@@ -406,7 +406,12 @@ environment = {
 	];
 
 	systemPackages = with pkgs; [
+		(discord-canary.override {
+      		withOpenASAR = true;
+    		withVencord = true; # can do this here too
+    	})
 		#steam-tui
+		#openasar
 		steamcmd
 		spotifyd
 		spotify-tray
@@ -913,11 +918,16 @@ users = {
 			yt-dlp
 			obsidian 
 			rofi-obsidian
+			#openasar
 			lxappearance
 			xorg_sys_opengl
 			vencord
 			vencord-web-extension
 			webcord-vencord
+			(discord-canary.override {
+      			withOpenASAR = true;
+    			withVencord = true; # can do this here too
+    		})
 			discord-gamesdk
 			discord-rpc
 			cairo
@@ -1574,6 +1584,11 @@ programs = {
 			libgtkflow3
 			yt-dlp
 			discord-rpc
+			(discord-canary.override {
+				withOpenASAR = true;
+				withVencord = true; # can do this here too
+			})
+			#openasar
 			vencord
 			vencord-web-extension
 			webcord-vencord
