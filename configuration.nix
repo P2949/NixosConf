@@ -412,6 +412,7 @@ environment = {
     	})
 		#steam-tui
 		#openasar
+		bc
 		steamcmd
 		spotifyd
 		spotify-tray
@@ -422,7 +423,6 @@ environment = {
 		yt-dlp
 		rofi-obsidian
 		godot_4
-		godot_4-mono
 		godot_4-export-templates
 		dotnet-sdk_9
 		xorg_sys_opengl
@@ -911,8 +911,8 @@ users = {
 			librespot
 			adwaita-qt
 			direnv
+			bc
 			godot_4
-			godot_4-mono
 			godot_4-export-templates
 			dotnet-sdk_9
 			yt-dlp
@@ -1593,11 +1593,11 @@ programs = {
 			vencord-web-extension
 			webcord-vencord
 			direnv
+			bc
 			cairo
 			pixman
 			discord-canary
 			godot_4
-			godot_4-mono
 			godot_4-export-templates
 			dotnet-sdk_9
 			obsidian 
