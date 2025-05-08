@@ -81,22 +81,15 @@ hardware = {
 
     	extraPackages = with pkgs; [
 			mesa.opencl
-			#amdenc
-			#amdvlk
 			intel-media-driver 
 			wlr-protocols
-			#intel-vaapi-driver
 			intel-gpu-tools
 			intel-graphics-compiler
 			intel-media-sdk
-			#vulkan-validation-layers
 			spirv-tools
-			hyprland
-			xdg-desktop-portal-hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 			vpl-gpu-rt
-			#xwayland
-			#xwayland-satellite
-			#xwayland-run
 			vaapi-intel-hybrid
 			intel-gmmlib
 			vaapiIntel        
@@ -109,14 +102,12 @@ hardware = {
 			libnvidia-container
 			libvdpau-va-gl
 			libvdpau
-			virtualgl
 			virtualglLib
 			intel-compute-runtime
 			nv-codec-headers-12
 			libvpl
 			intel-ocl
 			ffmpeg-full
-			#cudaPackages.nvidia_driver
 			nvidia-vaapi-driver
 			vulkan-extension-layer
 			vulkan-utility-libraries
@@ -127,7 +118,6 @@ hardware = {
 			xorg.xf86videonv
 			xorg.xf86inputevdev
 			xorg.xf86inputlibinput
-			virtualglLib
 			libvdpau-va-gl
 			libvdpau
 			vulkan-extension-layer
@@ -141,7 +131,6 @@ hardware = {
 			cairo
 			pixman
 			mesa
-			#rocmPackages.clr.icd
 			config.boot.kernelPackages.nvidia_x11_beta
 			config.boot.kernelPackages.nvidia_x11_beta_open
 			intel-cmt-cat
@@ -150,18 +139,13 @@ hardware = {
     
     	extraPackages32 = with pkgs.pkgsi686Linux; [ 
 			spirv-tools
-			#amdvlk
-			#vulkan-validation-layers
 			libva
 			freetype
 			intel-gpu-tools
 			libvpl
 			cairo
-			hyprland
 			libdrm
 			mangohud
-			virtualgl
-			#libnvidia-container
 			virtualglLib
 			libvdpau-va-gl
 			libvdpau
@@ -177,7 +161,6 @@ hardware = {
 			libvdpau-va-gl
 			mesa
 			glfw3-minecraft
-			#vpl-gpu-rt
 			vaapi-intel-hybrid
 			intel-graphics-compiler
 			xed
@@ -280,8 +263,8 @@ xdg = {
 	icons.enable = true;
     portal = {
 		configPackages = [
-			pkgs.hyprland
-			pkgs.xdg-desktop-portal-hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 		];
 		wlr.enable = true;
     	enable = true;
@@ -289,7 +272,7 @@ xdg = {
 		extraPortals = [
         	pkgs.xdg-desktop-portal
 			pkgs.xdg-desktop-portal-wlr
-			pkgs.xdg-desktop-portal-hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
       	];
     };
 };
@@ -410,31 +393,24 @@ environment = {
       		withOpenASAR = true;
     		withVencord = true; # can do this here too
     	})
-		#steam-tui
-		#openasar
 		bc
 		steamcmd
 		spotifyd
 		spotify-tray
-		spotify-qt
 		spotify-player
-		librespot
-		obsidian 
+		librespot 
 		yt-dlp
-		rofi-obsidian
 		godot_4
 		godot_4-export-templates
 		dotnet-sdk_9
 		xorg_sys_opengl
 		elegant-sddm
 		lxappearance
-		#amdenc
 		cairo
 		gh
 		pixman
 		lxappearance-gtk2
 		adwaita-qt
-		#amdvlk
 		adwaita-qt6
 		adwaita-icon-theme
 		spirv-tools
@@ -461,9 +437,6 @@ environment = {
 		unar
 		tailscale-systray
 		unrar-free
-		#xwayland
-		#xwayland-satellite
-		#xwayland-run
 		pkgsi686Linux.mangohud
 		libadwaita
 		gtk3-x11
@@ -485,12 +458,10 @@ environment = {
 		clang_multi
 		libclang
 		qt6.qtsvg
-		#rocmPackages.clr.icd
 		xorg.xf86videonv
 		intel-vaapi-driver
 		libnvidia-container
 		glib
-		virtualgl
 		virtualglLib
 		glibmm
 		libglibutil
@@ -511,7 +482,6 @@ environment = {
 		polkit_gnome
 		libva-utils
 		nvidia-vaapi-driver
-		#nvidia-podman
 		nvidia-docker
 		liquidctl
 		nodejs_22
@@ -521,8 +491,8 @@ environment = {
 		nv-codec-headers-12
 		xdg-utils
 		xdg-desktop-portal
-		hyprland
-		xdg-desktop-portal-hyprland
+		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 		libgcc
 		libgccjit
 		gccgo
@@ -537,8 +507,6 @@ environment = {
 		coolercontrol.coolercontrol-liqctld
 		wireplumber
 		ffmpeg-full
-		python3Full
-		python313Full	
 		onlyoffice-bin
 		wineWowPackages.stable
 		ncspot
@@ -551,7 +519,6 @@ environment = {
 		vulkan-headers
 		vulkan-tools-lunarg
 		vulkan-extension-layer
-		#vulkan-validation-layers
 		vulkan-utility-libraries
 		libvdpau
 		config.boot.kernelPackages.nvidia_x11_beta
@@ -559,7 +526,6 @@ environment = {
 		libnvidia-container
 		nvidia-vaapi-driver
 		nvidia-vaapi-driver
-		#nvidia-podman
 		xorg.xhost
 		nvidia-docker
 		nvidia_cg_toolkit
@@ -904,9 +870,7 @@ users = {
     		})
 			spotifyd
 			steamcmd
-			#steam-tui
 			spotify-tray
-			spotify-qt
 			spotify-player
 			librespot
 			adwaita-qt
@@ -915,10 +879,7 @@ users = {
 			godot_4
 			godot_4-export-templates
 			dotnet-sdk_9
-			yt-dlp
-			obsidian 
-			rofi-obsidian
-			#openasar
+			yt-dlp 
 			lxappearance
 			xorg_sys_opengl
 			vencord
@@ -935,8 +896,6 @@ users = {
 			discord-canary
 			lxappearance-gtk2
 			adwaita-qt6
-			#amdenc
-			#amdvlk
 			adwaita-icon-theme
 			ventoy-full
 			pango
@@ -954,14 +913,11 @@ users = {
 			xorg.xrdb
 			librewolf
 			clang
-			hyprland
-			xdg-desktop-portal-hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 			inputs.envycontrol.packages.x86_64-linux.default
-			#xwayland
 			tailscale-systray
 			xorg.xhost
-			#xwayland-satellite
-			#xwayland-run
 			unrar-wrapper
 			unrar
 			unar
@@ -969,7 +925,6 @@ users = {
 			libusb1
 			spirv-tools
 			google-chrome
-			#vulkan-validation-layers
 			unrar-free
 			adwaita-icon-theme
 			gnomeExtensions.appindicator
@@ -1028,15 +983,13 @@ users = {
 			unzip
 			wget
 			xdotool
-			kdenlive
+			libsForQt5.kdenlive
 			kdePackages.kdenlive
 			protontricks
 			winetricks
 			wineWowPackages.waylandFull
 			elegant-sddm
 			file-roller
-			# _7zz
-			# p7zip
 			xorg.xwininfo
 			alacritty
 			wofi
@@ -1056,7 +1009,6 @@ users = {
 			zsh-syntax-highlighting
 			fastfetch
 			slurp
-			#xwaylandvideobridge
 			util-linux
 			wl-clipboard
 			polkit_gnome
@@ -1073,7 +1025,6 @@ users = {
 			obs-studio-plugins.obs-backgroundremoval
 			obs-studio-plugins.obs-pipewire-audio-capture
 			obs-studio-plugins.waveform
-			obs-studio-plugins.obs-nvfbc
 			obs-studio-plugins.obs-websocket
 			mangohud
 			pkgsi686Linux.mangohud
@@ -1084,7 +1035,6 @@ users = {
 			libnvidia-container
 			nvidia-vaapi-driver
 			nvidia-vaapi-driver
-			#nvidia-podman
 			nvidia-docker
 			nvidia_cg_toolkit
 			nvidia-texture-tools
@@ -1123,9 +1073,9 @@ system = {
 };
 
 services = {
-	#pulseaudio.enable = false;
+	pulseaudio.enable = false;
 
-	desktopManager.plasma6.enable = true;
+	desktopManager.plasma6.enable = false;
 
 	auto-cpufreq = {
 		enable = true;
@@ -1163,7 +1113,7 @@ services = {
 		ffmpeg-full
 	];
 
-	aesmd.enable = true;
+	aesmd.enable = false;
 
 	throttled.enable = true;
 
@@ -1230,7 +1180,7 @@ services = {
 				};
 			};
 			extraPackages = with pkgs;[	
-				qt6.full
+				#qt6.full
 				#elegant-sddm
 			];
 		};
@@ -1256,8 +1206,6 @@ services = {
 	hypridle.enable = true;
 
 	udisks2.enable = true;
-
-	gsignond.enable = true;
 
 	power-profiles-daemon.enable = false;
 
@@ -1345,21 +1293,15 @@ programs = {
 
 		package = pkgs.steam.override { 
 			extraPkgs = pkgs: with pkgs; [
-				#steam-tui
-				#steamcmd
 				mesa
 				intel-media-driver 
 				wlr-protocols
 				intel-vaapi-driver
 				intel-gpu-tools
 				intel-graphics-compiler
-				#vulkan-validation-layers
 				spirv-tools
-				hyprland
-				xdg-desktop-portal-hyprland
-				#xwayland
-				#xwayland-satellite
-				#xwayland-run
+				inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+				inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 				vaapi-intel-hybrid
 				cairo
 				pixman
@@ -1373,11 +1315,9 @@ programs = {
 				egl-wayland
 				libvdpau-va-gl
 				libvdpau
-				virtualgl
 				virtualglLib
 				nv-codec-headers-12
 				libvpl
-				#cudaPackages.nvidia_driver
 				nvidia-vaapi-driver
 				vulkan-extension-layer
 				vulkan-utility-libraries
@@ -1388,15 +1328,9 @@ programs = {
 				xorg.xf86videonv
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
-				#amdvlk
 				wlr-protocols
-				#xwayland
-				#xwayland-satellite
-				#xwayland-run
 				egl-wayland
 				nvidia-vaapi-driver
-				#protontricks
-				#winetricks
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
 				mangohud
@@ -1413,10 +1347,8 @@ programs = {
 				vulkan-headers
 				vulkan-tools-lunarg
 				vulkan-extension-layer
-				#vulkan-validation-layers
 				spirv-tools
 				vulkan-utility-libraries
-				#nvidia-podman
 				nvidia_cg_toolkit
 				nvidia-optical-flow-sdk
 				nv-codec-headers-12
@@ -1429,13 +1361,7 @@ programs = {
 				intel-vaapi-driver
 				intel-gpu-tools
 				intel-graphics-compiler
-				#vulkan-validation-layers
 				spirv-tools
-				hyprland
-				#xdg-desktop-portal-hyprland
-				#xwayland
-				#xwayland-satellite
-				#xwayland-run
 				vaapi-intel-hybrid
 				cairo
 				pixman
@@ -1449,11 +1375,9 @@ programs = {
 				egl-wayland
 				libvdpau-va-gl
 				libvdpau
-				virtualgl
 				virtualglLib
 				nv-codec-headers-12
 				libvpl
-				#cudaPackages.nvidia_driver
 				nvidia-vaapi-driver
 				vulkan-extension-layer
 				vulkan-utility-libraries
@@ -1464,14 +1388,9 @@ programs = {
 				xorg.xf86videonv
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
-				#amdvlk
 				wlr-protocols
-				#xwayland
-				#xwayland-satellite
-				#xwayland-run
 				egl-wayland
 				nvidia-vaapi-driver
-				#protontricks
 				winetricks
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
@@ -1487,12 +1406,10 @@ programs = {
 				vulkan-tools
 				vulkan-loader
 				vulkan-headers
-				#vulkan-tools-lunarg
 				vulkan-extension-layer
 				vulkan-validation-layers
 				spirv-tools
 				vulkan-utility-libraries
-				#nvidia-podman
 				nvidia_cg_toolkit
 				nvidia-optical-flow-sdk
 				nv-codec-headers-12
@@ -1500,17 +1417,10 @@ programs = {
 		};
 
 		extraPackages = with pkgs; [
-			#steam-tui
-			#steamcmd
 			wlr-protocols
-			#xwayland
-			#xwayland-satellite
-			#xwayland-run
 			egl-wayland
-			#amdvlk
 			ffmpeg-full
 			nvidia-vaapi-driver
-			#protontricks
 			winetricks
 			wineWowPackages.waylandFull
 			mesa
@@ -1519,7 +1429,6 @@ programs = {
 			libnvidia-container
 			mangohud
 			pkgsi686Linux.mangohud
-			#lutris
 			intel-compute-runtime
 			pango
 			libthai
@@ -1533,20 +1442,17 @@ programs = {
 			intel-vaapi-driver
 			vaapi-intel-hybrid
 			nv-codec-headers-12
-			#rocmPackages.clr.icd
 			vulkan-tools
 			vulkan-loader
 			vulkan-headers
 			vulkan-tools-lunarg
 			vulkan-extension-layer
-			#vulkan-validation-layers
 			spirv-tools
 			vulkan-utility-libraries
 			cairo
 			pixman
 			config.boot.kernelPackages.nvidia_x11_beta
 			config.boot.kernelPackages.nvidia_x11_beta_open
-			#nvidia-podman
 			nvidia-docker
 			nvidia_cg_toolkit
 			libadwaita
@@ -1567,11 +1473,13 @@ programs = {
 	nix-ld = {
 		enable = true;
 		libraries =  with pkgs;[
-			#steam-tui
+			(discord-canary.override {
+				withOpenASAR = true;
+				withVencord = true; # can do this here too
+			})
 			steamcmd
 			spotifyd
 			spotify-tray
-			spotify-qt
 			spotify-player
 			librespot
 			lxappearance
@@ -1584,11 +1492,6 @@ programs = {
 			libgtkflow3
 			yt-dlp
 			discord-rpc
-			(discord-canary.override {
-				withOpenASAR = true;
-				withVencord = true; # can do this here too
-			})
-			#openasar
 			vencord
 			vencord-web-extension
 			webcord-vencord
@@ -1599,14 +1502,10 @@ programs = {
 			discord-canary
 			godot_4
 			godot_4-export-templates
-			dotnet-sdk_9
-			obsidian 
-			rofi-obsidian
+			dotnet-sdk_9 
 			betterdiscordctl
 			betterdiscord-installer
 			discord-gamesdk
-			#amdenc
-			#amdvlk
 			lxappearance-gtk2
 			pango
 			libthai
@@ -1625,14 +1524,11 @@ programs = {
 			libusb1
 			xorg.xhost
 			google-chrome
-			#xwayland-satellite
-			#xwayland
 			librewolf
 			unrar-wrapper
 			unrar
 			unar
 			unrar-free
-			#xwayland-run
 			tailscale-systray
 			adwaita-icon-theme
 			gnomeExtensions.appindicator
@@ -1659,7 +1555,6 @@ programs = {
 			libnvidia-container
 			libvdpau-va-gl
 			libvdpau
-			virtualgl
 			virtualglLib
 			intel-compute-runtime
 			intel-compute-runtime
@@ -1668,7 +1563,6 @@ programs = {
 			ffmpeg-full
 			nvidia-vaapi-driver
 			vulkan-extension-layer
-			#vulkan-validation-layers
 			spirv-tools
 			vulkan-utility-libraries
 			mesa
@@ -1676,7 +1570,6 @@ programs = {
 			xorg.xf86videonv
 			xorg.xf86inputevdev
 			xorg.xf86inputlibinput
-			#rocmPackages.clr.icd 
 			intel-vaapi-driver
 			spotify
 			zsh
@@ -1706,19 +1599,16 @@ programs = {
 			gimp
 			gnome-text-editor
 			pavucontrol
-			#steamtinkerlaunch
 			yad
 			unzip
 			wget
 			xdotool
-			kdenlive
+			libsForQt5.kdenlive
 			kdePackages.kdenlive
 			protontricks
 			winetricks
 			wineWowPackages.waylandFull
 			file-roller
-			# _7zz
-			# p7zip
 			xorg.xwininfo
 			alacritty
 			wofi
@@ -1735,7 +1625,6 @@ programs = {
 			zsh-syntax-highlighting
 			fastfetch
 			slurp
-			#xwaylandvideobridge
 			util-linux
 			wl-clipboard
 			polkit_gnome
@@ -1752,18 +1641,15 @@ programs = {
 			obs-studio-plugins.obs-backgroundremoval
 			obs-studio-plugins.obs-pipewire-audio-capture
 			obs-studio-plugins.waveform
-			obs-studio-plugins.obs-nvfbc
 			obs-studio-plugins.obs-websocket
 			mangohud
 			pkgsi686Linux.mangohud
 			curl
 			glibc
-			#rocmPackages.clr.icd
 			xorg.xf86videonv
 			intel-vaapi-driver
 			libnvidia-container
 			glib
-			virtualgl
 			virtualglLib
 			glibmm
 			libglibutil
@@ -1783,7 +1669,6 @@ programs = {
 			polkit_gnome
 			libva-utils
 			nvidia-vaapi-driver
-			#nvidia-podman
 			nvidia-docker
 			nvidia_cg_toolkit
 			nvidia-texture-tools
@@ -1791,8 +1676,8 @@ programs = {
 			nv-codec-headers-12
 			xdg-utils
 			xdg-desktop-portal
-			hyprland
-			xdg-desktop-portal-hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 			libgcc
 			libgccjit
 			gccgo
@@ -1803,8 +1688,6 @@ programs = {
 			vulkan-tools
 			wireplumber
 			ffmpeg-full
-			python3Full
-			python313Full	
 			onlyoffice-bin
 			wineWowPackages.stable
 			winetricks
@@ -1817,7 +1700,6 @@ programs = {
 			vulkan-extension-layer
 			vulkan-utility-libraries
 			libva
-			virtualgl
 			virtualglLib
 			libvdpau-va-gl
 			vulkan-extension-layer
@@ -1836,14 +1718,12 @@ programs = {
 			xorg.xf86videonv
 			intel-vaapi-driver
 			nv-codec-headers-12
-			#rocmPackages.clr.icd
 			ffmpeg-full
 			config.boot.kernelPackages.nvidia_x11_beta
 			config.boot.kernelPackages.nvidia_x11_beta_open
 			libnvidia-container
 			nvidia-vaapi-driver
 			nvidia-vaapi-driver
-			#nvidia-podman
 			nvidia-docker
 			nvidia_cg_toolkit
 			nvidia-texture-tools
@@ -1863,12 +1743,13 @@ programs = {
 	iio-hyprland.enable = false;
 
 	hyprland = {
+		withUWSM = true;
 		# Install the packages from nixpkgs
 		enable = true;
 		# Whether to enable XWayland
 		xwayland.enable = true;
-		package = pkgs.hyprland;
-		portalPackage = pkgs.xdg-desktop-portal-hyprland;
+		package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+		portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 		systemd.setPath.enable = true;
 	};
 
@@ -1912,7 +1793,7 @@ programs = {
 
 	firefox = {
 		package = pkgs.librewolf;
-		enable = true;
+		enable = false;
 		preferencesStatus = "user";
 		preferences = {
 			"media.ffmpeg.vaapi.enabled" = true;
