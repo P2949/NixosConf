@@ -69,6 +69,11 @@ nix = {
 
 hardware = {
 
+	bluetooth = {
+		enable = true;
+		hsphfpd.enable = false;
+	};
+
 	enableAllFirmware = true;
 
 	cpu.x86.msr.enable = true;
@@ -81,17 +86,40 @@ hardware = {
 
     	extraPackages = with pkgs; [
 			mesa.opencl
+			SDL
+			xorg.libXdamage
+			gamescope-wsi
+			libavif
+			goldberg-emu
+			bubblewrap
+			libsForQt5.kwindowsystem
+      		gamescope
+			kdePackages.kwindowsystem
+			sdl3
+			libinput
+			SDL2
+			libcap
+			libxcursor
+			seatd
+			libxfixes
+			xorg.libXcomposite
 			intel-media-driver 
+			libGL
+			libxkbcommon
+			libarchive
+			openssl
+			xorg.libXi
 			wlr-protocols
+			nvidia-modprobe
 			intel-gpu-tools
 			intel-graphics-compiler
-			intel-media-sdk
 			spirv-tools
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
 			vpl-gpu-rt
 			vaapi-intel-hybrid
 			intel-gmmlib
+			libx11
 			vaapiIntel        
 			vaapiVdpau
 			xed
@@ -118,14 +146,21 @@ hardware = {
 			xorg.xf86videonv
 			xorg.xf86inputevdev
 			xorg.xf86inputlibinput
+			libxrender
+			xorg.libXres
+			xorg.libXtst
+			libxmu
 			libvdpau-va-gl
 			libvdpau
 			vulkan-extension-layer
 			vulkan-utility-libraries
 			vaapiVdpau
+			libei
 			libvdpau-va-gl
 			nvidia-vaapi-driver
+			libdecor
 			libva
+			luajit
 			vaapiVdpau
 			libvdpau-va-gl
 			cairo
@@ -139,10 +174,31 @@ hardware = {
     
     	extraPackages32 = with pkgs.pkgsi686Linux; [ 
 			spirv-tools
+			SDL
+			luajit
+			sdl3
+			libinput
+			libxfixes
+			libavif
+			libxmu
+			xorg.libXcomposite
+			SDL2
+			libcap
+			xorg.libXres
+			libxrender
 			libva
+			goldberg-emu
+			bubblewrap
+			seatd
+			libsForQt5.kwindowsystem
+			#kdePackages.kwindowsystem
 			freetype
+			xorg.libXi
+			xorg.libXdamage
 			intel-gpu-tools
+			libx11
 			libvpl
+			libxcursor
 			cairo
 			libdrm
 			mangohud
@@ -150,7 +206,13 @@ hardware = {
 			libvdpau-va-gl
 			libvdpau
 			cairo
+			nvidia-modprobe
 			pixman
+			libdecor
+			libGL
+			libxkbcommon
+			openssl
+			libarchive
 			vulkan-extension-layer
 			vulkan-utility-libraries
 			vaapiVdpau
@@ -161,6 +223,7 @@ hardware = {
 			libvdpau-va-gl
 			mesa
 			glfw3-minecraft
+			xorg.libXtst
 			vaapi-intel-hybrid
 			intel-graphics-compiler
 			xed
@@ -178,11 +241,11 @@ hardware = {
 
 
 	amdgpu = {
-		opencl.enable = false;
+		opencl.enable = true;
 		amdvlk = {
-	 		supportExperimental.enable = false;
-	 		support32Bit.enable = false;
-	 		enable = false;
+	 		supportExperimental.enable = true;
+	 		support32Bit.enable = true;
+	 		enable = true;
 	 	};
 	};
 	steam-hardware.enable = true;
@@ -201,14 +264,21 @@ hardware = {
 
 
 	system76 = {
-		power-daemon.enable = false;
-		kernel-modules.enable = false;
+		power-daemon.enable = true;
+		kernel-modules.enable = true;
 		firmware-daemon.enable = true;
 		enableAll = true;
 	};
 
+	bumblebee = {
+		enable = false;
+		pmMethod = "none";
+		driver = "nvidia";
+		connectDisplay = true;
+	};
+
 	nvidia = {
-		forceFullCompositionPipeline = true;
+		forceFullCompositionPipeline = lib.mkForce true;
 		prime = {
 			allowExternalGpu = lib.mkForce true;
 			offload = {
@@ -224,13 +294,14 @@ hardware = {
 			intelBusId = "PCI:0:2:0";
 			nvidiaBusId = "PCI:1:0:0";
 		};
-		dynamicBoost.enable = false;
-		gsp.enable = true;
-		nvidiaPersistenced = true;
+		videoAcceleration = lib.mkForce true;
+		dynamicBoost.enable = lib.mkForce false;
+		gsp.enable = lib.mkForce true;
+		nvidiaPersistenced = lib.mkForce false;
 		# Modesetting is required.
-		modesetting.enable = true;
+		modesetting.enable = lib.mkForce true;
 		# Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-		powerManagement.enable = true;
+		powerManagement.enable = lib.mkForce true;
 		# Fine-grained power management. Turns off GPU when not in use.
 		# Experimental and only works on modern Nvidia GPUs (Turing or newer).
 		powerManagement.finegrained = lib.mkForce true;
@@ -241,15 +312,15 @@ hardware = {
 		# https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
 		# Only available from driver 515.43.04+
 		# Do not disable this unless your GPU is unsupported or if you have a good reason to.
-		open = true;
+		open = lib.mkForce true;
 		# Enable the Nvidia settings menu,
 		# accessible via `nvidia-settings`.
-		nvidiaSettings = true;
+		nvidiaSettings = lib.mkForce true;
 		# Optionally, you may need to select the appropriate driver version for your specific GPU.
 		#package = config.boot.kernelPackages.nvidiaPackages.stable;
 		package = config.boot.kernelPackages.nvidiaPackages.beta;
   	};
-	nvidiaOptimus.disable = false;
+	nvidiaOptimus.disable = lib.mkForce false;
 
 };
 
@@ -313,6 +384,11 @@ environment = {
 	shells = with pkgs; [ zsh ];
 
     sessionVariables = {
+		LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${pkgs.linuxPackages.nvidia_x11}/lib/:${pkgs.wayland}/lib/:${pkgs.sdl3}/lib/:${pkgs.xorg.libXdamage}/lib/";
+    __GLSHADER_DISK_CACHE = "1";
+    fully_kms_output = "TRUE";
+		FULLY_KMS_OUTPUT = "TRUE";
+		__GL_PRESENT= "0";
 		NIXOS_OZONE_WL = "1";
 		DOTNET_ROOT = "${pkgs.dotnet-sdk_9}/share/dotnet/";
 		POLKIT_AUTH_AGENT = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
@@ -329,12 +405,16 @@ environment = {
 		CLUTTER_BACKEND = "wayland";
 		GTK_USE_PORTAL = "1";
 		NIXOS_XDG_OPEN_USE_PORTAL = "1";
-		GDK_BACKEND = "wayland,x11";
-		QT_QPA_PLATFORM="wayland;xcb";
+		GDK_BACKEND = "wayland";
+		QT_QPA_PLATFORM="wayland";
 		QT_AUTO_SCREEN_SCALE_FACTOR = "1";
 		XDG_CURRENT_DESKTOP = "Hyprland";
 		XDG_SESSION_DESKTOP = "Hyprland";
 		__GL_VRR_ALLOWED = "1";
+		AQ_FORCE_LINEAR_BLIT="1";
+		AQ_MGPU_NO_EXPLICIT="0";
+		AQ_NO_MODIFIERS="0";
+		AQ_NO_ATOMIC="0";
 		__GL_GSYNC_ALLOWED = "1";
 		QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 		GTK_THEME = "Adwaita:dark";
@@ -360,8 +440,8 @@ environment = {
 		__GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
 		RADV_PERFTEST = "gpl";
 		AQ_DRM_DEVICES = "/dev/dri/card1";
-		#VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/intel_icd.i686.json";
-		#VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/intel_icd.i686.json";
+		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
 		__GLX_VENDOR_LIBRARY_NAME = "mesa";
 		AMD_VULKAN_ICD = "RADV";
 		NVD_BACKEND = "direct";
@@ -394,14 +474,40 @@ environment = {
     		withVencord = true; # can do this here too
     	})
 		bc
+		nvtopPackages.full
 		steamcmd
 		spotifyd
+		xorg.libXdamage
+		libxfixes
+		luajit
+		xorg.libXcomposite
+		libei
+		gamescope-wsi
+		libavif
+		xorg.libXres
 		spotify-tray
+		SDL
+		seatd
+		sdl3
+		libcap
+		SDL2
+		libx11
+		libinput
+		kdePackages.kwin
+    	kdePackages.kwin-x11
+		libxmu
+    	libsForQt5.kwindowsystem
+    	kdePackages.kwindowsystem
+    	gamescope
+    	bubblewrap
+    	goldberg-emu
 		spotify-player
+		nvidia_oc
 		librespot 
+		nvidia-modprobe
+		xorg.libXi
 		yt-dlp
-		godot_4
-		godot_4-export-templates
+		bumblebee
 		dotnet-sdk_9
 		xorg_sys_opengl
 		elegant-sddm
@@ -410,7 +516,10 @@ environment = {
 		gh
 		pixman
 		lxappearance-gtk2
-		adwaita-qt
+		libGL
+		libxkbcommon
+		libarchive
+		openssl
 		adwaita-qt6
 		adwaita-icon-theme
 		spirv-tools
@@ -423,19 +532,19 @@ environment = {
 		discord-canary
 		cachix
 		xsettingsd
+		gnumake
 		xorg.xrdb
 		lm_sensors
 		wlr-protocols
 		libusbp
-		librewolf
+		librewolf-bin
 		google-chrome
 		libusb1
-		inputs.envycontrol.packages.x86_64-linux.default
+		#inputs.envycontrol.packages.x86_64-linux.default
 		adwaita-icon-theme
 		unrar-wrapper
 		unrar
 		unar
-		tailscale-systray
 		unrar-free
 		pkgsi686Linux.mangohud
 		libadwaita
@@ -447,19 +556,15 @@ environment = {
 		gnomeExtensions.appindicator
 		intel-ocl
 		gnome-settings-daemon
-		gnome2.GConf
 		glibc
 		steamtinkerlaunch
 		vaapi-intel-hybrid
-		clang
 		direnv
-		clang-tools
 		intel-gmmlib
-		clang_multi
-		libclang
 		qt6.qtsvg
 		xorg.xf86videonv
 		intel-vaapi-driver
+		chiaki-ng
 		libnvidia-container
 		glib
 		virtualglLib
@@ -476,7 +581,6 @@ environment = {
 		glibcLocalesUtf8
 		iconv
 		libiconv
-		gnat
 		gfortran
 		gdb
 		polkit_gnome
@@ -493,13 +597,9 @@ environment = {
 		xdg-desktop-portal
 		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-		libgcc
-		libgccjit
-		gccgo
-		gcc_multi
-		gcc
 		nautilus
 		libcdada
+		xorg.libXtst
 		vulkan-tools
 		coolercontrol.coolercontrol-gui
 		coolercontrol.coolercontrold
@@ -510,15 +610,20 @@ environment = {
 		onlyoffice-bin
 		wineWowPackages.stable
 		ncspot
+		libdecor
 		librespot
+		libei
 		winetricks
 		waybar
+		libxrender
 		mako
 		vulkan-tools
+		qbittorrent-nox
 		vulkan-loader
 		vulkan-headers
 		vulkan-tools-lunarg
 		vulkan-extension-layer
+		libxcursor
 		vulkan-utility-libraries
 		libvdpau
 		config.boot.kernelPackages.nvidia_x11_beta
@@ -541,11 +646,14 @@ boot = {
 
 	kernel.sysctl = {
 		"kernel.sched_autogroup_enabled" = 1;
+		"kernel.sched_bore" = 1;
+		"kernel/sched_bore" = 1;
 		"kernel/sched_autogroup_enabled" = 1;
-		"vm.swappiness" = 90; # when swapping to ssd, otherwise change to 1
+		"vm.swappiness" = 1; # when swapping to ssd, otherwise change to 1
 		"vm.vfs_cache_pressure" = 50;
-		"vm.dirty_background_ratio" = 20;
-		"vm.dirty_ratio" = 50;
+		"vm.dirty_background_ratio" = 5;
+		"vm.dirty_ratio" = 90;
+		"net.ipv4.tcp_low_latency" = 1;
     	# these are the zen-kernel tweaks to CFS defaults (mostly)
     	"kernel.sched_latency_ns" = 4000000;
     	# should be one-eighth of sched_latency (this ratio is not
@@ -633,6 +741,8 @@ boot = {
 
 	kernelParams = [ 
 		"nvidia.nvidia_drm.modeset=1" 
+		"pcie_aspm=off"
+		"nvme_core.default_ps_max_latency_us=0"
 		"nvidia.NVreg_PowerMizerDefaultAC=0x3" 
 		"nvidia.NVreg_PowerMizerDefault=0x3" 
 		"nvidia.NVreg_PowerMizerLevel=0x3" 
@@ -671,6 +781,10 @@ systemd = {
 	network.enable = false;
 
 	globalEnvironment = {
+		__GL_SHADER_DISK_CACHE = "1";
+		fully_kms_output = "TRUE";
+		FULLY_KMS_OUTPUT = "TRUE";
+		__GL_PRESENT= "0";
 		NIXOS_OZONE_WL = "1";
 		POLKIT_AUTH_AGENT = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
 		DOTNET_ROOT = "${pkgs.dotnet-sdk_9}/share/dotnet/";
@@ -680,23 +794,25 @@ systemd = {
 		HYPRCURSOR_SIZE = "24";	
 		XCURSOR_THEME = "Adwaita:dark";
 		HYPRCURSOR_THEME = "Adwaita:dark";
-        WLR_DRM_NO_ATOMIC = "1";
-        SDL_VIDEODRIVER = "wayland";
-        MOZ_ENABLE_WAYLAND = "1";
-        _JAVA_AWT_WM_NONREPARENTING = "1";
-        CLUTTER_BACKEND = "wayland";
-        GTK_USE_PORTAL = "1";
-        NIXOS_XDG_OPEN_USE_PORTAL = "1";
-        GDK_BACKEND = "wayland,x11";
-        QT_QPA_PLATFORM="wayland;xcb";
-        QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-        XDG_CURRENT_DESKTOP = "Hyprland";
-        XDG_SESSION_DESKTOP = "Hyprland";
-        __GL_VRR_ALLOWED = "1";
-        __GL_GSYNC_ALLOWED = "1";
-        QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-        GTK_THEME = "Adwaita:dark";
-        WLR_DRM_DEVICES = "/dev/dri/card1";
+    		WLR_DRM_NO_ATOMIC = "1";
+		SDL_VIDEODRIVER = "wayland";
+		MOZ_ENABLE_WAYLAND = "1";
+		_JAVA_AWT_WM_NONREPARENTING = "1";
+		CLUTTER_BACKEND = "wayland";
+		GTK_USE_PORTAL = "1";
+		NIXOS_XDG_OPEN_USE_PORTAL = "1";
+		GDK_BACKEND = "wayland";
+		LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${pkgs.linuxPackages.nvidia_x11}/lib/:${pkgs.wayland}/lib/:${pkgs.sdl3}/lib/:${pkgs.xorg.libXdamage}/lib/";
+		QT_QPA_PLATFORM="wayland";
+		QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+		XDG_CURRENT_DESKTOP = "Hyprland";
+		PROTON_VERSION="GE-Proton10-15";
+		XDG_SESSION_DESKTOP = "Hyprland";
+		__GL_VRR_ALLOWED = "1";
+		__GL_GSYNC_ALLOWED = "1";
+		QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+		GTK_THEME = "Adwaita:dark";
+		WLR_DRM_DEVICES = "/dev/dri/card1";
 		__GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
 		__GL_MaxFramesAllowed = "3";
 		#__GL_THREADED_OPTIMIZATIONS = "1";
@@ -718,8 +834,8 @@ systemd = {
 		__GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
 		RADV_PERFTEST = "gpl";
 		AQ_DRM_DEVICES = "/dev/dri/card1";
-		#VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/intel_icd.i686.json";
-		#VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/intel_icd.i686.json";
+		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
 		__GLX_VENDOR_LIBRARY_NAME = "mesa";
 		AMD_VULKAN_ICD = "RADV";
 		NVD_BACKEND = "direct";
@@ -731,12 +847,6 @@ systemd = {
 		systemd-udev-settle.enable = true;
 		NetworkManager-wait-online.enable = true;
 	};
-
-	extraConfig = ''
-		DefaultCPUAccounting=yes
-		DefaultMemoryAccounting=yes
-		DefaultIOAccounting=yes
-    '';
 
 	user.extraConfig = ''
 		DefaultCPUAccounting=yes
@@ -752,6 +862,20 @@ systemd = {
 		serviceConfig = {
 			Type = "simple";
 			ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+			Restart = "on-failure";
+			RestartSec = 1;
+			TimeoutStopSec = 10;
+		};
+	};
+	user.services.nvidia_oc = {
+		description = "NVIDIA Overclocking Service";
+		wantedBy = [ "graphical-session.target" ];
+		wants = [ "graphical-session.target" ];
+		after = [ "network.target" ];
+		serviceConfig = {
+			Type = "simple";
+			User = "root";
+			ExecStart = "${pkgs.nvidia_oc}/nvidia_oc set --index 0 --power-limit 187000 --freq-offset 235 --mem-offset 305 --min-clock 300 --max-clock 4000";
 			Restart = "on-failure";
 			RestartSec = 1;
 			TimeoutStopSec = 10;
@@ -810,12 +934,14 @@ users = {
 
 	defaultUserShell = pkgs.zsh;
 
-	users.p2949 = {
+	users = { 
+		p2949 = {
 		shell = pkgs.zsh;
 		useDefaultShell = true;
 		isNormalUser = true;
 		description = "Pedro Goraieb Fernandes";
 		extraGroups = [ 
+			"qbittorrent"
 			"sddm" 
 			"systemd-journal" 
 			"keys" 
@@ -868,28 +994,57 @@ users = {
 					harfbuzz
       			];
     		})
+    			(discord-canary.override {
+      			withOpenASAR = true;
+    			withVencord = true; # can do this here too
+    		})
 			spotifyd
 			steamcmd
+			SDL
+			libinput
+			xorg.libXdamage
+			sdl3
+			libxmu
+			kdePackages.kwin
+			gamescope-wsi
+			luajit
+			xorg.libXres
+			xorg.libXcomposite
+      		kdePackages.kwin-x11
+      		libsForQt5.kwindowsystem
+      		kdePackages.kwindowsystem
+      		gamescope
+      		bubblewrap
+	  		libavif
+      		goldberg-emu
+			SDL2
+			libxfixes
 			spotify-tray
 			spotify-player
 			librespot
-			adwaita-qt
+			xorg.libXi
+			bumblebee
 			direnv
+			qbittorrent-nox
 			bc
-			godot_4
-			godot_4-export-templates
 			dotnet-sdk_9
+			flatpak
+      		gnome-software
 			yt-dlp 
 			lxappearance
+			libx11
 			xorg_sys_opengl
 			vencord
 			vencord-web-extension
 			webcord-vencord
-			(discord-canary.override {
-      			withOpenASAR = true;
-    			withVencord = true; # can do this here too
-    		})
+			nvidia_oc
+			libGL
+			libxkbcommon
+			libarchive
+			openssl
+			gnumake
 			discord-gamesdk
+			nvtopPackages.full
 			discord-rpc
 			cairo
 			pixman
@@ -897,7 +1052,6 @@ users = {
 			lxappearance-gtk2
 			adwaita-qt6
 			adwaita-icon-theme
-			ventoy-full
 			pango
 			libthai
 			harfbuzz
@@ -911,12 +1065,10 @@ users = {
 			gtk4
 			gtk3-x11
 			xorg.xrdb
-			librewolf
-			clang
+			librewolf-bin
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-			inputs.envycontrol.packages.x86_64-linux.default
-			tailscale-systray
+			#inputs.envycontrol.packages.x86_64-linux.default
 			xorg.xhost
 			unrar-wrapper
 			unrar
@@ -924,21 +1076,12 @@ users = {
 			libusbp
 			libusb1
 			spirv-tools
+			chiaki-ng
 			google-chrome
 			unrar-free
 			adwaita-icon-theme
 			gnomeExtensions.appindicator
-			gnome-settings-daemon
-			gnome2.GConf
-			clang-tools
-			clang_multi
-			libgcc
-			libgccjit
-			gccgo
-			gcc_multi
-			gcc
-			gnat
-			libclang
+			gnome-settings-daemon			
 			spotify
 			qt6.qtsvg
 			coolercontrol.coolercontrol-gui
@@ -983,7 +1126,6 @@ users = {
 			unzip
 			wget
 			xdotool
-			libsForQt5.kdenlive
 			kdePackages.kdenlive
 			protontricks
 			winetricks
@@ -1003,14 +1145,20 @@ users = {
 			audacity
 			stacer
 			libvdpau
+			libxcursor
 			libvdpau-va-gl
+			xorg.libXtst
+			libei
 			oh-my-zsh
+			seatd
 			pciutils
 			zsh-syntax-highlighting
+			libcap
 			fastfetch
 			slurp
 			util-linux
 			wl-clipboard
+			libdecor
 			polkit_gnome
 			polkit
 			jdk23
@@ -1020,12 +1168,6 @@ users = {
 			hypridle
 			eglexternalplatform
 			egl-wayland
-			obs-studio
-			obs-studio-plugins.wlrobs
-			obs-studio-plugins.obs-backgroundremoval
-			obs-studio-plugins.obs-pipewire-audio-capture
-			obs-studio-plugins.waveform
-			obs-studio-plugins.obs-websocket
 			mangohud
 			pkgsi686Linux.mangohud
 			nv-codec-headers-12
@@ -1034,6 +1176,7 @@ users = {
 			config.boot.kernelPackages.nvidia_x11_beta_open
 			libnvidia-container
 			nvidia-vaapi-driver
+			libxrender
 			nvidia-vaapi-driver
 			nvidia-docker
 			nvidia_cg_toolkit
@@ -1042,7 +1185,7 @@ users = {
     	];
   	};
 };
-
+};
 
 
   
@@ -1073,8 +1216,14 @@ system = {
 };
 
 services = {
-	pulseaudio.enable = false;
-
+	blueman.enable = true;
+	flatpak.enable = true;
+	xrdp.audio.enable = true;
+	gpsd.readonly = true;
+	pulseaudio = {
+		enable = false;
+		package = pkgs.pulseaudioFull;
+	};
 	desktopManager.plasma6.enable = false;
 
 	auto-cpufreq = {
@@ -1103,6 +1252,7 @@ services = {
 
 	udev = {
 		packages = with pkgs; [ gnome-settings-daemon android-udev-rules];
+		extraRules =  ''ACTION=="add|change", KERNEL=="sd[a-z]*[0-9]*|mmcblk[0-9]*p[0-9]*|nvme[0-9]*n[0-9]*p[0-9]*", ENV{ID_FS_TYPE}=="ext4", ATTR{../queue/scheduler}="mq-deadline"'';
 		enable = true;
 	};
 
@@ -1133,14 +1283,26 @@ services = {
 	};
 
 
-	dbus.packages = with pkgs; [ gnome2.GConf ];
+	dbus.packages = with pkgs; [
+		glfw
+		SDL
+		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+		xdg-desktop-portal
+		xdg-desktop-portal-wlr
+		sdl3
+		SDL2
+		gamescope
+		pass-secret-service
+		dbus
+	 ];
 	fwupd.enable = true;
 	upower.enable = true;
 
 
-	tailscale.enable = true;
+	tailscale.enable = false;
 
-	jack.loopback.enable = true;
+	#jack.loopback.enable = true;
 
 	resolved = {
 		enable = true;
@@ -1170,7 +1332,10 @@ services = {
 
 		sddm = {
 			enable = true;
-			wayland.enable = true;
+			wayland = {
+				enable = true;
+				#compositor = "kwin";
+			};
 			autoNumlock = true;
 			enableHidpi = true;
 			theme = "Elegant";
@@ -1180,7 +1345,7 @@ services = {
 				};
 			};
 			extraPackages = with pkgs;[	
-				#qt6.full
+				qt6.full
 				#elegant-sddm
 			];
 		};
@@ -1195,8 +1360,10 @@ services = {
 		alsa.enable = true;
 		alsa.support32Bit = true;
 		pulse.enable = true;
+		socketActivation = true;
+		raopOpenFirewall = true;
 		# If you want to use JACK applications, uncomment this
-		jack.enable = true;
+		#jack.enable = true;
 
 		# use the example session manager (no others are packaged yet so this is enabled by default,
 		# no need to redefine it in your config for now)
@@ -1211,6 +1378,9 @@ services = {
 
 	cpupower-gui.enable = true;
 
+	desktopManager.gnome.enable = false;
+	
+	displayManager.gdm.enable = false;
 	# Enable the X11 windowing system.
 	xserver = {
 
@@ -1229,16 +1399,26 @@ services = {
 		modules = with pkgs; [
 			xorg.xwininfo
 			xorg.xhost
+			xorg.libXres
 			xorg.xrdb
+			gamescope
 			xorg.xf86videonv
+			libavif
+			libdecor
 			xorg.xf86inputevdev
 			xorg.xf86inputlibinput
+			libei
 			xorg_sys_opengl
+			libcap
+			xorg.libXcomposite
+			xorg.libXi
+			libxmu
+			libxrender
+			xorg.libXtst
+			libxfixes
 		];
 		enable = true;
 		#display = 1;
-		desktopManager.gnome.enable = false;
-		displayManager.gdm.enable = false;
 		desktopManager.runXdgAutostartIfNone = true;
 		updateDbusEnvironment = true;
 	};
@@ -1277,6 +1457,39 @@ nixpkgs = {
 
 
 programs = {
+	opengamepadui = {
+		gamescopeSession = {
+			enable = true;
+		};
+	};
+	cdemu.enable = true;
+
+	ssh.askPassword = lib.mkForce"${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass}";
+
+	tuxclocker = {
+		enable = true; 
+		useUnfree = true;
+		enabledNVIDIADevices = 
+			[
+				0
+				31
+			];
+	};
+
+	obs-studio = {
+		enableVirtualCamera = true;
+		enable = true;
+		plugins = with pkgs; [
+		obs-studio-plugins.wlrobs
+		obs-studio-plugins.obs-vkcapture
+		obs-studio-plugins.obs-vaapi
+		#obs-studio-plugins.obs-nvfbc
+		]; 
+		
+		package = (pkgs.obs-studio.override {
+            		cudaSupport = true;
+        		});
+	};
 
 	coolercontrol = {
 		enable = true;
@@ -1293,12 +1506,45 @@ programs = {
 
 		package = pkgs.steam.override { 
 			extraPkgs = pkgs: with pkgs; [
+				xorg.libXcursor
+				xorg.libXi
+				xorg.libXinerama
+				gamescope-wsi
+				xorg.libXScrnSaver
+				libpng
+				libpulseaudio
+				libvorbis
+				stdenv.cc.cc.lib
+				libkrb5
+				keyutils
+				gamescope
 				mesa
 				intel-media-driver 
+				SDL
+				sdl3
+				xorg.libXi
+				libxfixes
+				libavif
+				libcap
+				xorg.libXres
+				luajit
+				libxmu
+				libinput
+				SDL2
+        		bubblewrap
+				xorg.libXcomposite
+        		goldberg-emu
 				wlr-protocols
 				intel-vaapi-driver
+				nvidia_oc
+				nvidia-modprobe
 				intel-gpu-tools
+				libGL
+				libxkbcommon
+				libarchive
+				openssl
 				intel-graphics-compiler
+				libx11
 				spirv-tools
 				inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 				inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
@@ -1328,38 +1574,70 @@ programs = {
 				xorg.xf86videonv
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
+				seatd
 				wlr-protocols
 				egl-wayland
 				nvidia-vaapi-driver
+				libxrender
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
 				mangohud
+				xorg.libXdamage
 				pkgsi686Linux.mangohud
 				vaapiVdpau
+				libei
 				vaapiIntel
 				intel-gmmlib
+				libdecor
 				xorg.xf86videonv
 				intel-vaapi-driver
 				vaapi-intel-hybrid
+				libxcursor
 				nv-codec-headers-12
 				vulkan-tools
 				vulkan-loader
 				vulkan-headers
 				vulkan-tools-lunarg
 				vulkan-extension-layer
+				xorg.libXtst
 				spirv-tools
 				vulkan-utility-libraries
 				nvidia_cg_toolkit
 				nvidia-optical-flow-sdk
 				nv-codec-headers-12
 			];
-			#privateTmp = false; 
+			privateTmp = false; 
 			extraLibraries = pkgs: with pkgs; [
+				xorg.libXcursor
+				xorg.libXi
+				xorg.libXinerama
+				xorg.libXScrnSaver
+				gamescope-wsi
+				libpng
+				libpulseaudio
+				libvorbis
+				stdenv.cc.cc.lib
+				libkrb5
+				keyutils
 				mesa
 				intel-media-driver 
 				wlr-protocols
 				intel-vaapi-driver
+				libxmu
 				intel-gpu-tools
+				libinput
+				xorg.libXres
+				luajit
+				seatd
+				SDL
+				libxfixes
+				libavif
+				bubblewrap
+				xorg.libXcomposite
+				goldberg-emu
+				libcap
+				sdl3
+				SDL2
 				intel-graphics-compiler
 				spirv-tools
 				vaapi-intel-hybrid
@@ -1368,12 +1646,18 @@ programs = {
 				intel-gmmlib
 				vaapiIntel        
 				vaapiVdpau
+				libx11
 				xed
+				nvidia_oc
 				mangohud
 				libva
 				libdrm
 				egl-wayland
 				libvdpau-va-gl
+				libGL
+				libxkbcommon
+				libarchive
+				openssl
 				libvdpau
 				virtualglLib
 				nv-codec-headers-12
@@ -1384,21 +1668,26 @@ programs = {
 				mesa
 				libdrm
 				glfw
+				nvidia-modprobe
 				glfw3-minecraft
 				xorg.xf86videonv
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
 				wlr-protocols
+				libdecor
 				egl-wayland
 				nvidia-vaapi-driver
 				winetricks
 				xorg.xf86inputevdev
 				xorg.xf86inputlibinput
+				libxrender
 				mangohud
 				pkgsi686Linux.mangohud
 				vaapiVdpau
+				libxcursor
 				vaapiIntel
 				intel-gmmlib
+				xorg.libXtst
 				xorg.xf86videonv
 				intel-vaapi-driver
 				vaapi-intel-hybrid
@@ -1417,31 +1706,69 @@ programs = {
 		};
 
 		extraPackages = with pkgs; [
+			xorg.libXcursor
+			xorg.libXi
+			xorg.libXinerama
+			gamescope-wsi
+			xorg.libXScrnSaver
+			libpng
+			libpulseaudio
+			libvorbis
+			stdenv.cc.cc.lib
+			libkrb5
+			keyutils
 			wlr-protocols
 			egl-wayland
+			seatd
 			ffmpeg-full
+			SDL
+			libinput
+			libxmu
+			luajit
+			libei
+			libcap
+			libavif
+			libxfixes
+			xorg.libXcomposite
+			xorg.libXdamage
+			sdl3
+			SDL2
+			xorg.libXres
+			bubblewrap
+			goldberg-emu
 			nvidia-vaapi-driver
 			winetricks
 			wineWowPackages.waylandFull
 			mesa
 			xorg.xf86inputevdev
+			libx11
+			xorg.libXi
 			xorg.xf86inputlibinput
 			libnvidia-container
 			mangohud
+			libdecor
+			libGL
+			libxkbcommon
+			libarchive
+			openssl
 			pkgsi686Linux.mangohud
 			intel-compute-runtime
 			pango
 			libthai
 			harfbuzz
 			vaapiVdpau
+			nvidia-modprobe
 			vaapiIntel
+			nvidia_oc
 			intel-gmmlib
 			intel-ocl
 			intel-media-driver
 			xorg.xf86videonv
 			intel-vaapi-driver
 			vaapi-intel-hybrid
+			xorg.libXtst
 			nv-codec-headers-12
+			libxcursor
 			vulkan-tools
 			vulkan-loader
 			vulkan-headers
@@ -1459,6 +1786,7 @@ programs = {
 			libgtkflow4
 			libgtkflow3
 			gtk4
+			libxrender
 			gtk3-x11
 			nvidia-texture-tools
 			nvidia-optical-flow-sdk
@@ -1478,19 +1806,63 @@ programs = {
 				withVencord = true; # can do this here too
 			})
 			steamcmd
+			seatd
+			libei
 			spotifyd
 			spotify-tray
+			xorg.libXcomposite
+			nvtopPackages.full
+			libxmu
+			gamescope-wsi
+			libcap
+			xorg.libXi
 			spotify-player
 			librespot
+			xorg.libXdamage
+			xorg.libXres
 			lxappearance
+			kdePackages.kwin
+			luajit
+      		kdePackages.kwin-x11
+	  		libinput
+			libsForQt5.kwindowsystem
+			kdePackages.kwindowsystem
+			libxfixes
+			gamescope
+			xorg.libXcursor
+			xorg.libXi
+			xorg.libXinerama
+			xorg.libXScrnSaver
+			libpng
+			libpulseaudio
+			libvorbis
+			stdenv.cc.cc.lib
+			libkrb5
+			keyutils
+			libavif
+			xorg.libXtst
+			bubblewrap
+			goldberg-emu
+			libx11
 			xorg_sys_opengl
+			SDL
+			sdl3
+			SDL2
+			libGL
+			libxkbcommon
+			libarchive
+			openssl
+			qbittorrent-nox
 			libadwaita
 			gtk4
 			elegant-sddm
 			gtk3-x11
+			bumblebee
+			nvidia-modprobe
 			libgtkflow4
 			libgtkflow3
 			yt-dlp
+			nvidia_oc
 			discord-rpc
 			vencord
 			vencord-web-extension
@@ -1500,8 +1872,6 @@ programs = {
 			cairo
 			pixman
 			discord-canary
-			godot_4
-			godot_4-export-templates
 			dotnet-sdk_9 
 			betterdiscordctl
 			betterdiscord-installer
@@ -1510,11 +1880,9 @@ programs = {
 			pango
 			libthai
 			harfbuzz
-			adwaita-qt
 			adwaita-qt6
 			adwaita-icon-theme
-			inputs.envycontrol.packages.x86_64-linux.default
-			clang
+			#inputs.envycontrol.packages.x86_64-linux.default
 			cachix
 			xsettingsd
 			xorg.xrdb
@@ -1524,20 +1892,15 @@ programs = {
 			libusb1
 			xorg.xhost
 			google-chrome
-			librewolf
+			librewolf-bin
 			unrar-wrapper
 			unrar
 			unar
 			unrar-free
-			tailscale-systray
 			adwaita-icon-theme
 			gnomeExtensions.appindicator
 			gnome-settings-daemon
 			gh
-			gnome2.GConf
-			clang-tools
-			clang_multi
-			libclang
 			coolercontrol.coolercontrol-gui
 			coolercontrol.coolercontrold
 			coolercontrol.coolercontrol-ui-data
@@ -1594,16 +1957,17 @@ programs = {
 			gamemode
 			goverlay
 			vscode.fhs
+			gnumake
 			gitFull
 			baobab
 			gimp
 			gnome-text-editor
 			pavucontrol
 			yad
+			libxrender
 			unzip
 			wget
 			xdotool
-			libsForQt5.kdenlive
 			kdePackages.kdenlive
 			protontricks
 			winetricks
@@ -1620,7 +1984,36 @@ programs = {
 			mpv
 			audacity
 			stacer
-			oh-my-zsh
+			libva
+			virtualglLib
+			libvdpau-va-gl
+			vulkan-extension-layer
+			vulkan-utility-libraries
+			mesa
+			glfw
+			glfw3-minecraft
+			xorg.xf86inputevdev
+			xorg.xf86inputlibinput
+			libnvidia-container
+			intel-compute-runtime
+			vaapiVdpau
+			libxcursor
+			vaapiIntel
+			intel-media-driver
+			nvidia-vaapi-driver
+			xorg.xf86videonv
+			intel-vaapi-driver
+			nv-codec-headers-12
+			ffmpeg-full
+			config.boot.kernelPackages.nvidia_x11_beta
+			config.boot.kernelPackages.nvidia_x11_beta_open
+			libnvidia-container
+			nvidia-vaapi-driver
+			nvidia-vaapi-driver
+			nvidia-docker
+			nvidia_cg_toolkit
+			nvidia-texture-tools
+			nvidia-optical-flow-sdk
 			pciutils
 			zsh-syntax-highlighting
 			fastfetch
@@ -1636,17 +2029,12 @@ programs = {
 			hypridle
 			eglexternalplatform
 			egl-wayland
-			obs-studio
-			obs-studio-plugins.wlrobs
-			obs-studio-plugins.obs-backgroundremoval
-			obs-studio-plugins.obs-pipewire-audio-capture
-			obs-studio-plugins.waveform
-			obs-studio-plugins.obs-websocket
 			mangohud
 			pkgsi686Linux.mangohud
 			curl
 			glibc
 			xorg.xf86videonv
+			chiaki-ng
 			intel-vaapi-driver
 			libnvidia-container
 			glib
@@ -1663,7 +2051,6 @@ programs = {
 			liquidctl
 			iconv
 			libiconv
-			gnat
 			gfortran
 			gdb
 			polkit_gnome
@@ -1678,15 +2065,39 @@ programs = {
 			xdg-desktop-portal
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-			libgcc
-			libgccjit
-			gccgo
-			gcc_multi
-			gcc
 			nautilus
 			libcdada
 			vulkan-tools
-			wireplumber
+			libva
+			virtualglLib
+			libvdpau-va-gl
+			vulkan-extension-layer
+			vulkan-utility-libraries
+			mesa
+			glfw
+			glfw3-minecraft
+			xorg.xf86inputevdev
+			xorg.xf86inputlibinput
+			libnvidia-container
+			intel-compute-runtime
+			vaapiVdpau
+			libxcursor
+			vaapiIntel
+			intel-media-driver
+			nvidia-vaapi-driver
+			xorg.xf86videonv
+			intel-vaapi-driver
+			nv-codec-headers-12
+			ffmpeg-full
+			config.boot.kernelPackages.nvidia_x11_beta
+			config.boot.kernelPackages.nvidia_x11_beta_open
+			libnvidia-container
+			nvidia-vaapi-driver
+			nvidia-vaapi-driver
+			nvidia-docker
+			nvidia_cg_toolkit
+			nvidia-texture-tools
+			nvidia-optical-flow-sdk
 			ffmpeg-full
 			onlyoffice-bin
 			wineWowPackages.stable
@@ -1703,6 +2114,7 @@ programs = {
 			virtualglLib
 			libvdpau-va-gl
 			vulkan-extension-layer
+			libdecor
 			vulkan-utility-libraries
 			mesa
 			glfw
@@ -1712,6 +2124,7 @@ programs = {
 			libnvidia-container
 			intel-compute-runtime
 			vaapiVdpau
+			libxcursor
 			vaapiIntel
 			intel-media-driver
 			nvidia-vaapi-driver
@@ -1734,6 +2147,7 @@ programs = {
 	gamescope = {
 		enable = true; 
 		capSysNice = true;
+		package = pkgs.gamescope;
 	};
 
 	adb.enable = true;
@@ -1792,29 +2206,30 @@ programs = {
 
 
 	firefox = {
-		package = pkgs.librewolf;
+		package = pkgs.librewolf-bin;
 		enable = false;
 		preferencesStatus = "user";
 		preferences = {
-			"media.ffmpeg.vaapi.enabled" = true;
-			"media.ffvpx.enabled" = true;
-			"media.av1.enabled" = true;
-			"gfx.webrender.all" = true;
-			"widget.wayland.opaque-region.enabled" = false;
-			"layout.frame_rate" = 75;
-		};
-		nativeMessagingHosts = {
-			packages =  with pkgs; [
+		 	"media.ffmpeg.vaapi.enabled" = true;
+		 	"media.ffvpx.enabled" = true;
+		 	"media.av1.enabled" = true;
+		 	"gfx.webrender.all" = true;
+		 	"widget.wayland.opaque-region.enabled" = true;
+		 	"layout.frame_rate" = 100;
+		 	"browser.tabs.tabmanager.enabled" = true;
+		 };
+		 nativeMessagingHosts = {
+		 	packages =  with pkgs; [
 				uget-integrator 
-				tridactyl-native
-				passff-host 
-				jabref  
-				fx-cast-bridge 
-				ff2mpv 
-				web-eid-app 
-				browserpass 
-			];
-		};
+		 		tridactyl-native
+		 		passff-host 
+		 		jabref  
+		 		fx-cast-bridge 
+		 		ff2mpv 
+		 		web-eid-app 
+		 		browserpass 
+		 	];
+		 };
 	};
 
 	gnome-disks.enable = true;
@@ -1831,7 +2246,34 @@ programs = {
 		enable = true;
 		shellAliases = {
 			ssteam = "nohup steam-run steam -no-cef-sandbox --vgui --no-cef-sandbox -vgui &";
-			update = "cd /etc/nixos && sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair && sudo nix flake update --accept-flake-config --refresh --repair && sudo nix-channel --update && sudo nix-store --optimise && sudo nix-store --verify --check-contents --repair && sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --verbose --keep-going --fallback --recreate-lock-file --flake '/etc/nixos#nixos' && sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --repair --verbose --keep-going --fallback && sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair && sudo nix-channel --update && sudo nixos-rebuild boot --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --repair --fallback --verbose --keep-going && sudo nix-collect-garbage --delete-older-than 2d && sudo nix-store --gc && sudo nix-store --optimise && sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair && sudo nix flake update --accept-flake-config --refresh --repair && sudo nix-channel --update && sudo nix-store --verify --check-contents --repair && sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --verbose --keep-going --fallback --recreate-lock-file --flake '/etc/nixos#nixos' && sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --repair --fallback --verbose --keep-going && sudo nixos-rebuild boot --accept-flake-config --cores 11 -j 1 --show-trace --repair --fallback --verbose --keep-going";
+			update = "cd /etc/nixos &&
+			 sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair &&
+			 sudo nix flake update --accept-flake-config --refresh --repair &&
+			 sudo nix-channel --update &&
+			 sudo nix-store --optimise &&
+			 sudo nix-store --verify --check-contents --repair";
+			buildupdate = "sudo nixos-rebuild switch --accept-flake-config --cores 10 --max-jobs --show-trace --upgrade-all --verbose --keep-going --fallback --recreate-lock-file --flake '/etc/nixos#nixos' ";
+			ultraupdate = "cd /etc/nixos &&
+			 sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair &&
+			 sudo nix flake update --accept-flake-config --refresh --repair &&
+			 sudo nix-channel --update &&
+			 sudo nix-store --optimise &&
+			 sudo nix-store --verify --check-contents --repair &&
+			 sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --verbose --keep-going --fallback --recreate-lock-file --flake '/etc/nixos#nixos' &&
+			 sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --repair --verbose --keep-going --fallback &&
+			 sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair &&
+			 sudo nix-channel --update &&
+			 sudo nixos-rebuild boot --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --repair --fallback --verbose --keep-going &&
+			 sudo nix-collect-garbage --delete-older-than 2d &&
+			 sudo nix-store --gc &&
+			 sudo nix-store --optimise &&
+			 sudo nix flake check --accept-flake-config --all-systems --recreate-lock-file --refresh --repair &&
+			 sudo nix flake update --accept-flake-config --refresh --repair &&
+			 sudo nix-channel --update &&
+			 sudo nix-store --verify --check-contents --repair &&
+			 sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --upgrade-all --verbose --keep-going --fallback --recreate-lock-file --flake '/etc/nixos#nixos' &&
+			 sudo nixos-rebuild switch --accept-flake-config --cores 11 -j 1 --show-trace --repair --fallback --verbose --keep-going &&
+			 sudo nixos-rebuild boot --accept-flake-config --cores 11 -j 1 --show-trace --repair --fallback --verbose --keep-going";
 		};
 		histSize = 10000;
 		histFile = "/home/p2949/zsh/history";

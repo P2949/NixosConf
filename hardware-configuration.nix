@@ -16,6 +16,11 @@
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/3759fdef-d2cb-40d1-8569-42e41d083814";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "nobarrier"
+      ];
     };
 
   boot.initrd.luks.devices."luks-6413f3fe-b08f-4ef7-a502-2331d530d7c1".device = "/dev/disk/by-uuid/6413f3fe-b08f-4ef7-a502-2331d530d7c1";
@@ -29,6 +34,11 @@
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/d9502c91-3386-4c7e-938a-5cb4b8885750";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "nobarrier"
+      ];
     };
 
   boot.initrd.luks.devices."luks-ad091587-982b-4a2a-9613-800a9b0487e6".device = "/dev/disk/by-uuid/ad091587-982b-4a2a-9613-800a9b0487e6";
