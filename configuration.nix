@@ -44,10 +44,17 @@ nix = {
 			"cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 			"nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
 		];
+		trusted-substituters = [
+			"https://hyprland.cachix.org/"
+			"https://cache.nixos.org/"
+			"https://cachix.cachix.org/"
+			"https://nix-community.cachix.org/"
+		];
 		sandbox = true;
 		experimental-features = [ 
 			"nix-command" 
 			"flakes" 
+			"auto-allocate-uids"
 		];
 		auto-optimise-store = true;
 		trusted-users = [
@@ -92,9 +99,12 @@ hardware = {
 			libavif
 			goldberg-emu
 			bubblewrap
+			extest
 			libsForQt5.kwindowsystem
-      		gamescope
 			kdePackages.kwindowsystem
+      gamescope
+      gamemode
+			npins
 			sdl3
 			libinput
 			SDL2
@@ -120,6 +130,7 @@ hardware = {
 			vaapi-intel-hybrid
 			intel-gmmlib
 			libx11
+			gnome-software
 			vaapiIntel        
 			vaapiVdpau
 			xed
@@ -162,6 +173,7 @@ hardware = {
 			libva
 			luajit
 			vaapiVdpau
+			xorg.libXxf86vm
 			libvdpau-va-gl
 			cairo
 			pixman
@@ -174,10 +186,12 @@ hardware = {
     
     	extraPackages32 = with pkgs.pkgsi686Linux; [ 
 			spirv-tools
+			xorg.libXxf86vm
 			SDL
 			luajit
 			sdl3
 			libinput
+			gamemode
 			libxfixes
 			libavif
 			libxmu
@@ -185,6 +199,7 @@ hardware = {
 			SDL2
 			libcap
 			xorg.libXres
+			extest
 			libxrender
 			libva
 			goldberg-emu
@@ -242,11 +257,6 @@ hardware = {
 
 	amdgpu = {
 		opencl.enable = true;
-		amdvlk = {
-	 		supportExperimental.enable = true;
-	 		support32Bit.enable = true;
-	 		enable = true;
-	 	};
 	};
 	steam-hardware.enable = true;
 
@@ -440,8 +450,8 @@ environment = {
 		__GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
 		RADV_PERFTEST = "gpl";
 		AQ_DRM_DEVICES = "/dev/dri/card1";
-		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
-		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
 		__GLX_VENDOR_LIBRARY_NAME = "mesa";
 		AMD_VULKAN_ICD = "RADV";
 		NVD_BACKEND = "direct";
@@ -479,7 +489,11 @@ environment = {
 		spotifyd
 		xorg.libXdamage
 		libxfixes
+		gamemode
+		extest
+		npins
 		luajit
+		gamemode
 		xorg.libXcomposite
 		libei
 		gamescope-wsi
@@ -494,13 +508,13 @@ environment = {
 		libx11
 		libinput
 		kdePackages.kwin
-    	kdePackages.kwin-x11
+    kdePackages.kwin-x11
 		libxmu
-    	libsForQt5.kwindowsystem
-    	kdePackages.kwindowsystem
-    	gamescope
-    	bubblewrap
-    	goldberg-emu
+    libsForQt5.kwindowsystem
+    kdePackages.kwindowsystem
+    gamescope
+    bubblewrap
+    goldberg-emu
 		spotify-player
 		nvidia_oc
 		librespot 
@@ -773,8 +787,7 @@ boot = {
   
 imports = [ 
 	./hardware-configuration.nix
-    ./cachix.nix
-];
+  ./cachix.nix];
 
 systemd = {
 
@@ -806,7 +819,7 @@ systemd = {
 		QT_QPA_PLATFORM="wayland";
 		QT_AUTO_SCREEN_SCALE_FACTOR = "1";
 		XDG_CURRENT_DESKTOP = "Hyprland";
-		PROTON_VERSION="GE-Proton10-15";
+		PROTON_VERSION="GE-Proton10-17";
 		XDG_SESSION_DESKTOP = "Hyprland";
 		__GL_VRR_ALLOWED = "1";
 		__GL_GSYNC_ALLOWED = "1";
@@ -834,8 +847,8 @@ systemd = {
 		__GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
 		RADV_PERFTEST = "gpl";
 		AQ_DRM_DEVICES = "/dev/dri/card1";
-		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
-		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
+		VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json:/run/opengl-driver/share/vulkan/icd.d/*:/run/opengl-driver-32/share/vulkan/icd.d/*";
 		__GLX_VENDOR_LIBRARY_NAME = "mesa";
 		AMD_VULKAN_ICD = "RADV";
 		NVD_BACKEND = "direct";
@@ -1001,13 +1014,16 @@ users = {
 			spotifyd
 			steamcmd
 			SDL
+			npins
 			libinput
 			xorg.libXdamage
 			sdl3
 			libxmu
 			kdePackages.kwin
 			gamescope-wsi
+			gamemode
 			luajit
+			extest
 			xorg.libXres
 			xorg.libXcomposite
       		kdePackages.kwin-x11
@@ -1029,7 +1045,7 @@ users = {
 			bc
 			dotnet-sdk_9
 			flatpak
-      		gnome-software
+      gnome-software
 			yt-dlp 
 			lxappearance
 			libx11
@@ -1216,6 +1232,17 @@ system = {
 };
 
 services = {
+	ananicy = {
+    enable = true;
+    package = pkgs.ananicy-cpp;
+    rulesProvider = pkgs.ananicy-cpp;
+    extraRules = [
+      {
+        "name" = "gamescope";
+        "nice" = -20;
+      }
+    ];
+  };
 	blueman.enable = true;
 	flatpak.enable = true;
 	xrdp.audio.enable = true;
@@ -1283,7 +1310,8 @@ services = {
 	};
 
 
-	dbus.packages = with pkgs; [
+	dbus = {
+		packages = with pkgs; [
 		glfw
 		SDL
 		inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
@@ -1293,9 +1321,16 @@ services = {
 		sdl3
 		SDL2
 		gamescope
+		gamescope-wsi
 		pass-secret-service
 		dbus
+		kdePackages.kwin
+    kdePackages.kwin-x11
+		libxmu
+    libsForQt5.kwindowsystem
+    kdePackages.kwindowsystem
 	 ];
+	};
 	fwupd.enable = true;
 	upower.enable = true;
 
@@ -1510,6 +1545,7 @@ programs = {
 				xorg.libXi
 				xorg.libXinerama
 				gamescope-wsi
+				extest
 				xorg.libXScrnSaver
 				libpng
 				libpulseaudio
@@ -1521,6 +1557,7 @@ programs = {
 				mesa
 				intel-media-driver 
 				SDL
+				gamemode
 				sdl3
 				xorg.libXi
 				libxfixes
@@ -1612,6 +1649,7 @@ programs = {
 				xorg.libXi
 				xorg.libXinerama
 				xorg.libXScrnSaver
+				gamemode
 				gamescope-wsi
 				libpng
 				libpulseaudio
@@ -1620,7 +1658,8 @@ programs = {
 				libkrb5
 				keyutils
 				mesa
-				intel-media-driver 
+				intel-media-driver
+				extest
 				wlr-protocols
 				intel-vaapi-driver
 				libxmu
@@ -1721,6 +1760,7 @@ programs = {
 			egl-wayland
 			seatd
 			ffmpeg-full
+			extest
 			SDL
 			libinput
 			libxmu
@@ -1728,6 +1768,7 @@ programs = {
 			libei
 			libcap
 			libavif
+			gamemode
 			libxfixes
 			xorg.libXcomposite
 			xorg.libXdamage
@@ -1812,8 +1853,12 @@ programs = {
 			spotify-tray
 			xorg.libXcomposite
 			nvtopPackages.full
+			npins
+			extest
+			gamemode
 			libxmu
 			gamescope-wsi
+			gnome-software
 			libcap
 			xorg.libXi
 			spotify-player
@@ -2108,6 +2153,7 @@ programs = {
 			vulkan-loader
 			vulkan-headers
 			vulkan-tools-lunarg
+			flatpak
 			vulkan-extension-layer
 			vulkan-utility-libraries
 			libva
@@ -2146,7 +2192,7 @@ programs = {
 
 	gamescope = {
 		enable = true; 
-		capSysNice = true;
+		capSysNice = false;
 		package = pkgs.gamescope;
 	};
 
