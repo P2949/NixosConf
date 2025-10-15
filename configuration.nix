@@ -6,12 +6,12 @@
 {
 
 networking = {
-	useDHCP = true;
+	useDHCP = false;
 	dhcpcd = {
-		enable = true;
-		persistent = true;
+		enable = false;
+		persistent = false;
 	};
-	useNetworkd = false;
+	useNetworkd = true;
 
 	hostName = "nixos"; # Define your hostname.
 	# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -21,7 +21,7 @@ networking = {
 	# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
 	# Enable networking
-	networkmanager.enable = false;
+	networkmanager.enable = true;
 
 	nftables.enable = true;
 
@@ -102,8 +102,8 @@ hardware = {
 			extest
 			libsForQt5.kwindowsystem
 			kdePackages.kwindowsystem
-      gamescope
-      gamemode
+			gamescope
+			gamemode
 			npins
 			sdl3
 			libinput
@@ -122,7 +122,6 @@ hardware = {
 			wlr-protocols
 			nvidia-modprobe
 			intel-gpu-tools
-			intel-graphics-compiler
 			spirv-tools
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
 			inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
@@ -240,7 +239,6 @@ hardware = {
 			glfw3-minecraft
 			xorg.libXtst
 			vaapi-intel-hybrid
-			intel-graphics-compiler
 			xed
 			intel-gmmlib
 			xorg.xf86inputevdev
@@ -409,13 +407,13 @@ environment = {
 		XCURSOR_THEME = "Adwaita:dark";
 		HYPRCURSOR_THEME = "Adwaita:dark";
 		WLR_DRM_NO_ATOMIC = "1";
-		SDL_VIDEODRIVER = "wayland";
+		SDL_VIDEODRIVER = "wayland,x11";
 		MOZ_ENABLE_WAYLAND = "1";
 		_JAVA_AWT_WM_NONREPARENTING = "1";
 		CLUTTER_BACKEND = "wayland";
 		GTK_USE_PORTAL = "1";
 		NIXOS_XDG_OPEN_USE_PORTAL = "1";
-		GDK_BACKEND = "wayland";
+		GDK_BACKEND = "wayland,x11";
 		QT_QPA_PLATFORM="wayland";
 		QT_AUTO_SCREEN_SCALE_FACTOR = "1";
 		XDG_CURRENT_DESKTOP = "Hyprland";
@@ -479,23 +477,23 @@ environment = {
 	];
 
 	systemPackages = with pkgs; [
-		(discord-canary.override {
-      		withOpenASAR = true;
-    		withVencord = true; # can do this here too
-    	})
 		bc
+		psmisc
 		nvtopPackages.full
 		steamcmd
+		jetbrains.idea-community-bin
 		spotifyd
 		xorg.libXdamage
 		libxfixes
 		gamemode
 		extest
+		pkgsi686Linux.extest
 		npins
 		luajit
 		gamemode
 		xorg.libXcomposite
 		libei
+		desktop-file-utils
 		gamescope-wsi
 		libavif
 		xorg.libXres
@@ -508,13 +506,13 @@ environment = {
 		libx11
 		libinput
 		kdePackages.kwin
-    kdePackages.kwin-x11
+    	kdePackages.kwin-x11
 		libxmu
-    libsForQt5.kwindowsystem
-    kdePackages.kwindowsystem
-    gamescope
-    bubblewrap
-    goldberg-emu
+    	libsForQt5.kwindowsystem
+    	kdePackages.kwindowsystem
+    	gamescope
+    	bubblewrap
+    	goldberg-emu
 		spotify-player
 		nvidia_oc
 		librespot 
@@ -537,13 +535,10 @@ environment = {
 		adwaita-qt6
 		adwaita-icon-theme
 		spirv-tools
-		discord-gamesdk
 		vencord
 		vencord-web-extension
 		webcord-vencord
 		lutris
-		discord-rpc
-		discord-canary
 		cachix
 		xsettingsd
 		gnumake
@@ -585,8 +580,6 @@ environment = {
 		glibmm
 		libglibutil
 		glibcInfo
-		betterdiscordctl
-		betterdiscord-installer
 		glibc_multi
 		glibcLocales
 		libdrm
@@ -603,9 +596,6 @@ environment = {
 		nvidia-docker
 		liquidctl
 		nodejs_22
-		nvidia_cg_toolkit
-		nvidia-texture-tools
-		nvidia-optical-flow-sdk
 		nv-codec-headers-12
 		xdg-utils
 		xdg-desktop-portal
@@ -646,10 +636,6 @@ environment = {
 		nvidia-vaapi-driver
 		nvidia-vaapi-driver
 		xorg.xhost
-		nvidia-docker
-		nvidia_cg_toolkit
-		nvidia-texture-tools
-		nvidia-optical-flow-sdk
 	];
 
 };
@@ -701,7 +687,7 @@ boot = {
 			enable = true;
 			udhcpc.enable = false;
 		};
-		services.resolved.enable = true;
+		services.resolved.enable = false;
 		systemd = {
 			dbus.enable = true;
 			enable = true;
@@ -729,6 +715,10 @@ boot = {
 		options nvidia NVreg_InitializeSystemMemoryAllocations=0
 		options nvidia NVreg_UsePageAttributeTable=1
 		options i915 force_probe=9bc5
+		options i965 force_probe=9bc5
+		options i965 enable_guc=3
+		options i965 enable_fbc=1
+		options i965 fastboot=1
 		options nvidia NVreg_EnableGpuFirmware=1
 		options nvidia NVreg_EnableResizableBar=1
 		options nvidia NVreg_PreserveVideoMemoryAllocations=1
@@ -736,6 +726,16 @@ boot = {
 		options i915 enable_fbc=1
 		options i915 fastboot=1
 		options nvidia-drm fbdev=1
+		options nvidia NVreg_EnableGpuFirmware=1
+		options nvidia NVreg_ModifyDeviceFiles=1
+		options nvidia NVreg_EnablePCIeGen3=1
+		options nvidia NVreg_UsePageAttributeTable=1
+		options nvidia NVreg_EnableVia4x=1
+		options nvidia NVreg_EnableALiAGP=8
+		options nvidia NVreg_ReqAGPRate=8
+		options nvidia NVreg_NvAGP=3
+		options nvidia NVreg_EnableAGPSBA=1
+		options nvidia NVreg_EnableAGPFW=1
 	'';
 
 	kernelModules = [
@@ -754,6 +754,16 @@ boot = {
 	];
 
 	kernelParams = [ 
+		"nvidia.NVreg_EnableGpuFirmware=1"
+		"nvidia.NVreg_ModifyDeviceFiles=1"
+		"nvidia.NVreg_EnablePCIeGen3=1"
+		"nvidia.NVreg_UsePageAttributeTable=1"
+		"nvidia.NVreg_EnableVia4x=1"
+		"nvidia.NVreg_EnableALiAGP=8"
+		"nvidia.NVreg_ReqAGPRate=8"
+		"nvidia.NVreg_NvAGP=3"
+		"nvidia.NVreg_EnableAGPSBA=1"
+		"nvidia.NVreg_EnableAGPFW=1"
 		"nvidia.nvidia_drm.modeset=1" 
 		"pcie_aspm=off"
 		"nvme_core.default_ps_max_latency_us=0"
@@ -774,6 +784,10 @@ boot = {
 		"i915.enable_guc=3" 
 		"i915.enable_fbc=1" 
 		"i915.fastboot=1" 
+		"i965.enable_guc=3" 
+		"i965.enable_fbc=1" 
+		"i965.fastboot=1" 
+		"i965.force_probe=9bc5" 
 		"nvidia-drm.fbdev=1"
 		"module_blacklist=nouveau"
 		"cgroup_no_v1=all" 
@@ -791,7 +805,7 @@ imports = [
 
 systemd = {
 
-	network.enable = false;
+	network.enable = true;
 
 	globalEnvironment = {
 		__GL_SHADER_DISK_CACHE = "1";
@@ -808,13 +822,13 @@ systemd = {
 		XCURSOR_THEME = "Adwaita:dark";
 		HYPRCURSOR_THEME = "Adwaita:dark";
     		WLR_DRM_NO_ATOMIC = "1";
-		SDL_VIDEODRIVER = "wayland";
+		SDL_VIDEODRIVER = "wayland,x11";
 		MOZ_ENABLE_WAYLAND = "1";
 		_JAVA_AWT_WM_NONREPARENTING = "1";
 		CLUTTER_BACKEND = "wayland";
 		GTK_USE_PORTAL = "1";
 		NIXOS_XDG_OPEN_USE_PORTAL = "1";
-		GDK_BACKEND = "wayland";
+		GDK_BACKEND = "wayland,x11";
 		LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${pkgs.linuxPackages.nvidia_x11}/lib/:${pkgs.wayland}/lib/:${pkgs.sdl3}/lib/:${pkgs.xorg.libXdamage}/lib/";
 		QT_QPA_PLATFORM="wayland";
 		QT_AUTO_SCREEN_SCALE_FACTOR = "1";
@@ -1007,18 +1021,18 @@ users = {
 					harfbuzz
       			];
     		})
-    			(discord-canary.override {
-      			withOpenASAR = true;
-    			withVencord = true; # can do this here too
-    		})
 			spotifyd
 			steamcmd
 			SDL
 			npins
+			pkgsi686Linux.extest
+			psmisc
 			libinput
 			xorg.libXdamage
+			desktop-file-utils
 			sdl3
 			libxmu
+			jetbrains.idea-community-bin
 			kdePackages.kwin
 			gamescope-wsi
 			gamemode
@@ -1045,7 +1059,7 @@ users = {
 			bc
 			dotnet-sdk_9
 			flatpak
-      gnome-software
+      		gnome-software
 			yt-dlp 
 			lxappearance
 			libx11
@@ -1059,12 +1073,9 @@ users = {
 			libarchive
 			openssl
 			gnumake
-			discord-gamesdk
 			nvtopPackages.full
-			discord-rpc
 			cairo
 			pixman
-			discord-canary
 			lxappearance-gtk2
 			adwaita-qt6
 			adwaita-icon-theme
@@ -1125,8 +1136,6 @@ users = {
 			qt6.qtwayland
 			protonup-qt
 			lutris	
-			betterdiscordctl
-			betterdiscord-installer
 			ncspot
 			librespot
 			gamemode
@@ -1159,7 +1168,6 @@ users = {
 			gh
 			mpv
 			audacity
-			stacer
 			libvdpau
 			libxcursor
 			libvdpau-va-gl
@@ -1193,11 +1201,6 @@ users = {
 			libnvidia-container
 			nvidia-vaapi-driver
 			libxrender
-			nvidia-vaapi-driver
-			nvidia-docker
-			nvidia_cg_toolkit
-			nvidia-texture-tools
-			nvidia-optical-flow-sdk
     	];
   	};
 };
@@ -1340,9 +1343,10 @@ services = {
 	#jack.loopback.enable = true;
 
 	resolved = {
-		enable = true;
-		extraConfig = "DNS=194.242.2.4#base.dns.mullvad.net\n
+		enable = false;
+		extraConfig = "DNS=194.242.2.4\n
 				   	   DNSSEC=no\n
+					   LLMNR=no\n
 				   	   DNSOverTLS=yes\n
 				   	   Domains=~\n";	
 	};
@@ -1546,6 +1550,7 @@ programs = {
 				xorg.libXinerama
 				gamescope-wsi
 				extest
+				pkgsi686Linux.extest
 				xorg.libXScrnSaver
 				libpng
 				libpulseaudio
@@ -1580,7 +1585,6 @@ programs = {
 				libxkbcommon
 				libarchive
 				openssl
-				intel-graphics-compiler
 				libx11
 				spirv-tools
 				inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
@@ -1650,6 +1654,7 @@ programs = {
 				xorg.libXinerama
 				xorg.libXScrnSaver
 				gamemode
+				pkgsi686Linux.extest
 				gamescope-wsi
 				libpng
 				libpulseaudio
@@ -1677,7 +1682,6 @@ programs = {
 				libcap
 				sdl3
 				SDL2
-				intel-graphics-compiler
 				spirv-tools
 				vaapi-intel-hybrid
 				cairo
@@ -1748,6 +1752,7 @@ programs = {
 			xorg.libXcursor
 			xorg.libXi
 			xorg.libXinerama
+			pkgsi686Linux.extest
 			gamescope-wsi
 			xorg.libXScrnSaver
 			libpng
@@ -1829,8 +1834,6 @@ programs = {
 			gtk4
 			libxrender
 			gtk3-x11
-			nvidia-texture-tools
-			nvidia-optical-flow-sdk
 			nv-codec-headers-12
 		];
 
@@ -1842,27 +1845,27 @@ programs = {
 	nix-ld = {
 		enable = true;
 		libraries =  with pkgs;[
-			(discord-canary.override {
-				withOpenASAR = true;
-				withVencord = true; # can do this here too
-			})
 			steamcmd
 			seatd
 			libei
+			pkgsi686Linux.extest
 			spotifyd
 			spotify-tray
 			xorg.libXcomposite
 			nvtopPackages.full
 			npins
 			extest
+			jetbrains.idea-community-bin
 			gamemode
 			libxmu
 			gamescope-wsi
 			gnome-software
 			libcap
 			xorg.libXi
+			desktop-file-utils
 			spotify-player
 			librespot
+			psmisc
 			xorg.libXdamage
 			xorg.libXres
 			lxappearance
@@ -1908,7 +1911,6 @@ programs = {
 			libgtkflow3
 			yt-dlp
 			nvidia_oc
-			discord-rpc
 			vencord
 			vencord-web-extension
 			webcord-vencord
@@ -1916,11 +1918,7 @@ programs = {
 			bc
 			cairo
 			pixman
-			discord-canary
 			dotnet-sdk_9 
-			betterdiscordctl
-			betterdiscord-installer
-			discord-gamesdk
 			lxappearance-gtk2
 			pango
 			libthai
@@ -2028,7 +2026,6 @@ programs = {
 			grimblast
 			mpv
 			audacity
-			stacer
 			libva
 			virtualglLib
 			libvdpau-va-gl
@@ -2057,7 +2054,6 @@ programs = {
 			nvidia-vaapi-driver
 			nvidia-docker
 			nvidia_cg_toolkit
-			nvidia-texture-tools
 			nvidia-optical-flow-sdk
 			pciutils
 			zsh-syntax-highlighting
@@ -2103,7 +2099,6 @@ programs = {
 			nvidia-vaapi-driver
 			nvidia-docker
 			nvidia_cg_toolkit
-			nvidia-texture-tools
 			nvidia-optical-flow-sdk
 			nv-codec-headers-12
 			xdg-utils
@@ -2139,10 +2134,6 @@ programs = {
 			libnvidia-container
 			nvidia-vaapi-driver
 			nvidia-vaapi-driver
-			nvidia-docker
-			nvidia_cg_toolkit
-			nvidia-texture-tools
-			nvidia-optical-flow-sdk
 			ffmpeg-full
 			onlyoffice-bin
 			wineWowPackages.stable
@@ -2182,11 +2173,6 @@ programs = {
 			config.boot.kernelPackages.nvidia_x11_beta_open
 			libnvidia-container
 			nvidia-vaapi-driver
-			nvidia-vaapi-driver
-			nvidia-docker
-			nvidia_cg_toolkit
-			nvidia-texture-tools
-			nvidia-optical-flow-sdk
 		]; 
 	};
 
