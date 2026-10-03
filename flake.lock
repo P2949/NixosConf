@@ -20,6 +20,23 @@
         "type": "github"
       }
     },
+    "liquidctl-pr886": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782155786,
+        "narHash": "sha256-DRrnLrG1hqXdQcQu8fHyViYkwBsCgsULvFK2hFv3bK0=",
+        "owner": "indyfive11",
+        "repo": "liquidctl",
+        "rev": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59",
+        "type": "github"
+      },
+      "original": {
+        "owner": "indyfive11",
+        "repo": "liquidctl",
+        "rev": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1790920529,
@@ -39,6 +56,7 @@
     "root": {
       "inputs": {
         "disko": "disko",
+        "liquidctl-pr886": "liquidctl-pr886",
         "nixpkgs": "nixpkgs"
       }
     }

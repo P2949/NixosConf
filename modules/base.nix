@@ -83,7 +83,6 @@
     efibootmgr
     usbutils
     lm_sensors
-    liquidctl
 
     tree
     file
