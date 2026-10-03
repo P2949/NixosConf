@@ -1,0 +1,110 @@
+{
+  disko.devices = {
+    disk.main = {
+      type = "disk";
+      device = "/dev/disk/by-id/nvme-Force_MP600_2046822900012855404A";
+
+      content = {
+        type = "gpt";
+
+        partitions = {
+          ESP = {
+            priority = 1;
+            size = "4G";
+            type = "EF00";
+
+            content = {
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot";
+              mountOptions = [
+                "umask=0077"
+              ];
+            };
+          };
+
+          swap = {
+            priority = 2;
+            size = "32G";
+
+            content = {
+              type = "swap";
+              discardPolicy = "both";
+            };
+          };
+
+          root = {
+            priority = 3;
+            size = "100%";
+
+            content = {
+              type = "btrfs";
+
+              extraArgs = [
+                "-f"
+                "-L"
+                "nixos"
+              ];
+
+              subvolumes = {
+                "@root" = {
+                  mountpoint = "/";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+
+                "@home" = {
+                  mountpoint = "/home";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+
+                "@nix" = {
+                  mountpoint = "/nix";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+
+                "@var" = {
+                  mountpoint = "/var";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+
+                "@optimization" = {
+                  mountpoint = "/var/lib/nixos-optimization";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+
+                "@snapshots" = {
+                  mountpoint = "/.snapshots";
+                  mountOptions = [
+                    "compress=zstd:1"
+                    "noatime"
+                    "discard=async"
+                  ];
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}
