@@ -80,6 +80,7 @@
     htop
 
     pciutils
+    efibootmgr
     usbutils
     lm_sensors
     liquidctl
