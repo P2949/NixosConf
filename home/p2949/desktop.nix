@@ -7,10 +7,6 @@
     thunar
     fuzzel
 
-    # Desktop shell
-    waybar
-    mako
-
     # Wayland utilities
     wl-clipboard
     grim
@@ -24,14 +20,16 @@
     vscode
   ];
 
-  # Hyprland itself remains a NixOS/system responsibility.
-  # Home Manager owns only its per-user configuration.
   xdg.configFile."hypr/hyprland.lua".source =
     ./hyprland.lua;
 
-  # hyprpolkitagent installs its executable under libexec rather than bin.
-  # Manage it as a graphical-session systemd user service, matching
-  # upstream's intended UWSM/systemd setup.
+  programs.waybar = {
+    enable = true;
+    systemd.enable = true;
+  };
+
+  services.mako.enable = true;
+
   systemd.user.services.hyprpolkitagent = {
     Unit = {
       Description = "Hyprland Polkit Authentication Agent";

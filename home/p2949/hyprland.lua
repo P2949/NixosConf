@@ -45,20 +45,6 @@ hl.monitor({
 local terminal = "alacritty"
 local menu = "fuzzel"
 
------------------
---- AUTOSTART ---
------------------
-
--- UWSM owns the graphical session and XDG environment.  Hyprland's
--- integrated XWayland is enabled by the NixOS module, so there is no
--- xwayland-satellite startup here.
---
--- These are lightweight session helpers without NixOS user services yet.
-hl.on("hyprland.start", function()
-    hl.exec_cmd("waybar")
-    hl.exec_cmd("mako")
-end)
-
 ---------------------------------
 --- CONFIGURATION AND OPTIONS ---
 ---------------------------------
