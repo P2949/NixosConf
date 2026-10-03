@@ -52,33 +52,13 @@
   programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # Core Hyprland desktop
-    alacritty
-    thunar
-    fuzzel
-
-    waybar
-    mako
-    hyprpolkitagent
-
-    wl-clipboard
-
-    grim
-    slurp
-
-    brightnessctl
-    pavucontrol
-
-    # Useful desktop debugging
+    # System / graphics diagnostics
     vulkan-tools
     mesa-demos
 
-    # Gaming
+    # Gaming infrastructure
     gamescope
     mangohud
-
-    # Work
-    vscode
   ];
 
   environment.sessionVariables = {
