@@ -14,6 +14,12 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Known-good Commander Core support used on the previous Gentoo system.
     liquidctl-pr886 = {
       url = "github:indyfive11/liquidctl/48e8dd07bdc1c5dca330a844aca7fb22218e6e59";
@@ -26,6 +32,7 @@
       nixpkgs,
       home-manager,
       disko,
+      impermanence,
       ...
     }:
     let
@@ -49,6 +56,7 @@
         modules = [
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
+          impermanence.nixosModules.impermanence
 
           ./hosts/desktop
 
