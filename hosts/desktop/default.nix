@@ -8,6 +8,8 @@
     ../../profiles/workstation.nix
 
     ../../modules/hardware/commander-core
+
+    ../../optimization
   ];
 
   networking.hostName = "desktop";
