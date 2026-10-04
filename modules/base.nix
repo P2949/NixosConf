@@ -83,6 +83,7 @@
     efibootmgr
     usbutils
     lm_sensors
+    alsa-utils
 
     tree
     file
