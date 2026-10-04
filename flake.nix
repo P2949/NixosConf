@@ -81,6 +81,16 @@
         inherit pkgs;
         inherit (nixpkgs) lib;
       };
+
+      optimizationCpuCodegen = import ./optimization/stages/cpu-codegen.nix {
+        inherit (nixpkgs) lib;
+      };
+
+      optimizationZstdSkylake = optimizationCpuCodegen {
+        package = pkgs.zstd;
+        march = "skylake";
+        mtune = "skylake";
+      };
     in
     {
 
@@ -163,6 +173,7 @@
         };
 
         optimization-runtime-capture = optimizationRuntimeCapture;
+        optimization-zstd-skylake = optimizationZstdSkylake;
       };
 
       apps.${system}.optimization-runtime-capture = {
