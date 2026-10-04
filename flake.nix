@@ -38,6 +38,34 @@
         inherit system;
         config.allowUnfree = true;
       };
+
+      desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
+
+        specialArgs = {
+          inherit inputs username pkgsUnstable;
+        };
+
+        modules = [
+          disko.nixosModules.disko
+          home-manager.nixosModules.home-manager
+
+          ./hosts/desktop
+
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+
+              extraSpecialArgs = {
+                inherit inputs username pkgsUnstable;
+              };
+
+              users.${username} = import ./home/p2949;
+            };
+          }
+        ];
+      };
     in
     {
 
@@ -104,32 +132,14 @@
             '';
       };
 
-      nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-        inherit system;
+      nixosConfigurations.desktop = desktop;
 
-        specialArgs = {
-          inherit inputs username pkgsUnstable;
-        };
+      packages.${system}.optimization-manifest = import ./optimization/manifest.nix {
+        inherit pkgs inputs;
 
-        modules = [
-          disko.nixosModules.disko
-          home-manager.nixosModules.home-manager
-
-          ./hosts/desktop
-
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-
-              extraSpecialArgs = {
-                inherit inputs username pkgsUnstable;
-              };
-
-              users.${username} = import ./home/p2949;
-            };
-          }
-        ];
+        repository = inputs.self;
+        systemConfig = desktop;
+        baseline = import ./optimization/baseline.nix;
       };
     };
 }
