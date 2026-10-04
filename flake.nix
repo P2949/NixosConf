@@ -46,9 +46,62 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = [
           pkgs.nixfmt
+          pkgs.nixfmt-tree
           pkgs.deadnix
           pkgs.statix
         ];
+      };
+
+      checks.${system} = {
+        formatting =
+          pkgs.runCommand "check-nix-formatting"
+            {
+              src = ./.;
+              nativeBuildInputs = [
+                pkgs.nixfmt-tree
+              ];
+            }
+            ''
+              cp -r "$src" source
+              chmod -R u+w source
+              cd source
+
+              treefmt             --ci             --tree-root .             --walk filesystem
+
+              touch "$out"
+            '';
+
+        statix =
+          pkgs.runCommand "check-statix"
+            {
+              src = ./.;
+              nativeBuildInputs = [
+                pkgs.statix
+              ];
+            }
+            ''
+              cd "$src"
+
+              statix check .
+
+              touch "$out"
+            '';
+
+        deadnix =
+          pkgs.runCommand "check-deadnix"
+            {
+              src = ./.;
+              nativeBuildInputs = [
+                pkgs.deadnix
+              ];
+            }
+            ''
+              cd "$src"
+
+              deadnix             --fail             --exclude hosts/desktop/hardware-configuration.nix             --             .
+
+              touch "$out"
+            '';
       };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
