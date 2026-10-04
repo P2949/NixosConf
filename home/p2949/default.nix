@@ -4,6 +4,7 @@
   imports = [
     ./desktop.nix
     ./development.nix
+    ./shell.nix
   ];
 
   home = {
