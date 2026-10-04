@@ -76,6 +76,11 @@
         inherit pkgs;
         filter = ./optimization/runtime/manifest.jq;
       };
+
+      optimizationExperimentModelCheck = import ./optimization/experiment/check.nix {
+        inherit pkgs;
+        inherit (nixpkgs) lib;
+      };
     in
     {
 
@@ -143,6 +148,7 @@
 
         runtime-capture = optimizationRuntimeCapture;
         runtime-manifest = optimizationRuntimeManifestCheck;
+        experiment-model = optimizationExperimentModelCheck;
       };
 
       nixosConfigurations.desktop = desktop;
