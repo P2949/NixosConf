@@ -11,6 +11,8 @@ let
 in
 {
   home.packages = [
+    pkgs.clang-tools
+
     unstable.pkgsRocm.blender
   ];
 }
