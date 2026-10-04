@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./desktop.nix
-    ./development.nix
+    ./desktop
+    ./development
     ./shell.nix
   ];
 

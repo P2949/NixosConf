@@ -1,8 +1,4 @@
-{
-  pkgs,
-  pkgsUnstable,
-  ...
-}:
+{ pkgs, ... }:
 
 let
   unrealFhs =
@@ -30,10 +26,6 @@ let
 in
 {
   home.packages = [
-    pkgs.clang-tools
-    pkgs.nixfmt
-
-    pkgsUnstable.pkgsRocm.blender
     unrealFhs
     unrealEngine
   ];
