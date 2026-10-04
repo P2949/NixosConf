@@ -1,1 +1,322 @@
-basic nixos config.
+# NixosConf
+
+Declarative NixOS configuration for the primary desktop workstation.
+
+The repository is intentionally organized around a simple rule:
+
+> **Hosts contain facts, modules contain features, profiles compose features, Home Manager contains user policy, packages build software, and optimization contains experiments.**
+
+The current configuration targets NixOS 26.05 and is built around a single `desktop` host.
+
+## Repository structure
+
+```text
+.
+├── flake.nix
+├── flake.lock
+├── statix.toml
+│
+├── hosts/
+│   └── desktop/
+│       ├── default.nix
+│       ├── hardware-configuration.nix
+│       └── disko.nix
+│
+├── profiles/
+│   └── workstation.nix
+│
+├── modules/
+│   ├── core/
+│   ├── desktop/
+│   ├── gaming/
+│   ├── compatibility/
+│   └── hardware/
+│       └── commander-core/
+│           ├── default.nix
+│           └── keeper.py
+│
+├── packages/
+│   └── liquidctl-pr886.nix
+│
+├── home/
+│   └── p2949/
+│       ├── default.nix
+│       ├── shell.nix
+│       ├── desktop/
+│       │   ├── default.nix
+│       │   ├── appearance.nix
+│       │   ├── hyprland.nix
+│       │   ├── hyprland.lua
+│       │   ├── waybar.nix
+│       │   └── notifications.nix
+│       └── development/
+│           ├── default.nix
+│           ├── blender.nix
+│           └── unreal.nix
+│
+└── optimization/
+    └── default.nix
+```
+
+## Architecture
+
+### `hosts/`
+
+Host-specific facts and policy belong here.
+
+For the desktop this includes:
+
+- hostname
+- bootloader configuration
+- CPU microcode
+- firmware policy
+- disk layout
+- Btrfs maintenance
+- Commander Core device identity and cooling policy
+- `system.stateVersion`
+
+The host composes the workstation profile and hardware-specific modules.
+
+### `profiles/`
+
+Profiles describe machine roles.
+
+`profiles/workstation.nix` composes the reusable workstation features and enables simple workstation policy such as:
+
+- NetworkManager
+- Bluetooth
+- Polkit
+- UDisks/GVfs
+- Firefox
+
+### `modules/`
+
+Reusable NixOS functionality lives here.
+
+Current groups include:
+
+- `core` — Nix policy, locale, users, and baseline packages
+- `desktop` — graphics, PipeWire, Hyprland, and portals
+- `gaming` — Steam, GameMode, Gamescope, and MangoHud
+- `compatibility` — `nix-ld`
+- `hardware/commander-core` — reusable Commander Core cooling support
+
+### `home/`
+
+Home Manager owns user-session policy.
+
+Desktop configuration is separated into:
+
+- applications
+- appearance
+- Hyprland/session integration
+- Waybar
+- notifications
+
+Development configuration is separated into:
+
+- general development tools
+- Blender
+- Unreal Engine support
+
+### `packages/`
+
+Custom package derivations belong here.
+
+`packages/liquidctl-pr886.nix` builds the pinned Liquidctl revision required by the Commander Core implementation.
+
+### `optimization/`
+
+Reserved for controlled system optimization experiments.
+
+This area is intentionally kept separate from the productive workstation configuration. CPU tuning, compiler tuning, LTO, PGO, and BOLT work should be introduced here only after establishing a stable architectural baseline.
+
+## Stable and unstable nixpkgs
+
+The main system uses the NixOS 26.05 nixpkgs branch.
+
+A single `pkgsUnstable` package set is created at the flake boundary and passed to modules that explicitly require unstable software.
+
+At present, Blender is sourced from unstable for the ROCm-enabled build.
+
+This keeps unstable package usage explicit rather than allowing individual modules to instantiate independent package sets.
+
+## Home Manager
+
+Home Manager is integrated as a NixOS module and uses the same stable package set as the system through:
+
+```nix
+useGlobalPkgs = true;
+useUserPackages = true;
+```
+
+The user identity is defined once at the flake boundary and passed to both NixOS and Home Manager.
+
+## Commander Core cooling
+
+The Corsair Commander Core is managed declaratively.
+
+The implementation consists of:
+
+```text
+host cooling policy
+        ↓
+hardware.commanderCore options
+        ↓
+Commander Core NixOS module
+        ↓
+keeper.py
+        ↓
+pinned Liquidctl PR #886 build
+```
+
+The desktop currently uses:
+
+- base fan duty: 60%
+- high fan duty: 100%
+- pump duty: 100%
+- high temperature threshold: 65 °C
+- low temperature threshold: 60 °C
+
+The module uses systemd supervision and watchdog support.
+
+## Unreal Engine
+
+Unreal Engine itself is **not packaged by Nix**.
+
+The externally installed engine currently lives at:
+
+```text
+~/Development/Unreal/Engines/UE_5.8.2
+```
+
+Home Manager provides:
+
+- the required Steam FHS runtime environment
+- an `unreal-engine` launcher
+
+The wrapper launches the external Unreal installation inside the compatibility environment.
+
+This distinction is intentional: Nix manages the launcher/runtime integration, not the Unreal Engine installation itself.
+
+## Common commands
+
+Build the desktop configuration without switching:
+
+```bash
+nix build \
+  '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+  --no-link
+```
+
+Check what activation would change:
+
+```bash
+sudo nixos-rebuild dry-activate --flake '.#desktop'
+```
+
+Activate the configuration:
+
+```bash
+sudo nixos-rebuild switch --flake '.#desktop'
+```
+
+Run all repository checks:
+
+```bash
+nix flake check --print-build-logs
+```
+
+Format the repository:
+
+```bash
+nix fmt
+```
+
+Verify formatting without modifying files:
+
+```bash
+nix fmt -- --ci
+```
+
+Enter the repository development environment:
+
+```bash
+nix develop
+```
+
+The development shell contains:
+
+- `nixfmt`
+- `nixfmt-tree`
+- `deadnix`
+- `statix`
+
+## Lint policy
+
+Statix is configured by `statix.toml`.
+
+Two style-only rules are intentionally disabled:
+
+- `empty_pattern`
+- `repeated_keys`
+
+Module-style argument patterns such as `{ ... }:` and separate dotted module option assignments are intentionally accepted.
+
+`hardware-configuration.nix` is generated by `nixos-generate-config`. It is formatted with the rest of the repository but excluded from Deadnix's unused-argument check.
+
+## CI
+
+GitHub Actions runs:
+
+```bash
+nix flake check --print-build-logs
+```
+
+The flake exposes reproducible checks for:
+
+- Nix formatting
+- Statix
+- Deadnix
+
+CI deliberately does not build the complete workstation closure.
+
+## Baselines
+
+The known-good productive workstation before the architecture refactor is tagged:
+
+```text
+nixos-26.05-productive-baseline
+```
+
+That baseline includes the functional workstation configuration before repository restructuring.
+
+After the architecture branch is fully validated and merged, a separate architecture baseline should be tagged before optimization work begins.
+
+## Optimization development
+
+Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
+
+The intended progression is:
+
+```text
+stock baseline
+    ↓
+CPU-specific code generation
+    ↓
+conservative compiler tuning
+    ↓
+LTO
+    ↓
+PGO
+    ↓
+BOLT
+    ↓
+validated combinations
+```
+
+Each stage should remain independently identifiable and benchmarkable.
+
+PGO/BOLT infrastructure should preserve provenance and fail closed when profile or binary identity does not match the expected derivation.
+
+BOLT outputs must be represented as new immutable Nix derivations rather than modifying files in `/nix/store`.
