@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ./persistence.nix
 
     ../../profiles/workstation.nix
 

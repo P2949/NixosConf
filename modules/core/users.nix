@@ -15,6 +15,7 @@
     ];
 
     shell = pkgs.zsh;
+    hashedPasswordFile = "/persist/secrets/${username}-password-hash";
   };
 
   programs.zsh.enable = true;

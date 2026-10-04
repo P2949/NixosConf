@@ -69,6 +69,11 @@ in
                   mountOptions = btrfsMountOptions;
                 };
 
+                "@persist" = {
+                  mountpoint = "/persist";
+                  mountOptions = btrfsMountOptions;
+                };
+
                 "@var" = {
                   mountpoint = "/var";
                   mountOptions = btrfsMountOptions;
@@ -90,4 +95,6 @@ in
       };
     };
   };
+
+  fileSystems."/persist".neededForBoot = true;
 }
