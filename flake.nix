@@ -66,6 +66,16 @@
           }
         ];
       };
+
+      optimizationRuntimeCapture = import ./optimization/runtime/capture.nix {
+        inherit pkgs;
+        repository = inputs.self;
+      };
+
+      optimizationRuntimeManifestCheck = import ./optimization/runtime/check.nix {
+        inherit pkgs;
+        filter = ./optimization/runtime/manifest.jq;
+      };
     in
     {
 
@@ -130,16 +140,32 @@
 
               touch "$out"
             '';
+
+        runtime-capture = optimizationRuntimeCapture;
+        runtime-manifest = optimizationRuntimeManifestCheck;
       };
 
       nixosConfigurations.desktop = desktop;
 
-      packages.${system}.optimization-manifest = import ./optimization/manifest.nix {
-        inherit pkgs inputs;
+      packages.${system} = {
+        optimization-manifest = import ./optimization/manifest.nix {
+          inherit pkgs inputs;
 
-        repository = inputs.self;
-        systemConfig = desktop;
-        baseline = import ./optimization/baseline.nix;
+          repository = inputs.self;
+          systemConfig = desktop;
+          baseline = import ./optimization/baseline.nix;
+        };
+
+        optimization-runtime-capture = optimizationRuntimeCapture;
+      };
+
+      apps.${system}.optimization-runtime-capture = {
+        type = "app";
+        program = "${optimizationRuntimeCapture}/bin/nixos-optimization-runtime-capture";
+
+        meta = {
+          description = "Capture runtime state for NixOS optimization experiments";
+        };
       };
     };
 }
