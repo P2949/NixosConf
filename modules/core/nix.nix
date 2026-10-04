@@ -10,7 +10,6 @@
     ];
 
     trusted-users = [
-      "root"
       username
     ];
 
