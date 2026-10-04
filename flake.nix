@@ -91,6 +91,36 @@
         march = "skylake";
         mtune = "skylake";
       };
+
+      optimizationBuildManifest = import ./optimization/manifest.nix {
+        inherit pkgs inputs;
+
+        repository = inputs.self;
+        systemConfig = desktop;
+        baseline = import ./optimization/baseline.nix;
+      };
+
+      optimizationZstdSilesiaCorpus = import ./optimization/experiments/zstd-skylake/corpus.nix {
+        inherit pkgs;
+      };
+
+      optimizationZstdSkylakeExperimentSpec = import ./optimization/experiments/zstd-skylake/spec.nix {
+        inherit pkgs;
+        inherit (nixpkgs) lib;
+
+        corpus = optimizationZstdSilesiaCorpus;
+      };
+
+      optimizationZstdSkylakeBenchmark = import ./optimization/experiments/zstd-skylake/runner.nix {
+        inherit pkgs;
+
+        stockZstd = pkgs.zstd;
+        optimizedZstd = optimizationZstdSkylake;
+        corpus = optimizationZstdSilesiaCorpus;
+        experimentSpec = optimizationZstdSkylakeExperimentSpec;
+        buildManifest = optimizationBuildManifest;
+        runtimeCapture = optimizationRuntimeCapture;
+      };
     in
     {
 
@@ -164,24 +194,35 @@
       nixosConfigurations.desktop = desktop;
 
       packages.${system} = {
-        optimization-manifest = import ./optimization/manifest.nix {
-          inherit pkgs inputs;
-
-          repository = inputs.self;
-          systemConfig = desktop;
-          baseline = import ./optimization/baseline.nix;
-        };
+        optimization-manifest = optimizationBuildManifest;
 
         optimization-runtime-capture = optimizationRuntimeCapture;
         optimization-zstd-skylake = optimizationZstdSkylake;
+
+        optimization-zstd-silesia-corpus = optimizationZstdSilesiaCorpus;
+
+        optimization-zstd-skylake-experiment = optimizationZstdSkylakeExperimentSpec;
+
+        optimization-zstd-skylake-benchmark = optimizationZstdSkylakeBenchmark;
       };
 
-      apps.${system}.optimization-runtime-capture = {
-        type = "app";
-        program = "${optimizationRuntimeCapture}/bin/nixos-optimization-runtime-capture";
+      apps.${system} = {
+        optimization-runtime-capture = {
+          type = "app";
+          program = "${optimizationRuntimeCapture}/bin/nixos-optimization-runtime-capture";
 
-        meta = {
-          description = "Capture runtime state for NixOS optimization experiments";
+          meta = {
+            description = "Capture runtime state for NixOS optimization experiments";
+          };
+        };
+
+        zstd-skylake-benchmark = {
+          type = "app";
+          program = "${optimizationZstdSkylakeBenchmark}/bin/nixos-optimization-zstd-skylake-benchmark";
+
+          meta = {
+            description = "Benchmark stock and Skylake-optimized zstd builds";
+          };
         };
       };
     };
