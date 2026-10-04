@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
-  users.users.p2949 = {
+  users.users.${username} = {
     isNormalUser = true;
 
     extraGroups = [
@@ -25,7 +25,7 @@
   # a practical open-file limit while retaining a finite hard ceiling.
   security.pam.loginLimits = [
     {
-      domain = "p2949";
+      domain = username;
       type = "soft";
       item = "nofile";
       value = 65536;

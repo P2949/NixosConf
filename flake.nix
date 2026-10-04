@@ -28,12 +28,21 @@
       disko,
       ...
     }:
+    let
+      system = "x86_64-linux";
+      username = "p2949";
+
+      pkgsUnstable = import inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in
     {
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
 
         specialArgs = {
-          inherit inputs;
+          inherit inputs username pkgsUnstable;
         };
 
         modules = [
@@ -48,9 +57,10 @@
               useUserPackages = true;
 
               extraSpecialArgs = {
-                inherit inputs;
+                inherit inputs username pkgsUnstable;
               };
-              users.p2949 = import ./home/p2949;
+
+              users.${username} = import ./home/p2949;
             };
           }
         ];

@@ -1,4 +1,4 @@
-{ ... }:
+{ username, ... }:
 
 {
   imports = [
@@ -8,8 +8,8 @@
   ];
 
   home = {
-    username = "p2949";
-    homeDirectory = "/home/p2949";
+    inherit username;
+    homeDirectory = "/home/${username}";
 
     # This is the first Home Manager installation for this system.
     # Like system.stateVersion, don't casually change it later.

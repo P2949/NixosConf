@@ -1,4 +1,4 @@
-{ ... }:
+{ username, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -11,7 +11,7 @@
 
     trusted-users = [
       "root"
-      "p2949"
+      username
     ];
 
     auto-optimise-store = true;
