@@ -20,7 +20,10 @@
     vscode
   ];
 
-  gtk.enable = true;
+  gtk = {
+      enable = true;
+      colorScheme = "dark";
+    };
 
   home.pointerCursor = {
     enable = true;
