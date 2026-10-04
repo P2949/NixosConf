@@ -1,3 +1,10 @@
+let
+  btrfsMountOptions = [
+    "compress=zstd:1"
+    "noatime"
+    "discard=async"
+  ];
+in
 {
   disko.devices = {
     disk.main = {
@@ -49,56 +56,32 @@
               subvolumes = {
                 "@root" = {
                   mountpoint = "/";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
 
                 "@home" = {
                   mountpoint = "/home";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
 
                 "@nix" = {
                   mountpoint = "/nix";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
 
                 "@var" = {
                   mountpoint = "/var";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
 
                 "@optimization" = {
                   mountpoint = "/var/lib/nixos-optimization";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
 
                 "@snapshots" = {
                   mountpoint = "/.snapshots";
-                  mountOptions = [
-                    "compress=zstd:1"
-                    "noatime"
-                    "discard=async"
-                  ];
+                  mountOptions = btrfsMountOptions;
                 };
               };
             };
