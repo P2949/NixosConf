@@ -46,7 +46,14 @@
 
   programs.firefox.enable = true;
 
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+
+    extraPackages = with pkgs; [
+      pulseaudio
+      gamemode
+    ];
+  };
   programs.gamemode.enable = true;
 
   programs.nix-ld.enable = true;
