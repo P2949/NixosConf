@@ -32,12 +32,25 @@
       system = "x86_64-linux";
       username = "p2949";
 
+      pkgs = nixpkgs.legacyPackages.${system};
+
       pkgsUnstable = import inputs.nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
       };
     in
     {
+
+      formatter.${system} = pkgs.nixfmt;
+
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [
+          pkgs.nixfmt
+          pkgs.deadnix
+          pkgs.statix
+        ];
+      };
+
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         inherit system;
 
