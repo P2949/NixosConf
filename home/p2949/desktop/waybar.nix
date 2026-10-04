@@ -1,46 +1,5 @@
-{ config, pkgs, ... }:
-
+{ ... }:
 {
-  home.packages = with pkgs; [
-    # Terminal / launcher / file manager
-    alacritty
-    thunar
-    fuzzel
-
-    # Wayland utilities
-    wl-clipboard
-    grim
-    slurp
-
-    # Desktop utilities
-    brightnessctl
-    pavucontrol
-
-    # Work
-    vscode
-  ];
-
-  gtk = {
-      enable = true;
-      colorScheme = "dark";
-    };
-
-  home.pointerCursor = {
-    enable = true;
-
-    package = pkgs.adwaita-icon-theme;
-    name = "Adwaita";
-    size = 24;
-
-    gtk.enable = true;
-  };
-
-  xdg.configFile."hypr/hyprland.lua".source = ./hyprland.lua;
-
-  # Feed Home Manager's session variables into the UWSM session.
-  xdg.configFile."uwsm/env".source =
-    "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
-
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -154,28 +113,5 @@
         padding: 0 8px;
       }
     '';
-  };
-
-  services.mako.enable = true;
-
-  systemd.user.services.hyprpolkitagent = {
-    Unit = {
-      Description = "Hyprland Polkit Authentication Agent";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-      ConditionEnvironment = "WAYLAND_DISPLAY";
-    };
-
-    Service = {
-      ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
-
-      Slice = "session.slice";
-      TimeoutStopSec = "5s";
-      Restart = "on-failure";
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
   };
 }

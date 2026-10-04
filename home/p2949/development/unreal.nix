@@ -1,11 +1,6 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
 let
-  unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
-
   unrealFhs =
     (pkgs.steam.override {
       extraPkgs =
@@ -31,10 +26,6 @@ let
 in
 {
   home.packages = [
-    pkgs.clang-tools
-    pkgs.nixfmt
-
-    unstable.pkgsRocm.blender
     unrealFhs
     unrealEngine
   ];

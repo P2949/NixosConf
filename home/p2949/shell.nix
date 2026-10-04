@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   programs.zsh = {
@@ -83,7 +83,6 @@
       zstyle ':completion:*' verbose yes
     '';
   };
-
 
   # Git-aware prompt.
   programs.starship = {
