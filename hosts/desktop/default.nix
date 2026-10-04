@@ -4,8 +4,6 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
-    ./persistence.nix
-    ./ephemeral-root.nix
 
     ../../profiles/workstation.nix
 
