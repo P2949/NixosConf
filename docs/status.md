@@ -3,7 +3,33 @@
 This is the current status entry point. `plan.md` retains the full execution
 ledger and Phase A–Y continuation directive until final baseline completion.
 
-## Accepted operating system
+## Current authoritative observation — 2026-10-05
+
+The user installed generation37 and rebooted after enabling VMX. Current normal
+closure: `0p67xd3scigqmmn65a0x5skdcsf6025b`; persistent candidate:
+`ph12l3` prefix (full identity in plan.md). Normal reset evidence passes on
+boot `d7c64889-aac3-4d09-8d14-5add9050cea3`, root300; persisted identity and
+credential match, failed units empty. KVM initialization and physical GameMode
+governor tests pass. BIOS3201/current ME retained; photo/runtime baseline:
+[firmware evidence](baselines/pre-optimization/firmware-20261005.md).
+
+Final offline suite, reconstruction, stock negative and full Nix store content
+verification passed. CI37379408763 passed all Flake checks job steps on exact
+head3abef3de6f17d8a93dac48de182a9d387a29b273. Prior hosted-runner failures
+are historical. Documentation-only successors require their own CI observation.
+
+Remaining: final persistent-root/return physical legs, sustained CPU/RAM/cooling
+and complete representative workload acceptance, multi-day normal-use soak
+after individual gates, exact recovery-media provenance, final backup refresh
+and freeze manifest/tag. The CPU thermal-aborted run is not a pass. No Android
+SDK/AVD found in inspected standard/project paths; actual emulator remains open.
+No further reboot scheduled, merge/tag/manifest published or optimization enabled.
+
+The following sections retain historical implementation observations; statements
+about uninstalled candidates, disabled VMX, running reconstruction or missing
+physical normal acceptance are superseded by this current section and plan.md.
+
+## Previously accepted operating system
 
 - Source: `c5e036b6e87d9aa77700909b508ccc0c3978d5b2`.
 - Normal closure: `/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8`.

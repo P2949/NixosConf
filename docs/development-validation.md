@@ -32,11 +32,11 @@ Final validation of the activated system and actual projects remains pending.
 
 ## Android virtualization gate
 
-On the current physical boot, the user belongs to `kvm`, but `/dev/kvm` is
-absent and the kernel reports `VMX (outside TXT) disabled by BIOS`.
-Enable firmware virtualization during the batched firmware maintenance window
-before claiming accelerated Android emulator acceptance. A passing software
-VM test is not evidence that physical KVM works.
+The post-firmware normal boot exposes accessible `/dev/kvm`; QEMU KVM
+initialization passed on the physical host. Actual accelerated Android emulator
+boot/project acceptance remains open. No SDK/AVD was found in the inspected
+`~/Android`, `~/.android` or `~/Development` locations; this is scoped discovery,
+not proof that no SDK exists elsewhere.
 
 ## Physical workstation preparation evidence
 
@@ -95,12 +95,15 @@ workload review; the smoke result is not a claim of warning-free operation.
 
 ### GameMode authorization and stock mitigations
 
-The current physical generation passes GameMode registration/reaper tests but
-fails the governor feature test: helper authorization requires the `gamemode`
-group, while the installed user is not a member. The preparation branch adds
-that membership when GameMode is enabled. The real-profile VM checks the
-packaged polkit action for the intended user, with an unrelated-user deny
-control; physical governor switching still needs post-activation verification.
+The earlier generation failed governor authorization because the user lacked
+`gamemode` membership. On the final candidate after the firmware reboot, the
+user has that membership and `gamemoded -t` passes all tests, including actual
+CPU governor switching. All twelve policies return to powersave and
+balance_performance; split_lock_mitigate remains1 and GameMode is inactive
+afterwards. The receipt is `/persist/nixos-readiness-20261005/post-vmx-gamemode.json`
+(mode0600). This closes the physical GameMode helper/governor gate; representative
+gameplay remains separate. The real-profile VM also checks an unrelated-user
+authorization deny control.
 
 The candidate declares `general.disable_splitlock=0`. GameMode may temporarily
 request the performance governor for games; it should preserve split-lock

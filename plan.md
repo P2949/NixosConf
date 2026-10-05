@@ -17268,3 +17268,32 @@ reboot is scheduled. No tag, merge, final manifest or optimization enabled.
 > Nothing visible in the photographs looks like an accidental partially-disabled CPU configuration: all cores, SMT, prefetchers, VMX, VT-d, Above-4G and the performance memory profile are active. The configuration is clearly intentionally performance-oriented rather than close to motherboard defaults.
 >
 > This should work well as the BIOS-state section of your NixOS/pre-optimization baseline. If you take photos of the **Boot, CPU power-management, DIGI+ VRM, DRAM timings and Q-Fan pages**, I can extend this into a nearly complete firmware configuration record rather than just the portions captured here.
+
+## Final-candidate GameMode and hosted CI acceptance — 2026-10-05
+
+Previous goal turn classified progress: complete attached firmware assessments
+recorded, live normal reset and KVM initialization evidence obtained, pushed3abef3d.
+Current physical boot/source revalidated before these next safe checks.
+
+`gamemoded -t` exited0, all tests passed including CPU governor switching,
+client/reaper/supervisor and ioprio tests. p2949 is a member of gamemode.
+All twelve governor/EPP policies match before/after: powersave and
+balance_performance; split_lock_mitigate remains1, GameMode inactive afterward.
+No permanent governor, split-lock, GPU or cooling changes. This closes the
+previous physical helper authorization/governor gate, not actual gameplay.
+Root-private0600 receipt: /persist/nixos-readiness-20261005/post-vmx-gamemode.json.
+
+GitHub run37379408763 on3abef3de6f17d8a93dac48de182a9d387a29b273 is
+terminal success: Flake checks job setup, checkout, Nix install and flake
+check steps all success. Run37374964780/3445ff3 also succeeded. Earlier
+runner-acquisition failures are historical, not a current CI blocker.
+
+Inspected ~/Android, ~/.android and ~/Development for emulator/adb/AVD
+artifacts; no SDK/AVD found there. Do not claim global absence or substitute
+QEMU initialization for real Android project acceptance. Dedicated RAM test
+requires most32GiB outside normal desktop usage per plan; available25GiB
+while session active is not authority to exhaust desktop memory. Soak starts
+after individual hardware/workload gates per section45; no premature soak
+pass from idle uptime. docs/status.md now provides current authoritative
+observations above its retained historical sections, and development-validation
+reflects closed GameMode/VMX gates. No host reboot or activation performed.
