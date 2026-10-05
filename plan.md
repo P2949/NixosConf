@@ -16483,3 +16483,33 @@ elapsed time is not readiness/approval and will not trigger a reboot.
 After settings capture and VMX, exact candidate physical chain then hardware,
 workloads/soak remain required. Prior accepted3trials/older chain are retained
 and not repeated for their own sake. No premature tag/manifest/merge.
+
+## Draft PR final-evidence reconciliation — 2026-10-05
+
+PR7 body updated with complete final offline acceptance, actual restored
+reconstruction design/optional evaluated-Disko deferral, current0p67xd/ph12l3
+artifacts, full closure audit, full store verification, accepted independent
+backup/user-reported real secrets restore and installed generation37 preflight.
+Removed obsolete reconstruction-executing/candidate-l994fn claims. Explicitly
+recorded the user's external switch rather than claiming old closure is live.
+Verified PR remains OPEN/DRAFT. Latest exact-head CI37374353043/3c8b06c queued;
+no terminal CI claim. Previous turn: progress (boot-file preflight and concrete
+physical-window preparation). Current turn: progress (PR authoritative state
+reconciled). Firmware-window availability question remains pending; no answer
+is inferred from automatic continuation or elapsed time. No reboot/activation.
+
+## Fresh pre-firmware runtime snapshot — 2026-10-05
+
+Pinned validation-shell collector session5499 exited0; every recorded capture
+command returned0. Source3c8b06c plus only the pending plan observation.
+Private /persist/nixos-readiness-20261005/pre-firmware-snapshot.md and
+pre-firmware-snapshot-receipt.json (0600) retain exact SHA/command count.
+Snapshot includes current live closure, Git/lock, firmware ME blocks, runtime
+CPU/memory/pressure/IRQ policy, graphics, storage, services/timers and
+persistence metadata. It excludes secret/reset-log contents. The validation
+shell obtained cached perf/turbostat tools; this does not add them to the
+stock runtime closure or imply compiler optimization.
+This is fresh comparison evidence for later firmware/candidate acceptance,
+not an accepted freeze manifest or sustained hardware/workload/soak result.
+Firmware OC/RAM values without trustworthy runtime access remain unknown.
+Window availability question still pending; no reboot/activation.
