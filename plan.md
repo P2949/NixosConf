@@ -4337,3 +4337,19 @@ if the interface is unavailable. Bash syntax/ShellCheck pass; full run has
 57 captures, all exit zero, private /tmp/nixos-preparation-me-20261005.md.
 Firmware/OC settings capture, upgrade decision and hardware stability gates
 remain pending. No reboot, live activation or graphical/cooling restart.
+
+## Sustained CPU gate attempted; conservative stop — 2026-10-05
+
+Planned30m stress-ng12CPU/all-method/verify at nice19 with5s monitoring.
+Preflight cooling/session active, low load, CPU about30C. Supervisor stopped
+all workers after5.06s when CPU max sampled80C reached conservative boundary
+matching coretemp high value; no threshold increase or cooling-policy change.
+Stressor short run reported12passed/0failed; supervisor marks thermal test
+aborted, not accepted. Throttle counters unchanged; targeted new kernel
+hardware/thermal errors absent; CPU returned28–30C, cooling active/high100%
+fan and pump100%, Wayland session still active. No host reboot/activation.
+Root-private receipt/log under/persist/nixos-cpu-thermal-20261005. Receipt UTC
+is explicitly completion time with elapsed duration, not mislabeled start.
+30minute thermal and longer OC/RAM stability gates remain open. Review
+firmware/OC/power/cooling state before retry; do not repeat short tests or
+relax the boundary merely to obtain a green result.
