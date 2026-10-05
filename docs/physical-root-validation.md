@@ -13,6 +13,21 @@ hash and copy receipts alone cannot establish that event. Reconcile before
 scheduling another drill. The older artifact-specific procedure below is
 historical and does not supersede the current stable ISO or this evidence status.
 
+## Current maintenance preflight, 2026-10-05
+
+Generation37 is already installed by the user's earlier switch: normal
+`nixos-generation-37.conf` targets0p67xd3scigqmmn65a0x5skdcsf6025b;
+persistent-root entry targetsph12l3y4k9jjmp5vhxwlkc11x4js2gjx.
+Kernel and initrd copies on the ESP match both store artifacts byte-for-byte.
+Accepted generation35 normal/persistent entries remain available. Both new
+candidate closures have independent GC roots; full store verification passed.
+No second boot installation is needed unless the candidate changes.
+
+VMX remains disabled and no firmware-settings API is exposed. Capture retained
+BIOS/OC/RAM/power settings and enable VMX at the machine in the coordinated
+window. Keep the graphical session alive until the user is ready. Boot-entry
+checks establish installed artifacts, not physical boot acceptance.
+
 ## Final-policy maintenance window
 
 This section supersedes the historical opt-in installation commands below.

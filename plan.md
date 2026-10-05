@@ -16460,3 +16460,26 @@ nix-store-verify.log (0600). This closes the full-store preparation check;
 final hardware/workload policy and subsequent-store health remain subject to
 physical acceptance and soak. Normal/persistent candidates GC-protected.
 No physical reboot or live activation; graphical session retained.
+
+## Physical maintenance preflight and unavoidable firmware access — 2026-10-05
+
+Read-only boot-entry preflight confirms generation37 normal entry
+nixos-generation-37.conf targets0p67xd... and is current default; its
+persistent-root entry targetsph12l3... . cmp verified both normal/persistent
+ESP kernel and initrd byte-identical to the corresponding store artifacts.
+Accepted generation35 normal/persistent entries remain present. Receipt:
+/persist/nixos-readiness-20261005/final-boot-entry-preflight.json (0600).
+The user's earlier live switch already installed generation37; another boot
+installation is unnecessary. No entry, default or one-shot selection modified.
+
+/dev/kvm still absent, current kernel confirms VMX disabled by BIOS;
+/sys/class/firmware-attributes absent. No available read-only/runtime interface
+provides firmware OC/RAM policy or enables VMX. Offline/backup/store/candidate/
+boot-file prerequisites complete; physical firmware capture/change now requires
+someone at the machine. Asked when user is available for one coordinated
+window, retaining BIOS3201/currentME. This is a physical-interface limitation,
+not a skill-imposed approval rule. Keep graphical session alive while waiting;
+elapsed time is not readiness/approval and will not trigger a reboot.
+After settings capture and VMX, exact candidate physical chain then hardware,
+workloads/soak remain required. Prior accepted3trials/older chain are retained
+and not repeated for their own sake. No premature tag/manifest/merge.
