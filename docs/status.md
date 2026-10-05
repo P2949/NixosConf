@@ -1,138 +1,118 @@
-# Stock workstation readiness status
+# Current readiness status
 
-This is the current status entry point. `plan.md` retains the full execution
-ledger and Phase A–Y continuation directive until final baseline completion.
+This file contains current truth only. [plan.md](../plan.md) preserves the
+chronological ledger, supplied guides and superseded observations.
 
-## Current authoritative observation — 2026-10-05
+## Source, PR and CI
 
-The user installed generation37 and rebooted after enabling VMX. Current normal
-closure: `0p67xd3scigqmmn65a0x5skdcsf6025b`; persistent candidate:
-`ph12l3` prefix (full identity in plan.md). Normal reset evidence passes on
-boot `d7c64889-aac3-4d09-8d14-5add9050cea3`, root300; persisted identity and
-credential match, failed units empty. KVM initialization and physical GameMode
-governor tests pass. BIOS3201/current ME retained; photo/runtime baseline:
-[firmware evidence](baselines/pre-optimization/firmware-20261005.md).
+Branch: `feat/pre-optimization-readiness`, based on main
+`f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
+`git rev-parse HEAD`; documentation does not embed its own future commit hash.
+[PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
+[CI run 37381090051](https://github.com/P2949/NixosConf/actions/runs/37381090051)
+passed Flake checks on exact reviewed head
+`1f96e0d3696d7f3f566819ddc5c83ed866b6f838`. Documentation successors need
+their own CI result; this does not certify a future head.
 
-Final offline suite, reconstruction, stock negative and full Nix store content
-verification passed. CI37379408763 passed all Flake checks job steps on exact
-head3abef3de6f17d8a93dac48de182a9d387a29b273. Prior hosted-runner failures
-are historical. Documentation-only successors require their own CI observation.
+## Current candidates and physical boot
 
-Remaining: final persistent-root/return physical legs, sustained CPU/RAM/cooling
-and complete representative workload acceptance, multi-day normal-use soak
-after individual gates, exact recovery-media provenance, final backup refresh
-and freeze manifest/tag. The CPU thermal-aborted run is not a pass. No Android
-SDK/AVD found in inspected standard/project paths; actual emulator remains open.
-No further reboot scheduled, merge/tag/manifest published or optimization enabled.
+Generation37 is installed. Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
-The following sections retain historical implementation observations; statements
-about uninstalled candidates, disabled VMX, running reconstruction or missing
-physical normal acceptance are superseded by this current section and plan.md.
+| Candidate | Store identity |
+|---|---|
+| Normal | `0p67xd3scigqmmn65a0x5skdcsf6025b` |
+| Persistent-root | `ph12l3y4k9jjmp5vhxwlkc11x4js2gjx` |
 
-## Previously accepted operating system
+Both closures have independent GC roots; their ESP kernel/initrd copies match
+store artifacts. Reinstallation is unnecessary unless runtime source changes.
+Normal boot `d7c64889-aac3-4d09-8d14-5add9050cea3` created root300,
+UUID `a3046ca3-1791-b646-a0d2-4bf142a152d3`, matching reset completion/count6.
+Persisted identity/credentials match; graphical login, persistent mounts,
+network and retained journals work; failed system units are empty.
+Commander is active with zero restarts. The first normal leg is ACCEPTED.
 
-- Source: `c5e036b6e87d9aa77700909b508ccc0c3978d5b2`.
-- Normal closure: `/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8`.
-- Persistent-root closure: `/nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8`.
-- Kernel: `6.18.55`; stable Nixpkgs: `0d9e9b832d03ac387417e16ce1febf73b2e631e1`.
-- Recovery ISO: `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; SHA-256
-  `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
-- Physical normal → persistent-root → normal passed on 2026-10-05;
-  final normal root subvolume 297. Home and var intentionally remain persistent.
+## Accepted gates
 
-## Implementation line
+- Full offline suite: flake checks, five root scenarios, workstation smoke,
+  native activation actions and 45 guard fixtures.
+- Independent blank-disk reconstruction: actual desktop composition, installed
+  UEFI boot, reset/recovery/return and seven subvolumes inspected read-only.
+  Evaluated-Disko experiment was rejected after failed device rebinding;
+  retain the proven direct production source import.
+- Stock contamination negative fixture and live closure membership audit.
+- Full Nix store content verification.
+- Accessible physical KVM and successful QEMU KVM initialization.
+- Physical GameMode governor/helper tests; CPU policies restored afterward.
+- Btrfs read-only scrub147.36GiB/54s, no errors; all five counters zero.
+  NVMe SMART pass, zero media errors/critical warning. Error-log count grew
+  12143→12145; latest entry is admin InvalidFieldInCommand. Historical entries
+  are not all classified; watch meaningful growth.
+- Independent Ventoy home archive and representative restore, engine supplement,
+  and separate secrets actual-recovery evidence reported by the user.
 
-`feat/pre-optimization-readiness`, based on integrated main `f89205c`.
-Current HEAD is obtained with `git rev-parse HEAD`; exact validation revisions
-are recorded in plan.md rather than maintaining a self-referencing HEAD literal.
+## Partial gates
 
-The incomplete username refactor is repaired in `2334858`: full flake checks
-pass; workstation-smoke and desktop reproduce their prior exact outputs.
-`2976771` removes the merged feature branch from push CI; PR CI is the
-feature-branch validation path. Main retains required Flake checks protection.
+- Unreal final-candidate incremental build passed using Epic's toolchain.
+  Editor/map attempt THERMAL ABORT at84C after6s under the80C guard.
+- Actual Blender project HIP render passed on final candidate:1920x1080,
+  64samples,12.6673s, source unchanged. Interactive/sustained work remains open.
+- C++/clangd preparation and synthetic Gamescope/MangoHud stack passed.
+  Representative final workflows/games remain open.
+- Silent PCM via current HDMI3 PipeWire default passed. StagePro enumerates
+  without an active sink; intended audible/reconnect workflow is unaccepted.
+- Recovery ISO build/hash/Ventoy copy passed; exact physical-drill provenance
+  still requires reconciliation with existing evidence.
 
-## Open gates
+## Open hard gates and next actions
 
-Storage/test/image organization, explicit Nix/Bash data interface, Commander
-Core policy ownership, native build/activation guards and stock closure
-exclusions are implemented on the draft readiness PR. Fast checks pass;
-activation has 45 fixture cases, native action VM acceptance and a read-only
-live positive check. The stock negative build rejects the intended test fixture.
-Candidate normal/persistent closures are GC-protected and remain uninstalled.
+1. Complete generation37 persistent-root→normal physical legs. Staged sentinels
+   must remain on root300 without a reset in recovery, then root-local sentinel
+   must disappear and persistent sentinel survive the next normal reset.
+   [Physical runbook](physical-root-validation.md) records expectations.
+2. Resolve CPU/power/cooling conditions before repeating heavy workloads.
+   Pump100% and fan60/100% commands are not actual RPM/airflow evidence.
+   Physical cooler confirmation is pending; do not weaken the80C guard.
+3. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
+4. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
+   Blender; actual Android Java project/accelerated AVD; native/Proton games,
+   controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
+   where used. KVM initialization is not Android application acceptance.
+5. Reconcile existing recovery-drill receipts before scheduling another drill.
+6. Check backup freshness at freeze; incrementally protect meaningful new work.
+7. Multi-day representative soak after individual gates; final stock-policy and
+   environment audit; canonical manifest; exact-source validation/CI; PR ready,
+   protected-main merge and annotated baseline tag.
 
-All five reset VM scenarios passed. The user confirmed the separate secrets
-backup was restored during a real system recovery, completing that gate on
-user-reported evidence. Retain BIOS 3201/current ME; no firmware update is planned.
+No reboot is scheduled. Preserve the live session and batch required physical
+interruptions when the user is available. No final manifest/tag exists yet.
 
-Still open: VMX enablement,
-sustained CPU/RAM/cooling/storage health, final
-exact-candidate workloads and multi-day soak. See the latest plan.md execution
-records for exact source/artifact identities and private receipt locations.
+## Recovery and backup
 
-The user chose a dedicated folder on existing Ventoy for the home backup,
-overriding the guide's older recommendation against that target. It is additive
-and does not reformat/erase Ventoy. An engine exclusion audit and supplemental
-47-file restore passed; the main archive is verified with representative restore
-and clean unmount (see the accepted receipt below).
-The newer guide reports earlier refactor checks and a read-only recovery drill;
-retain that provenance and reconcile exact physical-media receipts.
+Retain generation35 fallback, forensic roots, candidate GC roots and receipts.
+Accepted fallback closures: normal`czk5a2wn8di3pgv8a6w0b8aj3286g3h3`,
+persistent`9ppcqjkfnid501na0wc8jjysynp0kp1p`; its physical chain passed.
+Home/var deliberately remain persistent. Do not prune before final acceptance.
 
-No final pre-optimization tag exists yet. Compiler optimization remains outside
-this project. Any final physical checks are batched to minimize interruptions.
+ISO identity`d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; SHA256
+`52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
+Ventoy filename`nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`.
+[Backup details](backup-restore.md): archive27,844,003,241bytes, SHA256
+`9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`,
+plus47-file supplement. No format/repartition; verified restore and clean unmount.
 
-## Latest exact candidate identity
+## Retained firmware baseline
 
-After deriving reconstruction from the real desktop and moving/asserting
-workstation activation safety, the validated pre-fuzzel/Alacritty normal/persistent builds reproduce
-`l994fn5hpd2g2rijyffprl4368587m5w` and
-`cxc50rmb8i6akb62fcvzz3xkszzqf895` respectively (both stock26.05.20261004.0d9e9b8).
-Existing closure review and GC roots apply to those artifacts. These remain uninstalled.
-User desktop commits c3476c1/6893511 need new candidate validation; the prior
-closure equality is not evidence for those changes.
-Activation composition tests and full flake checks passed. The main Ventoy
-archive passed integrity, SHA-256 and three representative restored-file hash
-comparisons, with terminal receipt and clean unmount. Reconstruction source736b0fb
-completed independent installed-disk boot/reset/recovery checks but exited1 at
-final offline inspection: standalone Btrfs nologreplay was rejected. The narrow
-rescue=nologreplay correction is running in retry session89323, source9731b6d
-plus the existing local desktop comment edit; terminal acceptance remains open.
-The newest unified guide in plan.md supersedes older next-step ordering: no
-further broad refactor; close evidence before physical maintenance and freeze.
+BIOS3201, ME14.1.53.1649/14.1.53.1649/14.0.51.1528. AI Optimized50/49,
+Auto voltage, MCE RemoveAllLimits, cachemax48, AVXoffset0, XMP I DDR4-3200,
+DRAM1.35V,100MHz BCLK. VMX/VT-d/Above4G enabled; ReBAR Auto and Linux
+GPU BAR16GiB. Uncaptured firmware fields remain unknown, not reboot prerequisites.
+See [firmware baseline](baselines/pre-optimization/firmware-20261005.md).
 
-Latest backup result: [backup receipt summary](backup-restore.md#independent-ventoy-home-backup-accepted--2026-10-05).
-Earlier open-backup statements above are superseded by this accepted result.
+## Evidence and deferred work
 
-## Latest live observation
-
-A subsequent external activation changed the running system/profile to
-`0p67xd3scigqmmn65a0x5skdcsf6025b` (same26.05.20261004.0d9e9b8 version).
-Observed profile timestamp2026-10-05T20:46:57+01:00; actor/source unverified.
-The boot ID and graphical session remain unchanged; cooling and Home Manager
-services are active. The accepted artifact above is historical acceptance, not
-the currently running closure. This new live closure has no recorded physical
-boot acceptance yet.
-
-Journal reconciliation: p2949 invoked `nixos-rebuild switch --flake .#desktop`
-at20:46:34+01:00; activation completed20:46:59. Exact artifact build source
-remains unverified. All four current generated read-only activation checks pass,
-no failed units, and kernel identity is unchanged. The detailed observation
-receipt is retained privately under /persist/nixos-readiness-20261005.
-
-Reconstruction retry session89323 is now terminal PASS (exit0), derivation
-sjanby8f9cpwq6zk23n6pg77s0rf1f9g,1831.68s. Corrected read-only inspection
-passed along with installed-disk UEFI/reset/recovery/return checks. Private
-terminal receipt/log retained under /persist/nixos-readiness-20261005.
-Final evaluated-Disko decision and exact final offline suite remain pending.
-
-## Final offline validation accepted
-
-Final suite session2288 exited0: full flake checks, five root VM scenarios,
-workstation-smoke, native activation-actions, proven installed-disk reconstruction
-and recovery ISO outputs all successful. Reconstruction and activation-actions
-reused exact successful derivations; five root scenarios and workstation-smoke
-executed again. Stock negative separately rejected the intended PGO fixture.
-The evaluated-Disko import was executed, failed device rebinding, and explicitly
-deferred; restored harness reproduces the terminal PASS derivation exactly.
-Exact identities and private receipt/log references are in plan.md.
-The stable ISO hash is unchanged. Physical hardware/workloads/soak/freeze
-remain open; hosted CI failed to acquire a runner before test steps.
+[Development validation](development-validation.md),
+[closure review](closure-review.md), [reconstruction](reconstruction.md),
+[activation safety](activation-safety.md) and [plan.md](../plan.md) provide scope
+and receipts. Architecture cleanup, module-doc generation and docs moves are
+POST-BASELINE. Optimization-v2, VM variants, distributed builders and other
+experimental ideas start from the accepted baseline tag; optimization remains inert.
