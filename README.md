@@ -355,6 +355,10 @@ The [baseline collector](docs/baseline-capture.md) records the current running
 system and repository identities, diagnostic results and missing evidence
 without activating configuration or running stress tests.
 
+The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
+windows, rollback artifact retention and bounded persistent diagnostics.
+The prepared policy remains pending physical installation and acceptance.
+
 Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
 
 The intended progression is:

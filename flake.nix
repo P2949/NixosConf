@@ -91,6 +91,10 @@
       };
 
       checks.${system} = {
+        maintenance-guard = import ./tests/maintenance-guard.nix {
+          inherit pkgs;
+        };
+
         commander-core-config = import ./tests/commander-core-config.nix {
           inherit pkgs inputs;
         };

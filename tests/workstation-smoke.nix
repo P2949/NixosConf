@@ -28,6 +28,9 @@ vmPkgs.testers.runNixOSTest {
     boot.ephemeralBtrfsRoot.enable = lib.mkForce false;
     boot.initrd.systemd.enable = true;
     users.mutableUsers = false;
+    # Never collect/optimise the host-shared store from a guest.
+    nix.gc.automatic = lib.mkForce false;
+    nix.settings.auto-optimise-store = lib.mkForce false;
     users.users.${username} = {
       hashedPasswordFile = lib.mkForce null;
       password = "vm-test-only";
