@@ -1173,14 +1173,17 @@ Choose the least abstract option that evaluates cleanly.
 
 Validate:
 
-- [ ] VM boots;
-- [ ] `multi-user.target` reaches active;
-- [ ] D-Bus works;
-- [ ] logind works;
-- [ ] NetworkManager works or is consciously replaced by VM network configuration;
-- [ ] user exists;
-- [ ] Home Manager evaluates/activates in the intended test model;
-- [ ] no unexpected failed units.
+- [x] VM boots;
+- [x] `multi-user.target` reaches active;
+- [x] D-Bus works;
+- [x] logind works;
+- [x] NetworkManager works or is consciously replaced by VM network configuration;
+- [x] user exists;
+- [x] Home Manager evaluates/activates in the intended test model;
+- [x] no unexpected failed units.
+
+Proven on feat/workstation-validation's explicit workstation-smoke package;
+the VM uses harness storage/networking and does not prove physical acceptance.
 
 **Do not benchmark this VM.**
 
@@ -3001,7 +3004,7 @@ Use this as a smaller tracker after Impermanence is complete.
 [ ] README Impermanence/test updates
 [x] repository description
 [x] desktop evaluation CI check
-[ ] generic workstation VM
+[~] generic workstation VM (boot/service/HM smoke passed; branch integration pending)
 [~] recovery ISO (built, physical boot/drill pending)
 [ ] specialisation/recovery boot design
 [ ] unified GC/generation policy
@@ -3710,3 +3713,66 @@ It remains a draft follow-up, with no merge or live activation. Updated plan
 is included in the preparation branch; this master log also records publication.
 PR CI pending. Running Wayland session and commander-core service remain active,
 with no scheduled shutdown. Main/root integration and later acceptance gates open.
+
+PR CI update: Flake checks succeeded for preparation commit 792ac9e in run
+37259126858. No integration or activation performed.
+
+## Generic workstation correctness VM — IN PROGRESS, 2026-10-05
+
+Phase 8 preparation on feat/workstation-validation: added explicit package
+`workstation-smoke`, importing the real workstation profile and full Home Manager
+configuration. Physical host/Disko facts are omitted, Commander Core and
+destructive root reset are disabled, and the guest uses a public test-only
+password instead of host secrets. VM-only HM GC profile workaround retained.
+Smoke requires multi-user.target, functional system bus/logind/NetworkManager,
+UID 1000 user, HM activation/config file, absent hardware/reset services and
+zero failed units. It tests composition, not GPU/thermal performance or physical
+acceptance. Build/test launched as exec session 71743; artifacts/logs
+`/tmp/nixos-workstation-smoke-build.{json,log}`. No host restart or reboot.
+
+Initial VM evaluation failed: the test harness's immutable legacy pkgs config
+conflicted with the real profile's allowUnfree policy. Corrected the test
+boundary to import the same pinned stable package set with allowUnfree=true and
+force the node config to that package set's exact immutable configuration.
+The physical profile remains unchanged. Also moved reset absence verification
+to an assertion on the actual initrd services instead of checking a root-stage
+unit name. Corrected build/test running; no initial VM boot was claimed.
+
+## Generic workstation VM — PROVEN, 2026-10-05
+
+Corrected smoke passed: boot, multi-user.target, D-Bus RPC, logind,
+NetworkManager daemon/client, UID 1000 user, full HM activation and readable
+Hyprland configuration, no Commander Core service, no unexpected failed units.
+Reset absence is checked against actual initrd configuration at evaluation.
+VM storage/networking comes from the test harness; no external connectivity
+or physical graphics performance is inferred. Full-profile guest credentials
+are public test-only; no real secrets or home data are mounted.
+The unstable package set is passed from the existing flake boundary instead
+of reinstantiated by the fixture. Refactor preserves the exact tested drv:
+`/nix/store/rfric3h647c8d291c3i33jwwm4dgnfl4-vm-test-run-workstation-smoke.drv`;
+output `/nix/store/jg7rrprf18i440nsz6a76qn10vzsddcp-vm-test-run-workstation-smoke`.
+The VM script completed in 55.31 seconds under TCG, not a performance result.
+Final fast checks passed for the added package; publication in progress.
+Root log checkpoint 48b0fff CI run 37259193272 succeeded.
+
+### Task: generic workstation integration VM
+
+Status: **PROVEN** local smoke and fast checks; branch integration pending
+Owner: Codex
+Started: 2026-10-05
+Completed: local VM and source checks 2026-10-05
+Commit / PR: next commit on feat/workstation-validation, draft PR #3
+NixOS generation: physical generation 33 unchanged; disposable guest only
+System closure: physical `jj4h7abqachf769dpz308v480a6srdbs`; VM receipt above
+Evidence / command output: explicit smoke exit 0, all fast checks exit 0,
+current fixture drv matches the actual completed VM test
+Decision: keep heavy correctness VM explicit, outside ordinary CI builds
+Problems found: read-only pkgs policy aligned with unfree-enabled workstation profile
+Rollback path: revert added test/package; no host system installation changed
+Notes: hardware reset/physical disks/secrets excluded; no performance claims
+
+Publication update: generic VM checkpoint `1d1d025` pushed to
+feat/workstation-validation; draft PR #3 title/body now reflect the final
+package-ownership and correctness-validation scope. The heavy VM and all local
+fast checks passed; CI for this additional checkpoint is pending. Live system
+remains the prior installed generation, with no cooling/session restart or reboot.
