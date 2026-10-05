@@ -4462,3 +4462,12 @@ Actual physical log metadata root:root/0600/regular/one link satisfies guards;
 read only, no physical reset attempted. New source is ready for publication
 and propagation; selected refreshed-input boot/closure validation remains
 required because script changed. Full baseline still not accepted.
+
+Log hardening committed/pushed a74d195 and propagated into preparation and
+stable-refresh branches. Refreshed-input validation batch started sequentially
+(fast,33case+positive safety,recovery,A,B,fallback,workstation,desktop+ISO),
+one build job/two builder cores. Private logs/JSON under
+/tmp/nixos-logguard-refresh-20261005; receipts update after each terminal
+step. Batch handle recorded by tool; no stage restarted from timeout.
+Prior refreshed candidate/ISO and GC roots retained until new outputs reviewed.
+No host live activation/reboot or graphical/cooling restart.
