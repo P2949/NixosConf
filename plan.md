@@ -1896,7 +1896,7 @@ Current good choices:
 
 - [ ] launch representative Vulkan game;
 - [ ] launch representative Proton game;
-- [ ] verify GameMode requests succeed;
+- [~] GameMode registration/reaper pass; current governor helper denied. Group/mitigation fix prepared with VM allow/deny proof; physical feature retest after activation pending.
 - [ ] verify MangoHud works;
 - [ ] verify Gamescope path used for HDR/fullscreen if part of normal workflow;
 - [ ] verify audio;
@@ -4122,3 +4122,50 @@ core retained privately and classified as test-harness lifecycle failure;
 not silently vacuumed or presented as an ordinary user shutdown regression.
 Current startup/map smoke is valid, but gameplay and final baseline/soak
 remain unproven. Receipts/logs stored root-only under /persist.
+
+## GameMode and audio runtime gates — IN PROGRESS, 2026-10-05
+
+Exact preparation head3f61a1c CI run37293252039 succeeded. GameMode1.8.2
+selftest on current generation: registration, dual-client, reaper and
+supervisor pass; governor performance switch failed with pkexec Not authorized.
+Live user lacks gamemode group; upstream packaged polkit rules require it
+for governor/GPU/CPU/procsys helpers. No inference that requests alone prove
+governor policy works. All12 CPU policy governor/EPP values equal captured
+pre-test values afterwards; GameMode inactive, split_lock_mitigate remains1.
+Screensaver service unknown also logged; no screen-lock service disabled.
+
+Prepared fix in isolated gaming module: conditional p2949 gamemode membership
+when enabled, and general.disable_splitlock=0 to preserve stock mitigation
+even in gaming sessions. No live group/policy/service modifications. Added
+real-profile VM behavioral polkit authorization proof for user and deny
+control for nobody. First VM fixture incorrectly awaited inactive DBus-
+activated polkit before first request; moved wait after actual pkcheck trigger.
+No host helper or governor change used by VM. Fast flake checks passed;
+updated VM and full desktop candidate builds running.
+
+Audio inspection: Creative Stage Pro USB041e:32b4 present, ALSA card0,
+PipeWire sees device but current profile Off and only active sink is RX9070XT
+HDMI3 stereo (volume0.65). No claim that Creative is active or audible.
+One-second 48kHz stereo zero-valued WAV playback passed direct ALSA Pro
+plughw and current PipeWire default separately; no audible tone, sink/profile/
+volume/route change. Pro PCM returned closed afterwards. This verifies driver
+and default transport, not Creative-through-PipeWire hearing/reconnect.
+Current route preserved; dedicated Creative audio acceptance remains open.
+Updated real-profile VM passed:
+/nix/store/bpxcynh3pg4xamy6dsp0q197hn0513qh-vm-test-run-workstation-smoke.drv.
+Intended user actual polkit helper action succeeds; nobody returns1, proving
+privilege is not granted to unrelated user. Standard full-profile boot/HM/
+networking/zero-failed/hardware-exclusion tests still pass. Desktop candidate
+/nix/store/cpwrqq3c7kjxgknf5slk5h2sbs7gv4kq-nixos-system-desktop-26.05.20261002.774debe
+built; generated INI contains [general] disable_splitlock=0, user membership
+includes gamemode. Closure diff from a02fb has no package-version changes.
+Eighth explicit GC root gamemode-candidate protects new closure; previous
+seven retained, private exact-target receipt atomically refreshed. Final fast
+checks running after the corrected fixture; physical feature retest remains
+pending actual candidate activation. No live group/CPU/mitigation edit.
+
+Final fast flake check completed successfully after fixture correction.
+GameMode source/docs committed on isolated preparation branch; desktop build
+and behavioral VM complete. Root safety A/B/recovery/fallback derivations
+remain unchanged by this gaming-policy fix. No source integration into running
+generation, no reboot scheduled, live graphical session/cooling remain active.
