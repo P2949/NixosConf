@@ -31,6 +31,8 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │
 ├── modules/
 │   ├── core/
+│   │   ├── maintenance.nix
+│   │   └── maintenance-guard.sh
 │   ├── desktop/
 │   ├── gaming/
 │   ├── compatibility/
@@ -53,6 +55,7 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── home/
 │   └── p2949/
 │       ├── default.nix
+│       ├── cli.nix
 │       ├── shell.nix
 │       ├── desktop/
 │       │   ├── default.nix
@@ -68,6 +71,10 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │
 ├── tests/
 │   ├── desktop-evaluation.nix
+│   ├── workstation-smoke.nix
+│   ├── maintenance-guard.nix
+│   ├── commander-core-*.nix
+│   ├── test_commander_core.py
 │   └── impermanence-root-*.nix
 │
 └── optimization/
@@ -111,11 +118,12 @@ Reusable NixOS functionality lives here.
 
 Current groups include:
 
-- `core` — Nix policy, locale, users, and baseline packages
+- `core` — Nix policy, guarded maintenance, locale, users, and baseline packages
 - `desktop` — graphics, PipeWire, Hyprland, and portals
 - `gaming` — Steam, GameMode, Gamescope, and MangoHud
 - `compatibility` — `nix-ld`
 - `hardware/commander-core` — reusable Commander Core cooling support
+- `storage` — guarded ephemeral Btrfs root reset support
 
 ### `home/`
 
@@ -140,6 +148,12 @@ Development configuration is separated into:
 Custom package derivations belong here.
 
 `packages/liquidctl-pr886.nix` builds the pinned Liquidctl revision required by the Commander Core implementation.
+It accepts an explicit source selected at the flake/module boundary.
+
+Recovery and administration tools remain in `modules/core/packages.nix`.
+Interactive tools such as ripgrep, jq, gh and btop belong to Home Manager's
+`home/p2949/cli.nix`. Compilers, debuggers, build systems and Python are provided
+by `nix develop`, which also contains the repository's Nix lint tools.
 
 ### `optimization/`
 
@@ -297,8 +311,15 @@ The flake exposes reproducible checks for:
 - Desktop and recovery-specialisation evaluation
 - Ephemeral-root configuration validation
 - Baseline collector syntax and ShellCheck
+- Commander Core option validation, Python syntax, Ruff and hardware-free unit tests
 
 CI deliberately does not build the complete workstation closure.
+
+The real workstation profile and Home Manager configuration have an explicit
+headless integration VM: `nix build .#workstation-smoke`. Its guest storage,
+test-only credentials and disabled physical cooling/reset services isolate it
+from the host. This tests boot and service composition; it does not benchmark
+the workstation or replace graphics, cooling and application acceptance.
 
 ## Impermanence validation
 
@@ -341,6 +362,17 @@ The [baseline collector](docs/baseline-capture.md) records the current running
 system and repository identities, diagnostic results and missing evidence
 without activating configuration or running stress tests.
 
+The [backup and restore ledger](docs/backup-restore.md) distinguishes verified
+project remotes from the remaining independent home-data backup gate.
+
+The [development validation notes](docs/development-validation.md) cover
+project toolchain ownership, scoped clangd compiler queries and the current
+physical KVM acceptance gate.
+
+The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
+windows, rollback artifact retention and bounded persistent diagnostics.
+The prepared policy remains pending physical installation and acceptance.
+
 Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
 
 The intended progression is:
@@ -366,3 +398,6 @@ Each stage should remain independently identifiable and benchmarkable.
 PGO/BOLT infrastructure should preserve provenance and fail closed when profile or binary identity does not match the expected derivation.
 
 BOLT outputs must be represented as new immutable Nix derivations rather than modifying files in `/nix/store`.
+
+The [stock policy audit](docs/stock-policy.md) records evaluated kernel, CPU,
+memory and environment declarations and their remaining acceptance limits.

@@ -10,7 +10,8 @@ let
   cfg = config.hardware.commanderCore;
 
   liquidctlPr886 = import ../../../packages/liquidctl-pr886.nix {
-    inherit inputs pkgs;
+    inherit pkgs;
+    src = inputs.liquidctl-pr886;
   };
 
   pythonEnv = pkgs.python3.withPackages (_pythonPackages: [
@@ -93,8 +94,39 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.cooling.lowTemp <= cfg.cooling.highTemp;
-        message = "hardware.commanderCore.cooling.lowTemp must be <= highTemp";
+        assertion = builtins.match "[0-9a-fA-F]{4}:[0-9a-fA-F]{4}" cfg.usbId != null;
+        message = "hardware.commanderCore.usbId must be four hex digits, a colon, and four hex digits (for example 1b1c:0c1c).";
+      }
+      {
+        assertion = builtins.match "[[:space:]]*" cfg.serial == null;
+        message = "hardware.commanderCore.serial must contain a non-whitespace device serial.";
+      }
+      {
+        assertion = cfg.cooling.baseFanDuty <= cfg.cooling.highFanDuty;
+        message = "hardware.commanderCore.cooling.baseFanDuty must be <= highFanDuty.";
+      }
+      {
+        assertion =
+          cfg.cooling.lowTemp >= 0
+          && cfg.cooling.highTemp <= 100
+          && cfg.cooling.lowTemp < cfg.cooling.highTemp;
+        message = "hardware.commanderCore.cooling requires 0 <= lowTemp < highTemp <= 100 Celsius for strict hysteresis.";
+      }
+      {
+        assertion = lib.all (value: value > 0) [
+          cfg.cooling.tempInterval
+          cfg.cooling.wakeInterval
+          cfg.cooling.resetDelay
+        ];
+        message = "hardware.commanderCore.cooling tempInterval, wakeInterval and resetDelay must be strictly positive seconds.";
+      }
+      {
+        assertion = cfg.cooling.highDelay >= 0 && cfg.cooling.lowDelay >= 0;
+        message = "hardware.commanderCore.cooling highDelay and lowDelay must be nonnegative seconds.";
+      }
+      {
+        assertion = 2 * lib.max cfg.cooling.tempInterval cfg.cooling.wakeInterval < 35;
+        message = "hardware.commanderCore.cooling tempInterval and wakeInterval must each be below 17.5 seconds to leave two intervals of margin within the 35-second watchdog.";
       }
     ];
 

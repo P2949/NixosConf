@@ -1,6 +1,8 @@
 import argparse
 import glob
+import math
 import os
+import re
 import signal
 import socket
 import subprocess
@@ -122,7 +124,7 @@ def update_heartbeat():
     return now
 
 
-def main():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--base-fan-duty", type=int, default=60)
@@ -151,7 +153,7 @@ def main():
         default="e3072091824547ba7680aee53091005f",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     for value, name in (
         (args.base_fan_duty, "base fan duty"),
@@ -161,8 +163,36 @@ def main():
         if not 0 <= value <= 100:
             parser.error(f"{name} must be 0..100")
 
-    if args.low_temp > args.high_temp:
-        parser.error("--low-temp must be <= --high-temp")
+    if args.base_fan_duty > args.high_fan_duty:
+        parser.error("--base-fan-duty must be <= --high-fan-duty")
+
+    if not re.fullmatch(r"[0-9a-fA-F]{4}:[0-9a-fA-F]{4}", args.usb_id):
+        parser.error("--usb-id must be four hex digits, a colon, and four hex digits")
+
+    if not args.usb_serial.strip():
+        parser.error("--usb-serial must contain a non-whitespace device serial")
+
+    if not (0 <= args.low_temp < args.high_temp <= 100):
+        parser.error("temperatures must satisfy 0 <= --low-temp < --high-temp <= 100")
+
+    for name in ("temp_interval", "wake_interval", "reset_delay"):
+        value = getattr(args, name)
+        if not math.isfinite(value) or value <= 0:
+            parser.error(f"--{name.replace('_', '-')} must be finite and positive")
+
+    for name in ("high_delay", "low_delay"):
+        value = getattr(args, name)
+        if not math.isfinite(value) or value < 0:
+            parser.error(f"--{name.replace('_', '-')} must be finite and nonnegative")
+
+    if 2 * max(args.temp_interval, args.wake_interval) >= 35:
+        parser.error("polling and wake intervals must each be below 17.5s for the 35s watchdog")
+
+    return args
+
+
+def main():
+    args = parse_args()
 
     signal.signal(signal.SIGTERM, handle_signal)
     signal.signal(signal.SIGINT, handle_signal)

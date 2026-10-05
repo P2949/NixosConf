@@ -11,6 +11,43 @@ Exact final default/recovery hardware acceptance is pending. Do not install or s
 reset entry until the preflight gates below are satisfied. All commands here
 are operator commands; documenting them does not mean they have been run.
 
+## Final-policy maintenance window
+
+This section supersedes the historical opt-in installation commands below.
+Do not repeat the three successful reset trials. Complete remaining offline
+checks, independent backup/restore and source integration before this window.
+Keep the known-good persistent generation and forensic roots. Record the exact
+source revision, lock hash, built default closure and its persistent-root
+specialisation; do not infer those paths from an earlier build.
+
+1. Build and protect the accepted default/recovery closures and matching ISO.
+   Preview activation changes; use boot-only installation when ready, preserving
+   the live session. Inspect systemd-boot entries and verify each points at its
+   recorded closure. Do not run live `test` or `switch` for this transition.
+2. Boot the matching recovery ISO from Ventoy and perform the read-only drill
+   below. For the selected stable refresh, the staged filename is
+   `nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`,
+   SHA-256 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
+   Its copy/remount checks passed; its physical boot remains pending.
+3. Select the accepted normal default entry, which now resets root. Verify the
+   exact running closure, fresh root, one reset invocation, identity, credentials,
+   persistent state, networking, cooling and graphical login. Record private
+   evidence. Do not claim acceptance merely because the boot menu entry exists.
+4. During the same maintenance window select its `persistent-root` recovery
+   specialisation. Verify the exact specialisation closure, unchanged root
+   identity and reset-log completion count, retained root sentinel, machine ID,
+   earlier journals, credential sources and services. The recovery variant
+   prevents future resets; it does not restore previously discarded files.
+5. Return to the accepted normal entry when physical checks pass, then continue
+   final workloads/soak. Choose firmware/virtualization changes before final
+   acceptance so subsequent policy changes do not invalidate the freeze.
+
+These remain physical acceptance gates and require a planned interruption. No
+reboot is scheduled by this runbook; batch the checks and avoid intermediate
+reboots for documentation, offline builds or repeated smoke tests.
+
+## Historical opt-in trial procedure
+
 ## Before installing
 
 1. Require current safety, recovery, A, B and fast checks to pass. B must retain
@@ -109,10 +146,14 @@ The 2026-10-05 build produced
 `/nix/store/f424ql5wbi7h4xl7151696bvx1rr74g7-nixos-minimal-26.05.20261002.774debe-x86_64-linux.iso/iso/nixos-minimal-26.05.20261002.774debe-x86_64-linux.iso`
 (1,496,678,400 bytes), SHA-256
 `085a7b41e54e4e595f34fcea1ad9d37b48662d7eeae24d0f40781081d86678ca`.
-Copy the ISO onto your verified recovery medium (for example a Ventoy data
-partition), then boot it once. The ISO is built, but its physical boot and
-read-only recovery drill remain pending. Do not write a raw image to a device
-selected only by an assumed `/dev/sdX` name.
+The ISO was added on 2026-10-05 to the existing Ventoy data partition as
+`nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
+replacing any existing images. Copy checksum matched; clean unmount completed
+and a subsequent read-only exFAT check reported clean. Post-remount checksum
+verification is recorded in `plan.md`. Select this exact filename in Ventoy
+for the pending physical boot and read-only recovery drill. The user's previous
+successful recovery with another ISO does not establish this artifact's boot.
+Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.
 
 Boot recovery media and first identify the disk by its MP600 model/serial,
 partition layout and Btrfs label; device enumeration can differ on recovery
