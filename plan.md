@@ -4666,4 +4666,3 @@ started. Current turn is a prerequisite hold, not new implementation completion.
 Next external input: connect/identify independent backup destination; then execute
 backup and representative restore before the planned physical maintenance window.
 Goal remains active; first consecutive impasse audit, not marked blocked.
->>>>>>> 1d1d025 (Add explicit real-profile workstation integration VM)
