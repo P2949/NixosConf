@@ -27,9 +27,10 @@ active scrub or collection merely to start a benchmark.
 
 ## Recovery artifacts and first cleanup
 
-Eight explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
+Ten explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
 protect known persistent generation 31, parent/reset generation 33, prepared
-root-policy and workstation closures, the newer maintenance and GameMode candidates, and the pinned recovery ISO. Their
+root-policy and workstation closures, the newer maintenance/GameMode/stable-refresh candidates, and both pinned
+recovery ISOs. Their
 private receipt is `/persist/nixos-preparation-gcroots.json`. Git tags do not
 keep built store paths alive. These temporary roots require a deliberate
 retirement review after the final baseline/recovery milestone.
