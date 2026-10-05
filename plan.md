@@ -4368,3 +4368,16 @@ required-check semantics. This prevents future superseded same-ref checks
 from consuming parallel CI; separate branches/PR refs stay independent.
 Whitespace review passed; new exact-head CI acceptance remains pending.
 No host load repeated, cooling change, reboot or activation.
+
+## Local source-work discovery — 2026-10-05
+
+Read-only visible-home/project metadata scan found1Git repo, clean, no Git
+status failures;476matching source/document/project files totalling2,699,360
+bytes.2Blender files outside discovered repos total313,363bytes and require
+critical backup coverage. No traversal errors. Private path/status receipt
+/persist/nixos-home-work-audit-20261005.json mode0600/root-owned.
+Engine/generated/application/cache scan exclusions are not approved backup
+exclusions; extensions do not prove all unique home data audited. Ignored
+project/autosave/application data remain required. Current disks still only
+MP600 and Ventoy; independent destination pending, no deletion/repurposing.
+Backup ledger updated. No host tuning/load, reboot or live activation.
