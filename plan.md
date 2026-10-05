@@ -17360,3 +17360,35 @@ bootd7c64889-aac3-4d09-8d14-5add9050cea3 unchanged; graphical session survives.
 CI37379900573/f327106 cancelled after newer push; run37380170986/732d208
 is in progress, not terminal PASS and not restarted.
 No host activation/reboot, project commit, full-build or soak pass claimed.
+
+## Post-workload storage integrity and cooling evidence — 2026-10-05
+
+Previous goal turn progress: final Unreal incremental build passed; actual
+editor thermal abort established a concrete open operating-condition gate.
+Current controller state statusactive,pid913,pump duty100%,basefans60%;
+serviceactive,NRestarts0. These are commanded duties/heartbeat, not measured
+pump/fan RPM or airflow. Avoid concurrent liquidctl ownership/USB reset while
+the keeper controls cooling. Requested user cooler model and physical
+pump/fan/radiator-airflow confirmation while remaining booted because software
+telemetry cannot establish these facts. No response inferred from elapsed time.
+No heavy CPU/editor retry, thermal boundary relaxation or firmware change.
+
+Read-only Btrfs scrub `sudo ionice -c3 nice -n19 btrfs scrub start -B -r /`
+finished exit0 at23:10:48Dublin:147.36GiB,54seconds,2.73GiB/s,no errors.
+All five Btrfs device error counters remain0. This is final-candidate online
+filesystem integrity evidence, not a destructive surface test or general
+sustained CPU/RAM acceptance. No repair, GC or optimization performed.
+
+smartctl7.5 -x -j: SMARTpassed,critical_warning0,44C,spare100%,wear18%,
+media_errors0,warning/critical-temperature-time0,unsafe_shutdowns2214.
+Cumulative error-log count12145 (earlier12143); latest admin queue0 entry
+decodes InvalidFieldInCommand, status0x2002,parameter40,LBA0,namespace0.
+Do not classify every historical entry as benign or claim the counter is
+unchanged. No media-error increase observed; causation of the extra admin
+entries unproven (SMART collection itself queried device capabilities).
+Root-private0600 full SMART JSON/scrub status/device stats retained in
+/persist/nixos-readiness-20261005/readiness-final-{nvme.json,scrub.txt,btrfs-stats.txt}.
+CPU51C during scrub,controller active; graphical session remains alive.
+CI37380561557/95c8aa9 observed in progress; no terminal claim/restart.
+Remaining thermal/cooling, memory, workloads, physical-chain/soak/freeze
+gates unchanged; storage integrity result does not waive them.
