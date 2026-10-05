@@ -1897,7 +1897,7 @@ Current good choices:
 - [ ] launch representative Vulkan game;
 - [ ] launch representative Proton game;
 - [~] GameMode registration/reaper pass; current governor helper denied. Group/mitigation fix prepared with VM allow/deny proof; physical feature retest after activation pending.
-- [ ] verify MangoHud works;
+- [~] MangoHud library/shim mapped in successful physical Gamescope Vulkan smoke; representative-game/final-candidate acceptance pending;
 - [ ] verify Gamescope path used for HDR/fullscreen if part of normal workflow;
 - [ ] verify audio;
 - [ ] verify controller support.
@@ -4260,3 +4260,16 @@ matching new kernel GPU reset/fault/timeout messages in the test interval.
 Stable refresh draft PR #4 exact-head CI run37297618440 succeeded.
 Remaining physical, independent-backup and representative-workload gates
 remain open; the full baseline goal is not declared complete.
+
+## Pressure and IRQ evidence collection — 2026-10-05
+
+Preparation collector now records memory/CPU/I/O PSI, VM counters, interrupt
+distribution, effective IRQ affinity, IRQ-balancer state, NVMe scheduler and
+zswap/THP defrag. Bash syntax and pinned ShellCheck 0.11.0 pass. Full updated
+collector run completed with 56 captures, all exit zero; private receipt
+/tmp/nixos-preparation-expanded-20261005.md. Validation shell does not include
+ShellCheck, so lint used the independently resolved pinned stable package.
+Observed memory PSI averages zero, irqbalance absent/inactive, NVMe scheduler
+none, zswap disabled and THP defrag madvise. This is a snapshot, not workload
+delta evidence; no IRQ/memory policy decision or loaded acceptance claimed.
+No kernel tuning, service restart, live activation or reboot performed.
