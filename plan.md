@@ -1585,7 +1585,7 @@ Because `/var` is persistent, long-lived state should have explicit growth expec
 
 ## 20.1 Journal
 
-- [ ] inspect current journal size:
+- [x] inspect current journal size (2026-10-05: current identity 28.8 MiB, all identities 103 MiB; maintenance inventory below):
 
 ```bash
 journalctl --disk-usage
@@ -1597,7 +1597,7 @@ Choose the cap from actual usage. For this 1 TB workstation, something in the lo
 
 ## 20.2 Core dumps
 
-- [ ] inspect `/var/lib/systemd/coredump` or current coredump policy.
+- [x] inspect `/var/lib/systemd/coredump` and current coredump policy (2026-10-05: 213 MiB external files, upstream 2w retention; current identity no cores).
 - [?] set an explicit retention/size policy if large Unreal/browser/game crashes are accumulating many GiB.
 
 Keep enough crash evidence to diagnose failures, but do not allow persistent `/var` to become an uncontrolled artifact sink.
@@ -3879,3 +3879,33 @@ pressure-triggered collector. Full-store optimise/verification remain pending.
 The new maintenance candidate is additionally protected by a seventh explicit
 GC root, `workstation-preparation/maintenance-candidate`; previous six roots
 remain intact. No old candidate was retired or any store output collected.
+
+## Maintenance publication and background-service audit — 2026-10-05
+
+Published maintenance source commit 45dcd95 and synchronization a2b13ca on
+feat/workstation-validation. Draft PR #3 updated to include ownership, cooling
+correctness, real-profile VM and maintenance scope; GitHub reports MERGEABLE.
+Exact-head CI run 37289528027 is in progress. No source integration/activation.
+
+Read-only Phase 31 running-service/timer audit found 16 system services and
+14 user services. Keep networking (NM/wpa), name service, Nix daemon, D-Bus,
+polkit, realtime audio scheduling, journals/logind/udev/time sync, cooling,
+Bluetooth, tty login and oomd. User units serve Hyprland/Waybar/session binding,
+PipeWire/WirePlumber, portals/GVfs and authentication. No evidenced obsolete
+service warrants removal. Bluetooth usage is unmeasured; preserve current
+functionality rather than infer that an enabled peripheral service is unused.
+Current four timers: hourly logrotate, daily tmpfiles, weekly fstrim, monthly
+scrub. All must be accounted for in later controlled measurement windows;
+no timer or service stopped during this audit. Automatic GC remains absent
+from the running generation. Candidate maintenance schedules differ as recorded.
+
+Post-build memory snapshot: both memory PSI averages zero, 32 GiB disk swap
+used 0, zswap disabled; this is only one post-build snapshot, not proof of
+Unreal/Blender workload pressure. Keep existing memory policy pending workload
+acceptance. NVMe scheduler is kernel-selected none; no scheduler override.
+
+Phase 31 boot timing capture: graphical.target at 6.681s; cooling service
+3.465s on critical chain. Keep cooling startup intact rather than trade away
+hardware safety for boot timing. THP enabled/defrag both madvise; unchanged.
+These observations describe the current physical trial closure, not the new
+unactivated candidate.
