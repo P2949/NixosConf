@@ -111,6 +111,10 @@
             '';
       };
 
+      packages.${system}.impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
+        inherit inputs pkgs;
+      };
+
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         inherit system;
 
