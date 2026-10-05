@@ -369,6 +369,10 @@ The [development validation notes](docs/development-validation.md) cover
 project toolchain ownership, scoped clangd compiler queries and the current
 physical KVM acceptance gate.
 
+The [selected stable refresh](docs/stable-refresh.md) records its isolated
+input update, complete offline validation, closure diff and matching recovery
+artifact. Physical acceptance remains pending.
+
 The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
 windows, rollback artifact retention and bounded persistent diagnostics.
 The prepared policy remains pending physical installation and acceptance.
