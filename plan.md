@@ -4353,3 +4353,18 @@ is explicitly completion time with elapsed duration, not mislabeled start.
 30minute thermal and longer OC/RAM stability gates remain open. Review
 firmware/OC/power/cooling state before retry; do not repeat short tests or
 relax the boundary merely to obtain a green result.
+
+## Cooling response timing and CI supersession — 2026-10-05
+
+Journal correlation places approximate stress interval10:55:13.778–18.838UTC;
+keeper commanded fans100% at10:55:16.405 (CPU79C) before supervisor stop,
+then60% at10:55:30.408 (CPU28C). PID912/invocation unchanged and session
+active. This establishes logged control response, not measured RPM/capacity
+or sustained acceptance. Private cooling journal added to thermal receipts.
+
+Preparation workflow adds workflow/ref concurrency with cancel-in-progress
+per official GitHub documentation, retaining Flake checks name/triggers and
+required-check semantics. This prevents future superseded same-ref checks
+from consuming parallel CI; separate branches/PR refs stay independent.
+Whitespace review passed; new exact-head CI acceptance remains pending.
+No host load repeated, cooling change, reboot or activation.
