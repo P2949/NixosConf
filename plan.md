@@ -4169,3 +4169,63 @@ GameMode source/docs committed on isolated preparation branch; desktop build
 and behavioral VM complete. Root safety A/B/recovery/fallback derivations
 remain unchanged by this gaming-policy fix. No source integration into running
 generation, no reboot scheduled, live graphical session/cooling remain active.
+
+## Deliberate stable-input refresh preparation — IN PROGRESS, 2026-10-05
+
+Previous goal turn made concrete progress: GameMode authorization source fix,
+behavioral VM allow/deny proof, full build and audio transport evidence published.
+Phase30 upstream inspection now finds stable26.05 HEAD
+0d9e9b832d03ac387417e16ce1febf73b2e631e1 (2026-10-04T19:50:49Z), compared
+with current774debe7a0d1b496e35677ad955a1011c6ff74f3. Home Manager release26.05
+HEAD remains db7d5e2332710f5abb088f6b5de927d7f9511b35 (same current pin).
+GitHub compare reports171 commits/254 changed files, including kernel6.18.55
+and wpa_supplicant2.12 updates. Actual closure impact still must be reviewed.
+Primary upstream comparison:
+https://github.com/NixOS/nixpkgs/compare/774debe7a0d1b496e35677ad955a1011c6ff74f3...0d9e9b832d03ac387417e16ce1febf73b2e631e1
+
+Created isolated /persist/etc/nixos-stable-refresh worktree on
+feat/stable-refresh-validation from preparation head862735e. Current root
+and preparation branch pins remain unchanged. Selected only nixpkgs and
+consistent HM release refresh; retain proven Disko/Impermanence/unstable/
+liquidctl pins. Lock diff/evaluation in progress before any merge/activation.
+Need full fast/heavy tests, desktop/recovery builds, closure review and later
+physical acceptance before declaring this chosen refresh accepted/frozen.
+No reboot or service restart; existing candidates/ISO GC roots retained.
+Lock update complete: exactly nixpkgs locked revision/date/narHash changed;
+original nixos-26.05 ref and every other input node identical. Fast checks
+passed. New desktop candidate built and registered valid in store:
+/nix/store/bv3qgrvavss8r34shphqch0cdp4yk14j-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Closure diff from cpwr: kernel/initrd6.18.54->6.18.55, Lua5.5.0->5.5.1,
+WebKitGTK2.54.0->2.54.1, wpa_supplicant2.11->2.12, system revision/source
+metadata changes; no Mesa-version change reported. Exact diff saved in /tmp.
+Candidate protected by ninth GC root stable-refresh-candidate; prior eight
+retained and private receipt refreshed. Real-profile VM (including polkit
+allow/deny controls) passed69.25s; safety matrix passed147.38s. Remaining
+A/B/recovery/fallback tests still running, recovery ISO compression active.
+Latest memory PSI averages zero; graphical session/cooling remain active.
+New stable recovery ISO built successfully:
+/nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso/iso/nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso
+1496678400 bytes, SHA25652e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061.
+Protected by tenth GC root stable-refresh-recovery-iso; original ISO/candidates
+retained, root-only receipt updated. Additional Ventoy copy flushed, checksum
+matched and cleanly unmounted under new filename
+nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso.
+No old images overwritten. Read-only exFAT/checksum remount verification now
+running; physical boot/drill still pending. A and B three-boot tests passed
+318.18s and322.56s under refreshed kernel; recovery/fallback still running.
+Refreshed recovery VM passed323.84s; only fallback VM remains active.
+Read-only post-remount ISO SHA256 matches52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061;
+exfatprogs -n reports clean (6 directories/9 files), clean unmount completed.
+Media-copy acceptance complete; physical boot/read-only drill still pending.
+Retired only our duplicated expanded GDB scratch core copy after diagnosis;
+original systemd core and private backtrace receipts retained. No user project,
+secret, store output, profile generation or forensic root removed.
+Fallback VM passed429.01s; full six-test build batch completed exit0.
+Complete refreshed outputs recorded root-only in
+/persist/nixos-stable-refresh-heavy-build-20261005.json and desktop/ISO JSON.
+All six explicit heavy VMs and all fast checks pass for chosen0d9e9b8;
+desktop/recovery builds and closure review complete. New recovery USB checksum
+and clean exFAT check passed; disk unmounted. Selected stable/HM alignment and
+all unchanged pins documented in isolated refresh branch, with closure-diff
+artifact committed. Current source root/preparation input pins remain unchanged
+pending review/integration; no final freeze or physical acceptance claimed.
