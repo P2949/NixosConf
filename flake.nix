@@ -57,11 +57,21 @@
             pkgs.nixfmt-tree
             pkgs.deadnix
             pkgs.statix
+            pkgs.gcc
+            pkgs.clang
+            pkgs.lld
+            pkgs.gdb
+            pkgs.cmake
+            pkgs.ninja
+            pkgs.gnumake
+            pkgs.pkg-config
+            pkgs.python3
           ];
         };
 
         validation = pkgs.mkShell {
           packages = [
+            pkgs.python3
             pkgs.stress-ng
             pkgs.hyperfine
             pkgs.perf
@@ -81,6 +91,15 @@
       };
 
       checks.${system} = {
+        commander-core-config = import ./tests/commander-core-config.nix {
+          inherit pkgs inputs;
+        };
+
+        commander-core-python = import ./tests/commander-core-python.nix {
+          inherit pkgs;
+          src = inputs.liquidctl-pr886;
+        };
+
         baseline-collector =
           pkgs.runCommand "check-baseline-collector"
             {

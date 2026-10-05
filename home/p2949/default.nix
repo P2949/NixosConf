@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./cli.nix
     ./desktop
     ./development
     ./shell.nix

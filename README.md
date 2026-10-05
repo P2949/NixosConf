@@ -53,6 +53,7 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── home/
 │   └── p2949/
 │       ├── default.nix
+│       ├── cli.nix
 │       ├── shell.nix
 │       ├── desktop/
 │       │   ├── default.nix
@@ -140,6 +141,12 @@ Development configuration is separated into:
 Custom package derivations belong here.
 
 `packages/liquidctl-pr886.nix` builds the pinned Liquidctl revision required by the Commander Core implementation.
+It accepts an explicit source selected at the flake/module boundary.
+
+Recovery and administration tools remain in `modules/core/packages.nix`.
+Interactive tools such as ripgrep, jq, gh and btop belong to Home Manager's
+`home/p2949/cli.nix`. Compilers, debuggers, build systems and Python are provided
+by `nix develop`, which also contains the repository's Nix lint tools.
 
 ### `optimization/`
 
@@ -297,6 +304,7 @@ The flake exposes reproducible checks for:
 - Desktop and recovery-specialisation evaluation
 - Ephemeral-root configuration validation
 - Baseline collector syntax and ShellCheck
+- Commander Core option validation, Python syntax, Ruff and hardware-free unit tests
 
 CI deliberately does not build the complete workstation closure.
 
