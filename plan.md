@@ -3015,7 +3015,7 @@ Use this as a smaller tracker after Impermanence is complete.
 [ ] BIOS/ME decision
 [ ] OC/RAM revalidation
 [x] ReBAR audit (16 GiB GPU BAR above 4 GiB; firmware policy freeze pending)
-[ ] CPU policy audit
+[~] CPU policy declarations audited; loaded comparison/final running acceptance pending
 [ ] zram decision
 [ ] irqbalance decision
 [x] NVMe scheduler audit (kernel-selected none; preserved)
@@ -4290,3 +4290,20 @@ storage module and workstation/maintenance/Commander tests. Backup ledger
 updated with inventory scope and limitations. Documentation diff whitespace
 check passed. No home data removed, backup destination assumed, live
 activation, reboot or service restart performed.
+
+## Evaluated stock policy audit — 2026-10-05
+
+Stable-refresh source909700b evaluated kernel6.18.55, no permanent governor,
+irqbalance=false, zram=false and existing disk swap with implicit priority.
+No mitigation-disable/CPU-isolation parameters or arbitrary memory tuning.
+System/HM environment names exclude global compiler/linker flags,
+LD_LIBRARY_PATH, RADV_PERFTEST and MALLOC_CONF. Optimization module remains
+empty; nix-ld compatibility variables are intentional. Names only recorded,
+not environment values. Root-only receipt:
+/persist/nixos-stock-policy-audit-20261005.json.
+Initial attempt serialized whole swap submodule and encountered unset optional
+label; corrected query selected defined device/priority fields and succeeded.
+This is an evaluation-query issue, not a failed configuration build.
+Preparation docs/stock-policy.md records declared policy and remaining scope.
+Loaded CPU/IRQ/memory evidence, firmware policy and final running acceptance
+remain pending. No activation, tuning, reboot or graphical restart performed.
