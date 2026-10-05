@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/impermanence
   pull_request:
 
 concurrency:
