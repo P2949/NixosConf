@@ -9,7 +9,7 @@
 
     ../../profiles/workstation.nix
 
-    ../../modules/storage/btrfs-maintenance.nix
+    ../../modules/storage/btrfs-maintenance
     ../../modules/hardware/commander-core
   ];
 

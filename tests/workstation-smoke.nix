@@ -17,7 +17,7 @@ vmPkgs.testers.runNixOSTest {
       inputs.home-manager.nixosModules.home-manager
       ../profiles/workstation.nix
       ../modules/hardware/commander-core
-      ../modules/storage/ephemeral-btrfs-root.nix
+      ../modules/storage/ephemeral-btrfs-root
     ];
     _module.args = { inherit inputs username pkgsUnstable; };
     # Match the harness's immutable package configuration to the real profile.

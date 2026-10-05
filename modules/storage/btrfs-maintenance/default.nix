@@ -6,9 +6,14 @@
 }:
 
 let
+  # Keep the accepted store identity while organizing the source filename.
+  guardSource = builtins.path {
+    path = ./guard.sh;
+    name = "maintenance-guard.sh";
+  };
   guard =
     mode:
-    "${pkgs.bash}/bin/bash ${./maintenance-guard.sh} ${mode} ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
+    "${pkgs.bash}/bin/bash ${guardSource} ${mode} ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
 in
 {
   services.btrfs.autoScrub = {

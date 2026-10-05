@@ -36,10 +36,12 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │   ├── gaming/
 │   ├── compatibility/
 │   ├── storage/
-│   │   ├── btrfs-maintenance.nix
-│   │   ├── ephemeral-btrfs-root.nix
-│   │   ├── ephemeral-root-reset.sh
-│   │   └── maintenance-guard.sh
+│   │   ├── btrfs-maintenance/
+│   │   │   ├── default.nix
+│   │   │   └── guard.sh
+│   │   └── ephemeral-btrfs-root/
+│   │       ├── default.nix
+│   │       └── reset.sh
 │   └── hardware/
 │       └── commander-core/
 │           ├── default.nix

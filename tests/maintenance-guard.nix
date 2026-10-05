@@ -7,8 +7,8 @@ pkgs.runCommand "check-maintenance-guard"
     ];
   }
   ''
-    bash -n ${../modules/storage/maintenance-guard.sh}
-    shellcheck ${../modules/storage/maintenance-guard.sh}
+    bash -n ${../modules/storage/btrfs-maintenance/guard.sh}
+    shellcheck ${../modules/storage/btrfs-maintenance/guard.sh}
     cat > systemctl-stub <<'STUB'
     #!/usr/bin/env bash
     if [[ "$STATE" == unavailable ]]; then exit 1; fi
@@ -31,7 +31,7 @@ pkgs.runCommand "check-maintenance-guard"
       role=$2
       export STATE=$3 SCRUB=$4
       status=0
-      bash ${../modules/storage/maintenance-guard.sh} "$role" "$PWD/systemctl-stub" "$PWD/btrfs-stub" || status=$?
+      bash ${../modules/storage/btrfs-maintenance/guard.sh} "$role" "$PWD/systemctl-stub" "$PWD/btrfs-stub" || status=$?
       test "$status" = "$expected"
     }
     check 0 gc inactive clean

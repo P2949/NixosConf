@@ -10,7 +10,7 @@ pkgs.testers.runNixOSTest {
     { pkgs, ... }:
     {
       imports = [
-        ../modules/storage/ephemeral-btrfs-root.nix
+        ../modules/storage/ephemeral-btrfs-root
       ];
 
       virtualisation = {

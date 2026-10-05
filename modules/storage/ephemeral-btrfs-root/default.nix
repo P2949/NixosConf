@@ -54,7 +54,7 @@ let
         (lib.escapeShellArg cfg.logFile)
         allowedDescendantCheck
       ]
-      (builtins.readFile ./ephemeral-root-reset.sh);
+      (builtins.readFile ./reset.sh);
 
 in
 {
