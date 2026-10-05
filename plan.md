@@ -1356,7 +1356,7 @@ Before the later system-wide experiment, the normal operating procedure must be 
 
 ## 17.1 `dry-activate`
 
-- [ ] Use before changes that may restart important services.
+- [x] Dry activation preview exercised against built workstation candidate a02fb on 2026-10-05 before any real activation; running closure/profile, cooling PID/invocation, boot ID and graphical session unchanged. Continue using previews before service-affecting changes.
 
 ```bash
 sudo nixos-rebuild dry-activate --flake '.#desktop'
@@ -4003,3 +4003,45 @@ boot/drill. No host reboot, live activation, service restart, home-data copy,
 secret read or old ISO replacement occurred. Recovery and backup documentation
 updated on the isolated preparation branch. Independent backup destination
 question remains pending; continue unrelated offline work while awaiting it.
+
+## Activation preview and Blender preflight — 2026-10-05
+
+Reviewed generated candidate dry-activation snippets: persistence/filesystem
+activation excluded; user update code checks NIXOS_ACTION=dry-activate.
+Existing /root0700 and /home0755 match the generated directory setup.
+Ran a02fb/bin/switch-to-configuration dry-activate successfully, equivalent
+to previewing that already built exact closure without rebuilding source.
+Would stop/start commander-core, reload D-Bus, restart scrub timer, HM,
+polkit and journald. No real switch/test/boot performed. Before/after capture
+proves unchanged boot ID, runtime closure, system profile, cooling MainPID
+and InvocationID, active Wayland session. Private preview/runtime receipts
+saved under /persist. This confirms why live activation is still deferred.
+
+Current Blender 5.2.2 LTS background factory-startup HIP probe completed
+exit0, enumerating physical RX9070XT HIP and CPU. CUDA CUEW initialization
+warning observed; selected test backend is HIP, not CUDA. No custom user
+preferences/project opened or altered. A bounded factory-scene GPU render
+smoke is running with only the physical HIP GPU selected, CPU device disabled,
+512x512/32 samples and two host preparation threads; output only under /tmp.
+This is preparation smoke, not sustained or user-project render acceptance.
+
+Blender HIP smoke completed exit0: RX9070XT selected alone, CPU disabled,
+512x512/32 samples rendered to PNG (210552 bytes) in 2.30 seconds; private
+receipt /persist/nixos-blender-hip-smoke-20261005.json. Targeted current kernel
+log has no new GPU timeout/reset/fault or MCE/hardware-error match. Wayland
+remains active, Commander Core remains active, zero failed system units.
+After tests CPU package30C/GPU junction39C. Representative project render,
+longer thermal/stability and final candidate acceptance remain open.
+Exact preparation head a17023b CI run 37290998797 succeeded.
+
+Actual AI_Gavin_ProjectEditor Linux Development incremental target build
+passed using the existing Steam FHS environment, Epic bundled DotNet, Clang
+20.1.8 from v26_clang-20.1.8-rockylinux8/x86_64-unknown-linux-gnu and bundled
+libc++. MaxParallelActions=2 and nice10 used to preserve interactivity.
+One project shared-library link action executed, result Succeeded in2.06s;
+this is not a full recompile or large-compiler-load stability proof. Tracked
+project worktree remains clean. First invocation from /etc/nixos failed
+because the FHS view lacks that cwd; retried from actual project directory
+with the identical build command. No source edits or engine/toolchain flags
+changed. Private full build log /persist/nixos-unreal-cpp-build-20261005.log.
+Graphical editor/project launch, play and Vulkan rendering remain pending.
