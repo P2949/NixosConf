@@ -4576,3 +4576,93 @@ Three historical physical reset trials are sufficient viability evidence.
 No physical reboot, live activation, graphical or cooling restart performed.
 Decision: PROCEED with existing offline batch; HOLD source changes/integration
 and physical installation until their prerequisite gates are satisfied.
+
+
+## Frozen-candidate validation checkpoint — 2026-10-05
+
+Existing session82197 polled live; fallback VM continues, not restarted.
+B completed receipt/logs and updated partial checkpoint copied root-owned0600
+to /persist/nixos-logguard-refresh-20261005. The complete user-supplied guide
+also preserved privately there as continuation-guide-20261005.md.
+Frozen stable-refresh worktree remains clean. Live Wayland session1 Active=yes
+and commander-core active. Only MP600 and Ventoy USB attached; independent
+backup/restore destination remains unavailable. No physical reboot, activation,
+source change to the candidate, or declaration of full-batch acceptance.
+
+
+## Exact frozen-source output identity — 2026-10-05
+
+Read-only evaluation of clean stable-refresh c5e036b returned desktop drv
+/nix/store/717rjl57vdmzbvi1xsh7y2l2rq778l6s-nixos-system-desktop-26.05.20261004.0d9e9b8.drv
+with declared output
+/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8.
+This differs from the older bv3 desktop identity in the handoff; declared
+output is not build acceptance. Existing batch will build/review it.
+Recovery drv6w0ihzdsp3i6f6i08m7siz9sccxamh3f still declares d55ny1z4d53slhz3ilvyy2mg6d8khrqn,
+so ISO identity remains unchanged at evaluation. No redundant ISO copy needed
+if build and existing media evidence confirm the same exact artifact.
+Concurrent eval emitted ignored SQLite busy warnings but completed exit0.
+Derivation JSON probe initially assumed older top-level schema and failed;
+corrected for the current derivations envelope and obtained both outputs.
+No source change or physical activation. Fallback remains live session82197.
+
+
+## Refreshed persistent-root fallback passed — 2026-10-05
+
+Sequential batch82197 fallback completed exit0 in482.58s. Terminal VM evidence
+confirms persistent-root retained root sentinel/identity, machine ID, journals
+and credentials, with no failed units. Logs/output JSON and updated partial
+checkpoint preserved root-owned0600 under/persist/nixos-logguard-refresh-20261005.
+All five root VM scenarios now pass on frozen c5e036b; workstation-smoke has
+started on the same batch. Desktop/ISO build and closure review still pending.
+No physical boot/acceptance inferred from this VM. Candidate source unchanged;
+no host activation or graphical/cooling restart.
+
+
+## Exact c5e offline acceptance complete — 2026-10-05
+
+Session82197 terminal exit0: workstation-smoke passed10.04s with existing
+successful derivation reused (not a newly executed VM), desktop+ISO25.44s.
+All eight batch stages passed. Complete logs/JSON/checkpoint preserved privately
+under/persist/nixos-logguard-refresh-20261005. Frozen source clean c5e036b.
+Built desktop: /nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Matching persistent-root: /nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Recovery ISO remains d55ny1z4d53slhz3ilvyy2mg6d8khrqn; staged artifact unchanged.
+Exact closure-set comparison against bv3 removes only old system+initrd and
+adds new system+initrd; no package/kernel movement. Version diff empty.
+Private logguard-closure-diff.json records full set delta. New root-owned GCroot
+stable-refresh-logguard-candidate added under workstation-preparation and
+/persist/nixos-preparation-gcroots.json updated; all ten earlier roots retained.
+
+Offline c5e acceptance now complete, but physical acceptance is NOT complete.
+Independent backup+external restore, exact ISO boot/read-only drill, then boot-only
+installation and normal/persistent-root/normal maintenance window remain next.
+Do not merge stable-refresh or start readiness refactoring before those gates.
+Live cooling and graphical session remain active. No physical reboot or activation.
+
+
+## Physical preflight prepared without activation — 2026-10-05
+
+Root-private0600 physical-preflight.json created in the preserved logguard
+validation directory. Captures exact candidate and persistent-root closures,
+live closure/boot ID, private machine-ID hash, root subvolume, all persistent
+mounts, current ESP entries, three reset completions and session/service health.
+No failed units; commander-core active; graphical session1 active. Exact c5e
+candidate is NOT installed in current boot entries. Receipt explicitly records
+backup/restore and recovery-media physical drill pending, and must be refreshed
+before installation. Boot-only installation remains gated by those prerequisites.
+No host switch/test/boot installation, physical reboot or source change.
+
+
+## Prerequisite hold audit 1 — 2026-10-05
+
+After completing offline acceptance and preflight preparation, rechecked actual
+storage: only MP600 and Ventoy USB attached; no mounted NFS/CIFS/SSHFS destination.
+Independent backup destination remains unresolved. Exact candidate clean c5e;
+cooling and graphical session active. Guide forbids later source engineering
+or integration before physical acceptance, whose backup and ISO-drill gates
+remain unmet. No validation process remains running, and no redundant batch
+started. Current turn is a prerequisite hold, not new implementation completion.
+Next external input: connect/identify independent backup destination; then execute
+backup and representative restore before the planned physical maintenance window.
+Goal remains active; first consecutive impasse audit, not marked blocked.
