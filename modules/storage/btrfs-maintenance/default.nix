@@ -16,11 +16,18 @@ let
     "${pkgs.bash}/bin/bash ${guardSource} ${mode} ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
 in
 {
-  services.btrfs.autoScrub = {
-    enable = true;
-    interval = "*-*-01 02:00:00";
-    fileSystems = [ "/" ];
-  };
+  assertions = [
+    {
+      assertion = config.nix.gc.automatic;
+      message = "Btrfs maintenance coordination requires automatic Nix GC.";
+    }
+    {
+      assertion =
+        config.services.btrfs.autoScrub.enable
+        && builtins.elem "/" config.services.btrfs.autoScrub.fileSystems;
+      message = "Btrfs maintenance coordination requires a configured scrub of /.";
+    }
+  ];
 
   systemd.timers."btrfs-scrub--".timerConfig.AccuracySec = lib.mkForce "1min";
 

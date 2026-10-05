@@ -15,6 +15,12 @@
 
   networking.hostName = "desktop";
 
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "*-*-01 02:00:00";
+    fileSystems = [ "/" ];
+  };
+
   boot.loader.systemd-boot = {
     enable = true;
     configurationLimit = 20;
