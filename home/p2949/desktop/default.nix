@@ -11,7 +11,7 @@
   ];
 
   home.packages = with pkgs; [
-    # file manager
+    # File manager
     thunar
 
     # Wayland utilities
