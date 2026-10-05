@@ -355,6 +355,10 @@ The [baseline collector](docs/baseline-capture.md) records the current running
 system and repository identities, diagnostic results and missing evidence
 without activating configuration or running stress tests.
 
+The [development validation notes](docs/development-validation.md) cover
+project toolchain ownership, scoped clangd compiler queries and the current
+physical KVM acceptance gate.
+
 The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
 windows, rollback artifact retention and bounded persistent diagnostics.
 The prepared policy remains pending physical installation and acceptance.
