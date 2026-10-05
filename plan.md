@@ -16252,3 +16252,13 @@ session41850 exited0, producing4x7n27m1k6422dg0z8fcgcb9a41982dr. No recursion
 or type-complexity failure. nixfmt and git diff --check passed.
 Next: full flake checks, then final reconstruction and offline heavy suite;
 this evaluated harness has not yet passed execution. Host session preserved.
+
+## Final harness checks and reconstruction launch — 2026-10-05
+
+Full nix flake check source9ac1372, session99159, exited0: all checks passed.
+Formatting processed62Nix files with0changes; all registered checks passed.
+Log /tmp/readiness-final-flake-check.log. Final evaluated-Disko reconstruction
+started in session16726, nice19/max-jobs1/cores1, source9ac1372.
+Log /tmp/readiness-final-reconstruction.log; terminal acceptance still pending.
+No host activation/reboot. Remaining root/workstation/activation VM batch,
+intended stock-negative failure and recovery build follow this final harness.
