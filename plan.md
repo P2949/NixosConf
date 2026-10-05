@@ -2022,22 +2022,22 @@ A “fast” baseline that breaks university work is not a valid baseline.
 
 Validate the actual expected workflow, not just “the editor process launches”:
 
-- [ ] official UE 5.8.2 engine path still works;
-- [ ] Steam FHS wrapper works;
+- [~] official UE 5.8.2 path loaded actual project on current trial; final-candidate acceptance pending;
+- [~] Steam FHS build/editor wrapper passed actual-project tests on current trial; final-candidate acceptance pending;
 - [~] native Wayland startup/configured-map rendering passed on current physical trial closure (SDL3 wayland, compositor xwayland=false); final candidate/soak acceptance pending;
 - [~] actual editor Vulkan selects RX 9070 XT/RADV GFX1201, Mesa 26.1.8; final candidate acceptance pending;
 - [~] actual `AI_Gavin_Project` module and configured startup map loaded, 28 actors, ten-second editor tick/render hold; interactive play/final candidate acceptance pending;
-- [ ] C++ target builds successfully;
-- [ ] UnrealBuildTool uses Epic's intended toolchain/sysroot;
+- [~] actual editor target incremental link passed; full compilation/final-candidate acceptance pending;
+- [~] UBT reported Epic Clang 20.1.8/Rocky8 sysroot/libc++; final-candidate acceptance pending;
 - [ ] editor can run the project;
 - [ ] no global compatibility environment pollution was introduced.
 
 ## 30.2 Blender
 
-- [ ] intended Blender build launches;
-- [ ] RX 9070 XT ROCm/HIP path is available where expected;
-- [ ] Cycles GPU render completes;
-- [ ] no driver crash under a representative render.
+- [~] Blender 5.2.2 LTS loaded both actual local scenes; final-candidate acceptance pending;
+- [~] actual-scene render selected RX 9070 XT HIP alone; final-candidate acceptance pending;
+- [~] actual 33-object Cycles camera render completed 1920x1080/64 samples; sustained/final acceptance pending;
+- [~] no crash/new targeted GPU kernel faults in actual local-scene render; sustained/final acceptance pending.
 
 ## 30.3 Android Studio / KVM
 
@@ -4396,3 +4396,22 @@ session active. Root-private inspection/render receipts:
 This verifies actualscene load/render beyond factorysmoke, not all dependency
 classes, interactiveworkflow, sustainedrender or finalcandidateacceptance.
 No reboot, activation, service restart or physicalclockpolicy change.
+
+## Workload ledger reconciliation and Android prerequisite gap — 2026-10-05
+
+Phase24 checkbox ledger now marks measured Unreal wrapper/toolchain/target and
+Blender scene/HIP/render evidence partial rather than leaving those tests
+unrecorded. Full compilation, interactive/sustained work and finalcandidate
+acceptance remain open. No broader acceptance inferred from smoke tests.
+
+Android/Java preflight: no java/javac on current PATH; no Android declaration
+in current preparation Nix source; standard .android/.gradle/Android/
+AndroidStudioProjects/Google/JetBrains state paths absent; inspected home
+contains no Java source outside excluded engine/cache paths. Therefore an
+actual Android/Java workflow cannot yet be validated. This is distinct from
+BIOS-disabled VMX/missing /dev/kvm. No SDK licenses accepted, arbitrary JDK
+selected or absent application/project workflow assumed. Required tooling
+and intended project remain to establish; Android gate not bypassed.
+CI latest stable-refresh head59f26b run37300432384 observed pending; previous
+bb5699c run37300122243 inprogress; f16aeea run37299922367 cancelled;
+a109542 run37299736219 succeeded. No fresh load/reboot/activation performed.
