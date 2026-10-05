@@ -96,3 +96,29 @@ The main home archive integrity and representative external restore are still
 pending. `/persist/secrets` is outside its scope; the separate
 [bootstrap restore](bootstrap-secrets.md) is already user-confirmed. Preserve snapshots and
 receipts; only a terminal verified receipt closes the corresponding gate.
+
+## Independent Ventoy home backup accepted — 2026-10-05
+
+- [x] Main archive: 27,844,003,241 bytes.
+- [x] Zstd integrity passed; SHA-256
+  `9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`.
+- [x] Two Blender files and one actual Unreal project descriptor restored to
+  a separate root-private directory; all three source/restored hashes match.
+- [x] Earlier47-file engine supplement remains separately verified.
+- [x] Backup runner session50539 exited0, terminal receipt completed
+  2026-10-05T17:58:06Z. Ventoy cleanly unmounted17:58:09Z; findmnt confirms absent.
+
+USB folder: NixosConf-backups/2026-10-05; media UUID1BF6-1635. No formatting,
+partition change or existing ISO deletion. About12GiB free before unmount,
+above enforced4GiB reserve. Source is read-only home-ventoy-20261005 snapshot;
+application quiescence was not claimed. Engine ZIP and audited binaries/cache
+exclusions remain documented, with unique binary additions supplemented.
+Secrets backup is separate and user-confirmed from actual recovery.
+Private receipts, restored samples, scripts and logs are retained under
+/persist/nixos-ventoy-backup-20261005. This is point-in-time backup evidence;
+new work after snapshot creation requires a later backup before final freeze.
+
+Queued reconstruction session11114 started only after verified receipt and
+clean unmount, source736b0fb. Nix PID1186208 is actively building. This closes
+home archive/integrity/representative restore/unmount gates; it does not close
+reconstruction, physical hardware/workload acceptance or multi-day soak.

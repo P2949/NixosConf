@@ -61,7 +61,10 @@ workstation activation safety, current normal/persistent builds reproduce
 `cxc50rmb8i6akb62fcvzz3xkszzqf895` respectively (both stock26.05.20261004.0d9e9b8).
 Existing closure review and GC roots still apply. These remain uninstalled.
 Activation composition tests and full flake checks passed. The main Ventoy
-archive has completed writeback and zstd integrity; hashing/representative
-restore/terminal receipt/clean unmount remain open. Reconstruction is queued.
+archive passed integrity, SHA-256 and three representative restored-file hash
+comparisons, with terminal receipt and clean unmount. Reconstruction is running.
 The newest unified guide in plan.md supersedes older next-step ordering: no
 further broad refactor; close evidence before physical maintenance and freeze.
+
+Latest backup result: [backup receipt summary](backup-restore.md#independent-ventoy-home-backup-accepted--2026-10-05).
+Earlier open-backup statements above are superseded by this accepted result.
