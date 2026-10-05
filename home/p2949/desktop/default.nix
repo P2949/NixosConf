@@ -7,11 +7,11 @@
     ./waybar.nix
     ./notifications.nix
     ./fuzzel.nix
+    ./alacritty.nix
   ];
 
   home.packages = with pkgs; [
-    # Terminal / launcher / file manager
-    alacritty
+    # file manager
     thunar
 
     # Wayland utilities
