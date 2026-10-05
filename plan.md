@@ -1090,6 +1090,9 @@ Current fast checks:
 - Statix;
 - Deadnix.
 
+Implemented additions: desktop/recovery evaluation, ephemeral-root option
+validation and baseline collector syntax/ShellCheck. Python checks remain open.
+
 Keep the principle:
 
 > heavy multi-boot storage tests are explicit, not ordinary PR-lint work.
@@ -1654,8 +1657,8 @@ Do not assume these survived a firmware flash. Reconfirm them.
 
 For the RX 9070 XT:
 
-- [?] verify whether Resizable BAR and Above 4G decoding are enabled and actually exposed to the GPU;
-- [ ] if supported and currently off, evaluate enabling them **before** the final baseline;
+- [x] verify whether Resizable BAR and Above 4G decoding are enabled and actually exposed to the GPU;
+- [-] if supported and currently off, evaluate enabling them **before** the final baseline; already exposed, no change needed;
 - [ ] once chosen, freeze the policy.
 
 This is a stable platform-level performance feature, not part of the later compiler experiment.
@@ -2997,7 +3000,7 @@ Use this as a smaller tracker after Impermanence is complete.
 [ ] unified GC/generation policy
 [ ] journal/core-dump growth policy
 [x] validation dev shell
-[ ] baseline-info capture app/script
+[x] baseline-info capture app/script
 [x] closure-diff review procedure
 [ ] BIOS/ME decision
 [ ] OC/RAM revalidation
@@ -3512,3 +3515,63 @@ compatibility setting, distinct from an ambient linker path override.
 pushed to feat/impermanence. CI run 37257155346 completed successfully; local fast checks,
 fallback VM and validation-shell command resolution passed. No merge/tag or
 new host installation performed. This audit does not replace final acceptance.
+
+## Baseline collector preparation — 2026-10-05
+
+Phase 28 implementation: `scripts/nixos-baseline-info.sh` captures Git/lock and
+running system identities separately, plus CPU, firmware, memory, GPU, mounts,
+Btrfs usage/scrub/device counters, NVMe health and latest error entry, runtime
+services/timers/modules, observed thermals, cooling policy/state, root identity,
+machine identity and reset metadata/counts. Every command has an explicit exit
+status and 45-second timeout. Read-only privileged inspection uses sudo -n;
+no passwords, secrets or complete reset logs are copied. Collector clears only
+its own inherited LD_LIBRARY_PATH. Invocation/limitations documented in
+`docs/baseline-capture.md`; syntax/ShellCheck added to ordinary flake checks.
+
+Initial run exposed an invalid multi-target findmnt invocation and Btrfs read
+permission failures. Corrected to explicit mountpoint queries and noninteractive
+privileged reads. The full run with timeouts/device counters/error-log capture
+had no failed capture commands. ShellCheck flagged deliberately delayed child
+shell variable expansion; local annotations document that intent and direct
+syntax/ShellCheck checks passed. Final flake checks passed, including collector
+check drv `7vf3vxz0pfsz1szm2iczjkz5132964z0-check-baseline-collector.drv`.
+Publication pending.
+Final accepted baseline capture, ME version if retrievable, practical 32-bit
+Vulkan and controlled idle/load measurements remain separate and unproven.
+
+Storage observation: MP600 firmware EGFM11.3; SMART critical_warning=0,
+media_errors=0, available_spare=100%, percentage_used=18%, 12137 cumulative
+error-log entries. Latest retained entry is administrative queue 0, status
+0x2002 (nvme-cli labels it Invalid Field in Command), LBA/namespace 0; other
+15 requested slots were empty. This does not prove the nature of every
+historical error. Last scrub finished 2026-10-04 with no errors; current-boot
+kernel scan found no NVMe reset/timeout/I/O or Btrfs error matches.
+No firmware update or storage maintenance was performed.
+
+Previous log-only commit 91756e5 CI run 37257335711 completed successfully.
+
+### Task: baseline collector and read-only hardware evidence
+
+Status: **PROVEN** collector implementation, 47 successful capture commands,
+static checks and read-only preparation evidence; final baseline acceptance open
+Owner: Codex
+Started: 2026-10-05
+Completed: preparation snapshot captured 2026-10-05; full final manifest pending
+Commit / PR: current feat/impermanence preparation checkpoint
+NixOS generation: physical trial generation 33, unchanged
+System closure: `jj4h7abqachf769dpz308v480a6srdbs`
+Evidence / command output: 47 capture commands exit 0;
+`docs/baselines/pre-optimization/preparation-20261005.md` retains observed state,
+dirty repository status, collector SHA256 and source/runtime identities;
+`gpu-bars-20261005.txt` retains selected live PCI evidence
+Decision: keep current storage/graphics/firmware policies while completing validation
+Problems found: initial mount syntax/privileged reads and intentional child-shell lint
+Rollback path: revert source checkpoint; no activation or service changes
+Notes: report is preparation evidence, not final accepted baseline or workload testing
+
+Read-only ReBAR audit: RX 9070 XT at 0000:03:00.0, amdgpu driver, BAR 0 current
+size 16GB at physical address 0x4000000000 and BAR 2 current size 256MB.
+The actual mapped address is above 4GB, proving functional allocation there;
+the exact firmware menu labels were not read. ReBAR is exposed and needs no
+enablement change. BIOS still reports 3201 dated 2024-11-20. Firmware update
+decision, OC stability and final policy freeze remain open; no flash performed.

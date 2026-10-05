@@ -81,6 +81,20 @@
       };
 
       checks.${system} = {
+        baseline-collector =
+          pkgs.runCommand "check-baseline-collector"
+            {
+              nativeBuildInputs = [
+                pkgs.bash
+                pkgs.shellcheck
+              ];
+            }
+            ''
+              bash -n ${./scripts/nixos-baseline-info.sh}
+              shellcheck ${./scripts/nixos-baseline-info.sh}
+              touch "$out"
+            '';
+
         desktop-evaluation = import ./tests/desktop-evaluation.nix {
           inherit pkgs;
           config = inputs.self.nixosConfigurations.desktop.config;

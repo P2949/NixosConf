@@ -44,6 +44,12 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── packages/
 │   └── liquidctl-pr886.nix
 │
+├── scripts/
+│   └── nixos-baseline-info.sh
+│
+├── docs/
+│   └── baselines/pre-optimization/
+│
 ├── home/
 │   └── p2949/
 │       ├── default.nix
@@ -288,6 +294,9 @@ The flake exposes reproducible checks for:
 - Nix formatting
 - Statix
 - Deadnix
+- Desktop and recovery-specialisation evaluation
+- Ephemeral-root configuration validation
+- Baseline collector syntax and ShellCheck
 
 CI deliberately does not build the complete workstation closure.
 
@@ -327,6 +336,10 @@ This shell includes CPU, thermal, storage and graphics inspection tools;
 entering it does not run stress tests or change the workstation configuration.
 Tools come from the pinned nixpkgs input; `turbostat` is selected from the
 desktop's kernel package set.
+
+The [baseline collector](docs/baseline-capture.md) records the current running
+system and repository identities, diagnostic results and missing evidence
+without activating configuration or running stress tests.
 
 Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
 
