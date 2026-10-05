@@ -61,3 +61,27 @@ Do not substitute ambient Nix compilers for Epic's intended project toolchain.
 Private test receipts and build logs are retained under `/persist`; generated
 render output remains under `/tmp`. These results describe the currently
 running trial generation, pending final acceptance of the staged candidate.
+
+### Unreal Wayland project/map lifecycle
+
+The existing wrapper subsequently launched the actual project with temporary
+SDL Wayland selection and Vulkan. SDL3 reported `wayland`; the compositor
+reported a mapped native client (`xwayland=false`). Vulkan selected the
+RX 9070 XT/RADV GFX1201 with Mesa 26.1.8. The configured startup map loaded
+with 28 actors and remained active for ten seconds of editor ticks before
+orderly exit with code 0 using the unchanged default Mimalloc allocator.
+Interactive gameplay and the final candidate/soak remain pending.
+
+Automation scripts must respect the editor's shutdown lifecycle. An immediate
+`SystemLibrary.quit_editor()` from the map-loading script caused an ICU/Slate
+cleanup crash. The corrected probe used
+`EditorPythonScripting.set_keep_python_script_alive(True)`, a post-tick hold,
+and then cleared keep-alive so the native script executor deferred closing.
+It completed successfully with the default allocator. A diagnostic
+`-ansimalloc` trial also exited, but no allocator workaround was adopted.
+The intentionally failing probe/core is retained privately as harness evidence.
+
+Steam FHS uses a private `/tmp`; scripts and receipts that must cross that
+boundary belong in a private directory under home. The project itself remained
+Git-clean. Shutdown Vulkan suballocation warnings remain recorded for later
+workload review; the smoke result is not a claim of warning-free operation.
