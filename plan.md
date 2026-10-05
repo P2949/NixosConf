@@ -4415,3 +4415,50 @@ and intended project remain to establish; Android gate not bypassed.
 CI latest stable-refresh head59f26b run37300432384 observed pending; previous
 bb5699c run37300122243 inprogress; f16aeea run37299922367 cancelled;
 a109542 run37299736219 succeeded. No fresh load/reboot/activation performed.
+
+## Reset diagnostic alias hardening in progress — 2026-10-05
+
+Code review found reset log initialization could follow symlink/hardlink aliases
+and chmod/append unrelated persistent data before refusal. Source now validates
+relative log components, checks each parent against symlinks/non-directories,
+and refuses leaf symlink/nonregular/hard-linked files before touch/chmod.
+Nested log paths remain supported with a positive configuration control.
+Safety matrix adds five leaf-alias/type cases and two parent-alias/type cases;
+file modes now included in preservation comparisons and log metadata retained
+on refusal. New totals intended33runtime refusals/43invalid config cases,
+with4positive controls. No physical source activated.
+Bash source formatting completed. Fast check session10340 and disposable
+Btrfs safety VM session66710 authoritatively still running; logs under
+/tmp/nixos-log-safety-{fast,vm}-20261005.log. Results not yet claimed.
+These are additional safety changes; prior closure/VM results do not establish
+acceptance of this new script. No reboot, cooling/graphical restart or live
+activation. Propagation/build review follows passing checks.
+
+Fast checks completed exit0. First safety VM stopped at nested-parent fixture:
+test replacement assumed quoted safe assignment, but escapeShellArg emitted
+an unquoted safe filename, so fixture still used default leaf. Leaf alias/type
+cases passed before this harness error. Corrected fixture derives both
+assignment spellings using the same escapeShellArg helper; rerun required.
+Production nested-parent behavior not accepted based on failed fixture.
+
+Corrected VM session72429 confirms all7new unsafe-log cases passed, including
+nested parent symlink/file, while remaining matrix still running. Added
+explicit nested-log runtime positive control for safe directory creation and
+successful reset; not part of the currently running derivation, so another
+final safety build is required before full acceptance. Formatting passed.
+Existing stable-refresh exact-head d13d010 CI37300638766 completed success;
+this predates uncommitted log hardening and is not evidence for new code.
+
+Corrected33-refusal safety VM completed exit0. Final safety rebuild now includes
+new nested-log successful-reset positive control, with final fast recheck
+because the fixture changed. Logs /tmp/nixos-log-safety-final-20261005.log
+and /tmp/nixos-log-safety-final-fast-20261005.log. Both builds started;
+positive-control outcome not yet claimed. Previous33case proof remains valid
+for unchanged production script; later fixture extends coverage.
+
+Final fast check session56404 completed exit0. Final safety session91247
+completed exit0:33refusals plus safe nested-log successful-reset control.
+Actual physical log metadata root:root/0600/regular/one link satisfies guards;
+read only, no physical reset attempted. New source is ready for publication
+and propagation; selected refreshed-input boot/closure validation remains
+required because script changed. Full baseline still not accepted.

@@ -111,7 +111,8 @@ in
       }
       {
         assertion =
-          cfg.logFile != "" && !(lib.hasPrefix "/" cfg.logFile) && !(lib.hasInfix ".." cfg.logFile);
+          builtins.match "([A-Za-z0-9_@][A-Za-z0-9_.@-]*/)*[A-Za-z0-9_@][A-Za-z0-9_.@-]*" cfg.logFile != null
+          && !(lib.hasInfix ".." cfg.logFile);
         message = "logFile must be a safe path relative to the persistence subvolume.";
       }
     ];
@@ -205,7 +206,28 @@ in
 
         log_file="$persist/$log_relative"
 
-        mkdir -p "$(dirname "$log_file")"
+        # Never follow an alias while creating diagnostics: otherwise even a
+        # refused reset could chmod or append to unrelated persistent data.
+        log_parent="$persist"
+        IFS=/ read -r -a log_parts <<< "$log_relative"
+        for ((i = 0; i < ''${#log_parts[@]} - 1; i++)); do
+          log_parent="$log_parent/''${log_parts[i]}"
+          if [[ -L "$log_parent" ]] || [[ -e "$log_parent" && ! -d "$log_parent" ]]; then
+            echo "FAIL: unsafe reset log parent: $log_parent" >&2
+            exit 1
+          fi
+          if [[ ! -e "$log_parent" ]]; then
+            mkdir "$log_parent"
+          fi
+        done
+        if [[ -L "$log_file" ]] || [[ -e "$log_file" && ! -f "$log_file" ]]; then
+          echo "FAIL: reset log must be a regular file without aliases" >&2
+          exit 1
+        fi
+        if [[ -e "$log_file" && "$(stat -c %h "$log_file")" != 1 ]]; then
+          echo "FAIL: reset log must not have hard links" >&2
+          exit 1
+        fi
         touch "$log_file"
         chmod 0600 "$log_file"
 

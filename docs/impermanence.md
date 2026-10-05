@@ -38,7 +38,10 @@ The `/sysroot` mount guard and `RemainAfterExit=true` prevent resetting a
 mounted root during the proven initrd lifecycle. Normal activation constructs
 runtime directories; the reset service does not recreate `/tmp` or `/srv`.
 Diagnostics go to `@persist/ephemeral-root-reset.log` with mode `0600` and a
-boot ID. Missing or invalid persistence fails on stderr before any deletion.
+boot ID. Relative log path components must be safe names; existing parents
+cannot be symlinks or non-directories. The leaf must be a regular file with
+only one hard link, or absent. Unsafe diagnostic paths fail on stderr before
+log creation, chmod or root reset. Missing or invalid persistence fails on stderr before any deletion.
 
 ## Reproduce validation
 
@@ -55,13 +58,13 @@ nix build '.#impermanence-root-fallback' --no-link --no-write-lock-file -L
 ```
 
 The lightweight `ephemeral-root-config` check forces NixOS evaluation for
-three accepted configurations and 39 rejected configurations. VM tests remain explicit packages, outside
+four accepted configurations and 43 rejected configurations. VM tests remain explicit packages, outside
 ordinary flake checks. The test driver retains type checking and linting.
 
 | Test | Coverage |
 | --- | --- |
 | Configuration | Default and leading-slash root options accepted; non-systemd initrd, non-Btrfs root, missing device, unsafe names, conflicting names and missing/mismatched/conflicting root selectors rejected |
-| Safety | 26 independent failure cases on a real disposable Btrfs disk: unknown child/grandchild, unknown child with empty staging, misleading ` path ` text in a subvolume name, missing root and staging, invalid root paths, missing/invalid persistence, mounted `/sysroot`, malformed staging with root present or absent |
+| Safety | 33 independent failure cases on a real disposable Btrfs disk: unknown child/grandchild, unknown child with empty staging, misleading ` path ` text in a subvolume name, missing root and staging, invalid root paths, missing/invalid persistence, mounted `/sysroot`, malformed staging with root present or absent, aliased/nonregular diagnostics and unsafe log parents |
 | Recovery | Real UEFI/systemd-initrd boot with missing root and empty staging, then a boot with existing root and stale empty staging, then a normal reset boot |
 | A | Three real root-reset boots without machine-ID persistence |
 | B | Same three-boot harness with machine-ID persistence; missing backing file initialized on first boot and stable non-empty identity reused thereafter |
@@ -185,3 +188,16 @@ Read-only pretrial snapshots of root, tmp and srv remain intact, along with
 all three historical forensic roots. An older conflicting persisted machine
 ID was archived privately before seeding the active identity. This does not
 prove the historical generation-30 failure cause.
+
+## Diagnostic path hardening follow-up
+
+The expanded safety VM passed all 33 refusal cases and an additional successful
+nested-log reset control on 2026-10-05. New cases cover log symlinks (including
+broken ones), hard links, directories/FIFOs and symlink/non-directory parents.
+Refusals compare file modes as well as identities, entries and contents; unsafe
+log metadata remains intact. The positive control creates a safe log directory,
+resets root, retains persistent data and writes a regular 0600 completion log.
+All fast checks pass with 43 rejected and four accepted configurations.
+Earlier result tables describe the preceding 26-case revision; their closures
+do not prove this follow-up code. Refreshed-input boot tests and candidate
+builds must be repeated before deployment. No physical activation occurred.

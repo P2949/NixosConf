@@ -132,6 +132,10 @@ let
         ""
         "/etc/machine-id"
         "../outside"
+        "logs//reset.log"
+        "logs/./reset.log"
+        "logs/reset\n.log"
+        "logs/"
       ];
 
   results = map (
@@ -147,6 +151,9 @@ let
     case.name
   ) invalidCases;
 in
+assert lib.assertMsg (accepted {
+  boot.ephemeralBtrfsRoot.logFile = "logs/reset.log";
+}) "Nested reset log path rejected";
 assert lib.assertMsg (accepted { }) "Default ephemeral root configuration rejected";
 assert lib.assertMsg (accepted {
   fileSystems."/".options = lib.mkForce [ "subvol=/@root" ];

@@ -58,6 +58,12 @@ pkgs.testers.runNixOSTest {
 
     let
       resetScript = pkgs.writeShellScript "ephemeral-root-reset-safety" nodes.machine.specialisation.ephemeral.configuration.boot.initrd.systemd.services.ephemeral-root-reset.script;
+      nestedResetScript = pkgs.writeShellScript "ephemeral-root-reset-nested-log" (
+        builtins.replaceStrings
+          [ "log_relative=${pkgs.lib.escapeShellArg "ephemeral-root-reset.log"}" ]
+          [ "log_relative=${pkgs.lib.escapeShellArg "logs/reset.log"}" ]
+          nodes.machine.specialisation.ephemeral.configuration.boot.initrd.systemd.services.ephemeral-root-reset.script
+      );
     in
     ''
       import re
@@ -88,7 +94,7 @@ pkgs.testers.runNixOSTest {
           )
           entries = machine.succeed(
               "find " + top + " -mindepth 1 ! -path " + log_path
-              + " -printf '%P %y %l\\n' | sort"
+              + " -printf '%P %y %m %l\\n' | sort"
           )
           contents = machine.succeed(
               "find " + top + " -type f ! -path " + log_path
@@ -108,6 +114,11 @@ pkgs.testers.runNixOSTest {
           ("invalid-persistence", True, "empty", "persist-directory", "persistence path is not a Btrfs subvolume"),
           ("sysroot-mounted", True, "empty", "mounted", "/sysroot is already mounted"),
       ]
+      for kind in ("symlink", "broken-symlink", "directory", "fifo", "hardlink"):
+          reason = "must not have hard links" if kind == "hardlink" else "must be a regular file without aliases"
+          cases.append(("log-" + kind, True, "empty", "log-" + kind, reason))
+      for kind in ("symlink", "file"):
+          cases.append(("log-parent-" + kind, True, "empty", "parent-" + kind, "unsafe reset log parent"))
       for root_present in (False, True):
           for staging in ("child", "file", "dotfile", "directory", "symlink", "plain-directory", "alias", "broken-alias"):
               reason = (
@@ -170,12 +181,29 @@ pkgs.testers.runNixOSTest {
                   elif staging == "symlink":
                       machine.succeed("ln -s missing " + top + "/@root-next/data")
 
+              if root_kind == "parent-symlink":
+                  machine.succeed("ln -s ../@keep " + top + "/@persist/logs")
+              elif root_kind == "parent-file":
+                  sentinel("@persist/logs")
+              log_metadata = None
+              if root_kind.startswith("log-"):
+                  if root_kind in ("log-symlink", "log-broken-symlink"):
+                      target = "persist-sentinel" if root_kind == "log-symlink" else "missing"
+                      machine.succeed("ln -s " + target + " " + log_path)
+                  elif root_kind == "log-hardlink":
+                      machine.succeed("ln " + top + "/@persist/persist-sentinel " + log_path)
+                  elif root_kind == "log-directory":
+                      machine.succeed("mkdir " + log_path)
+                  else:
+                      machine.succeed("mkfifo " + log_path)
+                  log_metadata = machine.succeed("stat -c '%F %a %h' " + log_path)
               before = snapshot()
               if root_kind == "mounted":
                   machine.succeed("mkdir -p /sysroot")
                   machine.succeed("mount --bind " + top + "/@root /sysroot")
               machine.succeed("umount " + top)
-              output = machine.fail("${resetScript} 2>&1")
+              script = "${nestedResetScript}" if root_kind.startswith("parent-") else "${resetScript}"
+              output = machine.fail(script + " 2>&1")
               assert reason in output, output
               if root_kind == "mounted":
                   machine.succeed("umount /sysroot")
@@ -183,7 +211,9 @@ pkgs.testers.runNixOSTest {
               mount_disk()
               assert snapshot() == before, name + ": filesystem changed after refusal"
 
-              if root_kind not in ("mounted", "no-persist", "persist-directory"):
+              if log_metadata is not None:
+                  assert machine.succeed("stat -c '%F %a %h' " + log_path) == log_metadata
+              elif not root_kind.startswith("parent-") and root_kind not in ("mounted", "no-persist", "persist-directory"):
                   reset_log = machine.succeed("cat " + log_path)
                   assert reason in reset_log, reset_log
                   messages = re.findall(r"^\[[^]]+\] (.*)$", reset_log, re.MULTILINE)
@@ -193,5 +223,27 @@ pkgs.testers.runNixOSTest {
               else:
                   machine.succeed("test ! -e " + log_path)
               machine.succeed("umount " + top)
+
+      with subtest("nested-log-positive-control"):
+          machine.succeed("mkfs.btrfs -f -L impermanence-safety ${diskDevice}")
+          mount_disk()
+          create_subvolume("@persist")
+          create_subvolume("@root")
+          sentinel("@persist/persist-sentinel")
+          sentinel("@root/root-sentinel")
+          old_root = machine.succeed("btrfs subvolume show " + top + "/@root")
+          machine.succeed("umount " + top)
+          machine.succeed("${nestedResetScript}")
+          machine.succeed("! mountpoint -q /run/ephemeral-root-btrfs")
+          mount_disk()
+          assert machine.succeed("btrfs subvolume show " + top + "/@root") != old_root
+          machine.succeed("test ! -e " + top + "/@root/root-sentinel")
+          machine.succeed("grep -qx preserve-this-data " + top + "/@persist/persist-sentinel")
+          nested_log = top + "/@persist/logs/reset.log"
+          machine.succeed("test -f " + nested_log + " && test ! -L " + nested_log)
+          machine.succeed("test $(stat -c %a " + nested_log + ") = 600")
+          assert "RESET complete" in machine.succeed("cat " + nested_log)
+          machine.succeed("test ! -e " + top + "/@root-next")
+          machine.succeed("umount " + top)
     '';
 }
