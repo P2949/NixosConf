@@ -4273,3 +4273,20 @@ Observed memory PSI averages zero, irqbalance absent/inactive, NVMe scheduler
 none, zswap disabled and THP defrag madvise. This is a snapshot, not workload
 delta evidence; no IRQ/memory policy decision or loaded acceptance claimed.
 No kernel tuning, service restart, live activation or reboot performed.
+
+## Broader home inventory and architecture reconciliation — 2026-10-05
+
+Read-only full top-level home accounting completed: 31 entries, no failed
+directory scans, 18,361,851,904 allocated bytes across directories outside
+Development. Symlinks recorded without traversal; file contents not collected.
+Private root-owned 0600 receipt:
+/persist/nixos-home-full-inventory-20261005.json. This extends earlier partial
+size inventory but does not classify all application data, prove remote
+coverage, or substitute for independent backup and representative restore.
+Destination question remains pending; recovery USB is not repurposed.
+
+Preparation README architecture/tree reconciled with guarded maintenance,
+storage module and workstation/maintenance/Commander tests. Backup ledger
+updated with inventory scope and limitations. Documentation diff whitespace
+check passed. No home data removed, backup destination assumed, live
+activation, reboot or service restart performed.
