@@ -16513,3 +16513,23 @@ This is fresh comparison evidence for later firmware/candidate acceptance,
 not an accepted freeze manifest or sustained hardware/workload/soak result.
 Firmware OC/RAM values without trustworthy runtime access remain unknown.
 Window availability question still pending; no reboot/activation.
+
+## Physical-access blocking audit — 2026-10-05
+
+Same dependency persisted across three consecutive continuation turns:
+1. generation37/ESP preflight completed; firmware window availability requested;
+2. draft PR reconciled while window question remained unanswered;
+3. fresh57-command pre-firmware snapshot completed and pushed7207436.
+
+Final revalidation: /dev/kvm absent; firmware-attributes API absent; same live
+0p67xd... closure and bootID1299a2b6-c50b-4e83-8437-aa7e705914d6; clean worktree.
+No further required baseline implementation is safely executable before
+physical firmware capture/VMX and candidate boot acceptance. Remaining
+hardware/workload/soak/freeze evidence cannot be substituted by more offline
+checks, documentation or earlier-generation acceptance. Latest hosted CI still
+needing external runner availability also does not remove this dependency.
+
+Goal marked blocked on physical firmware access/window response after this
+audit; objective remains incomplete, not paused/completed. Resume when user
+can coordinate the retained BIOS3201/currentME window. No reboot scheduled,
+boot selection changed, live activation performed or graphical session ended.
