@@ -4,9 +4,7 @@
 explicit heavy test; ordinary flake checks evaluate it but do not execute it.
 
 The installer receives a new 96 GiB sparse virtual disk and the production
-Disko layout from `desktopSystem.config.disko.devices`, changing only the
-virtual device identity. This consumes the desktop's merged module configuration
-rather than independently importing the raw host layout. It creates GPT, 4 GiB
+Disko layout, changing only the virtual device identity. It creates GPT, 4 GiB
 ESP, 32 GiB swap and the Btrfs persistence islands. A test-only password hash
 uses the production `/persist/secrets/<username>-password-hash` contract.
 
@@ -32,3 +30,9 @@ a further reset; credential and journal persistence; all seven production
 subvolumes inspected read-only after shutdown; no failed units.
 Implementation/evaluation alone does not satisfy this gate: retain a successful
 execution receipt before the final baseline tag.
+
+The evaluated-device import was tested after the first terminal pass and
+deferred: Disko's computed script values retained the production device path
+despite the installer override. The raw host layout import allows Disko to
+evaluate its script in the installer configuration. The installed workstation
+still derives from the actual desktop with extendModules.

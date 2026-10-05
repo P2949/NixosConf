@@ -16262,3 +16262,21 @@ started in session16726, nice19/max-jobs1/cores1, source9ac1372.
 Log /tmp/readiness-final-reconstruction.log; terminal acceptance still pending.
 No host activation/reboot. Remaining root/workstation/activation VM batch,
 intended stock-negative failure and recovery build follow this final harness.
+
+## Evaluated Disko execution failure and explicit deferral — 2026-10-05
+
+Session16726 exited1 at real Disko partitioning, before desktop installation.
+Derived Disko script retained production MP600 path despite mkForce fixture
+device: realpath/sgdisk targeted an absent /dev/disk/by-id/nvme-Force_MP600_...
+inside the VM. Host disk was not exposed to the VM; no host partitioning occurred.
+Evaluation and full checks had passed, showing why execution was required.
+
+Per newest guide's explicit complexity deferral, revert evaluated-device import
+to the proven raw host layout import. Evaluated Disko devices include computed
+script values tied to their earlier device context; rebinding their public device
+option alone is insufficient. Do not add a sanitizing framework to force this
+optional refactor. Actual installed desktop still derives from desktopSystem.
+The ro,rescue=nologreplay fix and all independence requirements remain intact.
+Preserve failed log /tmp/readiness-final-reconstruction.log and prior terminal
+PASS receipt. Confirm final harness derivation equals proven sjanby8... before
+reusing its complete terminal evidence; then finish the remaining offline suite.
