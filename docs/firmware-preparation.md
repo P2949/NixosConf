@@ -32,3 +32,22 @@ Firmware virtualization is currently disabled, preventing physical KVM
 acceptance. Enable VMX in a batched maintenance window before final stock
 acceptance and freeze, then complete hardware/workload stability validation.
 No firmware packages have been flashed.
+
+## Retained-baseline settings capture
+
+Before changing VMX, record these firmware values for the retained BIOS/ME:
+
+- CPU multiplier, cache multiplier, core voltage mode/value, LLC and AVX offset.
+- PL1, PL2 and Tau.
+- RAM frequency, primary timings, voltage and XMP/manual policy.
+- VMX, Speed Shift/HWP and C-states policy.
+- ReBAR and Above 4G decoding.
+
+Runtime frequency or a benchmark cannot establish every firmware setting.
+Values unavailable through a reliable read-only interface remain unknown until
+the batched firmware window; do not invent them from the intended OC settings.
+Record before/after values and whether any setting other than VMX changed.
+Changes to CPU/RAM policy require stability validation of that final policy.
+No flash, automatic defaults reset, voltage change or tuning is part of this
+retained-firmware preparation. Enable VMX during the single coordinated window
+after offline acceptance, then verify /dev/kvm on the subsequent normal boot.

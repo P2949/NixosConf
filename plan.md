@@ -16406,3 +16406,46 @@ Remaining: hosted CI runner recovery, exact physical recovery-drill evidence,
 firmware OC/RAM capture+VMX maintenance, final-candidate physical boot chain,
 hardware stability, representative workloads and multi-day soak, backup refresh
 if substantial new work, then final manifest/tag. No premature freeze/merge.
+
+## Post-offline storage preparation and full store verification — 2026-10-05
+
+Current runtime remains0p67xd... . Btrfs all5device counters0; completed
+Oct4scrub clean147.24GiB/15seconds as currently reported. Btrfs895.51GiB,
+178.06GiB allocated,717.45GiB unallocated,147.23GiB used, estimated737.74GiB
+free, missing0, metadataDUP, no mixedprofiles, globalreserveused0. No redundant
+scrub launched. NVMecriticalwarning0,temp312K,spare100%,wear18%,mediaerrors0,
+unsafeShutdown2214,errorlog12143,warning/criticaltemperaturetime0. Latest
+entry remains adminqueue0,status8194(0x2002),parameterlocation40,LBA/ns0; no
+new increase from prior observation. No new targeted GPU/hardware/NVMe/Btrfs
+kernel error match since20:46 in the inspected interval.
+
+With no active game/render/build workload observed, required full store
+verification launched: sudo ionice-c3 nice-n19 nix-store --verify --check-contents.
+Session63787,NixPID2154541,log /tmp/readiness-nix-store-verify.log; live reading
+store/path/link hashes, terminal result pending. No --repair/optimization/GC.
+This is preparation; final accepted hardware/workload policy must still be
+validated after firmware/candidate physical acceptance.
+
+BIOS3201 and allMEblocks reconfirmed14.1.53.1649,14.1.53.1649,14.0.51.1528.
+docs/firmware-preparation.md now enumerates every requested OC/RAM/power/
+virtualization/ReBAR setting. Runtime frequency does not prove BIOS settings;
+unreadable values remain unknown for the coordinated firmware capture.
+No firmware change or host reboot/activation.
+
+## Current normal/persistent artifacts rebuilt and protected — 2026-10-05
+
+Source78f0773 plus pending documentation-only changes built exact normal
+0p67xd3scigqmmn65a0x5skdcsf6025b (drv7627m57ckrvdc97y0ca4x53ijaknkz19) and
+persistent-root ph12l3y4k9jjmp5vhxwlkc11x4js2gjx (drvg83qzkchik618bsfcd343phrlxplhrvw).
+Correct build session1982 exited0. Initial54531 used a nonexistent
+system.build.specialisation attribute and exited before building; corrected to
+config.specialisation.persistent-root.configuration.system.build.toplevel.
+Normal output matches currently running system; no installation/activation.
+
+Added independent GC roots final-readiness-normal and final-readiness-persistent
+under /nix/var/nix/gcroots/workstation-preparation, preserving every historical
+root. Updated root-private /persist/nixos-preparation-gcroots.json; exact build
+JSON retained /persist/nixos-readiness-20261005/final-candidates.json.
+Neither artifact has new physical boot acceptance merely from rebuild/roots.
+Full store verification session63787/PID2154541 still live hashing contents;
+no errors reported so far, terminal acceptance pending.
