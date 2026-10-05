@@ -52,3 +52,16 @@ retain that provenance and reconcile exact physical-media receipts.
 
 No final pre-optimization tag exists yet. Compiler optimization remains outside
 this project. Any final physical checks are batched to minimize interruptions.
+
+## Latest exact candidate identity
+
+After deriving reconstruction from the real desktop and moving/asserting
+workstation activation safety, current normal/persistent builds reproduce
+`l994fn5hpd2g2rijyffprl4368587m5w` and
+`cxc50rmb8i6akb62fcvzz3xkszzqf895` respectively (both stock26.05.20261004.0d9e9b8).
+Existing closure review and GC roots still apply. These remain uninstalled.
+Activation composition tests and full flake checks passed. The main Ventoy
+archive has completed writeback and zstd integrity; hashing/representative
+restore/terminal receipt/clean unmount remain open. Reconstruction is queued.
+The newest unified guide in plan.md supersedes older next-step ordering: no
+further broad refactor; close evidence before physical maintenance and freeze.
