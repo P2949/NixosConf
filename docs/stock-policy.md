@@ -29,3 +29,18 @@ Private evaluated receipt: /persist/nixos-stock-policy-audit-20261005.json.
 Only environment names are recorded, not values. This verifies candidate
 declarations; it does not prove final running policy, thermals, absence of
 per-application settings or workload performance. Freeze follows acceptance.
+
+## Loaded preparation interval, 2026-10-05
+
+A 55-second sample during the existing Proton game and USB home backup had
+about 25 GiB available RAM, 4.5 GiB occupied disk swap, 4,904 pages swapped in,
+zero pages swapped out and zero OOM events. Memory PSI some/full avg10 ended
+at0.01%; GPU interrupt42945 was on CPU7. These concurrent activities and the
+preceding VM tests make this preparation evidence rather than a controlled
+idle/load comparison. Do not infer balanced interrupts from aggregate timer
+counts or disable disk swap because available RAM is high. No policy was
+changed. Representative final-candidate compiler/Unreal workloads still need
+pressure and interrupt deltas before the stock policy is frozen.
+
+Private receipt:
+`/persist/nixos-readiness-20261005/pressure-game-backup-interval.json`.

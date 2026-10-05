@@ -8225,3 +8225,24 @@ audit scripts preserved root-private alongside receipts for reproducibility.
 Firmware and backup runbooks now explicitly reflect the user's retained
 BIOS3201/currentME choice and completed real secrets recovery; older conflicting
 recommendations in the historical ledger are superseded, not silently erased.
+
+## Readiness execution — loaded pressure interval, 2026-10-05
+
+Read-only55-second sample while user's existing Proton game and USB backup
+continued: MemAvailable26,371,032→26,488,752KiB; occupied disk swap about4.5GiB;
+pswpin+4904 pages, pswpout0, major faults+2159, OOM kills0. Memory PSI some/full
+avg10 ended0.01%, avg60 0.04/0.03%; GPU IRQ159 delivered42945 interrupts onCPU7.
+This is preparation after VM tests, not controlled idle or exact final-candidate
+acceptance. Timer/function-call distribution is not proof device IRQs are
+balanced. Retain current zram/irqbalance settings pending representative final
+workload evidence; no tuning occurred. Full private before/after receipt and
+collector script preserved under `/persist/nixos-readiness-20261005`.
+
+Optional isolated Facter adoption is consciously deferred for this baseline:
+existing explicit hardware configuration remains reviewed and tested; no
+identified hardware-provenance defect requires changing that framework. This
+optional experiment does not replace required physical hardware validation.
+
+PR CI37343573400 was cancelled by the newer push's configured concurrency;
+replacement37343814838 validates b4a1584 and is still running at this record.
+This is not a check failure or acceptance of an unfinished run.

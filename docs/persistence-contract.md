@@ -23,8 +23,9 @@ acceptance remains pending and is batched with other work.
 | Other mutable `/etc`, `/root` and root-local files | Root home inspected: Nix channels/cache only; ordinary root state disposable | Must be declared, persisted, backed up or approved disposable |
 
 Selective home and var Impermanence are deferred by `plan.md` Phase 4.
-No directory contents or secret values belong in this document. Independent
-encrypted backup and a restore test remain operator gates. The declarations
+No directory contents or secret values belong in this document. The separate encrypted secrets
+backup/restore gate is completed on user-confirmed real recovery; independent
+home backup verification remains open. The declarations
 alone do not prove credentials are present, correctly protected or backed up.
 
 Before first boot, inspect mutable `/etc` files with the Phase 4 inventory
@@ -72,8 +73,9 @@ and account source. A fresh `/etc` metadata inventory after boot three found
 only reconstructed account, sudo, marker, resolver and empty imperative-Wi-Fi
 files, plus persisted machine identity.
 
-The operator reports an older independent backup of secrets and recovery media
-previously used successfully. Backup freshness, encrypted storage and a
-representative restore proof remain unverified. Those broader baseline gates
-are not inferred from successful root reset. Full application acceptance and
+The operator confirms a separate secrets backup was restored successfully
+during recovery from an actual system failure. This completes that gate on
+user-reported evidence. Independent home backup is underway on Ventoy and
+requires its own terminal integrity/restore receipt. Those home gates are not
+inferred from successful root reset. Full application acceptance and
 the productive-period state audit remain pending.
