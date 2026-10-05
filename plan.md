@@ -8085,3 +8085,39 @@ entry point. Full fast checks exit0 including hardware-free Python7tests.
 Workstation-smoke reproduces1anhzd1q0pby5zy8qzyr6lf9spr5a0sb; built desktop
 remains grii8zp9miayx0747i1lvr6r91jzmyr6 for this source-only reorganization.
 Logs /tmp/readiness-test-registry-{fast,desktop-smoke,format}.log.
+
+## Readiness execution — native safeguards and backup scheduling, 2026-10-05
+
+Recovery image move aebae83 reproduces exact d55 ISO. Commander cleanup1613e19
+requires all policy arguments, passes watchdog seconds from one Nix constant,
+retains validation and adds Ruff format checking. Eight hardware-free tests,
+config check and unchanged workstation-smoke pass. Initial hysteresis fixture
+still relied on removed defaults; corrected to explicit test-only policy.
+01e019b adds shell syntax/ShellCheck checks as system.checks dependencies and
+reuses them in flake checks. Full current fast checks passed.
+
+Named activation guards now inspect /persist mount, root-owned0600/nonempty/
+non-aliased password source, ESP mount/free reserve and Btrfs topology. They
+never delete/reset subvolumes. ESP reserve256MiB based on largest installed
+initrd45,631,321bytes and3,948,449,792bytes free. Hardware-free fixture suite
+45cases passes. Generated preSwitchChecksScript executed directly read-only on
+this host with dry-activate arguments and exit0; no native host activation.
+Native action VM pending; its first failure was harness default disabling
+system.switch.enable, corrected explicitly, and stderr now captured for refusals.
+Built candidate normal l994fn5hpd2g2rijyffprl4368587m5w and persistent
+cxc50rmb8i6akb62fcvzz3xkszzqf895; these are NOT physically accepted.
+
+Stock control rejects four project-owned namespaces with native forbidden
+closure checks. Negative build now fails specifically for included
+8ii33j1vxfgl9z2gs954jbiwppsrhhlf-nixos-opt-pgo-fixture. Initial grouped regex
+exposed upstream unquoted shell interpolation; switched to four plain patterns.
+An empty probe dropped out of buildEnv closure; corrected to a retained bin file.
+Positive candidate normal/persistent builds succeed. No optimization introduced.
+
+USB writeback made host sgdisk's global sync wait (confirmed kernel stack), not
+an initrd/VM test failure. Compressor PID521504 temporarily SIGSTOP'd to drain
+about3GiB dirty pages; partial backup retained, not verified. Supervisor session12930
+resumes it automatically when root-matrix Nix PID527727 exits. Root matrix
+session43910 continues; backup session50539 remains unfinished. Do not forget
+resume/terminal verification or claim external restore before receipt exists.
+User graphical session, game and Commander Core remain running. No host reboot.

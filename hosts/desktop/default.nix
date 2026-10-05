@@ -8,12 +8,19 @@
     ./ephemeral-root.nix
 
     ../../profiles/workstation.nix
+    ../../modules/core/stock-control.nix
 
     ../../modules/storage/btrfs-maintenance
+    ../../modules/storage/activation-safety
     ../../modules/hardware/commander-core
   ];
 
   networking.hostName = "desktop";
+
+  boot.workstationActivationSafety = {
+    enable = true;
+    espReserveBytes = 256 * 1024 * 1024;
+  };
 
   services.btrfs.autoScrub = {
     enable = true;

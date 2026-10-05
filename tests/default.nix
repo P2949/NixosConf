@@ -8,6 +8,7 @@
 }:
 {
   checks = {
+    activation-safety = import ./storage/activation-safety/guard.nix { inherit pkgs; };
     ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
     btrfs-maintenance-shell = import ../modules/storage/btrfs-maintenance/check.nix { inherit pkgs; };
     maintenance-guard = import ./storage/btrfs-maintenance/guard.nix {
@@ -98,6 +99,8 @@
   };
 
   packages = rec {
+    activation-safety-actions = import ./storage/activation-safety/actions.nix { inherit pkgs; };
+    stock-contamination-negative = import ./workstation/stock-contamination.nix { inherit pkgs; };
     impermanence-root-test-a = reset-control;
     impermanence-root-test-b = persistent-identity;
     impermanence-root-recovery = interrupted-recovery;
