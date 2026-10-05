@@ -4,7 +4,9 @@ Status: source `c5e036b6e87d9aa77700909b508ccc0c3978d5b2` already
 passed physical normal → persistent-root → normal validation on 2026-10-05,
 ending at root subvolume297. The original three opt-in trials also passed;
 these are separate accepted historical results. The current readiness candidate
-and subsequent user desktop changes remain uninstalled and need final acceptance.
+is now installed as generation37. Its current normal boot has fresh-root,
+reset-log, identity/credentials, service, graphical login, network and persistent
+mount evidence. The remaining persistent-root/return legs are still unaccepted.
 Keep the graphical session alive during offline preparation.
 
 The supplied guide reports an earlier read-only recovery drill. Its exact ISO,
@@ -23,10 +25,18 @@ Accepted generation35 normal/persistent entries remain available. Both new
 candidate closures have independent GC roots; full store verification passed.
 No second boot installation is needed unless the candidate changes.
 
-VMX remains disabled and no firmware-settings API is exposed. Capture retained
-BIOS/OC/RAM/power settings and enable VMX at the machine in the coordinated
-window. Keep the graphical session alive until the user is ready. Boot-entry
-checks establish installed artifacts, not physical boot acceptance.
+The user enabled VMX and rebooted normal generation37; /dev/kvm and actual
+KVM initialization now pass. Firmware photo/runtime evidence is recorded in
+[firmware baseline](baselines/pre-optimization/firmware-20261005.md).
+CPU-heavy editor acceptance aborted at84C under the80C guard; review cooling
+and operating conditions before further heavy tests. Preserve the live session.
+
+Remaining-chain sentinels are staged: /root/nixos-readiness-final-root-sentinel
+and /persist/nixos-readiness-20261005/final-persistent-sentinel. Private0600
+final-physical-chain-preparation.json records identities and expected behavior.
+Persistent-root must retain root300 and both sentinels without another reset;
+return-normal must remove root-local sentinel and retain the persistent one.
+This staging is not acceptance. No one-shot boot selection or reboot scheduled.
 
 ## Final-policy maintenance window
 

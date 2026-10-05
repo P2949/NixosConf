@@ -17392,3 +17392,35 @@ CPU51C during scrub,controller active; graphical session remains alive.
 CI37380561557/95c8aa9 observed in progress; no terminal claim/restart.
 Remaining thermal/cooling, memory, workloads, physical-chain/soak/freeze
 gates unchanged; storage integrity result does not waive them.
+
+## Session-preserving normal-boot checks and remaining-chain staging — 2026-10-05
+
+Previous turn progress: final read-only147.36GiB scrub accepted and physical
+cooling evidence limitation isolated. User cooler/airflow question remains
+pending; elapsed time is not an answer. No CPU-heavy retry.
+
+Currentboot network HTTPSgithub200; NetworkManager/journald/Commander active,
+failed units empty. Home/var/persist mount direct@home/@var/@persist Btrfs
+subvolumes; retained journals include earlier physical boots. This supplements
+current normal freshroot300/reset-log/identity/credential/graphical evidence;
+no assumption that persistent-root/return legs have happened.
+
+One-second silent48000Hz stereo PCM through existing PipeWire default returned0
+with no stderr. HDMI3 remains default,volume0.66; StagePro enumerated but no
+active sink. No route/profile/volume changes. This is current-candidate
+transport evidence, not audible audio, controller or reconnect acceptance.
+Private0600 readiness-final-audio.json under/persist/nixos-readiness-20261005.
+
+Safely staged distinct nonsecret0600 root-local and persistent sentinels:
+/root/nixos-readiness-final-root-sentinel and
+/persist/nixos-readiness-20261005/final-persistent-sentinel. Existing matching
+files preserved; unexpected content would fail rather than overwrite. Private
+final-physical-chain-preparation.json records current boot,closure,root300,
+content SHA and expected legs. Journal marker nixos-readiness records staging.
+Persistent-root expected same root and bothsentinels,resetcountunchanged;
+returnnormal expected newroot,rootlocalsentinelabsent,persistentsentinelretained.
+Staging does not establish physical acceptance; no reboot/selection scheduled.
+Updated physical runbook's obsolete disabledVMX/uninstalled statements.
+Latest CI37380861801/5dd114e in progress when observed. No terminal claim.
+CPU/RAM/cooling,fullworkloads,remainingphysicalchain,recoveryprovenance,soak
+and finalfreeze still open. Work remains active; no prematurecompletion.
