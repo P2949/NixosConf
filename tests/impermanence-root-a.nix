@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  persistMachineId ? false,
   recovery ? false,
 }:
 
@@ -8,7 +9,13 @@ let
   diskDevice = "/dev/disk/by-id/virtio-impermanence-root";
 in
 pkgs.testers.runNixOSTest {
-  name = if recovery then "impermanence-root-recovery" else "impermanence-root-a";
+  name =
+    if recovery then
+      "impermanence-root-recovery"
+    else if persistMachineId then
+      "impermanence-root-b"
+    else
+      "impermanence-root-a";
 
   nodes.machine =
     { pkgs, ... }:
@@ -101,6 +108,8 @@ pkgs.testers.runNixOSTest {
         environment.persistence."/persist" = {
           hideMounts = true;
 
+          files = pkgs.lib.optional persistMachineId "/etc/machine-id";
+
           directories = [
             {
               directory = "/etc/nixos";
@@ -117,6 +126,8 @@ pkgs.testers.runNixOSTest {
         };
 
         networking.networkmanager.enable = true;
+
+        services.journald.storage = pkgs.lib.mkIf persistMachineId "persistent";
 
         users.users.tester = {
           isNormalUser = true;
@@ -151,7 +162,11 @@ pkgs.testers.runNixOSTest {
       ephemeralSystem = nodes.machine.specialisation.ephemeral.configuration.system.build.toplevel;
     in
     ''
+      import re
+
       recovery = ${if recovery then "True" else "False"}
+      persist_machine_id = ${if persistMachineId then "True" else "False"}
+      machine_ids = []
 
       machine.start(allow_reboot=True)
       machine.wait_for_unit("multi-user.target")
@@ -340,7 +355,25 @@ pkgs.testers.runNixOSTest {
               "\"$(cat /persist/secrets/tester-password-hash)\""
           )
 
-          machine.succeed("test ! -e /persist/etc/machine-id")
+          if persist_machine_id:
+              machine_id = machine.succeed("cat /etc/machine-id").strip()
+              assert re.fullmatch(r"[0-9a-f]{32}", machine_id), machine_id
+              machine_ids.append(machine_id)
+              machine.succeed("cmp /etc/machine-id /persist/etc/machine-id")
+              machine.succeed("test -s /persist/etc/machine-id")
+              machine.log(f"Boot {expected_boot_count} machine-id: {machine_id}")
+              machine.succeed(f"test -d /var/log/journal/{machine_id}")
+              machine.succeed(
+                  f"logger -t impermanence-journal 'persistent-boot-{expected_boot_count}'"
+              )
+              machine.succeed("journalctl --sync")
+              for previous_boot in range(1, expected_boot_count + 1):
+                  machine.succeed(
+                      "journalctl -t impermanence-journal --no-pager -o cat "
+                      f"| grep -Fx 'persistent-boot-{previous_boot}'"
+                  )
+          else:
+              machine.succeed("test ! -e /persist/etc/machine-id")
 
           machine.succeed("mkdir -p /mnt/impermanence-root")
           machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
@@ -407,5 +440,8 @@ pkgs.testers.runNixOSTest {
           "| sort -u | wc -l)\" = 3"
       )
 
+      if persist_machine_id:
+          assert len(machine_ids) == 3
+          assert len(set(machine_ids)) == 1, machine_ids
     '';
 }

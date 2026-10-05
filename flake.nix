@@ -128,6 +128,9 @@
           inherit inputs pkgs;
         };
 
+        impermanence-root-test-b = import ./tests/impermanence-root-b.nix {
+          inherit inputs pkgs;
+        };
       };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
