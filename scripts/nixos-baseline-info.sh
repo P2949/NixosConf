@@ -47,7 +47,9 @@ capture 'CPU policies' bash -c 'for p in /sys/devices/system/cpu/cpufreq/policy*
 capture 'Kernel command line' cat /proc/cmdline
 # shellcheck disable=SC2016
 capture 'BIOS' bash -c 'for n in bios_version bios_date; do printf "%s: " "$n"; cat "/sys/class/dmi/id/$n"; done'
-printf '\nME version: not collected; firmware decision remains a separate gate.\n'
+# The ABI can expose several component versions; retain all blocks verbatim.
+# shellcheck disable=SC2016
+capture 'Intel ME firmware components' bash -c 'found=0; for f in /sys/class/mei/mei*/fw_ver; do test -r "$f" || continue; found=1; printf "%s:\n" "$f"; cat "$f"; done; if test "$found" = 0; then printf "ME firmware interface unavailable\n"; exit 1; fi'
 capture 'Memory' free -h
 capture 'Memory pressure' cat /proc/pressure/memory
 capture 'CPU pressure' cat /proc/pressure/cpu

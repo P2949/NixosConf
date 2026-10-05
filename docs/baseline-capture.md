@@ -20,8 +20,9 @@ reset log, only its metadata and completion counts.
 
 Review failed commands before relying on the report. An observed temperature
 is not proof of idle/load thermal acceptance. The 64-bit Vulkan summary does
-not prove 32-bit Vulkan works. ME firmware identification, practical 32-bit
-graphics testing, sustained thermals and workload acceptance remain separate
+not prove 32-bit Vulkan works. ME component versions are read from the kernel
+sysfs interface; firmware upgrade/freeze, practical 32-bit graphics testing,
+sustained thermals and workload acceptance remain separate
 gates. This is a preparation snapshot until the final candidate is booted and
 accepted; the final baseline manifest must be captured again then.
 
