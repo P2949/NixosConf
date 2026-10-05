@@ -144,3 +144,24 @@ returned to 60% at 10:55:30.408 after cooling to 28 C. This proves the control
 response was logged before the conservative stop; it does not measure actual
 fan RPM or establish cooling capacity for sustained load. PID 912 and the
 service invocation remained unchanged.
+
+### Actual Blender project load and GPU render
+
+Both discovered local Blender files loaded in background mode with unchanged
+SHA-256 hashes. Each contains a 33-object Cycles scene and camera; inspection
+detected no missing file-backed images or linked libraries. This does not
+prove every procedural/driver/external dependency is available.
+
+The newer file rendered its actual camera at original 1920x1080 resolution
+and 100% scale, with 64 samples chosen in memory. RX 9070 XT HIP was the
+only enabled device; CPU rendering was disabled. Rendering took 11.83 seconds,
+produced a PNG and exited zero within a 180-second process limit. No project
+or user preferences were saved. The source hash remained unchanged; no new
+targeted kernel GPU fault/reset/timeout messages were found. The existing
+CUEW initialization warning remains recorded, while the selected HIP path
+worked. Cooling and graphical session remained active.
+
+Root-private receipts: /persist/nixos-blender-project-validation-20261005.
+Rendered output is private temporary data, not a public repository artifact.
+This extends the factory smoke to an actual local scene; longer rendering,
+interactive workflow and acceptance on the final candidate remain pending.
