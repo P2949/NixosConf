@@ -3536,6 +3536,12 @@ shell variable expansion; local annotations document that intent and direct
 syntax/ShellCheck checks passed. Final flake checks passed, including collector
 check drv `7vf3vxz0pfsz1szm2iczjkz5132964z0-check-baseline-collector.drv`.
 Publication pending.
+
+Publication update: collector/preparation checkpoint `4428840` pushed;
+GitHub CI run 37257876757 started. Retained snapshot is explicitly pre-acceptance
+and does not replace the final manifest required after hardware/workload gates.
+
+CI update: run 37257876757 completed successfully for checkpoint 4428840.
 Final accepted baseline capture, ME version if retrievable, practical 32-bit
 Vulkan and controlled idle/load measurements remain separate and unproven.
 
@@ -3575,3 +3581,34 @@ The actual mapped address is above 4GB, proving functional allocation there;
 the exact firmware menu labels were not read. ReBAR is exposed and needs no
 enablement change. BIOS still reports 3201 dated 2024-11-20. Firmware update
 decision, OC stability and final policy freeze remain open; no flash performed.
+
+## 32-bit graphics preparation — IN PROGRESS, 2026-10-05
+
+Building the exact locked nixpkgs `pkgsi686Linux.vulkan-tools` directly from the
+flake input, without adding it to ambient packages or changing graphics policy.
+Build receipt/log are `/tmp/nixos-vulkan32-tools-build.{json,log}`; live exec
+session 86559. Host i686 RADV ICD exists in `/run/opengl-driver-32` and points
+to the installed 32-bit Mesa 26.1.8 library. Planned direct ELF32 enumeration
+will check that real loader/driver path, without a session restart. It will not
+substitute for the plan's practical 32-bit Steam/Proton workload requirement,
+which remains open. No global ICD override will be configured.
+
+## 32-bit Vulkan API and rendering — PROVEN, 2026-10-05
+
+Pinned i686 tools built successfully:
+`/nix/store/k7my6w1a3xgq52fmygs92wlhcafcznqj-vulkan-tools-1.4.341.0.drv`;
+output `/nix/store/y2bi1k0yjhq04syrx3wwgxnvl6bcncy2-vulkan-tools-1.4.341.0`.
+`file` verified vulkaninfo as ELF32/i386. The default loader/ICD enumeration,
+with only the editor's LD_LIBRARY_PATH removed, returned exit 0 and identified
+the physical RX 9070 XT through RADV Mesa 26.1.8. No driver override was needed.
+ELF32 vkcube then completed 120 frames on Wayland GPU 0, 320x240, exit 0;
+the small test window closed automatically and the Wayland session remains
+active with no failed units. Summary/render receipts retained under
+`docs/baselines/pre-optimization/vulkan32-{summary,render}-20261005.txt`.
+
+Loader diagnostics include a skipped dzn ICD and RADV conformance/display-plane
+warnings; the selected AMD device and rendering completed successfully. This
+proves native 32-bit API enumeration/rendering, not Steam/Proton game acceptance.
+The installed DARK SOULS REMASTERED executable is PE32+ x86-64; running it would
+not satisfy the plan's separate 32-bit Steam/Proton workload requirement. That
+gate remains open. No package activation, graphics restart or host reboot.
