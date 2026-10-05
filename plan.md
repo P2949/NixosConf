@@ -2729,7 +2729,7 @@ Do **not** start the optimization experiment until every hard gate below is true
 ## Workloads
 
 - [ ] Unreal C++ workflow accepted.
-- [ ] Blender GPU workflow accepted.
+- [~] Actual local scene HIP camera render passed; interactive/sustained/final-candidate acceptance pending.
 - [ ] Steam/Proton accepted.
 - [ ] Android/KVM accepted.
 - [ ] audio/network/session accepted.
@@ -4381,3 +4381,18 @@ exclusions; extensions do not prove all unique home data audited. Ignored
 project/autosave/application data remain required. Current disks still only
 MP600 and Ventoy; independent destination pending, no deletion/repurposing.
 Backup ledger updated. No host tuning/load, reboot or live activation.
+
+## Actual Blender scene GPU validation — 2026-10-05
+
+Both discovered local .blend files loaded with source SHA256 unchanged,
+33object Cycles scenes/cameras, no missing file-backed images/linked libraries
+detected. Newer actualscene rendered1920x1080/100%,64samples in11.83s on
+RX9070XT HIP alone, CPUdevice disabled, PNG produced, exit0 under180s limit.
+Samples/output/device choices in-memory only; neither project nor preferences
+saved. Sourcehash unchanged. Existing CUEW warning retained; HIP successful.
+No new targeted kernel GPU reset/fault/timeout messages; cooling and Wayland
+session active. Root-private inspection/render receipts:
+/persist/nixos-blender-project-validation-20261005. Image remains private tmp.
+This verifies actualscene load/render beyond factorysmoke, not all dependency
+classes, interactiveworkflow, sustainedrender or finalcandidateacceptance.
+No reboot, activation, service restart or physicalclockpolicy change.
