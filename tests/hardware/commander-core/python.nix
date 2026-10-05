@@ -16,6 +16,7 @@ pkgs.runCommand "check-commander-core-python"
     export XDG_RUNTIME_DIR="$TMPDIR/runtime"
     mkdir -m 0700 "$XDG_RUNTIME_DIR"
       python -m py_compile "$KEEPER_SOURCE" ${./test_keeper.py}
+      ruff format --check "$KEEPER_SOURCE" ${./test_keeper.py}
       ruff check "$KEEPER_SOURCE" ${./test_keeper.py}
       python ${./test_keeper.py} -v
       touch "$out"
