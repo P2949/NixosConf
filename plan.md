@@ -16097,3 +16097,11 @@ local comment edit; no earlier exact-source result is relabelled as this revisio
 Bounded nice19/max-jobs1/cores1 execution; no physical reboot or system activation.
 Terminal reconstruction acceptance, subsequent evaluated-Disko decision and final
 offline validation remain pending.
+
+Retry launch correction: the first command mistakenly requested reconstruction
+under flake checks, where it is deliberately not registered. It exited before
+building. Correct package target `nix build .#blank-disk-reconstruction` is now
+running in session89323, source9731b6d plus the preserved local comment edit.
+Log: /tmp/readiness-reconstruction-rescue.log. No duplicate VM was started.
+Mount-option reference: https://btrfs.readthedocs.io/en/stable/Administration.html
+(rescue=nologreplay skips log replay; read-only remains explicit).

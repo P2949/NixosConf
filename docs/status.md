@@ -57,13 +57,19 @@ this project. Any final physical checks are batched to minimize interruptions.
 ## Latest exact candidate identity
 
 After deriving reconstruction from the real desktop and moving/asserting
-workstation activation safety, current normal/persistent builds reproduce
+workstation activation safety, the validated pre-fuzzel/Alacritty normal/persistent builds reproduce
 `l994fn5hpd2g2rijyffprl4368587m5w` and
 `cxc50rmb8i6akb62fcvzz3xkszzqf895` respectively (both stock26.05.20261004.0d9e9b8).
-Existing closure review and GC roots still apply. These remain uninstalled.
+Existing closure review and GC roots apply to those artifacts. These remain uninstalled.
+User desktop commits c3476c1/6893511 need new candidate validation; the prior
+closure equality is not evidence for those changes.
 Activation composition tests and full flake checks passed. The main Ventoy
 archive passed integrity, SHA-256 and three representative restored-file hash
-comparisons, with terminal receipt and clean unmount. Reconstruction is running.
+comparisons, with terminal receipt and clean unmount. Reconstruction source736b0fb
+completed independent installed-disk boot/reset/recovery checks but exited1 at
+final offline inspection: standalone Btrfs nologreplay was rejected. The narrow
+rescue=nologreplay correction is running in retry session89323, source9731b6d
+plus the existing local desktop comment edit; terminal acceptance remains open.
 The newest unified guide in plan.md supersedes older next-step ordering: no
 further broad refactor; close evidence before physical maintenance and freeze.
 
