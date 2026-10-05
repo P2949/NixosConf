@@ -3007,18 +3007,18 @@ Use this as a smaller tracker after Impermanence is complete.
 [~] generic workstation VM (boot/service/HM smoke passed; branch integration pending)
 [~] recovery ISO (built, physical boot/drill pending)
 [ ] specialisation/recovery boot design
-[ ] unified GC/generation policy
-[ ] journal/core-dump growth policy
+[~] unified GC/generation policy (prepared/tested; physical installation pending)
+[~] journal/core-dump growth policy (prepared/tested; physical installation pending)
 [x] validation dev shell
 [x] baseline-info capture app/script
 [x] closure-diff review procedure
 [ ] BIOS/ME decision
 [ ] OC/RAM revalidation
-[ ] ReBAR audit
+[x] ReBAR audit (16 GiB GPU BAR above 4 GiB; firmware policy freeze pending)
 [ ] CPU policy audit
 [ ] zram decision
 [ ] irqbalance decision
-[ ] NVMe scheduler audit
+[x] NVMe scheduler audit (kernel-selected none; preserved)
 [ ] full workload acceptance
 [ ] final soak
 [ ] final pre-optimization tag
@@ -3909,3 +3909,32 @@ Phase 31 boot timing capture: graphical.target at 6.681s; cooling service
 hardware safety for boot timing. THP enabled/defrag both madvise; unchanged.
 These observations describe the current physical trial closure, not the new
 unactivated candidate.
+
+## Development preflight and current CI — 2026-10-05
+
+Exact preparation PR head c2b43ca CI run 37289661236 completed successfully.
+Local clangd in the current HM profile completed C++20 AST/index checks with
+zero errors. Candidate development shell Clang compiled/ran the vector smoke;
+clangd requires --query-driver for that exact trusted compiler wrapper to
+discover Nix C++ include paths. Initial test incorrectly passed -std to clangd
+CLI, corrected to a compilation database. Without query-driver, the database
+probe then reported missing vector; exact-wrapper query resolved all errors.
+Final smoke log /tmp/nixos-clangd-devshell.log. No global clangd allowlist or
+project settings modified. Candidate HM still owns pinned clang-tools.
+This verifies the development setup, not final post-activation acceptance.
+
+Android/KVM preflight: user belongs to kvm, but /dev/kvm is absent and current
+boot kernel says "VMX (outside TXT) disabled by BIOS". CPU exposes no vmx
+flag. Firmware virtualization enablement is required before accelerated
+emulator acceptance; defer it to the already batched firmware/reboot window.
+No module load or firmware change attempted to disguise this hardware gate.
+
+Actual AI_Gavin_Project Git worktree is clean on main, HEAD 376e151fca709b084e182da4c76ccb21a228f86d.
+Fresh git ls-remote confirms remote main at the same commit. All 415 local
+LFS objects exist, match declared sizes and SHA256 IDs (2247127 bytes total).
+Read-only custom hashes used instead of git lfs fsck, which can move bad
+objects. This proves local object integrity and pushed Git commit, not remote
+LFS availability or independent backup/restore. Those gates remain pending.
+Engine executable and project file exist; editor/project launch, actual C++
+target build and renderer acceptance remain unperformed. No project contents
+or remote credentials published; no project files changed.
