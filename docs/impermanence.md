@@ -1,11 +1,15 @@
 # Ephemeral root validation
 
-The `feat/impermanence` branch stabilizes a Btrfs root reset in the systemd
-initrd. The parent `desktop` configuration retains persistent root, home and
-var. An opt-in `ephemeral-root` specialisation is now prepared for controlled
-physical testing; building it does not install or activate it. Hardware
-acceptance is still pending. See the [physical runbook](physical-root-validation.md)
-and [persistence contract](persistence-contract.md).
+Desktop now declares ephemeral root as its normal policy, with a
+`persistent-root` specialisation that disables the reset service. Both variants
+persist machine identity; home and var remain persistent.
+
+Three physical reset trials passed on 2026-10-05 using the original opt-in
+entry. The proposed final default and recovery closures build and evaluate,
+but their exact physical boot acceptance remains pending. No reboot or live
+activation is scheduled: remaining work is batched to preserve the graphical
+session. See the [physical runbook](physical-root-validation.md) and
+[persistence contract](persistence-contract.md).
 
 ## Reset contract
 
@@ -47,6 +51,7 @@ nix build '.#impermanence-root-safety' --no-link --no-write-lock-file -L
 nix build '.#impermanence-root-recovery' --no-link --no-write-lock-file -L
 nix build '.#impermanence-root-test-a' --no-link --no-write-lock-file -L
 nix build '.#impermanence-root-test-b' --no-link --no-write-lock-file -L
+nix build '.#impermanence-root-fallback' --no-link --no-write-lock-file -L
 ```
 
 The lightweight `ephemeral-root-config` check forces NixOS evaluation for
@@ -119,10 +124,11 @@ Machine-ID testing establishes behavior for this pinned VM configuration; it
 does not establish the cause of the historical generation-30 physical
 activation failure.
 
-## Gate for physical validation
+## Original physical trial procedure
 
-After every final-revision check passes, prepare a separate controlled physical
-boot milestone. Before its first boot:
+The three completed opt-in trials used the following procedure. Acceptance of
+the final default/recovery policy remains pending for a later maintenance
+window; do not repeat these reboots merely to rerun the initial trial.
 
 - Inventory current root-local data and preserve anything needed explicitly.
 - Inspect actual Btrfs topology and verify persistent credentials without
@@ -144,3 +150,38 @@ selective home and var Impermanence are deferred for the pre-experiment
 baseline. Both remain persistent. Compiler tuning, LTO, PGO and BOLT belong
 after the final baseline tag. Maintenance and repository cleanup follow the
 master plan's dependency gates.
+
+## Physical evidence and recovery transition
+
+| Trial | Boot ID | Fresh root ID | Result |
+| --- | --- | --- | --- |
+| 1 | `032de3f5-2df0-47d6-b26e-980dbacfdeeb` | 288 | Passed |
+| 2 | `2b719311-60d5-4afd-a9eb-34f96bd198ed` | 290 | Passed |
+| 3 | `da4649c0-8121-44ea-afcd-a2d0d4748681` | 292 | Passed |
+
+Each boot reached the exact trial closure, removed the disposable sentinel,
+preserved required mounts and state, retained the seeded identity, matched
+credentials without logging them, and had healthy networking, cooling,
+Home Manager, D-Bus/logind and an active Wayland session. No failed units
+were found. Each distinct trial boot has one reset-service invocation.
+Private receipts are `/persist/physical-root-trial-{1,2,3}.json`.
+
+Two intervening parent boots were selected manually by the operator; neither
+counts as a reset trial. They demonstrated the original persistent-root
+fallback but exposed its temporary identity change. The final declared policy
+persists identity in both variants. The new fallback VM checks three reset
+boots followed by a non-reset boot retaining root, identity, journals and
+credentials. The fallback test passed on 2026-10-05:
+`/nix/store/5ja4j37lb76ffqvlcynqbmmk6hcxisvw-vm-test-run-impermanence-root-fallback.drv`.
+The fourth boot verified the exact recovery closure, unchanged root ID/UUID and
+reset log, retained root file, stable machine ID, all three previous journal
+markers, credential source equality, required services and zero failed units.
+The fixture recreates its system profile before installing the recovery entry
+because only its host store is shared, whereas the physical host persists all
+of `/nix`. Interactive workload acceptance, exact final physical policy boots
+and the final soak remain separate gates.
+
+Read-only pretrial snapshots of root, tmp and srv remain intact, along with
+all three historical forensic roots. An older conflicting persisted machine
+ID was archived privately before seeding the active identity. This does not
+prove the historical generation-30 failure cause.

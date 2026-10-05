@@ -50,16 +50,42 @@
 
       formatter.${system} = pkgs.nixfmt-tree;
 
-      devShells.${system}.default = pkgs.mkShell {
-        packages = [
-          pkgs.nixfmt
-          pkgs.nixfmt-tree
-          pkgs.deadnix
-          pkgs.statix
-        ];
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          packages = [
+            pkgs.nixfmt
+            pkgs.nixfmt-tree
+            pkgs.deadnix
+            pkgs.statix
+          ];
+        };
+
+        validation = pkgs.mkShell {
+          packages = [
+            pkgs.stress-ng
+            pkgs.hyperfine
+            pkgs.perf
+            inputs.self.nixosConfigurations.desktop.config.boot.kernelPackages.turbostat
+            pkgs.hwloc
+            pkgs.numactl
+            pkgs.sysstat
+            pkgs.lm_sensors
+            pkgs.nvme-cli
+            pkgs.btrfs-progs
+            pkgs.pciutils
+            pkgs.usbutils
+            pkgs.vulkan-tools
+            pkgs.mesa-demos
+          ];
+        };
       };
 
       checks.${system} = {
+        desktop-evaluation = import ./tests/desktop-evaluation.nix {
+          inherit pkgs;
+          config = inputs.self.nixosConfigurations.desktop.config;
+        };
+
         ephemeral-root-config = import ./tests/impermanence-root-config.nix {
           inherit pkgs;
         };
@@ -131,6 +157,10 @@
         };
 
         impermanence-root-test-b = import ./tests/impermanence-root-b.nix {
+          inherit inputs pkgs;
+        };
+
+        impermanence-root-fallback = import ./tests/impermanence-root-fallback.nix {
           inherit inputs pkgs;
         };
       };

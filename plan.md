@@ -1098,7 +1098,7 @@ Keep the principle:
 
 The current fast checks do not need to build the full desktop closure, but the repository should detect broken NixOS evaluation.
 
-- [ ] Add a flake check or CI step that forces evaluation of:
+- [x] Add a flake check or CI step that forces evaluation of:
 
 ```text
 nixosConfigurations.desktop.config.system.build.toplevel
@@ -1129,9 +1129,9 @@ GitHub currently reports the branches as unprotected.
 
 Before the optimization campaign:
 
-- [ ] require CI for PRs into `main`;
-- [ ] prevent accidental force-push to `main`;
-- [ ] prefer PR merge for baseline changes;
+- [x] require CI for PRs into `main`;
+- [x] prevent accidental force-push to `main`;
+- [x] prefer PR merge for baseline changes;
 - [ ] keep release/baseline tags immutable by convention.
 
 This is repository reliability, not bureaucracy: the OS configuration itself is a research artifact.
@@ -2989,16 +2989,16 @@ Use this as a smaller tracker after Impermanence is complete.
 [ ] Commander Core remaining assertions
 [ ] Python lint/syntax/unit checks
 [ ] README Impermanence/test updates
-[ ] repository description
-[ ] desktop evaluation CI check
+[x] repository description
+[x] desktop evaluation CI check
 [ ] generic workstation VM
 [~] recovery ISO (built, physical boot/drill pending)
 [ ] specialisation/recovery boot design
 [ ] unified GC/generation policy
 [ ] journal/core-dump growth policy
-[ ] validation dev shell
+[x] validation dev shell
 [ ] baseline-info capture app/script
-[ ] closure-diff review procedure
+[x] closure-diff review procedure
 [ ] BIOS/ME decision
 [ ] OC/RAM revalidation
 [ ] ReBAR audit
@@ -3376,3 +3376,116 @@ next reboot, and keep graphical session alive so Codex can continue. No reboot
 is scheduled. No graphical/session/cooling services will be restarted by
 this preparation. Build, VM, source, documentation and recovery work can
 proceed independently; final hardware acceptance must be batched later.
+
+
+## Session-preserving continuation — 2026-10-05
+
+No host reboot or live activation is scheduled. The operator reconfirmed that
+three reset trials suffice for the initial repeatability gate and requested
+maximum batching before any further reboot. Current Wayland session stays live.
+
+**PROVEN builds:** proposed default closure
+`/nix/store/j4mmsn2b0bhblr06jhx4jnp7s4qp1w9p-nixos-system-desktop-26.05.20261002.774debe`
+built successfully; prior fast checks passed. Evaluation: defaultReset=true,
+recoveryReset=false, recoveryHasResetService=false, and both variants persist
+`/etc/machine-id`. Exact default/recovery hardware boot still pending.
+
+**Concurrent repository change observed:** HEAD is now `5e9719f` (add plan
+file), incorporating plan.md and the host policy edits. Codex retained this
+commit and continues from it rather than rewriting it.
+
+**IN PROGRESS:** new explicit `impermanence-root-fallback` VM test reuses the
+Btrfs fixture: three real reset boots followed by a persistent-root boot.
+It requires identical root ID/UUID, unchanged reset log, surviving root file,
+stable backed machine ID, retained journal markers, usable credentials,
+required services and zero failed units. This addresses recovery identity
+continuity without another physical reboot. Test VM build is running.
+Current harness exposes a shared Btrfs configuration for the two boot variants;
+Fast lint/evaluation checks passed after this refactor. Other phase gates
+remain open and are not inferred from these build results.
+
+## Fast desktop evaluation preparation — 2026-10-05
+
+Phase 7 preparation can proceed without host activation. Added the cheap
+`desktop-evaluation` flake check: force the desktop and persistent-root
+specialisation's toplevel derivation paths, thereby evaluating NixOS assertions,
+and retain their identities and stateVersion in a JSON receipt. String contexts
+are discarded before constructing the check so neither workstation closure
+becomes a build dependency. Fast checks passed. An injected false NixOS
+assertion produced `tryEval.success=false`, and derivation inspection confirmed
+only Bash/stdenv inputs, with neither desktop closure as a build dependency.
+Check drv: `lprnr8lh05h3s459msg6770l7614h0mx-check-desktop-evaluation.drv`.
+No live configuration changed.
+
+**Fallback VM first run:** all three reset/identity/journal validations passed.
+The fourth-boot setup failed because this fixture persists the host store but
+not `/nix/var/nix/profiles`; reset removed the system profile, so bootloader
+installation removed entries with no generation to enumerate. Added explicit
+fixture profile reconstruction before installing the recovery closure, matching
+the profile preparation performed by a real rebuild. The physical host persists
+all of `/nix`. Failure drv: `r05ywfcydp0a9rqx9gk0bwmjv0f34qw6`.
+Recovery boot remains unproven until the corrected VM test passes.
+
+## Validation tooling preparation — 2026-10-05
+
+Phase 27 offline preparation: declared `devShells.x86_64-linux.validation`
+with the plan's diagnostic tools. Pinned nixpkgs exposes `perf` directly
+(`linuxPackages.perf` is a deprecated alias); `turbostat` remains in the
+desktop's kernel package set. Tools remain outside the ambient host configuration; no benchmark,
+stress test, service restart or graphics change is run by entering the shell.
+Pinned attribute evaluation and shell build passed:
+`d6a1l07s158f66l4dgk760rxw228cmv6-nix-shell.drv`.
+
+## Closure review preparation — 2026-10-05
+
+Phase 29: added `docs/closure-review.md` with reproducible build/comparison
+commands and practical limits of the evidence. Compared the running third-trial
+closure `jj4h7abqachf769dpz308v480a6srdbs` to candidate
+`j4mmsn2b0bhblr06jhx4jnp7s4qp1w9p`. Generated configuration/unit/initrd/manual
+outputs changed size; no package version transitions were reported. Neither
+closure was activated by the comparison. Final candidate acceptance and
+closure review after any subsequent host configuration edits remain required.
+
+### Task: session-preserving validation preparation
+
+Status: **PROVEN** desktop evaluation check, validation shell, closure review
+procedure and corrected fallback VM; checkpoint publication pending.
+Owner: Codex
+Started: 2026-10-05
+Completed: 2026-10-05 for the three offline preparations only
+Commit / PR: current feat/impermanence checkpoint, publication pending
+NixOS generation: running physical trial generation 33; no new installation
+System closure: running `jj4h7abqachf769dpz308v480a6srdbs`; candidate `j4mmsn2b0bhblr06jhx4jnp7s4qp1w9p`
+Evidence / command output: fast checks exit 0; injected failing assertion rejected;
+evaluation check inputs contain no desktop closures; validation shell built and
+all fourteen diagnostic commands resolved; closure comparison recorded in docs
+Decision: proceed with independent offline work while preserving the session
+Problems found: VM fixture lacks persistent system profile; corrected before retry
+Rollback path: revert source checkpoint; live system has not been changed
+Notes: current Wayland session active, no failed units or scheduled shutdown;
+exact final hardware policy/recovery acceptance, backups, workloads and soak open.
+
+## Recovery transition and repository policy — PROVEN, 2026-10-05
+
+Corrected fallback VM passed, including all three reset boots and a fourth
+non-reset boot with unchanged root ID/UUID and reset log, surviving root file,
+stable machine ID, three retained journal markers, credential source equality,
+active required services and no failed units. Exact recovery closure identity
+was checked after boot. Successful drv:
+`/nix/store/5ja4j37lb76ffqvlcynqbmmk6hcxisvw-vm-test-run-impermanence-root-fallback.drv`;
+output `/nix/store/ggbaj3wlqcz08yvfgnl2xkqsb2ha28a8-vm-test-run-impermanence-root-fallback`.
+Shared-fixture refactor leaves the original A, B and recovery derivations
+unchanged, preserving their previously passed results. Fast checks passed.
+
+GitHub description changed from the historical backup-only wording to the
+recommended workstation/research description. Live read-back verified `main`
+protection: require current-branch `Flake checks` from GitHub Actions app 15368,
+apply to admins, require PRs with zero reviewer approvals, reject force-pushes
+and branch deletion. No extra human approval dependency was introduced.
+The API rejected a request containing both legacy contexts and checks; the
+corrected checks-only request succeeded and the live policy was verified.
+Reference: https://docs.github.com/en/rest/branches/branch-protection#update-branch-protection
+
+No host reboot, activation, shutdown schedule or service restart was performed.
+Final physical default/recovery policy acceptance remains batched and unproven;
+do not infer full recovery-media, backup, workload or soak acceptance from this VM.

@@ -3,14 +3,18 @@
   pkgs,
   persistMachineId ? false,
   recovery ? false,
+  persistentFallback ? false,
 }:
 
 let
   diskDevice = "/dev/disk/by-id/virtio-impermanence-root";
 in
+assert !persistentFallback || persistMachineId;
 pkgs.testers.runNixOSTest {
   name =
-    if recovery then
+    if persistentFallback then
+      "impermanence-root-fallback"
+    else if recovery then
       "impermanence-root-recovery"
     else if persistMachineId then
       "impermanence-root-b"
@@ -19,43 +23,8 @@ pkgs.testers.runNixOSTest {
 
   nodes.machine =
     { pkgs, ... }:
-    {
-      imports = [
-        inputs.impermanence.nixosModules.impermanence
-        inputs.home-manager.nixosModules.home-manager
-        ../modules/storage/ephemeral-btrfs-root.nix
-      ];
-
-      virtualisation = {
-        emptyDiskImages = [
-          {
-            size = 4096;
-            driveConfig.deviceExtraOpts.serial = "impermanence-root";
-          }
-        ];
-
-        useBootLoader = true;
-        mountHostNixStore = true;
-        useEFIBoot = true;
-
-        memorySize = 2048;
-        cores = 2;
-      };
-
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
-
-      boot.initrd.systemd = {
-        enable = true;
-        emergencyAccess = true;
-      };
-
-      environment.systemPackages = [
-        pkgs.btrfs-progs
-        pkgs.openssl
-      ];
-
-      specialisation.ephemeral.configuration = {
+    let
+      btrfsConfiguration = {
         virtualisation = {
           useDefaultFilesystems = false;
 
@@ -151,6 +120,52 @@ pkgs.testers.runNixOSTest {
           };
         };
       };
+    in
+    {
+      imports = [
+        inputs.impermanence.nixosModules.impermanence
+        inputs.home-manager.nixosModules.home-manager
+        ../modules/storage/ephemeral-btrfs-root.nix
+      ];
+
+      virtualisation = {
+        emptyDiskImages = [
+          {
+            size = 4096;
+            driveConfig.deviceExtraOpts.serial = "impermanence-root";
+          }
+        ];
+
+        useBootLoader = true;
+        mountHostNixStore = true;
+        useEFIBoot = true;
+
+        memorySize = 2048;
+        cores = 2;
+      };
+
+      boot.loader.systemd-boot.enable = true;
+      boot.loader.efi.canTouchEfiVariables = true;
+
+      boot.initrd.systemd = {
+        enable = true;
+        emergencyAccess = true;
+      };
+
+      environment.systemPackages = [
+        pkgs.btrfs-progs
+        pkgs.openssl
+      ];
+
+      specialisation = {
+        ephemeral.configuration = btrfsConfiguration;
+      }
+      // pkgs.lib.optionalAttrs persistentFallback {
+        persistent-root.configuration = {
+          imports = [ btrfsConfiguration ];
+          boot.ephemeralBtrfsRoot.enable = pkgs.lib.mkForce false;
+        };
+      };
 
       system.stateVersion = "26.05";
     };
@@ -160,6 +175,7 @@ pkgs.testers.runNixOSTest {
 
     let
       ephemeralSystem = nodes.machine.specialisation.ephemeral.configuration.system.build.toplevel;
+      fallbackSystem = nodes.machine.specialisation.persistent-root.configuration.system.build.toplevel;
     in
     ''
       import re
@@ -443,5 +459,54 @@ pkgs.testers.runNixOSTest {
       if persist_machine_id:
           assert len(machine_ids) == 3
           assert len(set(machine_ids)) == 1, machine_ids
+    ''
+    + pkgs.lib.optionalString persistentFallback ''
+      # A real persistent-root boot after three resets must retain both
+      # ordinary root state and the same identity/journal backing.
+      root_before_fallback = machine.succeed(
+          "btrfs subvolume show / | grep -E '^\\s*(UUID|Subvolume ID):'"
+      )
+      reset_log_before_fallback = machine.succeed("cat /persist/ephemeral-root-reset.log")
+      machine.succeed("echo keep-on-recovery > /root-sentinel")
+      # The fixture shares only the host store, not persistent /nix metadata.
+      # Recreate the profile a real nixos-rebuild boot would install before
+      # asking systemd-boot to enumerate generations on the reset root.
+      machine.succeed(
+          "mkdir -p /nix/var/nix/profiles; "
+          "ln -sfn '${fallbackSystem}' /nix/var/nix/profiles/system-1-link; "
+          "ln -sfn system-1-link /nix/var/nix/profiles/system"
+      )
+      machine.succeed("${fallbackSystem}/bin/switch-to-configuration boot")
+      machine.succeed(
+          "entry=$(grep -lF '${fallbackSystem}/init' /boot/loader/entries/*.conf | head -n1); "
+          "test -n \"$entry\"; "
+          "id=$(basename \"$entry\"); "
+          "sed -i \"s|^default .*|default $id|\" /boot/loader/loader.conf"
+      )
+      machine.succeed("sync")
+      machine.reboot()
+      machine.wait_for_unit("multi-user.target")
+      machine.succeed("test \"$(readlink -f /run/current-system)\" = '${fallbackSystem}'")
+      root_after_fallback = machine.succeed(
+          "btrfs subvolume show / | grep -E '^\\s*(UUID|Subvolume ID):'"
+      )
+      assert root_after_fallback == root_before_fallback
+      assert machine.succeed("cat /persist/ephemeral-root-reset.log") == reset_log_before_fallback
+      machine.succeed("grep -Fx keep-on-recovery /root-sentinel")
+      assert machine.succeed("cat /etc/machine-id").strip() == machine_ids[0]
+      machine.succeed("cmp /etc/machine-id /persist/etc/machine-id")
+      for previous_boot in range(1, 4):
+          machine.succeed(
+              "journalctl -t impermanence-journal --no-pager -o cat "
+              f"| grep -Fx 'persistent-boot-{previous_boot}'"
+          )
+      for service in ["NetworkManager", "dbus", "systemd-logind", "home-manager-tester"]:
+          machine.wait_for_unit(service + ".service")
+      machine.succeed(
+          "test \"$(getent shadow tester | cut -d: -f2)\" = "
+          "\"$(cat /persist/secrets/tester-password-hash)\""
+      )
+      machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
+      machine.log("Persistent-root fallback retained root, identity, journal and credentials")
     '';
 }

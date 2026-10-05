@@ -1,6 +1,13 @@
 # Controlled physical root validation
 
-Status: prepared, hardware validation pending. Do not install or select the
+Status: the original opt-in entry passed three hardware reset boots. The
+runbook below records that initial rollout; it is historical for the now
+proposed final policy. Desktop now declares reset by default and a
+`persistent-root` recovery entry, with identity persistence in both. Build
+and validate offline while retaining the current session; do not install or
+reboot the final policy until the batched boot-validation window.
+
+Exact final default/recovery hardware acceptance is pending. Do not install or select the
 reset entry until the preflight gates below are satisfied. All commands here
 are operator commands; documenting them does not mean they have been run.
 

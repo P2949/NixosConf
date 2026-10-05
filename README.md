@@ -17,10 +17,14 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── statix.toml
 │
 ├── hosts/
-│   └── desktop/
-│       ├── default.nix
-│       ├── hardware-configuration.nix
-│       └── disko.nix
+│   ├── desktop/
+│   │   ├── default.nix
+│   │   ├── hardware-configuration.nix
+│   │   ├── disko.nix
+│   │   ├── ephemeral-root.nix
+│   │   └── persistence.nix
+│   └── recovery/
+│       └── default.nix
 │
 ├── profiles/
 │   └── workstation.nix
@@ -30,6 +34,8 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │   ├── desktop/
 │   ├── gaming/
 │   ├── compatibility/
+│   ├── storage/
+│   │   └── ephemeral-btrfs-root.nix
 │   └── hardware/
 │       └── commander-core/
 │           ├── default.nix
@@ -53,6 +59,10 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │           ├── default.nix
 │           ├── blender.nix
 │           └── unreal.nix
+│
+├── tests/
+│   ├── desktop-evaluation.nix
+│   └── impermanence-root-*.nix
 │
 └── optimization/
     └── default.nix
@@ -283,12 +293,16 @@ CI deliberately does not build the complete workstation closure.
 
 ## Impermanence validation
 
-`feat/impermanence` contains an opt-in ephemeral Btrfs root module and explicit
-VM tests for safety, interrupted-reset recovery and machine-ID persistence.
-The physical desktop still uses persistent root and home.
+`feat/impermanence` declares an ephemeral Btrfs root by default, with a
+`persistent-root` recovery specialisation. Both variants persist machine
+identity; home and `/var` remain persistent. Three physical reset trials have
+passed using the original opt-in configuration. Hardware acceptance of the
+final default/recovery policy remains pending for a batched maintenance window.
 
 See [ephemeral root validation](docs/impermanence.md) for the reset contract,
-test commands, results and gates before a controlled physical boot. Heavy VM
+test commands, results and remaining physical acceptance gates. Explicit VM
+tests cover safety, interrupted-reset recovery, machine-ID persistence and
+transition to the persistent-root fallback. Heavy VM
 tests are exposed as packages; ordinary flake checks include configuration
 validation alongside formatting, Statix and Deadnix.
 
@@ -302,9 +316,17 @@ nixos-26.05-productive-baseline
 
 That baseline includes the functional workstation configuration before repository restructuring.
 
-After the architecture branch is fully validated and merged, a separate architecture baseline should be tagged before optimization work begins.
+The architecture checkpoint is tagged `nixos-26.05-architecture-baseline`.
+The final pre-optimization baseline remains pending the acceptance gates in
+[plan.md](plan.md).
 
 ## Optimization development
+
+Pinned diagnostic tools are available with `nix develop .#validation`.
+This shell includes CPU, thermal, storage and graphics inspection tools;
+entering it does not run stress tests or change the workstation configuration.
+Tools come from the pinned nixpkgs input; `turbostat` is selected from the
+desktop's kernel package set.
 
 Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
 
