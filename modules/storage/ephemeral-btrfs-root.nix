@@ -10,10 +10,18 @@ let
   cfg = config.boot.ephemeralBtrfsRoot;
 
   rootFs = config.fileSystems."/";
-  rootDevice = rootFs.device;
+  rootDevice = if rootFs.device == null then "" else rootFs.device;
   rootDeviceUnit = "${utils.escapeSystemdPath rootDevice}.device";
 
   topLevelMount = "/run/ephemeral-root-btrfs";
+
+  safeSubvolumeName = name: builtins.match "[A-Za-z0-9_@][A-Za-z0-9_.@-]*" name != null;
+  subvolumeNames = [
+    cfg.rootSubvolume
+    cfg.stagingSubvolume
+    cfg.persistenceSubvolume
+  ];
+  rootSubvolumeOptions = lib.filter (lib.hasPrefix "subvol=") rootFs.options;
 
   allowedSubvolumePaths = map (
     descendant: "${cfg.rootSubvolume}/${descendant}"
@@ -34,16 +42,19 @@ in
     rootSubvolume = lib.mkOption {
       type = lib.types.str;
       default = "@root";
+      description = "Direct top-level Btrfs subvolume reset at boot; must match the / subvol= mount option.";
     };
 
     stagingSubvolume = lib.mkOption {
       type = lib.types.str;
       default = "@root-next";
+      description = "Direct top-level staging subvolume; recovery and cleanup require it to be completely empty.";
     };
 
     persistenceSubvolume = lib.mkOption {
       type = lib.types.str;
       default = "@persist";
+      description = "Distinct direct top-level persistence subvolume holding the reset log.";
     };
 
     allowedDescendants = lib.mkOption {
@@ -52,16 +63,22 @@ in
         "tmp"
         "srv"
       ];
+      description = "Direct disposable child subvolumes permitted under root. All other descendants stop reset.";
     };
 
     logFile = lib.mkOption {
       type = lib.types.str;
       default = "ephemeral-root-reset.log";
+      description = "Log path relative to the persistence subvolume; written with mode 0600 before deletion.";
     };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
+      {
+        assertion = config.boot.initrd.systemd.enable;
+        message = "boot.ephemeralBtrfsRoot requires a systemd initrd.";
+      }
       {
         assertion = rootFs.fsType == "btrfs";
         message = "boot.ephemeralBtrfsRoot requires / to use Btrfs.";
@@ -71,13 +88,25 @@ in
         message = "boot.ephemeralBtrfsRoot requires a concrete root device.";
       }
       {
-        assertion = cfg.rootSubvolume != cfg.stagingSubvolume;
-        message = "The root and staging Btrfs subvolumes must differ.";
+        assertion = lib.all safeSubvolumeName subvolumeNames;
+        message = "Root, staging and persistence must be safe direct Btrfs subvolume names.";
       }
       {
-        assertion = lib.all (
-          name: name != "" && name != "." && name != ".." && !(lib.hasInfix "/" name)
-        ) cfg.allowedDescendants;
+        assertion = builtins.length (lib.unique subvolumeNames) == 3;
+        message = "The root, staging and persistence Btrfs subvolumes must all differ.";
+      }
+      {
+        assertion =
+          builtins.length rootSubvolumeOptions == 1
+          && lib.elem (builtins.head rootSubvolumeOptions) [
+            "subvol=${cfg.rootSubvolume}"
+            "subvol=/${cfg.rootSubvolume}"
+          ]
+          && !(lib.any (lib.hasPrefix "subvolid=") rootFs.options);
+        message = "The / mount must select boot.ephemeralBtrfsRoot.rootSubvolume with one matching subvol= option and no subvolid= override.";
+      }
+      {
+        assertion = lib.all safeSubvolumeName cfg.allowedDescendants;
         message = "allowedDescendants must contain direct relative subvolume names only.";
       }
       {
@@ -169,7 +198,7 @@ in
           exit 1
         fi
 
-        if ! btrfs subvolume show "$persist" >/dev/null 2>&1; then
+        if [[ -L "$persist" ]] || ! btrfs subvolume show "$persist" >/dev/null 2>&1; then
           echo "FAIL: persistence path is not a Btrfs subvolume: $persist" >&2
           exit 1
         fi
@@ -218,6 +247,25 @@ in
           fi
         }
 
+        require_empty_staging() {
+          local path="$1"
+          local label="$2"
+          local entries
+
+          require_no_descendants "$path" "$label"
+
+          # Include dotfiles and broken symlinks; an interrupted reset only
+          # leaves a genuinely empty staging subvolume.
+          shopt -s nullglob dotglob
+          entries=("$path"/*)
+          shopt -u nullglob dotglob
+
+          if (( ''${#entries[@]} != 0 )); then
+            log "FAIL: $label contains unexpected directory entries"
+            return 1
+          fi
+        }
+
         boot_id="$(
           cat /proc/sys/kernel/random/boot_id \
             2>/dev/null \
@@ -227,18 +275,18 @@ in
         log "BEGIN boot_id=$boot_id device=$root_device"
         log "top-level Btrfs mount established"
 
-        if [[ ! -e "$root" ]]; then
-          if [[ ! -e "$next" ]]; then
+        if [[ ! -e "$root" && ! -L "$root" ]]; then
+          if [[ ! -e "$next" && ! -L "$next" ]]; then
             log "FAIL: neither $root_name nor $next_name exists"
             exit 1
           fi
 
-          if ! btrfs subvolume show "$next" >/dev/null 2>&1; then
+          if [[ -L "$next" ]] || ! btrfs subvolume show "$next" >/dev/null 2>&1; then
             log "FAIL: $next_name exists but is not a Btrfs subvolume"
             exit 1
           fi
 
-          require_no_descendants \
+          require_empty_staging \
             "$next" \
             "$next_name"
 
@@ -261,7 +309,7 @@ in
           exit 0
         fi
 
-        if ! btrfs subvolume show "$root" >/dev/null 2>&1; then
+        if [[ -L "$root" ]] || ! btrfs subvolume show "$root" >/dev/null 2>&1; then
           log "FAIL: $root_name exists but is not a Btrfs subvolume"
           exit 1
         fi
@@ -270,21 +318,15 @@ in
           "root before reset:" \
           "$root"
 
-        if [[ -e "$next" ]]; then
-          if ! btrfs subvolume show "$next" >/dev/null 2>&1; then
+        if [[ -e "$next" || -L "$next" ]]; then
+          if [[ -L "$next" ]] || ! btrfs subvolume show "$next" >/dev/null 2>&1; then
             log "FAIL: $next_name exists but is not a Btrfs subvolume"
             exit 1
           fi
 
-          require_no_descendants \
+          require_empty_staging \
             "$next" \
             "$next_name"
-
-          log "deleting stale empty staging subvolume $next_name"
-
-          btrfs subvolume delete \
-            -c \
-            "$next"
         fi
 
         root_descendants=()
@@ -297,12 +339,16 @@ in
               exit 1
             fi
 
-            candidate="''${line##* path }"
+            candidate="''${line#* path }"
 
             if ! ( ${allowedDescendantCheck} ); then
               log "FAIL: refusing to delete unknown root descendant: $candidate"
               exit 1
             fi
+
+            # The root-level list may only expose direct children. Every
+            # allowed child must itself have no nested subvolumes.
+            require_no_descendants "$top/$candidate" "$candidate"
 
             root_descendants+=("$candidate")
           done <<< "$descendant_output"
@@ -316,9 +362,19 @@ in
           done
         fi
 
+        # All topology checks must pass before the first destructive action.
+        if [[ -e "$next" ]]; then
+          log "deleting stale empty staging subvolume $next_name"
+
+          btrfs subvolume delete \
+            -c \
+            "$next"
+        fi
+
         log "creating empty staging subvolume $next_name"
 
         btrfs subvolume create "$next"
+        sync
 
         for candidate in "''${root_descendants[@]}"; do
           log "deleting validated disposable descendant: $candidate"

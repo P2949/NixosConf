@@ -60,6 +60,10 @@
       };
 
       checks.${system} = {
+        ephemeral-root-config = import ./tests/impermanence-root-config.nix {
+          inherit pkgs;
+        };
+
         formatting =
           pkgs.runCommand "check-nix-formatting"
             {
@@ -111,8 +115,19 @@
             '';
       };
 
-      packages.${system}.impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
-        inherit inputs pkgs;
+      packages.${system} = {
+        impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
+          inherit inputs pkgs;
+        };
+
+        impermanence-root-safety = import ./tests/impermanence-root-safety.nix {
+          inherit pkgs;
+        };
+
+        impermanence-root-recovery = import ./tests/impermanence-root-recovery.nix {
+          inherit inputs pkgs;
+        };
+
       };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
@@ -143,5 +158,6 @@
           }
         ];
       };
+
     };
 }

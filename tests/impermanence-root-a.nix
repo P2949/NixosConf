@@ -1,13 +1,14 @@
 {
   inputs,
   pkgs,
+  recovery ? false,
 }:
 
 let
   diskDevice = "/dev/disk/by-id/virtio-impermanence-root";
 in
 pkgs.testers.runNixOSTest {
-  name = "impermanence-root-a";
+  name = if recovery then "impermanence-root-recovery" else "impermanence-root-a";
 
   nodes.machine =
     { pkgs, ... }:
@@ -150,6 +151,8 @@ pkgs.testers.runNixOSTest {
       ephemeralSystem = nodes.machine.specialisation.ephemeral.configuration.system.build.toplevel;
     in
     ''
+      recovery = ${if recovery then "True" else "False"}
+
       machine.start(allow_reboot=True)
       machine.wait_for_unit("multi-user.target")
 
@@ -157,10 +160,18 @@ pkgs.testers.runNixOSTest {
       machine.succeed("mkdir -p /mnt/impermanence-root")
       machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
 
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root")
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root/tmp")
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root/srv")
-      machine.succeed("chmod 1777 /mnt/impermanence-root/@root/tmp")
+      if recovery:
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root-next")
+          staging_identity = machine.succeed(
+              "btrfs subvolume show /mnt/impermanence-root/@root-next "
+              "| grep -E '^\\s*(UUID|Subvolume ID):'"
+          )
+      else:
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root")
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root/tmp")
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root/srv")
+          machine.succeed("chmod 1777 /mnt/impermanence-root/@root/tmp")
+          machine.succeed("echo disposable > /mnt/impermanence-root/@root/root-sentinel")
 
       machine.succeed("btrfs subvolume create /mnt/impermanence-root/@persist")
       machine.succeed("btrfs subvolume create /mnt/impermanence-root/@var")
@@ -180,7 +191,6 @@ pkgs.testers.runNixOSTest {
       machine.succeed("chmod 0755 /mnt/impermanence-root/@persist/etc/nixos")
       machine.succeed("chmod 0700 /mnt/impermanence-root/@persist/etc/NetworkManager/system-connections")
 
-      machine.succeed("echo disposable > /mnt/impermanence-root/@root/root-sentinel")
       machine.succeed("echo persistent > /mnt/impermanence-root/@persist/persist-sentinel")
       machine.succeed("echo repository-state > /mnt/impermanence-root/@persist/etc/nixos/persist-sentinel")
       machine.succeed("echo persistent-var > /mnt/impermanence-root/@var/var-sentinel")
@@ -225,7 +235,8 @@ pkgs.testers.runNixOSTest {
       machine.crash()
       machine.start(allow_reboot=True)
 
-      def validate_boot(expected_reset_count):
+      def validate_boot(expected_boot_count):
+          expected_reset_count = expected_boot_count - int(recovery)
           machine.wait_for_unit("multi-user.target")
 
           machine.log(
@@ -263,7 +274,7 @@ pkgs.testers.runNixOSTest {
           machine.succeed(
               "test \"$(grep -c 'BEGIN boot_id=' "
               "/persist/ephemeral-root-reset.log)\" "
-              f"= {expected_reset_count}"
+              f"= {expected_boot_count}"
           )
           machine.succeed(
               "test \"$(grep -c 'RESET complete' "
@@ -331,7 +342,32 @@ pkgs.testers.runNixOSTest {
 
           machine.succeed("test ! -e /persist/etc/machine-id")
 
+          machine.succeed("mkdir -p /mnt/impermanence-root")
+          machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
+          machine.succeed("test ! -e /mnt/impermanence-root/@root-next")
+          machine.succeed("umount /mnt/impermanence-root")
+          machine.succeed(
+              "test \"$(grep -c 'RECOVERY complete' "
+              "/persist/ephemeral-root-reset.log || true)\" "
+              f"= {int(recovery)}"
+          )
+
       validate_boot(1)
+
+      if recovery:
+          root_identity = machine.succeed(
+              "btrfs subvolume show / | grep -E '^\\s*(UUID|Subvolume ID):'"
+          )
+          assert root_identity == staging_identity, (root_identity, staging_identity)
+          machine.succeed("mkdir -p /mnt/impermanence-root")
+          machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
+          machine.succeed("test ! -e /mnt/impermanence-root/@root-next")
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@root-next")
+          stale_identity = machine.succeed(
+              "btrfs subvolume show /mnt/impermanence-root/@root-next "
+              "| grep -E '^\\s*(UUID|Subvolume ID):'"
+          )
+          machine.succeed("umount /mnt/impermanence-root")
 
       machine.succeed("echo disposable-second > /root-sentinel")
       machine.succeed("echo second >> /persist/persist-sentinel")
@@ -339,6 +375,19 @@ pkgs.testers.runNixOSTest {
       machine.reboot()
 
       validate_boot(2)
+
+      if recovery:
+          new_identity = machine.succeed(
+              "btrfs subvolume show / | grep -E '^\\s*(UUID|Subvolume ID):'"
+          )
+          assert new_identity not in (root_identity, stale_identity), new_identity
+          machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
+          machine.succeed("test ! -e /mnt/impermanence-root/@root-next")
+          machine.succeed("umount /mnt/impermanence-root")
+          machine.succeed(
+              "grep -Fq 'deleting stale empty staging subvolume @root-next' "
+              "/persist/ephemeral-root-reset.log"
+          )
 
       machine.succeed("echo disposable-third > /root-sentinel")
       machine.succeed("echo third >> /persist/persist-sentinel")
@@ -348,7 +397,8 @@ pkgs.testers.runNixOSTest {
       validate_boot(3)
 
       machine.succeed(
-          "test \"$(grep -c 'RESET complete' /persist/ephemeral-root-reset.log)\" = 3"
+          "test \"$(grep -c 'RESET complete' /persist/ephemeral-root-reset.log)\" "
+          f"= {3 - int(recovery)}"
       )
       machine.succeed(
           "test \"$(grep 'BEGIN boot_id=' "
@@ -356,5 +406,6 @@ pkgs.testers.runNixOSTest {
           "| sed -E 's/.*boot_id=([^ ]+).*/\\1/' "
           "| sort -u | wc -l)\" = 3"
       )
+
     '';
 }
