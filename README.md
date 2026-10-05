@@ -398,3 +398,6 @@ Each stage should remain independently identifiable and benchmarkable.
 PGO/BOLT infrastructure should preserve provenance and fail closed when profile or binary identity does not match the expected derivation.
 
 BOLT outputs must be represented as new immutable Nix derivations rather than modifying files in `/nix/store`.
+
+The [stock policy audit](docs/stock-policy.md) records evaluated kernel, CPU,
+memory and environment declarations and their remaining acceptance limits.
