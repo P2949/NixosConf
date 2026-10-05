@@ -2024,9 +2024,9 @@ Validate the actual expected workflow, not just “the editor process launches�
 
 - [ ] official UE 5.8.2 engine path still works;
 - [ ] Steam FHS wrapper works;
-- [ ] native Wayland path works as intended;
-- [ ] Vulkan uses RX 9070 XT/RADV, not software fallback;
-- [ ] actual `AI_Gavin_Project` opens;
+- [~] native Wayland startup/configured-map rendering passed on current physical trial closure (SDL3 wayland, compositor xwayland=false); final candidate/soak acceptance pending;
+- [~] actual editor Vulkan selects RX 9070 XT/RADV GFX1201, Mesa 26.1.8; final candidate acceptance pending;
+- [~] actual `AI_Gavin_Project` module and configured startup map loaded, 28 actors, ten-second editor tick/render hold; interactive play/final candidate acceptance pending;
 - [ ] C++ target builds successfully;
 - [ ] UnrealBuildTool uses Epic's intended toolchain/sysroot;
 - [ ] editor can run the project;
@@ -4045,3 +4045,80 @@ because the FHS view lacks that cwd; retried from actual project directory
 with the identical build command. No source edits or engine/toolchain flags
 changed. Private full build log /persist/nixos-unreal-cpp-build-20261005.log.
 Graphical editor/project launch, play and Vulkan rendering remain pending.
+
+## Native Unreal graphical validation — IN PROGRESS, 2026-10-05
+
+Preparation PR exact head caafd7a CI run 37291668888 succeeded. Previous
+turn completed build/render evidence and activation preview; no reboot or
+configuration activation. Native test launched existing unreal-engine wrapper
+from the project home directory, temporary SDL_VIDEO_DRIVER/SDL_VIDEODRIVER
+wayland selection, explicit Vulkan, unattended startup; no global overrides.
+SDL3 log confirms wayland, compositor client confirms xwayland=false/mapped,
+Vulkan log confirms radv/Mesa26.1.8. Actual project game name and linked
+AI_Gavin_Project module loaded. No GPU/software-fallback substitution.
+
+Initial ExecCmds=QUIT did not close the editor; installed source defines
+QUIT_EDITOR instead. Requested close via current Hyprland Lua dispatcher
+hl.dsp.window.close({window="pid:30808"}); old string dispatcher syntax
+rejected without action. Process exited0. All other observed window addresses
+retained; test windows gone, current session/cooling remain active. Startup
+modified generated editor/cache state, not tracked project files (Git clean).
+No project assets saved by test.
+
+A more precise Python map probe verifies intended project root, loads its
+configured EditorStartupMap and checks editor world/actors before calling
+SystemLibrary.quit_editor. Initial script in host /tmp was inaccessible to
+Steam FHS private tmp; engine correctly logged missing script, no receipt,
+so no map pass inferred from its process exit0. Relocated script/report to
+user-private ~/.cache/nixos-validation and reran. Map proof pending result.
+This is actual startup/map validation, not interactive gameplay/soak.
+
+Map probe returned success with 28 actors from configured startup map; engine
+version 5.8.2-56702186+++UE5+Release-5.8. Physical Vulkan device explicitly
+RX9070XT RADV GFX1201. HOWEVER orderly quit then crashed: SDL teardown
+destroying tracked windows, free(): invalid size, Signal6 handler followed by
+SIGSEGV; process exit139, core PID31445 present485.1M. Do not mark clean
+editor lifecycle accepted. Initial compositor-close smoke bypassed normal
+teardown (RequestExit force=true), so its exit0 does not contradict this
+reproducible-fault candidate. Current session/cooling healthy, zero failed
+system units, no targeted GPU/MCE kernel fault. Tracked project remains clean.
+
+Captured existing core privately under ~/.cache/nixos-validation mode0600
+inside0700 parent, rather than launch another GUI merely for a stack trace.
+Offline GDB in the same Steam FHS view is reading it; only function backtraces
+requested, no locals/env/core contents published. Workload failure investigation
+continues before final baseline acceptance; no global workaround introduced.
+Offline core backtrace locates glibc malloc abort at ubidi_close_64 in bundled
+Unreal Core ICU, through FICUTextBiDi/FTextLayout/Slate widget destructors;
+no external libicu shared object matched. A scoped -ansimalloc trial changed
+only that test process's default Mimalloc to ANSI: same map/28 actors, exit0.
+Vulkan shutdown suballocation warnings remain; do not treat this as full
+workload acceptance or install an allocator workaround on a single trial.
+
+Harness audit then found a critical confound: SystemLibrary.quit_editor calls
+QUIT_EDITOR synchronously, but installed EditorPythonExecuter source explicitly
+requires a full tick after the script before its deferred quit. The probe's
+immediate quit did not follow that lifecycle. Corrected probe uses keep-script-
+alive plus a post-tick callback, holds the loaded map for 10 seconds, then
+clears keep-alive so the native executor defers orderly close. Retesting the
+unchanged default Mimalloc first; no launcher/code policy change made. Original
+crash evidence remains valid, but applicability to ordinary user shutdown is
+unproven until this corrected lifecycle test completes. No engine source edit.
+
+Corrected lifecycle test completed exit0 with DEFAULT Mimalloc: intended
+project/root and configured startup world matched,28 actors, held10.0029s
+over1195 post-tick callbacks. Python reflected class is EditorPythonScripting
+(as declared by installed ScriptName metadata); first keep-alive attempt used
+wrong class name, so hold was not claimed despite clean framework-deferred
+exit0. Final test used correct class and native executor deferred close.
+Original synchronous in-script quit was a confound; corrected default close
+passes. Do not adopt -ansimalloc or libdecor/driver/global memory overrides
+based on the flawed probe. No source config/engine/allocator policy changed.
+
+Held-render test still logs Vulkan shutdown suballocation warnings (not an
+abort, process exits0); retained privately for later workload/soak review.
+No observed kernel GPU/MCE/hardware fault. Intentional earlier diagnostic
+core retained privately and classified as test-harness lifecycle failure;
+not silently vacuumed or presented as an ordinary user shutdown regression.
+Current startup/map smoke is valid, but gameplay and final baseline/soak
+remain unproven. Receipts/logs stored root-only under /persist.
