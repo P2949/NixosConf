@@ -180,7 +180,12 @@
 
       packages.${system} = {
         workstation-smoke = import ./tests/workstation-smoke.nix {
-          inherit inputs pkgs pkgsUnstable;
+          inherit
+            inputs
+            pkgs
+            pkgsUnstable
+            username
+            ;
         };
 
         recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;

@@ -2,9 +2,9 @@
   inputs,
   pkgs,
   pkgsUnstable,
+  username,
 }:
 let
-  username = "p2949";
   vmPkgs = import inputs.nixpkgs {
     system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
@@ -59,16 +59,16 @@ vmPkgs.testers.runNixOSTest {
     ''
       machine.start()
       machine.wait_for_unit("multi-user.target")
-      for service in ["dbus", "systemd-logind", "NetworkManager", "home-manager-p2949"]:
+      for service in ["dbus", "systemd-logind", "NetworkManager", "home-manager-${username}"]:
           machine.wait_for_unit(service + ".service")
       machine.succeed("busctl --system list --no-pager")
       machine.succeed("nmcli general status")
-      machine.succeed("test $(id -u p2949) = 1000")
-      machine.succeed("runuser -u p2949 -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
+      machine.succeed("test $(id -u ${username}) = 1000")
+      machine.succeed("runuser -u ${username} -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
       machine.wait_for_unit("polkit.service")
       status, _ = machine.execute("runuser -u nobody -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
       assert status == 1, "GameMode helper authorization must not extend to an unrelated user"
-      machine.succeed("runuser -u p2949 -- sh -c 'test -r ~/.config/hypr/hyprland.lua'")
+      machine.succeed("runuser -u ${username} -- sh -c 'test -r ~/.config/hypr/hyprland.lua'")
       machine.succeed("test $(systemctl show commander-core.service -p LoadState --value) = not-found")
       machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
       machine.log("Real workstation profile and Home Manager activated; hardware/reset services absent")
