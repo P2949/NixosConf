@@ -8286,3 +8286,17 @@ Private closure membership and recursive system-output differences are retained
 under `/persist/nixos-readiness-20261005`. This is preparation review, not
 physical acceptance or the final freeze comparison. Both old and candidate
 closures remain GC-protected; no installation or profile replacement occurred.
+
+## Readiness execution — published preparation CI accepted, 2026-10-05
+
+GitHub run37344821840 completed successfully for exact source
+`4e9e6a312cd786a18a8be326928a9a956ae2b43b`. Flake checks include current
+reconstruction evaluation/preflight and source formatting checks; the heavy
+reconstruction package is not executed by CI. Earlier superseded runs cancelled
+by workflow concurrency are not failures or substitutes for this terminal result.
+
+Live backup processes521492/521503/521504 remain active; archive is about20GB
+and increasing, with no logged pipeline error. Queued reconstruction supervisor
+730405 remains live and requires the verified backup receipt before starting.
+No backup completion, restore acceptance, physical activation or reboot is
+claimed from this checkpoint. Worktree was clean before this ledger update.
