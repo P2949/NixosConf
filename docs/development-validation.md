@@ -85,3 +85,30 @@ Steam FHS uses a private `/tmp`; scripts and receipts that must cross that
 boundary belong in a private directory under home. The project itself remained
 Git-clean. Shutdown Vulkan suballocation warnings remain recorded for later
 workload review; the smoke result is not a claim of warning-free operation.
+
+### GameMode authorization and stock mitigations
+
+The current physical generation passes GameMode registration/reaper tests but
+fails the governor feature test: helper authorization requires the `gamemode`
+group, while the installed user is not a member. The preparation branch adds
+that membership when GameMode is enabled. The real-profile VM checks the
+packaged polkit action for the intended user, with an unrelated-user deny
+control; physical governor switching still needs post-activation verification.
+
+The candidate declares `general.disable_splitlock=0`. GameMode may temporarily
+request the performance governor for games; it should preserve split-lock
+mitigation. No permanent performance governor, GPU clock tuning or global
+compiler settings are introduced. The test left all physical CPU governor/EPP
+values unchanged and GameMode inactive afterwards.
+
+### Audio routing evidence
+
+Creative Stage Pro is detected by USB and ALSA. Its current PipeWire device
+profile is Off; the active/default output is HDMI 3. A one-second silent PCM
+passed direct ALSA playback on the Stage Pro, and separately passed the current
+PipeWire default. No profile, sink, volume or default route was changed.
+
+This establishes hardware/default transport availability, not audible Stage
+Pro playback through PipeWire or reconnect acceptance. Preserve the current
+route until the intended output is established; do not infer a configuration
+bug merely from an inactive peripheral profile.

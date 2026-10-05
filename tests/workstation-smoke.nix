@@ -64,6 +64,10 @@ vmPkgs.testers.runNixOSTest {
       machine.succeed("busctl --system list --no-pager")
       machine.succeed("nmcli general status")
       machine.succeed("test $(id -u p2949) = 1000")
+      machine.succeed("runuser -u p2949 -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
+      machine.wait_for_unit("polkit.service")
+      status, _ = machine.execute("runuser -u nobody -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
+      assert status == 1, "GameMode helper authorization must not extend to an unrelated user"
       machine.succeed("runuser -u p2949 -- sh -c 'test -r ~/.config/hypr/hyprland.lua'")
       machine.succeed("test $(systemctl show commander-core.service -p LoadState --value) = not-found")
       machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")

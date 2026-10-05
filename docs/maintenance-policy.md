@@ -27,16 +27,16 @@ active scrub or collection merely to start a benchmark.
 
 ## Recovery artifacts and first cleanup
 
-Seven explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
+Eight explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
 protect known persistent generation 31, parent/reset generation 33, prepared
-root-policy and workstation closures, the newer maintenance candidate, and the pinned recovery ISO. Their
+root-policy and workstation closures, the newer maintenance and GameMode candidates, and the pinned recovery ISO. Their
 private receipt is `/persist/nixos-preparation-gcroots.json`. Git tags do not
 keep built store paths alive. These temporary roots require a deliberate
 retirement review after the final baseline/recovery milestone.
 
 The first preview is `/persist/nixos-gc-preview-20261005.txt`: 2235 dead paths,
-with the original six protected targets excluded; the seventh candidate root
-was added after that preview. No store outputs or profile generations
+with the original six protected targets excluded; the later candidate roots
+were added after that preview. No store outputs or profile generations
 were deleted. Nix did remove obsolete automatic/temp-root bookkeeping during
 root discovery. Repeat the preview before the first real cleanup if the store
 or generation set has changed. No cleanup or timer activation was performed
