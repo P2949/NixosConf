@@ -3938,3 +3938,68 @@ LFS availability or independent backup/restore. Those gates remain pending.
 Engine executable and project file exist; editor/project launch, actual C++
 target build and renderer acceptance remain unperformed. No project contents
 or remote credentials published; no project files changed.
+
+## Remote restore proof and backup inventory — 2026-10-05
+
+Preparation head d3467fa CI run 37290085329 succeeded. Previous turn made
+verified progress: development tests, source documentation and master ledger
+were committed/pushed. This turn continues independent recovery/backup work.
+
+Fetched Unreal HEAD LFS objects into a newly empty isolated storage directory,
+so existing local objects could not satisfy the operation. All 415 remote
+objects retrieved; exact sizes and SHA256 matched, zero missing/corrupt.
+Fresh no-checkout clone restored AI_Gavin_Project.uproject at remote HEAD
+376e151fca709b084e182da4c76ccb21a228f86d; SHA256
+eb5d13da3a8d07c82ca4f1d2722c1189fc1832248c7254d6054dc692e31dc92b
+matches the clean local file. Private receipts in /persist record remote LFS
+and representative Git restore proof. These prove this project's tracked
+remote data, not an independent encrypted backup of all critical home data.
+
+Read-only Development Git discovery (excluding engine/dependency/build cache
+trees) found one project repo, clean, no untracked files and valid upstream.
+No claim that every repository elsewhere in home has been audited. Home
+category allocated-byte inventory: Development 118032478208, .config
+1778237440, .local/share 14045966336. Engine tree 117487734784; Unreal
+projects 544743424. Values are du accounting, not deduplicated backup-size
+predictions. Project ignored data includes Binaries (5 files/3941728 bytes),
+DerivedDataCache (5/1627828), Intermediate (128/525015000), Saved
+(30/5672980). Preserve Saved/autosaves until content importance established;
+a clean Git status does not prove ignored data is reproducible. Private
+inventories saved root-only under /persist; no project contents published.
+
+Only external block disk present is 57.7 GiB Ventoy USB; read-only mount found
+existing multi-OS ISO files and 43239342080 bytes free. No separate backup
+drive connected. Asked for an independent backup destination while continuing
+other work; the user's earlier separate secrets-backup report is retained,
+not relabelled as a fresh home backup. No home backup or encryption/restore
+gate claimed complete.
+
+Read-only storage refresh: all five Btrfs device error counters zero; last
+scrub (2026-10-04 03:20:45) finished with no errors. No new scrub started.
+Pinned recovery ISO is being added under a new filename on Ventoy without
+replacing existing images; copy complete in size, explicit flush and hash
+verification still running. This is not physical boot/drill acceptance.
+The private GC-root receipt was refreshed atomically to include the seventh
+maintenance-candidate root; exact symlink target verified before recording.
+USB kernel log notes a pre-existing exFAT improperly-unmounted warning on
+both the initial read-only audit and later writable mount. Copy flush is still
+active, with device writes progressing; no repair or interruption attempted.
+Do not claim recovery-media readiness until hash/clean unmount completes.
+
+Recovery USB copy completed: added
+nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso
+(1496678400 bytes) without replacing existing images. Explicit flush completed,
+copy SHA256 matched 085a7b41e54e4e595f34fcea1ad9d37b48662d7eeae24d0f40781081d86678ca;
+clean unmount succeeded. Pinned exfatprogs 1.3.2 read-only fsck -n subsequently
+reports clean (6 directories/8 files); no filesystem repair performed. A fresh
+read-only remount checksum is running before final media-copy acceptance.
+Current NM reports connected/full; PipeWire/Pulse/WirePlumber active, Bluetooth
+Powered=yes. These establish daemon/connectivity state, not audible sound,
+peripheral reconnection or full workload acceptance. No current boot kernel
+amdgpu timeout/reset/fault/MCE/hardware-error matches in the targeted search.
+Post-remount ISO SHA256 matches the pinned artifact exactly. Read-only audit
+mount cleanly unmounted; the new media file is ready for its pending physical
+boot/drill. No host reboot, live activation, service restart, home-data copy,
+secret read or old ISO replacement occurred. Recovery and backup documentation
+updated on the isolated preparation branch. Independent backup destination
+question remains pending; continue unrelated offline work while awaiting it.
