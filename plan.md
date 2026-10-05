@@ -8023,3 +8023,17 @@ Decision:
 physical acceptance gate PASSED.
 stable-refresh integration gate PASSED.
 pre-optimization readiness engineering may now begin.
+
+
+## Readiness execution — username and CI repaired, 2026-10-05
+
+Latest attachment 36a1ce44 is byte-identical to the already integrated guide
+(SHA-256 85e1f947e5c9a77d0d1d311478be4989021caafbfe56b263a034d29a355cff20).
+Guide import committed as 40a9a1b. Username repair committed/pushed as 2334858;
+full flake check exit 0, workstation-smoke output exactly 1anhzd1q0pby5zy8qzyr6lf9spr5a0sb,
+desktop exactly accepted czk5a2wn8di3pgv8a6w0b8aj3286g3h3. Successful VM output
+was reused, not re-executed. Logs: /tmp/readiness-username-{fast,smoke,desktop}.log.
+2976771 switches feature CI to PRs with main-only push, retaining concurrency.
+Current-status documentation corrected without rewriting historical evidence.
+Backup destination requested; code preparation continues independently. No
+physical reboot, live activation or graphical/cooling restart performed.

@@ -1,4 +1,22 @@
-# Stable refresh candidate
+# Stable refresh acceptance
+
+## Accepted result — 2026-10-05
+
+Source: `c5e036b6e87d9aa77700909b508ccc0c3978d5b2`.
+Normal: `/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+Persistent-root: `/nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+Kernel: `6.18.55`. Matching recovery ISO/hash are recorded below.
+
+Physical normal → persistent-root → normal acceptance passed: root 295 reset,
+retained by recovery without another reset, then replaced by 297. Persistent
+probe and machine identity survived; root-local probe disappeared on final
+normal reset. See [current status](status.md) for remaining final-baseline gates.
+
+The bv3 output and timings below are the historical pre-log-hardening offline
+candidate, superseded by the exact c5e batch in plan.md. They are preserved
+as comparison evidence, not the current accepted desktop identity.
+
+## Historical preparation record
 
 The selected NixOS 26.05 revision is
 `0d9e9b832d03ac387417e16ce1febf73b2e631e1` (2026-10-04).
@@ -34,7 +52,8 @@ Its new Ventoy filename is
 `nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`.
 Media copy/flush verification passed, including SHA-256 after a read-only
 remount and an exFAT read-only check reporting clean. Prior recovery images remain.
-Physical boot/read-only recovery drill remains required.
+The supplied continuation guide reports a completed read-only filesystem drill;
+exact media-boot receipt details still need reconciliation in the recovery runbook.
 
 The desktop and ISO are protected by additional explicit GC roots
 `stable-refresh-candidate` and `stable-refresh-recovery-iso`. The existing eight
@@ -57,5 +76,5 @@ Fast flake checks, desktop/ISO builds and all six heavy VMs passed:
 The complete build receipts are retained privately under `/persist`.
 Offline validation is complete for this candidate.
 No profile installation, service restart, live activation or reboot occurred.
-Physical acceptance of this exact candidate, backup/recovery, firmware and
-workload/soak gates remain open under the master plan.
+This historical candidate was superseded by the accepted result above.
+Independent backup, final firmware, workload and soak gates remain open.

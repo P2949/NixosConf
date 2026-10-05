@@ -325,11 +325,10 @@ the workstation or replace graphics, cooling and application acceptance.
 
 ## Impermanence validation
 
-`feat/impermanence` declares an ephemeral Btrfs root by default, with a
+The desktop declares an ephemeral Btrfs root by default, with a
 `persistent-root` recovery specialisation. Both variants persist machine
-identity; home and `/var` remain persistent. Three physical reset trials have
-passed using the original opt-in configuration. Hardware acceptance of the
-final default/recovery policy remains pending for a batched maintenance window.
+identity; home and `/var` remain persistent. Validation includes original opt-in physical trials and accepted normal/recovery
+boots. See [current status](docs/status.md) for accepted artifacts and open gates.
 
 See [ephemeral root validation](docs/impermanence.md) for the reset contract,
 test commands, results and remaining physical acceptance gates. Explicit VM
@@ -373,13 +372,15 @@ physical KVM acceptance gate.
 
 The [selected stable refresh](docs/stable-refresh.md) records its isolated
 input update, complete offline validation, closure diff and matching recovery
-artifact. Physical acceptance remains pending.
+artifact and the accepted physical boot sequence.
 
 The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
 windows, rollback artifact retention and bounded persistent diagnostics.
-The prepared policy remains pending physical installation and acceptance.
+Current acceptance and remaining maintenance tasks are recorded in
+[current status](docs/status.md).
 
-Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
+Optimization work begins only from the final tagged stock baseline described
+in [current status](docs/status.md).
 
 The intended progression is:
 

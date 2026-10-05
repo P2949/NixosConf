@@ -5,9 +5,9 @@ Desktop now declares ephemeral root as its normal policy, with a
 persist machine identity; home and var remain persistent.
 
 Three physical reset trials passed on 2026-10-05 using the original opt-in
-entry. The proposed final default and recovery closures build and evaluate,
-but their exact physical boot acceptance remains pending. No reboot or live
-activation is scheduled: remaining work is batched to preserve the graphical
+entry. The stable-refresh normal/persistent-root/normal sequence also passed,
+ending on root 297. See [current status](status.md) for exact artifacts.
+Future final-candidate physical checks are batched to preserve the graphical
 session. See the [physical runbook](physical-root-validation.md) and
 [persistence contract](persistence-contract.md).
 
@@ -129,9 +129,8 @@ activation failure.
 
 ## Original physical trial procedure
 
-The three completed opt-in trials used the following procedure. Acceptance of
-the final default/recovery policy remains pending for a later maintenance
-window; do not repeat these reboots merely to rerun the initial trial.
+The three completed opt-in trials used the following procedure. The later stable-refresh default/recovery policy was also physically accepted;
+do not repeat these reboots merely to rerun the initial trial.
 
 - Inventory current root-local data and preserve anything needed explicitly.
 - Inspect actual Btrfs topology and verify persistent credentials without
