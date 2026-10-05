@@ -4666,3 +4666,45 @@ started. Current turn is a prerequisite hold, not new implementation completion.
 Next external input: connect/identify independent backup destination; then execute
 backup and representative restore before the planned physical maintenance window.
 Goal remains active; first consecutive impasse audit, not marked blocked.
+
+
+Physical acceptance completed — 2026-10-05
+
+Accepted source:
+c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+
+Normal closure:
+czk5a2wn8di3pgv8a6w0b8aj3286g3h3
+nixos-system-desktop-26.05.20261004.0d9e9b8
+
+Persistent-root closure:
+9ppcqjkfnid501na0wc8jjysynp0kp1p
+nixos-system-desktop-26.05.20261004.0d9e9b8
+
+Kernel:
+6.18.55
+
+Recovery ISO:
+d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+SHA-256:
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+
+Physical sequence:
+normal -> persistent-root -> normal
+
+Results:
+- first normal boot reset root to subvolume 295
+- persistent-root retained subvolume 295
+- persistent-root produced no reset-log increment
+- root-local and persistent probes both survived persistent-root
+- second normal boot replaced root 295 with 297
+- root-local probe disappeared
+- persistent probe survived
+- machine-id remained stable
+- all expected core services active
+- zero failed systemd units
+
+Decision:
+physical acceptance gate PASSED.
+stable-refresh integration gate PASSED.
+pre-optimization readiness engineering may now begin.
