@@ -136,7 +136,7 @@
 
       nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = [ ./hosts/recovery ];
+        modules = [ ./images/recovery.nix ];
       };
     };
 }

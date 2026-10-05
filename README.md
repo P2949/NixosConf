@@ -23,8 +23,9 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │   │   ├── disko.nix
 │   │   ├── ephemeral-root.nix
 │   │   └── persistence.nix
-│   └── recovery/
-│       └── default.nix
+│
+├── images/
+│   └── recovery.nix
 │
 ├── profiles/
 │   └── workstation.nix
@@ -74,12 +75,10 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │           └── unreal.nix
 │
 ├── tests/
-│   ├── desktop-evaluation.nix
-│   ├── workstation-smoke.nix
-│   ├── maintenance-guard.nix
-│   ├── commander-core-*.nix
-│   ├── test_commander_core.py
-│   └── impermanence-root-*.nix
+│   ├── default.nix
+│   ├── workstation/
+│   ├── hardware/commander-core/
+│   └── storage/
 │
 └── optimization/
     └── default.nix
