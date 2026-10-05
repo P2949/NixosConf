@@ -122,3 +122,18 @@ overlay library and shim. Temporary small windows closed without restarting
 the compositor. Keyboard/cursor and shutdown warnings remain in private logs.
 The outer display selected 155 Hz; HDR was disabled. This does not establish
 representative gameplay, HDR, controller or final-candidate acceptance.
+
+### Sustained CPU test remains open
+
+A planned 30-minute stress-ng CPU/all-method verification run on 2026-10-05
+used 12 workers at nice 19, with five-second sensor checks and an automatic
+stop at the conservative 80 C high-temperature boundary exposed by coretemp.
+It stopped after about five seconds when sampled temperature reached 80 C.
+No throttle-counter increases or matching new kernel hardware/thermal errors
+were observed; cooling remained active and temperature returned to about 30 C.
+The stressor's short-run verification reported no failures, but the wrapper
+correctly recorded an aborted thermal test. This does not pass the requested
+30-minute gate or prove OC stability. Review firmware/OC/power/cooling state
+before repeating a sustained test; no temperature boundary or cooling policy
+was changed to force a pass. Private receipts are retained under
+/persist/nixos-cpu-thermal-20261005. The graphical session remained active.
