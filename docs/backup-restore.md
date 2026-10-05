@@ -92,8 +92,8 @@ binaries equal in size/CRC to the retained ZIP;47 extra/different files were
 backed up separately and all47 restored/hash-verified. This compares with the
 local distribution, not a vendor authenticity signature.
 
-The main home archive integrity and representative external restore are still
-pending. `/persist/secrets` is outside its scope; the separate
+The main home archive integrity and representative external restore have
+passed; terminal receipt and clean unmount are recorded below. `/persist/secrets` is outside its scope; the separate
 [bootstrap restore](bootstrap-secrets.md) is already user-confirmed. Preserve snapshots and
 receipts; only a terminal verified receipt closes the corresponding gate.
 

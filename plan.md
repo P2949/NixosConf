@@ -12528,3 +12528,19 @@ Queued reconstruction session11114 started only after verified receipt and
 clean unmount, source736b0fb. Nix PID1186208 is actively building. This closes
 home archive/integrity/representative restore/unmount gates; it does not close
 reconstruction, physical hardware/workload acceptance or multi-day soak.
+
+## Reconstruction execution and PR reconciliation — 2026-10-05
+
+Live reconstruction PID1186208 has completed Disko and is copying the actual
+extended desktop closure with nixos-install. Entire installed-disk UEFI/reboot/
+recovery chain remains unaccepted until terminal success. No host store/kernel/
+initrd independence requirement was weakened. Host CPU readings65–66°C in
+observed interval; no physical session/service interruption.
+
+Draft PR7 description updated through gh body-file: exact-desktop extension,
+workstation safety assertions, pinned CI, verified main home/supplement backup,
+user-confirmed real secrets recovery and retained BIOS/ME are current. Removed
+obsolete encrypted-restore/home-backup blockers; reconstruction accurately
+listed executing, physical hardware/workloads/soak open. Latest head CI was
+still running at update; no claim it had passed. docs/status open-gate text now
+reflects accepted home backup, not the older in-progress checkpoint.

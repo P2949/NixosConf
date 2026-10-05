@@ -38,15 +38,16 @@ All five reset VM scenarios passed. The user confirmed the separate secrets
 backup was restored during a real system recovery, completing that gate on
 user-reported evidence. Retain BIOS 3201/current ME; no firmware update is planned.
 
-Still open: executed blank-disk reconstruction, full independent home archive
-and restore, VMX enablement, sustained CPU/RAM/cooling/storage health, final
+Still open: executed blank-disk reconstruction, VMX enablement,
+sustained CPU/RAM/cooling/storage health, final
 exact-candidate workloads and multi-day soak. See the latest plan.md execution
 records for exact source/artifact identities and private receipt locations.
 
 The user chose a dedicated folder on existing Ventoy for the home backup,
 overriding the guide's older recommendation against that target. It is additive
 and does not reformat/erase Ventoy. An engine exclusion audit and supplemental
-47-file restore passed; the main archive is still in progress.
+47-file restore passed; the main archive is verified with representative restore
+and clean unmount (see the accepted receipt below).
 The newer guide reports earlier refactor checks and a read-only recovery drill;
 retain that provenance and reconcile exact physical-media receipts.
 
