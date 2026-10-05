@@ -16105,3 +16105,21 @@ running in session89323, source9731b6d plus the preserved local comment edit.
 Log: /tmp/readiness-reconstruction-rescue.log. No duplicate VM was started.
 Mount-option reference: https://btrfs.readthedocs.io/en/stable/Administration.html
 (rescue=nologreplay skips log replay; read-only remains explicit).
+
+## Recovery evidence reconciliation and live retry — 2026-10-05
+
+Previous goal turn: progress (complete guide import, narrow harness correction,
+retry launch, commits9731b6d/eda67df pushed). Current retry session89323 and
+NixPID1794351 verified live; installer VM started. Do not restart this job
+because the installed-desktop copy is slow under TCG.
+
+Read-only receipt inspection: /persist/nixos-stable-refresh-iso-receipt-20261005.json
+contains only path, bytes and SHA-256 for the current stable ISO;
+nixos-stable-refresh-desktop-iso-build-20261005.json contains derivation/output
+identities. Neither is a physical ISO boot/subvolume inspection receipt.
+The guide-reported read-only drill remains guide-reported, exact artifact/date
+unverified. No new physical drill was scheduled. docs/physical-root-validation.md
+now distinguishes the already accepted c5e036b physical boot chain from the
+uninstalled readiness candidate and labels older774debe ISO staging historical.
+This prevents a stale runbook from demanding repeated accepted boots or selecting
+an older ISO unnecessarily. Current stable ISO52e3496c... remains authoritative.

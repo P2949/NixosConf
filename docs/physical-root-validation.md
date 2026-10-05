@@ -1,15 +1,17 @@
 # Controlled physical root validation
 
-Status: the original opt-in entry passed three hardware reset boots. The
-runbook below records that initial rollout; it is historical for the now
-proposed final policy. Desktop now declares reset by default and a
-`persistent-root` recovery entry, with identity persistence in both. Build
-and validate offline while retaining the current session; do not install or
-reboot the final policy until the batched boot-validation window.
+Status: source `c5e036b6e87d9aa77700909b508ccc0c3978d5b2` already
+passed physical normal → persistent-root → normal validation on 2026-10-05,
+ending at root subvolume297. The original three opt-in trials also passed;
+these are separate accepted historical results. The current readiness candidate
+and subsequent user desktop changes remain uninstalled and need final acceptance.
+Keep the graphical session alive during offline preparation.
 
-Exact final default/recovery hardware acceptance is pending. Do not install or select the
-reset entry until the preflight gates below are satisfied. All commands here
-are operator commands; documenting them does not mean they have been run.
+The supplied guide reports an earlier read-only recovery drill. Its exact ISO,
+date and physical inspection receipt still need reconciliation; existing build,
+hash and copy receipts alone cannot establish that event. Reconcile before
+scheduling another drill. The older artifact-specific procedure below is
+historical and does not supersede the current stable ISO or this evidence status.
 
 ## Final-policy maintenance window
 
@@ -24,11 +26,12 @@ specialisation; do not infer those paths from an earlier build.
    Preview activation changes; use boot-only installation when ready, preserving
    the live session. Inspect systemd-boot entries and verify each points at its
    recorded closure. Do not run live `test` or `switch` for this transition.
-2. Boot the matching recovery ISO from Ventoy and perform the read-only drill
-   below. For the selected stable refresh, the staged filename is
+2. Reconcile the reported earlier physical drill first. If it does not establish
+   the required artifact and inspection, batch the matching Ventoy ISO drill
+   below into this maintenance window. For the selected stable refresh, the staged filename is
    `nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`,
    SHA-256 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
-   Its copy/remount checks passed; its physical boot remains pending.
+   Its copy/remount checks passed; exact physical drill acceptance is unverified.
 3. Select the accepted normal default entry, which now resets root. Verify the
    exact running closure, fresh root, one reset invocation, identity, credentials,
    persistent state, networking, cooling and graphical login. Record private
@@ -139,7 +142,7 @@ latter survives on boots two and three. Check one BEGIN and one RESET for
 each distinct boot ID. Validate ordinary work between boots. Keep the parent
 default until repeated physical acceptance is recorded in `plan.md`.
 
-## Recovery drill and failure handling
+## Historical ISO staging and recovery drill procedure
 
 Build the pinned, secret-free ISO with `nix build '.#recovery-iso' --no-link`.
 The 2026-10-05 build produced
@@ -150,8 +153,8 @@ The ISO was added on 2026-10-05 to the existing Ventoy data partition as
 `nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
 replacing any existing images. Copy checksum matched; clean unmount completed
 and a subsequent read-only exFAT check reported clean. Post-remount checksum
-verification is recorded in `plan.md`. Select this exact filename in Ventoy
-for the pending physical boot and read-only recovery drill. The user's previous
+verification is recorded in `plan.md`. This older filename is retained as staging history. For a new drill use the
+current stable ISO identified in the maintenance-window section above. The user's previous
 successful recovery with another ISO does not establish this artifact's boot.
 Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.
 
