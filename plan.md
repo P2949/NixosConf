@@ -16160,3 +16160,54 @@ Private timestamped receipt and diff retained:
 live-activation-closure-diff.txt (0600). No secrets content collected. Host
 bootID/session unchanged. RetryPID1794351 verified live copying declared closure
 into target; no reconstruction restart, hardware tuning, reboot or live activation.
+
+## Full live closure membership review — 2026-10-05
+
+Previous goal turn: progress (journal provenance, four guard passes, private
+receipt and pushed7c657c2). RetryPID1794351/session89323 verified live copying
+the installed target; no duplicate job or source change. PR7 remains open,
+draft and mergeable. CI37366526909 for7c657c2 was queued when observed; the
+previous runs were cancelled, not passed.
+
+Read-only full closure membership comparison booted czk5a2... → live0p67xd... :
+2,207 →2,211 paths;21 added,17 removed;16,985,654,488 →16,985,809,648 NARbytes
+(+155,160). Added paths are generated normal/persistent systems, etc/units/initrd,
+Commander wrapper/source, pre-switch/activation checker, Home Manager generations/
+files/environment/fontconfig and Alacritty theme/config/fuzzel config. No project
+CPU/LTO/PGO/BOLT namespace artifact was found in the entire live runtime closure.
+This does not detect unnamed modifications or prove physical acceptance.
+Full path lists retained in root-private
+/persist/nixos-readiness-20261005/live-activation-closure-membership.json.
+The new full membership review supplements the previous concise diff-closures
+summary; no Nix store integrity scan or host write/activation was performed.
+
+## Current-source desktop identity and reconstruction wait — 2026-10-05
+
+Previous goal turn: progress (full live closure audit) plus verified process wait.
+Current7c657c2 source with only this documentation edit evaluates desktop
+toplevel to exactly the live0p67xd3scigqmmn65a0x5skdcsf6025b artifact.
+Evaluation session55246 exited0. This establishes current source reproduces
+the running artifact identity; it does not retrospectively establish the exact
+source used by the user's20:46 build or physical boot acceptance.
+
+RetryPID1794351/session89323 remained live after bounded55-second observation,
+copying further target paths at elapsed6m34s. No restart/duplicate execution.
+Observed host memory available15GiB, memory PSI some/full avg10/60/300 all0.00;
+these are transient headroom observations, not final workload/soak acceptance.
+CI37366526909 still queued; no PASS claim. Preserve tested reconstruction
+source while it runs. The next source-dependent steps remain terminal receipt,
+evaluated-Disko decision, then final offline suite per the newest guide.
+
+## Hosted CI acquisition failure — 2026-10-05
+
+CI37366526909 for7c657c2 ended failure; its Flake checks job111952951006
+ended cancelled with no steps and no assigned runner. Authoritative check-run
+annotation: "The job was not acquired by Runner of type hosted even after
+multiple attempts". This is runner acquisition failure, not evidence of a
+Nix/formatting/test defect or a passing source. No source fix or validation
+weakening is warranted. Commit/push the pending documentation observations
+to start one fresh normal PR CI run, then inspect its terminal result.
+ReconstructionPID1794351 verified live at elapsed20m27s copying target paths.
+Earlier consecutive monitoring turns were verified waits, not blockers: the
+same process remained live and advanced through the actual desktop closure.
+No production/harness source edits, host activation or physical reboot.
