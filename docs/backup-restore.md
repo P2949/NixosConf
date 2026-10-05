@@ -59,3 +59,19 @@ than the public configuration repository.
 
 A representative Git restore has passed. The broader home backup/restore gate
 remains open until the actual independent backup is available and verified.
+
+## Source-work scan scope
+
+A follow-up metadata scan of visible home/project trees found one clean Git
+repository and 476 files matching source/document/project extensions. Two
+Blender files outside the discovered repository total 313,363 bytes; include
+them in critical-data selection. The scan had no traversal or Git-status
+errors. Paths and status details remain root-private in
+/persist/nixos-home-work-audit-20261005.json.
+
+Engine installations, generated build trees and application/cache directories
+were excluded from this source-work scan to avoid treating installed software
+as user work. These are scan exclusions, not approved backup exclusions. File
+extensions do not cover all unique data; application state, ignored work and
+autosaves still need backup coverage. No files were deleted or transferred to
+an independent destination by this audit.
