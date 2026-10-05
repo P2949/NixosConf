@@ -20553,3 +20553,27 @@ Two-boot authorization remains in effect; preparing only the remaining normal
 return, no further permission request. Expected newroot/resetcount7,rootlocal
 sentinelgone,persistentsentinelretained,stableidentity/credentials/mounts/
 services/journals/graphical/network. Do not claim wholechain until observed.
+
+## Final generation37 physical chain ACCEPTED — 2026-10-05
+
+Previous goal turn progress: actual persistent-root leg accepted and authorized
+returnnormal scheduled. Current returnnormal boot36b6a76b-44bb-44c7-894c-
+ea52a060e538 runs exact0p67xd3scigqmmn65a0x5skdcsf6025b. RootID302,
+UUID8ec15d12-a1c8-4e40-8539-d97bde501f76,created23:51:32Dublin.
+Resetcount7 = prior6+1; exactlyone currentbootBEGIN. Root-local sentinelabsent,
+persistent sentinelSHA matches preparation. MachineID/credentialbooleanmatches
+true; correct root/home/var/persist/nix/optimization mounts, retained journals
+from firstnormal and persistentboots, requiredservicesactive,failedunitsempty.
+Wayland sessionactive, networkgithubHTTPS200,Commanderactive/success0restarts.
+Temporary systemdcontrol captureunitabsent. Private0600 final-return-normal-
+boot.jsonPASS; prior final-persistent-boot.jsonPASS plus preparationreceipt
+prove exactcandidatechain: normal300/count6 → persistent300/count6 →
+normal302/count7. No further rootboots needed to repeat accepted evidence.
+
+This closes final exactcandidate physicalrootchain, not all hardware/workload
+readiness. Thermal operating-condition, substantialRAM,remainingrealworkloads,
+recoverymediaprovenance,backupfreshness,representativesoak,policyfreeze and
+manifest/merge/tag remainopen. Coolingphysicalconfirmation stillpending;
+no heavyCPUretry or lowered80Cguard. User's two-boot authorization fulfilled;
+no additional boot scheduled and current graphicalsessionpreserved.
+Updated currentstatus/physicalrunbook acceptance. No runtimeNix/lockchanges.

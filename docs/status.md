@@ -25,11 +25,15 @@ Generation37 is installed. Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
 Both closures have independent GC roots; their ESP kernel/initrd copies match
 store artifacts. Reinstallation is unnecessary unless runtime source changes.
-Normal boot `d7c64889-aac3-4d09-8d14-5add9050cea3` created root300,
-UUID `a3046ca3-1791-b646-a0d2-4bf142a152d3`, matching reset completion/count6.
-Persisted identity/credentials match; graphical login, persistent mounts,
-network and retained journals work; failed system units are empty.
-Commander is active with zero restarts. The first normal leg is ACCEPTED.
+Physical normal→persistent-root→normal chain is ACCEPTED. First normal:
+boot`d7c64889-aac3-4d09-8d14-5add9050cea3`, root300, resetcount6.
+Persistent-root: boot`c6316fb4-f649-44b0-a8f6-8c4ae75be117`, same root300/UUID
+and both sentinels retained, no reset increment. Current return-normal:
+boot`36b6a76b-44bb-44c7-894c-ea52a060e538`, fresh root302,
+UUID`8ec15d12-a1c8-4e40-8539-d97bde501f76`, resetcount7. Root-local sentinel
+removed, persistent sentinel retained. Identity/credentials, persistent mounts,
+journals, services, network and active Wayland login pass. Commander active,
+zero restarts; temporary capture unit removed. No further reboot scheduled.
 
 ## Accepted gates
 
@@ -65,23 +69,17 @@ Commander is active with zero restarts. The first normal leg is ACCEPTED.
 
 ## Open hard gates and next actions
 
-1. Complete generation37 return-normal leg. Persistent-root leg passed on
-   bootc6316fb4-f649-44b0-a8f6-8c4ae75be117: root300/UUID and both sentinels
-   retained, resetcount6 unchanged, identity/credentials/services healthy.
-   Return-normal must create a new root, remove root-local sentinel, retain
-   persistent sentinel and increment reset count to7.
-   [Physical runbook](physical-root-validation.md) records expectations.
-2. Resolve CPU/power/cooling conditions before repeating heavy workloads.
+1. Resolve CPU/power/cooling conditions before repeating heavy workloads.
    Pump100% and fan60/100% commands are not actual RPM/airflow evidence.
    Physical cooler confirmation is pending; do not weaken the80C guard.
-3. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
-4. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
+2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
+3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; actual Android Java project/accelerated AVD; native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
    where used. KVM initialization is not Android application acceptance.
-5. Reconcile existing recovery-drill receipts before scheduling another drill.
-6. Check backup freshness at freeze; incrementally protect meaningful new work.
-7. Multi-day representative soak after individual gates; final stock-policy and
+4. Reconcile existing recovery-drill receipts before scheduling another drill.
+5. Check backup freshness at freeze; incrementally protect meaningful new work.
+6. Multi-day representative soak after individual gates; final stock-policy and
    environment audit; canonical manifest; exact-source validation/CI; PR ready,
    protected-main merge and annotated baseline tag.
 

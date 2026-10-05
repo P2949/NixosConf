@@ -6,7 +6,7 @@ ending at root subvolume297. The original three opt-in trials also passed;
 these are separate accepted historical results. The current readiness candidate
 is now installed as generation37. Its current normal boot has fresh-root,
 reset-log, identity/credentials, service, graphical login, network and persistent
-mount evidence. The remaining persistent-root/return legs are still unaccepted.
+mount evidence. Its complete generation37 physical chain now passes; exact evidence is below.
 Keep the graphical session alive during offline preparation.
 
 The supplied guide reports an earlier read-only recovery drill. Its exact ISO,
@@ -209,3 +209,17 @@ This writes boot entries without enabling reset live. Validate the exact mounts
 and selected closure before this repair; it is not part of the read-only drill.
 
 Recovery-media boot and bootloader repair remain unproven until rehearsed.
+
+## Final generation37 chain accepted — 2026-10-05
+
+Normal0p67xd root300/resetcount6 → persistentph12l3 root300/count6 retained
+→ normal0p67xd root302/count7. Persistent-root retained root UUID and both
+sentinels. Return-normal changed UUID, removed root-local sentinel, retained
+persistent sentinel and matched persisted identity/credentials. Correct mounts,
+retained journals, active network/cooling/HomeManager/services, zero failed
+units and active Wayland login passed. Private0600 receipts:
+final-persistent-boot.json and final-return-normal-boot.json under
+/persist/nixos-readiness-20261005. Temporary capture wiring removed.
+The earlier pending-leg statements above are superseded by this acceptance.
+No additional root-chain rehearsal is required for reassurance. Any firmware
+policy change or runtime source change needs its relevant evidence reassessed.
