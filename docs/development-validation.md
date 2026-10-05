@@ -137,3 +137,10 @@ correctly recorded an aborted thermal test. This does not pass the requested
 before repeating a sustained test; no temperature boundary or cooling policy
 was changed to force a pass. Private receipts are retained under
 /persist/nixos-cpu-thermal-20261005. The graphical session remained active.
+
+Journal timing confirms the keeper commanded 100% fan duty at 10:55:16.405
+UTC, within the approximate 10:55:13.778–10:55:18.838 stress interval, then
+returned to 60% at 10:55:30.408 after cooling to 28 C. This proves the control
+response was logged before the conservative stop; it does not measure actual
+fan RPM or establish cooling capacity for sustained load. PID 912 and the
+service invocation remained unchanged.
