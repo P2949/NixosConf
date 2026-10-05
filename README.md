@@ -355,6 +355,9 @@ The [baseline collector](docs/baseline-capture.md) records the current running
 system and repository identities, diagnostic results and missing evidence
 without activating configuration or running stress tests.
 
+The [backup and restore ledger](docs/backup-restore.md) distinguishes verified
+project remotes from the remaining independent home-data backup gate.
+
 The [development validation notes](docs/development-validation.md) cover
 project toolchain ownership, scoped clangd compiler queries and the current
 physical KVM acceptance gate.

@@ -1,0 +1,54 @@
+# Independent backup and restore gates
+
+The final baseline requires an independent backup of non-reproducible home
+state and a representative restore. Persistent subvolumes, same-disk snapshots,
+GC roots and Git tags do not protect against MP600 failure.
+
+The user reports that `/persist/secrets` was backed up separately long ago.
+Keep secrets out of this repository. Fresh backup date, destination and restore
+proof remain separate evidence; the earlier report does not establish a current
+home backup.
+
+## Verified project remote
+
+AI_Gavin_Project is clean at commit
+`376e151fca709b084e182da4c76ccb21a228f86d`, verified on remote main.
+A fetch into empty LFS storage retrieved all 415 tracked objects, with exact
+sizes and SHA-256 matches. A fresh remote clone restored the project descriptor
+with its hash matching the local tracked file. Private receipts reside under
+`/persist`; repository documentation contains no project content or credentials.
+
+This proves this project's tracked remote data. It does not cover ignored
+files, other repositories, editor state, documents or secrets. In particular,
+Unreal's `Saved` directory can contain autosaves and must not be dismissed as
+reproducible solely because Git ignores it.
+
+## Inventory and destination
+
+The 2026-10-05 allocated-size scan found about 118 GB in Development, of which
+117.5 GB is the engine tree, 1.8 GB in `.config` and 14 GB in `.local/share`.
+Unreal projects occupy about 545 MB, mostly intermediate build data. These are
+`du` accounting figures, not deduplicated backup-size estimates.
+
+Only the MP600 and Ventoy recovery USB are currently connected. The USB had
+43.2 GB free before adding the pinned recovery ISO; it cannot hold a broad
+copy of all inventoried data. An independent destination has been requested.
+Do not erase or repurpose the recovery medium to make room.
+
+Before excluding large trees, distinguish downloadable installations and
+rebuildable caches from unique project assets, local changes and autosaves.
+Inventory paths and repository details remain in root-only receipts rather
+than the public configuration repository.
+
+## Completion evidence still required
+
+- A destination outside the MP600, with enough capacity for the chosen data.
+- Critical data selection that covers local/untracked/ignored work and useful
+  application state, with exclusions justified rather than assumed.
+- Encrypted secrets backup and separately recoverable access credentials.
+- Backup date, destination, successful operation and integrity verification.
+- Representative restore from that backup into a separate directory, followed
+  by content/hash comparison; preserve the original working data.
+
+A representative Git restore has passed. The broader home backup/restore gate
+remains open until the actual independent backup is available and verified.
