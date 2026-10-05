@@ -9377,3 +9377,10 @@ runs are not acceptance. Runtime guard tests remain distinct from composition.
 
 Backup runner521492 is still draining USB writeback; dirty pages decreasing.
 Main archive/restore receipt remains pending. No live service restart/reboot.
+
+Full flake check including activation composition tests completed successfully
+for source9ec351d, session44699 exit0. Terminal log retained root-private as
+/persist/nixos-readiness-20261005/activation-composition-full.log. Exact desktop
+output comparison is being evaluated before any activation; namespace ownership
+alone is not claimed to preserve the closure without this check. USB writeback
+continues to drain; archive verification receipt remains absent.
