@@ -116,6 +116,8 @@
       };
 
       packages.${system} = {
+        recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
+
         impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
           inherit inputs pkgs;
         };
@@ -162,5 +164,9 @@
         ];
       };
 
+      nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./hosts/recovery ];
+      };
     };
 }
