@@ -114,10 +114,14 @@ pkgs.testers.runNixOSTest {
     machine.succeed("test -z \"$(findmnt -rn -t 9p,overlay)\"")
     for path in ["/nix", "/home", "/var", "/persist", "/var/lib/nixos-optimization"]:
         machine.succeed(f"mountpoint {path}")
+    machine.succeed("test \"$(getent shadow ${username} | cut -d: -f2)\" = \"$(cat /persist/secrets/${username}-password-hash)\"")
+    machine.succeed("logger -t reconstruction persistent-journal-probe")
+    machine.succeed("journalctl --sync")
     machine.succeed("touch /reconstruction-local /persist/reconstruction-persistent")
     machine.reboot()
     machine.wait_for_unit("multi-user.target", timeout=600)
     machine.succeed("test ! -e /reconstruction-local && test -e /persist/reconstruction-persistent")
+    machine.succeed("journalctl --no-pager --grep=persistent-journal-probe")
     root_id = machine.succeed("btrfs subvolume show / | sed -n 's/.*Subvolume ID:[[:space:]]*//p'").strip()
     resets = machine.succeed("grep -c 'RESET complete' /persist/ephemeral-root-reset.log").strip()
     assert int(resets) >= 2
@@ -133,5 +137,18 @@ pkgs.testers.runNixOSTest {
     assert machine.succeed("grep -c 'RESET complete' /persist/ephemeral-root-reset.log").strip() == resets
     machine.succeed("test $(cat /etc/machine-id) = 11111111111111111111111111111111")
     machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
+    machine.reboot()
+    machine.wait_for_unit("multi-user.target", timeout=600)
+    machine.succeed("test ! -e /reconstruction-recovery-local && test -e /persist/reconstruction-persistent")
+    assert int(machine.succeed("grep -c 'RESET complete' /persist/ephemeral-root-reset.log").strip()) == int(resets) + 1
+    machine.shutdown()
+    installer.start()
+    installer.wait_for_unit("multi-user.target")
+    installer.succeed("mkdir -p /mnt/reconstruction-inspect")
+    installer.succeed("mount -t btrfs -o ro,nologreplay,subvolid=5 ${diskDevice}-part3 /mnt/reconstruction-inspect")
+    for name in ["@root", "@home", "@var", "@nix", "@persist", "@optimization"]:
+        installer.succeed(f"btrfs subvolume show /mnt/reconstruction-inspect/{name}")
+    installer.succeed("test $(cat /mnt/reconstruction-inspect/@persist/etc/machine-id) = 11111111111111111111111111111111")
+    installer.succeed("umount /mnt/reconstruction-inspect")
   '';
 }

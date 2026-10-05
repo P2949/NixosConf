@@ -75,3 +75,23 @@ as user work. These are scan exclusions, not approved backup exclusions. File
 extensions do not cover all unique data; application state, ignored work and
 autosaves still need backup coverage. No files were deleted or transferred to
 an independent destination by this audit.
+
+
+## Current Ventoy backup operation — 2026-10-05
+
+The user explicitly selected a dedicated folder on existing Ventoy, overriding
+the older destination recommendation above. No existing boot files were erased
+and no partition was formatted. A fresh read-only home snapshot supplies a
+consistent filesystem view, without claiming quiesced application databases.
+
+The main compressed archive includes home, projects, engine source and assets.
+Capacity exclusions are the engine installation ZIP and engine binary/generated
+intermediate/cache directories. A read-only audit found all26,000 compared
+binaries equal in size/CRC to the retained ZIP;47 extra/different files were
+backed up separately and all47 restored/hash-verified. This compares with the
+local distribution, not a vendor authenticity signature.
+
+The main home archive integrity and representative external restore are still
+pending. `/persist/secrets` is outside its scope and requires the separate
+[encrypted bootstrap restore](bootstrap-secrets.md). Preserve snapshots and
+receipts; only a terminal verified receipt closes the corresponding gate.

@@ -127,7 +127,7 @@ in
       }
       {
         assertion = 2 * lib.max cfg.cooling.tempInterval cfg.cooling.wakeInterval < watchdogSeconds;
-        message = "hardware.commanderCore.cooling tempInterval and wakeInterval must each be below 17.5 seconds to leave two intervals of margin within the ${toString watchdogSeconds}-second watchdog.";
+        message = "hardware.commanderCore.cooling tempInterval and wakeInterval must leave two intervals of margin within the ${toString watchdogSeconds}-second watchdog.";
       }
     ];
 

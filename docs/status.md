@@ -28,9 +28,22 @@ feature-branch validation path. Main retains required Flake checks protection.
 ## Open gates
 
 Storage/test/image organization, explicit Nix/Bash data interface, Commander
-Core policy ownership, native build/activation guards, stock closure exclusions,
-blank-disk reconstruction, independent backup/restore, firmware/VMX decisions,
-sustained CPU/RAM/cooling/storage health, final workloads and multi-day soak.
+Core policy ownership, native build/activation guards and stock closure
+exclusions are implemented on the draft readiness PR. Fast checks pass;
+activation has 45 fixture cases, native action VM acceptance and a read-only
+live positive check. The stock negative build rejects the intended test fixture.
+Candidate normal/persistent closures are GC-protected and remain uninstalled.
+
+Still open: terminal reset-matrix acceptance, executed blank-disk reconstruction,
+full independent home archive/restore completion, current encrypted-secret
+restore, firmware/VMX decisions, sustained CPU/RAM/cooling/storage health, final
+exact-candidate workloads and multi-day soak. See the latest plan.md execution
+records for exact source/artifact identities and private receipt locations.
+
+The user chose a dedicated folder on existing Ventoy for the home backup,
+overriding the guide's older recommendation against that target. It is additive
+and does not reformat/erase Ventoy. An engine exclusion audit and supplemental
+47-file restore passed; the main archive is still in progress.
 The newer guide reports earlier refactor checks and a read-only recovery drill;
 retain that provenance and reconcile exact physical-media receipts.
 

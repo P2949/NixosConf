@@ -8150,3 +8150,28 @@ recommendation; no-format/no-erasure preservation remains mandatory.
 
 Btrfs coordination counterpart evaluation test added: one valid control and
 three disabled/missing counterpart refusals; execution pending at this record.
+
+## Readiness execution — exclusion audit and final preparation checks, 2026-10-05
+
+Latest full preparation flake check exits0, including new maintenance-config
+control/refusals. Reconstruction now also checks credential equality, persistent
+journal, return to normal after recovery and read-only installer inspection of
+all expected subvolumes. Its VM execution remains queued behind backup completion
+(session75533); implementation/evaluation is not reconstruction acceptance.
+
+Engine exclusion audit compared26000 binary files to retained distribution ZIP
+by size/CRC; all matched, with no read errors.47 additional/different binary-area
+files (1,508,851bytes total) were independently archived on Ventoy and all47
+restored/hash-compared successfully. Supplement569761bytes; root-private
+engine-exclusion-audit.json and supplement-receipt.json under backup receipt dir.
+CRC comparison establishes equality to local ZIP, not vendor authenticity.
+Generated intermediate/cache directories and installation ZIP remain excluded.
+Main home archive/representative restore still pending; supplement alone is not
+full home acceptance. Snapshot was taken without application quiescence.
+
+Two candidate GC roots added (readiness-guards-candidate and
+readiness-guards-persistent); all13 roots verified, no earlier root retired.
+Completed preparation logs preserved root-owned0600 under
+/persist/nixos-readiness-20261005. Root-matrix log/receipt must be preserved only
+with terminal status; currently final safety VM running. Backup resumes when
+that Nix process exits. No physical activation/reboot or final-baseline claim.

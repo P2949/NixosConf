@@ -27,7 +27,7 @@ active scrub or collection merely to start a benchmark.
 
 ## Recovery artifacts and first cleanup
 
-Eleven explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
+Explicit preparation GC roots under `/nix/var/nix/gcroots/workstation-preparation`
 protect known persistent generation 31, parent/reset generation 33, prepared
 root-policy and workstation closures, the newer maintenance/GameMode/stable-refresh candidates, and both pinned
 recovery ISOs. Their
