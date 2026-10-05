@@ -109,10 +109,14 @@ The 2026-10-05 build produced
 `/nix/store/f424ql5wbi7h4xl7151696bvx1rr74g7-nixos-minimal-26.05.20261002.774debe-x86_64-linux.iso/iso/nixos-minimal-26.05.20261002.774debe-x86_64-linux.iso`
 (1,496,678,400 bytes), SHA-256
 `085a7b41e54e4e595f34fcea1ad9d37b48662d7eeae24d0f40781081d86678ca`.
-Copy the ISO onto your verified recovery medium (for example a Ventoy data
-partition), then boot it once. The ISO is built, but its physical boot and
-read-only recovery drill remain pending. Do not write a raw image to a device
-selected only by an assumed `/dev/sdX` name.
+The ISO was added on 2026-10-05 to the existing Ventoy data partition as
+`nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
+replacing any existing images. Copy checksum matched; clean unmount completed
+and a subsequent read-only exFAT check reported clean. Post-remount checksum
+verification is recorded in `plan.md`. Select this exact filename in Ventoy
+for the pending physical boot and read-only recovery drill. The user's previous
+successful recovery with another ISO does not establish this artifact's boot.
+Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.
 
 Boot recovery media and first identify the disk by its MP600 model/serial,
 partition layout and Btrfs label; device enumeration can differ on recovery
