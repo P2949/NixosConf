@@ -52,7 +52,7 @@
           pkgsUnstable
           username
           ;
-        desktopConfig = inputs.self.nixosConfigurations.desktop.config;
+        desktopSystem = inputs.self.nixosConfigurations.desktop;
         repoSource = ./.;
       };
     in

@@ -43,6 +43,8 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │   │   └── ephemeral-btrfs-root/
 │   │       ├── default.nix
 │   │       └── reset.sh
+│   ├── workstation/
+│   │   └── activation-safety/
 │   └── hardware/
 │       └── commander-core/
 │           ├── default.nix
@@ -55,6 +57,12 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │   └── nixos-baseline-info.sh
 │
 ├── docs/
+│   ├── status.md
+│   ├── impermanence.md, persistence-contract.md, stock-control.md
+│   ├── backup-restore.md, bootstrap-secrets.md, firmware-preparation.md
+│   ├── activation-safety.md, reconstruction.md, physical-root-validation.md
+│   ├── baseline-capture.md, closure-review.md, development-validation.md
+│   ├── maintenance-policy.md, stable-refresh.md, stock-policy.md
 │   └── baselines/pre-optimization/
 │
 ├── home/

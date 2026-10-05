@@ -22,3 +22,9 @@ activation. The checks are not proof that subsequent firmware or boot succeeds.
 
 Positive/negative fixtures and native action tests must pass before installing
 this candidate. No live activation is implied by introducing these guards.
+
+Ownership: `modules/workstation/activation-safety`, configured through
+`workstation.activationSafety`. Tests live under
+`tests/workstation/activation-safety`. Composition assertions require the
+ephemeral-root contract and Btrfs root, concrete vfat ESP and selected user
+password-hash path. Recovery deliberately disables reset while retaining guards.

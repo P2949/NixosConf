@@ -8,6 +8,10 @@ Disko layout, changing only the virtual device identity. It creates GPT, 4 GiB
 ESP, 32 GiB swap and the Btrfs persistence islands. A test-only password hash
 uses the production `/persist/secrets/<username>-password-hash` contract.
 
+The fixture derives from the actual desktop NixOS definition with extendModules;
+only virtual hardware/test overrides are added. Production imports, specialArgs
+and Home Manager integration are inherited.
+
 The declared workstation and Home Manager closure is copied onto the target
 with nixos-install. The installer can obtain declared build artifacts from the
 NixOS test store; the installed VM is then launched with only its installed disk

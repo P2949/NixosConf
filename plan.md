@@ -8300,3 +8300,1064 @@ and increasing, with no logged pipeline error. Queued reconstruction supervisor
 730405 remains live and requires the verified backup receipt before starting.
 No backup completion, restore acceptance, physical activation or reboot is
 claimed from this checkpoint. Worktree was clean before this ledger update.
+
+## Continuation reviews adopted — 2026-10-05
+
+User request: read, record both attached reviews, then follow their applicable
+instructions. The reviews describe snapshot75a649c; current live state takes
+precedence over stale status claims. Full source texts are retained below.
+Immediate tasks: exact-desktop reconstruction via extendModules; workstation
+activation-safety namespace/location plus deliberate prerequisite assertions;
+fixed Ubuntu/action SHA pins; README docs tree correction; execute reconstruction
+after verified Ventoy backup. No generic host framework or broad refactor.
+Facter comparison is isolated/non-blocking, superseding the earlier conscious
+deferral as an experiment to revisit after reconstruction. Generated option
+docs are low-priority optional work. Distributed builds, optimization matrices,
+dependency grafting, signed cache, offline full build closure and remote
+deployment are future experiments, not baseline requirements. Preserve inert
+optimization and persistent home/var. Defer docs moves, plan archival and
+compatibility/store-basename/VSCode cleanups until after the baseline tag.
+
+### Attached source: Architecture and maintainability review
+
+Source: `/home/p2949/.codex/attachments/142886c5-3b74-483a-8b84-721ae344eaf6/Pasted text.txt`
+SHA-256: `d261b8b667a2b5d00f11acbefe800caada6973db53ed4f2607564a43a8a9e05d`
+
+> I took another fresh pass over the **current** `feat/pre-optimization-readiness`, rather than using the previous `c15a175` review as the answer.
+>
+> The branch has moved substantially. It is now at **`75a649ca15fe876f4e6a62c9d933338454dd1546`**, with the latest commit recording successful preparation CI and a backup checkpoint.  PR #7 is open as a draft against `main`, with **23 commits and 54 changed files**.   I also checked the current PR-head workflow run: the Nix checks are succeeding.
+>
+> The biggest change in my assessment is this:
+>
+> > **Most of the architectural cleanup I previously recommended is now finished. I would stop looking for broad ways to make the repository “more modular.” There are only a few real structural improvements left; beyond them, further abstraction will make this one-host config harder to understand rather than easier.**
+>
+> ## Current state
+>
+> | Area | Fresh assessment |
+> |---|---|
+> | `flake.nix` | **Good now.** Thin enough; validation is delegated. |
+> | `tests/` | **Good.** Proper subsystem and semantic organization. |
+> | Storage modules | **Good.** Feature directories and implementation co-location are in place. |
+> | Ephemeral-root Nix/Bash boundary | **Good.** Nix now supplies data; Bash owns logic. |
+> | Btrfs maintenance ownership | **Good.** Host owns schedule; module owns mechanism. |
+> | CI branch policy | **Fixed.** Main push + PR is the right model. |
+> | Recovery ISO | **Fixed.** Correctly lives under `images/`. |
+> | Username source of truth | **Fixed.** Smoke test consumes the flake username. |
+> | Commander Core | **Fixed.** Python policy defaults removed; watchdog centralized. |
+> | Current-status docs | **Much better.** `docs/status.md` exists. |
+> | Stock contamination control | **Good.** Explicit project namespace + negative test. |
+> | Activation safety | **Implementation good; ownership/naming could improve.** |
+> | Blank-disk reconstruction | **Very good test, but duplicates production assembly. This is now the biggest maintainability issue.** |
+> | Documentation tree | **Starting to get crowded.** Final cleanup should happen after baseline freeze. |
+> | `plan.md` | **Huge but still operationally useful. Archive after readiness.** |
+>
+> The root flake is a particularly good improvement. It now essentially defines inputs, package sets, development shells, the validation registry and the two NixOS configurations; the old wall of test registrations is gone.  `tests/default.nix` has become the single validation registry, while the actual tests are organized by workstation/hardware/storage concern.  I would **not split that registry further yet**.
+>
+> ### The highest-value remaining refactor: stop reconstructing the desktop configuration twice
+>
+> This is the strongest fresh recommendation.
+>
+> Your production desktop is constructed in `flake.nix` with Disko, Home Manager, Impermanence, the desktop host, shared `specialArgs`, and the Home Manager user integration.
+>
+> But `tests/storage/ephemeral-root/reconstruction.nix` independently rebuilds nearly the same composition:
+>
+> ```nix
+> installed = inputs.nixpkgs.lib.nixosSystem {
+>   specialArgs = { ... };
+>
+>   modules = [
+>     inputs.disko.nixosModules.disko
+>     inputs.home-manager.nixosModules.home-manager
+>     inputs.impermanence.nixosModules.impermanence
+>
+>     ../../../hosts/desktop
+>
+>     # recreated Home Manager integration,
+>     # stateVersion, fixture overrides, ...
+>   ];
+> };
+> ```
+>
+>
+>
+> That creates a subtle but important drift risk:
+>
+> ```text
+> real desktop composition
+>         │
+>         ├── changes later
+>         │
+>         ▼
+> reconstruction fixture may silently remain on old composition
+> ```
+>
+> And this particular test is supposed to prove something stronger than almost every other test:
+>
+> > the actual workstation definition can reconstruct the machine from a blank disk.
+>
+> So it should consume the **actual desktop system definition**, not reconstruct a close approximation of it.
+>
+> I would first try using the existing NixOS configuration's `extendModules` support. Conceptually:
+>
+> ```nix
+> desktopSystem = inputs.self.nixosConfigurations.desktop;
+>
+> installed = desktopSystem.extendModules {
+>   modules = [
+>     ({ lib, modulesPath, ... }: {
+>       imports = [
+>         (modulesPath + "/testing/test-instrumentation.nix")
+>         (modulesPath + "/profiles/qemu-guest.nix")
+>       ];
+>
+>       disko.devices.disk.main.device = lib.mkForce diskDevice;
+>
+>       hardware.commanderCore.enable = lib.mkForce false;
+>
+>       # Other fixture-only overrides...
+>     })
+>   ];
+> };
+> ```
+>
+> Then `tests/default.nix` can receive `desktopSystem` rather than merely `desktopConfig`.
+>
+> If `extendModules` produces an undesirable recursion/evaluation issue in this flake, the fallback I'd use is a **desktop-specific constructor**, for example:
+>
+> ```text
+> hosts/desktop/system.nix
+> ```
+>
+> used by both the flake and reconstruction test.
+>
+> I still would **not** build a generic `mkHost`, `mkSystem`, host framework, or giant `lib/`. Two consumers now genuinely need the exact same desktop assembly, so factoring *that specific assembly* has become justified.
+>
+> The workstation smoke test should remain different. Its purpose is deliberately to test the reusable workstation profile/Home Manager without physical Disko, Commander Core or destructive root-reset behavior.
+>
+> ## `activation-safety` is now in the wrong architectural category
+>
+> The implementation itself looks good. You have four named pre-switch checks, and the shell implementation is read-only and defensive.
+>
+> But this:
+>
+> ```text
+> modules/storage/activation-safety/
+> ```
+>
+> is no longer an accurate description.
+>
+> The module validates:
+>
+> ```text
+> /persist mount
+> password credential backing file
+> ESP free space
+> Btrfs/root topology
+> ```
+>
+> Only about half of that is storage.
+>
+> Likewise:
+>
+> ```nix
+> boot.workstationActivationSafety
+> ```
+>
+> isn't really a boot option. It controls `system.preSwitchChecks`.
+>
+> I'd use something like:
+>
+> ```text
+> modules/
+> └── workstation/
+>     └── activation-safety/
+>         ├── default.nix
+>         └── check.sh
+>
+> tests/
+> └── workstation/
+>     └── activation-safety/
+>         ├── guard.nix
+>         ├── actions.nix
+>         └── test_guard.py
+> ```
+>
+> with an option namespace such as:
+>
+> ```nix
+> workstation.activationSafety = {
+>   enable = true;
+>   espReserveBytes = 256 * 1024 * 1024;
+> };
+> ```
+>
+> This isn't urgent for correctness, but it would make the taxonomy more truthful.
+>
+> While touching it, I'd also make its configuration prerequisites explicit. The module currently assumes the selected user has a `hashedPasswordFile`, `/boot` exists, and the ephemeral-Btrfs-root configuration exists.  Those assumptions are true for your desktop, but reusable modules are easier to maintain when an invalid composition generates a deliberate assertion like:
+>
+> ```text
+> workstation.activationSafety requires:
+> - ephemeral Btrfs root enabled
+> - concrete /boot filesystem
+> - configured hashedPasswordFile
+> ```
+>
+> rather than eventually producing an obscure missing-attribute evaluation failure.
+>
+> ## CI is structurally correct now; make it reproducible
+>
+> The stale feature-branch trigger from my previous review is gone. The workflow now correctly runs on pushes to `main` and on pull requests.  That's the model I would keep.
+>
+> There is one remaining improvement I'd make for a repository that is going to be used for controlled optimization experiments: reduce mutable CI infrastructure.
+>
+> Currently:
+>
+> ```yaml
+> runs-on: ubuntu-latest
+>
+> uses: actions/checkout@v7
+> uses: cachix/install-nix-action@v31
+> ```
+>
+>
+>
+> I would use a fixed runner generation such as `ubuntu-24.04` and pin the two actions to full commit SHAs, with comments indicating the corresponding release. A Dependabot config can update those pins later if you want automation.
+>
+> Nix makes your *build inputs* reproducible; pinning the GitHub Actions layer makes the machinery that launches those builds less mutable too.
+>
+> I wouldn't make CI substantially more complicated than that. In particular, I still wouldn't put the multi-reboot VM suite or blank-disk reconstruction into every PR run.
+>
+> ## The new storage architecture is essentially finished
+>
+> The previous home-grown token templating has been removed. `ephemeral-btrfs-root/default.nix` now injects escaped values and an array, then reads ordinary Bash.  `reset.sh` itself owns the descendant-membership logic and destructive procedure.
+>
+> That's the right boundary:
+>
+> ```text
+> Nix
+>   typed configuration
+>   escaping
+>   systemd wiring
+>        ↓
+> Bash
+>   procedural reset implementation
+> ```
+>
+> I would leave this architecture alone.
+>
+> The same applies to Btrfs maintenance. Its module now asserts that automatic GC and the `/` scrub exist, while owning only coordination/ordering and the guard.  The desktop owns the actual monthly scrub policy.
+>
+> That's exactly the host-policy/module-mechanism division I'd recommend.
+>
+> There is one deliberate bit of transitional baggage:
+>
+> ```nix
+> guardSource = builtins.path {
+>   path = ./guard.sh;
+>   name = "maintenance-guard.sh";
+> };
+> ```
+>
+> with the comment that this preserves the accepted store identity.
+>
+> I would **not change that before the baseline freeze**. After the baseline project is complete, you can decide whether preserving that historical store basename is still worth the oddity.
+>
+> ## Your experimental-control layer is in good shape
+>
+> `stock-control.nix` is deliberately tiny:
+>
+> ```nix
+> system.forbiddenDependenciesRegexes = [
+>   "-nixos-opt-cpu-"
+>   "-nixos-opt-lto-"
+>   "-nixos-opt-pgo-"
+>   "-nixos-opt-bolt-"
+> ];
+> ```
+>
+>
+>
+> And you've done the important part I cared about: there is an explicit negative system containing a named PGO fixture.  The documentation also correctly notes that a failure for an unrelated reason doesn't prove the contract and that `system.extraDependencies` is outside this check.
+>
+> I would leave `modules/core/stock-control.nix` where it is for now. Creating a `research/`, `experiments/`, or `controls/` hierarchy for one eleven-line module would be architecture theatre. Once the actual optimization framework contains several related control modules, *then* it may warrant its own namespace.
+>
+> And `optimization/default.nix` is still inert. Keep it that way until the stock baseline tag exists.
+>
+> ## Documentation has improved, but is now the next organizational pressure point
+>
+> `docs/status.md` fixes the most serious problem from the last review. It clearly separates the accepted physical system from the current implementation line and current open gates.
+>
+> That's good.
+>
+> But the actual `docs/` directory now contains a substantial set of documents—activation safety, backup/restore, baseline capture, bootstrap secrets, closure review, development validation, firmware preparation, Impermanence, maintenance, persistence, physical validation, reconstruction, stable refresh, status, stock control and more.
+>
+> Meanwhile the README's repository tree still effectively presents:
+>
+> ```text
+> docs/
+> └── baselines/pre-optimization/
+> ```
+>
+> which no longer describes the docs architecture very well.
+>
+> I would make the **README correction now**, but defer actually moving all those documents until the readiness project is finished. Cross-linking a dozen live documents while `plan.md` is actively recording evidence creates churn for little current benefit.
+>
+> After the baseline freeze, I'd move toward:
+>
+> ```text
+> docs/
+> ├── status.md
+> ├── design/
+> ├── runbooks/
+> ├── validation/
+> ├── baselines/
+> └── history/
+> ```
+>
+> At the same time, archive `plan.md`. It is now roughly **283 KB** at the repository root.  It has served its purpose well as a forensic execution ledger, but once the tag exists, it should become historical evidence rather than the main project-navigation document.
+>
+> ## A couple of deliberately small cleanups remain
+>
+> VS Code is still under `home/p2949/desktop/default.nix` as “Work”, while the development module owns clang tooling and Nix formatting.   Moving VS Code to development would be semantically cleaner, but it is very low priority.
+>
+> The old flake package aliases such as:
+>
+> ```nix
+> impermanence-root-test-a = reset-control;
+> impermanence-root-test-b = persistent-identity;
+> ```
+>
+> are also still present.  I think keeping them while `plan.md` and historical commands still refer to A/B is sensible. Once the plan is archived and the semantic names are the documented interface, remove the aliases and the `rec` package set can probably become an ordinary attrset.
+>
+> Your system package ownership has also reached a sensible state: system/recovery utilities remain system-wide, while interactive CLI tools have moved to Home Manager.   I would stop moving packages around unless actual usage exposes a bad owner.
+>
+> ## What I would implement from here
+>
+> 1. **Make blank-disk reconstruction derive from the exact real `desktop` NixOS configuration**, preferably with `extendModules`; this is the one architectural issue I consider genuinely important now. Then execute that reconstruction test, because `docs/status.md` still correctly lists it as an open gate.
+> 2. **Rehome and rename `activation-safety`** to a workstation/system-safety concern and add explicit module assertions for its prerequisites. Keep the current shell implementation together rather than splitting its four roles into four tiny scripts.
+> 3. **Make CI infrastructure slightly more deterministic**: fixed Ubuntu runner plus commit-pinned GitHub Actions. Keep the current simple main/PR trigger model.
+> 4. **Correct the README's repository/docs representation now**, but postpone the large `docs/` directory reorganization and `plan.md` archival until the pre-optimization baseline is actually complete.
+> 5. **After the final baseline tag**, remove transitional compatibility baggage: A/B flake aliases, any store-name-preservation hacks you no longer value, archive the execution ledger, and do tiny semantic cleanups such as moving VS Code. Then stop refactoring and create the fresh optimization branch.
+>
+> The target architecture is therefore no longer dramatically different from what you already have. The repository has reached the point where **stability of the architecture is itself a maintainability feature**. Your host/profile/core/desktop/Home Manager split, storage modules, test registry, recovery image, CI model, custom hardware module, and experimental contamination controls are all at a level where I would actively resist adding flake-parts, flake-utils, a generic host framework, overlays for their own sake, or another layer of module aggregation.
+>
+> At this point, the more important remaining work is the readiness work already recorded in `docs/status.md`: blank-disk reconstruction execution, the current backup/restore work, hardware/VMX and sustained stability gates, exact-candidate workload acceptance, and the soak.  Those will improve the quality of the eventual optimization baseline much more than another round of broad Nix refactoring.
+
+### Attached source: NixOS feature and readiness review
+
+Source: `/home/p2949/.codex/attachments/ec8e48c1-3c13-4d5c-a3ce-f07ed96fe37d/Pasted text.txt`
+SHA-256: `daac048824eaab83bc6bbc0985723670b9d3c52582b34f932049ac3b5c9af7cb`
+
+> I took another fresh look at the live branches. The answer has changed substantially again.
+>
+> `feat/pre-optimization-readiness` is now at `75a649ca15fe876f4e6a62c9d933338454dd1546`, and PR #7 is an open draft with 23 commits and 54 changed files. The old `feat/optimization-framework` is still untouched at `397a8c7`, so I would continue treating it as historical prototype code rather than the base for new work.
+>
+> The biggest conclusion is: **you have now implemented nearly all of the high-value NixOS-native features I previously suggested.** The genuinely interesting “what should I try next?” list is getting much shorter.
+>
+> ## What you have already implemented
+>
+> These are no longer recommendations:
+>
+> | Feature | Current state |
+> |---|---|
+> | Flakes | extensively used |
+> | Home Manager as NixOS module | used |
+> | Disko | used |
+> | Impermanence | extensively tested |
+> | Ephemeral Btrfs root | custom implementation + VM/physical testing |
+> | Specialisations | `persistent-root` |
+> | NixOS integration tests | extensive |
+> | Multi-boot tests | extensive |
+> | Recovery ISO | declarative and moved to `images/` |
+> | Custom typed NixOS modules | extensive |
+> | `system.checks` | **implemented** |
+> | `system.preSwitchChecks` | **implemented** |
+> | `system.forbiddenDependenciesRegexes` | **implemented** |
+> | Negative closure-contamination test | **implemented** |
+> | Blank-disk reconstruction test | **implemented, execution still pending** |
+> | Test registry outside `flake.nix` | **implemented** |
+> | CI via feature PR | **implemented** |
+>
+> Your `flake.nix` has become pleasantly small again: validation is delegated to `tests/default.nix`, while the flake mostly contains actual top-level outputs.  The test registry now separates cheap checks from explicit heavier artifacts such as reconstruction, activation testing and multi-boot Impermanence scenarios.
+>
+> You also genuinely implemented `system.checks`, rather than merely having equivalent flake checks. Both the ephemeral-root module and Btrfs-maintenance module make their source checks dependencies of the NixOS system build.
+>
+> And your activation guard is now a proper NixOS mechanism:
+>
+> ```text
+> system.preSwitchChecks
+> ├── persistence
+> ├── credentials
+> ├── esp
+> └── topology
+> ```
+>
+>
+>
+> The stock-control idea is implemented too:
+>
+> ```nix
+> system.forbiddenDependenciesRegexes = [
+>   "-nixos-opt-cpu-"
+>   "-nixos-opt-lto-"
+>   "-nixos-opt-pgo-"
+>   "-nixos-opt-bolt-"
+> ];
+> ```
+>
+> with a deliberately contaminated NixOS system that should fail construction.
+>
+> That's a particularly strong foundation for the optimization project.
+>
+> ---
+>
+> # Before adding anything else: actually run the reconstruction test
+>
+> This is now my **#1 recommendation**, but it's no longer an implementation task.
+>
+> Your blank-disk test is much better than the conceptual version I previously suggested. It actually:
+>
+> ```text
+> empty qcow2 disk
+>     ↓
+> real Disko layout
+>     ↓
+> test-only bootstrap secret
+>     ↓
+> nixos-install
+>     ↓
+> systemd-boot/UEFI
+>     ↓
+> installer shuts down
+>     ↓
+> new QEMU instance boots from installed disk
+>     ↓
+> NO host Nix store mount
+> NO supplied host kernel
+> NO supplied host initrd
+>     ↓
+> normal ephemeral-root boot
+>     ↓
+> reboot
+>     ↓
+> root reset verified
+>     ↓
+> persistent-root specialisation
+>     ↓
+> root retained
+>     ↓
+> normal boot again
+>     ↓
+> root resets
+>     ↓
+> offline read-only filesystem inspection
+> ```
+>
+>
+>
+> That's excellent.
+>
+> But your current status still says **executed blank-disk reconstruction remains open**.  PR #7 says the same thing.
+>
+> So I would not spend time inventing another major NixOS reliability feature before running:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --print-build-logs
+> ```
+>
+> That test is now one of the strongest pieces of NixOS-specific infrastructure in the repository. Proving it actually passes is worth far more than adding another module.
+>
+> ---
+>
+> # 1. NixOS Facter
+>
+> This remains the clearest **major NixOS 26.05 feature you genuinely haven't explored yet**.
+>
+> Facter generates a hardware report and allows NixOS to derive configuration for:
+>
+> - architecture;
+> - firmware;
+> - CPU microcode;
+> - initrd modules;
+> - graphics;
+> - networking;
+> - Bluetooth;
+> - virtualization;
+> - some other detected hardware.
+>
+>
+>
+> What makes it particularly suited to your repository is its built-in comparison tooling:
+>
+> ```text
+> hardware.facter.debug.nvd
+> hardware.facter.debug.nix-diff
+> ```
+>
+>
+>
+> I would not immediately adopt it. Do this as an isolated experiment:
+>
+> ```text
+> current hardware-configuration.nix
+>           │
+>           │ compare
+>           ▼
+>       facter.json
+>           │
+>           ▼
+> Facter-derived NixOS configuration
+> ```
+>
+> Generate the report:
+>
+> ```bash
+> sudo nix-shell -p nixos-facter \
+>   --run 'nixos-facter -o facter.json'
+> ```
+>
+> and evaluate a temporary configuration containing:
+>
+> ```nix
+> hardware.facter.reportPath = ./facter.json;
+> ```
+>
+> Then compare closures.
+>
+> Your existing `hardware-configuration.nix` is tiny enough that manual configuration may still win. That's fine—the interesting part is being able to determine that empirically.
+>
+> **Priority: 5/5 as the next genuinely new NixOS feature.**
+>
+> ---
+>
+> # 2. Distributed Nix builds
+>
+> This is probably the next feature that can graduate from “interesting” to **actually useful** once the optimization work begins.
+>
+> NixOS has first-class declarative support through `nix.buildMachines`; Nixpkgs's NixOS module generates the remote builder configuration from it.
+>
+> Eventually:
+>
+> ```text
+> workstation
+>     │
+>     │ derivation
+>     ▼
+> build machine
+>     │
+>     ├── LLVM rebuild
+>     ├── ThinLTO build
+>     ├── instrumented PGO build
+>     ├── optimized application
+>     └── NixOS integration test
+>     │
+>     ▼
+> store output returned
+>     │
+>     ▼
+> workstation performs physical benchmark
+> ```
+>
+> That distinction is especially valuable for you:
+>
+> > **build location should not determine benchmark location.**
+>
+> Keep performance measurement on the actual i5-10600K system, while expensive compilation can happen elsewhere.
+>
+> ### Test this the NixOS way first
+>
+> Don't even start with a physical second computer.
+>
+> Make a two-node NixOS test:
+>
+> ```text
+> ┌────────────┐       SSH/Nix       ┌────────────┐
+> │ client VM  │ ──────────────────→ │ builder VM │
+> └────────────┘                      └────────────┘
+>        │
+>        └── prove the derivation was really built remotely
+> ```
+>
+> You already have enough experience with `runNixOSTest` that this would be a very natural next experiment.
+>
+> Then later use builder features such as:
+>
+> ```text
+> big-parallel
+> kvm
+> nixos-test
+> ```
+>
+> and eventually custom capabilities for hardware-sensitive work.
+>
+> **Priority: 4.5/5.**
+>
+> ---
+>
+> # 3. `system.replaceDependencies`
+>
+> Now that your stock contamination contract exists, this becomes even more interesting.
+>
+> NixOS can replace an old dependency with another derivation throughout a system without doing the normal full downstream rebuild:
+>
+> ```nix
+> system.replaceDependencies.replacements = [
+>   {
+>     oldDependency = pkgs.foo;
+>     newDependency = optimizedFoo;
+>   }
+> ];
+> ```
+>
+> This is deliberately constrained: the replacements should have the same name length and very similar layouts, and the initrd is excluded by default because replacement there is fragile.
+>
+> I would use this **only as an optimization research experiment**, not as your main architecture.
+>
+> For example:
+>
+> ```text
+> EXPERIMENT A
+>
+> stock zstd
+>     ↓
+> normal override
+>     ↓
+> downstream rebuild propagation
+>
+>
+> EXPERIMENT B
+>
+> stock workstation closure
+>     ↓
+> replaceDependencies
+>     ↓
+> optimized zstd graft
+> ```
+>
+> Now you can ask:
+>
+> > Does this performance change come from the optimized library itself, or from the larger rebuild graph changing too?
+>
+> And because you now have:
+>
+> ```text
+> system.forbiddenDependenciesRegexes
+> closure review
+> stock negative tests
+> specialisations
+> ```
+>
+> you have much better protection against contaminating the control system than when I first suggested this.
+>
+> I'd eventually create something like:
+>
+> ```text
+> specialisation.zstd-graft
+> ```
+>
+> and never allow it into the stock system.
+>
+> **Priority: 5/5 during optimization, 1/5 before the baseline.**
+>
+> ---
+>
+> # 4. Use specialisations much more aggressively for experiment matrices
+>
+> You technically already tested specialisations, so this isn't a *new* feature.
+>
+> But you've barely touched their interesting performance-testing potential.
+>
+> Today:
+>
+> ```text
+> normal
+> persistent-root
+> ```
+>
+> Later I'd aim for:
+>
+> ```text
+> NixOS generation
+> │
+> ├── stock
+> │
+> ├── cpu-codegen
+> │
+> ├── thinlto
+> │
+> ├── pgo
+> │
+> ├── bolt
+> │
+> ├── pgo-bolt
+> │
+> └── kernel-experiment
+> ```
+>
+> with the important property:
+>
+> ```text
+> same flake.lock
+> same source revision
+> same userspace policy
+> same machine
+> same persisted data
+>
+> only intended experiment differs
+> ```
+>
+> Then your stock contamination module can become stage-sensitive:
+>
+> ```text
+> stock:
+>     forbid CPU/LTO/PGO/BOLT
+>
+> cpu-codegen:
+>     permit CPU
+>     forbid LTO/PGO/BOLT
+>
+> PGO:
+>     permit selected PGO outputs
+>     forbid BOLT
+> ```
+>
+> Your current stock-control implementation is already the seed of exactly this architecture.
+>
+> This is probably how I would express **whole-system experimental variants** once the new optimization framework starts.
+>
+> ---
+>
+> # 5. NixOS test containers / native NixOS containers
+>
+> You're now using QEMU heavily.
+>
+> That's correct for:
+>
+> ```text
+> UEFI
+> bootloader
+> kernel
+> initrd
+> Btrfs
+> ephemeral root
+> specialisations
+> blank-disk installation
+> ```
+>
+> But NixOS's test framework can also use containers. Nixpkgs explicitly distinguishes:
+>
+> ```text
+> nodes.<name>      → QEMU machine
+> containers.<name> → systemd-nspawn machine
+> ```
+>
+>
+>
+> That gives you a much faster testing tier for things that don't require their own kernel.
+>
+> Potential candidates from your repository:
+>
+> ```text
+> Commander Core pure systemd integration
+> activation helper logic
+> service dependency tests
+> user/service policy
+> network client/server experiments
+> future optimization metadata services
+> ```
+>
+> Not:
+>
+> ```text
+> ephemeral root
+> Disko
+> systemd-boot
+> initrd
+> kernel experiments
+> ```
+>
+> I'd think of it as:
+>
+> ```text
+> unit/pure tests
+>      ↓
+> nspawn NixOS tests
+>      ↓
+> QEMU NixOS tests
+>      ↓
+> physical host
+> ```
+>
+> You don't necessarily *need* it, but it's one of the remaining uniquely NixOS testing capabilities you haven't really exploited.
+>
+> **Priority: 3.5/5.**
+>
+> ---
+>
+> # 6. Generate your own NixOS option manual
+>
+> Your custom configuration has stopped being “some Nix files.”
+>
+> You now have real APIs such as:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> boot.workstationActivationSafety.*
+> hardware.commanderCore.*
+> ```
+>
+> For example, activation-safety exposes an actual typed module interface rather than hardcoded scripting.
+>
+> This is now a good candidate for `nixosOptionsDoc`.
+>
+> Expose something like:
+>
+> ```bash
+> nix build .#module-docs
+> ```
+>
+> and generate reference documentation directly from the module declarations:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.enable
+> boot.ephemeralBtrfsRoot.rootSubvolume
+> boot.ephemeralBtrfsRoot.stagingSubvolume
+> boot.ephemeralBtrfsRoot.persistenceSubvolume
+> boot.ephemeralBtrfsRoot.allowedDescendants
+> boot.ephemeralBtrfsRoot.logFile
+>
+> boot.workstationActivationSafety.enable
+> boot.workstationActivationSafety.espReserveBytes
+>
+> hardware.commanderCore....
+> ```
+>
+> The nice property is:
+>
+> ```text
+> code changes
+>     ↓
+> module option definitions change
+>     ↓
+> documentation changes automatically
+> ```
+>
+> instead of maintaining another hand-written truth source.
+>
+> It's not operationally important, but it's extremely NixOS-native.
+>
+> **Priority: 3/5.**
+>
+> ---
+>
+> # 7. Try a fully self-contained offline recovery build
+>
+> This is where `system.includeBuildDependencies` becomes interesting.
+>
+> Normally a NixOS closure contains what is required to **run** the machine.
+>
+> NixOS can also construct one containing what is required to **rebuild** it:
+>
+> ```nix
+> system.includeBuildDependencies = true;
+> ```
+>
+> That drags in sources, intermediate build dependencies, compilers and even compiler bootstrap dependencies. It is intentionally enormous, so I would never put this on the workstation normally.
+>
+> But as an experiment:
+>
+> ```text
+> normal recovery ISO
+>         vs
+> offline-rebuild recovery ISO
+> ```
+>
+> Then disconnect networking and ask:
+>
+> > Can this environment rebuild the complete target system without downloading anything?
+>
+> That's a very strong demonstration of Nix's reproducibility model.
+>
+> You could eventually create:
+>
+> ```text
+> recovery-iso
+> recovery-iso-full-build-closure
+> ```
+>
+> and compare sizes.
+>
+> I would probably delete the latter after the experiment because it will be huge.
+>
+> **Priority: 2.5/5, mostly educational.**
+>
+> ---
+>
+> # 8. Build a real signed binary cache
+>
+> This one moves slightly outside pure NixOS into Nix itself, but becomes very relevant to PGO/LTO/BOLT.
+>
+> Once an optimized package costs 30 minutes or several hours to produce, you don't want:
+>
+> ```text
+> successful expensive derivation
+>        ↓
+> GC
+>        ↓
+> rebuild it from scratch
+> ```
+>
+> A proper binary cache gives you:
+>
+> ```text
+> builder
+>    ↓
+> optimized store output
+>    ↓
+> signed binary cache
+>    ↓
+> workstation / CI / recovery machine
+> ```
+>
+> The interesting part isn't merely caching—it is **cryptographic trust**.
+>
+> Then your experiment can record:
+>
+> ```text
+> source commit
+> derivation
+> profile identity
+> binary hash
+> cache signature
+> benchmark result
+> ```
+>
+> This would pair extremely well with your existing fail-closed provenance philosophy.
+>
+> I'd do this once optimization builds actually become expensive rather than now.
+>
+> **Priority: 4/5 later.**
+>
+> ---
+>
+> # 9. Remote deployment with `nixos-rebuild --target-host`
+>
+> If you eventually put NixOS on another test machine/builder, don't manage it manually.
+>
+> NixOS can separate:
+>
+> ```text
+> machine evaluating/building configuration
+>               │
+>               ▼
+>         target machine
+> ```
+>
+> so you can build/deploy remotely.
+>
+> Combined with remote builders:
+>
+> ```text
+> control machine
+>       │
+>       ├── build host
+>       │
+>       └── target host
+> ```
+>
+> becomes possible.
+>
+> For your eventual optimization lab, that could become:
+>
+> ```text
+> main workstation
+>     = benchmark target
+>
+> secondary machine
+>     = build server
+>
+> laptop
+>     = orchestration/control
+> ```
+>
+> without copying `/etc` trees around.
+>
+> Not useful enough yet for your one-host baseline, but worth trying when a second NixOS machine becomes part of the project.
+>
+> ---
+>
+> # What I would *not* add now
+>
+> A fresh look actually makes me more conservative here.
+>
+> I would **not** currently add:
+>
+> - more Impermanence, especially ephemeral `/home`;
+> - flake-parts;
+> - flake-utils;
+> - a generic host framework;
+> - another custom abstraction layer;
+> - NixOS containers just for the sake of containerization;
+> - automatic NixOS upgrades;
+> - secrets tooling merely because it exists;
+> - unusual kernels;
+> - more performance knobs before the stock baseline;
+> - another major recovery mechanism.
+>
+> Your status document shows that the remaining blockers are now mostly **execution and physical validation**, not missing architecture: reconstruction execution, backup completion, VMX, hardware stability, workload acceptance and soak testing.
+>
+> ## My updated ranking
+>
+> If I separate “do now” from “interesting later,” I get:
+>
+> | Rank | Feature / experiment | Timing |
+> |---|---|---|
+> | **1** | **Execute your existing blank-disk reconstruction** | now |
+> | **2** | **NixOS Facter comparison** | now, isolated/non-blocking |
+> | **3** | **Distributed-build two-node NixOS test** | after baseline / early optimization |
+> | **4** | **Specialisation-based optimization matrix** | optimization v2 |
+> | **5** | **`system.replaceDependencies` experiment** | optimization v2 |
+> | **6** | **NixOS nspawn/container tests** | whenever a suitable service test appears |
+> | **7** | **Generated option documentation** | low-risk anytime |
+> | **8** | **Signed binary cache** | when optimization builds become expensive |
+> | **9** | **Offline closure with `includeBuildDependencies`** | curiosity/recovery experiment |
+> | **10** | **Remote deployment** | once you have another NixOS machine |
+>
+> The important change is that I would **stop looking for additional reliability features right now**. You already built them. The more valuable next step is to prove the reconstruction test, finish the remaining physical readiness gates, tag the stock baseline, and then start a fresh optimization branch.
+>
+> At that point, the genuinely exciting NixOS experiments become **distributed builds + specialisations + `replaceDependencies` + your closure-contamination contracts**. Together, those can make NixOS not merely the OS hosting the PGO/BOLT project, but the actual experimental framework controlling it.
+
+
+## Attached-review implementation checkpoint — 2026-10-05
+
+Both attached reviews are preserved above in full with source hashes; quote
+prefixes and trailing whitespace normalization are presentation changes only.
+Reconstruction now consumes actual desktopSystem.extendModules rather than
+reassembling Disko/HM/Impermanence/user policy. Evaluation reproduces exact
+1l6h8zxp25wmifd2bacl006p4lcwb491 derivation before subsequent safety changes.
+An initial attempt to obtain installer inputs from _module.args failed because
+specialArgs are not stored there; explicit inputs parameter retained solely
+for installer Disko import. No generic constructor was added.
+
+Activation safety moved to modules/workstation and tests/workstation, namespace
+workstation.activationSafety. Shell mechanism is unchanged. Assertions now
+require declared ephemeral-root contract/concrete Btrfs root, concrete vfat ESP,
+and selected user hashedPasswordFile. They allow persistent-root's deliberate
+reset disablement. Full checks are running; negative composition coverage and
+updated candidate build/runtime validation remain required.
+
+CI uses ubuntu-24.04 and GitHub-API-resolved action commit pins: checkout v7
+3d3c42e5aac5ba805825da76410c181273ba90b1; install-nix-action v31
+13d8dd58da0234aa297dedd986986ccb8e7f3e24 (annotated tag dereferenced).
+Main-push/PR triggers and cheap/heavy split remain unchanged. README now lists
+current docs and workstation safety ownership. No docs-directory reshuffle,
+plan archival, optimization activation, physical reboot or live switch occurred.
+
+Backup archive writing finished at27,844,003,241bytes; runner521492 is still
+live, waiting for writeback before integrity/restore. No verified backup receipt
+exists yet and reconstruction supervisor remains queued. Do not claim completion.
+
+First attached-review fast run passed evaluation/formatting but failed Statix's
+assignment-versus-inherit rule for desktopSystem.config; changed to
+inherit (desktopSystem) config. Full retry session12766 is running, log
+/tmp/readiness-attached-review-fast-final.log. Initial failure is not acceptance.

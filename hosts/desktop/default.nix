@@ -11,13 +11,13 @@
     ../../modules/core/stock-control.nix
 
     ../../modules/storage/btrfs-maintenance
-    ../../modules/storage/activation-safety
+    ../../modules/workstation/activation-safety
     ../../modules/hardware/commander-core
   ];
 
   networking.hostName = "desktop";
 
-  boot.workstationActivationSafety = {
+  workstation.activationSafety = {
     enable = true;
     espReserveBytes = 256 * 1024 * 1024;
   };

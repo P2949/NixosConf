@@ -1,20 +1,14 @@
 {
+  desktopSystem,
   inputs,
   pkgs,
-  pkgsUnstable,
   username,
 }:
 let
   inherit (pkgs) lib;
   diskDevice = "/dev/disk/by-id/virtio-reconstruction";
-  installed = inputs.nixpkgs.lib.nixosSystem {
-    system = pkgs.stdenv.hostPlatform.system;
-    specialArgs = { inherit inputs pkgsUnstable username; };
+  installed = desktopSystem.extendModules {
     modules = [
-      inputs.disko.nixosModules.disko
-      inputs.home-manager.nixosModules.home-manager
-      inputs.impermanence.nixosModules.impermanence
-      ../../../hosts/desktop
       ({ modulesPath, ... }: {
         imports = [
           (modulesPath + "/testing/test-instrumentation.nix")
@@ -30,13 +24,6 @@ let
         systemd.timers.nix-gc.wantedBy = lib.mkForce [ ];
         systemd.timers."btrfs-scrub--".wantedBy = lib.mkForce [ ];
         systemd.timers.fstrim.wantedBy = lib.mkForce [ ];
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          extraSpecialArgs = { inherit inputs username pkgsUnstable; };
-          users.${username} = import ../../../home/p2949;
-        };
-        system.stateVersion = "26.05";
       })
     ];
   };

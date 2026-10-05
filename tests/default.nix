@@ -3,13 +3,13 @@
   pkgs,
   pkgsUnstable,
   username,
-  desktopConfig,
+  desktopSystem,
   repoSource,
 }:
 {
   checks = {
     btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
-    activation-safety = import ./storage/activation-safety/guard.nix { inherit pkgs; };
+    activation-safety = import ./workstation/activation-safety/guard.nix { inherit pkgs; };
     ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
     btrfs-maintenance-shell = import ../modules/storage/btrfs-maintenance/check.nix { inherit pkgs; };
     maintenance-guard = import ./storage/btrfs-maintenance/guard.nix {
@@ -41,7 +41,7 @@
 
     desktop-evaluation = import ./workstation/evaluation.nix {
       inherit pkgs;
-      config = desktopConfig;
+      inherit (desktopSystem) config;
     };
 
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
@@ -102,13 +102,13 @@
   packages = rec {
     blank-disk-reconstruction = import ./storage/ephemeral-root/reconstruction.nix {
       inherit
+        desktopSystem
         inputs
         pkgs
-        pkgsUnstable
         username
         ;
     };
-    activation-safety-actions = import ./storage/activation-safety/actions.nix { inherit pkgs; };
+    activation-safety-actions = import ./workstation/activation-safety/actions.nix { inherit pkgs; };
     stock-contamination-negative = import ./workstation/stock-contamination.nix { inherit pkgs; };
     impermanence-root-test-a = reset-control;
     impermanence-root-test-b = persistent-identity;

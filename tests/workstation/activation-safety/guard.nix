@@ -6,7 +6,7 @@ pkgs.runCommand "check-activation-safety"
       pkgs.shellcheck
       pkgs.python3
     ];
-    GUARD_SOURCE = ../../../modules/storage/activation-safety/check.sh;
+    GUARD_SOURCE = ../../../modules/workstation/activation-safety/check.sh;
   }
   ''
     bash -n "$GUARD_SOURCE"
