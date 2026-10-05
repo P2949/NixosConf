@@ -74,6 +74,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    system.checks = [ (import ./check.nix { inherit pkgs; }) ];
     assertions = [
       {
         assertion = config.boot.initrd.systemd.enable;

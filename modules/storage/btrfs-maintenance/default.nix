@@ -16,6 +16,7 @@ let
     "${pkgs.bash}/bin/bash ${guardSource} ${mode} ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
 in
 {
+  system.checks = [ (import ./check.nix { inherit pkgs; }) ];
   assertions = [
     {
       assertion = config.nix.gc.automatic;

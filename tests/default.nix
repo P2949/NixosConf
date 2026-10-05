@@ -8,6 +8,8 @@
 }:
 {
   checks = {
+    ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
+    btrfs-maintenance-shell = import ../modules/storage/btrfs-maintenance/check.nix { inherit pkgs; };
     maintenance-guard = import ./storage/btrfs-maintenance/guard.nix {
       inherit pkgs;
     };
