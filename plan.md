@@ -9361,3 +9361,19 @@ First attached-review fast run passed evaluation/formatting but failed Statix's
 assignment-versus-inherit rule for desktopSystem.config; changed to
 inherit (desktopSystem) config. Full retry session12766 is running, log
 /tmp/readiness-attached-review-fast-final.log. Initial failure is not acceptance.
+
+## Readiness execution — activation prerequisites validated, 2026-10-05
+
+Full attached-review refactor fast retry exited0 (session12766). New explicit
+activation-safety-config check then passed normal/recovery controls, presence
+of four named checks and five targeted prerequisite refusals; output
+/nix/store/igfjz1lvkl6lv8y45mabiazxjpy5nfw2-check-workstation-activation-config.
+It verifies assertion messages, not unrelated evaluation failure. Initial test
+fixtures forced an upstream lazy diagnostic prematurely, assumed exactly four
+checks despite built-in switchInhibitors, and used an empty device string
+rejected by the upstream type. Fixed assertion short-circuit order, required
+check membership and null device fixture respectively. These failed fixture
+runs are not acceptance. Runtime guard tests remain distinct from composition.
+
+Backup runner521492 is still draining USB writeback; dirty pages decreasing.
+Main archive/restore receipt remains pending. No live service restart/reboot.

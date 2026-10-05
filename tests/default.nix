@@ -8,6 +8,7 @@
 }:
 {
   checks = {
+    activation-safety-config = import ./workstation/activation-safety/config.nix { inherit pkgs; };
     btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
     activation-safety = import ./workstation/activation-safety/guard.nix { inherit pkgs; };
     ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
