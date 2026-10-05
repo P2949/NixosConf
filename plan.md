@@ -3776,3 +3776,17 @@ feat/workstation-validation; draft PR #3 title/body now reflect the final
 package-ownership and correctness-validation scope. The heavy VM and all local
 fast checks passed; CI for this additional checkpoint is pending. Live system
 remains the prior installed generation, with no cooling/session restart or reboot.
+
+## Preparation PR synchronization — 2026-10-05
+
+PR #3's latest VM commit initially had no CI checks because simultaneous plan
+updates on both branches created a plan.md-only merge conflict. Verified locally
+with merge-tree, merged current feat/impermanence into the preparation branch,
+and resolved only plan.md using the complete current master log. All preparation
+evidence/publication records are retained; source changes were not discarded.
+Published synchronization commit `5fa804beacf73dd755ac267a7cbd7fd0e56e6283`.
+GitHub now reports MERGEABLE and CI run 37260120931 is in progress for that
+exact commit. Local merge-tree also succeeds. Draft remains unmerged.
+Master checkpoint 779514b CI run 37259961951 completed successfully.
+Both worktrees are clean before this log update; live Wayland and Commander
+Core remain active, no host shutdown scheduled. Entire goal remains open.
