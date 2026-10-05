@@ -2080,9 +2080,9 @@ Any match outside the deliberately parked/inert optimization area must be explai
 
 Before the experiment:
 
-- [ ] no system build flag is changed by importing `optimization/default.nix`;
-- [ ] `optimization/` cannot alter the desktop unless explicitly enabled later;
-- [ ] no old prototype output from `feat/optimization-framework` is wired into `main`.
+- [x] no system build flag is changed by importing `optimization/default.nix`;
+- [x] `optimization/` cannot alter the desktop unless explicitly enabled later;
+- [x] no old prototype output from `feat/optimization-framework` is wired into `main`.
 
 ---
 
@@ -3489,3 +3489,26 @@ Reference: https://docs.github.com/en/rest/branches/branch-protection#update-bra
 No host reboot, activation, shutdown schedule or service restart was performed.
 Final physical default/recovery policy acceptance remains batched and unproven;
 do not infer full recovery-media, backup, workload or soak acceptance from this VM.
+
+## Experimental cleanliness audit — PROVEN, 2026-10-05
+
+Phase 25: `optimization/default.nix` is an empty module in both the current
+worktree and origin/main. Workstation imports do not wire any old prototype
+outputs. Active Nix/Python/Lua source outside optimization contains no compiler,
+LTO/PGO/BOLT or global optimization flag setting; the only optimization path
+match is the intentionally persistent `/var/lib/nixos-optimization` subvolume.
+
+User systemd manager, `start-hyprland` and the live Hyprland process had none of
+the audited compiler flags, `LD_LIBRARY_PATH`, `MALLOC_CONF` or `RADV_PERFTEST`.
+The current agent shell inherits one `LD_LIBRARY_PATH` for libdbusmenu-glib
+from the VS Code/Codex process ancestry. It is not a global session setting or
+compiler optimization, and is deliberately left alone to preserve the editor.
+Future benchmark commands should use `env -u LD_LIBRARY_PATH nix develop
+.#validation ...` rather than inherit that application-specific library path.
+`NIX_LD_LIBRARY_PATH` in generated system environment is the deliberate nix-ld
+compatibility setting, distinct from an ambient linker path override.
+
+**Publication:** implementation/test/documentation checkpoint `54bd22f` was
+pushed to feat/impermanence. CI run 37257155346 completed successfully; local fast checks,
+fallback VM and validation-shell command resolution passed. No merge/tag or
+new host installation performed. This audit does not replace final acceptance.
