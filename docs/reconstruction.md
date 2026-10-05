@@ -21,6 +21,8 @@ cooling, firmware and graphical workload acceptance remains physical work.
 
 Required checks: blank signatures before Disko; copied closure and EFI fallback;
 normal root reset twice; persistent mounts/identity/probes; persistent-root
-one-shot boot with retained root identity/reset count; no failed units.
+one-shot boot with retained root identity/reset count; return to normal with
+a further reset; credential and journal persistence; all seven production
+subvolumes inspected read-only after shutdown; no failed units.
 Implementation/evaluation alone does not satisfy this gate: retain a successful
 execution receipt before the final baseline tag.

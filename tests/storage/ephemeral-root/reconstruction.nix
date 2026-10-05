@@ -108,7 +108,7 @@ pkgs.testers.runNixOSTest {
     # Deliberately no host store, 9p mount, kernel or initrd supplied by QEMU.
     machine = create_machine(start_command=shlex.join(command), name="reconstructed")
     driver.machines_qemu.append(machine)
-    machine.start()
+    machine.start(allow_reboot=True)
     machine.wait_for_unit("multi-user.target", timeout=600)
     machine.wait_for_unit("home-manager-${username}.service", timeout=600)
     machine.succeed("test $(readlink -f /run/current-system) = ${installed.config.system.build.toplevel}")
@@ -148,7 +148,7 @@ pkgs.testers.runNixOSTest {
     installer.wait_for_unit("multi-user.target")
     installer.succeed("mkdir -p /mnt/reconstruction-inspect")
     installer.succeed("mount -t btrfs -o ro,nologreplay,subvolid=5 ${diskDevice}-part3 /mnt/reconstruction-inspect")
-    for name in ["@root", "@home", "@var", "@nix", "@persist", "@optimization"]:
+    for name in ["@root", "@home", "@var", "@nix", "@persist", "@optimization", "@snapshots"]:
         installer.succeed(f"btrfs subvolume show /mnt/reconstruction-inspect/{name}")
     installer.succeed("test $(cat /mnt/reconstruction-inspect/@persist/etc/machine-id) = 11111111111111111111111111111111")
     installer.succeed("umount /mnt/reconstruction-inspect")

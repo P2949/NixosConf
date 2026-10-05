@@ -8246,3 +8246,16 @@ optional experiment does not replace required physical hardware validation.
 PR CI37343573400 was cancelled by the newer push's configured concurrency;
 replacement37343814838 validates b4a1584 and is still running at this record.
 This is not a check failure or acceptance of an unfinished run.
+
+## Readiness execution — reconstruction driver preflight, 2026-10-05
+
+Custom installed-disk guest now starts with allow_reboot=True: pinned test
+machine driver otherwise adds -no-reboot, which would terminate QEMU at the
+first reboot and invalidate the normal/recovery/normal sequence. Final
+read-only layout inspection now covers all seven production subvolumes,
+including @snapshots. Disko's direct executable uses its noninteractive legacy
+destroy implementation and is restricted to the blank virtual target; no
+physical disk command is executed. Corrected test evaluates successfully to
+`1l6h8zxp25wmifd2bacl006p4lcwb491-vm-test-run-blank-disk-reconstruction.drv`.
+Runtime acceptance remains queued, not proven. Documentation reflects full
+credential/journal/return-normal/layout checks. No physical reboot occurred.
