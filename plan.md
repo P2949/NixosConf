@@ -1481,7 +1481,7 @@ This is intentionally not a frequent timer. It is a one-time confidence check th
 
 Optional:
 
-- [?] evaluate Nix `min-free` / `max-free` settings to prevent a full `/nix` filesystem.
+- [-] Evaluated and deferred Nix `min-free` / `max-free` for the stock baseline: 763 GiB free of 896 GiB at the preparation checkpoint; representative large-build/workload space demand is not yet measured. Avoid arbitrary thresholds and an additional pressure-triggered collector outside the guarded maintenance window. Revisit with measured space requirements before large optimization builds.
 
 Do not set arbitrary values. Base them on:
 
@@ -3790,3 +3790,92 @@ exact commit. Local merge-tree also succeeds. Draft remains unmerged.
 Master checkpoint 779514b CI run 37259961951 completed successfully.
 Both worktrees are clean before this log update; live Wayland and Commander
 Core remain active, no host shutdown scheduled. Entire goal remains open.
+
+## Maintenance inventory and rollback protection — 2026-10-05
+
+Preparation PR #3 synchronization commit 5fa804b CI run 37260120931 succeeded.
+Both worktrees were clean at this checkpoint; no source integration/activation.
+
+Phase 12 preflight: store filesystem 896 GiB total, 122 GiB used, 763 GiB free.
+System generations 17..33 remain, current profile generation 33. Created six
+explicit root-owned GC roots under `/nix/var/nix/gcroots/workstation-preparation`
+for known persistent gen31, parent gen33, actual three-trial reset closure,
+proposed root-policy closure, workstation preparation closure and recovery ISO.
+Private receipt `/persist/nixos-preparation-gcroots.json` mode 0600 records
+exact targets. These roots supplement profile retention and need an explicit
+retirement decision after the final milestone; Git tags alone do not root builds.
+
+Completed `nix-store --gc --print-dead` preview with 2235 dead store paths in
+private `/persist/nixos-gc-preview-20261005.txt`. Verified all six protected
+closures exist and are absent from the dead set. No store outputs or profile
+generations deleted. Nix did remove stale automatic links and stale temporary
+root bookkeeping while finding roots; the preview is not metadata-immutable.
+Automatic GC remains inactive in the running system. No optimise/verify pass
+or destructive cleanup has been started during the active desktop session.
+
+Phase 14 inventory: current identity journal reports 28.8 MiB; all journal
+directories total 103 MiB, including older identities. Coredumps total 213 MiB,
+all listed retained files predate the three successful physical trials; current
+identity coredumpctl finds none. Effective upstream tmpfiles retention is 2w.
+Observed journal config is persistent with default bounds; coredump config has
+no explicit caps. New explicit bounds/GC schedule remain under preparation.
+Monthly scrub currently has AccuracySec=1d, which must be narrowed or guarded
+before claiming non-overlapping maintenance windows. No journal/coredump purge,
+timer activation, cooling reset, graphics restart or host reboot performed.
+
+## Maintenance policy implementation — IN PROGRESS, 2026-10-05
+
+On the isolated preparation branch, added a single standard automatic GC
+policy: Saturday 04:00 local time, 30-day profile horizon, persistent=false
+so missed GC does not run immediately at boot. No count-based pruning daemon.
+Monthly physical scrub moves to day 1 at 02:00 with one-minute accuracy.
+GC is ordered after scrub for simultaneous queued jobs. Both have non-failing
+ExecConditions that skip when the peer is active; GC additionally requires
+completed clean Btrfs scrub evidence and skips unknown/error health. No manual
+cleanup or live timer activation. Both timers must be paused before benchmark
+windows; this is documented stock maintenance, not a performance runner.
+
+Journal cap proposed 2 GiB, 4 GiB keep-free, 90-day time horizon, based on
+103 MiB combined current history. Core processing remains 32 GiB; external
+files capped at 8 GiB, target total 4 GiB with 4 GiB keep-free, existing 2w
+tmpfiles retention retained. MaxUse is not a hard instantaneous quota: a new
+large dump can temporarily exceed the target. No old evidence vacuumed.
+
+Added ShellCheck/syntax and 15 deterministic maintenance-condition cases for
+idle/active/activating/failed/unavailable services and clean/running/corrupt/
+unknown scrub reports. Initial stub test failed because /usr/bin/env does not
+exist in the Nix build sandbox; patchShebangs added to the test fixture.
+Guard itself already accepted the actual live clean/idle storage state through
+a read-only invocation. Final fast checks, desktop build and updated real-profile
+VM running. VM explicitly disables GC/auto store optimisation for host-store
+isolation. This source policy is not installed on the physical system.
+Reference for non-failing condition exits: https://raw.githubusercontent.com/systemd/systemd/v260/man/systemd.service.xml
+
+## Reboot batching and maintenance verification — 2026-10-05
+
+User confirmed that further reboots should be avoided because they destroy the
+active graphical session. Three successful physical reset trials satisfy the
+repeated-reset check; do not repeat them without a newly discovered boot issue.
+Exact final default/recovery boot acceptance remains a distinct pending gate.
+Batch all independent source/build/VM preparation before any further physical
+boot; no reboot or live activation scheduled at this checkpoint.
+
+Maintenance preparation final `nix flake check` passed, including the 15 guard
+cases. Updated real-profile VM build passed:
+`/nix/store/fwb69j58qc3sfpdhcqqiihlvn65pzdkh-vm-test-run-workstation-smoke.drv`.
+Desktop candidate built successfully:
+`/nix/store/a02fbpmmdq8yl93n56qyqapa2h5gk78c-nixos-system-desktop-26.05.20261002.774debe`.
+Source changes remain in the isolated preparation worktree pending publication;
+these maintenance settings have not been activated on the physical workstation.
+
+Maintenance generated-unit review confirms GC Persistent=false, Saturday 04:00,
+zero randomized delay, scrub day 1 at 02:00 with AccuracySec=1min, and the
+expected guard paths/order. systemd-analyze accepts both calendars in the
+host timezone. Closure comparison from ba579 to a02fb shows only maintenance
+script/timer additions in its package summary, with no new package versions.
+Optional min-free/max-free thresholds deferred based on abundant observed
+space, unmeasured future build demand and the need to avoid an unguarded
+pressure-triggered collector. Full-store optimise/verification remain pending.
+The new maintenance candidate is additionally protected by a seventh explicit
+GC root, `workstation-preparation/maintenance-candidate`; previous six roots
+remain intact. No old candidate was retired or any store output collected.
