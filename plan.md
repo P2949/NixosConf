@@ -998,8 +998,8 @@ system.stateVersion = "26.05"
 home.stateVersion   = "26.05"
 ```
 
-- [ ] Keep both at their original installation value.
-- [ ] Do not bump them merely because nixpkgs later upgrades.
+- [x] Keep both at their original installation value.
+- [x] Do not bump them merely because nixpkgs later upgrades.
 
 ## 11.3 Clean custom-package dependency direction
 
@@ -1025,14 +1025,18 @@ Current module already has typed 0–100 fan/pump duties and `lowTemp <= highTem
 
 Add or deliberately evaluate:
 
-- [ ] `usbId` format validation;
-- [ ] non-empty serial validation;
-- [ ] `baseFanDuty <= highFanDuty`;
-- [ ] strictly positive polling/wake/reset intervals;
-- [ ] sensible temperature range validation;
-- [ ] `lowTemp < highTemp` if strict hysteresis is desired;
-- [ ] watchdog interval has enough margin relative to the keeper's wake/report interval;
-- [ ] error messages are actionable.
+- [~] `usbId` format validation;
+- [~] non-empty serial validation;
+- [~] `baseFanDuty <= highFanDuty`;
+- [~] strictly positive polling/wake/reset intervals;
+- [~] sensible temperature range validation;
+- [~] `lowTemp < highTemp` if strict hysteresis is desired;
+- [~] watchdog interval has enough margin relative to the keeper's wake/report interval;
+- [~] error messages are actionable.
+
+All eight implemented and checked in feat/workstation-validation; integration
+and eventual hardware acceptance are pending. Strict hysteresis chosen;
+0 <= lowTemp < highTemp <= 100, with the existing 35-second watchdog retained.
 
 Do not rewrite the known-working control loop for style reasons.
 
@@ -1042,9 +1046,12 @@ The cooling daemon is critical code.
 
 Add fast checks to the normal CI path:
 
-- [ ] Python syntax compile check;
-- [ ] Ruff or equivalent static lint;
-- [ ] small unit tests for pure argument/state-transition logic where practical.
+- [~] Python syntax compile check;
+- [~] Ruff or equivalent static lint;
+- [~] small unit tests for pure argument/state-transition logic where practical.
+
+Implemented as ordinary checks on feat/workstation-validation; local checks
+passed, branch CI/integration pending.
 
 Do not make CI depend on the physical Commander Core.
 
@@ -2987,10 +2994,10 @@ Each of these is either:
 Use this as a smaller tracker after Impermanence is complete.
 
 ```text
-[ ] package ownership split
-[ ] liquidctl derivation accepts explicit src
-[ ] Commander Core remaining assertions
-[ ] Python lint/syntax/unit checks
+[~] package ownership split (prepared and checked on feat/workstation-validation)
+[~] liquidctl derivation accepts explicit src (identical package drv)
+[~] Commander Core remaining assertions (source checked; hardware acceptance open)
+[~] Python lint/syntax/unit checks (local checks passed; CI/integration pending)
 [ ] README Impermanence/test updates
 [x] repository description
 [x] desktop evaluation CI check
@@ -3612,3 +3619,94 @@ proves native 32-bit API enumeration/rendering, not Steam/Proton game acceptance
 The installed DARK SOULS REMASTERED executable is PE32+ x86-64; running it would
 not satisfy the plan's separate 32-bit Steam/Proton workload requirement. That
 gate remains open. No package activation, graphics restart or host reboot.
+
+## Offline workstation-validation branch — IN PROGRESS, 2026-10-05
+
+Created separate `feat/workstation-validation` worktree at
+`/persist/etc/nixos-validation`, based on root checkpoint 3c420fa. This stages
+independent Phase 6/7 preparation while keeping feat/impermanence focused; it
+does not merge the root milestone or bypass final physical acceptance.
+The first worktree creation lacked parent write permission; created only the
+new directory with user ownership, then added the already-created branch.
+
+Liquidctl dependency direction now accepts explicit `{ pkgs, src }` at the
+package boundary. Before/after package drv paths match exactly:
+`daj9nkcn8anj6h61mwb2xr5xi6kyjndi-python3.13-liquidctl-1.17.0.dev22+g48e8dd07b.drv`.
+Added actionable cooling assertions for USB ID, meaningful serial, duty order,
+strict 0..100 Celsius hysteresis, positive polling/wake/reset intervals,
+nonnegative transition delays and two intervals of margin under the unchanged
+35-second watchdog. CLI parsing enforces the same policy, with finite numbers.
+Only argument parsing moved to a pure helper; the working control loop is intact.
+
+Added fast Nix invalid/valid/disabled controls and Python syntax/Ruff/unit
+checks. Python tests use actual pinned liquidctl imports but mock every device,
+USB reset, sensor, timing and signal call in simulated-loop coverage. Tests
+exercise transient spikes, delayed high/low transitions, keepalive and cleanup,
+plus invalid arguments, sensor conversion, atomic-write failure and notify errors.
+Fast checks running (exec session 71773); assertions test fixture overrides
+corrected to mkDefault so malformed ID/serial cases fail for the intended
+assertion rather than conflicting module definitions. No host activation,
+cooling reset/restart, graphical restart or reboot.
+
+## Workstation preparation results — 2026-10-05
+
+All fast checks passed on the separate branch after supplying a private
+XDG_RUNTIME_DIR for liquidctl's import-time runtime backend in the Nix sandbox
+and correcting the test-fixture Statix inherit expression. Python check
+`2clyafwch3xnkq14xiwi2irb5lmp1fid-check-commander-core-python.drv` passed syntax,
+Ruff and seven tests (including sixteen invalid CLI cases). Nix controls reject
+15 invalid configurations through actionable Commander Core assertions and
+accept current defaults, boundary values and a disabled invalid hardware setup.
+Added a sensor-loss error cleanup subcase; targeted rerun passed as
+`n0a28k9ihy66vhcx75idx0nkqd6r5vsd-check-commander-core-python.drv`, verifying
+exit 1, visible error state, device disconnect and removal of the heartbeat.
+
+Prepared package ownership split on this branch: nine interactive tools moved
+to Home Manager cli.nix, nine development commands moved to the default dev
+shell, recovery/admin tools remain system-owned. Python is also explicit in
+the validation shell because the baseline collector needs it. Built HM path
+contains all nine CLI commands; candidate system profile contains none of the
+nine moved development commands. GCC and Clang compiled and ran a C++ program
+inside the declared development shell; all compiler/build/lint tools resolved.
+
+Full desktop candidate built:
+`/nix/store/ba579rag0nap9b156v5y8l06rxdjnn6d-nixos-system-desktop-26.05.20261002.774debe`;
+drv `8h4vqc51j6v8jk5s9n1nka69ah2ad5si-nixos-system-desktop-26.05.20261002.774debe.drv`.
+Compared to the earlier root-policy candidate, closure diff shows expected
+toolchain/debugger/build-tool removals and generated system/user profile changes,
+with no newly introduced package version. No activation performed. Keeper's
+live service and control loop remain the prior installed version.
+Both stateVersion values remain 26.05. Latest root checkpoint 3c420fa CI run
+37258160134 completed successfully. Preparation branch publication pending;
+main merge and hardware acceptance gates remain open.
+
+### Task: offline package ownership and cooling correctness preparation
+
+Status: **PROVEN** local source checks/builds; **IN PROGRESS** branch CI/integration
+Owner: Codex
+Started: 2026-10-05
+Completed: local preparation checks 2026-10-05; final integration pending
+Commit / PR: feat/workstation-validation, publication pending
+NixOS generation: unchanged physical trial generation 33
+System closure: candidate `ba579rag0nap9b156v5y8l06rxdjnn6d`, not installed
+Evidence / command output: final flake checks exit 0; targeted sensor-loss test
+exit 0; explicit-source package drv unchanged; development shell C++ smoke passed;
+built Home Manager CLI commands present and ambient system toolchains absent
+Decision: preserve live cooling and prepare changes for the later batched boot
+Problems found: private XDG runtime dir needed for test import; lint fixture corrected
+Rollback path: discard/revert preparation branch; running system is untouched
+Notes: default fan/pump policy, hysteresis control loop, watchdog timeout, inputs
+and both installation stateVersion values remain unchanged; stricter invalid-input
+rejection is intended. No switches, resets, firmware changes or reboot performed.
+
+## Workstation preparation publication — 2026-10-05
+
+Published `792ac9e4056113470d87e3ac7265569e9dfb739b` on
+feat/workstation-validation and opened draft PR #3 against feat/impermanence:
+https://github.com/P2949/NixosConf/pull/3
+The PR contains package ownership changes, explicit-source liquidctl package
+boundary, cooling argument/assertion checks and hardware-free CI coverage.
+It remains a draft follow-up, with no merge or live activation. Updated plan
+is included in the preparation branch; this master log also records publication.
+PR CI pending. Running Wayland session and commander-core service remain active,
+with no scheduled shutdown. Main/root integration and later acceptance gates open.
