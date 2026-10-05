@@ -49,6 +49,18 @@ capture 'Kernel command line' cat /proc/cmdline
 capture 'BIOS' bash -c 'for n in bios_version bios_date; do printf "%s: " "$n"; cat "/sys/class/dmi/id/$n"; done'
 printf '\nME version: not collected; firmware decision remains a separate gate.\n'
 capture 'Memory' free -h
+capture 'Memory pressure' cat /proc/pressure/memory
+capture 'CPU pressure' cat /proc/pressure/cpu
+capture 'I/O pressure' cat /proc/pressure/io
+capture 'VM counters' cat /proc/vmstat
+capture 'Interrupt distribution' cat /proc/interrupts
+capture 'IRQ balancing service' systemctl show irqbalance.service -p LoadState -p ActiveState
+# shellcheck disable=SC2016
+capture 'IRQ effective affinity' bash -c 'for f in /proc/irq/*/effective_affinity_list; do test -r "$f" || continue; printf "%s: " "$f"; cat "$f"; done'
+# shellcheck disable=SC2016
+capture 'NVMe schedulers' bash -c 'for f in /sys/block/nvme*n*/queue/scheduler; do test -r "$f" || continue; printf "%s: " "$f"; cat "$f"; done'
+# shellcheck disable=SC2016
+capture 'Zswap and THP defrag' bash -c 'for f in /sys/module/zswap/parameters/enabled /sys/kernel/mm/transparent_hugepage/defrag; do test -r "$f" || continue; printf "%s: " "$f"; cat "$f"; done'
 capture 'Swap' swapon --show
 capture 'ZRAM' zramctl
 capture 'Transparent huge pages' cat /sys/kernel/mm/transparent_hugepage/enabled

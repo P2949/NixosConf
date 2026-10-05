@@ -112,3 +112,13 @@ This establishes hardware/default transport availability, not audible Stage
 Pro playback through PipeWire or reconnect acceptance. Preserve the current
 route until the intended output is established; do not infer a configuration
 bug merely from an inactive peripheral profile.
+
+### Gamescope and MangoHud smoke
+
+Nested Gamescope 3.16.23 completed 600-frame Vulkan cube runs with both
+native Wayland and XCB/XWayland clients on the physical RX 9070 XT. Both
+exited zero; MangoHud 0.8.3 initialized, and the XCB child mapped both the
+overlay library and shim. Temporary small windows closed without restarting
+the compositor. Keyboard/cursor and shutdown warnings remain in private logs.
+The outer display selected 155 Hz; HDR was disabled. This does not establish
+representative gameplay, HDR, controller or final-candidate acceptance.
