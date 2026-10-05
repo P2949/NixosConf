@@ -20577,3 +20577,48 @@ manifest/merge/tag remainopen. Coolingphysicalconfirmation stillpending;
 no heavyCPUretry or lowered80Cguard. User's two-boot authorization fulfilled;
 no additional boot scheduled and current graphicalsessionpreserved.
 Updated currentstatus/physicalrunbook acceptance. No runtimeNix/lockchanges.
+
+## Pre-freeze stock environment observation — 2026-10-05
+
+Previous turn progress: final physical chain accepted and0c6a40b pushed.
+Current same returnnormalboot36b6a76b... closure0p67xd. Read-only closure
+membership2211paths has no projectCPU/LTO/PGO/BOLT namespaces. Scoped source
+search in hosts,core/storage/workstation/hardware,home,profiles found no
+-march/-mtune/-flto/-fprofile/llvm-bolt/RADV_PERFTEST/MALLOC_CONF matches.
+Usermanager has no audited compiler/linker/Rust/Nixflags/LD/MALLOC/RADV keys.
+Accessible start-hyprland and Waybar process environments likewise none;
+Firefox has LD_LIBRARY_PATH, agent has libdbusmenu-glib16.04.0 library path.
+Do not treat all LD paths as experiment contamination or automatically unset
+package wrapper paths. Actual Firefox value/classification and inaccessible
+Hyprland wrapper process environment still need scoped review at finalfreeze.
+No broad claim all application environments were inspectable/clean.
+THPmadvise,split_lock_mitigate1,32GiBdisk_swap/no current swapuse observed.
+Private0600 pre-freeze-stock-policy.json retains full scoped observation.
+This is pre-freeze evidence, not frozenpolicy/manifest or optimization enabled.
+
+CI37385402004 exact0c6a40b confirmedinprogress; no restart/newledgerpush while
+active. Coolingphysicalconfirmation remainspending; no heavyCPU/editorretry,
+newfirmwarepolicy or furtherreboot. Full objective incomplete. Keep observation
+local until activeCI terminates, avoiding needless cancellation by another push.
+
+## Application library-path caveat resolved and CI accepted — 2026-10-05
+
+Previous turn progress: scoped pre-freeze stock observation obtained and kept
+local while CI active. Root read-only process inspection now includes actual
+Hyprland wrapped process: no audited compiler/linker/Nix/Rust/LD/MALLOC/RADV
+keys in Hyprland/start-hyprland/Waybar. Firefox has only LD_LIBRARY_PATH among
+those keys; all36colon-separated components occur literally in the installed
+Firefox157 package wrapper. This classifies the observed Firefox path as
+package-wrapper library wiring, not unexplained global optimization tuning.
+Agent library path is separate libdbusmenu-glib wrapper environment; no
+projectoptimizationnamespaces. Do not unset necessary package library paths.
+Private0600 application-stock-environment.json retains scoped process metadata
+and the literal-wrapper membership comparison. This closes that observation's
+unresolved application-path caveat, not a universal environment audit or final
+freeze. No runtime policy/package/user environment changed.
+
+CI37385402004 on0c6a40b terminalsuccess. Publish the accumulated ledger only
+now; no active run cancelled for a status-only push. Hardwarethermal/RAM,
+remaining realworkloads,recoveryprovenance,backupfreshness,soak and freeze
+remainopen. Pendingphysicalcoolerconfirmation stillneeded before heavyretry.
+No additional reboot or graphicalsession interruption.
