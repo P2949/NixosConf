@@ -134,7 +134,7 @@ pkgs.testers.runNixOSTest {
     installer.start()
     installer.wait_for_unit("multi-user.target")
     installer.succeed("mkdir -p /mnt/reconstruction-inspect")
-    installer.succeed("mount -t btrfs -o ro,nologreplay,subvolid=5 ${diskDevice}-part3 /mnt/reconstruction-inspect")
+    installer.succeed("mount -t btrfs -o ro,rescue=nologreplay,subvolid=5 ${diskDevice}-part3 /mnt/reconstruction-inspect")
     for name in ["@root", "@home", "@var", "@nix", "@persist", "@optimization", "@snapshots"]:
         installer.succeed(f"btrfs subvolume show /mnt/reconstruction-inspect/{name}")
     installer.succeed("test $(cat /mnt/reconstruction-inspect/@persist/etc/machine-id) = 11111111111111111111111111111111")
