@@ -17327,3 +17327,36 @@ stability, other actual workloads, physical remaining chain and soak still open.
 Additional scoped Android discovery in ~/.local/share, ~/Downloads and /opt
 found no emulator/adb/AVD paths; do not claim global absence.
 CI37379900573/f327106 remained in progress when checked; no restart issued.
+
+## Final-candidate Unreal build and thermal-stopped editor — 2026-10-05
+
+Previous goal turn progress: actual Blender final-candidate render evidence
+recorded/pushed732d208. Revalidated project/repository clean before execution.
+Actual AI_Gavin_ProjectEditor incremental build through Steam FHS passed exit0,
+2.55s UBT/4.00s wrapper, one shared-library link action. Epic Clang20.1.8,
+RockyLinux8 SDK and bundled libc++ retained; MaxParallelActions2,nice19.
+CPU sensor polling1s, peak60C, no thermal stop. Project Git remains clean.
+This closes final-candidate incremental build, not full recompilation.
+
+A separate actual editor/map acceptance trial used Vulkan, temporary SDL
+Wayland, unchanged default allocator and the previously corrected deferred
+script shutdown probe. It was stopped at6.01s: CPU sample84C exceeded the
+retained80C high boundary. SIGTERM process-group shutdown, exit-15; map report
+not created. This is THERMAL ABORT, not editor/map acceptance or CPU stability.
+No threshold relaxed, allocator workaround or firmware change applied.
+Commander remained active/success,NRestarts0. It logged fans100% at23:07:29
+Dublin then60% at23:07:40 when CPU40C. This proves commanded response, not
+actual fan/pump RPM or capacity. No targeted new kernel hardware/thermal/GPU
+fault/reset/timeout matches; post-test CPU returned40–45C.
+The earlier fixed5GHz characterization is already corrected to AI Optimized
+50/49+MCE RemoveAllLimits. The new workload abort strengthens the open
+CPU/power/cooling gate; do not repeat CPU-heavy acceptance hoping for a pass
+without addressing/reviewing its operating conditions. Do not replace the
+required unrestricted workload acceptance with a CPU-capped easier workload.
+
+Root-private0600 build/editor receipts/logs:
+/persist/nixos-readiness-20261005/final-unreal/. Running normal0p67xd... and
+bootd7c64889-aac3-4d09-8d14-5add9050cea3 unchanged; graphical session survives.
+CI37379900573/f327106 cancelled after newer push; run37380170986/732d208
+is in progress, not terminal PASS and not restarted.
+No host activation/reboot, project commit, full-build or soak pass claimed.

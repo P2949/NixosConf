@@ -186,3 +186,16 @@ preferences saved, no new targeted GPU faults; Commander remained active
 with0restarts. Private receipts: /persist/nixos-readiness-20261005/final-blender.
 Actual-project basic render now passes on finalnormal0p67xd; sustained render
 and interactive workflow remain open.
+
+### Final-candidate Unreal acceptance
+
+Actual editor target incremental build passed on normal0p67xd with Epic's
+bundled toolchain: one link action, UBT2.55s, sensor peak60C, project Git-clean.
+A separate Wayland/Vulkan editor/map startup trial reached84C after6s and
+was terminated by the80C thermal guard before its map report. Editor/map
+acceptance remains open; do not transfer the earlier-generation lifecycle pass
+to this candidate. Commander commanded100% fans, remained active/zero restarts,
+and reduced duty after CPU returned40C. Actual RPM/cooling capacity unverified.
+Receipts: /persist/nixos-readiness-20261005/final-unreal (0600).
+Further CPU-heavy acceptance requires reviewing thermal/power/cooling conditions;
+no weaker threshold, capped substitute workload or new firmware policy adopted.
