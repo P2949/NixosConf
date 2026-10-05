@@ -281,6 +281,17 @@ The flake exposes reproducible checks for:
 
 CI deliberately does not build the complete workstation closure.
 
+## Impermanence validation
+
+`feat/impermanence` contains an opt-in ephemeral Btrfs root module and explicit
+VM tests for safety, interrupted-reset recovery and machine-ID persistence.
+The physical desktop still uses persistent root and home.
+
+See [ephemeral root validation](docs/impermanence.md) for the reset contract,
+test commands, results and gates before a controlled physical boot. Heavy VM
+tests are exposed as packages; ordinary flake checks include configuration
+validation alongside formatting, Statix and Deadnix.
+
 ## Baselines
 
 The known-good productive workstation before the architecture refactor is tagged:
