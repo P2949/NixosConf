@@ -4541,3 +4541,38 @@ B session82197 verified live and entering boot sequence; repeated bounded
 waits returned same running handle. No terminal B result yet; completed
 fast/safety/recovery/A remain passed. Cooling and Wayland checked active.
 No restart, physical reboot or activation; immutable source retained.
+
+
+## Unified continuation guide adopted — 2026-10-05
+
+Read all 2,507 lines of the user-supplied Downloads guide:
+`/home/p2949/Downloads/NIXOS_plan_md_Unified_Continuation_Guide_2026-10-05.md`.
+Its dependency order now controls continuation. Exact stable-refresh source
+c5e036b6e87d9aa77700909b508ccc0c3978d5b2 remains clean and frozen in
+/persist/etc/nixos-stable-refresh. Do not merge this documentation into it,
+refactor, change inputs, or start later readiness engineering before physical
+acceptance. After acceptance use one stable-refresh-to-main PR, then create
+feat/pre-optimization-readiness for the guide's remaining ordered work.
+Final baseline tag waits for all required engineering, hardware, workload and
+soak gates. Selective home/var Impermanence is explicitly deferred; no compiler
+optimization work belongs in this baseline.
+
+Live fetch verified main0721275, impermanencef674601, workstationd49c519,
+stable-refreshc5e036b, historical optimization397a8c7. Impermanence advanced
+beyond the guide snapshot through documentation-only evidence updates; preserve
+these without merging into the frozen acceptance source.
+
+Guide artifact claims predate completion of the diagnostic-log-hardening
+refresh batch: do not infer that the older bv3 closure is the exact c5e output.
+Continue existing session82197, not a new batch. Fast/safety/recovery/A/B now
+pass; B completed365.86s. Fallback currently running; workstation and desktop/
+ISO outputs remain pending. Confirm exact output identities after completion.
+Actual GC roots live under /nix/var/nix/gcroots/workstation-preparation.
+
+Independent external backup destination and representative external restore
+remain open; same-disk staging is not independent backup. Physical matching ISO
+read-only drill and exact normal/persistent-root acceptance remain open.
+Three historical physical reset trials are sufficient viability evidence.
+No physical reboot, live activation, graphical or cooling restart performed.
+Decision: PROCEED with existing offline batch; HOLD source changes/integration
+and physical installation until their prerequisite gates are satisfied.
