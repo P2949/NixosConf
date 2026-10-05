@@ -4307,3 +4307,18 @@ This is an evaluation-query issue, not a failed configuration build.
 Preparation docs/stock-policy.md records declared policy and remaining scope.
 Loaded CPU/IRQ/memory evidence, firmware policy and final running acceptance
 remain pending. No activation, tuning, reboot or graphical restart performed.
+
+## Final-policy runbook separation — 2026-10-05
+
+Physical runbook now separates completed historical opt-in trials from the
+remaining final-default/persistent-root acceptance window. The final section
+requires exact source/lock/closure receipts, boot-only installation, matching
+new ISO read-only drill, exact default boot validation, non-reset recovery
+identity/root/log/state proof and return to accepted normal policy. It explicitly
+rejects repeating the three trials or live activation during this transition.
+Stable-refresh media filename/SHA matched the previously verified artifact.
+This prepares the interruption; none of these pending physical actions ran.
+Documentation whitespace check passed; source and final acceptance remain
+distinct. Latest refresh CI run37299169138 was observed in progress at its
+then-head a799647; previous-head54ee0ef run37298793271 succeeded.
+No host boot entries, default, runtime services or firmware changed.
