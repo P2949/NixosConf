@@ -308,6 +308,12 @@ The flake exposes reproducible checks for:
 
 CI deliberately does not build the complete workstation closure.
 
+The real workstation profile and Home Manager configuration have an explicit
+headless integration VM: `nix build .#workstation-smoke`. Its guest storage,
+test-only credentials and disabled physical cooling/reset services isolate it
+from the host. This tests boot and service composition; it does not benchmark
+the workstation or replace graphics, cooling and application acceptance.
+
 ## Impermanence validation
 
 `feat/impermanence` declares an ephemeral Btrfs root by default, with a

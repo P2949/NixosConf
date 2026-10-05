@@ -175,6 +175,10 @@
       };
 
       packages.${system} = {
+        workstation-smoke = import ./tests/workstation-smoke.nix {
+          inherit inputs pkgs pkgsUnstable;
+        };
+
         recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
 
         impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
