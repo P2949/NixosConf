@@ -25,9 +25,10 @@ do not establish that prerequisite. ASUS lists MEUpdateTool
 - BIOS: `9928bf5a987ff0a44f2efa7bd131186d68a7d1eaeb5198f43ad8333897bc5cf9`
 - ME tool: `75c5efe983cfb0c4c9e75830b3e1d1287e0e6adcf93d97194acbaaac15746bfe`
 
-No packages have been flashed or upgrade decision finalized. Capture all
-OC/RAM/power/virtualization settings before any flash; use the board-specific
-vendor procedure and verify ME/BIOS afterwards. Firmware virtualization is
-currently disabled, preventing physical KVM acceptance. Resolve firmware and
-settings in the batched maintenance window before final stock acceptance and
-freeze; then repeat required hardware/workload stability tests.
+On 2026-10-05 the user selected retaining BIOS 3201/current ME. No firmware
+update is planned; the newer packages above remain historical reference only.
+Capture OC/RAM/power/virtualization settings for the retained baseline.
+Firmware virtualization is currently disabled, preventing physical KVM
+acceptance. Enable VMX in a batched maintenance window before final stock
+acceptance and freeze, then complete hardware/workload stability validation.
+No firmware packages have been flashed.

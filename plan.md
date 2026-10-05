@@ -8207,3 +8207,21 @@ path: pinned makeScriptWriter exposes a direct executable symlink, so appending
 Corrected reconstruction evaluates successfully to
 `8fqjrlw2v2q61579lr1y2lqlkgrry0lr-vm-test-run-blank-disk-reconstruction.drv`.
 Evaluation is not runtime acceptance.
+
+## Readiness execution — retained-firmware storage observation, 2026-10-05
+
+Read-only NVMe/Btrfs receipts were captured under root-private
+`/persist/nixos-readiness-20261005`. Critical warning0, media errors0,
+spare100%, wear18%, temperature315K (about42°C), warning/critical temperature
+time0. Cumulative error-log entries12143 versus earlier12137; retained newest
+entry is admin queue0, status0x2002, parameter offset40, LBA/namespace0.
+This does not explain every historical error; storage acceptance remains open.
+Unsafe shutdown count2214 is recorded, not dismissed. Btrfs device counters
+all0; last scrub finished2026-10-04 with no errors. No new scrub or Nix store
+content verification ran while backup/game were active. No current-boot kernel
+matches for the captured NVMe/Btrfs error patterns. Backup runner and exclusion
+audit scripts preserved root-private alongside receipts for reproducibility.
+
+Firmware and backup runbooks now explicitly reflect the user's retained
+BIOS3201/currentME choice and completed real secrets recovery; older conflicting
+recommendations in the historical ledger are superseded, not silently erased.

@@ -4,10 +4,10 @@ The final baseline requires an independent backup of non-reproducible home
 state and a representative restore. Persistent subvolumes, same-disk snapshots,
 GC roots and Git tags do not protect against MP600 failure.
 
-The user reports that `/persist/secrets` was backed up separately long ago.
-Keep secrets out of this repository. Fresh backup date, destination and restore
-proof remain separate evidence; the earlier report does not establish a current
-home backup.
+The user confirms that `/persist/secrets` was backed up separately and restored
+during recovery from an actual system failure. That gate is complete on
+user-reported evidence. Keep secrets out of this repository. This does not
+establish a current home backup.
 
 ## Verified project remote
 
@@ -37,9 +37,10 @@ and topology evidence, not proof that application state is reproducible or
 that every local repository has been audited. Root-only receipt:
 `/persist/nixos-home-full-inventory-20261005.json`.
 
-Only the MP600 and Ventoy recovery USB are currently connected. The USB had
-43.2 GB free before adding the pinned recovery ISO; it cannot hold a broad
-copy of all inventoried data. An independent destination has been requested.
+Only the MP600 and Ventoy recovery USB are currently connected. The earlier USB inventory showed
+43.2 GB free before adding the pinned recovery ISO. The user subsequently chose
+an additive compressed backup folder on Ventoy, with audited exclusions and a
+4 GiB free-space reserve enforced by the runner.
 Do not erase or repurpose the recovery medium to make room.
 
 Before excluding large trees, distinguish downloadable installations and
@@ -52,7 +53,7 @@ than the public configuration repository.
 - A destination outside the MP600, with enough capacity for the chosen data.
 - Critical data selection that covers local/untracked/ignored work and useful
   application state, with exclusions justified rather than assumed.
-- Encrypted secrets backup and separately recoverable access credentials.
+- Encrypted secrets backup and restore: completed by user-confirmed recovery.
 - Backup date, destination, successful operation and integrity verification.
 - Representative restore from that backup into a separate directory, followed
   by content/hash comparison; preserve the original working data.
@@ -92,6 +93,6 @@ backed up separately and all47 restored/hash-verified. This compares with the
 local distribution, not a vendor authenticity signature.
 
 The main home archive integrity and representative external restore are still
-pending. `/persist/secrets` is outside its scope and requires the separate
-[encrypted bootstrap restore](bootstrap-secrets.md). Preserve snapshots and
+pending. `/persist/secrets` is outside its scope; the separate
+[bootstrap restore](bootstrap-secrets.md) is already user-confirmed. Preserve snapshots and
 receipts; only a terminal verified receipt closes the corresponding gate.
