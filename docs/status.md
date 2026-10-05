@@ -91,3 +91,9 @@ at20:46:34+01:00; activation completed20:46:59. Exact artifact build source
 remains unverified. All four current generated read-only activation checks pass,
 no failed units, and kernel identity is unchanged. The detailed observation
 receipt is retained privately under /persist/nixos-readiness-20261005.
+
+Reconstruction retry session89323 is now terminal PASS (exit0), derivation
+sjanby8f9cpwq6zk23n6pg77s0rf1f9g,1831.68s. Corrected read-only inspection
+passed along with installed-disk UEFI/reset/recovery/return checks. Private
+terminal receipt/log retained under /persist/nixos-readiness-20261005.
+Final evaluated-Disko decision and exact final offline suite remain pending.

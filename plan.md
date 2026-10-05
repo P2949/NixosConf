@@ -16211,3 +16211,33 @@ ReconstructionPID1794351 verified live at elapsed20m27s copying target paths.
 Earlier consecutive monitoring turns were verified waits, not blockers: the
 same process remained live and advanced through the actual desktop closure.
 No production/harness source edits, host activation or physical reboot.
+
+## Reconstruction installed-disk phase — 2026-10-05
+
+RetryPID1794351/session89323 remained live, completed actual desktop closure
+installation and independently booted its target disk. Desktop multi-user and
+Home Manager startup, exact installed closure, machine identity, persistent
+mounts, no9p/overlay and disposable credential comparison passed. First normal
+reboot passed root-local sentinel removal, persistent sentinel retention and
+journal probe persistence. The driver selected the persistent-root one-shot
+entry and is proceeding to that boot at elapsed27m36s. Remaining recovery,
+return-to-normal and final read-only inspection gates remain unaccepted until
+terminal success. Physical workstation was not rebooted/activated by this work.
+Replacement CI37368387623 for14727d5 remains awaiting terminal evidence.
+
+## Reconstruction retry terminal PASS — 2026-10-05
+
+Session89323 exited0. Derivation sjanby8f9cpwq6zk23n6pg77s0rf1f9g; test
+script1831.68seconds. Launch9731b6d plus preserved comment subsequently2fe2c27.
+Harness SHA2564e06f8d91ddbb82f4a15a67622c88a460ce3f8b9409306300307c470eab93e08;
+lock unchanged7efb19569e8a022768cd570498ff8b93cb98b108358149b668a658e2d9f406a2.
+All required checks passed: blank-disk Disko, installed desktop/HM/credentials,
+independent installed-disk UEFI runtime without host store/kernel/initrd, normal
+reset and persistent journal/identity, persistent-root recovery, return normal
+reset, all7subvolumes and identity inspected with ro,rescue=nologreplay, clean
+unmount. Previous standalone-nologreplay failure remains historical.
+Private terminal receipt/log: /persist/nixos-readiness-20261005/
+reconstruction-rescue-pass.json and reconstruction-rescue-pass.log.
+No host reboot/activation. Next: evaluated desktop Disko source decision, then
+focused/fullchecks and final reconstruction/offline suite. Physical hardware,
+workloads/soak/freeze still open; do not mark the entire objective complete.
