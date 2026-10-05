@@ -17297,3 +17297,33 @@ after individual hardware/workload gates per section45; no premature soak
 pass from idle uptime. docs/status.md now provides current authoritative
 observations above its retained historical sections, and development-validation
 reflects closed GameMode/VMX gates. No host reboot or activation performed.
+
+## Final-candidate actual Blender project render — 2026-10-05
+
+Previous goal turn was progress: physical GameMode acceptance and authoritative
+CI evidence recorded/pushedf327106. Revalidated clean source and boot before
+workload execution; no reboot or activation.
+
+Loaded ~/Development/Blender/mirror_techproof_v006_persistent_wipe.blend
+in background Blender, rendered its actual33-object camera scene at
+1920x1080/100%,64samples with only RX9070XT HIP enabled; CPU render disabled.
+Exit0, PNG produced,12.6673s rendering. Running finalnormal0p67xd... closure,
+bootd7c64889-aac3-4d09-8d14-5add9050cea3. Source SHA256
+`bc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe`
+unchanged. This Development copy differs from the earlier Downloads copy
+(bf37fe...); do not conflate their identities or infer a user modification.
+Sample/device/output choices were in-memory; no project/preferences saved.
+No targeted new kernel amdgpu fault/reset/timeout or hardware/OOM matches
+since22:03:57UTC. Commander actualunitcommander-core.service active/success,
+NRestarts0; graphical session preserved. A preliminary query of nonexistent
+commander-core-keeper.service returned inactive and was corrected by enumerating
+the loaded unit; it is not cooling failure evidence.
+
+Private0600 receipt/render metadata/log:
+/persist/nixos-readiness-20261005/final-blender/. PNG remains private /tmp.
+This closes actual-project load/basic render on the final candidate, not
+sustained GPU rendering or interactive Blender acceptance. CPU/RAM sustained
+stability, other actual workloads, physical remaining chain and soak still open.
+Additional scoped Android discovery in ~/.local/share, ~/Downloads and /opt
+found no emulator/adb/AVD paths; do not claim global absence.
+CI37379900573/f327106 remained in progress when checked; no restart issued.

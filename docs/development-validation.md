@@ -175,3 +175,14 @@ Root-private receipts: /persist/nixos-blender-project-validation-20261005.
 Rendered output is private temporary data, not a public repository artifact.
 This extends the factory smoke to an actual local scene; longer rendering,
 interactive workflow and acceptance on the final candidate remain pending.
+
+### Actual Blender render on final candidate
+
+On the post-VMX normal boot, the Development copy of the actual33-object
+project rendered at1920x1080/100%,64samples using only RX9070XT HIP. Exit0,
+12.6673s; source SHA256bc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe
+unchanged. This differs from the earlier Downloads copy. No project or
+preferences saved, no new targeted GPU faults; Commander remained active
+with0restarts. Private receipts: /persist/nixos-readiness-20261005/final-blender.
+Actual-project basic render now passes on finalnormal0p67xd; sustained render
+and interactive workflow remain open.
