@@ -12492,3 +12492,13 @@ Backup zstd integrity passed; runner is hashing the same existing archive.
 Representative restore/final receipt/clean unmount still open. No second archive,
 firmware change, live switch or reboot. Next required step remains completion of
 backup followed by queued independent reconstruction.
+
+## Backup/reconstruction sequencing corrected — 2026-10-05
+
+Newest guide requires clean USB unmount before reconstruction. Replaced only
+our waiting supervisor730405 (explicitly cancelled before build) with session11114:
+wait for existing runner521492; require verified receipt; cleanly unmount
+/mnt/nixos-backup-ventoy; write private clean-unmount timestamp; only then build
+blank-disk reconstruction with bounded jobs/cores and full build logs. A missing
+receipt or failed unmount holds execution. No backup process was restarted or
+interrupted. Hashing remains live/progressing; no representative restore claim.
