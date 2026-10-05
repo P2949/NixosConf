@@ -9384,3 +9384,18 @@ for source9ec351d, session44699 exit0. Terminal log retained root-private as
 output comparison is being evaluated before any activation; namespace ownership
 alone is not claimed to preserve the closure without this check. USB writeback
 continues to drain; archive verification receipt remains absent.
+
+## Readiness execution — source identity and backup integrity phase, 2026-10-05
+
+Current desktop evaluation after the safety ownership/assertion refactor still
+returns exact l994fn5hpd2g2rijyffprl4368587m5w normal candidate. This verifies
+closure identity rather than assuming the namespace move is operationally inert.
+GitHub CI37349870726 passed for77527f8; local full checks for9ec351d also passed.
+Physical acceptance remains separate.
+
+Archive writeback finished: backup runner521492 has launched zstd integrity
+verification (observed child1138116). Dirty pages drained to about3MiB with no
+writeback pending. Tar reported only an ignored transient IPC socket; no saved
+socket payload is required for reconstruction. Main archive27,844,003,241bytes;
+SHA/representative restore and final receipt remain pending, so reconstruction
+supervisor730405 still waits. No physical activation or reboot occurred.
