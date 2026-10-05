@@ -20490,3 +20490,46 @@ uncaptured firmware fields do not require another BIOS visit.
 No early manifest/tag/merge, architecturepolish or optimizationexperiment.
 Guide's future experimental/postbaseline items are preserved in full above,
 not silently promoted to prebaseline readiness requirements.
+
+## Remaining physical-window preflight and verified CI wait — 2026-10-05
+
+Previous goal turn progress: full3014-line guide recorded, current-only status
+and PR rewritten, flake checks passed and8412272 pushed. Revalidated current
+normal0p67xd bootd7c64889..., root300/UUIDa3046ca3..., matching root-local and
+persistent sentinels, no failed units, activeCommanderpid913/pump100/fans60,
+CPU38C. No host state transition or test retry performed.
+
+Requested availability for the already-staged two-boot persistent-root→normal
+maintenance window. Required because the user explicitly prioritizes preserving
+the current graphical session; do not interpret automatic continuation as
+readiness to interrupt it. Cooler/airflow confirmation also remains unanswered.
+No new firmware visit requested for optional settings.
+
+Inspected stable ISO receipt: exact d55ny1z... artifact/hash/size accepted,
+not physical boot evidence. physical-root-trial-{1,2,3}.json/preflight keys
+prove installed-system root/identity/reset trial scope, not exact ISO/media/date/
+read-only recovery inspection. Scoped receipt discovery has not found that
+missing exact physical drill record; do not generalize into global nonexistence.
+Physical provenance remains OPEN; no new drill scheduled.
+
+GitHub run37383959167 exact8412272 is confirmed live/in_progress, Flakechecks
+job active. This is a verified wait, not a terminal failure or justification to
+restart. Keep this observation local while it runs rather than pushing another
+ledger-only commit that cancels the active PR CI. No completion/tag/merge claim.
+Next physical gate and heavy thermal gate still require their actual evidence.
+
+## User-ready physical transition — 2026-10-05
+
+User explicitly answered saved work/ready now for the two remaining boots.
+CI37383959167/8412272 terminalsuccess. Earlier in-progress observation above
+superseded. Current firstnormal root300/sentinels revalidated. Prepared private
+persistent-root capture script and temporary root-local systemd.control unit
+(no runtime Nix architecture change). Normal Nix-managed system unit directory
+is read-only; initial install there failed without modifying it. Installed in
+actual writable systemd control search path, verified unit and dependencies.
+Capture checks exactpersistentclosure/rootUUID/ID/resetcount6/bothsentinels/
+identity/credentials/mounts/services/journals/failedunits without copying secrets.
+Receipt final-persistent-boot.json0600. Graphical login checked separately.
+Remove temporary capture wiring before normal return; normal root reset also
+clears root-local wiring. Only reboot1 scheduled now; inspect its receipt before
+reboot2. No automatic second reboot on failed/unchecked evidence.
