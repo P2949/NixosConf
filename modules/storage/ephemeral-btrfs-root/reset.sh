@@ -1,12 +1,9 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2154
 set -euo pipefail
 
-top=@NIX_TOP@
-root_device=@NIX_ROOT_DEVICE@
-root_name=@NIX_ROOT_NAME@
-next_name=@NIX_NEXT_NAME@
-persist_name=@NIX_PERSIST_NAME@
-log_relative=@NIX_LOG_RELATIVE@
-
+# Configuration is provided as escaped assignments and an array by Nix.
+# shellcheck disable=SC2154
 root="$top/$root_name"
 next="$top/$next_name"
 persist="$top/$persist_name"
@@ -189,6 +186,17 @@ if [[ -e "$next" || -L "$next" ]]; then
     "$next_name"
 fi
 
+is_allowed_descendant() {
+  local candidate=$1
+  local allowed
+  for allowed in "${allowed_descendants[@]}"; do
+    if [[ "$candidate" == "$root_name/$allowed" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 root_descendants=()
 descendant_output="$(btrfs subvolume list -o "$root")"
 
@@ -201,7 +209,7 @@ if [[ -n "$descendant_output" ]]; then
 
     candidate="${line#* path }"
 
-    if ! ( @NIX_ALLOWED_DESCENDANT_CHECK@ ); then
+    if ! is_allowed_descendant "$candidate"; then
       log "FAIL: refusing to delete unknown root descendant: $candidate"
       exit 1
     fi

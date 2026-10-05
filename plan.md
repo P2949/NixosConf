@@ -8037,3 +8037,35 @@ was reused, not re-executed. Logs: /tmp/readiness-username-{fast,smoke,desktop}.
 Current-status documentation corrected without rewriting historical evidence.
 Backup destination requested; code preparation continues independently. No
 physical reboot, live activation or graphical/cooling restart performed.
+
+## Readiness execution — storage packaging and data interface, 2026-10-05
+
+PR #7 is draft and Flake checks passed at 4c81db7 (run37334007796).
+05d7119 groups both storage features with helpers; source scripts byte-identical.
+Initial guard basename changed the system closure; builtins.path preserves the
+accepted maintenance-guard.sh store identity. Final fast checks pass and desktop
+exactly czk5a2wn8di3pgv8a6w0b8aj3286g3h3. da2f1c7 moves scrub host schedule back
+to desktop and adds counterpart assertions; fast checks pass and exact desktop
+closure remains unchanged. Logs /tmp/readiness-storage-*-final.log and
+/tmp/readiness-maintenance-{fast,desktop}.log.
+
+Reset data interface replaces textual/code substitutions with escaped scalar
+assignments and allowed_descendants array; Bash owns exact descendant matching.
+Source ShellCheck passes. Fast session78939 and sequential heavy session43910
+are pending, not acceptance. Heavy uses max-jobs1/cores2; original unbounded
+invocation cancelled before completion and restarted with bounded concurrency.
+CPU briefly sampled81C while the user's game and evaluation were active;
+background Nix clients lowered to nice19, later sampled69C, cooling active.
+No user game/session or cooling process was stopped.
+
+User explicitly selected existing Ventoy USB for backup. Verified UUID1BF6-1635,
+40,245,919,744 bytes initially free. Additive home snapshot home-ventoy-20261005
+created. Backup under NixosConf-backups/2026-10-05 includes all home plus engine
+source/assets; excludes installed engine ZIP and engine Binaries/Intermediate/
+DerivedDataCache directories (1481 excluded paths recorded privately). Included
+logical size50,244,561,937 bytes/348166 files, compressed with one zstd thread.
+4GiB free-space reserve enforced; archive integrity/hash and representative
+restore still pending in session50539. No secrets outside home included; user's
+existing separately held secret backup is not a newly tested encrypted restore.
+Private inventory/exclusions/runner receipts: /persist/nixos-ventoy-backup-20261005.
+Ventoy boot files/partitioning left intact; no format, delete or physical reboot.

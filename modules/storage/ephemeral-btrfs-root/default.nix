@@ -23,38 +23,16 @@ let
   ];
   rootSubvolumeOptions = lib.filter (lib.hasPrefix "subvol=") rootFs.options;
 
-  allowedSubvolumePaths = map (
-    descendant: "${cfg.rootSubvolume}/${descendant}"
-  ) cfg.allowedDescendants;
-
-  allowedDescendantCheck =
-    if allowedSubvolumePaths == [ ] then
-      "false"
-    else
-      lib.concatMapStringsSep " || " (
-        path: ''[[ "$candidate" == ${lib.escapeShellArg path} ]]''
-      ) allowedSubvolumePaths;
-  resetScript =
-    builtins.replaceStrings
-      [
-        "@NIX_TOP@"
-        "@NIX_ROOT_DEVICE@"
-        "@NIX_ROOT_NAME@"
-        "@NIX_NEXT_NAME@"
-        "@NIX_PERSIST_NAME@"
-        "@NIX_LOG_RELATIVE@"
-        "@NIX_ALLOWED_DESCENDANT_CHECK@"
-      ]
-      [
-        (lib.escapeShellArg topLevelMount)
-        (lib.escapeShellArg rootDevice)
-        (lib.escapeShellArg cfg.rootSubvolume)
-        (lib.escapeShellArg cfg.stagingSubvolume)
-        (lib.escapeShellArg cfg.persistenceSubvolume)
-        (lib.escapeShellArg cfg.logFile)
-        allowedDescendantCheck
-      ]
-      (builtins.readFile ./reset.sh);
+  resetScript = ''
+    top=${lib.escapeShellArg topLevelMount}
+    root_device=${lib.escapeShellArg rootDevice}
+    root_name=${lib.escapeShellArg cfg.rootSubvolume}
+    next_name=${lib.escapeShellArg cfg.stagingSubvolume}
+    persist_name=${lib.escapeShellArg cfg.persistenceSubvolume}
+    log_relative=${lib.escapeShellArg cfg.logFile}
+    allowed_descendants=( ${lib.escapeShellArgs cfg.allowedDescendants} )
+    ${builtins.readFile ./reset.sh}
+  '';
 
 in
 {
