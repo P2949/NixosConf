@@ -4322,3 +4322,18 @@ Documentation whitespace check passed; source and final acceptance remain
 distinct. Latest refresh CI run37299169138 was observed in progress at its
 then-head a799647; previous-head54ee0ef run37298793271 succeeded.
 No host boot entries, default, runtime services or firmware changed.
+
+## Physical Intel ME identification — 2026-10-05
+
+Read-only ME sysfs query returned all three component blocks:
+0:14.1.53.1649, 0:14.1.53.1649, 0:14.0.51.1528. Kernel ABI documents up
+to three component versions; no unsupported component-role decoding assumed.
+ASUS support reverified BIOS3402 dated2026-08-05 requiring ME14.1.79.2540
+first, and MEUpdateTool14.1.79.2540v5 dated2026-09-01. Current readings do
+not establish that prerequisite. Source links and published package SHA256
+recorded in preparation docs/firmware-preparation.md; no firmware flashed.
+Collector now captures all readable ME firmware blocks and fails explicitly
+if the interface is unavailable. Bash syntax/ShellCheck pass; full run has
+57 captures, all exit zero, private /tmp/nixos-preparation-me-20261005.md.
+Firmware/OC settings capture, upgrade decision and hardware stability gates
+remain pending. No reboot, live activation or graphical/cooling restart.
