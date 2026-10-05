@@ -65,9 +65,11 @@ Commander is active with zero restarts. The first normal leg is ACCEPTED.
 
 ## Open hard gates and next actions
 
-1. Complete generation37 persistent-root→normal physical legs. Staged sentinels
-   must remain on root300 without a reset in recovery, then root-local sentinel
-   must disappear and persistent sentinel survive the next normal reset.
+1. Complete generation37 return-normal leg. Persistent-root leg passed on
+   bootc6316fb4-f649-44b0-a8f6-8c4ae75be117: root300/UUID and both sentinels
+   retained, resetcount6 unchanged, identity/credentials/services healthy.
+   Return-normal must create a new root, remove root-local sentinel, retain
+   persistent sentinel and increment reset count to7.
    [Physical runbook](physical-root-validation.md) records expectations.
 2. Resolve CPU/power/cooling conditions before repeating heavy workloads.
    Pump100% and fan60/100% commands are not actual RPM/airflow evidence.

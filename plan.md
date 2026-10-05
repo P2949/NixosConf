@@ -20533,3 +20533,23 @@ Receipt final-persistent-boot.json0600. Graphical login checked separately.
 Remove temporary capture wiring before normal return; normal root reset also
 clears root-local wiring. Only reboot1 scheduled now; inspect its receipt before
 reboot2. No automatic second reboot on failed/unchecked evidence.
+
+## Final generation37 persistent-root leg ACCEPTED — 2026-10-05
+
+Authorized reboot completed into exactph12l3y4k9jjmp5vhxwlkc11x4js2gjx,
+bootc6316fb4-f649-44b0-a8f6-8c4ae75be117. RootID300/UUIDa3046ca3-1791-
+b646-a0d2-4bf142a152d3 retained, bothsentinelsmatch, resetcount6 unchanged.
+Persisted identity/credential comparisons true; all persistent mounts correct,
+NetworkManager/dbus/logind/Commander/HomeManager active, retained journals
+visible. Wayland sessionactive, networkHTTPS200, coolingactive/success0restarts.
+Private0600 final-persistent-boot.json records PASS. Initial capture failed
+because systemd's PATH lacked getent; corrected explicit PATH, reran without
+reboot, all assertions passed. Original failure and successful rerun preserved
+in final-persistent-capture-journal.txt. This was harness environment failure,
+not system persistence failure. Removed temporary root-local control unit and
+its wants link; daemonreload,failedunitsempty. Capture script/receipts retained.
+
+Two-boot authorization remains in effect; preparing only the remaining normal
+return, no further permission request. Expected newroot/resetcount7,rootlocal
+sentinelgone,persistentsentinelretained,stableidentity/credentials/mounts/
+services/journals/graphical/network. Do not claim wholechain until observed.
