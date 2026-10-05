@@ -5,9 +5,11 @@ The stock baseline uses an external secret model. The repository declares
 hash nor decryption credentials. A new secrets framework is not required.
 
 Keep an encrypted independent copy and its recoverable access credentials.
-Record date, encrypted artifact hash and storage identity privately. The user's
-older separate backup is reported evidence; a current restore test is still
-required before the final freeze and any firmware update.
+Record date, encrypted artifact hash and storage identity privately.
+On 2026-10-05 the user confirmed that the separate backup was restored during
+recovery from an actual system failure. This gate is complete on user-reported
+evidence; no repeat restore is required. Private artifact location, hash and
+decryption method were not collected.
 
 From trusted recovery media, identify and mount the intended persistence
 subvolume. Restore into a temporary root-private directory first, compare the
@@ -21,5 +23,6 @@ this same path contract without reading any production secret. Recovery ISO
 configuration excludes workstation secrets and persistence imports.
 
 The dedicated Ventoy home backup excludes `/persist/secrets`; its tar archive
-is not evidence of a newly encrypted bootstrap-secret backup. The existing
-separate backup must be located and restore-tested independently.
+is not evidence of a newly encrypted bootstrap-secret backup.
+The separate secrets backup and successful recovery are user-confirmed;
+this home archive has its own verification gate.

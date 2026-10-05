@@ -8175,3 +8175,35 @@ Completed preparation logs preserved root-owned0600 under
 /persist/nixos-readiness-20261005. Root-matrix log/receipt must be preserved only
 with terminal status; currently final safety VM running. Backup resumes when
 that Nix process exits. No physical activation/reboot or final-baseline claim.
+
+## Readiness execution — user confirmations, 2026-10-05
+
+This record supersedes earlier open secrets-restore and firmware-choice gates.
+
+- [x] Separate `/persist/secrets` backup and restore: the user confirms this
+  was already performed during recovery from an actual system failure. Evidence
+  is user-reported successful recovery, not a fresh agent-run restore. Private
+  location/hash/key method were not collected. Do not repeat this completed gate.
+- [x] Firmware decision: retain BIOS 3201/current ME. No update is planned.
+  VMX enablement and stability validation remain open. No reboot is triggered.
+- [x] Five reset scenarios passed; session43910 exited0: safety
+  `22h49w4jvsvywvcj5bcybl0600ksr5qq`, interrupted recovery
+  `mbm4m0f5l1hffdifgg0ldwzb1f2bd28p`, reset control
+  `00viicfiafzw6ys40yqq1zlix2zmb38w`, persistent identity
+  `b0hr6yij7b07sap4jrflfbr7jvj6hh01`, fallback
+  `4wgixv6kb41hbxppkkigk4fz8n77vlrw`. Terminal log preserved under
+  `/persist/nixos-readiness-20261005`.
+- [~] Ventoy compressor resumed after reset tests. Main archive and restore
+  remain pending until the verification receipt exists.
+- [~] Reconstruction remains queued behind verified backup. Installer root
+  uses unique virtio-root identity to avoid the target's duplicate nixos label.
+
+No live activation, reboot or graphical-session interruption occurred.
+
+Reconstruction preflight corrected Disko invocation to its executable store
+path: pinned makeScriptWriter exposes a direct executable symlink, so appending
+/bin/disko was invalid. Runtime acceptance remains pending.
+
+Corrected reconstruction evaluates successfully to
+`8fqjrlw2v2q61579lr1y2lqlkgrry0lr-vm-test-run-blank-disk-reconstruction.drv`.
+Evaluation is not runtime acceptance.

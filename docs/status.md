@@ -34,9 +34,12 @@ activation has 45 fixture cases, native action VM acceptance and a read-only
 live positive check. The stock negative build rejects the intended test fixture.
 Candidate normal/persistent closures are GC-protected and remain uninstalled.
 
-Still open: terminal reset-matrix acceptance, executed blank-disk reconstruction,
-full independent home archive/restore completion, current encrypted-secret
-restore, firmware/VMX decisions, sustained CPU/RAM/cooling/storage health, final
+All five reset VM scenarios passed. The user confirmed the separate secrets
+backup was restored during a real system recovery, completing that gate on
+user-reported evidence. Retain BIOS 3201/current ME; no firmware update is planned.
+
+Still open: executed blank-disk reconstruction, full independent home archive
+and restore, VMX enablement, sustained CPU/RAM/cooling/storage health, final
 exact-candidate workloads and multi-day soak. See the latest plan.md execution
 records for exact source/artifact identities and private receipt locations.
 

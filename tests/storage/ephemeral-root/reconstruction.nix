@@ -60,6 +60,8 @@ pkgs.testers.runNixOSTest {
     virtualisation = {
       memorySize = 4096;
       cores = 2;
+      # Avoid a label collision after target Btrfs is also labelled nixos.
+      rootDevice = "/dev/disk/by-id/virtio-root";
       additionalPaths = [ installed.config.system.build.toplevel ];
       emptyDiskImages = [
         {
@@ -82,7 +84,7 @@ pkgs.testers.runNixOSTest {
     installer.succeed("test -b ${diskDevice}")
     # Prove no filesystem/signature exists before invoking the actual Disko layout.
     installer.succeed("test -z \"$(wipefs -n --noheadings -o TYPE ${diskDevice})\"")
-    installer.succeed("${lib.getExe' nodes.installer.system.build.diskoScript "disko"}")
+    installer.succeed("${nodes.installer.system.build.diskoScript}")
     installer.succeed("install -d -m 0700 /mnt/persist/secrets")
     installer.succeed("openssl passwd -6 -salt reconstruction vm-test-only > /mnt/persist/secrets/${username}-password-hash")
     installer.succeed("chmod 0600 /mnt/persist/secrets/${username}-password-hash")
