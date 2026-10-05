@@ -20622,3 +20622,75 @@ now; no active run cancelled for a status-only push. Hardwarethermal/RAM,
 remaining realworkloads,recoveryprovenance,backupfreshness,soak and freeze
 remainopen. Pendingphysicalcoolerconfirmation stillneeded before heavyretry.
 No additional reboot or graphicalsession interruption.
+
+## Verified exact-head CI wait / thermal dependency — 2026-10-05
+
+Previous goal turn progress: application-wrapper caveat resolved and accepted
+physical-chain CI recorded/pushed0bba60e. Current exactheadCI37385753196
+confirmedlive/inprogress with activeFlakechecks job, repolledsamehandle after
+20seconds; stillinprogress. This turn classified verifiedwait, not terminal
+failure/restart or broader acceptance. No active job cancelled by ledgerpush.
+Controlleractivepid903,0restarts,CPU41C,pumpcommand100%,fancommand60%;failed
+unitsempty. These idle readings do not resolve two prior thermalaborts or prove
+physicalpump/fanRPM/airflow. Physicalcoolerconfirmation remains unanswered.
+Heavytests remain stopped; no weaker workload or raisedthreshold substitute.
+Observation stayslocal pendingCIterminal. No reboot or runtimepolicychange.
+
+## Exact-head CI terminal acceptance / physical dependency audit — 2026-10-06
+
+Previous goal turn verifiedwait: exactCI37385753196 live. Repolledsamehandle,
+waited30s, terminalsuccess; setup/checkout/Nixinstallation/actualflakechecks/
+postcheckout/completion allsuccess on0bba60eba510a7a9b93fc2b3ea8c15fb79e5f350.
+No restart or competingpush. Current idleCPU35C,Commanderactivepid903,
+commandedpump100/fans60. Idletemperature is not sustainedacceptance.
+
+Repeated physicalcooling dependency persisted across applicationenvironment
+resolution, exactCIverifiedwait and this terminalCIaudit. Both thermalaborts
+remain unclosed; no cooler/airflow/model response. Software cannot infer actual
+pump/fan operation/contact/capacity from commanded duty. Latestguide makes
+this nextrequired gate; RAM requires dedicated capacity/testing period,
+remaininginteractive/game/audio work needs actual acceptance,soak starts only
+after individualgates. Rootchain/offline/store/storage/backups/basicworkloads
+are accepted; repeating them would not advance remainingrequirements.
+No safe next heavyweight acceptance without resolving that physical operating
+condition; no loweredguard/CPU-capped substitute/unapprovedfirmwarechange.
+Physical recoveryprovenance stillunverified; no unnecessarynewdrill scheduled.
+
+Ledger checkpoint stayslocal to preserve the terminal exacttestedGitHEAD and
+avoid an endless documentationpush→CI→documentationpush loop. Reconcile and
+publish these appended observations with the next substantive progress after
+userresponse. No reboot/sessioninterruption,manifest,merge/tag or completion.
+
+## Cooler confirmation and pre-ramp diagnostic PASS — 2026-10-06
+
+User resumed work: cooler Corsair iCUE H150i Elite Capellix; pump/fans operate,
+ramp when liquidctl requests but take time, radiator airflow present/minimaldirt,
+reported idle30–35C. Accepted as user-observed physical evidence; not measured
+RPM/contact/voltage or sustainedcapacity. Prior physicalconfirmation dependency
+answered; objective remains incomplete, resumed blocked-audit startsfresh.
+
+Read currentkeeper:1s sensorinterval,65C threshold plus1s hotdelay before100%
+fancommand. Mechanicalramp adds unmeasured delay. Diagnostic changed runtime
+basefan60→100 only, pump100 unchanged,20s preramp before actual unchanged
+Unreal Wayland/Vulkan project/map startup, normaluncappedworkload/nice19.
+Temporary /run dropin, originalkeeper ownsUSB; no concurrentliquidctl control.
+Five-minute systemdrollback timer plus supervisorfinally restoration ensured
+originalpolicy restored. Keeper restarted onlyatidle, graphicalsessionremained.
+No firmware/Nixruntime/source architecture or thermalguard change.
+
+Same deferredmap probe PASS:28actors,tensecondhold1192frames,exit0,32.547s
+wrapper,peakCPU67C,half-secondmonitoring,80Cguardnottriggered. No projectsave;
+projectGitclean. Source finalnormal0p67xd after acceptedrootchain. Contrast
+priorbase60 trial84C/6s abort. Consistent with ramp-up contribution, not proof
+solecause: cache/load/ambient/order differences not controlled. This is a
+DIAGNOSTICtemporary100%policy pass, not final acceptance of restored60%baseline,
+PIE/interactive/broadbuild,sustainedCPU/RAM or soak. Originalruntimeoverride
+removed,rollbacktimerstopped,keeperactive/success0restarts,newpid14214,
+fan60/pump100,CPU49C after restoration; intentionalrestartsnotautorestartfailure.
+No new targetedkernelGPU/hardware/OOMmatches in testinterval.
+Private0600 preramp-unreal/{receipt.json,editor.log} underreadinessdirectory.
+
+Next: review/tune response timing or explicitly chosen coolingbaseline, then
+revalidate realunrestrictedstartup and sustainedhardware/workloads under that
+actualpolicy. Do not transfer temporarydiagnostic pass to oldbaseline or assume
+100%permanentfanpolicy chosen by user. No new reboot needed for fanpolicy work.
