@@ -6,13 +6,13 @@
     ./hyprland.nix
     ./waybar.nix
     ./notifications.nix
+    ./fuzzel.nix
   ];
 
   home.packages = with pkgs; [
     # Terminal / launcher / file manager
     alacritty
     thunar
-    fuzzel
 
     # Wayland utilities
     wl-clipboard
