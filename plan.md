@@ -16280,3 +16280,20 @@ The ro,rescue=nologreplay fix and all independence requirements remain intact.
 Preserve failed log /tmp/readiness-final-reconstruction.log and prior terminal
 PASS receipt. Confirm final harness derivation equals proven sjanby8... before
 reusing its complete terminal evidence; then finish the remaining offline suite.
+
+## Final restored harness identity and offline suite launch — 2026-10-05
+
+Final source18046fa reconstruction drvPath evaluation session28334 exited0,
+exactly sjanby8f9cpwq6zk23n6pg77s0rf1f9g, matching the terminal PASS receipt.
+Thus optional-refactor reversion restores the entire proven derivation, not
+merely similar source. No need to spend another30minutes rerunning identical
+successful artifact; final build still requires its existing successful output.
+
+Final offline suite session2288 launched: first full flake checks, then bounded
+build of proven reconstruction, workstation-smoke, safety/reset/identity/
+interrupted-recovery/persistent-fallback, native activation actions and recovery
+ISO. Logs /tmp/readiness-final-offline-checks.log and
+/tmp/readiness-final-offline-builds.log; output JSON
+/tmp/readiness-final-offline-builds.json. Terminal acceptance pending.
+Expected stock-contamination-negative diagnostic remains a separate next check.
+Host not activated/rebooted; graphical session retained.
