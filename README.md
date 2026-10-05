@@ -31,13 +31,14 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │
 ├── modules/
 │   ├── core/
-│   │   ├── maintenance.nix
-│   │   └── maintenance-guard.sh
+│   │   └── maintenance.nix
 │   ├── desktop/
 │   ├── gaming/
 │   ├── compatibility/
 │   ├── storage/
-│   │   └── ephemeral-btrfs-root.nix
+│   │   ├── btrfs-maintenance.nix
+│   │   ├── ephemeral-btrfs-root.nix
+│   │   └── maintenance-guard.sh
 │   └── hardware/
 │       └── commander-core/
 │           ├── default.nix

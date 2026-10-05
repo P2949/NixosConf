@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ ... }:
 
 {
   imports = [
@@ -14,6 +9,7 @@
 
     ../../profiles/workstation.nix
 
+    ../../modules/storage/btrfs-maintenance.nix
     ../../modules/hardware/commander-core
   ];
 
@@ -28,16 +24,6 @@
 
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
-
-  services.btrfs.autoScrub = {
-    enable = true;
-    interval = "*-*-01 02:00:00";
-    fileSystems = [ "/" ];
-  };
-
-  systemd.timers."btrfs-scrub--".timerConfig.AccuracySec = lib.mkForce "1min";
-  systemd.services."btrfs-scrub--".serviceConfig.ExecCondition =
-    "${pkgs.bash}/bin/bash ${../../modules/core/maintenance-guard.sh} scrub ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
 
   hardware.commanderCore = {
     enable = true;
