@@ -49,13 +49,15 @@
       highFanDuty = 100;
       pumpDuty = 100;
 
-      highTemp = 65;
-      highDelay = 1;
+      # Start the mechanical fan ramp before short CPU load spikes peak.
+      # Keep idle duty and firmware policy unchanged; retain hysteresis.
+      highTemp = 50;
+      highDelay = 0;
 
-      lowTemp = 60;
-      lowDelay = 10;
+      lowTemp = 45;
+      lowDelay = 30;
 
-      tempInterval = 1;
+      tempInterval = 0.5;
       wakeInterval = 10;
       resetDelay = 3;
     };

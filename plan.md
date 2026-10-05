@@ -20694,3 +20694,27 @@ Next: review/tune response timing or explicitly chosen coolingbaseline, then
 revalidate realunrestrictedstartup and sustainedhardware/workloads under that
 actualpolicy. Do not transfer temporarydiagnostic pass to oldbaseline or assume
 100%permanentfanpolicy chosen by user. No new reboot needed for fanpolicy work.
+
+## Earlier adaptive fan response diagnostic and host-policy change — 2026-10-06
+
+Previous turn progress: physicalcoolerconfirmation recorded,100%pre-ramp
+diagnosticpassed with67Cpeak; originalpolicy restored. New runtime-only trial
+retainedbase60/pump100, changed high50C/delay0,low45C/delay30s,poll0.5s.
+Started at33C/base60 (no100%pre-ramp), actualuncappedUnrealWayland/Vulkan
+startup/map28actors/10secondhold1151frames passed exit0,28.0348s,peak72C.
+80Cguardunchanged,0.5smonitoring; runtimeoverridefinallyremoved/originalkeeper
+restored,independent5minute rollbacktimerstopped. Privateroot0600 receipt/log
+earlier-ramp-unreal underreadinessdirectory. Cache/order remainconfounders;
+no solecausation or sustainedCPU/RAM acceptance claimed.
+
+Adopted tested earlier-response values in hosts/desktop/default.nix only.
+Genericmodule/keeper state machine unchanged; this is hostpolicy addressing
+observed realworkloadthermalstartup failure, not architecturepolish. Idle60%,
+high100%,pump100% retained; quickerresponse and longerlowhold reduce late
+ramp/rapidfall-back. No firmware/clock/CPUcap/80Cthreshold changes.
+Sourcepolicy is PROVISIONAL pendingflakechecks/build/liveadoption/sustained
+validation. Currentlivebootclosure still0p67xd and originalgeneratedpolicy;
+physicalrootchain remains accepted for that artifact, not claimed for a future
+coolingcandidate. Scope relevantrevalidation to actualchangedcoolingpolicy,
+retainacceptedroot/activation/reconstruction evidence for unchangedlogic.
+No reboot/sessioninterruption.
