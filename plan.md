@@ -2340,8 +2340,8 @@ Do one deliberate stable refresh **before** freezing the baseline.
 
 ## 36.1 Update policy
 
-- [ ] update `nixos-26.05` input to the chosen current stable revision;
-- [ ] update Home Manager release input consistently;
+- [~] selected stable 0d9e9b8 prepared and fully checked on feat/stable-refresh-validation (draft PR #4); integration/physical acceptance pending;
+- [~] release-26.05 checked current at db7d5e2 and follows selected stable pin; compatible full-profile VM passed, integration/physical acceptance pending;
 - [ ] update Disko/Impermanence only if their current locked revisions are compatible with the now-tested design;
 - [ ] update `nixpkgs-unstable` only for the software that actually requires it;
 - [ ] re-run all validation.
@@ -4229,3 +4229,14 @@ and clean exFAT check passed; disk unmounted. Selected stable/HM alignment and
 all unchanged pins documented in isolated refresh branch, with closure-diff
 artifact committed. Current source root/preparation input pins remain unchanged
 pending review/integration; no final freeze or physical acceptance claimed.
+
+## Stable refresh publication — 2026-10-05
+
+Published separate draft PR #4:
+https://github.com/P2949/NixosConf/pull/4
+base feat/workstation-validation, head feat/stable-refresh-validation.
+Source refresh commit033a02a plus master-plan synchronization committed/pushed.
+Only the stable input node and review/evidence documentation differ from its
+preparation base; all six heavy tests, fast checks and artifact/media proofs
+are complete. Keep draft unmerged until remaining baseline integration and
+physical gates are satisfied. No final baseline/optimization tag or branch.
