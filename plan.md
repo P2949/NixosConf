@@ -16449,3 +16449,14 @@ JSON retained /persist/nixos-readiness-20261005/final-candidates.json.
 Neither artifact has new physical boot acceptance merely from rebuild/roots.
 Full store verification session63787/PID2154541 still live hashing contents;
 no errors reported so far, terminal acceptance pending.
+
+## Full Nix-store integrity terminal PASS — 2026-10-05
+
+Session63787 exited0; full nix-store --verify --check-contents completed path
+existence, link hashes and store content hashes with no reported corruption.
+No repair, store optimization or GC requested. Private terminal receipt/log
+/persist/nixos-readiness-20261005/nix-store-verify-receipt.json and
+nix-store-verify.log (0600). This closes the full-store preparation check;
+final hardware/workload policy and subsequent-store health remain subject to
+physical acceptance and soak. Normal/persistent candidates GC-protected.
+No physical reboot or live activation; graphical session retained.
