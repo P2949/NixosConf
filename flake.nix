@@ -14,6 +14,12 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Known-good Commander Core support used on the previous Gentoo system.
     liquidctl-pr886 = {
       url = "github:indyfive11/liquidctl/48e8dd07bdc1c5dca330a844aca7fb22218e6e59";
@@ -26,6 +32,7 @@
       nixpkgs,
       home-manager,
       disko,
+      impermanence,
       ...
     }:
     let
@@ -43,16 +50,83 @@
 
       formatter.${system} = pkgs.nixfmt-tree;
 
-      devShells.${system}.default = pkgs.mkShell {
-        packages = [
-          pkgs.nixfmt
-          pkgs.nixfmt-tree
-          pkgs.deadnix
-          pkgs.statix
-        ];
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          packages = [
+            pkgs.nixfmt
+            pkgs.nixfmt-tree
+            pkgs.deadnix
+            pkgs.statix
+            pkgs.gcc
+            pkgs.clang
+            pkgs.lld
+            pkgs.gdb
+            pkgs.cmake
+            pkgs.ninja
+            pkgs.gnumake
+            pkgs.pkg-config
+            pkgs.python3
+          ];
+        };
+
+        validation = pkgs.mkShell {
+          packages = [
+            pkgs.python3
+            pkgs.stress-ng
+            pkgs.hyperfine
+            pkgs.perf
+            inputs.self.nixosConfigurations.desktop.config.boot.kernelPackages.turbostat
+            pkgs.hwloc
+            pkgs.numactl
+            pkgs.sysstat
+            pkgs.lm_sensors
+            pkgs.nvme-cli
+            pkgs.btrfs-progs
+            pkgs.pciutils
+            pkgs.usbutils
+            pkgs.vulkan-tools
+            pkgs.mesa-demos
+          ];
+        };
       };
 
       checks.${system} = {
+        maintenance-guard = import ./tests/maintenance-guard.nix {
+          inherit pkgs;
+        };
+
+        commander-core-config = import ./tests/commander-core-config.nix {
+          inherit pkgs inputs;
+        };
+
+        commander-core-python = import ./tests/commander-core-python.nix {
+          inherit pkgs;
+          src = inputs.liquidctl-pr886;
+        };
+
+        baseline-collector =
+          pkgs.runCommand "check-baseline-collector"
+            {
+              nativeBuildInputs = [
+                pkgs.bash
+                pkgs.shellcheck
+              ];
+            }
+            ''
+              bash -n ${./scripts/nixos-baseline-info.sh}
+              shellcheck ${./scripts/nixos-baseline-info.sh}
+              touch "$out"
+            '';
+
+        desktop-evaluation = import ./tests/desktop-evaluation.nix {
+          inherit pkgs;
+          config = inputs.self.nixosConfigurations.desktop.config;
+        };
+
+        ephemeral-root-config = import ./tests/impermanence-root-config.nix {
+          inherit pkgs;
+        };
+
         formatting =
           pkgs.runCommand "check-nix-formatting"
             {
@@ -104,6 +178,34 @@
             '';
       };
 
+      packages.${system} = {
+        workstation-smoke = import ./tests/workstation-smoke.nix {
+          inherit inputs pkgs pkgsUnstable;
+        };
+
+        recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
+
+        impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
+          inherit inputs pkgs;
+        };
+
+        impermanence-root-safety = import ./tests/impermanence-root-safety.nix {
+          inherit pkgs;
+        };
+
+        impermanence-root-recovery = import ./tests/impermanence-root-recovery.nix {
+          inherit inputs pkgs;
+        };
+
+        impermanence-root-test-b = import ./tests/impermanence-root-b.nix {
+          inherit inputs pkgs;
+        };
+
+        impermanence-root-fallback = import ./tests/impermanence-root-fallback.nix {
+          inherit inputs pkgs;
+        };
+      };
+
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         inherit system;
 
@@ -114,6 +216,7 @@
         modules = [
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
+          impermanence.nixosModules.impermanence
 
           ./hosts/desktop
 
@@ -130,6 +233,11 @@
             };
           }
         ];
+      };
+
+      nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./hosts/recovery ];
       };
     };
 }

@@ -1,9 +1,16 @@
-{ ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ./persistence.nix
+    ./ephemeral-root.nix
 
     ../../profiles/workstation.nix
 
@@ -24,9 +31,13 @@
 
   services.btrfs.autoScrub = {
     enable = true;
-    interval = "monthly";
+    interval = "*-*-01 02:00:00";
     fileSystems = [ "/" ];
   };
+
+  systemd.timers."btrfs-scrub--".timerConfig.AccuracySec = lib.mkForce "1min";
+  systemd.services."btrfs-scrub--".serviceConfig.ExecCondition =
+    "${pkgs.bash}/bin/bash ${../../modules/core/maintenance-guard.sh} scrub ${config.systemd.package}/bin/systemctl ${pkgs.btrfs-progs}/bin/btrfs";
 
   hardware.commanderCore = {
     enable = true;

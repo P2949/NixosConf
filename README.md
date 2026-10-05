@@ -17,19 +17,27 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── statix.toml
 │
 ├── hosts/
-│   └── desktop/
-│       ├── default.nix
-│       ├── hardware-configuration.nix
-│       └── disko.nix
+│   ├── desktop/
+│   │   ├── default.nix
+│   │   ├── hardware-configuration.nix
+│   │   ├── disko.nix
+│   │   ├── ephemeral-root.nix
+│   │   └── persistence.nix
+│   └── recovery/
+│       └── default.nix
 │
 ├── profiles/
 │   └── workstation.nix
 │
 ├── modules/
 │   ├── core/
+│   │   ├── maintenance.nix
+│   │   └── maintenance-guard.sh
 │   ├── desktop/
 │   ├── gaming/
 │   ├── compatibility/
+│   ├── storage/
+│   │   └── ephemeral-btrfs-root.nix
 │   └── hardware/
 │       └── commander-core/
 │           ├── default.nix
@@ -38,9 +46,16 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 ├── packages/
 │   └── liquidctl-pr886.nix
 │
+├── scripts/
+│   └── nixos-baseline-info.sh
+│
+├── docs/
+│   └── baselines/pre-optimization/
+│
 ├── home/
 │   └── p2949/
 │       ├── default.nix
+│       ├── cli.nix
 │       ├── shell.nix
 │       ├── desktop/
 │       │   ├── default.nix
@@ -53,6 +68,14 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │           ├── default.nix
 │           ├── blender.nix
 │           └── unreal.nix
+│
+├── tests/
+│   ├── desktop-evaluation.nix
+│   ├── workstation-smoke.nix
+│   ├── maintenance-guard.nix
+│   ├── commander-core-*.nix
+│   ├── test_commander_core.py
+│   └── impermanence-root-*.nix
 │
 └── optimization/
     └── default.nix
@@ -95,11 +118,12 @@ Reusable NixOS functionality lives here.
 
 Current groups include:
 
-- `core` — Nix policy, locale, users, and baseline packages
+- `core` — Nix policy, guarded maintenance, locale, users, and baseline packages
 - `desktop` — graphics, PipeWire, Hyprland, and portals
 - `gaming` — Steam, GameMode, Gamescope, and MangoHud
 - `compatibility` — `nix-ld`
 - `hardware/commander-core` — reusable Commander Core cooling support
+- `storage` — guarded ephemeral Btrfs root reset support
 
 ### `home/`
 
@@ -124,6 +148,12 @@ Development configuration is separated into:
 Custom package derivations belong here.
 
 `packages/liquidctl-pr886.nix` builds the pinned Liquidctl revision required by the Commander Core implementation.
+It accepts an explicit source selected at the flake/module boundary.
+
+Recovery and administration tools remain in `modules/core/packages.nix`.
+Interactive tools such as ripgrep, jq, gh and btop belong to Home Manager's
+`home/p2949/cli.nix`. Compilers, debuggers, build systems and Python are provided
+by `nix develop`, which also contains the repository's Nix lint tools.
 
 ### `optimization/`
 
@@ -278,8 +308,33 @@ The flake exposes reproducible checks for:
 - Nix formatting
 - Statix
 - Deadnix
+- Desktop and recovery-specialisation evaluation
+- Ephemeral-root configuration validation
+- Baseline collector syntax and ShellCheck
+- Commander Core option validation, Python syntax, Ruff and hardware-free unit tests
 
 CI deliberately does not build the complete workstation closure.
+
+The real workstation profile and Home Manager configuration have an explicit
+headless integration VM: `nix build .#workstation-smoke`. Its guest storage,
+test-only credentials and disabled physical cooling/reset services isolate it
+from the host. This tests boot and service composition; it does not benchmark
+the workstation or replace graphics, cooling and application acceptance.
+
+## Impermanence validation
+
+`feat/impermanence` declares an ephemeral Btrfs root by default, with a
+`persistent-root` recovery specialisation. Both variants persist machine
+identity; home and `/var` remain persistent. Three physical reset trials have
+passed using the original opt-in configuration. Hardware acceptance of the
+final default/recovery policy remains pending for a batched maintenance window.
+
+See [ephemeral root validation](docs/impermanence.md) for the reset contract,
+test commands, results and remaining physical acceptance gates. Explicit VM
+tests cover safety, interrupted-reset recovery, machine-ID persistence and
+transition to the persistent-root fallback. Heavy VM
+tests are exposed as packages; ordinary flake checks include configuration
+validation alongside formatting, Statix and Deadnix.
 
 ## Baselines
 
@@ -291,9 +346,36 @@ nixos-26.05-productive-baseline
 
 That baseline includes the functional workstation configuration before repository restructuring.
 
-After the architecture branch is fully validated and merged, a separate architecture baseline should be tagged before optimization work begins.
+The architecture checkpoint is tagged `nixos-26.05-architecture-baseline`.
+The final pre-optimization baseline remains pending the acceptance gates in
+[plan.md](plan.md).
 
 ## Optimization development
+
+Pinned diagnostic tools are available with `nix develop .#validation`.
+This shell includes CPU, thermal, storage and graphics inspection tools;
+entering it does not run stress tests or change the workstation configuration.
+Tools come from the pinned nixpkgs input; `turbostat` is selected from the
+desktop's kernel package set.
+
+The [baseline collector](docs/baseline-capture.md) records the current running
+system and repository identities, diagnostic results and missing evidence
+without activating configuration or running stress tests.
+
+The [backup and restore ledger](docs/backup-restore.md) distinguishes verified
+project remotes from the remaining independent home-data backup gate.
+
+The [development validation notes](docs/development-validation.md) cover
+project toolchain ownership, scoped clangd compiler queries and the current
+physical KVM acceptance gate.
+
+The [selected stable refresh](docs/stable-refresh.md) records its isolated
+input update, complete offline validation, closure diff and matching recovery
+artifact. Physical acceptance remains pending.
+
+The [maintenance policy](docs/maintenance-policy.md) documents guarded GC/scrub
+windows, rollback artifact retention and bounded persistent diagnostics.
+The prepared policy remains pending physical installation and acceptance.
 
 Optimization work should proceed from the architectural baseline rather than being mixed into general configuration cleanup.
 
@@ -320,3 +402,6 @@ Each stage should remain independently identifiable and benchmarkable.
 PGO/BOLT infrastructure should preserve provenance and fail closed when profile or binary identity does not match the expected derivation.
 
 BOLT outputs must be represented as new immutable Nix derivations rather than modifying files in `/nix/store`.
+
+The [stock policy audit](docs/stock-policy.md) records evaluated kernel, CPU,
+memory and environment declarations and their remaining acceptance limits.

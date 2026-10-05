@@ -15,11 +15,24 @@
     ];
 
     shell = pkgs.zsh;
+    hashedPasswordFile = "/persist/secrets/${username}-password-hash";
   };
 
   programs.zsh.enable = true;
 
   security.sudo.enable = true;
+
+  security.sudo.extraRules = [
+    {
+      users = [ username ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 
   # Give large development workloads (Unreal, clangd, IDEs, etc.)
   # a practical open-file limit while retaining a finite hard ceiling.
