@@ -8121,3 +8121,32 @@ resumes it automatically when root-matrix Nix PID527727 exits. Root matrix
 session43910 continues; backup session50539 remains unfinished. Do not forget
 resume/terminal verification or claim external restore before receipt exists.
 User graphical session, game and Commander Core remain running. No host reboot.
+
+## Readiness execution — activation accepted in VM, reconstruction prepared, 2026-10-05
+
+Native activation action VM now passes, output
+/nix/store/zwbjrn73wajchh8360m4lb7d5iz1lf62-vm-test-run-activation-safety-actions.
+It exercises test/boot/switch/dry-activate refusal and success using native
+switch-to-configuration; bootloader writer is intentionally test-only. No
+physical host action was invoked. Earlier harness-disabled switch binary and
+uncaptured stderr were corrected; rejected runs are not acceptance evidence.
+
+Blank-disk reconstruction is registered as an explicit heavy package. It
+reuses actual desktop Disko/workstation/Home Manager contracts with virtual
+disk/cooling/test-agent overrides, creates a96GiB sparse target, seeds a
+fixture-only secret at the production path and installs pinned closure/UEFI.
+Installed QEMU boots disk/UEFI only, with no host store/kernel/initrd. It tests
+two normal resets and persistent-root retention. Evaluation and full flake
+checks pass, but actual execution is still required. Do not mark this gate done.
+An initial duplicate Nix attribute in installer Disko setup was fixed before
+successful evaluation. docs/reconstruction.md describes precise scope.
+
+External bootstrap-secret Model A documented in docs/bootstrap-secrets.md;
+new encrypted framework is unnecessary for this baseline. User was asked for
+existing encrypted backup location/key method for a restore check, without
+requesting secrets/passwords in chat. Fresh encrypted restore remains open.
+User's explicit Ventoy backup choice supersedes the guide's older no-USB-target
+recommendation; no-format/no-erasure preservation remains mandatory.
+
+Btrfs coordination counterpart evaluation test added: one valid control and
+three disabled/missing counterpart refusals; execution pending at this record.

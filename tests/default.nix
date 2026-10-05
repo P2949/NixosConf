@@ -8,6 +8,7 @@
 }:
 {
   checks = {
+    btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
     activation-safety = import ./storage/activation-safety/guard.nix { inherit pkgs; };
     ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
     btrfs-maintenance-shell = import ../modules/storage/btrfs-maintenance/check.nix { inherit pkgs; };
@@ -99,6 +100,14 @@
   };
 
   packages = rec {
+    blank-disk-reconstruction = import ./storage/ephemeral-root/reconstruction.nix {
+      inherit
+        inputs
+        pkgs
+        pkgsUnstable
+        username
+        ;
+    };
     activation-safety-actions = import ./storage/activation-safety/actions.nix { inherit pkgs; };
     stock-contamination-negative = import ./workstation/stock-contamination.nix { inherit pkgs; };
     impermanence-root-test-a = reset-control;
