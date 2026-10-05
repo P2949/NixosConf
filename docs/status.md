@@ -85,3 +85,9 @@ The boot ID and graphical session remain unchanged; cooling and Home Manager
 services are active. The accepted artifact above is historical acceptance, not
 the currently running closure. This new live closure has no recorded physical
 boot acceptance yet.
+
+Journal reconciliation: p2949 invoked `nixos-rebuild switch --flake .#desktop`
+at20:46:34+01:00; activation completed20:46:59. Exact artifact build source
+remains unverified. All four current generated read-only activation checks pass,
+no failed units, and kernel identity is unchanged. The detailed observation
+receipt is retained privately under /persist/nixos-readiness-20261005.

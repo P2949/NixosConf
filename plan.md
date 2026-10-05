@@ -16137,3 +16137,26 @@ not invalidate that artifact's historical physical acceptance or establish
 physical acceptance of0p67xd... . Do not claim the old candidate remains the
 running system. Reconstruction retryPID1794351 remains live and reached Disko;
 source9731b6d plus the preserved desktop comment edit remains its launch identity.
+
+## Live activation provenance and read-only checks — 2026-10-05
+
+Journal establishes p2949 invoked sudo nixos-rebuild switch --flake .#desktop
+at20:46:34+01:00, with0p67xd... activation finishing20:46:59. Exact build source
+is not established solely by that command. User subsequently committed the
+remaining comment capitalization as2fe2c27; worktree is clean. This agent did
+not initiate activation. /run/booted-system remains accepted czk5a2... .
+
+All four generated current-system checker roles (persistence, credentials, esp,
+topology) were rerun read-only and individually returned0. No failed system
+units. Kernel still na8n3qdqf1fs7lwads81ra9nlh1hqc9w-linux-6.18.55. Running
+persistent-root artifact ph12l3y4k9jjmp5vhxwlkc11x4js2gjx remains without new
+physical acceptance. Diff-closures from booted to live reports added Alacritty
+theme/config, fuzzel config and workstation-activation output, no reported package
+version transition. Full generated-output differences are not expanded by that
+summary, so it is not a full membership/activation audit.
+
+Private timestamped receipt and diff retained:
+/persist/nixos-readiness-20261005/live-activation-observation.json and
+live-activation-closure-diff.txt (0600). No secrets content collected. Host
+bootID/session unchanged. RetryPID1794351 verified live copying declared closure
+into target; no reconstruction restart, hardware tuning, reboot or live activation.
