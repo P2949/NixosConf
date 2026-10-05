@@ -6,7 +6,7 @@ let
     system = pkgs.stdenv.hostPlatform.system;
     specialArgs = { inherit inputs; };
     modules = [
-      ../modules/hardware/commander-core
+      ../../../modules/hardware/commander-core
       {
         boot.loader.grub.devices = [ "nodev" ];
         fileSystems."/" = {

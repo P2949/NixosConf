@@ -1,7 +1,6 @@
 { inputs, pkgs }:
 
-import ./impermanence-root-a.nix {
+import ./harness.nix {
   inherit inputs pkgs;
   persistMachineId = true;
-  persistentFallback = true;
 }

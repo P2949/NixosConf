@@ -7,7 +7,7 @@ let
     inherit pkgs;
     system = pkgs.stdenv.hostPlatform.system;
     modules = [
-      ../modules/storage/ephemeral-btrfs-root
+      ../../../modules/storage/ephemeral-btrfs-root
       {
         boot.initrd.systemd.enable = true;
         boot.loader.grub.devices = [ "nodev" ];

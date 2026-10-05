@@ -8069,3 +8069,19 @@ restore still pending in session50539. No secrets outside home included; user's
 existing separately held secret backup is not a newly tested encrypted restore.
 Private inventory/exclusions/runner receipts: /persist/nixos-ventoy-backup-20261005.
 Ventoy boot files/partitioning left intact; no format, delete or physical reboot.
+
+## Readiness execution — test subsystem, 2026-10-05
+
+Reset-interface fast checks completed exit0; root VM matrix remains running.
+Built reset-interface desktop grii8zp9miayx0747i1lvr6r91jzmyr6. Version-level
+closure diff vs accepted czk is empty; generated initrd/system identities change
+because the data interface changes rendered script. No physical acceptance claim.
+
+Tests now have explicit tests/default.nix registry, workstation/hardware/storage
+subdirectories, shared ephemeral-root harness and semantic scenario filenames.
+Semantic output names added; all historical checks/package aliases preserved.
+Root flake delegates detailed validation and remains the input/configuration
+entry point. Full fast checks exit0 including hardware-free Python7tests.
+Workstation-smoke reproduces1anhzd1q0pby5zy8qzyr6lf9spr5a0sb; built desktop
+remains grii8zp9miayx0747i1lvr6r91jzmyr6 for this source-only reorganization.
+Logs /tmp/readiness-test-registry-{fast,desktop-smoke,format}.log.

@@ -15,9 +15,9 @@ vmPkgs.testers.runNixOSTest {
   nodes.machine = { lib, ... }: {
     imports = [
       inputs.home-manager.nixosModules.home-manager
-      ../profiles/workstation.nix
-      ../modules/hardware/commander-core
-      ../modules/storage/ephemeral-btrfs-root
+      ../../profiles/workstation.nix
+      ../../modules/hardware/commander-core
+      ../../modules/storage/ephemeral-btrfs-root
     ];
     _module.args = { inherit inputs username pkgsUnstable; };
     # Match the harness's immutable package configuration to the real profile.
@@ -41,7 +41,7 @@ vmPkgs.testers.runNixOSTest {
       useUserPackages = true;
       extraSpecialArgs = { inherit inputs username pkgsUnstable; };
       users.${username} = {
-        imports = [ ../home/p2949 ];
+        imports = [ ../../home/p2949 ];
         # The harness shares the host store but not its per-user GC profile.
         home.activationGenerateGcRoot = false;
       };

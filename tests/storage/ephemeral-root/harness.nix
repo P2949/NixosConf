@@ -125,7 +125,7 @@ pkgs.testers.runNixOSTest {
       imports = [
         inputs.impermanence.nixosModules.impermanence
         inputs.home-manager.nixosModules.home-manager
-        ../modules/storage/ephemeral-btrfs-root
+        ../../../modules/storage/ephemeral-btrfs-root
       ];
 
       virtualisation = {
