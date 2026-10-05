@@ -31,6 +31,8 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │
 ├── modules/
 │   ├── core/
+│   │   ├── maintenance.nix
+│   │   └── maintenance-guard.sh
 │   ├── desktop/
 │   ├── gaming/
 │   ├── compatibility/
@@ -69,6 +71,10 @@ The current configuration targets NixOS 26.05 and is built around a single `desk
 │
 ├── tests/
 │   ├── desktop-evaluation.nix
+│   ├── workstation-smoke.nix
+│   ├── maintenance-guard.nix
+│   ├── commander-core-*.nix
+│   ├── test_commander_core.py
 │   └── impermanence-root-*.nix
 │
 └── optimization/
@@ -112,11 +118,12 @@ Reusable NixOS functionality lives here.
 
 Current groups include:
 
-- `core` — Nix policy, locale, users, and baseline packages
+- `core` — Nix policy, guarded maintenance, locale, users, and baseline packages
 - `desktop` — graphics, PipeWire, Hyprland, and portals
 - `gaming` — Steam, GameMode, Gamescope, and MangoHud
 - `compatibility` — `nix-ld`
 - `hardware/commander-core` — reusable Commander Core cooling support
+- `storage` — guarded ephemeral Btrfs root reset support
 
 ### `home/`
 

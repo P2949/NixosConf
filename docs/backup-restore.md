@@ -30,6 +30,13 @@ The 2026-10-05 allocated-size scan found about 118 GB in Development, of which
 Unreal projects occupy about 545 MB, mostly intermediate build data. These are
 `du` accounting figures, not deduplicated backup-size estimates.
 
+A subsequent full top-level home scan covered 31 entries with no failed
+directory scans. Non-Development directories allocate about 18.4 GB in total.
+The private inventory records symlinks without following them; this is size
+and topology evidence, not proof that application state is reproducible or
+that every local repository has been audited. Root-only receipt:
+`/persist/nixos-home-full-inventory-20261005.json`.
+
 Only the MP600 and Ventoy recovery USB are currently connected. The USB had
 43.2 GB free before adding the pinned recovery ISO; it cannot hold a broad
 copy of all inventoried data. An independent destination has been requested.
