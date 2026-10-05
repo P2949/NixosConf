@@ -4240,3 +4240,23 @@ Only the stable input node and review/evidence documentation differ from its
 preparation base; all six heavy tests, fast checks and artifact/media proofs
 are complete. Keep draft unmerged until remaining baseline integration and
 physical gates are satisfied. No final baseline/optimization tag or branch.
+
+## Reboot budget and graphics smoke verification — 2026-10-05
+
+The three successful physical reset trials are sufficient; do not repeat them.
+User requests avoiding further reboots because each destroys the graphical
+session. Continue offline preparation and bounded runtime checks; batch any
+remaining final-candidate/recovery-media physical acceptance into a planned
+window. No reboot, live activation or graphical/cooling restart performed.
+
+Gamescope 3.16.23 nested Wayland and XCB/XWayland Vulkan cube runs each
+completed 600 frames on RX 9070 XT RADV and exited zero. MangoHud 0.8.3
+initialized; the XCB child maps positively contain libMangoHud.so and its shim.
+Small temporary windows closed normally. Logs retain nonfatal keyboard/cursor
+and teardown warnings; outer refresh was 155 Hz and HDR was disabled. These
+are smoke checks, not gameplay, HDR, controller or sustained-load acceptance.
+Cooling remains active, Wayland session active, no failed system units or
+matching new kernel GPU reset/fault/timeout messages in the test interval.
+Stable refresh draft PR #4 exact-head CI run37297618440 succeeded.
+Remaining physical, independent-backup and representative-workload gates
+remain open; the full baseline goal is not declared complete.
