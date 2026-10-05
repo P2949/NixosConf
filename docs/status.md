@@ -38,7 +38,7 @@ All five reset VM scenarios passed. The user confirmed the separate secrets
 backup was restored during a real system recovery, completing that gate on
 user-reported evidence. Retain BIOS 3201/current ME; no firmware update is planned.
 
-Still open: executed blank-disk reconstruction, VMX enablement,
+Still open: VMX enablement,
 sustained CPU/RAM/cooling/storage health, final
 exact-candidate workloads and multi-day soak. See the latest plan.md execution
 records for exact source/artifact identities and private receipt locations.
@@ -97,3 +97,16 @@ sjanby8f9cpwq6zk23n6pg77s0rf1f9g,1831.68s. Corrected read-only inspection
 passed along with installed-disk UEFI/reset/recovery/return checks. Private
 terminal receipt/log retained under /persist/nixos-readiness-20261005.
 Final evaluated-Disko decision and exact final offline suite remain pending.
+
+## Final offline validation accepted
+
+Final suite session2288 exited0: full flake checks, five root VM scenarios,
+workstation-smoke, native activation-actions, proven installed-disk reconstruction
+and recovery ISO outputs all successful. Reconstruction and activation-actions
+reused exact successful derivations; five root scenarios and workstation-smoke
+executed again. Stock negative separately rejected the intended PGO fixture.
+The evaluated-Disko import was executed, failed device rebinding, and explicitly
+deferred; restored harness reproduces the terminal PASS derivation exactly.
+Exact identities and private receipt/log references are in plan.md.
+The stable ISO hash is unchanged. Physical hardware/workloads/soak/freeze
+remain open; hosted CI failed to acquire a runner before test steps.

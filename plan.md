@@ -16297,3 +16297,112 @@ ISO. Logs /tmp/readiness-final-offline-checks.log and
 /tmp/readiness-final-offline-builds.json. Terminal acceptance pending.
 Expected stock-contamination-negative diagnostic remains a separate next check.
 Host not activated/rebooted; graphical session retained.
+
+## Final restored-source fast checks PASS — 2026-10-05
+
+Offline suite session2288 completed its full flake-check stage: all checks
+passed; formatting62files0changes. Source18046fa launched with later
+documentation-only a40caba; final reconstruction resolves exact proven
+sjanby8f9cpwq6zk23n6pg77s0rf1f9g. The sequential heavy build stage is now
+active (disk-image build visible); no aggregate JSON/terminal result yet.
+Do not mark remaining VM/ISO stages complete based on the fast-check result.
+Logs remain /tmp/readiness-final-offline-checks.log and
+/tmp/readiness-final-offline-builds.log. Stock-negative diagnostic follows.
+No host reboot, activation or graphical-session interruption.
+
+## Final offline VM phase and deferred-refactor receipts — 2026-10-05
+
+Suite session2288/NixPID1983450 verified live: disk-image preparation progressed
+to reset-control/impermanence-root-a VM execution (drv6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv).
+Aggregate terminal result remains pending. Current exact-head CI37370176006
+(a40caba) pending, no PASS claim. Preserved evaluated-Disko failure/decision
+under /persist/nixos-readiness-20261005/evaluated-disko-failure.log and
+evaluated-disko-deferral.json (0600), including the failed and restored drv
+identities and explicit scope. No physical reboot/activation.
+
+## Final reset-control VM terminal PASS — 2026-10-05
+
+Final suite session2288/NixPID1983450 remains live. Reset-control VM
+impermanence-root-a (6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv) completed
+test script successfully in322.85seconds and batch proceeded to persistent
+identity/impermanence-root-b. Console boot-menu escape sequences were normal
+transient output, not a failure. Aggregate result and remaining VM/ISO/negative
+gates still pending; no physical workstation reboot or activation.
+
+## Final stock negative fixture PASS (expected failure) — 2026-10-05
+
+Independent bounded stock-contamination-negative execution session85359
+exited1 for the intended diagnostic: system closure contains disallowed
+/nix/store/8ii33j1vxfgl9z2gs954jbiwppsrhhlf-nixos-opt-pgo-fixture.
+Derivation mwkr72incnicd88m7fj7rd7m2d3dsryp. This is the required expected
+negative acceptance, not an unrelated build failure. Sourcea40caba plus
+plan-only observations. Root-private final-stock-negative.log and
+final-stock-negative-receipt.json retained under
+/persist/nixos-readiness-20261005. Positive desktop artifact and runtime
+namespace audit are separate evidence. Heavy suitePID1983450 remains live
+at elapsed15m04s; no aggregate terminal PASS claim.
+
+## Final persistent-identity PASS and repeated hosted-CI issue — 2026-10-05
+
+Persistent-identity/impermanence-root-b completed321.11seconds successfully;
+final suite session2288/PID1983450 progressed to persistent-fallback and remains
+live. The final batch aggregate, otherVMs and recovery build remain pending.
+
+CI37370176006/a40caba failed before steps: job111965091040 cancelled, no
+runner assigned, annotation "The job was not acquired by Runner of type hosted
+even after multiple attempts". Same infrastructure condition as previous
+37366526909, not a source-test result. Keep required checks/runner policy intact;
+local final-source full flake checks passed independently. No automatic repeated
+reruns during this local suite; retry exact final head after evidence checkpoint.
+No physical reboot/activation.
+
+## Final persistent-fallback VM terminal PASS — 2026-10-05
+
+Final persistent-fallback completed its test script successfully in417.04s.
+Suite session2288/PID1983450 progressed to interrupted-recovery VM and remains
+live at elapsed22m45s. Previous waits verified the same live advancing process;
+no stalled-job restart. Remaining aggregate/VM/ISO acceptance still pending.
+No physical reboot, system activation or graphical-session interruption.
+
+## Final interrupted-recovery VM terminal PASS — 2026-10-05
+
+Interrupted-recovery completed successfully in309.81seconds. Suite session2288/
+PID1983450 proceeded to safety VM fixtures and remains live at29m49s.
+Reset, identity, fallback and interrupted recovery final executions are now
+proven individually; aggregate heavy batch, safety/activation/workstation
+results and recovery artifact receipt remain pending. No host reboot/activation.
+
+## Final offline suite terminal PASS — 2026-10-05
+
+Session2288 exited0 after full flake checks and all9requested heavy outputs.
+Source18046fa at launch, same production/harness as a40caba; intervening
+observations only edit plan.md. All5rootVMs and workstation-smoke actually
+executed in this batch: reset322.85s,identity321.11s,fallback417.04s,
+interrupted-recovery309.81s,safety146.15s,workstation60.81s. Reconstruction
+and activation-actions were reused exact previously successful derivations;
+recoveryISO exact prior artifact reused. Do not describe reused outputs as
+new physical validation or reexecuted VM tests. Stock negative separately
+passed intended diagnostic (session85359).
+
+Private final-offline-suite-receipt.json, checks/build logs and output JSON
+retained under /persist/nixos-readiness-20261005 (0600). ISO hash recomputed
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061,
+1496678400bytes, unchanged staged stable ISO.
+
+Exact successful outputs:
+
+- `/nix/store/sjanby8f9cpwq6zk23n6pg77s0rf1f9g-vm-test-run-blank-disk-reconstruction.drv` → `/nix/store/mjf1yikn6id526yp0kr7c6vhspz10z43-vm-test-run-blank-disk-reconstruction`
+- `/nix/store/3vn9i1j8llylf3ipkbs3s8dhbvhkwds4-vm-test-run-workstation-smoke.drv` → `/nix/store/h8hm26pad7c30sxz3pd3z0ijrm4w085x-vm-test-run-workstation-smoke`
+- `/nix/store/n1bgqjs1814cafj3hx9k8wy9iwz8wz1w-vm-test-run-impermanence-root-safety.drv` → `/nix/store/v7czkdxaa29w7m2rfjr4k2yc988fg4fg-vm-test-run-impermanence-root-safety`
+- `/nix/store/6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv-vm-test-run-impermanence-root-a.drv` → `/nix/store/5bdqai2262264ja9b193wj0dk48c10cw-vm-test-run-impermanence-root-a`
+- `/nix/store/r513cgfhqzcwgvn7gwciszdgyqfdmm41-vm-test-run-impermanence-root-b.drv` → `/nix/store/bf8js1lwp8l5idj5y2jvcsj51wypvrpf-vm-test-run-impermanence-root-b`
+- `/nix/store/mz7fyxfag10m9gs3xrw2i4dvk2ds034d-vm-test-run-impermanence-root-recovery.drv` → `/nix/store/j7wv2qi05q7jgk89jfij0zkd5qsizm9y-vm-test-run-impermanence-root-recovery`
+- `/nix/store/w8wcilkwk2p5y001mbyvr0412s3ywa3k-vm-test-run-impermanence-root-fallback.drv` → `/nix/store/dfkyis3rgpv8v09as7rzrip818ck3sgk-vm-test-run-impermanence-root-fallback`
+- `/nix/store/bj264kfcgxs0yqv864pk1b5lc1h14fb4-vm-test-run-activation-safety-actions.drv` → `/nix/store/zwbjrn73wajchh8360m4lb7d5iz1lf62-vm-test-run-activation-safety-actions`
+- `/nix/store/6w0ihzdsp3i6f6i08m7siz9sccxamh3f-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso.drv` → `/nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso`
+
+Host running0p67xd...,bootID1299a2b6-c50b-4e83-8437-aa7e705914d6 unchanged.
+Remaining: hosted CI runner recovery, exact physical recovery-drill evidence,
+firmware OC/RAM capture+VMX maintenance, final-candidate physical boot chain,
+hardware stability, representative workloads and multi-day soak, backup refresh
+if substantial new work, then final manifest/tag. No premature freeze/merge.
