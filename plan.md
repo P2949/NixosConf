@@ -16123,3 +16123,17 @@ now distinguishes the already accepted c5e036b physical boot chain from the
 uninstalled readiness candidate and labels older774debe ISO staging historical.
 This prevents a stale runbook from demanding repeated accepted boots or selecting
 an older ISO unnecessarily. Current stable ISO52e3496c... remains authoritative.
+
+## Live activation drift observed — 2026-10-05
+
+Current /run/current-system and system profile now resolve to
+`/nix/store/0p67xd3scigqmmn65a0x5skdcsf6025b-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+Profile symlink timestamp20:46:57 Europe/Dublin. This agent did not initiate
+switch/test/boot activation; actor and exact source have not been established.
+BootID remains1299a2b6-c50b-4e83-8437-aa7e705914d6, graphical user session1
+exists, Commander Core and Home Manager services active. This observation
+supersedes older claims about the currently running czk5a2... closure, but does
+not invalidate that artifact's historical physical acceptance or establish
+physical acceptance of0p67xd... . Do not claim the old candidate remains the
+running system. Reconstruction retryPID1794351 remains live and reached Disko;
+source9731b6d plus the preserved desktop comment edit remains its launch identity.

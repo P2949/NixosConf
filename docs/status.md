@@ -75,3 +75,13 @@ further broad refactor; close evidence before physical maintenance and freeze.
 
 Latest backup result: [backup receipt summary](backup-restore.md#independent-ventoy-home-backup-accepted--2026-10-05).
 Earlier open-backup statements above are superseded by this accepted result.
+
+## Latest live observation
+
+A subsequent external activation changed the running system/profile to
+`0p67xd3scigqmmn65a0x5skdcsf6025b` (same26.05.20261004.0d9e9b8 version).
+Observed profile timestamp2026-10-05T20:46:57+01:00; actor/source unverified.
+The boot ID and graphical session remain unchanged; cooling and Home Manager
+services are active. The accepted artifact above is historical acceptance, not
+the currently running closure. This new live closure has no recorded physical
+boot acceptance yet.
