@@ -4471,3 +4471,73 @@ one build job/two builder cores. Private logs/JSON under
 step. Batch handle recorded by tool; no stage restarted from timeout.
 Prior refreshed candidate/ISO and GC roots retained until new outputs reviewed.
 No host live activation/reboot or graphical/cooling restart.
+
+## Read-only home backup staging — 2026-10-05
+
+Home subvolume descendant audit returned zero nested subvolumes. Created
+additive read-only snapshot /persist/backup-staging/home-20261005 under
+root-owned0700parent; ro=true verified and snapshot parent UUID matches
+live/home UUID. Root-private0600receipt:
+/persist/nixos-home-backup-staging-20261005.json. No existing snapshot
+replaced/deleted. Same-MP600 staging only, not independent backup; application
+databases were not quiesced, so no application-consistency guarantee. Refresh
+staging/coverage for subsequent edits before actual external backup. Retire
+only after explicit backup/restore and snapshot lifecycle review.
+
+Refreshed batch session82197 still running: fastchecks passed76.21s, expanded
+safety started. Stable-refresh source c5e036b remains unchanged during batch;
+later documentation synchronization waits for receipts to avoid changing
+source identity mid-validation. Cooling and Wayland active. No reboot/live
+activation, home policy change, data deletion or independent-backup claim.
+
+## Refreshed safety and home staging restore evidence — 2026-10-05
+
+Batch82197 expanded stable-input safety passed160.54s; recovery now running.
+Same immutable source c5e036b remains selected. No batch restart.
+Copied both loose Blender files from read-only home snapshot to separate
+private/tmpdirectory; snapshot/restored SHA256 matched for both and current
+live file hashes still matched. Original work untouched. Root-private receipt
+/persist/nixos-home-staging-restore-20261005.json. This is a staging copy/hash
+proof on the same physical disk, explicitly not independent backup/restore
+or Phase16 acceptance. External destination and application-data coverage
+remain pending. No render repeated, no host activation/reboot.
+
+Restore probe initially omitted the username component: snapshot source is
+/home, not/home/p2949. First path lookup failed before any copy; corrected
+paths preserve the full relative path from/home. Both copies/hash comparisons
+then completed successfully with original files unchanged. No failed probe
+was accepted as restore evidence. Coverage remains same-disk staging only.
+
+## Immutable batch checkpoint — 2026-10-05
+
+Exact stable-refresh c5e036b CI37301908893 completed success. Sequential
+batch82197 still running recovery VM; completed fast/safety receipts preserved
+root-private under/persist/nixos-logguard-refresh-20261005 with clean source
+revision, lock/module SHA256 checkpoint. Only terminal successful stages copied;
+checkpoint explicitly partial, not full-batch/candidate acceptance. Running
+stable-refresh worktree remains clean/unchanged. Documentation synchronization
+still deferred until batch terminal. No process restarted because of wait
+timeout, no host activation/reboot or cooling/graphical restart.
+
+Refreshed recovery VM completed exit0 in382.18s, including its three virtual
+boots. Logs/output JSON and updated completed-step checkpoint copied to
+root-private/persist ledger. Batch82197 advanced to testA; same source retained.
+Runner preserved privately for reproducibility. These timings describe TCG
+correctness tests, not physical performance. No physical reboot or activation.
+
+TestA batch82197 authoritatively still running through VM boot checks; same
+handle polled without restarting. Host cooling and Wayland remain active.
+Completed results unchanged (fast/safety/recovery pass); no A acceptance yet.
+This interval is a verified wait, not a claim of new implementation completion.
+
+Refreshed A three-reset-boot VM passed exit0 in310.53s. Completed A logs/JSON
+and timestamped partial checkpoint preserved root-private/persist. Source
+revision still matches c5e036b. Batch82197 advanced to B (identity/journal
+persistence), pending. Host cooling and Wayland remain active; no physical
+reboot or live activation. Remaining B/fallback/workstation/artifact stages
+not yet accepted.
+
+B session82197 verified live and entering boot sequence; repeated bounded
+waits returned same running handle. No terminal B result yet; completed
+fast/safety/recovery/A remain passed. Cooling and Wayland checked active.
+No restart, physical reboot or activation; immutable source retained.
