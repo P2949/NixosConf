@@ -16533,3 +16533,738 @@ Goal marked blocked on physical firmware access/window response after this
 audit; objective remains incomplete, not paused/completed. Resume when user
 can coordinate the retained BIOS3201/currentME window. No reboot scheduled,
 boot selection changed, live activation performed or graphical session ended.
+
+## Firmware photos and post-VMX boot — 2026-10-05
+
+Supersedes the preceding physical-access blocking audit: the user performed
+firmware work and rebooted. The agent did not reboot, activate a system,
+change firmware, alter boot selection or interrupt the graphical session.
+Both attached assessments are identical; their entire content is preserved
+once below as supplied analysis, not independently verified instructions.
+Sources: attachment IDs d4bac096-1807-4142-8e0f-b30106ad3d86 and
+b051f755-bda5-42ff-90fb-eda7dee7ea44, each `Pasted text.txt`.
+SHA-256: `954a2446f7b703aa8ae347fbb301035a7429d374744b8c0d6a8fddb8a43f2833`.
+The image set contains overlapping screens and a repeated Ai Tweaker image.
+Displayed firmware clock 21:37–21:40 is not assumed to use OS timezone.
+
+### Reconciled authority and remaining uncertainty
+
+Photos establish AI Optimized core ratios 50/49, Auto core/cache voltage,
+MCE Enabled–Remove All Limits, max cache48, AVX offset Auto/current0,
+XMP I DDR4-3200 at configured1.35V, BCLK100MHz. These supersede any earlier
+fixed5GHz/manual-voltage description; they do not prove sustained clocks.
+Profile16-18-18-36 is visible, but applied detailed timings/command rate
+are not captured. Prediction values (including @L4) are not measured load
+voltages, selected LLC or a stability result. Load voltage remains unmeasured.
+
+VMX/VT-d, SR-IOV, Above4G, both prefetchers and HT enabled; all cores active.
+ReBAR detailed setting Auto takes precedence over ON highlighted in an open
+quick-control menu. IOMMU preboot option only reads “Enable IOMMU during boot
+with...” and its suffix remains unknown. Primary display PCIE and concurrent
+iGPU Multi-Monitor Disabled; no Intel VGA device currently enumerates in Linux.
+AMI2.20.1276 is an interface footer; live ASUS release remains3201, ME blocks
+14.1.53.1649,14.1.53.1649,14.0.51.1528. Retain this selected firmware baseline.
+No assertion that VMX was the only changed setting: complete before/after
+firmware captures are unavailable.
+
+Linux resolves the guide's GPU BAR uncertainty: AMD03:00.0 (1002:7550)
+BAR0 current16GiB, BAR2 current256MiB; amdgpu reports VRAM16304MiB and
+BAR16384MiB. DMAR and x2apic interrupt remapping are present, with default
+Translated IOMMU domain; this does not prove isolation for every device.
+SR-IOV firmware permission does not prove any device exposes VFs.
+
+Numerical PL1/PL2/Tau/current limits, actual LLC, VRM policy, detailed RAM
+settings, firmware Speed Shift/C-states, CSM/SecureBoot/PTT, PEG generation/
+ASPM, SATA and fan/pump/Q-Fan policies remain uncaptured. Additional photos
+are optional future evidence, not a reason to demand another reboot now.
+The earlier thermal-aborted CPU test remains incomplete; these photos do not
+convert it into a pass or authorize weaker thermal thresholds/new OC policy.
+
+### New physical observation and KVM acceptance scope
+
+BootID `d7c64889-aac3-4d09-8d14-5add9050cea3`; current normal candidate
+`0p67xd3scigqmmn65a0x5skdcsf6025b`, generation37. RootID300 (previous297),
+UUID `a3046ca3-1791-b646-a0d2-4bf142a152d3`, created22:40:53+01:00.
+Current boot has a matching RESET complete record; accumulated count6.
+Machine identity and p2949 credential equal their persisted sources, checked
+as booleans without recording secrets. Failed system units empty; Commander
+active/success, NRestarts0. The user's graphical session remains active.
+
+/dev/kvm exists and is accessible to p2949. QEMU10.2.4 initialized using
+`-accel kvm -cpu host`, guest paused, no disks/network/display; QMP query-kvm
+returned enabled=true/present=true and process exited0. This closes the
+firmware-disabled VMX/KVM initialization gate, not an actual Android emulator
+workload or guest execution gate. Private receipt0600:
+`/persist/nixos-readiness-20261005/post-vmx-normal-boot-observation.json`.
+
+This is current final-candidate normal reset/identity/service evidence.
+Persistent-root then return-to-normal physical legs, complete hardware and
+real workload acceptance, multi-day soak, current-head CI and final freeze
+remain open. Do not repeat older accepted trials solely for their own sake.
+Coordinate remaining physical boots to preserve the user's session; no new
+reboot is scheduled. No tag, merge, final manifest or optimization enabled.
+
+### Complete supplied assessment (quoted reference)
+
+> I went through all ten BIOS photos and reconciled the overlapping screens. The most useful way to preserve this is as a firmware/overclock baseline report, with uncertain or incomplete items explicitly marked rather than guessed.
+>
+> # UEFI / BIOS Configuration Baseline
+>
+> **Capture date:** 5 October 2026
+> **Capture time:** approximately 21:37–21:40
+> **Firmware interface:** ASUS ROG UEFI BIOS Utility — Advanced Mode
+> **AMI interface/version string shown:** `Version 2.20.1276`, copyright 2024 American Megatrends
+>
+> > Important: `2.20.1276` appears to be the AMI/UEFI interface version displayed in the footer. These photographs do **not** show the motherboard's actual ASUS BIOS release number.
+>
+> ---
+>
+> # 1. Executive summary
+>
+> The photographs show a fairly performance-oriented firmware configuration with the following major characteristics:
+>
+> | Area | Observed state |
+> |---|---|
+> | CPU platform | Intel Comet Lake |
+> | Physical CPU cores visible | 6 |
+> | Hyper-Threading | Enabled |
+> | Active processor cores | All |
+> | CPU ratio policy | ASUS `AI Optimized` |
+> | Target CPU turbo | 5000 MHz |
+> | Target AVX frequency | 5000 MHz |
+> | Light/heavy ratio | `50 / 49` |
+> | Target cache/ring | 4800 MHz |
+> | Max cache ratio | 48× |
+> | AVX negative offset | 0 currently |
+> | ASUS MultiCore Enhancement | Enabled — Remove All Limits |
+> | CPU voltage | Auto |
+> | XMP | XMP I |
+> | Memory | 32 GiB DDR4-3200 |
+> | DRAM voltage | 1.35 V configured |
+> | VT-x / VMX | Enabled |
+> | VT-d / IOMMU | Enabled |
+> | SR-IOV | Enabled |
+> | Above 4G Decoding | Enabled |
+> | Re-Size BAR Support | Auto |
+> | Primary graphics | PCIe |
+> | iGPU Multi-Monitor | Disabled |
+> | Hardware prefetcher | Enabled |
+> | Adjacent cache-line prefetch | Enabled |
+> | SGX | Disabled |
+>
+> The biggest point worth calling out is that this is **not a simple fixed 5.0 GHz all-core/manual-voltage configuration**. The BIOS is presently using ASUS's **AI Optimized CPU ratio mode**, and explicitly reports:
+>
+> ```text
+> Light Load / Heavy Load: 50 / 49
+> ```
+>
+> So its intended behavior is approximately 5.0 GHz under the lighter condition and 4.9 GHz under the BIOS-defined heavier condition, rather than an unconditional fixed 50× ratio.
+>
+> At the same time, the top-level target display still reports:
+>
+> ```text
+> Target CPU Turbo-Mode Frequency: 5000 MHz
+> Target CPU @ AVX Frequency:      5000 MHz
+> Target Cache Frequency:          4800 MHz
+> ```
+>
+> ---
+>
+> # 2. CPU identification and topology
+>
+> The CPU configuration screen exposes:
+>
+> | Item | Value |
+> |---|---:|
+> | L2 cache | `256 KB × 6` |
+> | L3 cache | `12 MB` |
+> | L4 cache | N/A |
+> | Intel VT-x Technology | Supported |
+> | Intel SMX Technology | Supported |
+> | Active Processor Cores | All |
+> | Hyper-Threading | Enabled |
+>
+> The `256 KB × 6` L2 presentation tells us that all six physical cores are represented. With Hyper-Threading enabled, the operating system should therefore receive the full SMT topology rather than having threads disabled in firmware.
+>
+> The System Agent screen also identifies the platform as:
+>
+> ```text
+> CometLake
+> ```
+>
+> and displays the associated string:
+>
+> ```text
+> 9.1.10.40
+> ```
+>
+> The photographs additionally show VT-d as both supported and enabled.
+>
+> ---
+>
+> # 3. CPU frequency and overclock configuration
+>
+> ## ASUS AI overclock policy
+>
+> The primary Ai Tweaker screen shows:
+>
+> | Setting | Value |
+> |---|---|
+> | CPU Core Ratio | `AI Optimized` |
+> | Optimized AVX Frequency | `Normal Use` |
+> | Light Load / Heavy Load | `50 / 49` |
+> | AVX Instruction Core Ratio Negative Offset | Auto |
+> | Current AVX negative offset | `0` |
+> | ASUS MultiCore Enhancement | `Enabled - Remove All Limits` |
+> | Current ASUS MCE Status | Enabled |
+> | CPU SVID Support | Auto |
+> | SVID Behavior | Auto |
+>
+> The effective target values shown at the top of the BIOS are:
+>
+> ```text
+> CPU Turbo:     5000 MHz
+> CPU AVX:       5000 MHz
+> DRAM:          3200 MHz
+> Cache/Ring:    4800 MHz
+> ```
+>
+> ### Interpretation
+>
+> This is a hybrid ASUS-controlled overclock rather than a manually fixed ratio/voltage setup.
+>
+> Three things contribute:
+>
+> 1. **AI Optimized CPU ratio** lets ASUS determine the operative ratios.
+> 2. **50/49 light/heavy behavior** means the BIOS distinguishes lighter and heavier CPU loading.
+> 3. **MultiCore Enhancement — Remove All Limits** removes the ordinary power-limit constraint which could otherwise reduce sustained turbo behavior.
+>
+> The photographs therefore describe a system intended to sustain relatively aggressive turbo behavior, subject primarily to the AI OC frequency/voltage model and thermal/current constraints.
+>
+> ---
+>
+> # 4. Cache / ring configuration
+>
+> Visible settings are:
+>
+> | Setting | Value |
+> |---|---|
+> | Ring Down Bin | Auto |
+> | Minimum CPU Cache Ratio | Auto |
+> | Maximum CPU Cache Ratio | `48` |
+> | Reported target cache frequency | `4800 MHz` |
+>
+> This is therefore targeting a maximum 48× cache/ring ratio.
+>
+> The ASUS prediction panel agrees with this target and displays an estimated cache voltage requirement for 4.8 GHz.
+>
+> ---
+>
+> # 5. CPU and platform voltages
+>
+> The relevant Ai Tweaker screen shows:
+>
+> | Rail / setting | Configured mode/value | Live value shown |
+> |---|---:|---:|
+> | CPU Core/Cache Voltage | Auto | `1.021 V` at the photographed idle state |
+> | DRAM Voltage | `1.35000 V` | `1.343 V` |
+> | CPU VCCIO Voltage | Auto | approximately `1.168 V` |
+> | CPU System Agent Voltage | Auto | `1.152 V` |
+> | PLL Termination Voltage | Auto | — |
+> | PCH Core Voltage | Auto | `1.048 V` |
+> | BCLK Aware Adaptive Voltage | Enabled | — |
+> | Extreme Over-voltage | Disabled | — |
+>
+> There is therefore **no manually entered fixed Vcore visible** in these photographs.
+>
+> The CPU core/cache voltage is managed automatically, with BCLK-aware adaptive-voltage functionality enabled.
+>
+> ### Important consequence
+>
+> The photographed `1.021 V` should not be interpreted as the CPU's load voltage. The BIOS hardware monitor was showing the processor at only 4.1 GHz and roughly idle conditions when the picture was taken.
+>
+> Load voltage will be substantially different.
+>
+> ---
+>
+> # 6. ASUS AI OC prediction information
+>
+> The right-side prediction panel contains useful baseline information:
+>
+> | ASUS prediction | Value |
+> |---|---:|
+> | SP score | `72` |
+> | Cooler score | `155 pts` |
+> | Non-AVX voltage requirement for 5000 MHz | `1.412 V @ L4` |
+> | AVX voltage requirement for 5000 MHz | `1.462 V @ L4` |
+> | Cache voltage requirement for 4800 MHz | `1.332 V @ L4` |
+> | Heavy Non-AVX prediction | `4931 MHz` |
+> | Heavy AVX prediction | `4708 MHz` |
+> | Heavy Cache prediction | `4884 MHz` |
+>
+> These are **ASUS prediction values**, not actual measured workload voltages/frequencies.
+>
+> That distinction matters particularly for the AVX entry: the BIOS target line says 5.0 GHz AVX with a current AVX offset of zero, but ASUS's own AI prediction estimates approximately **4.708 GHz under its defined heavy AVX workload**.
+>
+> So there is no contradiction:
+>
+> ```text
+> Configured ratio target
+>         ≠
+> frequency ASUS predicts under its heavy workload
+> ```
+>
+> The latter includes the platform's electrical/thermal model.
+>
+> ---
+>
+> # 7. Live BIOS hardware-monitor snapshot
+>
+> During the photographs, the right-hand hardware monitor showed:
+>
+> | Measurement | Value |
+> |---|---:|
+> | CPU frequency | `4100 MHz` |
+> | CPU ratio | `41×` |
+> | BCLK | `100.00 MHz` |
+> | CPU temperature | `30 °C` |
+> | Core voltage | `1.021 V` |
+> | DRAM frequency | `3200 MHz` |
+> | DRAM voltage | `1.343 V` |
+> | Installed memory | `32768 MB` |
+>
+> This is an excellent idle/BIOS reference snapshot.
+>
+> Nothing here suggests the processor was under significant load during the photographs.
+>
+> ---
+>
+> # 8. Base clock configuration
+>
+> Visible values are:
+>
+> ```text
+> BCLK Frequency: 100.0000 MHz
+> BCLK Spread Spectrum: Auto
+> ```
+>
+> The live hardware monitor simultaneously reads:
+>
+> ```text
+> BCLK: 100.00 MHz
+> ```
+>
+> So the CPU/memory overclock is **not being generated through a substantial BCLK overclock**.
+>
+> The performance configuration is ratio-based.
+>
+> ---
+>
+> # 9. Memory configuration
+>
+> The system has:
+>
+> ```text
+> 32768 MB
+> DDR4-3200
+> ```
+>
+> The BIOS is configured for:
+>
+> | Setting | Value |
+> |---|---|
+> | Ai Overclock Tuner | `XMP I` |
+> | DRAM Frequency | `DDR4-3200MHz` |
+> | BCLK : DRAM Frequency Ratio | Auto |
+> | DRAM Odd Ratio Mode | Enabled |
+> | DRAM Voltage | `1.35000 V` |
+> | Actual DRAM voltage shown | `1.343 V` |
+>
+> The visible XMP profile string begins:
+>
+> ```text
+> XMP DDR4-3200 16-18-18-36-1...
+> ```
+>
+> The photograph cuts off the end of that profile string, so I would **not infer the remaining timing fields from the image**.
+>
+> At minimum, the primary visible timings are therefore:
+>
+> ```text
+> DDR4-3200
+> CL16
+> tRCD 18
+> tRP 18
+> tRAS 36
+> ```
+>
+> with the profile running at the expected 1.35 V setting.
+>
+> The detailed `DRAM Timing Control` submenu was not opened, so secondary/tertiary timings cannot be recovered from these photographs.
+>
+> ---
+>
+> # 10. CPU prefetch and execution-related settings
+>
+> The processor configuration shows:
+>
+> | Setting | State |
+> |---|---|
+> | Hardware Prefetcher | Enabled |
+> | Adjacent Cache Line Prefetch | Enabled |
+> | Tcc Offset Time Window | Auto |
+> | Software Guard Extensions / SGX | Disabled |
+> | Active Processor Cores | All |
+> | Hyper-Threading | Enabled |
+>
+> For a performance baseline, it is useful that both hardware-prefetch facilities are explicitly documented as enabled.
+>
+> There is no photograph showing other lower-level CPU power-management items such as SpeedStep, Speed Shift, package C-states, or individual C-state limits.
+>
+> ---
+>
+> # 11. CPU virtualization
+>
+> CPU virtualization is explicitly enabled:
+>
+> ```text
+> Intel (VMX) Virtualization Technology: Enabled
+> ```
+>
+> The screen also reports Intel VT-x as supported.
+>
+> So hardware virtualization is enabled at the processor level.
+>
+> ---
+>
+> # 12. VT-d / IOMMU configuration
+>
+> The System Agent configuration shows:
+>
+> ```text
+> VT-d: supported
+> VT-d: enabled
+> ```
+>
+> and `Control Iommu Pre-boot Behavior` is configured to an option beginning:
+>
+> ```text
+> Enable IOMMU during boot with ...
+> ```
+>
+> The remainder of that option is cut off by the width of the BIOS field.
+>
+> Taken together, these photographs show a firmware configuration intentionally prepared to expose Intel's IOMMU functionality rather than leaving VT-d disabled.
+>
+> This is especially useful to preserve as a baseline for:
+>
+> - Linux IOMMU use;
+> - device isolation;
+> - virtualization;
+> - VFIO;
+> - DMA remapping;
+> - other PCIe virtualization experiments.
+>
+> ---
+>
+> # 13. SR-IOV
+>
+> Under:
+>
+> ```text
+> Advanced
+> → PCI Subsystem Settings
+> ```
+>
+> the following is visible:
+>
+> ```text
+> SR-IOV Support: Enabled
+> ```
+>
+> So firmware support for PCIe Single Root I/O Virtualization is enabled.
+>
+> Actual SR-IOV functionality will still depend on the individual PCIe device supporting virtual functions; the BIOS setting alone does not establish that a particular GPU/NIC exposes them.
+>
+> ---
+>
+> # 14. Above-4G decoding and Resizable BAR
+>
+> The PCI subsystem page shows:
+>
+> | Setting | Value |
+> |---|---|
+> | Above 4G Decoding | **Enabled** |
+> | Re-Size BAR Support | **Auto** |
+> | SR-IOV Support | **Enabled** |
+>
+> A separate photograph of ASUS's quick ReSize BAR control shows its dropdown open with:
+>
+> ```text
+> OFF
+> ON
+> ```
+>
+> and `ON` highlighted.
+>
+> The detailed page is the more precise configuration capture, and reports:
+>
+> ```text
+> Above 4G Decoding = Enabled
+> Re-Size BAR Support = Auto
+> ```
+>
+> The BIOS's own explanatory text also states that enabling Re-Size BAR requires:
+>
+> ```text
+> CSM (Compatibility Support Module) disabled
+> ```
+>
+> ### What the pictures prove
+>
+> They prove that the firmware is **configured to permit/use ReBAR automatically** and that the required Above-4G decoding feature is enabled.
+>
+> ### What they do not prove
+>
+> There is no Boot/CSM photograph.
+>
+> Therefore these images alone do **not conclusively prove that ReBAR is actually active for the installed GPU**.
+>
+> That should ultimately be verified from the operating system or from a Boot/CSM capture.
+>
+> ---
+>
+> # 15. Graphics configuration
+>
+> Under:
+>
+> ```text
+> Advanced
+> → System Agent Configuration
+> → Graphics Configuration
+> ```
+>
+> the firmware is set to:
+>
+> | Setting | Value |
+> |---|---|
+> | Primary Display | `PCIE` |
+> | iGPU Multi-Monitor | `Disabled` |
+>
+> That means the discrete PCIe graphics device is explicitly preferred for primary display output.
+>
+> The significant item here is:
+>
+> ```text
+> iGPU Multi-Monitor = Disabled
+> ```
+>
+> If the intention is to keep the Intel integrated GPU active alongside a discrete GPU, this is the one photograph I would flag for closer inspection. On ASUS Intel platforms, this option is normally the setting associated with keeping integrated graphics available when a discrete PCIe GPU is installed.
+>
+> So the captured firmware policy is clearly:
+>
+> ```text
+> primary graphics → PCIe GPU
+> concurrent iGPU → not explicitly enabled
+> ```
+>
+> Whether Linux nevertheless sees the iGPU should be checked separately rather than inferred from this BIOS photograph.
+>
+> ---
+>
+> # 16. Security-related CPU features
+>
+> Visible states include:
+>
+> ```text
+> Intel SMX Technology: Supported
+> Software Guard Extensions (SGX): Disabled
+> ```
+>
+> No Secure Boot, TPM/PTT, Platform Key, or CSM screen was photographed, so their states are **unknown from this image set**.
+>
+> ---
+>
+> # 17. Overall overclock character
+>
+> A concise description of the photographed CPU configuration would be:
+>
+> ```text
+> 100 MHz BCLK
+>         │
+>         ├── XMP I → DDR4-3200 CL16-class memory
+>         │
+>         └── ASUS AI CPU overclock
+>                 │
+>                 ├── 50× light load
+>                 ├── 49× heavy load
+>                 ├── AVX offset currently 0
+>                 ├── 48× maximum cache
+>                 ├── adaptive/automatic core voltage
+>                 └── MCE removes normal power limits
+> ```
+>
+> That is quite different from:
+>
+> ```text
+> fixed 50× all-core
+> fixed 48× cache
+> fixed manual Vcore
+> ```
+>
+> The photographs show the first model, not the second.
+>
+> ---
+>
+> # 18. Reproducibility implications for performance testing
+>
+> For a performance-testing machine, these photographs preserve several variables that could otherwise contaminate comparisons.
+>
+> The particularly important ones are:
+>
+> ```text
+> BCLK                       100 MHz
+> CPU ratio mode             AI Optimized
+> Light/heavy ratios         50 / 49
+> AVX offset                 0
+> Cache max                  48
+> MCE                         Remove All Limits
+> Vcore                       Auto/adaptive
+> XMP                         XMP I
+> Memory                      DDR4-3200
+> Primary memory timings      16-18-18-36...
+> VT-x                        Enabled
+> VT-d                        Enabled
+> SR-IOV                      Enabled
+> Above 4G                    Enabled
+> ReBAR                       Auto
+> Prefetchers                 Enabled
+> HT                          Enabled
+> All CPU cores               Enabled
+> ```
+>
+> The most important variable for benchmark reproducibility is probably **AI Optimized CPU frequency/voltage management**.
+>
+> It is not necessarily a bad configuration. But unlike a manually fixed multiplier/voltage configuration, it means the firmware itself participates in determining the final workload operating point.
+>
+> For a future stock-vs-optimized software comparison, I would therefore preserve this exact firmware state—or document any later change—rather than silently changing CPU overclock policy midway through the experiments.
+>
+> ---
+>
+> # 19. Items that are not visible and therefore remain unknown
+>
+> These photographs do **not** establish the following:
+>
+> - exact ASUS motherboard BIOS release/build;
+> - CSM state;
+> - Secure Boot state;
+> - Intel PTT/TPM state;
+> - boot mode details;
+> - individual CPU C-state configuration;
+> - Intel SpeedStep / Speed Shift configuration;
+> - PL1 / PL2 / Tau numerical values;
+> - load-line calibration level;
+> - VRM switching frequency/current capability;
+> - CPU current limits;
+> - detailed DRAM secondary/tertiary timings;
+> - command rate;
+> - PCIe link-generation settings;
+> - ASPM settings;
+> - PEG slot configuration;
+> - SATA mode;
+> - fan/pump curves;
+> - Q-Fan configuration;
+> - actual OS-visible ReBAR status;
+> - actual OS-visible IOMMU groups;
+> - actual GPU PCIe BAR size;
+> - whether the integrated GPU currently enumerates in Linux.
+>
+> The `DIGI+ VRM`, `DRAM Timing Control`, `Auto Voltage Caps`, and `DRAM REF Voltage Control` sections are visible only as collapsed menus, so their internal values cannot be extracted.
+>
+> ---
+>
+> # 20. Concise baseline record
+>
+> For a short-form baseline, I would preserve the configuration as:
+>
+> ```text
+> ASUS ROG UEFI — 2026-10-05
+>
+> CPU:
+>   Platform: Comet Lake
+>   Cores: all 6 enabled
+>   Hyper-Threading: enabled
+>   Core ratio: AI Optimized
+>   Light/heavy: 50x / 49x
+>   Target turbo: 5.0 GHz
+>   AVX target: 5.0 GHz
+>   AVX offset: 0
+>   Cache target/max: 4.8 GHz / 48x
+>   MCE: Enabled — Remove All Limits
+>   Core/cache voltage: Auto
+>   BCLK-aware adaptive voltage: Enabled
+>   Extreme over-voltage: Disabled
+>   BCLK: 100.00 MHz
+>
+> Memory:
+>   Capacity: 32 GiB
+>   XMP: XMP I
+>   Frequency: DDR4-3200
+>   Visible primary timings: 16-18-18-36...
+>   DRAM voltage: 1.35 V
+>   VCCIO: Auto (~1.168 V observed)
+>   SA voltage: Auto (~1.152 V observed)
+>
+> CPU features:
+>   Hardware prefetcher: Enabled
+>   Adjacent cache-line prefetch: Enabled
+>   SGX: Disabled
+>   VMX/VT-x: Enabled
+>
+> PCI/IOMMU:
+>   VT-d: Enabled
+>   IOMMU pre-boot behavior: Enabled
+>   Above 4G Decoding: Enabled
+>   ReBAR: Auto
+>   SR-IOV: Enabled
+>
+> Graphics:
+>   Primary display: PCIe
+>   iGPU Multi-Monitor: Disabled
+>
+> Idle BIOS snapshot:
+>   CPU: 4.1 GHz
+>   Ratio: 41x
+>   Temperature: 30 C
+>   Vcore: 1.021 V
+>   DRAM: 3200 MHz / 1.343 V
+>
+> ASUS AI prediction:
+>   SP: 72
+>   Cooler: 155 pts
+>   5 GHz non-AVX Vreq: 1.412 V @ L4
+>   5 GHz AVX Vreq: 1.462 V @ L4
+>   4.8 GHz cache Vreq: 1.332 V @ L4
+>   Heavy non-AVX: 4931 MHz
+>   Heavy AVX: 4708 MHz
+>   Heavy cache: 4884 MHz
+> ```
+>
+> # 21. Overall assessment
+>
+> The photographs capture a coherent performance-oriented setup:
+>
+> - all CPU cores and Hyper-Threading available;
+> - both CPU prefetch mechanisms enabled;
+> - XMP DDR4-3200 active;
+> - CPU and cache overclocking active;
+> - Intel power limits removed through MCE;
+> - virtualization and IOMMU functionality enabled;
+> - Above-4G, ReBAR support and SR-IOV prepared;
+> - discrete PCIe graphics explicitly prioritized.
+>
+> The two items I would particularly preserve as explicit baseline facts are **AI Optimized 50/49 CPU behavior** and **iGPU Multi-Monitor being disabled**. Those are easy details to forget later and materially change how the machine behaves.
+>
+> Nothing visible in the photographs looks like an accidental partially-disabled CPU configuration: all cores, SMT, prefetchers, VMX, VT-d, Above-4G and the performance memory profile are active. The configuration is clearly intentionally performance-oriented rather than close to motherboard defaults.
+>
+> This should work well as the BIOS-state section of your NixOS/pre-optimization baseline. If you take photos of the **Boot, CPU power-management, DIGI+ VRM, DRAM timings and Q-Fan pages**, I can extend this into a nearly complete firmware configuration record rather than just the portions captured here.

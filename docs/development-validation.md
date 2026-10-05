@@ -1,5 +1,12 @@
 # Development validation
 
+> Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
+> /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
+> Earlier VMX-disabled observations below are historical. Actual Android
+> emulator acceptance remains open. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
+
+
 Enter the pinned development shell with `nix develop .#default`. GCC, Clang,
 debugger and build tools belong to this environment; clangd remains owned by
 Home Manager. Open project tooling from the intended environment and generate

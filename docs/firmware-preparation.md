@@ -1,5 +1,12 @@
 # Firmware preparation
 
+> Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
+> /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
+> Earlier VMX-disabled observations below are historical. Actual Android
+> emulator acceptance remains open. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
+
+
 Observed motherboard: ASUS ROG STRIX Z490-E GAMING, revision 1.xx.
 BIOS reports 3201 with embedded date 2024-11-20. The vendor publication date
 can differ from this embedded date; do not treat them as interchangeable.
