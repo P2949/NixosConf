@@ -16241,3 +16241,14 @@ reconstruction-rescue-pass.json and reconstruction-rescue-pass.log.
 No host reboot/activation. Next: evaluated desktop Disko source decision, then
 focused/fullchecks and final reconstruction/offline suite. Physical hardware,
 workloads/soak/freeze still open; do not mark the entire objective complete.
+
+## Evaluated Disko source-of-truth change — 2026-10-05
+
+After terminal reconstruction PASS, installer Disko input now uses
+`desktopSystem.config.disko.devices`, with the existing mkForce virtual-device
+override. One-expression change only; no new module/framework or weakening of
+actual-desktop/runtime independence. Full reconstruction derivation evaluation
+session41850 exited0, producing4x7n27m1k6422dg0z8fcgcb9a41982dr. No recursion
+or type-complexity failure. nixfmt and git diff --check passed.
+Next: full flake checks, then final reconstruction and offline heavy suite;
+this evaluated harness has not yet passed execution. Host session preserved.

@@ -4,7 +4,9 @@
 explicit heavy test; ordinary flake checks evaluate it but do not execute it.
 
 The installer receives a new 96 GiB sparse virtual disk and the production
-Disko layout, changing only the virtual device identity. It creates GPT, 4 GiB
+Disko layout from `desktopSystem.config.disko.devices`, changing only the
+virtual device identity. This consumes the desktop's merged module configuration
+rather than independently importing the raw host layout. It creates GPT, 4 GiB
 ESP, 32 GiB swap and the Btrfs persistence islands. A test-only password hash
 uses the production `/persist/secrets/<username>-password-hash` contract.
 

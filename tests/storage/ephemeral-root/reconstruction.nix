@@ -35,7 +35,7 @@ pkgs.testers.runNixOSTest {
   nodes.installer = { lib, ... }: {
     imports = [
       inputs.disko.nixosModules.disko
-      { disko.devices = (import ../../../hosts/desktop/disko.nix).disko.devices; }
+      { disko.devices = desktopSystem.config.disko.devices; }
     ];
     disko.enableConfig = false;
     disko.devices.disk.main.device = lib.mkForce diskDevice;
