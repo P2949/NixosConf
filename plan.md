@@ -24411,3 +24411,180 @@ Target is substantial full-pass RAM evidence with healthy desktop headroom,
 not whole-installed-RAM testing. No concurrentCPU test; GUI preserved.
 Inspect complete pattern log/mlock/exit/guards, memorypressure/swap and
 post-kernel evidence before acceptance. No reboot or userapp termination.
+
+## RAM early evidence and PR synchronization — 2026-10-06
+
+SameRAM PID152959 remains live;20GiB allocation/mlock confirmed. Early
+log reached SolidBits after comparison and SequentialIncrement patterns
+reportedok. This is progress, not fullpass. Roughly8GiB available; sampled
+memorypressure averages0. Commander/GUI retained. Root-private
+ram-20g-hardware-limits/early-system-observation.json captured11:34:36UTC,
+explicitly early-run NOTprelaunchbaseline: no exposedEDACcontroller
+counters, failedunitsempty, session1Waylandactive. Cannot claim EDACzero
+errors without exposedcounterevidence.
+
+DraftPR7 updated with completedCPU900.38s/12workers/peak81C/zero thermal
+throttle and activeRAM, removing outdatedCPU-pending interpretation.
+CI37457177789 confirmedin_progress on9688893e1eb7cc01a84539f8a21ed69f2b91ef49.
+Retain sameCIhandle; earliergreen not exactcurrenthead acceptance.
+Local ledger remains pending nextsubstantiveresult to avoid polling commits.
+
+## Real-project PIE lifecycle probe prepared — 2026-10-06
+
+Read installedUE5.8.2 LevelEditorSubsystem.h/.cpp declarations for
+EditorRequestBeginPlay/EndPlay and IsInPlayInEditor. Prepared and syntax
+checked ~/.cache/nixos-validation/final-candidate-pie-probe.py using actual
+AI_Gavin_Project configuredmap, map/world/actor assertions, asynchronous
+Slate callback, actualPIE observed-state120s hold, endrequest/statecheck,
+60s start/30s end bounds and private JSON report. No sourceasset saves.
+Not launched while RAM PID152959 remainslive. This prepares lifecycle
+evidence only; interactiveediting, broad build, ordinary editor exit and
+representativeworkflow stillrequired. Do not treat automatedPIE as human
+interaction or claim120s substitutes entire sustainedworkload scope.
+
+## PIE harness acceptance-state review; current CI PASS — 2026-10-06
+
+Before any execution, corrected preparedPIEprobe transient success state:
+mapload records map_loaded only; success staysfalse until120s actualPIE
+and endstate verified, terminal flag distinguishes pending/result. Error
+cleanup requests endplay. Installedengine implementation confirms beginplay
+uses active viewport and actualPlayInEditor worldtype; endplay requests
+normalendmap, observedpredicate is IsPlayingSessionInEditor. Probe still
+not launched; no interactiveworkflow claim. Syntaxchecked.
+
+CI37457177789 authoritativelycompleted/success on
+9688893e1eb7cc01a84539f8a21ed69f2b91ef49; pendinglocal ledger is not covered.
+RAM samePID152959 live beyond5minutes, SolidBits progressing, no terminal
+receipt yet. Preserve original test; do not restart due polling intervals.
+
+## Longer real-project Blender render prepared — 2026-10-06
+
+Read acceptedfinal-blender/render.json to reuse actual
+~/Development/Blender/mirror_techproof_v006_persistent_wipe.blend,33objects,
+1920x1080, RX9070XT HIP-only. Existing12.6673s/64sample smoke staysaccepted.
+Prepared syntax-checked ~/.cache/nixos-validation/sustained-blender-project.py:
+1024samples, adaptive sampling disabled, fullresolution, explicitHIP-only
+CPUoff, sourcehash before/after assertion, separatePNG and privateJSON.
+Settings changed only in memory; no save of blend/preferences. Actual
+duration/device/errors must be inspected after execution, not inferred
+from samplecount. This will cover longer render, not interactive editing
+or whole representativeworkflow. Not launched duringRAMtest.
+RAM samePID152959 live at436s, about8GiB available, pressure averages0.
+No competingheavyload, no reboot, no sourceasset modification.
+
+## RAM same-process verified wait — 2026-10-06
+
+AuthoritativePID152959 confirmedlive twice thisturn, at488s then571s.
+SolidBits setting/testing advanced97→133; logprogress demonstrates work
+rather than relyingon stale lock/state. At571s MemAvailable8501944KiB,
+SwapFree33295436KiB, pressure averages0, CPU57C, no terminalreceipt.
+Keep original20GiB fullpattern loop running; no parallelUE/Blender/build,
+no artificialduration cutoff, no RAMPASS untilterminal completeevidence.
+This is verifiedwait; physical/workload/freeze objective remainsactive.
+
+## RAM supervisor and process verified live — 2026-10-06
+
+Same unifiedexecsession61486 polled: stillrunning/nooutput; authoritative
+memtesterPID152959 live at621s and711s. SolidBits advanced155→194.
+At711s available8491212KiB, swapfree33295436KiB, pressure averages0,
+CPU58C. No terminalreceipt or replacementtest. Continue original fullloop,
+keeping heavyworkloads idle and GUI intact. Next action depends terminal
+pattern completion, not the observation timeout. Ledgerlocalpendingresult.
+
+## RAM pattern progress beyond prior partial attempts — 2026-10-06
+
+SamePID152959 authoritativelylive at921s; fullpatternlog inspected.
+StuckAddress, RandomValue, XOR/SUB/MUL/DIV/OR/AND comparisons,
+SequentialIncrement, SolidBits and BlockSequential all reportok.
+Checkerboard nowinprogress. Previous largeattempts had notcompleted
+SolidBits, so this is newpattern evidence, not a rerunclaim.
+Available8489708KiB, swapfree33295436KiB, pressure averages0, CPU66C.
+Remainingpatterns/fullterminal stillrequired; noRAMPASS yet. No heavy
+parallelwork or reboot. GUI remainsretained. Localledger pendingterminal.
+
+RAM continuation verified at1073s on originalPID152959: available8541932KiB,
+swapfree33295436KiB unchanged, pressure averages0, CPU64C. Checkerboard
+was stillinprogress in thisturn's pattern inspection; no terminalreceipt.
+Commander and session1 active. Keep samefullloop running, no reboot or
+heavyparallelwork. This is verifiedwait, not a new stabilityPASS.
+
+RAM continuation: Checkerboard reportedok, BitSpread inprogress at1127s;
+originalPID152959 confirmedlive again at1222s. Available8513176KiB,
+swapfree33295436KiB, pressure averages0, CPU62C. Remainingpatterns and
+terminal/post-system checks stillrequired. No testrestart or heavyoverlap.
+
+RAM verifiedwait: originalPID152959 live at1268s and1352s; pattern
+work advancing, no terminalreceipt. Available8531940KiB, swapfree
+33295436KiB unchanged, memorypressure averages0, CPU63C. Preserve
+samefullpass and noheavyoverlap; no stabilityPASS or reboot claimed.
+
+RAM pattern update: BitSpread passed; BitFlip inprogress at1406s.
+SamePID152959 confirmedlive again1492s, available8512956KiB, swapfree
+33295436KiB unchanged, pressure averages0, CPU67C. Failedunitsempty,
+session1Waylandactive. Fullterminal/remainingpatterns stillpending.
+Keep same20GiB loop running withno competingheavyworkload or reboot.
+
+RAM verifiedwait at1620s: samePID152959 live, BitFlip work advancing
+(last inspectedpattern109 at1539s), available8503068KiB, swapfree
+33295436KiB unchanged, pressure averages0, CPU61C. No terminalreceipt;
+no replacementtest, artificialstop, or heavyparallelwork. Fullpasspending.
+
+RAM same-process verifiedwait1751s: PID152959 live, BitFlip advanced
+through167 at1671s; available8494732KiB, swapfree33295436KiB unchanged,
+pressure averages0, CPU62C, no terminalreceipt. No restart/heavyoverlap.
+
+RAM verifiedwait1879s: originalPID152959 live, BitFlip advanced259;
+available8509968KiB, swapfree33295436KiB stable, pressure averages0,
+CPU67C, no terminalreceipt. Continue fullpattern pass, no heavyoverlap.
+
+RAM verifiedwait2095s: originalPID152959 live across three observations,
+BitFlip advanced280→354. Available8477448KiB, swapfree33295436KiB stable,
+pressure averages0, CPU64C. Commander/session1 active. Fullpass pending,
+no restart/parallelheavyload/reboot.
+
+RAM verifiedwait2219s: originalPID152959 live; BitFlip advanced373 at
+2139s. Available8501784KiB, swapfree33295436KiB stable, pressure averages0,
+CPU62C. No terminalreceipt; preserve original fullpass/noheavyoverlap.
+
+RAM newpattern evidence: BitFlip nowreportsok; WalkingOnes inprogress.
+OriginalPID152959 confirmedlive41m29s after repeatedsameprocess polling.
+Lastsample2439s available8535400KiB, swapfree33295436KiB stable, pressure
+averages0, CPU66C. Remainingpatterns/terminal/postsystem checks required.
+No reboot, replacementtest or competingheavyload.
+
+RAM verifiedwait2625s: originalPID152959 live, WalkingOnes work advancing
+(last observed36 at2537s), available8516864KiB, swapfree33295436KiB stable,
+pressure averages0, CPU64C. Remainingpatterns andterminal pending.
+No competingheavyload, restart or reboot.
+
+RAM newpattern evidence: WalkingOnes reportsok; WalkingZeroes running.
+OriginalPID152959 confirmedlive2772s; available8520504KiB, swapfree
+33295440KiB, pressure averages0, CPU64C. Remainingwritepatterns/full
+terminal andpostsystem stillrequired. Samepass retained, no reboot.
+
+RAM verifiedwait2937s: originalPID152959 live, WalkingZeroes advanced47
+at2854s; available8523692KiB, swapfree33295440KiB stable, pressure
+averages0, CPU59C. No terminalreceipt; fullpasspending, no restart or
+competingheavyload/reboot.
+
+## Substantial20GiB RAM full-pass acceptance PASS — 2026-10-06
+
+OriginalPID152959 terminal; root-private ram-20g-hardware-limits/receipt.json
+and completepatternlog inspected. Start11:32:32.501213UTC, elapsed
+3036.550295083s (50m36.55s), exit0, no stop,20GiB allocated/locked,
+one complete loop, actualpl4test-active closure, unchangedboot33d53799.
+All16 enabledpatterns ok: StuckAddress/RandomValue, CompareXOR/SUB/MUL/
+DIV/OR/AND, SequentialIncrement, SolidBits, BlockSequential, Checkerboard,
+BitSpread, BitFlip, WalkingOnes, WalkingZeroes. LogendsDone, nofailurelines.
+Optional8/16bit writepatterns not enabled in this pinnedbinary/run; do not
+claim those ran. Before/after24thermal counters all0. Peak79C; initial
+available29505132KiB, minimum8323716KiB, final29570220KiB. Initialswapfree
+33296524KiB→33295440KiB:1084KiB growth, below guard. No matching new
+MCE/hardware/OOM/amdgpu fault/reset/timeout in kernel journal since start.
+Commander active, failedunitsempty, session1Waylandactive. EDAC counters
+not exposed; don't claim EDAC zero from absence.
+
+Accept substantialtested20GiB completepattern scope, not allinstalledRAM
+or exhaustiveOC stability. Earlier24/22GiB receipts remain incomplete.
+CPU15minute and substantialRAM gates nowaccepted, advancing realUE/Blender
+workloadcriticalpath. No reboot, closinguserapps, or newboot deployment.

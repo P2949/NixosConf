@@ -85,11 +85,15 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    candidate, not exhaustive OC stability or physical boot/resume acceptance.
    Measured AIO pump/fans function; post-load coolant snapshots do not
    establish load-time warmup or contact. No firmware/voltage changes.
-   Previous24/22GiB RAM passes stopped at headroom/swap guards; substantial
-   full-pass RAM acceptance remains open. A separate20GiB/one-loop memtester
-   run is now active, with mlock, headroom/swap, critical/throttle, cooling and
-   power guards; no RAM acceptance claimed yet.
-2. Complete the active substantial RAM pass; CPU15minute validation accepted.
+   Previous24/22GiB attempts remain incomplete. The separate20GiB/one-loop
+   memtester pass completed in3036.55s: all16 enabled patterns ok, exit0,
+   mlock successful, no guard stop, all24 thermal counters unchanged0,
+   peak79C, minimum available8323716KiB and swap growth1084KiB. No matching
+   new kernel faults or failedunits; session1Wayland active. Accept substantial
+   tested-memory full-pass scope, not all installed RAM or exhaustive stability.
+   EDAC controller counters are not exposed on this host.
+2. CPU15minute and substantial20GiB RAM validation accepted on test-active
+   candidate. Continue representative workloads before soak/freeze.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
