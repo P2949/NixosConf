@@ -20970,3 +20970,20 @@ verificationlog and posthealth, not exit0 afterguardstop. Runtime125W trial
 not yet declarativelydurable: after validation implement boot/resume policy,
 preview activation and test withoutreboot; final stockbaseline needs this
 new powerpolicy explicitlyrecorded. Desktop remainsactive; no reboot.
+
+## User duration correction:10–15minutes, existing trial retained — 2026-10-06
+
+User explicitly rejects30minutes as overkill and requests10–15minutes.
+This supersedes earlier guide/duration criterion for this CPUvalidation.
+Choose15minutes/900s and retain the same running12worker all-methods
+verification process,125W package policy and80C safety guard. Do not restart
+and discard alreadyelapsed work. Private stop-at-15-minutes.py captures
+PID129596 startticks to avoid signalling reusedPID, observes existing
+samples and gracefullyterminates whole stressgroup at900s; exits if original
+receipt/process alreadyterminal. Timerunifiedsession23855, no reboot.
+Original supervisor still records its original1795s PASSpredicate, so its
+boolean alone is not current user-duration acceptance. Preserve original
+receipt, and separately evaluate actual≥900s, expected durationstop, zero
+verification errors, no thermal/cooling/policy guardstop and posthealth.
+Do not call shorter run equivalent to30minute endurance proof; it satisfies
+the explicitly revised15minute criterion if evidence passes.
