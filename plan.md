@@ -24143,3 +24143,22 @@ this interval, not the unsampled earlierfailedrun or thermalsteadystate.
 NoVcore or actualpumpRPM/coolant/contactmeasurement obtained. Desktop
 remainedactive. No loweredlimit/ratio/voltage, no reboot; investigate AIO
 telemetry/heattransfer and avoid manufacturingacceptance fromshortduration.
+
+## Exclusive AIO telemetry measurement — 2026-10-06
+
+Read pinnedCommanderCore.get_status implementation beforeuse; it reads
+RPM/temperatures throughwakecontext. Avoided concurrentUSBowner: no load
+running, scheduled45s restartfailsafe, stoppedkeeper, one get_status with
+pinnedkeeperPythonenv/firmwaremajor2 under12stimeout, finally restarted
+keeper. No dutycommand fromdiagnostic, disconnectfinally. Unified42127
+exit0, telemetryexit0, restoreexit0; active/state reverified, failsafetimer
+stopped afterward. This was a controlleddiagnostic servicestop/restart,
+not a spontaneouscontrollerfailure; Waylandactive.
+
+Rootprivate600 cpu-125w/aio-telemetry.json: pump2687rpm, fanports4/5/6
+2359/2372/2329rpm, ports1/2/3 zero, watertemperature29.4C. Zeroports
+may be unpopulated; no wiringfault conclusion without connectionevidence.
+Singlepostloadsample afterdiagnosticcooldown does not establish coolant
+underfailedstressload, heattransfer/contact, sensoraccuracy or fullstability.
+This replaces unknownRPM with measuredobservation atthatinstant, while
+15minuteCPUgate remainsOPEN. No newstress/firmware/voltagechange/reboot.
