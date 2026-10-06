@@ -24357,3 +24357,57 @@ Acceptance dependsfull900s/verification/nohardwareerrors/throttling, not
 crossing80C. Precondition/script/log/samples/receipt remainprivate600;
 no packagepolicy/ratio/voltage/coolingthresholdchange. Ledger/statuslocal
 pendingterminaloutcome, no prematurePASS/freeze.
+
+## Next RAM validation prepared — 2026-10-06
+
+Prepared and syntax-checked, not started: root-private
+run-memory-test-20g-hardware-limits.py, memtester20GiB/one full loop.
+Tests about64% of installed RAM, with greater desktop headroom than
+prior incomplete22/24GiB attempts. Current MemAvailable about28GiB;
+recheck before launch. Preserve3GiB headroom/256MiB swap-growth guards,
+mlock requirement, cooling and bounded timeout. Replace old80C cutoff
+with verified100C critical boundary and paired thermal-throttle counters.
+Supervisor refuses concurrent stress-ng. CPU prerequisite still running;
+no RAM acceptance claimed, user apps preserved, no reboot.
+
+## Development-validation thermal provenance corrected — 2026-10-06
+
+Corrected false historical wording that attributed80C to coretemp.
+Added current125W/15minute/direct-user criterion override to that document,
+retaining original interrupted-run observations and linking current status.
+Prepared RAM supervisor now records initial/final memory, swap-free and
+pressure samples privately, with125W readback guard. Not launched while
+CPU PID144260 remains live. No matching recent kernel hardware/MCE/OOM/GPU
+fault events found in scoped15minute journal query.
+
+## PR and exact-head CI reconciled — 2026-10-06
+
+LiveGitHub CI37456067075 completed/success on
+c9bb1a9441545fc641804d1dff6bb8b09a18bc0b. Does not certify current
+local documentation deltas or incomplete physical gates. DraftPR7 body
+updated: user supersedes80C cutoff, hardware-evidence15minute test pending,
+paste/contact not prerequisite, DarkSouls functional useracceptance and
+observed post-exit governor restoration accepted with sourcebinding limit.
+CPU PID144260 stilllive at608s,78C,120.22W; checkedcpu0core/package
+throttle counters0, failedunitsnone. No parallel RAM/heavy workload.
+Keep trial running to original15minute duration; no earlyPASS.
+
+## CPU125W15minute acceptance PASS; RAM pass launched — 2026-10-06
+
+Authoritative cpu-125w-hardware-limits15/receipt.json and complete stress.log
+reviewed: start11:16:48.543842UTC, elapsed900.380193542s, exit0, no stop,
+peak81C, bothlimits125000000uW, actualpl4test-active closure, unchangedboot
+33d53799-a016-48ce-8754-8da64a76f7f0. Stressor reports full900s,12CPU
+workers passed,0failed/skipped/untrustworthy. All24 before/after core/package
+thermal-throttle counters0. Kernel since start has no matching hardware/MCE/
+OOM/amdgpu fault/reset/timeout. Commander active; failedunitsnone; session1
+Wayland active. Accept exact user-selected15minute CPU validation scope.
+No claim exhaustiveOC stability, measured coolant causality, physicalresume
+or newboot deployment. Original80C cutoff histories remain incomplete only.
+
+Launched separate root-private20GiB/one-loop RAM supervisor, session61486,
+after CPU terminal. Available29495300KiB, swapfree33296524KiB before launch.
+Target is substantial full-pass RAM evidence with healthy desktop headroom,
+not whole-installed-RAM testing. No concurrentCPU test; GUI preserved.
+Inspect complete pattern log/mlock/exit/guards, memorypressure/swap and
+post-kernel evidence before acceptance. No reboot or userapp termination.

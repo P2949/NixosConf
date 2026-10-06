@@ -78,15 +78,18 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    remains generation37. Physical boot/resume remains pending.
    Earlier80C cutoff stops were incomplete tests, not proven overheating or
    hardware faults. User explicitly superseded the arbitrary80C criterion;
-   block/paste history is not a prerequisite. A new isolated15-minute trial
-   is running at125W, using Intel/coretemp100C critical limit, paired thermal
-   throttle counters, verification/errors, cooling/power/conflict guards and
-   temperature/power trends. Its terminal outcome is pending.
+   block/paste history is not a prerequisite. The isolated15-minute125W trial
+   passed:900.38s elapsed,12 workers passed/0 failed, peak81C, all24 thermal
+   counters remained0, bothlimits125W, no guard stop or targeted new kernel
+   faults. This accepts the user-selected15minute CPU scope on the test-active
+   candidate, not exhaustive OC stability or physical boot/resume acceptance.
    Measured AIO pump/fans function; post-load coolant snapshots do not
    establish load-time warmup or contact. No firmware/voltage changes.
    Previous24/22GiB RAM passes stopped at headroom/swap guards; substantial
-   full-pass RAM acceptance remains open.
-2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
+   full-pass RAM acceptance remains open. A separate20GiB/one-loop memtester
+   run is now active, with mlock, headroom/swap, critical/throttle, cooling and
+   power guards; no RAM acceptance claimed yet.
+2. Complete the active substantial RAM pass; CPU15minute validation accepted.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR

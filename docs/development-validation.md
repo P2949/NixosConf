@@ -1,5 +1,13 @@
 # Development validation
 
+> Current correction, 2026-10-06: the user adopted 125W long/short package
+> limits and a 15-minute CPU verification scope. The previous 80°C test
+> cutoff was an agent-selected criterion, not a coretemp hardware limit or
+> proof of overheating. It is superseded by hardware/correctness evidence;
+> coretemp reports a 100°C critical limit. Historical attempts below retain
+> their original results. Current candidate and acceptance state belong in
+> [status](status.md); paste/contact history is not a prerequisite.
+
 > Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
 > /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
 > Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
@@ -138,7 +146,7 @@ representative gameplay, HDR, controller or final-candidate acceptance.
 
 A planned 30-minute stress-ng CPU/all-method verification run on 2026-10-05
 used 12 workers at nice 19, with five-second sensor checks and an automatic
-stop at the conservative 80 C high-temperature boundary exposed by coretemp.
+stop at an agent-selected 80 C cutoff; coretemp did not define that cutoff.
 It stopped after about five seconds when sampled temperature reached 80 C.
 No throttle-counter increases or matching new kernel hardware/thermal errors
 were observed; cooling remained active and temperature returned to about 30 C.
