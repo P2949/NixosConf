@@ -24661,3 +24661,47 @@ experience; priorbatchrender cannot establish thatscope. Asked actualdevice
 applicability StageUSB/controller/Bluetooth/HDRVRR/nativegames to avoid
 inventingunusedrequirements. These aremissing observations/preferences,
 not deploymentapproval. Independentdocumentation/reviewwork continues.
+
+## Completed workload evidence retained and PR synchronized — 2026-10-06
+
+DraftPR7 body updated from livepriorbody with fullRAM/longerBlender/PIE/
+broaderUEbuild acceptance and remaininginteractive/applicability/freeze
+gates. CurrentCI37465058365 observedrunning on2372e7e4854c27b4c9a31b1246f45280b3d99914,
+not prematurelyaccepted. BlenderPID162310 stilllive/nativeWayland with
+actualproject; userobservation and actualdeviceuse questions pending.
+
+Copied8 completedworkload receipt/report/log artifacts into rootprivate
+/persist/nixos-readiness-20261005/completed-workloads-20261006/, directory
+700/files600, preserving homeoriginals. Includes Blender render/outer
+receipt/log, PIEreport/editorlog, UErebuild outerreceipt/coverage/log.
+This is retainedvalidationevidence, not canonicalfreezemanifest or external
+backupfreshness acceptance. No source/configpolicy change or reboot.
+
+## Current closure identity and retained-artifact integrity verified — 2026-10-06
+
+All8 retained completedworkload artifacts SHA256-match home originals;
+privatecopy-integrity.json records individualmatches. Localpersist copies
+are not the independentVentoybackup. Currentoffline evaluation of dirty
+documentation-only worktree succeeds: normalpl4iy6fdvgjanswwwvvvja42p17p40zd
+and persistent4rkvhfwj2vvj932ck5hp2izvrs65dp2f unchanged. Thus recent
+documentation changes do not require differentruntime closures. No
+activation/bootdefaultchange or freeze certification implied.
+CI37465058365 nowterminalsuccess on2372e7e4854c27b4c9a31b1246f45280b3d99914.
+Currentlocalledger remainsoutside thatexactcommit. BlenderPID162310 still
+live about5minutes; editing/deviceapplicability replies pending. Before
+freeze stillrequired interactiveworkflows/recoveryprovenance/freshness/
+soak/fullfinalsourcebinding. No reboot proposed before independentworkdone.
+
+## Recovery provenance additional receipt reconciliation — 2026-10-06
+
+Inspected rootlevel namedISOreceipts outside earlierreadinessdirectory:
+/persist/nixos-stable-refresh-iso-receipt-20261005.json confirms d55nyISO,
+1496678400bytes, expected52e3496c...SHA; desktop-iso-build JSON confirms
+drv/output buildidentity only. Neither records physicalmedia boot/date/
+read-onlyMP600/subvolumeinspection. Ventoybackup artifactnames contain
+backup/copy/restore evidence, not identifiedphysicaldrillreceipt. Older
+unifiedguide references requiredread-onlydrill but supplies no matching
+terminalphysical receipt at inspectedlocations. Scope-specific conclusion,
+not proof noevent everoccurred. Exactphysicaldrill remainsunverified;
+retainedcurrentprocedure read-only/noDisko/noformatting. No newreboot
+scheduled while pendinginteractive andotherpre-reboot work.
