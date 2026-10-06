@@ -20718,3 +20718,33 @@ physicalrootchain remains accepted for that artifact, not claimed for a future
 coolingcandidate. Scope relevantrevalidation to actualchangedcoolingpolicy,
 retainacceptedroot/activation/reconstruction evidence for unchangedlogic.
 No reboot/sessioninterruption.
+
+## Tuned cooling candidate test activation and sustained test executing — 2026-10-06
+
+Prior turn progress: flakesession45545 terminalexit0/allcheckspass, both cooling
+candidates built session91494 exit0. Dryactivation restarted onlyCommander,
+kernel/normalinitrd same as accepted0p67xd; GCrootsreadiness-cooling-normal/
+persistent retain lgkijm9r3377z50lqbk7cf6h1zfjl4x9 /017hw90zb373629alxdgh4pnx0gwlkx8.
+Initial testsession66858 handle disappeared after externalboot; inspectedlive
+instead of blindly restarting. Previousbootjournal proves testactivation
+finished00:20:04 into lgkijm9..., laternewboot33d53799-a016-48ce-8754-
+8da64a76f7f0 came upold generation37/0p67xd policy. No agent scheduled that
+additionalboot. /tmp artifacts disappeared; do not reconstruct lostlogs as
+retainedreceipts. Newexternalcommitfdf63d3 preserves intendedhostpolicychange;
+clean sourcebeforecurrentobservations.
+
+Revalidated dryactivation onlyCommander, then testactivated existinglgcandidate
+session28845 exit0. Live high50/delay0,low45/30s,poll0.5; bootIDsame and
+Waylandactive,failedunitsempty. Originalprofile/bootdefault not changed yet.
+Private0600 tuned-cooling-reactivation.log. Physicalrootchain remainsaccepted
+for old bootartifact; this onlycoolingchange does not replace rootlogic tests.
+
+Actual sustainedstress-ng0.21.01 --cpu12 --cpu-methodall --verify --timeout30m
+--metrics-brief atnice19 executing session47715. Unrestrictedworkers,notCPUcap;
+0.5sCPUsensorsampling,killprocessgroup at80C/inactivecooling/1830stimeout.
+Initial25.6s CPU69–70C,fan100/pump100,serviceactive. This is liveprogress,not
+terminalpass. Persistentuserprivate workinglogs/receipt destination:
+~/.cache/nixos-validation/tuned-cpu-20261006. Capture rootprivate terminal
+receipt/log/telemetry afterprocess finishes; re-pollsamehandle,neverrestart
+merely for timeout. No firmware/guardchange or reboot/sessionrestart.
+RemainingRAM/workloads/recoveryprovenance/backupfreshness/soak/freeze stillopen.

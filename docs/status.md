@@ -14,7 +14,7 @@ passed Flake checks on exact reviewed head
 `1f96e0d3696d7f3f566819ddc5c83ed866b6f838`. Documentation successors need
 their own CI result; this does not certify a future head.
 
-## Current candidates and physical boot
+## Accepted boot candidates and physical history
 
 Generation37 is installed. Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
@@ -28,7 +28,7 @@ store artifacts. Reinstallation is unnecessary unless runtime source changes.
 Physical normal→persistent-root→normal chain is ACCEPTED. First normal:
 boot`d7c64889-aac3-4d09-8d14-5add9050cea3`, root300, resetcount6.
 Persistent-root: boot`c6316fb4-f649-44b0-a8f6-8c4ae75be117`, same root300/UUID
-and both sentinels retained, no reset increment. Current return-normal:
+and both sentinels retained, no reset increment. Accepted return-normal:
 boot`36b6a76b-44bb-44c7-894c-ea52a060e538`, fresh root302,
 UUID`8ec15d12-a1c8-4e40-8539-d97bde501f76`, resetcount7. Root-local sentinel
 removed, persistent sentinel retained. Identity/credentials, persistent mounts,
@@ -69,9 +69,15 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 
 ## Open hard gates and next actions
 
-1. Resolve CPU/power/cooling conditions before repeating heavy workloads.
-   Pump100% and fan60/100% commands are not actual RPM/airflow evidence.
-   Physical cooler confirmation is pending; do not weaken the80C guard.
+1. Complete sustained validation of the tuned cooling policy. User confirms
+   H150i Elite Capellix pump/fans/airflow with mechanical ramp delay. Earlier
+   response diagnostic passed real editor/map startup at72C from60% idle duty.
+   Source fdf63d3 adopts high50C/delay0,low45C/30s,poll0.5s. Test-active normal
+   candidate`lgkijm9r3377z50lqbk7cf6h1zfjl4x9`, persistent candidate
+   `017hw90zb373629alxdgh4pnx0gwlkx8`, GC-protected. Kernel/initrd unchanged;
+   activation preview restarts only Commander. Boot default still accepted
+   generation37/0p67xd; do not call tuned policy durably deployed yet.
+   Guarded30-minute12-worker CPU test is executing; no terminal pass claimed.
 2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; actual Android Java project/accelerated AVD; native/Proton games,
