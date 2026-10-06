@@ -81,8 +81,10 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    generation37/0p67xd; do not call tuned policy durably deployed yet.
    Guarded30-minute12-worker CPU trial stopped at80C after457.98s: verification
    errors0, throttle counters unchanged, but required duration incomplete.
-   Live package long/short limits4095.875W; user baseline-power preference pending.
-   No power limit or thermal guard change made. The24GiB RAM attempt stopped at
+   User adopted125W baseline on2026-10-06. Both runtime package long/short
+   limits now125W with verified readback; timewindows unchanged. Guarded
+   30-minute12-worker verification is running; result and durable boot/resume
+   deployment remain pending. The80C thermal guard is unchanged. The24GiB RAM attempt stopped at
    the3GiB desktop-headroom guard after496.96s, peak79C; incomplete, not passed.
    The separate22GiB pass also stopped after718.36s at the256MiB swap-growth
    guard, peak79C. Neither completed; substantial RAM gate remains open.

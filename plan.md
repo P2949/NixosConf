@@ -20937,3 +20937,36 @@ root runbook still described completed sentinels/sequence as staged and
 remaining: corrected to accepted root300/count6→root302/count7 receipts,
 explicitly no repeatgeneration37 bootsequence. Reusable procedure retained
 with completedstatus. No acceptance expanded or runtime behavior changed.
+
+## Current-source CI terminal success — 2026-10-06
+
+Prior turn verifiedwait on exactlive GitHubrun37447553370. Same run now
+authoritatively completed/success on
+db93568a2fc2a314ca97bee1ceb260b95736f414. Flakechecks ran after checkout
+and Nixinstallation. This validates that source, not unfinished physical
+CPU/RAM/workload/recovery/soak/freeze gates and not any later source change.
+Active Wayland and Commander rechecked; no local stress process restarted.
+Ledger kept local pending next substantive change to avoid recurring
+documentation pushes cancelling CI or requiring an endless receiptpushloop.
+PR remainsdraft; no merge/tag/manifest/completion claim.
+
+## User adopts125W baseline; guarded runtime validation — 2026-10-06
+
+Explicit user reply adopts and validates125W. This resolves the previous
+CPUbaseline preference blocker; no goalblocked transition was completed
+in the interrupted preceding turn. Apply actualpackage policy, not a capped
+substitute workload presented as acceptance of unrestrictedpolicy. Root
+package-0 powercap enabled1, nameslong_term/short_term verified. Bothlimits
+changed4095875000→125000000uW and readbackverified; originals retained
+private600 cpu-125w/power-policy.json. Timewindows unchanged55967744/2440us.
+Writes rollback to originals on apply/verifyerror; no firmware/voltage change.
+
+Same pinned12worker stress-ng all-methods/verify30minute workload now
+runs nice19 under rootprivate cpu-125w/validate.py, unifiedsession63539.
+Sample coretemp0.5s; stopat80C, coolinginactive, limitdeviation or1830s.
+Wholeprocessgroup termination plus10s killfallback. Logs/samples/receipt600.
+No RAMload/compilation concurrent. Acceptance requires full duration, clean
+verificationlog and posthealth, not exit0 afterguardstop. Runtime125W trial
+not yet declarativelydurable: after validation implement boot/resume policy,
+preview activation and test withoutreboot; final stockbaseline needs this
+new powerpolicy explicitlyrecorded. Desktop remainsactive; no reboot.
