@@ -20908,3 +20908,18 @@ Private600 gaming-inventory-20261006/receipt.json preserves limitedscope.
 No game launched, save modified, native game substituted, GPU workload
 added or user application closed. Actual gameplay/controller/audio/HDR/VRR
 requirements remain open, as does sustained CPU/RAM acceptance.
+
+## Authoritative scope correction: Android/Gradle NOT NECESSARY — 2026-10-06
+
+User explicitly states this machine will do no Android tooling or Gradle
+work and requests marking it unnecessary. This direct instruction overrides
+earlier attached-guide Android requirements and historical OPEN entries.
+Android Studio, SDK/Gradle provisioning, realJavaAndroid project and
+acceleratedAVD boot/interaction/restart are NOT APPLICABLE, not pending
+and not failed. Withdraw the project-location question; no response, tooling
+installation, license acceptance, project creation or emulator test needed.
+Physical VMX/KVM accepted evidence remains valid for general virtualization.
+Updated currentstatus and development/firmware runbooks accordingly; retain
+original quoted guides/history for provenance without treating theirAndroid
+requirements as currentgates. Other CPU/RAM, applicable realworkloads,
+recovery/soak/freeze/merge/tag gates remain unchanged and incomplete.

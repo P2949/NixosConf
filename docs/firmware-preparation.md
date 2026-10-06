@@ -2,8 +2,8 @@
 
 > Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
 > /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
-> Earlier VMX-disabled observations below are historical. Actual Android
-> emulator acceptance remains open. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
 > for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
 
 
@@ -36,8 +36,9 @@ On 2026-10-05 the user selected retaining BIOS 3201/current ME. No firmware
 update is planned; the newer packages above remain historical reference only.
 Capture OC/RAM/power/virtualization settings for the retained baseline.
 VMX is now enabled and physical KVM initialization passed after the user
-maintenance boot. Actual Android emulator and hardware/workload stability
-validation remain open; another firmware reboot is not required for capture.
+maintenance boot. Hardware/workload stability validation remains open;
+Android validation is not applicable. Another firmware reboot is not required
+for capture.
 No firmware packages have been flashed.
 
 ## Retained-baseline settings capture

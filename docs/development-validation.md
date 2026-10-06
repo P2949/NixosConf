@@ -2,8 +2,8 @@
 
 > Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
 > /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
-> Earlier VMX-disabled observations below are historical. Actual Android
-> emulator acceptance remains open. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
 > for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
 
 
@@ -30,13 +30,14 @@ The preparation C++20 smoke compiled and ran a standard-library program;
 clangd built its AST/index with zero errors using the exact wrapper query.
 Final validation of the activated system and actual projects remains pending.
 
-## Android virtualization gate
+## Android tooling — not applicable
 
-The post-firmware normal boot exposes accessible `/dev/kvm`; QEMU KVM
-initialization passed on the physical host. Actual accelerated Android emulator
-boot/project acceptance remains open. No SDK/AVD was found in the inspected
-`~/Android`, `~/.android` or `~/Development` locations; this is scoped discovery,
-not proof that no SDK exists elsewhere.
+On2026-10-06 the user explicitly confirmed this machine will not perform
+Android or Gradle work. Android Studio, SDK provisioning, Java Android
+projects and accelerated AVD/emulator validation are not required and do not
+block baseline acceptance. The earlier project-location request is withdrawn.
+Physical VMX/KVM initialization remains accepted independent evidence; no
+Android tooling was installed or configured for this validation.
 
 ## Physical workstation preparation evidence
 

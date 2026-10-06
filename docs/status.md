@@ -90,12 +90,11 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Retain all guards and arrange stable headroom for a substantial full pass.
 2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
-   Blender; actual Android Java project/accelerated AVD; native/Proton games,
+   Blender; native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
-   where used. KVM initialization is not Android application acceptance.
-   Fresh scoped discovery found no Studio/SDK/AVD/Gradle project in inspected
-   declarations, PATH, launchers and Development/Downloads; actual project
-   location requested. This is not a claim of global absence.
+   where used. Android tooling, Gradle projects and AVD/emulator validation
+   are NOT APPLICABLE by explicit user instruction on2026-10-06: this machine
+   will not perform Android work. No Android setup or project input is needed.
    Installed Dark Souls Remastered/app570940 and Proton Experimental provide
    a real Proton candidate. No native game identified in inspected manifests
    or controller observed in current kernel input enumeration; actual play
