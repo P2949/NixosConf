@@ -20858,3 +20858,19 @@ diagnostic scope, test-active versus boot-default candidates, incomplete
 CPU thermal and RAM headroom/swap trials, and retained guards. No validation
 claim expanded or new runtime behavior introduced. Prior turn made actual
 progress by preserving terminal RAM results; no RAM process is running now.
+
+## Current-system general C++ development smoke — 2026-10-06
+
+Scoped discovery found no generalC++ project in Development outsideUnreal;
+this is not global absence. On test-active lgkijm9r3377z50lqbk7cf6h1zfjl4x9,
+pinned offline default development shell compiled C++20 ranges/span/sort/
+accumulate with Clang, Wall/Wextra/Werror; executable asserted expected
+ordering/sum and returned0. Home-Manager clangd checked the exact compiler
+compilation database with scoped query-driver and reported all checks
+completed0errors. Unifiedsession57354 exit0. Private700 parent/600 source,
+script/log/database/receipt under ~/.cache/nixos-validation/cpp-20261006.
+No source/input/runtime configuration changed. Desktop/cooling stayedactive.
+This completes current-system general toolchain smoke only; representative
+actual projects/university workflow, CPU/RAM thermal/memory gates, Android
+and other explicit workload requirements remain open. No repeated heavy
+CPU/RAM test, no reboot, baseline power preference stillpending.

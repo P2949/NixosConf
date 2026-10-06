@@ -60,7 +60,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
   Editor/map attempt THERMAL ABORT at84C after6s under the80C guard.
 - Actual Blender project HIP render passed on final candidate:1920x1080,
   64samples,12.6673s, source unchanged. Interactive/sustained work remains open.
-- C++/clangd preparation and synthetic Gamescope/MangoHud stack passed.
+- General C++20 compile/run and scoped clangd compilation-database check
+  passed on the test-active cooling candidate; actual project workflows remain
+  open. Synthetic Gamescope/MangoHud stack passed.
   Representative final workflows/games remain open.
 - Silent PCM via current HDMI3 PipeWire default passed. StagePro enumerates
   without an active sink; intended audible/reconnect workflow is unaccepted.
