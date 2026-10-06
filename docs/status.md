@@ -89,7 +89,12 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    still125W. Zero worker errors do not override incomplete duration/guardstop.
    Later /proc evidence shows a user-launched Dark Souls game overlapped
    both CPU trials. These are combined-load observations, not isolated CPU
-   cooling tests. Wait for quiet conditions before new validation loads.
+   cooling tests. A new guarded isolated15-minute trial now runs after game
+   exit on the test-active125W candidate, with workload/maintenance conflict
+   guards. It stopped at80C after207.56s at about120W, with no conflict
+   guard triggered. The15-minute gate remains open. Post-stop pump2681RPM,
+   three fans2329–2369RPM and coolant29.1C were sampled after cooldown;
+   they do not prove load-time heat transfer. Block/paste history requested.
    Runtime125W remains applied by the test-active declarative service;
    boot deployment, physical resume and thermal acceptance pending.
    Investigate measured load power/voltage/clocks and AIO heat transfer;

@@ -24263,3 +24263,38 @@ terminated. Sourcebinding/representativeness remain explicit atfinalacceptance.
 Postgameavailable24GiB,CPU52C backgrounddesktop; no newstressjobstarted
 before verifyingquietperiod. Keep125Wand80Cguard, isolated15minuteCPU
 trial next when gameabsent/maintenanceinactive conditionsverified.
+
+## Isolated125W15minute trial started aftergameexit — 2026-10-06
+
+Newconditions verified game/Unreal/Blender/build/RAMstressabsent, GC/scrub/
+fstrimservicesinactive, startingCPU50C. This supersedes attributiondefect
+in prior combinedgame+CPU trials; no userapplications closed. On current
+pl4iy6fdvgjanswwwvvvja42p17p40zd test-activecandidate, actualsame12worker
+all-methods/verify15m CPUload now runs undernice19, session91921.
+Private700 cpu-125w-isolated15/600 script/precondition/log/samples/receipt.
+Power125Wreadbackguard,80Cthermalguard, coolinghealth,930stimeout, plus
+conflictinggame/editor/render/build/memtest and maintenanceservice guards.
+Powerenergydeltas retained; desktopbackgroundpreserved, not claimed zero
+backgroundwork. NoRAMtest/heavybuildconcurrent, no changedvoltage/ratio,
+no reboot. Full900sduration/verification/posthealth needed beforeacceptance.
+Ledger/statuslocalpendingterminalresult to avoidrepeatedCIpushcancellation.
+
+## Isolated125W trial thermalstop; physicalcontact history requested — 2026-10-06
+
+SamePID140930 authoritativelyterminal, cpu-125w-isolated15/receipt.json:
+start10:49:43.645720UTC, elapsed207.563902s, peak80C, stopthermal_80C,
+exit0, passfalse, actualpl4candidate/both125Wlimits. No conflict/maintenance
+guardtrigger; gameabsent distinguishes earliercombinedload. Atstop energy
+derivedpackage119.343W. Stresslog12passed/0failed, metricsuntrustworthy0
+doesnot override incomplete900sduration. Thus gameoverlap is not sufficient
+to explainthermalfailure; do not claim precise cause from thesedata.
+
+PostloadAIOsample10:54:50.375098UTC, about99s afterstop: pump2681rpm,
+fanports4/5/6 2366/2369/2329rpm, water29.1C, otherports0. This is cooled
+postloadreading, NOT simultaneousCPU80C/coolant29C proof. Exclusiveowner
+with45s restorationtimer, boundedread, finallyrestart; exit0restore0,
+keeperactive, failsafetimerstopped, Waylandactive, failedunitsnone.
+No cutoff/ratio/voltage/powerchange orreboot, no unchangedstressretry.
+Asked user whenblock/pastelastmounted/changed and knowncontactissues
+after softwarepower/RPMdiagnostics; no shutdown/disassembly requested.
+Physicalcontact/actualCPUvoltage stillunmeasured; CPU/RAMgatesOPEN.
