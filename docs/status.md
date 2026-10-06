@@ -83,9 +83,12 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    errors0, throttle counters unchanged, but required duration incomplete.
    User adopted125W baseline on2026-10-06. Both runtime package long/short
    limits now125W with verified readback; timewindows unchanged. Guarded
-   15-minute12-worker verification is running per user duration correction;
-   result and durable boot/resume
-   deployment remain pending. The80C thermal guard is unchanged. The24GiB RAM attempt stopped at
+   The15-minute12-worker125W
+   trial stopped at thermal80C guard after295.43s, sampled peak83C, bothlimits
+   still125W. Zero worker errors do not override incomplete duration/guardstop.
+   Runtime125W remains applied; durable deployment and acceptance pending.
+   Investigate measured load power/voltage/clocks and AIO heat transfer;
+   retain80C guard and avoid unchanged-load retries. The24GiB RAM attempt stopped at
    the3GiB desktop-headroom guard after496.96s, peak79C; incomplete, not passed.
    The separate22GiB pass also stopped after718.36s at the256MiB swap-growth
    guard, peak79C. Neither completed; substantial RAM gate remains open.

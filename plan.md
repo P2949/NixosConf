@@ -24080,3 +24080,30 @@ Markdownlocaltargets16 verified, gitdiffcheckpassed after normalizing
 quoted trailing whitespace; nixfmtCI processed62files/0changes exit0.
 Fullflakechecks deferred until
 ongoingCPUtrialterminal to avoid concurrent compilation contaminating it.
+
+##125W trial thermal stop before revised15minute target — 2026-10-06
+
+Sameprocess129596 authoritativelyterminal; timerexited because process/
+receiptterminal, not an observationtimeout. cpu-125w/receipt.json records
+startUTC2026-10-06T10:14:47.167066+00:00, elapsed295.429672s, exit0,
+peak83C, stop_reasonthermal_80C, bothlimits125000000uW, passfalse.
+Halfsecond sampling caught83C, so80Cguard has overshoot; cutoffnotraised.
+Stresslog12workerspassed/0failed, metricsuntrustworthy0 does not override
+thermalstop or incomplete15minute duration. Originalstresslog30mintimeout
+is historical configuredtimeout; revised900s timer never firedbeforeguard.
+
+PoststopCommanderactive/pid2888/NRestarts0, fanhigh100%, pump100%
+commanded, CPU59C atfirstcheck; Waylandactive, failedunitsnone, journal
+since trialstart no targetedOOM/MCE/hardware/thermal entries. Allobserved
+24core/package throttlecounters0; this is posttestreading, not a newly
+captured pairedbefore/aftermeasurement. No simultaneous RAM/buildload.
+
+Private600 post-observation.json records powercaplimits/windows, hwmon
+sensor inventory and postload2s packageenergy delta≈50.91W with ongoing
+desktopactivity. This is cooldown/background observation, NOT actual
+stressload power/voltage or proof of effectivePLenforcementunderload.
+No Commander RPM/coolantmeasurement from these sysfsdevice names;
+physical pump/fanfunction userreported, heattransfer/blockcontact unknown.
+125Wremainsruntimeapplied perchosenpolicy, not durablydeployed/accepted.
+No sameconditionsstressrepeat or safetyweakening. Investigateactualvoltage/
+power/clocks/AIOtelemetry before furtherload; CPU/RAM gates remainOPEN.
