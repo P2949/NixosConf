@@ -93,6 +93,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Blender; actual Android Java project/accelerated AVD; native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
    where used. KVM initialization is not Android application acceptance.
+   Fresh scoped discovery found no Studio/SDK/AVD/Gradle project in inspected
+   declarations, PATH, launchers and Development/Downloads; actual project
+   location requested. This is not a claim of global absence.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and

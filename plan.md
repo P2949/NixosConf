@@ -20874,3 +20874,21 @@ This completes current-system general toolchain smoke only; representative
 actual projects/university workflow, CPU/RAM thermal/memory gates, Android
 and other explicit workload requirements remain open. No repeated heavy
 CPU/RAM test, no reboot, baseline power preference stillpending.
+
+## Android application gate scoped discovery — 2026-10-06
+
+Read current development contract: actual Java project, Studio startup,
+acceleratedAVD and interaction/restart required; physical QEMU KVM alone
+is insufficient. Fresh searches found no Android/JDK package declarations
+outside documentation, no Android Studio application launcher in inspected
+user/system application directories, no android-studio/java/adb/emulator/
+sdkmanager on currentPATH, and no Gradle build/settings or SDK/AVD target
+files in inspected Development/Downloads tree excludingUnreal. Documents
+directory does not exist and was explicitly not searched successfully.
+Do not generalize this scoped result to global absence. No tooling downloaded,
+license accepted, application launched or synthetic project substituted.
+Requested actualJavaAndroid project/tooling location; if noneexists, prepare
+a representative project with explicit scope. This missing workload input
+and pendingCPUbaseline preference do not erase remaining acceptance gates.
+Previous turn was progress: current-system C++/clangd evidence recorded.
+No reboot or heavy workload started; desktop preserved.
