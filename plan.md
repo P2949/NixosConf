@@ -24222,3 +24222,44 @@ or restoredpolicy acceptance. No usergame killed/paused or sessionchanged.
 Defer newCPU/RAM/heavybuild untilactualgamefinished and dedicatedconditions
 verified. CPUVcore not exposed by inspectedhwmon: onlyAMDvddgfx621mV
 was found, not CPUvoltage. Failedunitsnone; physicalthermalgate remainsOPEN.
+
+## DraftPR currentstate reconciled; livegame preserved — 2026-10-06
+
+GamePID128769 confirmedlive30m35s; Commander and Waylandactive. No
+newload added. PR7 body now describes test-active declarative125Wclosures,
+acceptedservice/resume-hook/localchecks/CI6431827, pendingcurrentCI
+37451447583 onc11fb0a, user15minutecriterion and bothCPUtrialsoverlapping
+usergame. Includes limited60s measuredpower/clocks and momentaryAIO
+RPM/coolant evidence, incompleteRAMpasses and conditionalnativegaming/
+controller/HDR/VRR. Removed stalepending125Wchoice/unconstrainedruntime
+and oldtest-activeclosures. PRremainsdraft. Recordlocalwithoutcancelling
+liveCI; no reboot, no gameinterference, no acceptanceexpanded.
+
+## Current-source CI PASS; usergame remainslive — 2026-10-06
+
+VerifiedsameGitHubrun37451447583 transitionedin_progress→completed/
+success on exactcommittedc11fb0a86f2304e101efb8592bfb966f6dee43ba.
+No run restarted. SamegamePID128769 live33m20s, Commander/Waylandactive.
+No newCPU/RAM/heavyload, no reboot. CI closes current-source check only;
+quietCPU15minute and substantialRAM fullpass, boot/resume, applicable
+workloads/recovery/freshness/soak/freeze remainOPEN. Ledgerlocalpending
+nextsubstantivechange; noCIreceiptpushloop.
+
+## RealProton gameplay userconfirmed and postexit restoration — 2026-10-06
+
+Userreply everythingworkedperfectly to gameplay/controls/audio/freezes/
+stutterquestion accepted as user-observed functionalgameplay evidence.
+Beforepassivesnapshot, authoritative/proc128769 alreadygone; initial
+snapshotassert correctlyprevented attributingdeadprocessliveobservations.
+FollowupnoDarkSouls/Gamescopeprocess, GameModeinactive; all12policies
+powersave/EPPbalance_performance, failedunitsnone, no targetedGPUreset/
+fault/timeout/MCE/hardware/OOMjournalentries since gamestart. Rootprivate
+live-game/post-exit-observation.json recordsrestoration. Sourcepl4candidate
+current, but sessionbeganbefore its testactivation: functionalProtonplay/
+controls/audio and exitrestoration accepted, not an uninterrupted exactfinal
+candidate session or loggedcleanexitcode/frametimebenchmark. No usergame
+terminated. Sourcebinding/representativeness remain explicit atfinalacceptance.
+
+Postgameavailable24GiB,CPU52C backgrounddesktop; no newstressjobstarted
+before verifyingquietperiod. Keep125Wand80Cguard, isolated15minuteCPU
+trial next when gameabsent/maintenanceinactive conditionsverified.

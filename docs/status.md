@@ -107,7 +107,11 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    are NOT APPLICABLE by explicit user instruction on2026-10-06: this machine
    will not perform Android work. No Android setup or project input is needed.
    Installed Dark Souls Remastered/app570940 and Proton Experimental provide
-   a real Proton candidate. No native game identified in inspected manifests
+   a real Proton candidate. User reports gameplay/controls/audio worked
+   perfectly; observed exit restored GameMode inactive and all12 CPU policies
+   to powersave/balance_performance, with no targeted kernel faults. Session
+   spanned test-activation; uninterrupted final-candidate binding remains open.
+   No native game identified in inspected manifests
    or controller observed in current kernel input enumeration; actual play
    and controller acceptance remain open.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
