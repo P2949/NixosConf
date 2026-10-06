@@ -141,3 +141,11 @@ See [firmware baseline](baselines/pre-optimization/firmware-20261005.md).
 and receipts. Architecture cleanup, module-doc generation and docs moves are
 POST-BASELINE. Optimization-v2, VM variants, distributed builders and other
 experimental ideas start from the accepted baseline tag; optimization remains inert.
+
+## Continuation ownership
+
+The2026-10-06 unified guide is recorded in full near the top of plan.md, with
+source provenance and direct-user overrides. README is now an architectural
+entry point; cooling thresholds and detailed inventories belong to source.
+Formatting/local links passed; source CI and pending validation remain
+separate evidence. Post-tag cleanup and optimization-v2 remain deferred.
