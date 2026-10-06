@@ -24184,3 +24184,41 @@ or bootproven yet; sourcehook alone is not physicalresumeacceptance.
 Boot/systemprofile remainsgeneration37; this is TESTactivation, not boot
 deployment or acceptedfinalbaseline. PreserveearlierGCroots/receipts.
 No reboot, no stressrepeat, no acceptanceexpansion.
+
+##125W policy source validation and generated resume-hook execution — 2026-10-06
+
+Offlinefullflakechecksession35966 terminalexit0, logallcheckspassed.
+Source643182766cfbf9956a618b70cbf1d7dc68edd906. ExactsourceGitHubrun
+37450780620 completed/success. Localformat62files0changes; evaluation/
+Statix/etc checks accepted for thissource, not physicalthermal/soakproof.
+Privateusercache power-policy-flake-check.log retains fulloutput.
+
+Inspected actualgeneratedsleep-actions ExecStop script: onlyresumecommand
+is restartcpu-package-power-limit, no sleep-triggeringoperation. Executed
+that exactscript directlyexit0, powerserviceactive/resultsuccess, both
+limits125000000. This proves generatedhook execution withoutsuspend;
+actualphysicalresume/boot stillunproven. Waylandactive, no reboot.
+Ledger keptlocalpendingnextsubstantivechange to avoidCIreceiptpushloop.
+Currentcommitted6431827 has greenexactsourceCI; futurechanges need
+relevantvalidation. CPUthermal/RAM/applicableworkloadgates remainOPEN.
+
+## Correction: real game overlapped CPU trials — 2026-10-06
+
+Fresh liveprocess audit found user-launched DarkSoulsRemasteredPID128769
+using112% lifetimeCPU, Steamhelpers and browseractivity. Rootprivate
+cpu-125w/game-context.json binds /proc startticks+uptime to
+2026-10-06T10:11:37.071758UTC, earlier than125Wtrialstart10:14:47UTC.
+Thus failed125Wtrial and later60sdiagnostic overlapped realgame; prior
+statements of nootherstress/RAMprocess were narrower and did NOT prove
+quietdedicatedCPUtestconditions. Agent failed to check gameactivity before
+loads. Preserve originalthermalstop receipts; they are real observed
+combinedload outcomes, not isolatedCPU/AIOcapacity proof. Measured125W
+limits and diagnostic121W remain valid for package undercombinedactivity.
+GPU/radiatorambient contribution unmeasured; no causation asserted.
+
+Gamecurrentlylive, Vulkan and MangoHud libraries mapped, GameModeactive.
+This is realgame launch evidence, not interactiveplay/audio/frametime/exit
+or restoredpolicy acceptance. No usergame killed/paused or sessionchanged.
+Defer newCPU/RAM/heavybuild untilactualgamefinished and dedicatedconditions
+verified. CPUVcore not exposed by inspectedhwmon: onlyAMDvddgfx621mV
+was found, not CPUvoltage. Failedunitsnone; physicalthermalgate remainsOPEN.

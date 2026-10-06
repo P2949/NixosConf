@@ -87,6 +87,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    The15-minute12-worker125W
    trial stopped at thermal80C guard after295.43s, sampled peak83C, bothlimits
    still125W. Zero worker errors do not override incomplete duration/guardstop.
+   Later /proc evidence shows a user-launched Dark Souls game overlapped
+   both CPU trials. These are combined-load observations, not isolated CPU
+   cooling tests. Wait for quiet conditions before new validation loads.
    Runtime125W remains applied by the test-active declarative service;
    boot deployment, physical resume and thermal acceptance pending.
    Investigate measured load power/voltage/clocks and AIO heat transfer;
