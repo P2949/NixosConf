@@ -20801,3 +20801,22 @@ swapgrowth>256MiB,CPU≥80C,coolinginactive or2hourtimeout. PreserveGUI with
 ≥4GiBinitialheadroom; no concurrentstressCPUtest. At37.3s available4821708KiB,
 CPU68C; fullRAMresult remainsOPEN. Workingprivateparent700/logs600 inram-24g/
 underreadiness; terminalreceipt600. No reboot or profile/bootdefault changes.
+
+## RAM desktop-headroom stop and guarded substantial retry — 2026-10-06
+
+The original24GiB memtester process is authoritatively terminal, not restarted
+from an observation timeout. Private ram-24g/receipt.json records exit-15,
+496.964s, peak79C, minimumMemAvailable2939976KiB, stop_reason
+desktop_headroom_3GiB, mlock_success true, pass false. This incomplete run
+does not satisfy the RAM gate. Post-stop desktop remains active Wayland;
+no failed units, memory recovered, swap use approximately1.1MiB.
+
+A separate22GiB full-pattern one-pass run now executes under the same pinned
+memtester and unchanged80C/3GiB/swap256MiB/cooling/time guards, session73453.
+Require initial26GiB available; extra desktop reserve addresses the observed
+headroom failure without terminating user applications. This tests most of
+installed RAM, but provides no24GiB or exhaustive physical-memory claim.
+Private run-memory-test-22g.py and ram-22g/ artifacts retain distinct scope.
+Full terminal result and post-test health still required; RAM remainsOPEN.
+CPU baseline preference remains pending, no RAPL write, reboot, boot-default
+change or weakened guard.
