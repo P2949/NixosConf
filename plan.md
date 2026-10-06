@@ -2,6 +2,17 @@
 
 ## Current continuation directive — adopted2026-10-06
 
+**Latest direct-user correction:**80C is not a hardware failure boundary.
+The historical80C aborts are incomplete tests, not proof of overheating,
+instability or bad cooler contact. Withdrawal of that arbitrary acceptance
+cutoff overrides attached-guide instructions to retain it. Current15minute
+125W validation uses Intel/coretemp100C critical limit, thermal-throttle
+counter growth, correctness/errors, cooling/power/workload guards and
+temperature/power trends. Block/paste history is no longer a prerequisite.
+Coolant warming is user-explained behavior; load-time telemetry was not
+measured, so its exact contribution remains unquantified.
+
+
 The unified guide below supersedes competing next-action sections; prior
 ledger remains intact as historical evidence. Physical state/current source
 and docs/status.md override snapshot statements. Direct user instructions
@@ -24298,3 +24309,51 @@ No cutoff/ratio/voltage/powerchange orreboot, no unchangedstressretry.
 Asked user whenblock/pastelastmounted/changed and knowncontactissues
 after softwarepower/RPMdiagnostics; no shutdown/disassembly requested.
 Physicalcontact/actualCPUvoltage stillunmeasured; CPU/RAMgatesOPEN.
+
+## Exactcurrent-sourceCI terminalPASS — 2026-10-06
+
+SameconfirmedliveGitHubrun37453057354 nowcompleted/success on
+504eb2bca93cfdd0099ca4f953d9d86906f09e16. No rerun. SourceCIgate green,
+not physicalthermal/RAM/workload/finalfreeze acceptance. No CPU/RAM
+process restarted or thermalcutoff changed. Block/pastehistoryrequest
+pending; no disassembly/reboot requested or scheduled. Ledgerlocal until
+nextsubstantivechange to avoid endlessCIreceiptpushloop.
+
+## Blocked audit: unresolved physicalthermal condition — 2026-10-06
+
+Threeconsecutivepost-CI goalturns revalidated sameblocker without new
+evidence/statechange: isolated125W15minute trial stops80C at207.56s,
+noCPU/RAMtestlive, allCIterminalgreen. Existingsoftwarepower/RPM/
+clock/energy diagnostics do not establish blockcontact/CPUvoltage/loadtime
+heattransfer. Pendingblock/pastehistory is missingphysicalinput. Do not
+rerunsamefailedload, weaken80Cguard, lowerchosenbaselinewithoutdecision,
+claimshortdiagnosticasacceptance, or boot/disassemblewithoutcoordinating.
+CPUstable prerequisite holdsdependentRAM/heavyworkload/soak/freeze gates;
+no meaningfulsafeindependentrequiredaction identified atthispoint.
+Goalmarkedblocked, notcomplete/paused. Source125Wtestactive/keeper/
+Waylandpreserved; bootdefaultgeneration37 unchanged. Resumeonnewphysical
+information or conditionchange; no userreboot requested. Ledgerlocal.
+
+## User thermal-criterion correction implemented; validation resumed — 2026-10-06
+
+Directuser rejects magic80C boundary and explains coolantwarmup. Acknowledge
+prior error: plan/test80C was treatedas hardwarefailure, blocked oncontact
+without evidence. Historical receipts remainunchanged; classify as deliberate
+criterion-aborted/incomplete, not overheating/unstable/hardwarefault proof.
+Withdrawpastehistoryprerequisite and relatedblocked interpretation. User
+continuation resumesgoal; originalscope retained. Actualcoolantwarmup was
+not captured duringload, so explanation consistent but not quantitatively
+confirmed. No remount/BIOS/reboot request.
+
+PrimaryIntel SKU199311 specs Tjunction100C:
+https://www.intel.com/content/www/us/en/products/sku/199311/intel-core-i510600k-processor-12m-cache-up-to-4-80-ghz/specifications.html
+All7coretemp criticalattributes read100000mC. Newdistinctrootprivate
+cpu-125w-hardware-limits15/ supervisor requires that verifiedcriticalvalue,
+paired24throttlecounter baseline/after, stopsatcritical or countergrowth,
+keeps125Wreadback/cooling/workload/maintenance/time guards. Retains12worker
+all-methods/verify15m, nice19,0.5s temperature/packagepowertrends. Session
+82335live; no competinggame/render/build/RAMload, desktoppreserved.
+Acceptance dependsfull900s/verification/nohardwareerrors/throttling, not
+crossing80C. Precondition/script/log/samples/receipt remainprivate600;
+no packagepolicy/ratio/voltage/coolingthresholdchange. Ledger/statuslocal
+pendingterminaloutcome, no prematurePASS/freeze.

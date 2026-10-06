@@ -71,39 +71,21 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 
 ## Open hard gates and next actions
 
-1. Complete sustained validation of the tuned cooling policy. User confirms
-   H150i Elite Capellix pump/fans/airflow with mechanical ramp delay. Earlier
-   response diagnostic passed real editor/map startup at72C from60% idle duty.
-   Source fdf63d3 adopts high50C/delay0,low45C/30s,poll0.5s. Test-active normal
-   candidate`pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent candidate
-   `4rkvhfwj2vvj932ck5hp2izvrs65dp2f`, GC-protected. The host now declares
-   a125W boot service and resume reapplication; test-activation/readback passed. Kernel/initrd unchanged;
-   activation preview restarts only Commander. Boot default still accepted
-   generation37/0p67xd; do not call tuned policy durably deployed yet.
-   Guarded30-minute12-worker CPU trial stopped at80C after457.98s: verification
-   errors0, throttle counters unchanged, but required duration incomplete.
-   User adopted125W baseline on2026-10-06. Both runtime package long/short
-   limits now125W with verified readback; timewindows unchanged. Guarded
-   The15-minute12-worker125W
-   trial stopped at thermal80C guard after295.43s, sampled peak83C, bothlimits
-   still125W. Zero worker errors do not override incomplete duration/guardstop.
-   Later /proc evidence shows a user-launched Dark Souls game overlapped
-   both CPU trials. These are combined-load observations, not isolated CPU
-   cooling tests. A new guarded isolated15-minute trial now runs after game
-   exit on the test-active125W candidate, with workload/maintenance conflict
-   guards. It stopped at80C after207.56s at about120W, with no conflict
-   guard triggered. The15-minute gate remains open. Post-stop pump2681RPM,
-   three fans2329–2369RPM and coolant29.1C were sampled after cooldown;
-   they do not prove load-time heat transfer. Block/paste history requested.
-   Runtime125W remains applied by the test-active declarative service;
-   boot deployment, physical resume and thermal acceptance pending.
-   Investigate measured load power/voltage/clocks and AIO heat transfer;
-   retain80C guard and avoid unchanged-load retries. The24GiB RAM attempt stopped at
-   the3GiB desktop-headroom guard after496.96s, peak79C; incomplete, not passed.
-   The separate22GiB pass also stopped after718.36s at the256MiB swap-growth
-   guard, peak79C. Neither completed; substantial RAM gate remains open.
-   Desktop/cooling remain active, no failed units or targeted kernel errors.
-   Retain all guards and arrange stable headroom for a substantial full pass.
+1. Validate the selected125W package policy using hardware/correctness evidence.
+   Test-active normal`pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
+   `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
+   power service and generated resume hook/readback passed; boot default
+   remains generation37. Physical boot/resume remains pending.
+   Earlier80C cutoff stops were incomplete tests, not proven overheating or
+   hardware faults. User explicitly superseded the arbitrary80C criterion;
+   block/paste history is not a prerequisite. A new isolated15-minute trial
+   is running at125W, using Intel/coretemp100C critical limit, paired thermal
+   throttle counters, verification/errors, cooling/power/conflict guards and
+   temperature/power trends. Its terminal outcome is pending.
+   Measured AIO pump/fans function; post-load coolant snapshots do not
+   establish load-time warmup or contact. No firmware/voltage changes.
+   Previous24/22GiB RAM passes stopped at headroom/swap guards; substantial
+   full-pass RAM acceptance remains open.
 2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; native/Proton games,
