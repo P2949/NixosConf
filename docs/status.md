@@ -82,8 +82,10 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Live package long/short limits4095.875W; user baseline-power preference pending.
    No power limit or thermal guard change made. The24GiB RAM attempt stopped at
    the3GiB desktop-headroom guard after496.96s, peak79C; incomplete, not passed.
-   A separate22GiB full-pattern pass now executes with unchanged headroom,
-   swap,80C and cooling guards; substantial RAM gate remains open.
+   The separate22GiB pass also stopped after718.36s at the256MiB swap-growth
+   guard, peak79C. Neither completed; substantial RAM gate remains open.
+   Desktop/cooling remain active, no failed units or targeted kernel errors.
+   Retain all guards and arrange stable headroom for a substantial full pass.
 2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; actual Android Java project/accelerated AVD; native/Proton games,

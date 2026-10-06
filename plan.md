@@ -20820,3 +20820,28 @@ Private run-memory-test-22g.py and ram-22g/ artifacts retain distinct scope.
 Full terminal result and post-test health still required; RAM remainsOPEN.
 CPU baseline preference remains pending, no RAPL write, reboot, boot-default
 change or weakened guard.
+
+## Substantial RAM retry swap stop; PR current-state reconciliation — 2026-10-06
+
+The same22GiB memtester PID6953 advanced through pattern counters131→161
+until authoritatively terminal. Private ram-22g/receipt.json: startUTC
+2026-10-06T09:42:01.186067+00:00, exit-15, elapsed718.355675s, peak79C,
+minimumMemAvailable3300676KiB, stop_reason swap_growth_256MiB,
+mlock_success true, pass false. This is incomplete, not RAM acceptance.
+No failure markers had appeared in the completed portions, which cannot
+prove the unfinished full-pattern pass. Both24GiB and22GiB attempts retain
+their original private receipts/logs/samples. No immediate further allocation
+reduction or weakened guard; RAM validation requires a substantial completed
+pass with stable desktop headroom during a suitably quiet period.
+
+Post-stop free reports25GiB available,284MiB swap; memory PSI avg10/60/300
+all0; active Wayland session, Commander active, failed units empty; journal
+since test start has no targetedOOM/MCE/hardware/thermal entries. Private
+0600 ram-22g/post-health.json captures health. Read-only process observation
+shows browser/VSCode consumers; no user application was terminated.
+
+DraftPR7 description reconciled confirmedH150i physical observations,
+test-active tuned candidates versus accepted generation37 boot default,
+457.98s CPU80C guardstop and pending actual125Wbaseline preference, and
+separate incomplete RAM attempts. EarlierCI is not current-head acceptance.
+No reboot, power write, merge, tag, baseline manifest or completion claim.
