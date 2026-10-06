@@ -24628,3 +24628,36 @@ Accept automatedrealprojectmap/PIE/endplay/editor lifecycle; interactive
 editing/representativesession and appropriatelybroadC++build remainopen.
 CI37463127370 confirmedcompleted/success on15fe7705e5be20bc13b2c8609f4c73382ced0767;
 currentlocaldocumentation delta not covered by thatexactheadreceipt.
+
+## Actual Unreal project editor-target rebuild PASS — 2026-10-06
+
+InstalledBuild.txt confirmed; existingSteamFHS Build.sh invoked actual
+AI_Gavin_ProjectEditor LinuxDevelopment -Rebuild, MaxParallelActions2,
+WaitMutex/NoHotReload, nice19. No engine/source/toolchain substitution.
+Supervisor session87245 terminalexit0: start12:36:18.133379UTC, elapsed
+40.240138887s, no guardstop, peakCPU65C, actualpl4closure/unchangedboot.
+LogResultSucceeded, UBT39.93s, UBA36.95s;4actions: sharedPCHcompile,
+Module.AI_Gavin_Project.cpp compile, editorlibrarylink, targetmetadata.
+Unitysource inspected:59includes covers all25actualproject.cpp files;
+missingprojecttranslationunits0. Rebuilt wholeproject module and generated
+code in installedengine context, NOT fullengine sourcebuild.
+EpicClang20.1.8/RockyLinux8sysroot/bundledlibc++ confirmedinlog.
+ProjectGitclean, no sourcechanges; no matchingnew hardware/MCE/OOM/GPU
+faults sincebuildstart, failedunitsempty. Accept broaderprojectbuild gate
+beyond priorone-link incremental. InteractiveUE/Blender sessions remainopen.
+Private unreal-project-rebuild-{receipt,coverage}.json andbuildlog.
+CI37464236863 confirmedsuccess on60d0cdb6482dbe6c2b10a784e868e8e6382f7d55;
+localnewledger not covered by currentexactheadCI. No reboot.
+
+## Actual Blender editing session opened — 2026-10-06
+
+With all heavytests terminal, opened actualproject Blender GUI with factory
+preferences; session50108, compositorPID162310 mapped/nativeWayland.
+Logconfirmsactualblend loaded. ExistingVSCodewindow remainsmapped.
+No automatedsourceedit/save or desktoprestart. Askeduser to useviewport/
+editing normally and report functionalexperience, then exitwithout saving
+if desired. No callablecomputer-use tool exposed for observing humaninput
+experience; priorbatchrender cannot establish thatscope. Asked actualdevice
+applicability StageUSB/controller/Bluetooth/HDRVRR/nativegames to avoid
+inventingunusedrequirements. These aremissing observations/preferences,
+not deploymentapproval. Independentdocumentation/reviewwork continues.

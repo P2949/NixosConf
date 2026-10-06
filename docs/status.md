@@ -94,10 +94,12 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    EDAC controller counters are not exposed on this host.
 2. CPU15minute and substantial20GiB RAM validation accepted on test-active
    candidate. Continue representative workloads before soak/freeze.
-3. Real Unreal interactive editing and appropriately broad build remain open;
+3. Real Unreal interactive editing remains open; editor-target rebuild passed
+   (shared PCH and project unity compile covering all25 project C++ files,
+   link/metadata, Epic bundled toolchain,40.24s, Git-clean).
    configured-map/120s PIE/endplay/normal editor exit passed on the test-active
-   candidate with project Git-clean and no matching new kernel faults. Interactive/sustained
-   Blender interactive editing/viewport (longer1024sample real-project HIP
+   candidate with project Git-clean and no matching new kernel faults.
+   Blender interactive editing/viewport remains open (longer1024sample real-project HIP
    render passed105.21s, source unchanged, no matching GPU faults); native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
    where used. Android tooling, Gradle projects and AVD/emulator validation
