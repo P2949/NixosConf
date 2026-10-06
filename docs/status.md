@@ -94,8 +94,11 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    EDAC controller counters are not exposed on this host.
 2. CPU15minute and substantial20GiB RAM validation accepted on test-active
    candidate. Continue representative workloads before soak/freeze.
-3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
-   Blender; native/Proton games,
+3. Real Unreal interactive editing and appropriately broad build remain open;
+   configured-map/120s PIE/endplay/normal editor exit passed on the test-active
+   candidate with project Git-clean and no matching new kernel faults. Interactive/sustained
+   Blender interactive editing/viewport (longer1024sample real-project HIP
+   render passed105.21s, source unchanged, no matching GPU faults); native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
    where used. Android tooling, Gradle projects and AVD/emulator validation
    are NOT APPLICABLE by explicit user instruction on2026-10-06: this machine

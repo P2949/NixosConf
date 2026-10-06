@@ -24588,3 +24588,43 @@ Accept substantialtested20GiB completepattern scope, not allinstalledRAM
 or exhaustiveOC stability. Earlier24/22GiB receipts remain incomplete.
 CPU15minute and substantialRAM gates nowaccepted, advancing realUE/Blender
 workloadcriticalpath. No reboot, closinguserapps, or newboot deployment.
+
+## Longer actual Blender HIP render PASS — 2026-10-06
+
+After RAM terminal, launched preparedfactory-startup backgroundreal-project
+render alone. Supervisor session52681 terminalexit0: start12:26:39.660623UTC,
+elapsed107.247812148s, no guardstop, peakCPU71C, actualpl4closure, unchanged
+boot33d53799. Renderreport:105.212839011s,1920x1080/100%,1024samples,
+adaptiveoff, RX9070XT HIP enabled, CPUdisabled, outputPNGpresent.
+Before/afteractualprojectSHA bothbc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe.
+Logsavedoutput and ordinaryBlenderquit, exit0. CUDA CUEWwarning was
+nonfatal; actualHIPselection confirmedbyreport, not assumed. No matching
+newkernel GPUreset/fault/timeout/MCE/hardware/OOM since renderstart,
+failedunitsempty, Commander/session1active.
+
+Accept longeractualprojectrender scope; interactive viewport/editing and
+representativeworkflow remainopen, not replaced by this105s batchrender.
+Private artifacts ~/.cache/nixos-validation/sustained-blender-*; no user
+preferences/project saves or reboot. CI37463127370 observedrunning on
+15fe7705e5be20bc13b2c8609f4c73382ced0767; no prematurecurrentCIpass.
+
+## Actual Unreal configured-map PIE lifecycle PASS — 2026-10-06
+
+Preparedprobe executed alone afterBlenderterminal via existingunreal-engine
+SteamFHS wrapper, actualAI_Gavin_Project, temporarySDLwayland, Vulkan,
+unattended ExecutePythonScript; no ansimalloc/globalcompilerchange.
+Session19848 terminalexit0, originalPID161345 gone after ordinaryeditor
+scriptcompletion. Logconfirms SDLwayland/RADV, actualPIEworld creation
+and start, then normalLogExit/SDLTearDown. Reportterminalsuccess true:
+UE5.8.2-56702186, actualFirstPlayableRoom map,28actors, pie_started and
+pie_ended true,120.001425857s actualPIE,14389Slatecallbackframes, elapsed
+120.14467925s. Frames arecallbackcount, not frametimebenchmark/renderFPS.
+ProjectGit remainsclean, no assets saved. Scopedkernel since12:30:47UTC
+no matchingnew hardware/MCE/OOM/amdgpu fault/reset/timeout; Commander
+active, failedunitsempty, session1active. Actualruntimepl4candidate,
+no reboot. Privatefinal-candidate-pie-{probe.json,editor.log,launch.log}.
+
+Accept automatedrealprojectmap/PIE/endplay/editor lifecycle; interactive
+editing/representativesession and appropriatelybroadC++build remainopen.
+CI37463127370 confirmedcompleted/success on15fe7705e5be20bc13b2c8609f4c73382ced0767;
+currentlocaldocumentation delta not covered by thatexactheadreceipt.
