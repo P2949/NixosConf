@@ -77,7 +77,11 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    `017hw90zb373629alxdgh4pnx0gwlkx8`, GC-protected. Kernel/initrd unchanged;
    activation preview restarts only Commander. Boot default still accepted
    generation37/0p67xd; do not call tuned policy durably deployed yet.
-   Guarded30-minute12-worker CPU test is executing; no terminal pass claimed.
+   Guarded30-minute12-worker CPU trial stopped at80C after457.98s: verification
+   errors0, throttle counters unchanged, but required duration incomplete.
+   Live package long/short limits4095.875W; user baseline-power preference pending.
+   No power limit or thermal guard change made. Guarded24GiB memtester pass is
+   now executing separately with desktop-headroom/swap/temperature guards.
 2. Sustained CPU/cooling and substantial RAM stability during a dedicated period.
 3. Real Unreal editor/PIE and appropriately broad build; interactive/sustained
    Blender; actual Android Java project/accelerated AVD; native/Proton games,

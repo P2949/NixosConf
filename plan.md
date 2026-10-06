@@ -20748,3 +20748,56 @@ terminalpass. Persistentuserprivate workinglogs/receipt destination:
 receipt/log/telemetry afterprocess finishes; re-pollsamehandle,neverrestart
 merely for timeout. No firmware/guardchange or reboot/sessionrestart.
 RemainingRAM/workloads/recoveryprovenance/backupfreshness/soak/freeze stillopen.
+
+## Sustained CPU verified wait and RAM tool preparation — 2026-10-06
+
+Previous turn progress: tuned candidate reactivated and actual sustainedCPU
+supervisor started, recorded/pushed59e508a. Revalidated live stressPID2992 and
+workerprocesses; same supervisor samples advance, no terminalreceipt exists.
+At253.6s CPU77C,Commanderactive/fullfan100/pump100. This is verifiedwait,
+not thermalstabilityPASS or justification to restart. Keep80Cguardunchanged.
+
+Prepared memtester4.7.1 from pinnedflake nixpkgs, derivationyxqd5fil...,
+outputbmjj5vj2lh6shj8a22d0xiz7vgh9wgwy. Build/fetchsession42776 exit0,
+12.8KiBcachedownload; no runtimepackage/input/lockchange. Private0600
+memtester-preparation.json preserves full derivation/output. No RAMload started
+concurrently: preserve CPUtest attribution and graphicalsessionheadroom.
+Current31GiBtotal/28GiBavailable/0swapuse. SubstantialRAMtesting stillneeds
+meaningfulduration/zeroerrors and headroom/pressure/thermal/OOM guards during
+its dedicatedperiod; preparingtool is not RAMacceptance. No reboot or policy
+change, no additional accepted-test repetition. Ledger observation local until
+terminalCPUresult/substantive nextdeployment, no prematurebaselinefreeze.
+
+## Tuned-policy CPU thermal abort / live RAPL observation / RAM executing — 2026-10-06
+
+Previous turn verifiedwait: sameCPUprocess/samplesadvanced; not restarted.
+TerminalCPUreceipt nowpresent:457.977s/7m38s,peak80C,thermal_80C stop,
+passfalse. stress-ngreturned0 after requestedtermination and reports12workers
+passed/0failed; guardstop overrides exit0 and is not30minuteacceptance.
+Allcore/packagethrottlecountersunchanged0; no targetedkernelhardware/MCE/
+thermal/OOMmatches. Commanderactive,postloadCPU30C. Private0600 tuned-cpu/
+receipt.json,stress.log,samples.jsonl copiedunderreadiness. Fasterfansaddressed
+startup but not sustainedthermalcapacity under currentunlimitedpowerpolicy.
+No unchangedheavyCPUretry or weakenedguard.
+
+Read-onlypowercap package-0 enabled1, long/shortlimits4095875000uW each
+(4095.875W), longwindow55967744us,short2440us,reportedlongmax125000000uW.
+These are runtimevalues, not a photograph of firmwarePLsettings. Optional
+core/DRAMmaxattributesreturnENODATA61; captured explicitly, not fabricated.
+FirstcollectorstoppedonENODATA; corrected optionalattributehandling without
+powerwrites. Private0600 rapl-observation.json. Kernelprimaryreference:
+https://docs.kernel.org/power/powercap/powercap.html describes constraints in
+microwatts/timewindows and writablepackagepower controls. No controls changed.
+Asked user whether actualbaseline should adopt conservative125Wpackagepolicy
+(reducedsustainedboost/newvalidation) or retainpresentpolicy/investigatecooling.
+Do not silently usea cappedworkload to passoldunlimitedbaseline. Pendinganswer
+is preference aboutactualbaseline, not newpermission for alreadyacceptedtests.
+
+IndependentRAMgate started onlyafterCPUterminal/cooldown. Memtester4.7.1
+24GiB/onefullpass undernice19, session51405, supervisorprivate
+run-memory-test.py. Allocation25769803776bytes/mlocklocked verified; initial
+MemAvailable30057328KiB, require≥28GiBbeforeallocation, stopifavailable<3GiB,
+swapgrowth>256MiB,CPU≥80C,coolinginactive or2hourtimeout. PreserveGUI with
+≥4GiBinitialheadroom; no concurrentstressCPUtest. At37.3s available4821708KiB,
+CPU68C; fullRAMresult remainsOPEN. Workingprivateparent700/logs600 inram-24g/
+underreadiness; terminalreceipt600. No reboot or profile/bootdefault changes.
