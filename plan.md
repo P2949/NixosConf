@@ -20923,3 +20923,17 @@ Updated currentstatus and development/firmware runbooks accordingly; retain
 original quoted guides/history for provenance without treating theirAndroid
 requirements as currentgates. Other CPU/RAM, applicable realworkloads,
 recovery/soak/freeze/merge/tag gates remain unchanged and incomplete.
+
+## Recovery/backup runbook evidence reconciliation — 2026-10-06
+
+Fresh scoped receipt-name review under readiness and Ventoybackup roots
+found build/offline/backup receipts, not exactISO physicalboot/inspection
+proof. Prior guide-reported drill therefore remains provenanceOPEN; no
+reboot or ISO rebuild scheduled solely to fill documentation. Existing
+accepted backup and reconstruction results were contradicted by stale
+present-tense backup-runbook OPEN/activelybuilding paragraphs: corrected
+to terminal accepted evidence and point-in-time freshness atfreeze. Physical
+root runbook still described completed sentinels/sequence as staged and
+remaining: corrected to accepted root300/count6→root302/count7 receipts,
+explicitly no repeatgeneration37 bootsequence. Reusable procedure retained
+with completedstatus. No acceptance expanded or runtime behavior changed.

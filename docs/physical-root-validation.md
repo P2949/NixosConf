@@ -31,14 +31,19 @@ KVM initialization now pass. Firmware photo/runtime evidence is recorded in
 CPU-heavy editor acceptance aborted at84C under the80C guard; review cooling
 and operating conditions before further heavy tests. Preserve the live session.
 
-Remaining-chain sentinels are staged: /root/nixos-readiness-final-root-sentinel
-and /persist/nixos-readiness-20261005/final-persistent-sentinel. Private0600
-final-physical-chain-preparation.json records identities and expected behavior.
-Persistent-root must retain root300 and both sentinels without another reset;
-return-normal must remove root-local sentinel and retain the persistent one.
-This staging is not acceptance. No one-shot boot selection or reboot scheduled.
+The staged generation37 sequence is complete: persistent-root retained
+root300 and reset count6, then return-normal created root302/count7, removed
+the root-local sentinel and retained the persistent sentinel. The private
+preparation, persistent-boot and return-normal receipts are terminal accepted
+evidence, detailed below. No remaining generation37 root-chain reboot is
+required. The tuned cooling candidate is separately test-active with unchanged
+kernel/initrd; see [current status](status.md) for its incomplete load validation.
 
-## Final-policy maintenance window
+## Physical validation procedure (generation37 sequence completed)
+
+The normal/persistent-root/return sequence below is a reusable procedure,
+not a request to repeat accepted generation37 boots. Any genuinely new
+required physical window must be coordinated to preserve user work.
 
 This section supersedes the historical opt-in installation commands below.
 Do not repeat the three successful reset trials. Complete remaining offline

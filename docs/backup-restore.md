@@ -48,7 +48,7 @@ rebuildable caches from unique project assets, local changes and autosaves.
 Inventory paths and repository details remain in root-only receipts rather
 than the public configuration repository.
 
-## Completion evidence still required
+## Backup acceptance criteria
 
 - A destination outside the MP600, with enough capacity for the chosen data.
 - Critical data selection that covers local/untracked/ignored work and useful
@@ -58,8 +58,9 @@ than the public configuration repository.
 - Representative restore from that backup into a separate directory, followed
   by content/hash comparison; preserve the original working data.
 
-A representative Git restore has passed. The broader home backup/restore gate
-remains open until the actual independent backup is available and verified.
+The Git restore and independent Ventoy home archive/integrity/representative
+restore gates have passed. See the terminal evidence below. At final freeze,
+check meaningful changes since the snapshot and back up new work as needed.
 
 ## Source-work scan scope
 
@@ -118,7 +119,8 @@ Private receipts, restored samples, scripts and logs are retained under
 /persist/nixos-ventoy-backup-20261005. This is point-in-time backup evidence;
 new work after snapshot creation requires a later backup before final freeze.
 
-Queued reconstruction session11114 started only after verified receipt and
-clean unmount, source736b0fb. Nix PID1186208 is actively building. This closes
-home archive/integrity/representative restore/unmount gates; it does not close
-reconstruction, physical hardware/workload acceptance or multi-day soak.
+Reconstruction was subsequently completed and accepted; see
+[reconstruction evidence](reconstruction.md). The backup receipt closes its
+home archive/integrity/representative restore/unmount gates, independently
+of hardware/workload acceptance and multi-day soak. No backup or
+reconstruction process is claimed to be running from this historical record.
