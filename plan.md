@@ -24124,3 +24124,22 @@ failedstresspower or motherboardvoltage. Noalteredratio/voltage/limit,
 no newstress workload, no reboot. Source125Wdurability and thermalcause
 stillunresolved; nextdiagnostics need realpower/clocks/AIOtelemetry with
 guards rather than another uninstrumented acceptance retry.
+
+## Instrumented125W60second diagnosis completed — 2026-10-06
+
+Distinct boundeddiagnostic, not repeated15minute acceptance attempt: same
+12workers/allmethods/verify workload,60s, simultaneousread-onlyturbostat
+1s intervals and supervisorpackageenergy0.5s deltas, retain80Cguard.
+StartCPU56C, no otherstress/RAMprocess, Commanderactive. Private700
+cpu-125w-diagnostic60/ with600 script/log/samples/receipt/turbostat/summary.
+Unifiedsession45311 terminalexit0, elapsed60.468s, peak78C, stopnone,
+both125Wlimitsretained. ScopepredicatePASS is diagnosticONLY;15minute
+CPUgate remainsOPEN following earlier295.43s thermalstop.
+
+5–59s energy-derivedpower mean120.526W,max121.330W;59turbostat intervals
+withBusy>90% mean120.493W, busyclockmean4764.441MHz, CoreThrmax0.
+Measuredloadpower approximately121W supports effectivepowerlimiting for
+this interval, not the unsampled earlierfailedrun or thermalsteadystate.
+NoVcore or actualpumpRPM/coolant/contactmeasurement obtained. Desktop
+remainedactive. No loweredlimit/ratio/voltage, no reboot; investigate AIO
+telemetry/heattransfer and avoid manufacturingacceptance fromshortduration.
