@@ -20845,3 +20845,16 @@ test-active tuned candidates versus accepted generation37 boot default,
 457.98s CPU80C guardstop and pending actual125Wbaseline preference, and
 separate incomplete RAM attempts. EarlierCI is not current-head acceptance.
 No reboot, power write, merge, tag, baseline manifest or completion claim.
+
+## Subsystem runbook reconciliation — 2026-10-06
+
+Read authoritative source policy and current development/firmware runbooks.
+Firmware preparation still contained obsolete present-tense VMX-disabled
+and future mandatory firmware-window instructions despite its current banner.
+Corrected those paragraphs to accepted VMX/KVM evidence and explicitly retain
+unknown photo-only settings without an extra capture reboot. Development
+validation now records confirmed cooler observations, earlier-response
+diagnostic scope, test-active versus boot-default candidates, incomplete
+CPU thermal and RAM headroom/swap trials, and retained guards. No validation
+claim expanded or new runtime behavior introduced. Prior turn made actual
+progress by preserving terminal RAM results; no RAM process is running now.

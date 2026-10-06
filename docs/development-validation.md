@@ -199,3 +199,34 @@ and reduced duty after CPU returned40C. Actual RPM/cooling capacity unverified.
 Receipts: /persist/nixos-readiness-20261005/final-unreal (0600).
 Further CPU-heavy acceptance requires reviewing thermal/power/cooling conditions;
 no weaker threshold, capped substitute workload or new firmware policy adopted.
+
+### Cooling trial and substantial RAM validation status (2026-10-06)
+
+The user identifies a Corsair iCUE H150i Elite Capellix and confirms working
+pump/fans, radiator airflow, minimal dust, idle30–35C and mechanical ramp
+delay. These physical observations do not measure actual RPM or establish
+sustained cooling capacity. An earlier-response diagnostic completed actual
+Unreal editor/map startup at72C without100% pre-ramp; interactive PIE and
+sustained acceptance remain open.
+
+Host policy now requests60% idle fans,100% high fans and pump, high50C/delay0,
+low45C/delay30s and0.5s polling. Normal candidate
+lgkijm9r3377z50lqbk7cf6h1zfjl4x9 is test-active; persistent candidate
+017hw90zb373629alxdgh4pnx0gwlkx8 is built and GC-protected. Boot default
+remains the physically accepted generation37. Kernel/initrd are unchanged.
+
+The guarded30-minute12-worker CPU trial stopped at80C after457.98s.
+Zero worker verification errors and unchanged throttle counters do not
+satisfy its incomplete duration gate. Runtime package long/short limits are
+4095.875W each; preference for an actual conservative125W baseline remains
+pending. No power control has been changed or thermal guard weakened.
+
+Separate24GiB and22GiB memtester one-pass attempts allocated and locked
+their requested memory, but stopped after496.96s at the3GiB desktop-headroom
+guard and718.36s at the256MiB swap-growth guard respectively. Both peaked
+at79C; neither completed the full pattern pass. RAM stability remains open.
+The desktop and cooling service remain active, failed units empty and no
+targeted kernel OOM/hardware/thermal errors were observed after the retry.
+Receipts/logs/samples remain private under
+/persist/nixos-readiness-20261005/{tuned-cpu,ram-24g,ram-22g}.
+See [current status](status.md) for changing acceptance classifications.

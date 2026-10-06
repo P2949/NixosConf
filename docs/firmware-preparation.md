@@ -35,9 +35,9 @@ do not establish that prerequisite. ASUS lists MEUpdateTool
 On 2026-10-05 the user selected retaining BIOS 3201/current ME. No firmware
 update is planned; the newer packages above remain historical reference only.
 Capture OC/RAM/power/virtualization settings for the retained baseline.
-Firmware virtualization is currently disabled, preventing physical KVM
-acceptance. Enable VMX in a batched maintenance window before final stock
-acceptance and freeze, then complete hardware/workload stability validation.
+VMX is now enabled and physical KVM initialization passed after the user
+maintenance boot. Actual Android emulator and hardware/workload stability
+validation remain open; another firmware reboot is not required for capture.
 No firmware packages have been flashed.
 
 ## Retained-baseline settings capture
@@ -51,10 +51,11 @@ Before changing VMX, record these firmware values for the retained BIOS/ME:
 - ReBAR and Above 4G decoding.
 
 Runtime frequency or a benchmark cannot establish every firmware setting.
-Values unavailable through a reliable read-only interface remain unknown until
-the batched firmware window; do not invent them from the intended OC settings.
+Captured values are recorded in the firmware observation linked above.
+Values unavailable through a reliable read-only interface remain unknown;
+do not invent them or schedule another firmware reboot only to obtain photos.
 Record before/after values and whether any setting other than VMX changed.
 Changes to CPU/RAM policy require stability validation of that final policy.
 No flash, automatic defaults reset, voltage change or tuning is part of this
-retained-firmware preparation. Enable VMX during the single coordinated window
-after offline acceptance, then verify /dev/kvm on the subsequent normal boot.
+retained-firmware preparation. The coordinated VMX window is complete;
+/dev/kvm access and QEMU KVM initialization have been verified.
