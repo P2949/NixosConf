@@ -96,6 +96,10 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Fresh scoped discovery found no Studio/SDK/AVD/Gradle project in inspected
    declarations, PATH, launchers and Development/Downloads; actual project
    location requested. This is not a claim of global absence.
+   Installed Dark Souls Remastered/app570940 and Proton Experimental provide
+   a real Proton candidate. No native game identified in inspected manifests
+   or controller observed in current kernel input enumeration; actual play
+   and controller acceptance remain open.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and

@@ -20892,3 +20892,19 @@ a representative project with explicit scope. This missing workload input
 and pendingCPUbaseline preference do not erase remaining acceptance gates.
 Previous turn was progress: current-system C++/clangd evidence recorded.
 No reboot or heavy workload started; desktop preserved.
+
+## Real gaming workload discovery — 2026-10-06
+
+Read Steam manifests and library path without account/session data. One
+inspected Steam library at ~/.local/share/Steam contains actual
+DARK SOULS REMASTERED app570940 (StateFlags4), executablepresent,
+Proton Experimental app1493710, Steam Linux Runtime4 app4183110 and
+redistributables228980. No native game identified among these manifests.
+This provides an actual Proton workload candidate, not launch/play proof.
+No Steam process currentlyrunning. Kernelinput enumeration contains
+keyboard/mouse/audio/buttons but no observed gamepad; /dev/input/js*
+glob is empty. Absence of js nodes alone is not proof of no usable controller.
+Private600 gaming-inventory-20261006/receipt.json preserves limitedscope.
+No game launched, save modified, native game substituted, GPU workload
+added or user application closed. Actual gameplay/controller/audio/HDR/VRR
+requirements remain open, as does sustained CPU/RAM acceptance.
