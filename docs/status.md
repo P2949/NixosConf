@@ -75,8 +75,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    H150i Elite Capellix pump/fans/airflow with mechanical ramp delay. Earlier
    response diagnostic passed real editor/map startup at72C from60% idle duty.
    Source fdf63d3 adopts high50C/delay0,low45C/30s,poll0.5s. Test-active normal
-   candidate`lgkijm9r3377z50lqbk7cf6h1zfjl4x9`, persistent candidate
-   `017hw90zb373629alxdgh4pnx0gwlkx8`, GC-protected. Kernel/initrd unchanged;
+   candidate`pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent candidate
+   `4rkvhfwj2vvj932ck5hp2izvrs65dp2f`, GC-protected. The host now declares
+   a125W boot service and resume reapplication; test-activation/readback passed. Kernel/initrd unchanged;
    activation preview restarts only Commander. Boot default still accepted
    generation37/0p67xd; do not call tuned policy durably deployed yet.
    Guarded30-minute12-worker CPU trial stopped at80C after457.98s: verification
@@ -86,7 +87,8 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    The15-minute12-worker125W
    trial stopped at thermal80C guard after295.43s, sampled peak83C, bothlimits
    still125W. Zero worker errors do not override incomplete duration/guardstop.
-   Runtime125W remains applied; durable deployment and acceptance pending.
+   Runtime125W remains applied by the test-active declarative service;
+   boot deployment, physical resume and thermal acceptance pending.
    Investigate measured load power/voltage/clocks and AIO heat transfer;
    retain80C guard and avoid unchanged-load retries. The24GiB RAM attempt stopped at
    the3GiB desktop-headroom guard after496.96s, peak79C; incomplete, not passed.

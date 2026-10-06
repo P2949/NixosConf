@@ -24162,3 +24162,25 @@ Singlepostloadsample afterdiagnosticcooldown does not establish coolant
 underfailedstressload, heattransfer/contact, sensoraccuracy or fullstability.
 This replaces unknownRPM with measuredobservation atthatinstant, while
 15minuteCPUgate remainsOPEN. No newstress/firmware/voltagechange/reboot.
+
+## Declarative125W boot/resume policy implemented and test-active — 2026-10-06
+
+Userselected125W policy now authoritative in hosts/desktop/default.nix.
+Oneshotcpu-package-power-limit.service wantedmulti-user, aftermoduleload,
+requires package-0/enabled1/long_term/short_term identities, writes125000000
+uW bothlimits and verifiesreadback. RemainAfterExit; resumeCommands
+restartsservice to reapply policy aftersleep. No ratio/voltage/timewindow
+change. Failurevisible asfailedservice; thermalvalidation stillOPEN.
+
+Nixfmt0changes, offlineevaluationserviceconfigPASS, normal/persistentbuild
+session60154 exit0. Normalpl4iy6fdvgjanswwwvvvja42p17p40zd, persistent
+4rkvhfwj2vvj932ck5hp2izvrs65dp2f independentlyGCrootedreadiness-power-
+normal/persistent. Closurecomparisonagainstlgkcandidate adds powerunit/
+script; resumehookchangesgeneratedsleepaction. Dryactivateexit0.
+Testactivation61731 exit0 starts powerunit and NetworkManagerdispatcher;
+powerunitactive/exited/resultsuccess, bothlimitsread125000000, service
+restart/readbackPASS. Waylandactive, failedunitsnone. Noactualsuspend/resume
+or bootproven yet; sourcehook alone is not physicalresumeacceptance.
+Boot/systemprofile remainsgeneration37; this is TESTactivation, not boot
+deployment or acceptedfinalbaseline. PreserveearlierGCroots/receipts.
+No reboot, no stressrepeat, no acceptanceexpansion.
