@@ -24107,3 +24107,20 @@ physical pump/fanfunction userreported, heattransfer/blockcontact unknown.
 125Wremainsruntimeapplied perchosenpolicy, not durablydeployed/accepted.
 No sameconditionsstressrepeat or safetyweakening. Investigateactualvoltage/
 power/clocks/AIOtelemetry before furtherload; CPU/RAM gates remainOPEN.
+
+## Read-only hardware power-limit confirmation — 2026-10-06
+
+Pinnedvalidation shell resolved kernel6.18.55 turbostat. Help exit1 is
+helpbehavior, not failedmeasurement. Initial3x1s no-load-injected observation
+exit0 recorded backgroundBusy22–24%,busy4.80GHz,package61.57–62.96W;
+notidle or stressloadpower. OptionalGPU/PSYS perfattributesunavailable.
+No/dev/cpu/0/msr initially, so firsttool guessedTjMax and lackedMSRdecode.
+Loadedmsr diagnosticmodule only (noMSRwrites), then read-only2x1s turbostat
+exit0 with fullhardwaredecode savedprivate600 cpu-125w/turbostat-msr.txt.
+MSR_PKG_POWER_LIMIT0x4283e800df83e8 unlocked: limit1ENabled125W/56s/
+clampENabled; limit2ENabled125W/0.002441s/clampDISabled.
+MSR_PKG_POWER_INFO125WTDP. This confirms registerpolicy, not measured
+failedstresspower or motherboardvoltage. Noalteredratio/voltage/limit,
+no newstress workload, no reboot. Source125Wdurability and thermalcause
+stillunresolved; nextdiagnostics need realpower/clocks/AIOtelemetry with
+guards rather than another uninstrumented acceptance retry.
