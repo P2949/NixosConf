@@ -24884,3 +24884,60 @@ frame-by-frame adaptive refresh. Screenshot overlay is not a benchmark.
 HDR acceptance remains open for Sky: Children of the Light. Native game
 installation and functional gameplay are now complete; natural-exit policy
 restoration/final-source binding remain distinct checks where required.
+
+
+## HDR source activated and current-status reconciliation — 2026-10-07
+
+Root dry activation showed only Home Manager restart. Test activation session1832
+completed exit0; current-system bjxxpsm7f42b909v9gpf48p7pinajc3x. Home Manager
+installed10-bit/vrr1/cm_auto_hdr1 source; Hyprland config errors empty, DP-3
+155Hz/VRRtrue/XRGB2101010/sRGB. Stardew PID15872 continued running.
+Commander actual unit commander-core.service active; an earlier query using
+nonexistent corsair-commander-core returned inactive, not a cooling failure.
+Power unit active/both limits125W; no failed units. Bluetooth masked-runtime
+and soft-blocked. No reboot, compositor restart or boot-default change.
+Latest audio snapshot HDMI3 default with active Firefox and Stardew links;
+Stage sink remains available. No agent audio rerouting occurred. Accepted
+user USB playback remains valid historical functional evidence, not a claim
+that every later stream continues using USB. Preserve current user selection.
+
+Current-status partial-gates section contained superseded Blender/Unreal/audio
+claims; reconciled with accepted receipts and explicit user observations.
+Full offline flake check started for the HDR/Bluetooth/VRR source; terminal
+result pending. GitHub CI4c586ee/e8775f7 passed;4f0cb2f running at inspection,
+5955546 cancelled by successor. Do not label a pending check successful.
+
+Built HDR-policy persistent-root specialisation evaluated to
+/nix/store/8v183hn0p5yv7wf625yj38n6bhsjpxz6-nixos-system-desktop-26.05.20261004.0d9e9b8
+and exists in store. Added independent readiness-hdr-normal and
+readiness-hdr-persistent GC roots via nix-store --add-root --realise.
+Existing accepted/fallback roots retained. No physical boot claim for these
+new closures. The source checks remain running, not a reason to repeat
+accepted hardware stress tests.
+
+
+Local flake check session70259 completed exit0/all checks passed: flake outputs
+evaluated and4 changed check derivations built (desktop evaluation, formatting,
+statix, deadnix); unchanged checks reused. This is not a fresh run of all VM
+packages/reconstruction or hardware stress. CI37694567526 completed success
+on4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76.
+
+Monitor capability read-only inspection: pinned edid-decode (v4l-utils1.32.0)
+reports MSI MAG401QR CTA HDR static metadata type1, SMPTE ST2084/PQ and
+BT2020RGB/YCbCr. Advertised maximum luminance417.710cd/m² and frame-average
+374.834cd/m² are EDID metadata, not measured panel brightness; advertised
+vertical range48–155Hz is not by itself measured active VRR. Full receipt
+~/.cache/nixos-validation/monitor-edid-20261007.txt. No output change.
+Initial offline tool-only build began an unnecessarily broad source dependency
+fetch; cancelled exact nix process22114 with SIGINT, terminalexit1. Retried
+same pinned tool with binary-cache access: session58598 exit0,2.3MiB fetched.
+No system package installation, lockfile change or active workload restart.
+
+Sky/app2325290 files were briefly visible in scoped enumeration, but its
+manifest was absent on subsequent read. Installation completion is unverified;
+no repeated launcher invocation or forced game start while Stardew runs.
+HDR requires an actual supported presentation path, not only the Steam label
+or10-bit output. Existing Proton Experimental script has no matched
+ENABLE_HDR_WSI/DXVK_HDR handling in the inspected launcher text; this does
+not establish lack of support throughout Proton. Research/inspect exact
+game presentation path before configuring per-title HDR launch behavior.

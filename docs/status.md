@@ -9,10 +9,12 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run 37381090051](https://github.com/P2949/NixosConf/actions/runs/37381090051)
-passed Flake checks on exact reviewed head
-`1f96e0d3696d7f3f566819ddc5c83ed866b6f838`. Documentation successors need
-their own CI result; this does not certify a future head.
+[CI run37694567526](https://github.com/P2949/NixosConf/actions/runs/37694567526)
+passed Flake checks on head`4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76`.
+Local offline flake check passed for HDR/Bluetooth/VRR source; changed checks
+were desktop evaluation, formatting, statix and deadnix, with unchanged checks reused.
+The HDR/native-game documentation successors require their own result;
+prior CI success does not certify a later head.
 
 ## Accepted boot candidates and physical history
 
@@ -54,26 +56,34 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 - Independent Ventoy home archive and representative restore, engine supplement,
   and separate secrets actual-recovery evidence reported by the user.
 
-## Partial gates
+## Accepted representative workloads and remaining scopes
 
-- Unreal final-candidate incremental build passed using Epic's toolchain.
-  Editor/map attempt THERMAL ABORT at84C after6s under the80C guard.
-- Actual Blender project HIP render passed on final candidate:1920x1080,
-  64samples,12.6673s, source unchanged. Interactive/sustained work remains open.
-- General C++20 compile/run and scoped clangd compilation-database check
-  passed on the test-active cooling candidate; actual project workflows remain
-  open. Synthetic Gamescope/MangoHud stack passed.
-  Representative final workflows/games remain open.
-- Silent PCM via current HDMI3 PipeWire default passed. StagePro enumerates
-  without an active sink; intended audible/reconnect workflow is unaccepted.
+- Selected125W CPU verification passed15minutes/12workers; peak81C,
+  no correctness failures or thermal-counter growth. Complete20GiB locked
+  memtester pass also passed. Older80C cutoff aborts remain incomplete evidence.
+- Actual Blender HIP render passed1920x1080/1024samples in105.21s,
+  source unchanged. Interactive editing/workspaces accepted by user.
+- Unreal configured map/120-second PIE lifecycle and installed-engine project
+  rebuild covering all25 project C++ files passed. Interactive editing remains
+  open; these checks do not claim a full engine rebuild.
+- Stardew Valley native Linux gameplay accepted by user and running ELF verified.
+  Dark Souls gameplay/controls/audio accepted; uninterrupted final-source binding
+  and natural-exit restoration for the new candidate remain separate scopes.
+- Stage Pro functional USB playback accepted by user with independently observed
+  sink/route. Latest snapshot has HDMI3 default and active Firefox/Stardew streams
+  routed to the monitor; this does not revoke the accepted USB test. Preserve
+  user routing. Stage reconnect/reboot persistence remains separate.
+- HDR policy built and test-activated:10-bit desktop sRGB, automatic fullscreen
+  HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual HDR content and desktop
+  return pending; advertised metadata is not a measured HDR session.
 - Recovery ISO build/hash/Ventoy copy passed; exact physical-drill provenance
   still requires reconciliation with existing evidence.
 
 ## Open hard gates and next actions
 
 1. Validate the selected125W package policy using hardware/correctness evidence.
-   Test-active normal now`2jvq6m083wwg81m718ynwd3c712mw1g5` after Bluetooth-off/
-   VRR policy build and test-activation on2026-10-07. Earlier tested normal
+   Test-active normal now`bjxxpsm7f42b909v9gpf48p7pinajc3x` after Bluetooth-off/
+   VRR/HDR policy build and test-activation on2026-10-07. Earlier tested normal
    `pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
    `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
    power service and generated resume hook/readback passed; boot default
@@ -123,9 +133,10 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    now cm_auto_hdr=1 with10-bit output; monitor reports XRGB2101010/sRGB
    at155Hz withVRR true and no config errors. Actual HDR content/return remains
    untested. Offline build passed: bjxxpsm7f42b909v9gpf48p7pinajc3x;
-   activation pending, test-active system remains2jvq6m083wwg81m718ynwd3c712mw1g5. User confirms Stage Pro
+   test-activation passed; current system isbjxxpsm7f42b909v9gpf48p7pinajc3x. User confirms Stage Pro
    USB playback working and already tested; current PipeWire independently
-   confirms Stage default sink and active Firefox FL/FR playback links.
+   confirmed Stage default sink and active Firefox FL/FR playback links
+   during the accepted USB test; latest snapshot routes playback to HDMI3.
    Functional USB playback accepted; reconnect/reboot persistence separate.
    Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
    VRR remains true at155Hz, source installed by Home Manager.
