@@ -24788,3 +24788,36 @@ HDR remains to enable/validate with actualcontent, no all-dayHDR assumed.
 Currentwpctl StagePro device49exists but onlyHDMI3sink61/default/Firefox
 stream: useraudibleworking accepted, directStageUSBroute notproven.
 Preserve audiblecurrentroute while investigatingprofile/connection.
+
+Workflowpolicy committed/pushed e8775f7; offline normalconfigurationbuild
+started session3820, private workflow-policy-20261007-build.log. No durable
+activation or successfulbuild claim before terminal. Fullobjective resumed
+with actualuser observations, graphicalsession preserved.
+
+## Workflow-policy build/test activation and Stage USB playback accepted — 2026-10-07
+
+Offline normalbuild session3820 terminalexit0: candidate
+2jvq6m083wwg81m718ynwd3c712mw1g5. Dryactivate reviewed: stopBluetooth/
+Commander, reloadDBus, restartHomeManager/polkit/udev, startCommander; no
+compositorrestart. Actualtestactivation session24604 exit0, current-system
+now2j, HomeManager hyprland.lua now8dbph...declaresvrr1. BothRAPLlimits
+125000000uW, powerunit/Commander active, failedunitsempty, session1active,
+VRRtrue atoriginal155Hz. Bootprofile/default notchanged bytestactivation.
+Currentboot hadgeneration37 runtime beforetest: diffremovedBluetooth
+config/unit/obex andaddedchosen125W service/resume policy; priorPLcandidate
+acceptance stillhistoricalexactscope. No newCPU/RAMreruns justforBluetooth.
+
+Bluetooth daemon becameactive followingactivation despite sourceenablefalse;
+rfkill remainedblocked. Appliedruntime mask--now to preventD-Busreactivation
+incurrent session, verifiedmasked-runtime andsoftblocked. SourceBluetooth
+enable/powerOnBootfalse remainsdurable declaration; reboot behaviorpending.
+No permanentruntimefilehack or GUIrestart.
+
+Latestdirectuser says StageUSB alreadytested/used and audiblyplayingrightnow.
+Accept audiblefunctionalUSBplayback; do not request sameconfirmationagain.
+Currentwpctl independentlyconfirms CreativeStagePro analogstereo sink76
+default, Firefoxstream65 FL/FR linkedactive toStageplayback, device49
+USB041e:32b4. PrioronlyHDMI observation historical, not ongoingfailure.
+No forcedroute/profilechange byagent; preserveworkingroute. Reconnect and
+reboot persistence remainseparateunproven scopes ifrequiredbyfinalplan.
+HDR/VRR realcontent and nativeLinuxgames remain applicable/open.

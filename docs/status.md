@@ -72,7 +72,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 ## Open hard gates and next actions
 
 1. Validate the selected125W package policy using hardware/correctness evidence.
-   Test-active normal`pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
+   Test-active normal now`2jvq6m083wwg81m718ynwd3c712mw1g5` after Bluetooth-off/
+   VRR policy build and test-activation on2026-10-07. Earlier tested normal
+   `pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
    `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
    power service and generated resume hook/readback passed; boot default
    remains generation37. Physical boot/resume remains pending.
@@ -116,8 +118,12 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    disabled: source enable/powerOnBoot false, live rfkill blocked/service stopped.
    VRR declared1 and applied live: monitor reports true at3440x1440@155Hz.
    HDR/content and native-game validation remain open. User confirms Stage Pro
-   working, but current PipeWire exposes only HDMI output; direct USB route
-   requires reconciliation. Blender report closes the previous input blocker.
+   USB playback working and already tested; current PipeWire independently
+   confirms Stage default sink and active Firefox FL/FR playback links.
+   Functional USB playback accepted; reconnect/reboot persistence separate.
+   Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
+   VRR remains true at155Hz, source installed by Home Manager.
+   Blender report closes the previous input blocker.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and
