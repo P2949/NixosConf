@@ -26417,3 +26417,29 @@ Build/install log ~/.cache/nixos-validation/final-policy-boot-install-20261007.l
 Next physical window can be one normal boot, then coordinated suspend/resume
 when user available, with no ritual repeat of accepted CPU/RAM/root-chain tests.
 Visual HDR feedback and interactive Unreal remain pending independently.
+
+
+## Coordinated final normal boot authorized — 2026-10-07
+
+User explicitly answered ready now for one normal reboot followed by
+suspend/resume check. Generation38 default independently verified via
+filtered bootctl JSON (no machine-ID fields). Before reboot live/installed
+closure bjxx, both125W limits, Commander/HomeManager/NetworkManager active,
+Hyprland configerrors empty. Private preboot-state.json retained alongside
+ESP boolean checks and machine-ID digest; physical boot ID/root/mounts stored
+privately for comparison. This is preboot evidence, not acceptance.
+Linux supports freeze/mem/disk withdeep selected. Resume hook is implemented
+via sleep-actions.service ExecStop (NixOS resumeCommands), not a guessed
+/etc/systemd/system-sleep or post-resume.service file. Inspect actual generated
+ExecStop script and service timestamps around real suspend/resume after login.
+
+PR7 updated for generation38 installation, HDR MKV output/return evidence and
+conditional root-chain decision. CI6dc7b04 passed;6906fc2 stillrunning at inspection.
+Reboot is now authorized and will be scheduled after recording this handoff.
+On return verify generation38 selected/actualclosure, fresh normalroot/reset,
+private identity equality, persistentmounts, services/session, governor/EPP,
+125W bootreadback, Bluetoothoff,155Hz/10bit/VRR, intendedStageUSBroute.
+Then coordinate actual suspend/resume, observe powerunitrestart/readback and
+GUI/network/audio/Commander return. Do not reboot again to retestrootchain.
+VisualHDR feedback, interactiveUnreal, uninterruptedProton, recoveryprovenance,
+soak/freeze/backup/finalmanifest/exactsuite/merge/tag remain pending.
