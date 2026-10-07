@@ -9,8 +9,8 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run37695517220](https://github.com/P2949/NixosConf/actions/runs/37695517220)
-passed Flake checks on head`c8307a8869aba76ecb40fa89467e9681d69490fe`.
+[CI run37697507796](https://github.com/P2949/NixosConf/actions/runs/37697507796)
+passed Flake checks on head`fa8b015ced221aebb5662d27100d4a2793784a90`.
 Local offline flake check passed for HDR/Bluetooth/VRR source; changed checks
 were desktop evaluation, formatting, statix and deadnix, with unchanged checks reused.
 The HDR/native-game documentation successors require their own result;
@@ -18,10 +18,11 @@ prior CI success does not certify a later head.
 
 ## Accepted boot candidates and physical history
 
-Generation38 is installed as the next-boot default; physical selected boot
-remains generation37. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
+Generation38 is physically booted and selected; normal candidate is
+`bjxxpsm7f42b909v9gpf48p7pinajc3x`, boot`1348b203-5917-42ba-8daf-89abaaaa2bad`.
+Fresh root and private machine-ID equality passed. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
 and persistent-root`8v183hn0p5yv7wf625yj38n6bhsjpxz6` ESP kernel/initrd copies
-match their store artifacts. Boot-only installation passed; no reboot occurred.
+match their store artifacts. Boot-only installation and the coordinated normal reboot passed.
 Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
 | Candidate | Store identity |
@@ -92,7 +93,8 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    `pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
    `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
    power service and generated resume hook/readback passed; boot default
-   is generation38 after boot-only installation. Physical boot/resume remains pending.
+   is generation38. Actual boot and suspend/resume passed: power service
+   restarted on resume, both125W limits retained, Wayland/network/Commander returned.
    Earlier80C cutoff stops were incomplete tests, not proven overheating or
    hardware faults. User explicitly superseded the arbitrary80C criterion;
    block/paste history is not a prerequisite. The isolated15-minute125W trial
@@ -119,7 +121,7 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Blender interactive editing/viewport accepted by user on2026-10-07 across Layout,
    Modeling, UV Editing, Shading and Animation without freezes/crashes (longer1024sample real-project HIP
    render passed105.21s, source unchanged, no matching GPU faults); native/Proton games,
-   controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
+   controller, remaining audible audio/reconnect and visual HDR
    where used. Android tooling, Gradle projects and AVD/emulator validation
    are NOT APPLICABLE by explicit user instruction on2026-10-06: this machine
    will not perform Android work. No Android setup or project input is needed.
@@ -142,8 +144,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    USB playback working and already tested; current PipeWire independently
    confirmed Stage default sink and active Firefox FL/FR playback links
    during the accepted USB test; latest snapshot routes playback to HDMI3.
-   Functional USB playback accepted; reconnect/reboot persistence separate.
-   Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
+   Functional USB playback accepted. Stage sink/profile returned after actual
+   boot and suspend/resume; audible postboot/resume/replug scope remains open.
+   Bluetooth remained inactive/rfkill-blocked after actual generation38 boot;
    VRR remains true at155Hz, source installed by Home Manager. Final root-chain
    repeat is unnecessary: both variants retain identical initrd/kernel/fstab,
    identity/user-generation/persistence contracts and unchanged relevant modules.

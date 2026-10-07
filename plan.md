@@ -26443,3 +26443,38 @@ Then coordinate actual suspend/resume, observe powerunitrestart/readback and
 GUI/network/audio/Commander return. Do not reboot again to retestrootchain.
 VisualHDR feedback, interactiveUnreal, uninterruptedProton, recoveryprovenance,
 soak/freeze/backup/finalmanifest/exactsuite/merge/tag remain pending.
+
+
+## Generation38 physical boot and real suspend/resume accepted — 2026-10-07
+
+Scheduled authorized reboot completed. Actual selected boot entry
+nixos-generation-38.conf, current closure bjxxpsm7f42b909v9gpf48p7pinajc3x,
+boot1348b203-5917-42ba-8daf-89abaaaa2bad differs from preboot. Root changed
+by private btrfs comparison; machine-ID SHA equality true. Detailed root/reset
+log retained in generation38-postboot.json, not a new fullrootchain claim.
+Commander/power/NetworkManager/HomeManager active, Wayland session1active,
+failedunitsnone, power125000000uW both. Bluetooth inactive/softblocked after
+actual boot without prior runtime mask; display155Hz/VRRtrue/XRGB2101010/sRGB,
+configerrors empty. StagePro visible with restoredanalogstereo sink47; HDMI3
+remains user's saved default61. Do not claimStageUSB isdefaultwhenit isnot.
+
+Authorized suspend/resume performed using rtcwake -m no -s30 then
+systemctl suspend. Kernel/systemd slept23:43:12 and resumed23:43:45 local.
+sleep-actions ExecStop restarted cpu-package-power-limit.service, journal
+confirms stop/start, InvocationID changed, bothreadback125W, sameboot.
+Network connectivityfull, Waylandactive/Hyprlandresponsive, Commanderactive,
+failedunitsempty, display155Hz/VRRtrue/10bit, Bluetoothoff retained.
+StagePro restored USB041e:32b4/ALSAcard0/PipeWireanalogstereo sink47;
+PipeWire/WirePlumberactive. A shortened sed audio snapshot omittedStage
+row, initially suspecteddisappearance; fullsnapshot disprovedit, no defect
+claim or configurationfixneeded. Audiblepostresumeplayback notyetobserved.
+AMDGPU MODE1 reset messages occur inresume path; these alone do not mean
+an unsolicited runtimeGPUfault. No such fault claim based on grepwordreset.
+
+Private final-policy-20261007/generation38-postboot.json and
+generation38-resume.json retainexactevidence. Acceptance closes finalpolicy
+physicalboot,125Wboot/resume implementation, Bluetoothoffbootpersistence,
+155Hz/10bit/VRRbootpersistence andStageenumeration/sinkboot/resumereturn.
+Human audibleStagepostboot/resume, visualHDR, interactiveUnreal andProton
+finalcandidate remain distinctworkloadscopes. No additional reboot planned.
+CI6906fc2 run37697178033 andfa8b015 run37697507796 passed.
