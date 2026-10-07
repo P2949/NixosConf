@@ -73,7 +73,7 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
   these checks do not claim a full engine rebuild.
 - Stardew Valley native Linux gameplay accepted by user and running ELF verified.
   Dark Souls gameplay/controls/audio accepted; uninterrupted final-source binding
-  and natural-exit restoration for the new candidate remain separate scopes.
+  is now accepted on generation38; natural exit restored all12 CPU policies.
 - Stage Pro functional USB playback accepted by user with independently observed
   sink/route. Latest snapshot has HDMI3 default and active Firefox/Stardew streams
   routed to the monitor; this does not revoke the accepted USB test. Preserve
@@ -87,8 +87,7 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 
 ## Validation evidence and remaining actions
 
-Remaining hard gates: visual HDR/SDR return; uninterrupted final-boot Proton
-session and natural-exit policy restoration; applicable audible audio persistence;
+Remaining hard gates: visual HDR/SDR return; applicable audible audio persistence;
 recovery-drill provenance; representative multi-day soak; backup freshness;
 frozen-source capture/manifest/exact validation/CI; PR ready/merge/tag.
 Generation38 boot/resume, root-chain decision and Unreal interaction are closed.
@@ -139,8 +138,10 @@ all12 powersave/balance_performance CPU policies passed read-only inspection.
    Installed Dark Souls Remastered/app570940 and Proton Experimental provide
    a real Proton candidate. User reports gameplay/controls/audio worked
    perfectly; observed exit restored GameMode inactive and all12 CPU policies
-   to powersave/balance_performance, with no targeted kernel faults. Session
-   spanned test-activation; uninterrupted final-candidate binding remains open.
+   to powersave/balance_performance, with no targeted kernel faults. Historical session
+   spanned test-activation. New generation38 session accepted by user; GameMode
+   active observed during play, inactive after exit, all12 powersave/EPP
+   balance_performance policies restored, no matching scoped kernel faults.
    Native Linux games, HDR and always-enabled VRR ARE APPLICABLE by user
    confirmation2026-10-07; controller is NOT APPLICABLE. Bluetooth requested
    disabled: source enable/powerOnBoot false, live rfkill blocked/service stopped.

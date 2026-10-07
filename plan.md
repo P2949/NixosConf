@@ -29230,3 +29230,32 @@ Stageaudiblecurrentboot/resume confirmation plus whetherphysicalreplug is
 normalusage; ifnot, replug N/A perguide. Do notforceUSBroute awayfromHDMI.
 No newreboot/suspend/stress/apprepeat. Currenteditor allowedtonaturalexit.
 Protonsession canbelaunchedwhen itdoesnotinterruptuserwork; preserveGUI.
+
+
+## Uninterrupted final-boot Proton and Unreal exit evidence — 2026-10-08
+
+Unreal session24158 terminalexit0; projectGitclean, userinteractiveacceptance
+retained. No forcededitorclose/repeatedtest. DarkSoulsinitialSteamlaunch from
+/etc/nixos failedbwrapchdir becauseFHSenvironmentdoesnotexposethatcwd;
+retriedfromhome usingexistingSteam/App570940/MangoHud/GameModeoptions.
+Launcher session55113, actualsteam_app_570940 window andGameModeactive
+observed. Userconfirms everything/gameplay/controls/audio workedcorrectly.
+No liveconfigurationactivation occurred duringthissession; closurebjxx and
+physicalboot1348b203-5917-42ba-8daf-89abaaaa2bad retained.
+
+Afteruserexit, gamewindow/processgone andGameModeinactive. Firstlate snapshot
+showedperformance whileexittransition wasstillinprogress. Subsequentall12
+policiesrestoredpowersave/EPPbalance_performance, no matchingnewkernel
+amdgpu timeout/hang/fault/reset/hardwareerror/OOM/segfault since launch.
+Accept finalcandidateProton gameplay/exitpolicybinding PASS, no artificial
+minimumduration/benchmark. Earlierreceipt namedproton-active.json wascaptured
+late duringexit andrecordsGameModeinactive/performance; preserveastransition
+snapshot, notactive-stateproof orpersistentrestorationfailure. CLIactive
+andmappedgamewindowwereobservedearlier. Privateproton-exit.json retained.
+GameModejournallogs unavailableScreenSaverinhibitor/RAPLcoreenergy andwrapper
+duplicate/iopriowarnings; no evidence theseblockedgameplay orrestoration.
+Do notcreate unrelatedtuning workfromnonfatalwarnings.
+
+Remainingpresoak: visualHDR/SDRreturn, audibleStagecurrentboot/resume and
+replugonlyifnormallyused, exactrecoveryprovenance. Questionsalreadyqueued;
+do notrepeatacceptedUnreal/native/CPU/RAM/boot/resumechecks. PreserveGUI.
