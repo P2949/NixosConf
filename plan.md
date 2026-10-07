@@ -29297,3 +29297,34 @@ zero-writeproof; no historicalreceiptrewrittenaspassingnewprocedure.
 Reference: https://btrfs.readthedocs.io/en/latest/ch-mount-options.html
 RemaininghumanHDR/Stageanswerspending. Recoverywindowrequiresnewavailability;
 completednormalbootauthorizationdoesnotauthorizeanotherISOreboot.
+
+
+## Connected recovery media reverified for pending window — 2026-10-08
+
+Ventoy DataTraveler remainsconnected/unmounted. Mounted knownexternalUUID
+1BF6-1635 exfatread-only at/run/ventoy-readiness; exact currentrecoveryISO
+SHA52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+matched. findmntconfirmedro, verification session62464 exit0/cleanunmount.
+No formatting/backuprewrite/productionmountchange. This closescurrentmedia
+readiness, notphysicalISOdrillprovenance. Requesteduseravailability forone
+readonlyISOinspectionandreturngeneration38; preserveGUIuntilreply. Existing
+normalbootwindowcompleted, notreusedasnewauthorization. HDR/Stagequestions
+remainpending andnotrepeated. CI15ffef6run37699904803 PASS;80de732run37700267797
+inprogress. KeepthisledgerupdatefornextconsolidatedbatchratherthaninterruptCI.
+
+
+## Exact recovery drill window authorized and USB script staged — 2026-10-08
+
+UserexplicitlyreadyforoneISOreadonlyinspectionandreturngeneration38. Prepared
+smallbashscript onVentoy NixosConf-backups/readiness-recovery-drill-20261008/
+inspect.sh, syntaxchecked/copied/bytecompared/flushed/cleanunmounted. Script
+requires exact recoverycurrent-system22w62q0hmbppzrc24xv3jdbm5r3wv95f, verifies
+ISOhash, targetBtrfsUUID/MP600model, noexistingtargetmount/internalswap,
+mountsro,nologreplay,subvolid5, verifiessevenexpectedsubvolumes/repo/profiles/
+home/credentialfileexistencewithoutsecretreads. ReceiptonexternalUSB only;
+productionunmountedviatrap/normalexit. Accepts kerneloptionrenderingnologreplay
+orrescue=nologreplay. No script executionagainstlivedisk orphysicaldrillpass
+claimed. RecoveryISOhasnoCodexsession, so selectingVentoyISO andrunning
+preparedscript needuserconsole; do notpromise unattendedagentcontrol there.
+Normalbootdefault remainsgeneration38. Rebootwillbescheduledonlyafter
+thishandoffiscommitted. ReturnwithsavedUSBreceiptforagentverification.
