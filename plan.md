@@ -7,8 +7,10 @@ selection/editing and Layout/Modeling/UV/Shading/Animation workspaces worked
 perfectly, without freezes or crashes. Controller NOT APPLICABLE by user
 instruction. Bluetooth unused and explicitly requested disabled. Stage Pro
 USB audio, HDR, always-enabled VRR/FreeSync and native Linux games ARE
-APPLICABLE. User reports Stage Pro working now; verify actual route rather
-than overriding it blindly. These answers supersede the pending-input block.
+APPLICABLE. Stage Pro functional USB playback PASS: user already tested it,
+uses it regularly and confirms active audible playback; PipeWire independently
+confirmed its default sink and Firefox routing. Do not request this confirmation
+again or interrupt playback for a redundant test. These answers supersede the pending-input block.
 Continue the complete plan; do not repeat accepted CPU/RAM/render tests.
 
 ## Current continuation directive — adopted2026-10-06
@@ -24821,3 +24823,47 @@ USB041e:32b4. PrioronlyHDMI observation historical, not ongoingfailure.
 No forcedroute/profilechange byagent; preserveworkingroute. Reconnect and
 reboot persistence remainseparateunproven scopes ifrequiredbyfinalplan.
 HDR/VRR realcontent and nativeLinuxgames remain applicable/open.
+
+
+## HDR policy prepared; Stage Pro confirmation reaffirmed — 2026-10-07
+
+Latest user confirmation closes functional Stage Pro USB playback acceptance.
+Current inspection still shows Creative Stage Pro Analog Stereo as default sink
+76, with Firefox FL/FR connected to Stage playback. Stream state at inspection
+was init, so this snapshot alone is not a fresh continuous-playback measurement;
+audible acceptance rests on the explicit user report plus observed routing.
+Reconnect/reboot persistence is a separate scope, not an audible-playback blocker.
+
+Hyprland source now requests 10-bit output and render.cm_auto_hdr=1 for automatic
+fullscreen HDR switching while the desktop stays sRGB. Live complete Lua monitor
+and render declarations accepted without config errors: DP-3 remains
+3440x1440@155Hz, VRR true, XRGB2101010, sRGB; cm_auto_hdr reports 1.
+These observations prove the policy/output format, not actual HDR content or
+HDR-to-desktop restoration. No reboot or compositor restart was performed.
+Official configuration reference: https://wiki.hypr.land/Configuring/Basics/Variables/
+and https://wiki.hypr.land/configuring/core/monitors/colors/.
+
+Scoped Steam library inspection found Dark Souls, Proton and runtimes only.
+Native Linux games and HDR are applicable; no suitable installed content was
+identified in that scope. A question requesting native-game launcher/library
+and HDR content locations is pending. Do not interpret scoped absence as lack
+of all installed games, or synthetic output as real workload acceptance.
+Source build/activation for this new HDR change remains pending until terminal
+results are recorded; current test-active system is still 2jvq6m083wwg81m718ynwd3c712mw1g5.
+
+
+User supplied workload candidates — 2026-10-07: installing Stardew Valley
+for normal native Linux use and Sky: Children of the Light for HDR validation.
+User reports the recently formatted system has no other installed candidates.
+The content-location question is resolved; wait for installation completion
+and inspect actual native/Proton selection and HDR support/settings. Steam HDR
+listing is user-reported, not yet an observed successful HDR session. Neither
+installation nor acceptance is complete merely because a candidate is selected.
+Preserve the working Stage Pro route throughout these checks.
+
+HDR-policy offline build session49628 completed exit0. Built normal closure
+/nix/store/bjxxpsm7f42b909v9gpf48p7pinajc3x-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Build log: ~/.cache/nixos-validation/hdr-policy-20261007-build.log.
+No system activation or boot-default change in this step; live Lua policy is
+already applied. Next review dry activation before making Home Manager source
+durable, then validate the selected games when installations finish.
