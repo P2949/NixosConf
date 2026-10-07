@@ -26503,3 +26503,18 @@ Current190bb01 CI37698315374 running; awaitterminalresult, notpriorheadproof.
 HumanvisualHDR question remains outstanding; no repeatedfullscreenplayback
 whileuserinteractswithUnreal. AudibleStagepostboot/reconnect scope, final
 Protonsession, recoveryprovenance, thenrepresentativesoak/freeze stillopen.
+
+
+## Unreal human interactive acceptance confirmed — 2026-10-07
+
+Direct user says this test has already been performed, Unreal works perfectly,
+continued normal work has been ongoing with no issues. Accept real interactive
+Unreal editing/workflow PASS; do not ask for another equivalent exercise.
+Current generation38 editor remains live session24158 at inspection, actual
+configured-map PIE world visible in log, projectGitclean, no matching scoped
+new kernel amdgpu timeout/fault/hang, hardwareerror/OOM/segfault found.
+This live process is not an ordinary-exit receipt; accepted previous automated
+PIE/endplay/ordinaryexit remains historical evidence, and current naturalexit
+can be observed later without requiring another human test or forcingexit.
+Preserve user editorwork. InteractiveUnreal gate removed from criticalpath.
+VisualHDR response remains missing; no substitute from taggedmetadata alone.

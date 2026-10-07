@@ -69,8 +69,8 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 - Actual Blender HIP render passed1920x1080/1024samples in105.21s,
   source unchanged. Interactive editing/workspaces accepted by user.
 - Unreal configured map/120-second PIE lifecycle and installed-engine project
-  rebuild covering all25 project C++ files passed. Interactive editing remains
-  open; these checks do not claim a full engine rebuild.
+  rebuild covering all25 project C++ files passed. Interactive editing accepted by the user after normal work with no issues;
+  these checks do not claim a full engine rebuild.
 - Stardew Valley native Linux gameplay accepted by user and running ELF verified.
   Dark Souls gameplay/controls/audio accepted; uninterrupted final-source binding
   and natural-exit restoration for the new candidate remain separate scopes.
@@ -113,8 +113,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    EDAC controller counters are not exposed on this host.
 2. CPU15minute and substantial20GiB RAM validation accepted on test-active
    candidate. Continue representative workloads before soak/freeze.
-3. Real Unreal interactive editing remains open: actual project is now open
-   in native Wayland on generation38; user observation and ordinary exit pending.
+3. Real Unreal interactive editing PASS by direct user confirmation of
+   continued normal work without issues. Current generation38 native Wayland
+   editor remains running; observe natural exit later without repeating the test.
    Editor-target rebuild passed
    (shared PCH and project unity compile covering all25 project C++ files,
    link/metadata, Epic bundled toolchain,40.24s, Git-clean).
