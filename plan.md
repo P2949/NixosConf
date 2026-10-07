@@ -26374,3 +26374,46 @@ No reboot/suspend/boot-default change. Next actions: remaining exact root
 contract comparison and boot-only preparation; visual HDR feedback, interactive
 Unreal, final physical boot/resume/Proton/audio persistence, recovery provenance,
 soak/freeze/backup/canonical artifacts/merge/tag remain open in guide order.
+
+
+## Final root-chain decision and generation38 boot-only installation — 2026-10-07
+
+Compared accepted generation37 normal/persistent candidates with current
+normalbjxxpsm7f42b909v9gpf48p7pinajc3x/persistent8v183hn0p5yv7wf625yj38n6bhsjpxz6.
+Both variants retain byte-identical initrd/kernel/parameters/fstab and machine-ID
+persistence service, identical persistence script references and identical
+user-group generation JSON/helper references (compared paths only; no secrets
+read/printed). Source modules/storage, activation-safety, desktop persistence,
+Disko/hardware configuration unchanged since reviewed1f96e0d. prepare-root
+normal differs only top-level identity, verified normalized comparison.
+The compared etc/passwd/group files are absent from both static closures;
+the authoritative activation user-generation contracts matched instead.
+The guessed pre-switch-checks artifact does not exist in either closure;
+absence is not acceptance evidence. Existing switch-inhibitor artifact identical.
+
+Decision under newest guide PhaseG: retain accepted generation37 physical
+normal/persistent/normal chain; no extra persistent→normal boots required
+for these ordinary stage2 power/Bluetooth/HomeManager changes. Reassess
+only if subsequent root/initrd/persistence semantics change. Current final
+normal boot and power/resume/audio/display persistence remain OPEN.
+
+Boot-only nixos-rebuild boot --offline --flake .#desktop session78489 exit0
+from clean source6dc7b041a491f569b6eb8fe09965db2b0922bc9c. Installed generation38,
+system profile and default nixos-generation-38.conf point to bjxx candidate.
+Generation38 persistent-root entry points to8v183 candidate. Both kernel/initrd
+ESP copies byte-hash-match store, both init paths verified. Retained old entries.
+Current selected physical boot still generation37; live current-system bjxx
+comes from prior testactivation, not a physical generation38 boot.
+Hyprland responsive, Commander/HomeManager/NetworkManager active.
+No reboot or new live activation occurred. Non-root bootctl permission error
+was resolved using sudo; generic pgrep Hyprland did not match wrapped executable
+and was not evidence that the graphical session ended.
+
+Private ESP boolean receipt and preboot machine-ID comparison digest retained
+under /persist/nixos-readiness-20261005/final-policy-20261007/, directory700,
+files600. Bootloader inspection should filter machine-id fields from tool output
+and public evidence; private identity equality should be reported only as boolean.
+Build/install log ~/.cache/nixos-validation/final-policy-boot-install-20261007.log.
+Next physical window can be one normal boot, then coordinated suspend/resume
+when user available, with no ritual repeat of accepted CPU/RAM/root-chain tests.
+Visual HDR feedback and interactive Unreal remain pending independently.

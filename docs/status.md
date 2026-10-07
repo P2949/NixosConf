@@ -18,7 +18,11 @@ prior CI success does not certify a later head.
 
 ## Accepted boot candidates and physical history
 
-Generation37 is installed. Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
+Generation38 is installed as the next-boot default; physical selected boot
+remains generation37. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
+and persistent-root`8v183hn0p5yv7wf625yj38n6bhsjpxz6` ESP kernel/initrd copies
+match their store artifacts. Boot-only installation passed; no reboot occurred.
+Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
 | Candidate | Store identity |
 |---|---|
@@ -26,7 +30,7 @@ Generation37 is installed. Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 | Persistent-root | `ph12l3y4k9jjmp5vhxwlkc11x4js2gjx` |
 
 Both closures have independent GC roots; their ESP kernel/initrd copies match
-store artifacts. Reinstallation is unnecessary unless runtime source changes.
+store artifacts. Generation37 remains the accepted physical root-chain baseline.
 Physical normal→persistent-root→normal chain is ACCEPTED. First normal:
 boot`d7c64889-aac3-4d09-8d14-5add9050cea3`, root300, resetcount6.
 Persistent-root: boot`c6316fb4-f649-44b0-a8f6-8c4ae75be117`, same root300/UUID
@@ -88,7 +92,7 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    `pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
    `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
    power service and generated resume hook/readback passed; boot default
-   remains generation37. Physical boot/resume remains pending.
+   is generation38 after boot-only installation. Physical boot/resume remains pending.
    Earlier80C cutoff stops were incomplete tests, not proven overheating or
    hardware faults. User explicitly superseded the arbitrary80C criterion;
    block/paste history is not a prerequisite. The isolated15-minute125W trial
@@ -140,7 +144,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    during the accepted USB test; latest snapshot routes playback to HDMI3.
    Functional USB playback accepted; reconnect/reboot persistence separate.
    Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
-   VRR remains true at155Hz, source installed by Home Manager.
+   VRR remains true at155Hz, source installed by Home Manager. Final root-chain
+   repeat is unnecessary: both variants retain identical initrd/kernel/fstab,
+   identity/user-generation/persistence contracts and unchanged relevant modules.
    Blender report closes the previous input blocker. Stardew Valley native
    gameplay accepted; user replaced Sky with downloaded HDR MKV samples in ~/Downloads.
    Visual HDR acceptance and final-source workload checks remain pending.
