@@ -85,7 +85,15 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 - Recovery ISO build/hash/Ventoy copy passed; exact physical-drill provenance
   still requires reconciliation with existing evidence.
 
-## Open hard gates and next actions
+## Validation evidence and remaining actions
+
+Remaining hard gates: visual HDR/SDR return; uninterrupted final-boot Proton
+session and natural-exit policy restoration; applicable audible audio persistence;
+recovery-drill provenance; representative multi-day soak; backup freshness;
+frozen-source capture/manifest/exact validation/CI; PR ready/merge/tag.
+Generation38 boot/resume, root-chain decision and Unreal interaction are closed.
+Expected mounts, credential-source equality, persistent journal directory and
+all12 powersave/balance_performance CPU policies passed read-only inspection.
 
 1. Validate the selected125W package policy using hardware/correctness evidence.
    Test-active normal now`bjxxpsm7f42b909v9gpf48p7pinajc3x` after Bluetooth-off/

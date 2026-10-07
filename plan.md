@@ -27753,3 +27753,34 @@ PIE/endplay/ordinaryexit remains historical evidence, and current naturalexit
 can be observed later without requiring another human test or forcingexit.
 Preserve user editorwork. InteractiveUnreal gate removed from criticalpath.
 VisualHDR response remains missing; no substitute from taggedmetadata alone.
+
+
+## New unified final guide reconciliation — 2026-10-07
+
+Read entire new attachment and imported full text near top with SHA and
+only trailing whitespace normalization. Snapshotfa8b015/prebootinstructions
+are superseded by actual generation38boot/resume and directUnrealacceptance.
+No repeat reboot/rootchain/CPU/RAM/Blender/nativegaming requested or run.
+Guide's consolidatedevidence/minimalchurn/stocktag boundary adopted; final
+exactheavy suite remains freeze-time work, not repeated reassurance now.
+
+Extended generation38 read-only acceptance: expected @root/@persist/@home/
+@var/@nix on MP600 andvfatESP verified; persistcredentialsource available,
+activecredentialmatches configuredsource booleantrue, persistentjournal
+directorypresent. All12 CPU policies powersave/EPPbalance_performance.
+Receipt private final-policy-20261007/generation38-extended-boot-check.json.
+Initial diagnostic guessed passwordfilename without -hash andreturnedfalse;
+correctconfiguredpath from modules/core/users.nix verifiedtrue. This was
+a diagnosticpathmistake, not missingcredentialfailure. No secretvalue printed.
+
+Formatting nix fmt -- --ci session25339 terminalexit0,62filesprocessed/0changed.
+Offline flakecheck session75175 running atrecording; recordterminalresultbefore
+callingpassed. Recent5e588b7 CIrunning,ce03b08cancelledbysuccessor,prior
+acceptedCI remains historicalexactscope. Currenteditor remains live; no forced
+exit or repeatedhumanexercise. OutstandingvisualHDR question keptpending.
+
+Unified-guide offline flakecheck session75175 completed exit0/allchecks passed.
+Formatting anddiffwhitespacepassed. LatestliveGit inspection found imported
+guide already committed as734168d; retainthatcommit andconsolidate extended
+physicalevidence here, noduplicateguideimport. These documentation successors
+do not constitutefrozenfinalsource orcompletedremaininghuman/soakgates.
