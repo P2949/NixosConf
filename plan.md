@@ -24867,3 +24867,20 @@ Build log: ~/.cache/nixos-validation/hdr-policy-20261007-build.log.
 No system activation or boot-default change in this step; live Lua policy is
 already applied. Next review dry activation before making Home Manager source
 durable, then validate the selected games when installations finish.
+
+
+## Native Linux gameplay accepted — 2026-10-07
+
+Stardew Valley/app413150 functional native Linux gameplay PASS. User confirms
+currently playing and considers this check finished; attached screenshot shows
+actual in-game play. Read-only live inspection independently confirms running
+PID15872 resolves to Steam/steamapps/common/Stardew Valley/Stardew Valley,
+an x86-64 Linux ELF executable, launched through Steam Linux Runtime
+scout-on-soldier. This is the native Linux route, not a Proton inference.
+No interruption, forced exit or repeat gameplay request is needed.
+During inspection DP-3 remains155Hz, VRR true, XRGB2101010/sRGB; system failed
+units empty. This verifies enabled VRR policy while playing, not measured
+frame-by-frame adaptive refresh. Screenshot overlay is not a benchmark.
+HDR acceptance remains open for Sky: Children of the Light. Native game
+installation and functional gameplay are now complete; natural-exit policy
+restoration/final-source binding remain distinct checks where required.

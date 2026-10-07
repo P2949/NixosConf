@@ -117,7 +117,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    confirmation2026-10-07; controller is NOT APPLICABLE. Bluetooth requested
    disabled: source enable/powerOnBoot false, live rfkill blocked/service stopped.
    VRR declared1 and applied live: monitor reports true at3440x1440@155Hz.
-   HDR/content and native-game validation remain open. Live/source HDR policy
+   Native Linux gameplay PASS: user playing Stardew Valley/app413150,
+   independently confirmed running Linux ELF through Steam Linux Runtime.
+   HDR/content validation remains open. Live/source HDR policy
    now cm_auto_hdr=1 with10-bit output; monitor reports XRGB2101010/sRGB
    at155Hz withVRR true and no config errors. Actual HDR content/return remains
    untested. Offline build passed: bjxxpsm7f42b909v9gpf48p7pinajc3x;
@@ -127,9 +129,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Functional USB playback accepted; reconnect/reboot persistence separate.
    Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
    VRR remains true at155Hz, source installed by Home Manager.
-   Blender report closes the previous input blocker. User is installing Stardew
-   Valley for native Linux validation and Sky: Children of the Light for HDR;
-   installations and actual workload acceptance remain pending.
+   Blender report closes the previous input blocker. Stardew Valley native
+   gameplay accepted; Sky: Children of the Light remains the HDR candidate.
+   Actual HDR acceptance and natural-exit/final-source checks remain pending.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and
