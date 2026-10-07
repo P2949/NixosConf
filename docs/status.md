@@ -99,7 +99,8 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    link/metadata, Epic bundled toolchain,40.24s, Git-clean).
    configured-map/120s PIE/endplay/normal editor exit passed on the test-active
    candidate with project Git-clean and no matching new kernel faults.
-   Blender interactive editing/viewport remains open (longer1024sample real-project HIP
+   Blender interactive editing/viewport accepted by user on2026-10-07 across Layout,
+   Modeling, UV Editing, Shading and Animation without freezes/crashes (longer1024sample real-project HIP
    render passed105.21s, source unchanged, no matching GPU faults); native/Proton games,
    controller, intended audio/reconnect, normal desktop/Bluetooth and HDR/VRR
    where used. Android tooling, Gradle projects and AVD/emulator validation
@@ -110,9 +111,13 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    perfectly; observed exit restored GameMode inactive and all12 CPU policies
    to powersave/balance_performance, with no targeted kernel faults. Session
    spanned test-activation; uninterrupted final-candidate binding remains open.
-   No native game identified in inspected manifests
-   or controller observed in current kernel input enumeration; actual play
-   and controller acceptance remain open.
+   Native Linux games, HDR and always-enabled VRR ARE APPLICABLE by user
+   confirmation2026-10-07; controller is NOT APPLICABLE. Bluetooth requested
+   disabled: source enable/powerOnBoot false, live rfkill blocked/service stopped.
+   VRR declared1 and applied live: monitor reports true at3440x1440@155Hz.
+   HDR/content and native-game validation remain open. User confirms Stage Pro
+   working, but current PipeWire exposes only HDMI output; direct USB route
+   requires reconciliation. Blender report closes the previous input blocker.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and

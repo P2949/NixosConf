@@ -17,15 +17,15 @@
 -- renumbering.  This is the proven SDR baseline:
 --   3440x1440 @ 155 Hz, scale 1, 8 bpc, sRGB.
 --
--- VRR is intentionally disabled here. HDR/10-bit are also intentionally
--- left out of the baseline and can be reintroduced separately.
+-- Keep Adaptive Sync enabled for desktop and fullscreen workloads.
+-- HDR output is validated separately against actual HDR content.
 hl.monitor({
     output = "desc:Microstep MSI MAG401QR EA5H156300816",
     mode = "3440x1440@155",
     position = "0x0",
     scale = 1,
     transform = 0,
-    vrr = 0,
+    vrr = 1,
     bitdepth = 8,
     cm = "srgb",
 })
@@ -97,9 +97,8 @@ hl.config({
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
 
-        -- Disabled because this monitor/setup is being kept on the
-        -- known-good fixed-refresh baseline for now.
-        vrr = 0,
+        -- Adaptive Sync enabled at all times, as requested.
+        vrr = 1,
 
         enable_swallow = true,
         swallow_regex = "^(Alacritty)$",

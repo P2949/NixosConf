@@ -1,5 +1,16 @@
 # NixOS Pre-Experiment Readiness Master Plan
 
+## User workflow decisions — 2026-10-07
+
+Blender interactive acceptance PASS by user report: viewport navigation,
+selection/editing and Layout/Modeling/UV/Shading/Animation workspaces worked
+perfectly, without freezes or crashes. Controller NOT APPLICABLE by user
+instruction. Bluetooth unused and explicitly requested disabled. Stage Pro
+USB audio, HDR, always-enabled VRR/FreeSync and native Linux games ARE
+APPLICABLE. User reports Stage Pro working now; verify actual route rather
+than overriding it blindly. These answers supersede the pending-input block.
+Continue the complete plan; do not repeat accepted CPU/RAM/render tests.
+
 ## Current continuation directive — adopted2026-10-06
 
 **Latest direct-user correction:**80C is not a hardware failure boundary.
@@ -24705,3 +24716,75 @@ terminalphysical receipt at inspectedlocations. Scope-specific conclusion,
 not proof noevent everoccurred. Exactphysicaldrill remainsunverified;
 retainedcurrentprocedure read-only/noDisko/noformatting. No newreboot
 scheduled while pendinginteractive andotherpre-reboot work.
+
+## Exact-head CI and interactive session verified wait — 2026-10-06
+
+SameGitHubrun37465911086 confirmedin_progress twice on
+294b895a8250e056ada4bdd9a8b4875978067a2d. BlenderPID162310 stilllive
+at10m08s, failedunitsempty. Currentworktree wasclean beforethisledger.
+No new userediting/deviceapplicability replies; elapsedapp uptime does
+not certify interactivefunctional use or start acceptedmultidaysoak.
+Keep sameCIhandle, preserve Blender andGUI, no repeatedheavytests or
+newreboot. Remainingfreeze/recovery/sourcebinding gates stayopen.
+
+## Current-head CI terminal PASS and remaining dependencies — 2026-10-06
+
+SameGitHubrun37465911086 completed/success on
+294b895a8250e056ada4bdd9a8b4875978067a2d. No rerun. Localpostcommitledger
+notcovered; avoid endlessCIreceiptcommits. BlenderPID162310 stilllive
+12m14s, session1active. No userediting/deviceapplicability answers yet.
+Immediateworkflow acceptance cannot be inferred from processuptime;
+completedautomatedCPU/RAM/render/PIE/build checks retained, not repeated.
+Recoveryphysicalbinding andfinalboot/resume remainunverified; no new
+maintenancewindow assumed from older completedreboot authorization.
+Soak/freshness/finalmanifest/tag remaindependent on remainingacceptance.
+Meaningfulnextprogress requires actualinteractive observations or intended
+workflow/device information; currently no suchanswer. Goalnotcomplete.
+
+## Remaining-input dependency revalidated — 2026-10-06
+
+CI37465911086 stillterminalgreen; no furtherCIwait. BlenderPID162310
+stilllive13m10s, no exit event/report, session1active. No newediting/device
+answers. Neither applicationuptime nor absenceoferrors proves interactive
+editing/audio/device applicability. Immediate requiredacceptance depends
+on thoseobservations; independentautomatedtests/evidence reconciliation
+completed. No appropriate repeatedtest/posttagarchitecture work identified
+that advances remaininggate without substitutes. Freeze/backup/soak/source
+binding retain original sequencing. Preserve application andGUI; do not
+mark goalcomplete. Sameinputdependency remains, no newapprovalquestion.
+
+## Blocked audit: interactive observations and applicability pending — 2026-10-06
+
+Sameinputdependency persisted across three consecutive continuationturns
+followingterminalCI: no response to actualBlender editing experience or
+which StageUSB/controller/Bluetooth/HDRVRR/nativegame workflows areused.
+BlenderPID162310 remainslive14m16s, session1active, failedunitsempty.
+No meaningfulremaining independentrequiredaction identified: completed
+CPU/RAM/render/PIE/projectbuild and evidence retained; freeze/soak/source
+binding/backupfreshness depend on unfinishedworkflow acceptance. Repeating
+automatedtests or treating uptime as editing would narrowrequiredscope.
+Goalmarkedblocked pendingtheseobservations, notcomplete/paused. No
+reboot, appclosure, extra approvalquestion or fabricatedPASS. Resume on
+actualanswers/newstate, preserving fulloriginalplan throughfreeze/posttag.
+
+## User workflow response implemented — 2026-10-07
+
+User confirms Blender viewport/editing and Layout/Modeling/UV/Shading/
+Animation allperfect/no freezes/crashes: interactive gate accepted.
+Controller unnecessary. Bluetooth explicitlydisabled; StageUSB/HDR/VRR/
+nativeLinuxgames applicable, examplesStardew/Terraria areusage not evidence
+these titlescurrentlyinstalled. Previousmissing-inputblock superseded.
+Workstation Bluetooth enable/powerOnBoot nowfalse; targetedNixevaluation
+enablefalse. Live rfkill Bluetoothsoftblocked and service stopped, GUIkept.
+FullBluetooth attr evaluation hit deprecatedremoved extraConfig option;
+this is introspectionofobsoleteoption, not evidence enablefalse invalid.
+Both sourceHyprland monitor andmiscVRR changed0→1. OfficialHyprland
+variables confirms1on vs2fullscreen. Legacykeyword rejected harmlessly;
+Luaeval accepted. Partialmonitor update temporarilyselected60Hz; immediately
+reapplied completeoriginal3440x1440@155/scale1/8bit/sRGB declaration with
+vrr1. Currentmonitor vrrtrue/155Hz; configerrorsempty. No restart/reboot.
+Runtime edits are not durableHomeManageractivation; sourcebuild pending.
+HDR remains to enable/validate with actualcontent, no all-dayHDR assumed.
+Currentwpctl StagePro device49exists but onlyHDMI3sink61/default/Firefox
+stream: useraudibleworking accepted, directStageUSBroute notproven.
+Preserve audiblecurrentroute while investigatingprofile/connection.
