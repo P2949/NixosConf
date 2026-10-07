@@ -1,5 +1,1240 @@
 # NixOS Pre-Experiment Readiness Master Plan
 
+## Unified final continuation update — adopted2026-10-07
+
+Newest supplied guide is adopted for the remaining finalization sequence.
+Its reviewedfa8b015/preboot checkpoint is historical: generation38 actualboot,
+125Wboot/resume, Bluetoothoff/displaypersistence and root-contract comparison
+have since passed; Unreal interactive work is explicitly accepted by user.
+Do not repeat those gates. Current runtime remains bjxx/8v183; no new
+runtime architecture or optimization work before baseline tag. Remaining
+visualHDR/SDRreturn, finalbootProton/exitpolicy, applicableaudio persistence,
+recoveryprovenance, soak/backup/freeze/exactvalidation/merge/tag govern continuation.
+Consolidate evidence updates; retain current working graphical session.
+The attached instruction to perform the prepared reboot has already been
+fulfilled, not fresh authorization for another reboot.
+
+Full guide follows, trailing whitespace normalized. Historical source/CI
+claims are snapshot data; current evidence takes precedence.
+Attachment SHA256: `05bd7565ceefa3e509dc4ff149f7a08548aa94bb5cada3fcb3a72cef208d4f1a`.
+
+> I re-ran the review against the live GitHub state and reconciled it with the attached continuation guide.
+>
+> There are several meaningful updates since the attached guide. That guide still listed physical boot, boot/resume power-limit validation, HDR, Unreal, Proton, recovery provenance, soak, freeze and merge/tag as the remaining path. Assess NixOS Performance Ceiling The branch is now at **`fa8b015ced221aebb5662d27100d4a2793784a90`**, whose latest commit records the authorized Generation 38 reboot handoff; PR #7 remains open, draft and mergeable.   Exact-head Nix checks **#166 have passed** on that SHA.
+>
+> Crucially, the four commits since the attached guide's `4f0cb2f…` snapshot modify only `docs/status.md` and `plan.md`; the actual runtime configuration has not changed.  Generation 38 is already installed as the next-boot default, while the currently selected physical boot is still Generation 37. The repository has also determined that the already accepted normal→persistent-root→normal chain remains valid because the root/initrd/persistence semantics did not change. HDR signalling has progressed substantially: native-Wayland mpv already negotiated PQ/BT.2020, DRM switched to BT2020_RGB during fullscreen and returned afterward; what remains is perceptual/monitor acceptance.
+>
+> The latest handoff is especially important: the project has already captured preboot state, verified Generation 38 as the default, and explicitly authorized **one normal reboot followed by a suspend/resume check**. It also explicitly says not to repeat the root-chain, CPU or RAM tests.  The source still declares the 125 W boot/resume policy, Commander Core cooling policy, 155 Hz/10-bit/sRGB/VRR configuration and automatic fullscreen HDR, while `optimization/default.nix` remains intentionally empty.
+>
+> So I would now supersede the previous next-action sections of `plan.md` with this:
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## Current objective
+>
+> Finish the pre-optimization readiness project with the smallest possible amount of additional churn, establish one immutable and well-evidenced stock NixOS baseline, merge and tag it, then stop readiness work and begin optimization work separately.
+>
+> The project is no longer in architecture, hardware-stability or broad workstation-validation mode.
+>
+> It is in the final:
+>
+> ```text
+> physical binding
+> → remaining real workflows
+> → evidence reconciliation
+> → soak
+> → freeze
+> → exact validation
+> → merge/tag
+> ```
+>
+> phase.
+>
+> Do not reopen already accepted gates unless a later source change genuinely invalidates their evidence.
+>
+> ---
+>
+> # 1. Current checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed head:
+>
+> ```text
+> fa8b015ced221aebb5662d27100d4a2793784a90
+> Record authorized generation38 reboot and postboot validation handoff
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> ```
+>
+> Exact-current-head CI:
+>
+> ```text
+> Nix checks #166
+> PASS
+> ```
+>
+> Generation 38 has already been installed using boot-only activation.
+>
+> Its intended normal closure is:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> and its persistent-root closure is:
+>
+> ```text
+> 8v183hn0p5yv7wf625yj38n6bhsjpxz6
+> ```
+>
+> The machine is still physically running the previously accepted Generation 37 session until the authorized final normal reboot occurs.
+>
+> The current source configuration has not changed since the previously reviewed runtime source; the recent commits are evidence/documentation commits.
+>
+> ---
+>
+> # 2. Governing rules from this point onward
+>
+> Use this source-of-truth order:
+>
+> ```text
+> 1. direct physical observations / explicit user results
+> 2. current source tree
+> 3. docs/status.md
+> 4. exact-source automated evidence and private receipts
+> 5. plan.md chronology
+> 6. older imported continuation guides
+> 7. historical branches
+> ```
+>
+> Continue using these classifications:
+>
+> ```text
+> ACCEPTED
+> PARTIAL
+> OPEN
+> NOT APPLICABLE
+> DEFERRED
+> HISTORICAL / SUPERSEDED
+> ```
+>
+> Do not convert historical failures into passes. Record later evidence that supersedes them.
+>
+> Do not repeatedly revalidate accepted areas for reassurance.
+>
+> Do not introduce compiler optimization work before the baseline tag.
+>
+> Do not perform architectural cleanup before the baseline tag unless it fixes an actual readiness defect.
+>
+> ---
+>
+> # 3. Gates that are closed
+>
+> The following should be treated as complete unless a relevant source change later invalidates them:
+>
+> ```text
+> [x] repository architecture
+> [x] stable NixOS 26.05 refresh
+> [x] stock/optimization separation
+> [x] optimization namespace contamination guard
+> [x] activation-safety framework
+> [x] root-reset VM scenarios
+> [x] interrupted reset recovery
+> [x] machine identity persistence
+> [x] persistent-root specialisation
+> [x] generation37 normal→persistent-root→normal physical chain
+> [x] blank-disk reconstruction
+> [x] full Nix-store verification
+> [x] physical KVM/VMX
+> [x] GameMode helper/governor operation
+> [x] GameMode policy restoration evidence
+> [x] Btrfs scrub
+> [x] Btrfs device counters
+> [x] NVMe SMART/media health
+> [x] independent external backup
+> [x] representative backup restore
+> [x] Unreal engine supplement backup
+> [x] secrets recovery
+> [x] selected 125 W CPU package policy
+> [x] 15-minute 125 W CPU stress acceptance
+> [x] complete 20 GiB memtester loop
+> [x] Unreal project rebuild covering all 25 project source files
+> [x] Unreal configured-map 120-second PIE lifecycle
+> [x] Blender 1024-sample HIP render
+> [x] Blender interactive workflow
+> [x] native Stardew Valley gameplay
+> [x] Dark Souls basic Proton gameplay/controls/audio
+> [x] Stage Pro functional USB playback
+> [x] VRR functionality
+> [x] Bluetooth-off policy
+> [x] controller NOT APPLICABLE
+> [x] Android/Gradle/AVD NOT APPLICABLE
+> [x] README ownership cleanup
+> [x] current runtime optimization module remains inert
+> [x] exact-head CI at current documentation checkpoint
+> ```
+>
+> In particular, do **not** rerun:
+>
+> ```text
+> 15-minute CPU stress
+> 20 GiB memtester
+> Blender rendering
+> Blender interaction
+> Stardew native gameplay
+> generation37 root-chain
+> blank-disk reconstruction merely for reassurance
+> ```
+>
+> unless something relevant changes.
+>
+> ---
+>
+> # 4. Root-chain decision is now closed
+>
+> Earlier guidance treated another normal→persistent-root→normal sequence as conditional.
+>
+> That comparison has now been performed.
+>
+> Generation 38 retains the accepted root/persistence semantics:
+>
+> ```text
+> kernel/initrd contract
+> root-reset implementation
+> fstab/mount structure
+> machine-ID handling
+> persistence contract
+> user-generation handling
+> persistent-root specialisation
+> ```
+>
+> Therefore:
+>
+> ```text
+> NO additional persistent-root physical sequence is required.
+> ```
+>
+> The upcoming Generation 38 normal boot only needs to prove that the expected normal boot actually occurred and that ordinary root reset still behaved normally.
+>
+> Do not boot persistent-root again unless a future source change touches the root/persistence implementation or the normal Generation 38 boot exposes a genuine regression.
+>
+> ---
+>
+> # 5. Immediate next action — perform the already-authorized Generation 38 normal boot
+>
+> This is now the highest-priority action.
+>
+> Do not create another documentation-only source commit before the reboot merely to update a CI SHA. The current head is already green and preboot evidence has already been captured.
+>
+> Before reboot, only confirm there is no new uncommitted configuration change that would make the installed candidate stale.
+>
+> Then reboot normally.
+>
+> Generation 38 should be selected as the installed default.
+>
+> ## Postboot evidence
+>
+> Immediately after login, verify and record:
+>
+> ```text
+> running /run/current-system closure
+> Generation 38 selected
+> new boot ID
+> fresh normal-root subvolume
+> normal root-reset count advanced as expected
+> machine identity unchanged
+> persistent mounts correct
+> credentials available
+> journals correct
+> failed systemd units
+> active Wayland session
+> NetworkManager
+> Home Manager
+> Commander Core
+> CPU governor/EPP
+> 125 W PL1
+> 125 W PL2
+> Bluetooth disabled
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> VRR true
+> audio devices/routes
+> ```
+>
+> Expected normal closure:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> If that closure is selected and the above checks pass:
+>
+> ```text
+> GENERATION38 NORMAL BOOT = ACCEPTED
+> ```
+>
+> Do not stress-test the CPU again.
+>
+> ---
+>
+> # 6. Prove the 125 W resume path
+>
+> This is a distinct gate from the already accepted 15-minute CPU workload.
+>
+> The source deliberately applies the package limits:
+>
+> ```text
+> PL1 = 125 W
+> PL2 = 125 W
+> ```
+>
+> at boot and restarts the power-limit service after resume.
+>
+> The real remaining question is therefore not whether the CPU is stable at 125 W.
+>
+> It is:
+>
+> > Does the declared resume mechanism actually restore the selected policy after a real suspend/resume cycle?
+>
+> ## Procedure
+>
+> Before suspend:
+>
+> ```text
+> confirm PL1 = 125 W
+> confirm PL2 = 125 W
+> record cpu-package-power-limit service state/timestamp
+> record relevant sleep-actions service state
+> ```
+>
+> Perform one ordinary deep suspend/resume.
+>
+> After resume:
+>
+> ```text
+> confirm machine resumed successfully
+> confirm PL1 = 125 W
+> confirm PL2 = 125 W
+> confirm generated resume action actually executed
+> confirm Wayland usable
+> confirm network restored
+> confirm Commander Core active
+> confirm audio usable
+> confirm no new failed unit
+> ```
+>
+> Also inspect the actual generated `sleep-actions.service`/`ExecStop` implementation rather than looking for guessed system-sleep scripts.
+>
+> If all passes:
+>
+> ```text
+> 125 W BOOT/RESUME POLICY = ACCEPTED
+> ```
+>
+> No additional suspend loops are necessary.
+>
+> ---
+>
+> # 7. Finish the remaining display gate — HDR perceptual acceptance
+>
+> The technical HDR path has already demonstrated substantially more than the previous guide assumed.
+>
+> Already proven:
+>
+> ```text
+> 10-bit desktop output
+> sRGB normal desktop
+> automatic fullscreen HDR enabled
+> PQ/BT.2020 HDR source recognized
+> native Wayland mpv HDR output negotiated
+> DRM connector switched to BT2020_RGB in fullscreen
+> ordinary exit restored normal/default DRM state
+> VRR remains enabled
+> ```
+>
+> Do not redo that entire instrumentation sequence merely to prove it again.
+>
+> What remains is the human-facing part.
+>
+> Use one of the downloaded known HDR MKV samples, such as the existing `waterfall.mkv`.
+>
+> Confirm:
+>
+> ```text
+> normal SDR desktop looks correct before playback
+> HDR fullscreen visually engages correctly
+> monitor HDR indication/state is consistent with HDR operation if exposed
+> highlights/colour do not look obviously clipped, washed out or broken
+> no compositor/display instability
+> exit fullscreen/player normally
+> desktop returns visually to correct SDR/sRGB appearance
+> VRR/display mode remains sane afterward
+> ```
+>
+> If the visual result is acceptable and return-to-SDR is normal:
+>
+> ```text
+> HDR = ACCEPTED
+> ```
+>
+> Do not require HDR gaming as an additional independent gate unless the video result exposes a game-specific reason to test it.
+>
+> ---
+>
+> # 8. Finish Unreal human-interaction acceptance
+>
+> Automated and compile-side Unreal validation is already strong:
+>
+> ```text
+> real project
+> all 25 C++ project files rebuilt
+> Epic bundled compiler/toolchain
+> successful link
+> Git-clean project
+> configured map
+> 28 actors
+> 120-second PIE
+> normal end-play
+> ordinary editor exit
+> ```
+>
+> Only genuine interactive editor use remains.
+>
+> Use the actual project normally.
+>
+> Exercise:
+>
+> ```text
+> viewport movement
+> camera navigation
+> object selection
+> transform/edit operations
+> Details panel interaction
+> content browsing
+> opening relevant assets
+> PIE
+> stop PIE
+> continue editing
+> ordinary editor exit
+> ```
+>
+> The acceptance criterion is not a long artificial timer.
+>
+> It is:
+>
+> ```text
+> no freeze
+> no crash
+> no GPU reset
+> no broken input
+> editor remains responsive
+> PIE transition works
+> editing still works after PIE
+> normal exit succeeds
+> ```
+>
+> Then:
+>
+> ```text
+> UNREAL INTERACTIVE WORKFLOW = ACCEPTED
+> ```
+>
+> ---
+>
+> # 9. Bind the Proton evidence to the final boot
+>
+> Dark Souls has already demonstrated:
+>
+> ```text
+> launch
+> gameplay
+> controls
+> audio
+> GameMode behavior
+> CPU-policy restoration
+> ```
+>
+> The only weakness in that evidence is that the earlier session crossed a live activation boundary.
+>
+> After the clean Generation 38 boot, perform one uninterrupted Dark Souls session.
+>
+> Check:
+>
+> ```text
+> launch normally
+> play normally
+> audio works
+> GameMode active while expected
+> no visible regression
+> exit through the normal game path
+> GameMode inactive afterward
+> all CPU policies restored
+> no matching GPU reset/kernel fault
+> ```
+>
+> No synthetic benchmark or minimum gameplay duration is needed.
+>
+> No controller-specific validation is required.
+>
+> If this passes:
+>
+> ```text
+> PROTON FINAL-SOURCE BINDING = ACCEPTED
+> ```
+>
+> ---
+>
+> # 10. Stage Pro persistence without changing user routing
+>
+> Do not make “Stage Pro must always be the default sink” an acceptance criterion.
+>
+> The current evidence shows that the Stage Pro functional USB path works, while the user may at other times intentionally route audio through HDMI.
+>
+> Preserve the user's chosen routing.
+>
+> The remaining question is persistence/re-enumeration.
+>
+> After the Generation 38 boot verify:
+>
+> ```text
+> Stage Pro enumerates correctly
+> its expected PipeWire sink/profile exists
+> it can be selected
+> actual playback works when selected
+> ```
+>
+> If USB reconnect is an expected normal workflow:
+>
+> ```text
+> disconnect Stage Pro
+> reconnect it
+> confirm sink/profile returns
+> confirm playback works
+> ```
+>
+> Do not redo low-level ALSA diagnostics unless this fails.
+>
+> If successful:
+>
+> ```text
+> STAGE PRO PERSISTENCE = ACCEPTED
+> ```
+>
+> ---
+>
+> # 11. Bluetooth and VRR only require persistence checks
+>
+> Bluetooth is intentionally disabled.
+>
+> Therefore test:
+>
+> ```text
+> Bluetooth remains disabled after boot
+> no unwanted automatic power-on
+> no unexpected Bluetooth service activation
+> ```
+>
+> Do not test Bluetooth pairing/functionality.
+>
+> VRR has already been demonstrated live.
+>
+> After boot simply confirm:
+>
+> ```text
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> VRR = true
+> ```
+>
+> Do not create another VRR benchmark gate.
+>
+> ---
+>
+> # 12. Consolidate the physical evidence into the repository
+>
+> Once the Generation 38 boot, suspend/resume and remaining workflows above have been completed, update the evidence once.
+>
+> Avoid making one commit per tiny observation unless there is a real reason.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> plan.md chronological ledger
+> PR #7 body
+> ```
+>
+> The current `docs/status.md` and PR body contain older CI wording even though current-head CI #166 has passed.
+>
+> Correct that as part of this consolidated evidence update rather than producing another bookkeeping commit before the physical work.
+>
+> After the evidence commit:
+>
+> ```text
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> push
+> ```
+>
+> Require CI on the new exact head.
+>
+> ---
+>
+> # 13. Reconcile recovery-drill provenance
+>
+> Do this as an evidence-reconciliation exercise first.
+>
+> Known recovery artifact:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> SHA256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Existing evidence already establishes:
+>
+> ```text
+> ISO build
+> ISO hash
+> Ventoy copy
+> backup integrity
+> representative restore
+> ```
+>
+> What remains uncertain is the exact binding of the earlier physical recovery drill to:
+>
+> ```text
+> this ISO
+> this hash
+> date
+> physical media
+> MP600 device identity
+> read-only mount
+> expected Btrfs subvolumes
+> absence of modifications
+> ```
+>
+> Inspect existing private receipts first.
+>
+> If those facts can be tied together:
+>
+> ```text
+> RECOVERY DRILL = ACCEPTED
+> ```
+>
+> Do nothing more.
+>
+> Only if the provenance cannot be reconstructed should another physical recovery boot be scheduled.
+>
+> If another drill is required, perform one read-only drill.
+>
+> Never invoke:
+>
+> ```text
+> Disko
+> mkfs
+> repartitioning
+> destructive Btrfs operations
+> ```
+>
+> during that validation.
+>
+> ---
+>
+> # 14. Enter the final representative soak
+>
+> When all individual physical gates have passed, stop changing ordinary workstation policy.
+>
+> Run the final candidate normally for several days.
+>
+> This should resemble actual machine use rather than another synthetic torture campaign.
+>
+> Representative activity should naturally include some combination of:
+>
+> ```text
+> Unreal
+> Blender
+> Firefox
+> normal development work
+> C/C++ or Nix builds
+> native gaming
+> Proton gaming
+> Stage Pro
+> HDR/SDR use
+> ordinary filesystem operations
+> normal boots
+> suspend/resume if actually used
+> ```
+>
+> Watch for:
+>
+> ```text
+> system freeze
+> application crashes suggesting systemic problems
+> GPU reset
+> MCE/hardware errors
+> filesystem errors
+> new failed services
+> Commander Core failures/restarts
+> unexpected thermal throttling
+> root-reset failure
+> login/session failure
+> audio disappearance
+> network regression
+> VRR regression
+> HDR/SDR state problems
+> unexpected memory/swap pathology
+> meaningful NVMe error-log growth
+> ```
+>
+> Do not continuously poke the machine with synthetic tests during the soak.
+>
+> The value of this phase is exposure to representative mixed use.
+>
+> If no meaningful defect appears:
+>
+> ```text
+> MULTI-DAY REPRESENTATIVE SOAK = ACCEPTED
+> ```
+>
+> If a defect appears:
+>
+> ```text
+> record
+> → diagnose
+> → fix declaratively
+> → identify which accepted evidence the fix invalidates
+> → rerun only that affected scope
+> → restart soak if the change is materially system-wide
+> ```
+>
+> ---
+>
+> # 15. Refresh backup freshness immediately before freeze
+>
+> The original backup/restore gate is already accepted.
+>
+> Do not recreate the entire backup from scratch merely as ritual.
+>
+> Instead protect meaningful changes since the accepted backup.
+>
+> Review especially:
+>
+> ```text
+> Git repositories
+> untracked source
+> ignored but valuable source/assets
+> Unreal project changes
+> Blender files
+> documents
+> new assets
+> other irreplaceable user work
+> ```
+>
+> Perform an incremental backup/update where appropriate.
+>
+> Record:
+>
+> ```text
+> date
+> destination
+> scope
+> integrity/hash or equivalent verification
+> ```
+>
+> Then:
+>
+> ```text
+> BACKUP FRESHNESS = ACCEPTED
+> ```
+>
+> ---
+>
+> # 16. Freeze the candidate
+>
+> Once the soak and backup freshness pass:
+>
+> ```text
+> STOP ordinary readiness changes.
+> ```
+>
+> The repository must be:
+>
+> ```text
+> clean
+> fully committed
+> no relevant untracked config
+> no staged changes
+> flake.lock frozen
+> optimization/default.nix still empty/inert
+> ```
+>
+> From this point until the baseline tag, only evidence/finalization changes should occur unless a genuine defect is found.
+>
+> Do not:
+>
+> ```text
+> reorganize modules
+> move documentation trees
+> introduce new frameworks
+> upgrade random packages
+> change kernel
+> change Mesa
+> experiment with compiler flags
+> begin PGO/LTO/BOLT
+> ```
+>
+> ---
+>
+> # 17. Capture the canonical baseline
+>
+> Run the existing baseline collector on the accepted final machine:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> Do not rely on a preparation snapshot from before the final boot.
+>
+> The final baseline must bind:
+>
+> ```text
+> source
+> lock file
+> built closure
+> running closure
+> physical configuration
+> accepted runtime state
+> ```
+>
+> Create one canonical baseline record under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> Record at least:
+>
+> ```text
+> Git commit
+> flake.lock hash
+> nixpkgs revision
+> NixOS version
+> Nix version
+>
+> normal closure
+> persistent-root closure
+> recovery ISO path
+> recovery ISO SHA256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME versions
+> CPU ratios/cache
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR size
+> NVMe identity/firmware
+> Btrfs mount options
+>
+> CPU governor/EPP
+> THP state
+> swap/zram
+> I/O scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+>
+> CPU acceptance result
+> RAM acceptance result
+> root-chain evidence identity
+> normal Generation38 boot evidence
+> resume evidence
+> HDR acceptance
+> Unreal acceptance
+> native gaming acceptance
+> Proton acceptance
+> audio acceptance
+> backup identity/freshness
+> recovery-drill identity
+> soak result
+> ```
+>
+> Never commit secrets or raw sensitive identifiers where the existing project deliberately stores only hashes/private receipts.
+>
+> ---
+>
+> # 18. Run the frozen exact-source validation suite
+>
+> On the frozen candidate:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then explicitly run the heavier outputs that are deliberately not all part of ordinary CI:
+>
+> ```text
+> blank-disk reconstruction
+> workstation smoke
+> activation-safety actions
+> stock-contamination negative fixture
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Build and record the exact:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Perform the final closure review.
+>
+> Require no unexplained introduction of:
+>
+> ```text
+> optimization namespaces
+> global CFLAGS/CXXFLAGS
+> NIX_CFLAGS_COMPILE
+> global LDFLAGS
+> unexpected kernel
+> unexpected Mesa
+> unexpected LLVM/toolchain
+> unexpected unstable packages
+> global performance hacks
+> ```
+>
+> Do not repeat full Nix-store content verification unless there is new evidence suggesting store corruption.
+>
+> Do not repeat the physical root-chain because its relevant implementation remains unchanged.
+>
+> ---
+>
+> # 19. Run exact-final-head CI
+>
+> Push the frozen exact source/evidence state.
+>
+> Require GitHub Nix checks to pass on that exact SHA.
+>
+> No statement of:
+>
+> ```text
+> FINAL SOURCE ACCEPTED
+> ```
+>
+> should rely on CI from an ancestor.
+>
+> After exact-head CI passes, reconcile:
+>
+> ```text
+> docs/status.md
+> PR #7 body
+> canonical baseline record
+> plan.md final chronology
+> ```
+>
+> `docs/status.md` should now contain:
+>
+> ```text
+> zero unresolved hard readiness gates
+> ```
+>
+> Historical failures and superseded attempts stay in `plan.md`.
+>
+> ---
+>
+> # 20. Close PR #7
+>
+> Only when the previous stages pass:
+>
+> ```text
+> mark PR #7 ready for review
+> ```
+>
+> Then merge through the normal main-branch workflow.
+>
+> After merging, compare the tested feature tree against the merged main tree.
+>
+> If the tree is identical:
+>
+> ```text
+> reuse the accepted artifact/evidence identity
+> ```
+>
+> Do not rerun the entire readiness program.
+>
+> If conflict resolution or another change altered the tree:
+>
+> ```text
+> identify actual changed scope
+> rebuild
+> rerun affected checks
+> update the baseline identity
+> ```
+>
+> ---
+>
+> # 21. Create the immutable stock baseline tag
+>
+> Create an annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The baseline/tag evidence must identify:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> recovery ISO hash
+> canonical manifest
+> accepted validation evidence
+> ```
+>
+> Once the tag exists:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Do not continue adding more readiness gates.
+>
+> ---
+>
+> # 22. Post-tag cleanup is a separate project
+>
+> Only after the baseline tag should repository cleanup resume.
+>
+> Candidate cleanup remains:
+>
+> ```text
+> archive historical plan material
+> organize docs into clearer categories
+> move stock-control ownership if desired
+> move VS Code policy toward development ownership
+> remove obsolete compatibility aliases
+> generate module option documentation
+> add Markdown/link checking
+> other maintainability cleanup
+> ```
+>
+> None of these should block the stock baseline.
+>
+> ---
+>
+> # 23. Start optimization-framework-v2 only from the tag
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not rebase the old optimization branch wholesale.
+>
+> Use it only as donor/reference material.
+>
+> The optimization project should begin with experiment infrastructure such as:
+>
+> ```text
+> benchmark/workload corpus
+> specialisation-based A/B system states
+> stage-aware contamination rules
+> experiment provenance
+> reproducible CPU-target experiments
+> ```
+>
+> and then progress into:
+>
+> ```text
+> CPU-target code generation
+> graphics-stack A/B
+> profiling
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific optimization
+> ```
+>
+> The stock tag remains the permanent control.
+>
+> ---
+>
+> # 24. Exact execution order from the present state
+>
+> ```text
+> 1. Do not make another bookkeeping commit before the prepared physical boot.
+> 2. Confirm local working tree has no uncommitted runtime change.
+> 3. Reboot normally into installed Generation38.
+> 4. Confirm expected normal closure.
+> 5. Confirm fresh ephemeral root/reset.
+> 6. Confirm identity and persistent mounts.
+> 7. Confirm services/session/network/Commander Core.
+> 8. Confirm governor/EPP.
+> 9. Confirm PL1 = 125 W.
+> 10. Confirm PL2 = 125 W.
+> 11. Confirm Bluetooth remains disabled.
+> 12. Confirm 3440×1440@155 Hz.
+> 13. Confirm 10-bit output.
+> 14. Confirm VRR=true.
+> 15. Confirm audio device availability without altering intentional routing.
+> 16. Perform one real suspend/resume.
+> 17. Prove the generated resume mechanism executed.
+> 18. Confirm PL1/PL2 remain 125 W after resume.
+> 19. Confirm GUI/network/audio/Commander Core recovered.
+> 20. Complete HDR visual/perceptual acceptance with the HDR MKV.
+> 21. Confirm correct visual SDR return.
+> 22. Complete human Unreal editing acceptance.
+> 23. Run one uninterrupted final-boot Dark Souls session.
+> 24. Verify natural exit and GameMode/CPU-policy restoration.
+> 25. Verify Stage Pro reboot/reconnect persistence as applicable.
+> 26. Consolidate new evidence into status/plan/PR rather than many tiny commits.
+> 27. Run flake checks and require CI on that evidence head.
+> 28. Reconcile existing recovery-drill receipts.
+> 29. Only perform another recovery drill if provenance cannot be established.
+> 30. Begin multi-day normal-use soak.
+> 31. Fix only genuine defects and rerun only invalidated scopes.
+> 32. Refresh external backup delta.
+> 33. Freeze ordinary source changes.
+> 34. Capture the final baseline collector snapshot.
+> 35. Write the canonical baseline manifest.
+> 36. Run the exact frozen offline suite.
+> 37. Run the heavy VM/reconstruction suite.
+> 38. Build and record normal/persistent/recovery artifacts.
+> 39. Run final closure/stock-contamination audit.
+> 40. Push the exact final state.
+> 41. Require exact-final-head CI green.
+> 42. Make docs/status.md show no hard gate remaining.
+> 43. Mark PR #7 ready.
+> 44. Merge to main.
+> 45. Verify merged tree identity.
+> 46. Create the annotated stock baseline tag.
+> 47. End readiness work.
+> 48. Perform cleanup separately.
+> 49. Create optimization-framework-v2 from the baseline tag.
+> ```
+>
+> ---
+>
+> # 25. Remaining hard-GO checklist
+>
+> ```text
+> [ ] Generation38 physically booted
+> [ ] expected Generation38 closure confirmed
+> [ ] normal ephemeral-root reset confirmed
+> [ ] identity/persistence confirmed
+> [ ] 125 W boot readback
+> [ ] Bluetooth-off boot persistence
+> [ ] 155 Hz / 10-bit / VRR boot persistence
+> [ ] Stage Pro reboot persistence as applicable
+> [ ] actual suspend/resume
+> [ ] 125 W resume reapplication
+> [ ] GUI/network/audio/Commander resume
+> [ ] HDR visual acceptance
+> [ ] correct visual HDR→SDR return
+> [ ] Unreal interactive workflow
+> [ ] uninterrupted final-boot Proton session
+> [ ] natural-exit GameMode policy restoration
+> [ ] Stage Pro reconnect persistence as applicable
+> [ ] recovery-drill provenance
+> [ ] multi-day representative soak
+> [ ] backup freshness
+> [ ] source frozen
+> [ ] final baseline capture
+> [ ] canonical manifest
+> [ ] exact frozen flake checks
+> [ ] heavy VM/reconstruction suite
+> [ ] final closure audit
+> [ ] final stock-contamination audit
+> [ ] exact-final-head CI
+> [ ] docs/status.md zero hard gates
+> [ ] PR #7 ready
+> [ ] merge
+> [ ] merged-tree verification
+> [ ] annotated baseline tag
+> ```
+>
+> There is deliberately **no** item here for another CPU stress test, RAM test, Blender test, native-game test, Generation 37 root-chain test, controller test or Android test.
+>
+> ---
+>
+> # 26. Stop condition
+>
+> The readiness project is finished when the machine is:
+>
+> > physically running and proven against the selected stock policy; stable for its actual representative workload; reproducibly reconstructable; recoverable; backed up; tied to exact immutable Nix closures and source; and tagged as the control state for later optimization experiments.
+>
+> It does not need to prove every theoretically possible workload or hardware state.
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS WORK.
+> START OPTIMIZATION WORK.
+> ```
+>
+> Do not allow `plan.md` to become an indefinitely expanding certification exercise after that point.
+>
+> The main difference from the attached guide is that I would **not** spend another commit cycle preparing for the reboot: that preparation is already complete, the reboot is explicitly authorized in the newest evidence, Generation 38 is already installed, and the exact current documentation head has green CI. The correct next substantive action is now the Generation 38 boot and its postboot/resume checks. After that, the remaining interactive gates are quite small before the project can enter soak/freeze.
+>
+> I would also treat the **extra root-chain run as definitively removed from the current critical path**, rather than merely conditional as in the attached guide: the project has now compared the relevant semantics and documented that the accepted Generation 37 evidence remains applicable.
+
 ## Final acceptance/freeze continuation directive — adopted2026-10-07
 
 The newest user-supplied guide below is adopted for readiness sequencing.
