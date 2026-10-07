@@ -113,7 +113,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    EDAC controller counters are not exposed on this host.
 2. CPU15minute and substantial20GiB RAM validation accepted on test-active
    candidate. Continue representative workloads before soak/freeze.
-3. Real Unreal interactive editing remains open; editor-target rebuild passed
+3. Real Unreal interactive editing remains open: actual project is now open
+   in native Wayland on generation38; user observation and ordinary exit pending.
+   Editor-target rebuild passed
    (shared PCH and project unity compile covering all25 project C++ files,
    link/metadata, Epic bundled toolchain,40.24s, Git-clean).
    configured-map/120s PIE/endplay/normal editor exit passed on the test-active

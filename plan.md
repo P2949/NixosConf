@@ -26478,3 +26478,28 @@ physicalboot,125Wboot/resume implementation, Bluetoothoffbootpersistence,
 Human audibleStagepostboot/resume, visualHDR, interactiveUnreal andProton
 finalcandidate remain distinctworkloadscopes. No additional reboot planned.
 CI6906fc2 run37697178033 andfa8b015 run37697507796 passed.
+
+
+## Final-candidate interactive Unreal staged and boot details reconciled — 2026-10-07
+
+Opened actual AI_Gavin_Project through existing unreal-engine/Steam FHS wrapper
+with temporary SDL nativeWayland variables, Vulkan andnormalGUI mode.
+Session24158 remains live at inspection; Hyprland maps UnrealEditor actual
+project window with xwaylandfalse. ProjectGitclean atlaunch andsubsequentcheck.
+Userquestion requests viewport/selection/reversiblepropertyedit/PlayStop/
+continuedediting/ordinaryexit. Noautomatedharness substitutedforinteraction.
+Log later shows playworld creation; this alone is not humanacceptance or
+terminalexit. Preserveeditor andwaitforusernormalexit. Private logs
+~/.cache/nixos-validation/generation38-unreal-interactive*.log.
+
+Savedphysicalrootcomparison refined: prebootroot306/UUID
+e3b06ca7-2170-a445-ab83-d8a199003111 → generation38root308/UUID
+e6995128-937f-ed4a-a532-6b766ec71c13. Resetlog finalcompletion
+2026-10-07T22:40:22+00:00;10 completed resetevents total. Prebootsnapshot
+didnotcapture completioncount, so do not inventbeforecount/delta measurement.
+Privateidentitybooleantrue. No need another reboot toobtainmissingcount.
+PR7 nowrecords actualgeneration38boot/resume andremaining scopes.
+Current190bb01 CI37698315374 running; awaitterminalresult, notpriorheadproof.
+HumanvisualHDR question remains outstanding; no repeatedfullscreenplayback
+whileuserinteractswithUnreal. AudibleStagepostboot/reconnect scope, final
+Protonsession, recoveryprovenance, thenrepresentativesoak/freeze stillopen.
