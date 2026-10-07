@@ -29259,3 +29259,41 @@ Do notcreate unrelatedtuning workfromnonfatalwarnings.
 Remainingpresoak: visualHDR/SDRreturn, audibleStagecurrentboot/resume and
 replugonlyifnormallyused, exactrecoveryprovenance. Questionsalreadyqueued;
 do notrepeatacceptedUnreal/native/CPU/RAM/boot/resumechecks. PreserveGUI.
+
+
+## Remaining pre-soak evidence reconciliation — 2026-10-08
+
+PR7 updated for accepted generation38Proton naturalexit/restoration and
+Unrealterminalexit0. CI3060ba1run37699390184 completedPASS;15ffef6run37699904803
+remainsinprogress atinspection. Noancestorpassclaimedforpendinghead.
+Scopedrecoveryaudit rechecked readinessreceipt filenames andretained top-level
+ISOreceipts: stable-refresh-iso receipt haspath/bytes/sha256 only, desktopISO
+buildreceipt hasbuildoutputs, neitherestablishes physicalreadonlydrill.
+Private recovery-receipt-scope-audit.json recordsfields only. This scopecannot
+prove nodrilleveroccurred, but no matchingISO-boundeventevidencefound.
+Knownimagecopy/hash/generalprioruserrecovery remainaccepted separateproofs.
+Exactphysicalrecoverydrill staysOPEN; anadditionalreadonlyISOwindow isneeded
+if no existingeventreceipt canbefound. Existing runbook alreadydefines
+readonlyMP600/subvolumeinspection andforbids Disko/format/delete. Do not
+scheduleanotherbootundercompletednormalbootpermission.
+
+VisualHDR andStagepostboot/replug questionsstillpending; preservedwithout
+repeat. Updatedledger locally aspartofnextcoherentevidencebatch rather than
+anothertinyCI-cancellingcommit. Runtime/GUIuntouched.
+
+
+## Recovery read-only procedure corrected — 2026-10-08
+
+Runbook review found newdrillparagraph onlyspecifiedreadonly. OfficialBtrfs
+mountoptionreference confirmsroalonecanreplaytreelog; nologreplaydisablesit.
+Corrected actualoffline recoveryprocedure to ro,nologreplay,subvolid5 and
+allsubvolumeinspectionmounts ro,nologreplay. Require noexistingproductionrw
+mount, capturefindmntoptions/exactISO/hash/media/time/target/topology and
+keepreceiptinRAM/exportexternalmedia, not productionMP600. This isconcrete
+read-onlydrillpreparation, notnewruntimepolicy orperformedphysicaldrill.
+No livefilesystemremount/blockdevchange orreboot performed. Historical
+preflightcommand elsewhere remains a liveinspectionexample, notoffline
+zero-writeproof; no historicalreceiptrewrittenaspassingnewprocedure.
+Reference: https://btrfs.readthedocs.io/en/latest/ch-mount-options.html
+RemaininghumanHDR/Stageanswerspending. Recoverywindowrequiresnewavailability;
+completednormalbootauthorizationdoesnotauthorizeanotherISOreboot.

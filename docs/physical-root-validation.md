@@ -191,9 +191,18 @@ Do not write a raw image to a device selected only by an assumed `/dev/sdX` name
 Boot recovery media and first identify the disk by its MP600 model/serial,
 partition layout and Btrfs label; device enumeration can differ on recovery
 media. Never run Disko, `mkfs`, repartitioning or recursive deletion for this
-drill. Mount top-level read-only using the verified partition, list subvolumes
-and read the reset log under `@persist`. Mount each of `@nix`, `@var`, `@home`
-and `@persist` read-only at separate mountpoints to verify expected state.
+drill. Mount the verified Btrfs partition with `ro,nologreplay,subvolid=5`, list
+subvolumes and read the reset log under `@persist`. Use `ro,nologreplay`
+with the corresponding `subvol=@nix`, `subvol=@var`, `subvol=@home` and
+`subvol=@persist` options for separate inspection mounts. Btrfs can replay its
+tree log even with `ro`; `nologreplay` suppresses that behavior for this drill.
+See the [official Btrfs mount-option reference](https://btrfs.readthedocs.io/en/latest/ch-mount-options.html).
+First confirm the production partition is not already mounted read-write;
+if it is, stop and resolve that mount before the read-only inspection.
+Record `findmnt` options for every inspection mount, exact ISO/hash, media,
+time, target disk identity and observed topology in the drill receipt.
+Keep the receipt on recovery RAM storage during inspection, then export it
+to the external backup media rather than writing it to the inspected MP600.
 The repository is `@persist/etc/nixos`; profile generations live in
 `@nix/var/nix/profiles`. Unmount everything and exit without disk changes.
 
