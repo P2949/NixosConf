@@ -9,8 +9,8 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run37694567526](https://github.com/P2949/NixosConf/actions/runs/37694567526)
-passed Flake checks on head`4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76`.
+[CI run37695517220](https://github.com/P2949/NixosConf/actions/runs/37695517220)
+passed Flake checks on head`c8307a8869aba76ecb40fa89467e9681d69490fe`.
 Local offline flake check passed for HDR/Bluetooth/VRR source; changed checks
 were desktop evaluation, formatting, statix and deadnix, with unchanged checks reused.
 The HDR/native-game documentation successors require their own result;
@@ -74,8 +74,9 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
   routed to the monitor; this does not revoke the accepted USB test. Preserve
   user routing. Stage reconnect/reboot persistence remains separate.
 - HDR policy built and test-activated:10-bit desktop sRGB, automatic fullscreen
-  HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual HDR content and desktop
-  return pending; advertised metadata is not a measured HDR session.
+  HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual waterfall.mkv PQ/BT2020 output negotiated with native Wayland mpv;
+  DRM DP-3 changed BT2020_RGB during fullscreen and Default after ordinary exit.
+  Visual quality/monitor HDR indication pending; EDID is not measured brightness.
 - Recovery ISO build/hash/Ventoy copy passed; exact physical-drill provenance
   still requires reconciliation with existing evidence.
 
@@ -129,10 +130,10 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    VRR declared1 and applied live: monitor reports true at3440x1440@155Hz.
    Native Linux gameplay PASS: user playing Stardew Valley/app413150,
    independently confirmed running Linux ELF through Steam Linux Runtime.
-   HDR/content validation remains open. Live/source HDR policy
+   HDR video signalling/return demonstrated; perceptual acceptance remains open. Live/source HDR policy
    now cm_auto_hdr=1 with10-bit output; monitor reports XRGB2101010/sRGB
-   at155Hz withVRR true and no config errors. Actual HDR content/return remains
-   untested. Offline build passed: bjxxpsm7f42b909v9gpf48p7pinajc3x;
+   at155Hz withVRR true and no config errors. HDR-tagged waterfall sample
+   negotiated PQ/BT2020 and DRM BT2020_RGB; ordinary exit restored Default. Offline build passed: bjxxpsm7f42b909v9gpf48p7pinajc3x;
    test-activation passed; current system isbjxxpsm7f42b909v9gpf48p7pinajc3x. User confirms Stage Pro
    USB playback working and already tested; current PipeWire independently
    confirmed Stage default sink and active Firefox FL/FR playback links
@@ -141,8 +142,8 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
    Bluetooth is rfkill-blocked and service runtime-masked after test-activation;
    VRR remains true at155Hz, source installed by Home Manager.
    Blender report closes the previous input blocker. Stardew Valley native
-   gameplay accepted; Sky: Children of the Light remains the HDR candidate.
-   Actual HDR acceptance and natural-exit/final-source checks remain pending.
+   gameplay accepted; user replaced Sky with downloaded HDR MKV samples in ~/Downloads.
+   Visual HDR acceptance and final-source workload checks remain pending.
 4. Reconcile existing recovery-drill receipts before scheduling another drill.
 5. Check backup freshness at freeze; incrementally protect meaningful new work.
 6. Multi-day representative soak after individual gates; final stock-policy and
