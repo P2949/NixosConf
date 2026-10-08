@@ -7,8 +7,9 @@ is a historical checkpoint; authoritative branch/source and terminal CI must
 be checked live. Physicalgeneration38boot/125Wresume/Bluetoothoff/display/
 Stageenumeration andinteractiveUnreal are CLOSED. No additional tests in
 those scopes without an actual relevantchange. Remaining before soak:
-visualHDR/SDRreturn, audibleStagecurrentboot/resume and replugonlyifused,
-uninterruptedfinalbootProton/exitpolicy, recoveryprovenance. Then follow
+visualHDR/SDRreturn, audibleStagecurrentboot/resume and replugonlyifused.
+Uninterrupted final-boot Proton/exit policy and exact physical recovery
+provenance are CLOSED by the later receipts recorded below. Then follow
 soak→backupdelta→freeze→canonicalbaseline→exactchecks/heavysuite/closureaudit→
 exactheadCI→merge/treecomparison→annotatedtag. PreservecurrentGUI. No new
 readiness categories, architecture cleanup or optimization beforetag.
@@ -29377,3 +29378,26 @@ all remaining repository/profile/home directory and credential-source existence
 checks, without reading credential contents or executing the recovery script
 against the live production disk. These checks passed. Physical terminal recovery
 inspection remains pending; do not claim these desktop checks replace it.
+
+## Exact physical recovery drill accepted — 2026-10-08
+
+- [x] Exact recovery ISO physically booted; expected recovery closure matched.
+- [x] ISO SHA256 matched `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
+- [x] Force MP600 production Btrfs identified and mounted read-only with
+  `rescue=nologreplay,subvolid=5`; full topology recorded.
+- [x] Required @root, @persist, @nix, @var and @home subvolumes verified;
+  repository, profiles, user home and credential-source existence verified
+  without reading secret contents. Production partition cleanly unmounted.
+- [x] User returned normally; live /run/current-system and system profile both
+  resolve to generation 38's expected `bjxxpsm7f42b909v9gpf48p7pinajc3x`
+  normal closure, root mounted from @root, no failed system units.
+
+Terminal receipt `receipt-20261008T000047Z.txt` was read directly from USB,
+copied to `/persist/nixos-readiness-20261005/final-policy-20261007/`, and compared
+byte-for-byte. Receipt SHA256:
+`61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
+Receipt timestamp is retained as emitted. USB was safely unmounted afterwards.
+The prior two script failures remain recorded as historical failed attempts;
+this terminal PASS supersedes their pending recovery status. No further recovery
+reboot is needed for this gate. Remaining pre-soak human observations are visual
+HDR/SDR return and audible Stage postboot/resume, with replug only if used.
