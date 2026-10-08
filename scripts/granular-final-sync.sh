@@ -3,9 +3,11 @@
 set -euo pipefail
 
 case "${1:-}" in
-  --sync) sync_mode=1 ;;
-  --verify) sync_mode=0 ;;
-  *) printf 'Usage: granular-final-sync --sync|--verify\n' >&2; exit 2 ;;
+  --sync) sync_mode=1; var_only=0 ;;
+  --verify) sync_mode=0; var_only=0 ;;
+  --sync-var) sync_mode=1; var_only=1 ;;
+  --verify-var) sync_mode=0; var_only=1 ;;
+  *) printf 'Usage: granular-final-sync --sync|--verify|--sync-var|--verify-var\n' >&2; exit 2 ;;
 esac
 
 if (( EUID != 0 )); then
@@ -15,7 +17,7 @@ fi
 
 # This one-time tool only accepts the live legacy topology. After cutover it
 # must refuse to copy reset-root scaffolding over the persistent profiles.
-for task_mount in /home /var /persist; do
+for task_mount in /var /persist; do
   mountpoint -q "$task_mount"
   expected_subvolume="/@${task_mount#/}"
   if [[ "$(findmnt -rn -o FSROOT --mountpoint "$task_mount")" != "$expected_subvolume" ]]; then
@@ -23,6 +25,15 @@ for task_mount in /home /var /persist; do
     exit 1
   fi
 done
+if (( var_only )); then
+  expected_home=/@root
+else
+  expected_home=/@home
+fi
+if [[ "$(findmnt -rn -o FSROOT -T /home)" != "$expected_home" ]]; then
+  printf 'Refusing migration: home is not on the expected %s.\n' "$expected_home" >&2
+  exit 1
+fi
 
 umask 077
 evidence=/persist/granular-migration
@@ -41,6 +52,7 @@ mirror_state() {
   if (( dry_run )); then rsync_flags+=(-n); fi
 
   for task_source in "${task_directories[@]}"; do
+    if (( var_only )) && [[ "$task_source" != /var/* ]]; then continue; fi
     task_target="/persist$task_source"
     if [[ -d "$task_source" ]] && ! [[ "$task_source" -ef "$task_target" ]]; then
       # Only explicitly declared parents are mirrored. Originals and their
@@ -50,6 +62,7 @@ mirror_state() {
     fi
   done
   for task_source in "${task_files[@]}"; do
+    if (( var_only )) && [[ "$task_source" != /var/* ]]; then continue; fi
     task_target="/persist$task_source"
     if [[ -f "$task_source" ]] && ! [[ "$task_source" -ef "$task_target" ]]; then
       if (( ! dry_run )); then mkdir -p "$(dirname "$task_target")"; fi
@@ -59,13 +72,13 @@ mirror_state() {
 
   # Preserve existing configuration/history at their new atomic-save locations.
   # Prefer the new locations if the user already started using them.
-  if [[ ! -e "$task_home/.config/git/config" && -f "$task_home/.gitconfig" ]]; then
+  if (( ! var_only )) && [[ ! -e "$task_home/.config/git/config" && -f "$task_home/.gitconfig" ]]; then
     if (( ! dry_run )); then
       install -d -m 0700 -o "$task_user" -g users "/persist$task_home/.config/git"
     fi
     rsync "${rsync_flags[@]}" "$task_home/.gitconfig" "/persist$task_home/.config/git/config"
   fi
-  if [[ ! -e "$task_home/.local/state/zsh/history" && -f "$task_home/.config/zsh/.zsh_history" ]]; then
+  if (( ! var_only )) && [[ ! -e "$task_home/.local/state/zsh/history" && -f "$task_home/.config/zsh/.zsh_history" ]]; then
     if (( ! dry_run )); then
       install -d -m 0700 -o "$task_user" -g users "/persist$task_home/.local/state/zsh"
     fi
