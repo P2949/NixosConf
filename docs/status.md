@@ -9,17 +9,17 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run37697507796](https://github.com/P2949/NixosConf/actions/runs/37697507796)
-passed Flake checks on head`fa8b015ced221aebb5662d27100d4a2793784a90`.
-Local offline flake check passed for HDR/Bluetooth/VRR source; changed checks
-were desktop evaluation, formatting, statix and deadnix, with unchanged checks reused.
-The HDR/native-game documentation successors require their own result;
-prior CI success does not certify a later head.
+[CI run37700775543](https://github.com/P2949/NixosConf/actions/runs/37700775543)
+passed Flake checks on `9cf9fe203d4f545523fed3985abf4808ea4c19bb`.
+Recovery acceptance head `50e19fe1c395412d62893a5ab9ea917dcedd2bc3` has
+[CI run37706082277](https://github.com/P2949/NixosConf/actions/runs/37706082277)
+in progress as last checked; a prior pass does not certify this successor.
+Local offline checks previously passed the HDR/Bluetooth/VRR source.
 
 ## Accepted boot candidates and physical history
 
 Generation38 is physically booted and selected; normal candidate is
-`bjxxpsm7f42b909v9gpf48p7pinajc3x`, boot`1348b203-5917-42ba-8daf-89abaaaa2bad`.
+`bjxxpsm7f42b909v9gpf48p7pinajc3x`, current boot`b07efa9b-0e60-425f-ba36-d1eb038327cd` after the recovery return.
 Fresh root and private machine-ID equality passed. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
 and persistent-root`8v183hn0p5yv7wf625yj38n6bhsjpxz6` ESP kernel/initrd copies
 match their store artifacts. Boot-only installation and the coordinated normal reboot passed.
@@ -27,8 +27,8 @@ Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
 
 | Candidate | Store identity |
 |---|---|
-| Normal | `0p67xd3scigqmmn65a0x5skdcsf6025b` |
-| Persistent-root | `ph12l3y4k9jjmp5vhxwlkc11x4js2gjx` |
+| Generation38 normal | `bjxxpsm7f42b909v9gpf48p7pinajc3x` |
+| Generation38 persistent-root | `8v183hn0p5yv7wf625yj38n6bhsjpxz6` |
 
 Both closures have independent GC roots; their ESP kernel/initrd copies match
 store artifacts. Generation37 remains the accepted physical root-chain baseline.
@@ -82,94 +82,38 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
   HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual waterfall.mkv PQ/BT2020 output negotiated with native Wayland mpv;
   DRM DP-3 changed BT2020_RGB during fullscreen and Default after ordinary exit.
   Visual quality/monitor HDR indication pending; EDID is not measured brightness.
-- Recovery ISO build/hash/Ventoy copy passed; exact physical-drill provenance
-  still requires reconciliation with existing evidence.
+- Exact physical recovery drill PASS: matched recovery closure and ISO hash,
+  MP600 mounted `ro,rescue=nologreplay,subvolid=5`, required five subvolumes
+  and repository/profiles/home/credential existence checked, clean unmount.
+  USB receipt `receipt-20261008T000047Z.txt` copied and compared privately;
+  SHA256 `61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
+  Return to generation38 normal closure verified, with no failed system units.
+  Earlier script failures remain historical, superseded by this terminal PASS.
 
 ## Validation evidence and remaining actions
 
 Remaining hard gates: visual HDR/SDR return; applicable audible audio persistence;
-recovery-drill provenance; representative multi-day soak; backup freshness;
+representative multi-day soak; backup freshness;
 frozen-source capture/manifest/exact validation/CI; PR ready/merge/tag.
 Generation38 boot/resume, root-chain decision and Unreal interaction are closed.
 Expected mounts, credential-source equality, persistent journal directory and
 all12 powersave/balance_performance CPU policies passed read-only inspection.
 
-1. Validate the selected125W package policy using hardware/correctness evidence.
-   Test-active normal now`bjxxpsm7f42b909v9gpf48p7pinajc3x` after Bluetooth-off/
-   VRR/HDR policy build and test-activation on2026-10-07. Earlier tested normal
-   `pl4iy6fdvgjanswwwvvvja42p17p40zd`, persistent
-   `4rkvhfwj2vvj932ck5hp2izvrs65dp2f` built/GC-protected. Declarative
-   power service and generated resume hook/readback passed; boot default
-   is generation38. Actual boot and suspend/resume passed: power service
-   restarted on resume, both125W limits retained, Wayland/network/Commander returned.
-   Earlier80C cutoff stops were incomplete tests, not proven overheating or
-   hardware faults. User explicitly superseded the arbitrary80C criterion;
-   block/paste history is not a prerequisite. The isolated15-minute125W trial
-   passed:900.38s elapsed,12 workers passed/0 failed, peak81C, all24 thermal
-   counters remained0, bothlimits125W, no guard stop or targeted new kernel
-   faults. This accepts the user-selected15minute CPU scope on the test-active
-   candidate, not exhaustive OC stability or physical boot/resume acceptance.
-   Measured AIO pump/fans function; post-load coolant snapshots do not
-   establish load-time warmup or contact. No firmware/voltage changes.
-   Previous24/22GiB attempts remain incomplete. The separate20GiB/one-loop
-   memtester pass completed in3036.55s: all16 enabled patterns ok, exit0,
-   mlock successful, no guard stop, all24 thermal counters unchanged0,
-   peak79C, minimum available8323716KiB and swap growth1084KiB. No matching
-   new kernel faults or failedunits; session1Wayland active. Accept substantial
-   tested-memory full-pass scope, not all installed RAM or exhaustive stability.
-   EDAC controller counters are not exposed on this host.
-2. CPU15minute and substantial20GiB RAM validation accepted on test-active
-   candidate. Continue representative workloads before soak/freeze.
-3. Real Unreal interactive editing PASS by direct user confirmation of
-   continued normal work without issues. Current generation38 native Wayland
-   editor remains running; observe natural exit later without repeating the test.
-   Editor-target rebuild passed
-   (shared PCH and project unity compile covering all25 project C++ files,
-   link/metadata, Epic bundled toolchain,40.24s, Git-clean).
-   configured-map/120s PIE/endplay/normal editor exit passed on the test-active
-   candidate with project Git-clean and no matching new kernel faults.
-   Blender interactive editing/viewport accepted by user on2026-10-07 across Layout,
-   Modeling, UV Editing, Shading and Animation without freezes/crashes (longer1024sample real-project HIP
-   render passed105.21s, source unchanged, no matching GPU faults); native/Proton games,
-   controller, remaining audible audio/reconnect and visual HDR
-   where used. Android tooling, Gradle projects and AVD/emulator validation
-   are NOT APPLICABLE by explicit user instruction on2026-10-06: this machine
-   will not perform Android work. No Android setup or project input is needed.
-   Installed Dark Souls Remastered/app570940 and Proton Experimental provide
-   a real Proton candidate. User reports gameplay/controls/audio worked
-   perfectly; observed exit restored GameMode inactive and all12 CPU policies
-   to powersave/balance_performance, with no targeted kernel faults. Historical session
-   spanned test-activation. New generation38 session accepted by user; GameMode
-   active observed during play, inactive after exit, all12 powersave/EPP
-   balance_performance policies restored, no matching scoped kernel faults.
-   Native Linux games, HDR and always-enabled VRR ARE APPLICABLE by user
-   confirmation2026-10-07; controller is NOT APPLICABLE. Bluetooth requested
-   disabled: source enable/powerOnBoot false, live rfkill blocked/service stopped.
-   VRR declared1 and applied live: monitor reports true at3440x1440@155Hz.
-   Native Linux gameplay PASS: user playing Stardew Valley/app413150,
-   independently confirmed running Linux ELF through Steam Linux Runtime.
-   HDR video signalling/return demonstrated; perceptual acceptance remains open. Live/source HDR policy
-   now cm_auto_hdr=1 with10-bit output; monitor reports XRGB2101010/sRGB
-   at155Hz withVRR true and no config errors. HDR-tagged waterfall sample
-   negotiated PQ/BT2020 and DRM BT2020_RGB; ordinary exit restored Default. Offline build passed: bjxxpsm7f42b909v9gpf48p7pinajc3x;
-   test-activation passed; current system isbjxxpsm7f42b909v9gpf48p7pinajc3x. User confirms Stage Pro
-   USB playback working and already tested; current PipeWire independently
-   confirmed Stage default sink and active Firefox FL/FR playback links
-   during the accepted USB test; latest snapshot routes playback to HDMI3.
-   Functional USB playback accepted. Stage sink/profile returned after actual
-   boot and suspend/resume; audible postboot/resume/replug scope remains open.
-   Bluetooth remained inactive/rfkill-blocked after actual generation38 boot;
-   VRR remains true at155Hz, source installed by Home Manager. Final root-chain
-   repeat is unnecessary: both variants retain identical initrd/kernel/fstab,
-   identity/user-generation/persistence contracts and unchanged relevant modules.
-   Blender report closes the previous input blocker. Stardew Valley native
-   gameplay accepted; user replaced Sky with downloaded HDR MKV samples in ~/Downloads.
-   Visual HDR acceptance and final-source workload checks remain pending.
-4. Reconcile existing recovery-drill receipts before scheduling another drill.
-5. Check backup freshness at freeze; incrementally protect meaningful new work.
-6. Multi-day representative soak after individual gates; final stock-policy and
-   environment audit; canonical manifest; exact-source validation/CI; PR ready,
-   protected-main merge and annotated baseline tag.
+1. Obtain the remaining human observations: HDR picture/monitor indication and
+   normal SDR return; audible Stage Pro after boot/resume, with replug only if
+   normally used. Technical signalling, enumeration and user playback already
+   passed; do not repeat accepted workload or root-chain tests.
+2. After these individual gates, perform the representative multi-day mixed-use
+   soak. Application uptime alone is not evidence of completed normal work.
+3. Check backup freshness at freeze and protect meaningful new work incrementally.
+4. Freeze source, capture the canonical baseline, run exact final checks/heavy
+   suite and stock closure audit, verify exact-head CI, ready and merge PR7,
+   compare the merged tree, and create the annotated baseline tag.
+
+Android/Gradle/emulators and controller testing are not applicable by user
+instruction. Bluetooth remains disabled by request. Unreal's normal editor exit
+already completed successfully; no repeat interaction is required. Both125W
+boot limits and their restoration after real suspend/resume are accepted.
 
 No reboot is scheduled. Preserve the live session and batch required physical
 interruptions when the user is available. No final manifest/tag exists yet.

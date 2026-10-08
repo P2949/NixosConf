@@ -29401,3 +29401,15 @@ The prior two script failures remain recorded as historical failed attempts;
 this terminal PASS supersedes their pending recovery status. No further recovery
 reboot is needed for this gate. Remaining pre-soak human observations are visual
 HDR/SDR return and audible Stage postboot/resume, with replug only if used.
+
+## Current-status reconciliation after recovery acceptance — 2026-10-08
+
+Updated docs/status.md to remove superseded pending recovery and running-Unreal
+claims, replace old candidate identities with generation38 candidates, and
+record the verified current return boot. Exact-head CI run37706082277 for
+50e19fe was confirmed live/in progress; predecessor9cf9fe CI passed, while
+7eef022 was cancelled by its successor. No terminal successor result claimed.
+The previous goal turn made concrete progress by accepting and archiving the
+physical recovery receipt. Remaining human HDR/SDR and audible Stage observations
+were requested together; soak is not marked started before those gates close.
+No accepted workloads, stress tests or reboot chains are being repeated.
