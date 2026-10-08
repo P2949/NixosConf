@@ -105,6 +105,10 @@
   };
 
   packages = rec {
+    granular-physical-check = import ../packages/granular-physical-check.nix {
+      inherit pkgs username;
+      inherit (desktopSystem) config;
+    };
     granular-final-sync = import ../packages/granular-migration.nix {
       inherit pkgs username;
       inherit (desktopSystem) config;

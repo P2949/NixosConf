@@ -93,5 +93,10 @@ in
     };
   };
 
-  fileSystems."/persist".neededForBoot = true;
+  fileSystems = {
+    "/persist".neededForBoot = true;
+  }
+  // lib.optionalAttrs config.workstation.granularMigration.keepLegacyVar {
+    "/var".neededForBoot = true;
+  };
 }
