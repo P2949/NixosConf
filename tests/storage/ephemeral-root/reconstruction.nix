@@ -40,7 +40,7 @@ pkgs.testers.runNixOSTest {
       {
         disko.devices =
           (import ../../../hosts/desktop/disko.nix {
-            config = desktopSystem.config;
+            inherit (desktopSystem) config;
             inherit lib;
           }).disko.devices;
       }

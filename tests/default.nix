@@ -106,6 +106,10 @@
   };
 
   packages = rec {
+    granular-arm-cutover = import ../packages/granular-arm-cutover.nix {
+      inherit pkgs username;
+      inherit (desktopSystem) config;
+    };
     granular-shutdown-cutover = import ../packages/granular-shutdown-cutover.nix {
       inherit pkgs username;
       inherit (desktopSystem) config;

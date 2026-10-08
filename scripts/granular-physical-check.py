@@ -33,7 +33,7 @@ if os.geteuid() != 0:
 settings = json.loads(Path(sys.argv[1]).read_text())
 args = sys.argv[2:]
 if not args or args[0] not in ("seed", "verify"):
-    fail("Usage: granular-physical-check seed home|normal|recovery SYSTEM | verify")
+    fail("Usage: granular-physical-check seed home|home-recovery|normal|recovery SYSTEM | verify")
 
 evidence = Path("/persist/granular-migration")
 evidence.mkdir(mode=0o700, exist_ok=True)
@@ -43,11 +43,12 @@ boot_id = Path("/proc/sys/kernel/random/boot_id").read_text().strip()
 home = Path(settings["home"])
 
 if args[0] == "seed":
-    if len(args) != 3 or args[1] not in ("home", "normal", "recovery"):
-        fail("seed requires home|normal|recovery and the exact next system closure.")
+    if len(args) != 3 or args[1] not in ("home", "home-recovery", "normal", "recovery"):
+        fail("seed requires a migration mode and the exact next system closure.")
     if ticket.exists():
         fail("A physical boot check is already pending; verify it before seeding another.")
     mode = args[1]
+    recovery = mode in ("recovery", "home-recovery")
     system = str(Path(args[2]).resolve())
     if not system.startswith("/nix/store/") or not Path(system, "bin/switch-to-configuration").is_file():
         fail("The next system must be an already built NixOS store closure.")
@@ -59,9 +60,9 @@ if args[0] == "seed":
     home_dirs = [home / ".cache", home / "granular-undeclared"]
     home_dirs += [home / relative for relative in settings["caches"]]
     for directories, retained, user_owned in [
-        (root_dirs, mode == "recovery", False),
-        (var_dirs, mode in ("home", "recovery"), False),
-        (home_dirs, mode == "recovery", True),
+        (root_dirs, recovery, False),
+        (var_dirs, mode != "normal", False),
+        (home_dirs, recovery, True),
         ([home / "Documents", home / ".config/Code"], True, True),
         (["/persist", "/nix", "/.snapshots", "/boot",
           "/var/lib/nixos", "/var/lib/nixos-optimization"], True, False),
@@ -90,7 +91,7 @@ else:
         errors.append("The booted system differs from the exact expected closure.")
     if fsroot(home) != "/@root":
         errors.append("Home is not root-local.")
-    expected_var = "/@var" if data["mode"] == "home" else "/@root"
+    expected_var = "/@var" if data["mode"] in ("home", "home-recovery") else "/@root"
     if fsroot("/var") != expected_var:
         errors.append("Var topology differs from the expected migration phase.")
     for mount, expected in [("/", "/@root"), ("/persist", "/@persist"),

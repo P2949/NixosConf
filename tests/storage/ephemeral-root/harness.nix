@@ -635,6 +635,11 @@ pkgs.testers.runNixOSTest {
       for path in persistent_paths:
           machine.succeed(f"grep -Fx persistent {path}")
 
+      # Installing the recovery-only profile above lets bootloader cleanup
+      # remove the normal initrd. Reinstall the normal generation, as a real
+      # nixos-rebuild boot does, before selecting it for the return boot.
+      machine.succeed("ln -sfn '${ephemeralSystem}' /nix/var/nix/profiles/system-1-link")
+      machine.succeed("${ephemeralSystem}/bin/switch-to-configuration boot")
       arm_ephemeral_boot()
       machine.reboot()
       validate_boot(4)

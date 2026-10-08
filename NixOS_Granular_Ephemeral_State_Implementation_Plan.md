@@ -134,6 +134,11 @@ Evidence paths and validation results will be added here as work progresses.
 - Final-sync tooling supports the later var-only migration and rejects copying
   root-local home back over active persisted profiles. A failed shutdown copy
   must leave the old boot default selected. No live mount replacement is used.
+- Strengthened combined VM passed three normal boots and two recovery boots,
+  then its return-to-normal step reached a stale boot entry whose initrd had
+  been pruned when installing the fixture's recovery-only profile. The fixture
+  now reinstalls the exact normal generation before selecting it, matching
+  real `nixos-rebuild boot`; return-to-normal assertions are retained unchanged.
 
 The live desktop still uses its original mounts. No cutover generation has been
 installed and no legacy state has been deleted. A final quiesced synchronization
