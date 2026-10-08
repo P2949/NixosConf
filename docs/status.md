@@ -9,11 +9,11 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run37706702892](https://github.com/P2949/NixosConf/actions/runs/37706702892)
-passed Flake checks on `3ff359140cc348f3f871b1ffe3f0dc80172f9d52`, which
-accepts the final human observations and starts normal-use soak. Earlier
-50e19fe and f254124 checks also passed. Later evidence heads require their
-own terminal CI; documentation updates do not invalidate runtime acceptance.
+GitHub [PR #7 checks](https://github.com/P2949/NixosConf/pull/7/checks) on
+its current head are authoritative for CI status. Historical exact runs remain
+in plan.md. Record final exact-head CI in the PR body and annotated baseline tag
+after it completes; a source document cannot certify its own future CI run.
+The canonical baseline binds source, lockfile, artifacts and physical evidence.
 
 ## Accepted boot candidates and physical history
 

@@ -31432,3 +31432,76 @@ OOM patterns. This narrow early snapshot is not completed multi-day soak,
 exhaustive fault coverage or proof of representative workloads. Continue normal
 use; freeze/final validation remain dependent on the multi-day evidence.
 Do not push a bookkeeping successor merely to cancel the still-running CI.
+
+
+## Narrow post-tag cleanup and CI evidence ownership — adopted 2026-10-08
+
+Read attachment55d546e0 in full; copies86b9dc48 and61acc5a1 are byte-identical
+(cmp verified). Preserve the full text once below. SHA256: `650773bf4612f1758121bc2fe47c3af6e5c2997111040b9a02c86fd942e16e2a`.
+Its reviewed41c12e snapshot is historical; subsequent7a8cc4c CI
+run37707709269 is terminal PASS. Runtime configuration remains unchanged.
+
+Adopt the CI ownership correction now as documentation-only reconciliation:
+current-head GitHub PR checks are authoritative, while final exact CI run evidence
+belongs in PR/tag metadata after completion. The canonical baseline binds source,
+lock and artifacts without attempting to certify its own future CI. This avoids
+an endless status-commit/CI-successor loop and does not advance the source freeze.
+
+Retain these post-tag proposals without implementing them during soak/readiness:
+RAPL mechanism extraction with host-owned125W policy; explicit enabled-host
+Commander policy and matching tests; host Bluetooth and development VS Code
+ownership; semantic test aliases; intact history archival; generated options and
+offline link checks after the docs move. Keep explicit flake/Hyprland structure;
+stock-control structure belongs to later stage-aware optimization design.
+A post-tag cleanup series must demonstrate closure preservation. It is separate
+from readiness completion and must not delay the immutable baseline.
+
+> I took another live pass over the repository rather than carrying the previous review forward. The snapshot I reviewed is **`41c12e082c8eb78bff201dc231eb51ac5ec2d646`**, and exact-head Nix checks **#182 passed**. PR #7 is still draft/mergeable and is now at **115 commits**.
+>
+> The key change in my assessment is that **the repository no longer needs another general modularization pass**. Your README cleanup is done and is much better: it now explains responsibilities without duplicating mutable configuration.  The flake is also still appropriately explicit for a one-host repository.  And all individual readiness gates are now accepted; you're in the normal-use soak/freeze phase.
+>
+> So I'd make **fewer, narrower changes** now:
+>
+> 1. **Do not refactor runtime source before the baseline tag.** This is the most important recommendation at this exact moment. Generation 38, the 125 W policy, boot/resume behavior, display policy, recovery, workloads, etc. are now physically accepted, and `optimization/default.nix` is still correctly inert.   Finish the soak, backup delta, frozen-source validation, merge and tag first. A “cleaner” source tree is not worth invalidating source-bound evidence now.
+>
+> 2. **At freeze, fix the CI/current-truth ownership model rather than continuing to update CI SHAs inside `docs/status.md`.** This is the biggest remaining documentation-design problem. The current status document says a prior run on `3ff3591…` passed, whereas current HEAD `41c12e…` has now passed #182.   This is inherently circular: if you commit “HEAD X passed CI,” that documentation commit creates HEAD Y, which then needs new CI. I would make `status.md` say simply that **GitHub PR checks on current HEAD are authoritative**. Record the exact final CI run in the PR body and/or annotated baseline tag, because those can be updated after CI without changing the source commit. Your canonical baseline under `docs/baselines/pre-optimization/` should bind source, lockfile, closures, recovery artifact and physical evidence, but it should not try to certify its own commit's future CI run.
+>
+> 3. **Immediately post-tag, extract the new Intel RAPL power-limit implementation from the host into a hardware module.** This is the strongest genuinely new source-architecture issue since the previous review. `hosts/desktop/default.nix` now contains the 125 W *policy* **and** the full mechanism: raw `/sys/class/powercap/intel-rapl:0` probing, writes, verification, systemd service and resume restart.  That crosses your otherwise good boundary of “host = facts/policy, module = mechanism.” I'd create:
+>
+> ```text
+> modules/hardware/intel-rapl-power-limit/
+>     default.nix
+>
+> tests/hardware/intel-rapl-power-limit/
+>     config.nix
+> ```
+>
+> and reduce the host to approximately:
+>
+> ```nix
+> hardware.intelRaplPowerLimit = {
+>   enable = true;
+>   longTermWatts = 125;
+>   shortTermWatts = 125;
+> };
+> ```
+>
+> The module should own micro-watt conversion, sysfs validation, the oneshot service and resume reapplication. The host owns **125 W**. This also gives optimization-v2 a much cleaner invariant to hold constant across experiments.
+>
+> 4. **Make Commander Core policy completely explicit at the host boundary.** The host now explicitly declares the real cooling policy—60/100% fans, 100% pump, 50/45 °C hysteresis and the timing values.  But `modules/hardware/commander-core/default.nix` still carries fallback policy defaults such as 60% base fan, 65/60 °C thresholds and timing defaults.  I would remove defaults from the actuating/cooling-policy options and require an enabled host to provide them explicitly. That makes the module purely a mechanism and makes accidental enablement fail closed rather than silently choosing a cooling policy. Your current config test explicitly checks that the defaults work, so it should instead construct one complete known-good policy and then test invalid variants against it.
+>
+> 5. **Fix two small ownership mismatches after the tag.** Bluetooth is currently disabled inside `profiles/workstation.nix`; that looks more like a fact/policy of this desktop than a defining property of every future “workstation” role.  I'd move the `hardware.bluetooth` block to `hosts/desktop/default.nix`. Similarly, VS Code is still under `home/p2949/desktop/default.nix` while you already have a dedicated `development/` hierarchy containing Clang tooling, Blender and Unreal.   Move `vscode` to `development/default.nix`. Both changes make the existing taxonomy more internally consistent without introducing new abstraction.
+>
+> 6. **Retire the historical flake-output aliases once the readiness plan is archived.** `tests/default.nix` still exposes `impermanence-root-test-a`, `impermanence-root-test-b`, `impermanence-root-recovery`, and `impermanence-root-fallback` as compatibility aliases, and still calls one test `impermanence-root-safety`.  After the historical plan no longer depends on those names, I'd expose only the semantic API: `reset-control`, `reset-safety`, `interrupted-recovery`, `persistent-identity`, `persistent-fallback`, etc. That will probably also let `packages = rec { ... };` become an ordinary attrset. I would **not** otherwise split `tests/default.nix`; it remains readable.
+>
+> 7. **After the tag, retire `plan.md` as a live root-level document.** This is now the largest organizational debt by far. It contains multiple complete imported continuation guides and an enormous chronological ledger; current `status.md` correctly treats it as history rather than present truth.  Move it intact to something like `docs/history/pre-optimization-readiness.md` rather than rewriting history. Then organize the rest of `docs/` into `design/`, `runbooks/`, `validation/`, `baselines/`, and `history/`, leaving `docs/status.md` at the top as the short live entry point. After the baseline exists, much of the immutable hardware/closure detail currently in `status.md` can move into the baseline record as well.
+>
+> 8. **Add generated option documentation and link validation only after that docs move.** You now have enough real custom API surface to justify `nixosOptionsDoc`: `boot.ephemeralBtrfsRoot.*`, `workstation.activationSafety.*`, `hardware.commanderCore.*`, and eventually the RAPL module. The modules already contain types, descriptions and assertions.   Generate those facts instead of manually copying them into prose. At the same time add a cheap offline Markdown-link check to `nix flake check`, particularly because moving the docs will otherwise make broken internal links easy to miss.
+>
+> There are also several things I would now **stop recommending**. I would leave `flake.nix` explicit—no `flake-parts`, `flake-utils`, auto-discovery, `mkHost`, or generic multi-host library. Your current flake is small enough that abstraction would obscure it.  I would also leave the 9 KB Hyprland Lua configuration as one file for now: it is already clearly sectioned into monitors, configuration, bindings, workspaces and rules, so splitting it merely because it is long would add navigation cost without removing duplication.
+>
+> I would also revise one piece of my **previous** advice: I would **not bother moving `modules/core/stock-control.nix` to `modules/workstation/` as an isolated cleanup anymore**. It is only a 298-byte set of forbidden optimization namespaces, and optimization-v2 is about to need a stage-aware evolution of exactly that mechanism.  Moving it once after the tag and then redesigning it again a few commits later is pointless churn. Let optimization-v2 decide its permanent structure—probably a stock/CPU/LTO/PGO/BOLT stage-control subsystem.
+>
+> So the practical sequence I would use is: **finish soak → freeze/tag the current stock system → make one closure-preserving cleanup series containing the RAPL module, Commander Core policy cleanup, Bluetooth/VS Code ownership fixes, test alias cleanup and documentation archival → prove that those source-only refactors did not change the stock closure → then begin optimization-v2.**
+>
+> That would leave you with a repository that is cleaner because its boundaries are sharper, not because it has more layers.
