@@ -6,6 +6,7 @@
     ./desktop
     ./development
     ./shell.nix
+    ./xdg.nix
   ];
 
   home = {
@@ -17,5 +18,4 @@
     stateVersion = "26.05";
   };
 
-  xdg.enable = true;
 }
