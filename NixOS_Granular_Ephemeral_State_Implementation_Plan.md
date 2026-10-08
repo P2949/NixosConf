@@ -193,8 +193,10 @@ These receipts do not assert physical or functional application acceptance.
   `pre-cutover-flake.log`, `combined-regression-final.log`,
   `reconstruction-final.log`, `root-suite-final.log`; the unit and shutdown log
   are in the same directory. Artifacts are 0600, directory 0700.
-- Next gate: user saved-work/reboot readiness because reboot closes the active
-  graphical session. The plan and service are ready; do not arm another service
+- User chose “I'll save my work and reboot myself” for the first physical home
+  cutover. No agent-initiated reboot is authorized or scheduled. Await that
+  actual orderly reboot; elapsed time is not evidence it occurred. The plan and
+  service are ready; do not arm another service
   or select generation 42 manually before final-copy verification.
 - After the actual reboot, inspect `final-copy-shutdown.log`,
   `final-sync-verified`, and `physical-boot-pending.json`, then run:
