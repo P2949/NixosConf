@@ -16,7 +16,7 @@ pkgs.writeShellApplication {
     pkgs.systemd
   ];
   text = ''
-    desktop_uid=${toString config.users.users.${username}.uid}
+    desktop_uid=$(id -u ${pkgs.lib.escapeShellArg username})
     final_sync=${finalSync}
     physical_check=${physicalCheck}
     ${builtins.readFile ../scripts/granular-shutdown-cutover.sh}

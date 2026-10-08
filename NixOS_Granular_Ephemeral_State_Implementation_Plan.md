@@ -139,6 +139,18 @@ Evidence paths and validation results will be added here as work progresses.
   been pruned when installing the fixture's recovery-only profile. The fixture
   now reinstalls the exact normal generation before selecting it, matching
   real `nixos-rebuild boot`; return-to-normal assertions are retained unchanged.
+- A local shutdown-refusal check exposed a runtime-allocated UID: the Nix UID
+  was null and the first wrapper passed an empty process selector. It incorrectly
+  began an allow-list copy while apps were running. The final dry-run detected
+  drift and aborted before boot selection; source volumes and snapshots were
+  untouched. The wrapper now resolves `id -u` at runtime, and any process-check
+  error aborts. Only generated diagnostic sentinels were removed; failed ticket
+  and copy log are private under `/persist/granular-migration`. Final quiesced
+  synchronization is still mandatory; this attempt is not migration acceptance.
+- Added [the physical cutover procedure](docs/granular-cutover.md) and the
+  packaged arming tool: boot-only installation of an exact built store closure,
+  old-default protection, reviewed stop ordering, no automatic reboot, and
+  receipt-based normal/recovery checks. These tools never retire subvolumes.
 
 The live desktop still uses its original mounts. No cutover generation has been
 installed and no legacy state has been deleted. A final quiesced synchronization

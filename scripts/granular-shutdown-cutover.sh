@@ -20,9 +20,15 @@ grep -Fq "init=$task_system/init " "/boot/loader/entries/$task_entry"
 
 # Refuse the cutover if any process of the desktop user remains alive. An
 # unsuccessful final sync leaves the old boot default and originals intact.
-if pgrep -u "$desktop_uid" > /dev/null; then
+if pgrep -u "$desktop_uid" '.*' > /dev/null; then
   printf 'Desktop processes still running; retaining the old boot default.\n' >&2
   exit 1
+else
+  task_process_status=$?
+  if (( task_process_status != 1 )); then
+    printf 'Desktop process check failed; retaining the old boot default.\n' >&2
+    exit 1
+  fi
 fi
 "$physical_check/bin/granular-physical-check" seed "$task_check" "$task_system"
 "$final_sync/bin/granular-final-sync" "$task_sync"
