@@ -4,6 +4,7 @@
   imports = [
     ./blender.nix
     ./unreal.nix
+    ./unity.nix
   ];
 
   home.packages = [
