@@ -71,9 +71,9 @@ The project trees beneath `Development` are mixed too. Unity's observed project
 `Logs` and `Temp` directories and Unreal's `AI_Gavin_Project/Intermediate`,
 `Saved/Logs`, `Saved/ShaderDebugInfo` and `Saved/UnrealBuildTool` reset. Source,
 Assets, Packages, ProjectSettings/UserSettings, Unreal Content/Config, autosaves,
-collections and installed engine binaries remain retained. Both Unity Libraries
-currently remain retained pending the user's cache preference: the older
-`VR-AR-project` has no Assets directory, so deletion might lose recovery material.
+collections and installed engine binaries remain retained. The user explicitly
+selected retaining both Unity Libraries (class R): the older `VR-AR-project` has
+no Assets directory, so deletion might also lose recovery material.
 The actual Unity and Unreal project exception paths are in the same application
 exception list as profile caches; new projects require an audit and declaration.
 

@@ -114,15 +114,18 @@ Evidence paths and validation results will be added here as work progresses.
 - Added the temporary `desktop-home-cutover` output to follow stages 21–26
   before removing `/var`. It keeps only `@var`, with `neededForBoot` required
   by Impermanence's persisted var paths. The final `desktop` retains neither.
-  Evaluation checks both configurations. Reconstruction now consumes the actual
-  evaluated Disko devices rather than assuming the module is a literal set.
+  Evaluation checks both configurations. Reconstruction calls the actual Disko
+  module with the desktop policy rather than assuming it is a literal set.
+  Copying already evaluated Disko internals initially retained the physical
+  device despite the fixture override; importing raw declarations fixes that
+  test integration error without changing the physical disk configuration.
 - Project metadata audit found Unity project logs/temp and Unreal project
   Intermediate/Logs/ShaderDebugInfo/UnrealBuildTool artifacts under the persisted
   Development parent. These are now declared root-backed exceptions. Assets,
   source, settings, autosaves and editor collections remain retained.
 - Unity Libraries total 3.3 GiB. The older project's Assets directory is absent;
-  its Library may contain recovery data. A user preference question is pending;
-  both Libraries remain retained while that question is unresolved.
+  its Library may contain recovery data. User explicitly selected retaining both
+  Libraries while resetting project logs and temporary files; both are class R.
 - Packaged `granular-physical-check` seeds a private, exact-closure/boot-ID-bound
   matrix including every application cache exception, then verifies only after
   a real reboot. `granular-shutdown-cutover` refuses while desktop-user processes
