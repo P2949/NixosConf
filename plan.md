@@ -29328,3 +29328,52 @@ claimed. RecoveryISOhasnoCodexsession, so selectingVentoyISO andrunning
 preparedscript needuserconsole; do notpromise unattendedagentcontrol there.
 Normalbootdefault remainsgeneration38. Rebootwillbescheduledonlyafter
 thishandoffiscommitted. ReturnwithsavedUSBreceiptforagentverification.
+
+## Physical recovery attempt and USB script correction — 2026-10-08
+
+The user physically booted the exact recovery ISO. The external receipt
+`receipt-20261007T233423Z.txt` confirms the expected recovery closure matched,
+the ISO SHA256 matched, and the Force MP600 with the expected Btrfs partition
+was identified. Inspection did not pass: the mount was rejected with
+`Unknown parameter 'nologreplay'`. Preserve this failed attempt as evidence;
+it does not establish completed topology inspection or indicate filesystem
+corruption. A copy is retained under the private final-policy-20261007 evidence
+directory. The receipt clock is recorded as emitted, not treated as a verified
+wall-clock timestamp.
+
+Ventoy's raw `/dev/sda1` cannot be directly mounted while serving the running
+ISO; `/dev/mapper/sda1` worked in the recovery environment. On the normal
+installed system the UUID device remains usable. The user returned to generation
+38 and requested preparation of the correction before another ISO boot.
+
+Updated the external USB `NixosConf-backups/readiness-recovery-drill-20261008/inspect.sh`
+to use `ro,rescue=nologreplay,subvolid=5`. Retained the original as
+`inspect.sh.before-mount-fix`; syntax validation passed and the existing
+read-only/log-replay-disabled option check remains intact. Updated the offline
+recovery runbook to the same syntax. The script must run in recovery, not against
+the mounted production system. The next physical read-only inspection and
+subsequent normal return remain pending; no reboot was initiated here.
+
+## Second recovery attempt and corrected topology assertion — 2026-10-08
+
+The user must leave the ISO and return to the local generation 38 desktop to
+communicate with this agent; phone access is unavailable. Do not tell the user
+to apply interactive follow-up corrections while remaining in recovery.
+
+The second external receipt shows matching recovery closure and ISO hash,
+a successful MP600 mount with `ro,rescue=nologreplay,subvolid=5`, and the actual
+subvolume listing. It stopped after verifying @root because @root/tmp was
+incorrectly required to be a subvolume. The reset module's allowed descendants
+(tmp and srv) are permissions for disposal, not assertions that those children
+must exist as subvolumes. @root/srv appears in the recorded listing; @root/tmp
+does not. This failure was a test-script assumption, not a production defect.
+Both failed USB receipts have been copied into the private final-policy evidence
+directory. The user returned to the expected generation 38 normal closure.
+
+Corrected the USB script to require @root, @persist, @nix, @var and @home while
+still recording the full subvolume listing. Bash syntax validation passed.
+Independently checked all five corresponding mounted production subvolumes and
+all remaining repository/profile/home directory and credential-source existence
+checks, without reading credential contents or executing the recovery script
+against the live production disk. These checks passed. Physical terminal recovery
+inspection remains pending; do not claim these desktop checks replace it.
