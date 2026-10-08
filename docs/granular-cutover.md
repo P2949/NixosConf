@@ -14,7 +14,7 @@ Record the exact built closures and retain migration tooling with GC roots
 under `/persist/granular-migration`. Save application work before rebooting.
 
 The packaged `granular-arm-cutover home SYSTEM` performs a boot-only installation
-of the already built `SYSTEM` with `nixos-rebuild boot --store-path`. This avoids
+of the already built `SYSTEM` with `nixos-rebuild boot --no-reexec --store-path`. This avoids
 re-evaluating a changing checkout during installation. It pins the current boot
 entry as the default, records the rollback closure/entry, and creates/starts
 `granular-final-copy.service` in `/run/systemd/system`. The runtime unit and

@@ -35,7 +35,7 @@ printf '%s\n' "$task_rollback" > "$task_evidence/pre-cutover-boot-entry"
 # generation during installation, and on every preparation error afterward.
 bootctl set-default "$task_rollback"
 trap 'bootctl set-default "$task_rollback"' ERR
-nixos-rebuild boot --store-path "$task_system"
+nixos-rebuild boot --no-reexec --store-path "$task_system"
 bootctl set-default "$task_rollback"
 task_entry=$(entry_for_system "$task_system")
 [[ "$task_entry" =~ ^[A-Za-z0-9._-]+\.conf$ ]]

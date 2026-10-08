@@ -164,8 +164,9 @@ copies below those mountpoints must be pruned after physical acceptance.
 
 Deliberate `R` exceptions: Steam's 218 MiB shadercache and Unreal's approximately
 831 MiB shared DDC/Zen cache plus the small per-version DDC are reconstructable
-but retained to avoid shader compilation/asset rebuild delays. Installed Unity
-editors, Steam binaries/games and editor extensions are also deliberate `R`.
+but retained to avoid shader compilation/asset rebuild delays. Both Unity project
+Libraries are explicitly retained at the user's request; logs/temp reset.
+Installed Unity editors, Steam binaries/games and editor extensions are also deliberate `R`.
 These are explicit performance choices, not unidentified persistent state.
 The user explicitly chose to keep the quantified Steam/Unreal caches persistent
 when offered the option to reset them every boot on 2026-10-08.

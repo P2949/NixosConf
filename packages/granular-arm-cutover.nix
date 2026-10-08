@@ -14,7 +14,7 @@ pkgs.writeShellApplication {
     pkgs.gawk
     pkgs.util-linux
     pkgs.systemd
-    pkgs.nixos-rebuild
+    pkgs.nixos-rebuild-ng
   ];
   text = ''
     desktop_uid=$(id -u ${pkgs.lib.escapeShellArg username})

@@ -13,6 +13,13 @@ No granular generation is installed yet; the accepted physical boot history belo
 still describes the older whole-home/var persistence model. Existing PR/CI
 evidence does not certify these new local changes.
 
+Local granular validation now passes: the combined normal/recovery/return VM,
+actual Disko blank-disk reconstruction, desktop/home-only builds, workstation
+smoke and root regression scenarios. The staged physical procedure is in
+[granular-cutover.md](granular-cutover.md). Migration tools and exact candidate
+closures are retained under `/persist/granular-migration`; all physical and
+application acceptance gates remain open.
+
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.

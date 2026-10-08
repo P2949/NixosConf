@@ -26,14 +26,28 @@ from source changes or VM tests.
   Retirement must inspect these individually and must not recursively delete.
 - Prepared: snapshots, state classification ledger, migration backing,
   granular declarations, topology guards and multi-boot regression tests.
-- Passed: desktop build, blank-disk reconstruction, workstation smoke and five
-  existing root-reset regression scenarios. Revalidation follows the additional
-  project cache declarations and intermediate migration configuration.
-- Pending: strengthened combined regression, next-boot cutovers, representative application
+- Passed: formatting, flake checks, the strengthened combined regression
+  (three normal, two recovery, return to normal), desktop and home-only builds,
+  blank-disk reconstruction, workstation smoke and five root-reset scenarios.
+- Pending: next-boot cutovers, representative application
   checks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 
 Evidence paths and validation results will be added here as work progresses.
+
+### Offline validation receipts
+
+| Check | Result | Receipt |
+| --- | --- | --- |
+| Combined home/var/identity/cache/recovery/return regression | PASS, 143.49 s | `/tmp/granular-flake-final2.log`; `/nix/store/gn3v0k8hwf5avib1kl1i210l66lcbyfp-vm-test-run-granular-impermanence` |
+| Flake checks, formatting, statix, deadnix, actual topology evaluation | PASS | `/tmp/granular-flake-final2.log` |
+| Actual Disko blank-disk reconstruction and installed-system reboot/recovery | PASS, 251.07 s | `/tmp/granular-reconstruction-final2.log`; `/nix/store/vl85cgqyj7lbs0ncd0j9jf4xc0qd1syh-vm-test-run-blank-disk-reconstruction` |
+| Workstation Home Manager smoke | PASS | `/tmp/granular-build-pass7.log`, `/tmp/granular-offline-final.log` |
+| Five root regression scenarios | PASS; latest fixture replay recorded separately | `/tmp/granular-root-suite-final.log`, `/tmp/granular-root-suite-pass2.log` |
+| Migration tools | Build/shellcheck PASS; runtime refusal PASS | `/tmp/granular-tools-uid-fixed.log`, private `shutdown-refusal-fixed.log`, `var-refusal-fixed.log` |
+
+The home/var test output aliases share the combined regression intentionally.
+These receipts do not assert physical or functional application acceptance.
 
 ### Migration and implementation evidence
 
@@ -2426,8 +2440,8 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [ ] development/project data survives.
 - [ ] stateful development tools selected for persistence survive.
 - [ ] Home Manager reconstructs declarative configuration.
-- [ ] `.config` has been audited rather than blindly persisted as a whole.
-- [ ] `.local` has been audited rather than blindly persisted as a whole.
+- [x] `.config` has been audited rather than blindly persisted as a whole.
+- [x] `.local` has been audited rather than blindly persisted as a whole.
 
 ## Var
 
@@ -2437,9 +2451,9 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [ ] undeclared service state disappears.
 - [ ] `/var/lib/nixos` survives.
 - [ ] system random-seed state survives.
-- [ ] every additional persistent service DB has an explicit justification.
+- [x] every additional persistent service DB has an explicit justification.
 - [ ] `/var/lib/nixos-optimization` survives independently.
-- [ ] log persistence/ephemerality is an explicit policy rather than a side effect.
+- [x] log persistence/ephemerality is an explicit policy rather than a side effect.
 
 ## Boot modes
 
@@ -2462,13 +2476,13 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 ## Tests
 
-- [ ] `nix fmt` passes.
-- [ ] `nix flake check` passes.
-- [ ] desktop system builds.
-- [ ] home multi-boot test passes.
-- [ ] var multi-boot test passes.
-- [ ] combined granular-Impermanence regression test passes.
-- [ ] changed Disko layout passes reconstruction testing.
+- [x] `nix fmt` passes.
+- [x] `nix flake check` passes.
+- [x] desktop system builds.
+- [x] home multi-boot test passes.
+- [x] var multi-boot test passes.
+- [x] combined granular-Impermanence regression test passes.
+- [x] changed Disko layout passes reconstruction testing.
 - [ ] physical repeated-boot sentinel tests pass.
 
 ## Persistent storage hygiene

@@ -11,6 +11,8 @@ experiments.
   chronological evidence.
 - [Granular ephemeral-state plan](NixOS_Granular_Ephemeral_State_Implementation_Plan.md):
   active home/var migration and acceptance record.
+- [Granular cutover procedure](docs/granular-cutover.md): staged boot-only
+  rollout, verified shutdown copy and physical acceptance receipts.
 - [Desktop policy](hosts/desktop/default.nix): authoritative host settings,
   including cooling policy.
 - [Flake](flake.nix): pinned inputs, configurations, development shells and
