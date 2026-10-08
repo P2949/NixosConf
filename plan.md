@@ -29433,3 +29433,1296 @@ not just process uptime. Natural suspend/reboots may be observed if used, but
 none are scheduled. Preserve the session, avoid tuning/source-policy changes and
 additional synthetic torture tests. Soak completion, freeze-time backup delta,
 canonical baseline, exact final validation, merge and baseline tag remain pending.
+
+
+## Post-recovery final continuation guide — adopted 2026-10-08
+
+Read the complete attachment and retain it below, with trailing whitespace normalized.
+Attachment SHA256: `b61a0ef85cf20b5ab575e3adf672f8de292a9427281031d9326bf00b424a9380`.
+The reviewed 50e19fe checkpoint is historical: its CI passed; f254124 CI also
+passed; 3ff3591 CI is currently running. User confirmation has since closed
+both HDR/SDR and audible Stage observations and the normal-use soak has begun.
+Do not repeat those observations, physical recovery or accepted workload tests.
+The guide governs remaining soak, backup delta, freeze, canonical evidence, exact
+final suite/CI, merge/tree comparison and baseline tag. Post-tag optimization is
+a separate subsequent phase; stop readiness at the tag. No runtime policy change
+is introduced by this import. Replug is not required unless part of normal use.
+
+> I re-ran the review against the **current live repository**, rather than carrying forward the previous checkpoint. The attached guide still had Proton, recovery provenance, HDR, and Stage Pro in the pre-soak checklist. Assess NixOS Performance Ceiling Since then, the branch has advanced eight evidence/documentation commits to **`50e19fe1c395412d62893a5ab9ea917dcedd2bc3`**, while the runtime configuration has not changed.
+>
+> Two major gates are now definitively closed. The uninterrupted Generation 38 Dark Souls session passed, including natural exit, GameMode deactivation, restoration of all 12 CPU policies, and no matching new GPU/kernel fault.  The exact physical recovery drill also passed: the intended ISO booted, its SHA-256 matched, the MP600 was mounted read-only with `rescue=nologreplay`, required subvolumes were inspected, the receipt was preserved, and the machine returned normally to the expected Generation 38 closure.  Current exact-head CI has now also finished: **Nix checks #177 passed on `50e19fe…`**.
+>
+> There is one documentation issue worth fixing during the next consolidated evidence commit: `docs/status.md` still describes recovery provenance as open, and the recovery runbook still contains the older statement that recovery-media boot is unproven, even though the new exact physical drill supersedes both statements.   I would **not** make a separate bookkeeping commit for that now; close HDR and Stage Pro first, then reconcile all of this in one pre-soak evidence commit.
+>
+> Here is the revised single continuation guide.
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## Purpose
+>
+> This document is the single forward-looking continuation directive for `plan.md`.
+>
+> Older plans, imported reviews and failed attempts remain useful chronology, but they must not be interpreted as fresh instructions when newer evidence supersedes them.
+>
+> The project has now reached:
+>
+> ```text
+> last two human observations
+> → consolidated evidence
+> → representative soak
+> → backup freshness
+> → source freeze
+> → canonical baseline
+> → exact frozen validation
+> → merge
+> → immutable baseline tag
+> → STOP readiness
+> ```
+>
+> Do not add new readiness categories unless a concrete defect exposes a genuine missing requirement.
+>
+> ---
+>
+> # 1. Current authoritative checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed HEAD:
+>
+> ```text
+> 50e19fe1c395412d62893a5ab9ea917dcedd2bc3
+> Accept exact physical recovery drill and generation 38 return
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> base = main
+> ```
+>
+> Exact-head CI:
+>
+> ```text
+> Nix checks #177
+> PASS
+> ```
+>
+> Current physical normal closure:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> Persistent-root closure:
+>
+> ```text
+> 8v183hn0p5yv7wf625yj38n6bhsjpxz6
+> ```
+>
+> Generation 38 is the accepted physical candidate.
+>
+> No runtime configuration has changed during the eight commits between the previous guide's `5e588b7…` checkpoint and current `50e19fe…`; changes were confined to:
+>
+> ```text
+> plan.md
+> docs/status.md
+> docs/physical-root-validation.md
+> ```
+>
+> Therefore the existing physical Generation 38 evidence remains bound to the current runtime configuration.
+>
+> ---
+>
+> # 2. Current stock source policy
+>
+> The productive workstation source currently defines the intended baseline.
+>
+> ## CPU
+>
+> ```text
+> PL1 = 125 W
+> PL2 = 125 W
+> ```
+>
+> The host applies both limits at boot and restarts the power-limit service after resume.
+>
+> Real boot and real suspend/resume have already proven this mechanism.
+>
+> ## Cooling
+>
+> Current Commander Core host policy:
+>
+> ```text
+> fan idle/base = 60%
+> fan high = 100%
+> pump = 100%
+>
+> high threshold = 50 °C
+> high delay = 0 s
+>
+> low threshold = 45 °C
+> low delay = 30 s
+>
+> temperature poll = 0.5 s
+> ```
+>
+> This is accepted baseline policy.
+>
+> ## Display
+>
+> Current Hyprland policy:
+>
+> ```text
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> sRGB desktop
+> VRR = always enabled
+> colour management enabled
+> automatic fullscreen HDR enabled
+> ```
+>
+> The technical HDR signalling path is already proven.
+>
+> ## Bluetooth
+>
+> ```text
+> hardware.bluetooth.enable = false
+> hardware.bluetooth.powerOnBoot = false
+> ```
+>
+> This is intentional policy.
+>
+> ## Stock/optimization boundary
+>
+> Stock-control rejects dependencies containing the experiment namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> and:
+>
+> ```text
+> optimization/default.nix
+> ```
+>
+> remains intentionally empty.
+>
+> Do not alter this boundary before the baseline tag.
+>
+> ---
+>
+> # 3. Gates that are closed
+>
+> Do not repeat these unless a later configuration change actually invalidates them.
+>
+> ```text
+> [x] repository architecture
+> [x] stable NixOS 26.05 refresh
+> [x] stable/unstable package boundary
+> [x] stock/optimization separation
+> [x] forbidden optimization namespaces
+> [x] activation safety
+> [x] 45 activation guard fixtures
+> [x] root-reset VM matrix
+> [x] interrupted reset recovery
+> [x] persistence identity
+> [x] Generation 37 normal→persistent-root→normal physical chain
+> [x] Generation 38 physical normal boot
+> [x] Generation 38 fresh ephemeral root
+> [x] Generation 38 persisted identity/mounts
+> [x] root/initrd/persistence semantic comparison
+> [x] no additional persistent-root physical boot required
+> [x] blank-disk reconstruction
+> [x] stock closure audit
+> [x] full Nix-store verification
+> [x] physical KVM
+> [x] GameMode helpers/governor
+> [x] Btrfs scrub/device counters
+> [x] NVMe SMART/media health
+> [x] independent backup
+> [x] representative restore
+> [x] engine supplement backup
+> [x] secrets recovery
+> [x] selected 125 W CPU policy
+> [x] 15-minute 125 W CPU validation
+> [x] 125 W physical boot application
+> [x] real suspend/resume
+> [x] 125 W resume reapplication
+> [x] 20 GiB complete memtester pass
+> [x] Blender long HIP render
+> [x] Blender human interactive workflow
+> [x] Unreal full project rebuild scope
+> [x] Unreal 120-second PIE lifecycle
+> [x] Unreal human interactive workflow
+> [x] Unreal natural later exit / project clean
+> [x] native Stardew Valley gameplay
+> [x] Dark Souls basic functionality
+> [x] uninterrupted Generation 38 Dark Souls session
+> [x] GameMode restoration after final Proton session
+> [x] no matching scoped final Proton GPU/kernel fault
+> [x] Stage Pro functional USB playback
+> [x] Stage Pro USB/ALSA/PipeWire enumeration after boot/resume
+> [x] Bluetooth-off boot/resume persistence
+> [x] 155 Hz persistence
+> [x] 10-bit persistence
+> [x] VRR persistence
+> [x] exact recovery ISO physical boot
+> [x] recovery ISO SHA verification
+> [x] MP600 exact read-only recovery inspection
+> [x] recovery receipt preservation
+> [x] clean return to Generation 38
+> [x] controller NOT APPLICABLE
+> [x] Android tooling NOT APPLICABLE
+> [x] current-head CI #177
+> ```
+>
+> In particular, do not rerun:
+>
+> ```text
+> CPU stress
+> RAM memtester
+> Blender
+> Unreal
+> Stardew Valley
+> Dark Souls readiness session
+> Generation 37 root chain
+> Generation 38 suspend/resume
+> recovery-media boot
+> KVM
+> blank-disk reconstruction merely for reassurance
+> ```
+>
+> The exact frozen VM/reconstruction suite later is a source-reproducibility step, not a reason to repeat these physical tests.
+>
+> ---
+>
+> # 4. Only two pre-soak observations remain
+>
+> The real pre-soak critical path is now:
+>
+> ```text
+> 1. visual HDR / visual SDR return
+> 2. audible Stage Pro persistence
+> ```
+>
+> Stage Pro physical replug is required only if physical reconnect is genuinely part of expected normal use.
+>
+> Everything else should move to soak/finalization.
+>
+> ---
+>
+> # 5. Immediate action A — close HDR visual acceptance
+>
+> Technical HDR operation has already established:
+>
+> ```text
+> HDR-tagged PQ/BT.2020 source recognized
+> native Wayland mpv negotiated HDR output
+> DRM output switched to BT2020_RGB during fullscreen
+> DRM returned to Default after exit
+> 10-bit output remained active
+> VRR remained active
+> ```
+>
+> Do not repeat the technical capability investigation unless the visual test exposes a problem.
+>
+> Use the existing known HDR MKV.
+>
+> ## Before playback
+>
+> Confirm:
+>
+> ```text
+> normal desktop visually looks correct
+> sRGB appearance is normal
+> no residual HDR/wide-gamut appearance
+> ```
+>
+> ## During fullscreen HDR
+>
+> Human acceptance should answer only:
+>
+> ```text
+> does HDR visibly engage?
+> does the image look correct?
+> are highlights/colour plausible?
+> is the image free of obvious washout/clipping?
+> is the display stable?
+> ```
+>
+> If the monitor exposes an HDR indicator, record it, but absence of a useful OSD indicator is not itself failure if the already-proven DRM/output signalling is correct.
+>
+> ## After ordinary exit
+>
+> Confirm:
+>
+> ```text
+> desktop returns visually to normal SDR/sRGB
+> colour is not stuck in HDR/wide-gamut mode
+> display remains usable
+> 155 Hz remains correct
+> VRR remains correct
+> ```
+>
+> If those observations pass:
+>
+> ```text
+> HDR VISUAL ACCEPTANCE = PASS
+> HDR → SDR VISUAL RETURN = PASS
+> ```
+>
+> Do not add HDR gaming as another gate.
+>
+> The readiness requirement is the display stack.
+>
+> ---
+>
+> # 6. Immediate action B — close Stage Pro audible persistence
+>
+> Already proven:
+>
+> ```text
+> Stage Pro USB playback worked before
+> USB device returned after Generation 38 boot
+> ALSA card returned
+> PipeWire sink returned
+> device survived suspend/resume enumeration
+> PipeWire/WirePlumber remained functional
+> ```
+>
+> Do not require Stage Pro to become the default sink.
+>
+> The user's saved HDMI routing is legitimate and must not be changed simply to satisfy validation.
+>
+> Now:
+>
+> ```text
+> select/route some ordinary audio to Stage Pro
+> play audio
+> confirm it is audible and normal
+> ```
+>
+> That is enough to establish current-boot/post-resume audible persistence.
+>
+> If successful:
+>
+> ```text
+> STAGE PRO AUDIBLE PERSISTENCE = PASS
+> ```
+>
+> ## Replug
+>
+> Only perform:
+>
+> ```text
+> unplug USB
+> replug USB
+> confirm device/sink returns
+> confirm audible playback
+> ```
+>
+> if physical replug is actually a normal expected workflow.
+>
+> Otherwise classify:
+>
+> ```text
+> STAGE PRO PHYSICAL REPLUG = NOT APPLICABLE
+> ```
+>
+> Do not invent a requirement merely because it is easy to test.
+>
+> ---
+>
+> # 7. Once those two observations pass, PRE-SOAK VALIDATION IS COMPLETE
+>
+> At that point do not introduce another application/peripheral test.
+>
+> The pre-soak acceptance set is sufficient.
+>
+> Immediately transition to:
+>
+> ```text
+> evidence reconciliation
+> → soak
+> ```
+>
+> ---
+>
+> # 8. Consolidate current documentation once
+>
+> There are known stale current-truth statements.
+>
+> `docs/status.md` still describes recovery provenance as open even though the exact physical recovery drill has now passed.
+>
+> `docs/physical-root-validation.md` still contains older wording saying recovery-media boot is unproven. That statement is now superseded.
+>
+> The PR body also contains older sections describing gates as pending before newer appended evidence closes them.
+>
+> Do not make a special standalone documentation commit before HDR/Stage.
+>
+> After HDR and Stage are resolved, make one coherent evidence/documentation update.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> docs/physical-root-validation.md
+> plan.md
+> PR #7 body
+> ```
+>
+> ## docs/status.md
+>
+> Make current truth explicitly say:
+>
+> ```text
+> Generation 38 boot/resume = accepted
+> Unreal interaction = accepted
+> final Generation 38 Proton = accepted
+> physical recovery drill = accepted
+> HDR = accepted              # once user confirms
+> Stage Pro audible = accepted # once user confirms
+> ```
+>
+> Then its remaining hard-gate section should begin with:
+>
+> ```text
+> representative soak
+> backup freshness
+> freeze
+> canonical baseline
+> exact final validation
+> merge/tag
+> ```
+>
+> ## docs/physical-root-validation.md
+>
+> Replace the stale combined statement:
+>
+> ```text
+> Recovery-media boot and bootloader repair remain unproven...
+> ```
+>
+> with two distinct facts:
+>
+> ```text
+> read-only physical recovery-media drill = ACCEPTED
+> bootloader-repair rehearsal = not demonstrated
+> ```
+>
+> Do not turn bootloader repair into a new pre-optimization gate unless the project's recovery requirements are explicitly expanded.
+>
+> The already-adopted readiness sequence required the safe recovery-media inspection, not a destructive/repair rehearsal.
+>
+> ## plan.md
+>
+> Preserve all chronology.
+>
+> Append evidence rather than rewriting history.
+>
+> Older failed recovery-script attempts remain historical failed attempts.
+>
+> The later exact physical PASS supersedes their pending status.
+>
+> ## PR #7
+>
+> Rewrite the summary sufficiently that a reviewer does not have to interpret contradictory chronological paragraphs to determine current truth.
+>
+> It may still mention meaningful historical caveats, but the main "remaining" section must reflect the actual remaining gates.
+>
+> ---
+>
+> # 9. Evidence commit and CI
+>
+> After the consolidated pre-soak evidence update:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Commit and push.
+>
+> Require CI to complete successfully on that evidence head.
+>
+> Because this update should be documentation/evidence-only, it does not invalidate the existing Generation 38 physical runtime evidence.
+>
+> The soak may begin while CI runs if the local checks passed and no runtime source changed.
+>
+> If CI fails:
+>
+> ```text
+> inspect actual failure
+> fix only that failure
+> do not reopen physical acceptance gates
+> ```
+>
+> ---
+>
+> # 10. Begin representative multi-day soak
+>
+> Once HDR and Stage Pro are closed, stop adding individual tests.
+>
+> Use the machine normally for several representative days.
+>
+> The soak is not another synthetic stress campaign.
+>
+> Representative activity can naturally include:
+>
+> ```text
+> Unreal development
+> Blender
+> Firefox/general desktop use
+> C/C++ development
+> Nix/package builds
+> native gaming
+> Proton gaming
+> Stage Pro
+> HDR playback
+> normal filesystem work
+> ordinary boots if naturally needed
+> suspend/resume if naturally used
+> ```
+>
+> There is no need to deliberately exercise every item every day.
+>
+> Watch for actual faults:
+>
+> ```text
+> system freeze
+> GPU timeout/hang/reset outside expected suspend behaviour
+> MCE/hardware error
+> filesystem/Btrfs error
+> unexpected failed service
+> Commander Core failure/restart
+> unexpected throttling
+> root-reset failure
+> identity/persistence regression
+> login/Wayland failure
+> audio disappearance
+> network regression
+> HDR stuck after exit
+> VRR regression
+> severe unexpected memory/swap behaviour
+> meaningful new NVMe error-log growth
+> ```
+>
+> Expected AMDGPU reset messages that occur specifically as part of suspend/resume are not, by themselves, evidence of a spontaneous GPU fault.
+>
+> If clean:
+>
+> ```text
+> REPRESENTATIVE MULTI-DAY SOAK = PASS
+> ```
+>
+> If a genuine defect appears:
+>
+> ```text
+> record exact failure
+> → diagnose
+> → fix declaratively
+> → determine what evidence the fix invalidates
+> → rerun only affected scope
+> → restart soak only if the fix materially changes system behaviour
+> ```
+>
+> Do not silently work around a failure.
+>
+> ---
+>
+> # 11. Backup freshness after the soak
+>
+> The main backup itself is already accepted.
+>
+> Existing archive:
+>
+> ```text
+> 27,844,003,241 bytes
+> SHA256:
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> plus the accepted 47-file engine supplement and separate secrets-recovery evidence.
+>
+> Do not rebuild the entire archive merely for ceremony.
+>
+> Review changes since the accepted backup:
+>
+> ```text
+> Git repositories
+> untracked/ignored valuable work
+> Unreal project changes
+> Blender files
+> documents
+> new project assets
+> other irreplaceable files
+> ```
+>
+> Protect the meaningful delta.
+>
+> Record:
+>
+> ```text
+> date
+> media/destination
+> scope
+> integrity/verification result
+> ```
+>
+> Then:
+>
+> ```text
+> BACKUP FRESHNESS = PASS
+> ```
+>
+> ---
+>
+> # 12. Freeze the stock candidate
+>
+> After soak and backup freshness:
+>
+> ```text
+> FREEZE ORDINARY READINESS SOURCE CHANGES.
+> ```
+>
+> Repository should be:
+>
+> ```text
+> clean
+> all intended work committed
+> no staged leftovers
+> no relevant untracked config
+> flake.lock fixed
+> optimization/default.nix still inert
+> ```
+>
+> From this point do not:
+>
+> ```text
+> upgrade kernel
+> upgrade Mesa
+> change cooling
+> change CPU policy
+> change display policy
+> reorganize modules
+> start architecture cleanup
+> add sysctl tuning
+> change toolchain
+> enable global compiler flags
+> begin LTO
+> begin PGO
+> begin BOLT
+> begin optimization-framework work
+> ```
+>
+> unless solving an actual discovered defect.
+>
+> ---
+>
+> # 13. Capture the canonical baseline
+>
+> Run the existing collector on the accepted final physical machine:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> Create the canonical baseline under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> It must bind together:
+>
+> ```text
+> exact Git source
+> flake.lock
+> nixpkgs revision
+> NixOS version
+> Nix version
+>
+> running normal closure
+> built normal closure
+> persistent-root closure
+> recovery ISO/store identity
+> recovery ISO SHA256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME
+> CPU ratio/cache policy
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR
+> NVMe identity/firmware
+> Btrfs mount policy
+>
+> governor
+> EPP
+> THP
+> swap/zram
+> scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+>
+> CPU acceptance
+> RAM acceptance
+> Generation 37 root-chain evidence
+> Generation 38 normal boot evidence
+> Generation 38 suspend/resume evidence
+> Blender acceptance
+> Unreal acceptance
+> native-game acceptance
+> Proton acceptance
+> HDR acceptance
+> Stage Pro acceptance
+> physical recovery receipt identity
+> backup identity/freshness
+> soak result
+> ```
+>
+> For the physical recovery drill retain the exact receipt information, including:
+>
+> ```text
+> ISO SHA256:
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+>
+> receipt:
+> receipt-20261008T000047Z.txt
+>
+> receipt SHA256:
+> 61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6
+> ```
+>
+> Do not commit secrets or unnecessarily expose private hardware/user identifiers.
+>
+> ---
+>
+> # 14. Final stock-policy audit
+>
+> Before exact final validation, prove that the baseline is still genuinely stock.
+>
+> Confirm:
+>
+> ```text
+> optimization/default.nix is inert
+> stock forbidden-dependency rules remain active
+>
+> no system-wide PGO
+> no system-wide BOLT
+> no system-wide LTO
+> no optimization experiment output in closure
+>
+> no global CFLAGS/CXXFLAGS leakage
+> no global NIX_CFLAGS_COMPILE tuning
+> no unexpected LDFLAGS
+> no accidental -march=native baseline policy
+> no hidden allocator/performance preload
+> no permanent performance governor
+> no unrelated low-level performance hacks
+> ```
+>
+> Confirm intended policy remains:
+>
+> ```text
+> 125 W PL1/PL2
+> selected Commander Core cooling policy
+> Bluetooth disabled
+> 155 Hz
+> 10-bit
+> sRGB desktop
+> VRR enabled
+> automatic HDR
+> ordinary governor/EPP baseline
+> ```
+>
+> Unexpected drift is a blocker.
+>
+> ---
+>
+> # 15. Exact frozen validation
+>
+> On the frozen source run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then run the explicit heavy outputs that form the final exact-source reproducibility suite:
+>
+> ```text
+> blank-disk-reconstruction
+> workstation-smoke
+> activation-safety-actions
+> stock-contamination-negative
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> These are final exact-source automated checks.
+>
+> They do **not** imply another physical root-chain or recovery-media drill.
+>
+> Build and record exact final:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Keep appropriate GC protection until baseline finalization is complete.
+>
+> ---
+>
+> # 16. Closure comparison
+>
+> Compare the final built normal candidate with the accepted physical running closure:
+>
+> ```bash
+> nix store diff-closures /run/current-system "$final_candidate"
+> ```
+>
+> Since the commits following the tested runtime have so far been documentation-only, the desired outcome is:
+>
+> ```text
+> runtime closure unchanged
+> ```
+>
+> If it differs unexpectedly, explain the difference before proceeding.
+>
+> Block on unexplained:
+>
+> ```text
+> kernel changes
+> Mesa changes
+> LLVM/toolchain changes
+> large dependency churn
+> new unstable-package spread
+> optimization derivations
+> service-policy changes
+> compiler flags
+> ```
+>
+> Do not rerun the physical readiness program if the closures are identical.
+>
+> ---
+>
+> # 17. Final contamination audit
+>
+> Run the final stock closure/forbidden-dependency audit.
+>
+> Require no:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> outputs in the stock closure.
+>
+> The baseline must remain a valid control for future optimization experiments.
+>
+> ---
+>
+> # 18. Exact-final-head CI
+>
+> After the canonical baseline/final evidence changes are committed:
+>
+> ```text
+> push exact final source
+> → require GitHub CI on that exact SHA
+> ```
+>
+> Current CI #177 is useful evidence for the current checkpoint, but it is not a substitute for CI on a later final manifest/freeze commit.
+>
+> Only after the final SHA is green should the repository claim:
+>
+> ```text
+> FINAL SOURCE = ACCEPTED
+> ```
+>
+> ---
+>
+> # 19. Final current-truth reconciliation
+>
+> Immediately before PR readiness:
+>
+> ## docs/status.md
+>
+> Must show:
+>
+> ```text
+> zero unresolved hard readiness gates
+> ```
+>
+> ## plan.md
+>
+> Must retain chronology and conclude with the final acceptance state.
+>
+> Do not erase:
+>
+> ```text
+> old failed tests
+> superseded thermal guards
+> incomplete RAM attempts
+> failed recovery scripts
+> intermediate CI
+> ```
+>
+> They remain legitimate history.
+>
+> ## PR #7
+>
+> Its main summary should state the final state without requiring reviewers to decode historical appendices.
+>
+> ## Canonical baseline
+>
+> Must point to exact:
+>
+> ```text
+> source SHA
+> normal closure
+> persistent-root closure
+> recovery artifact/hash
+> physical recovery receipt
+> accepted workload evidence
+> backup
+> soak
+> ```
+>
+> ---
+>
+> # 20. Mark PR #7 ready
+>
+> Only after the checklist closes:
+>
+> ```text
+> mark PR #7 ready for review
+> ```
+>
+> At that point "ready" means:
+>
+> ```text
+> no known unfinished pre-optimization readiness gate
+> ```
+>
+> PR #7 is already mergeable, but mergeability alone is not readiness.
+>
+> ---
+>
+> # 21. Merge to main
+>
+> Merge through the normal main-branch workflow.
+>
+> After merge, compare the resulting main tree against the exact tested feature-branch tree.
+>
+> If tree-identical:
+>
+> ```text
+> retain all accepted evidence
+> ```
+>
+> Do not perform another giant validation cycle.
+>
+> If merge conflict resolution/intervening source changes alter the tree:
+>
+> ```text
+> identify actual changed scope
+> rebuild
+> rerun affected checks
+> update artifact identities
+> ```
+>
+> Only revalidate what changed.
+>
+> ---
+>
+> # 22. Create the immutable stock baseline
+>
+> Create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The tag/baseline record must identify:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> recovery ISO SHA256
+> canonical baseline record
+> accepted evidence set
+> ```
+>
+> Once the tag exists:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> At that point:
+>
+> ```text
+> STOP READINESS WORK.
+> ```
+>
+> Do not add another "just one more" validation gate.
+>
+> ---
+>
+> # 23. Post-tag cleanup
+>
+> Only after the tag should maintainability cleanup proceed.
+>
+> Potential cleanup remains:
+>
+> ```text
+> archive/organize plan history
+> reorganize docs into design/runbooks/validation/history
+> move stock-control ownership if desired
+> move VS Code ownership toward development if desired
+> remove obsolete historical aliases
+> add generated NixOS option documentation
+> add Markdown/link checking
+> other architecture cleanup
+> ```
+>
+> These are not baseline blockers.
+>
+> ---
+>
+> # 24. Optimization-v2 starts from the tag
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not rebase the old optimization branch wholesale.
+>
+> Treat it as donor/reference material.
+>
+> Begin with experiment infrastructure:
+>
+> ```text
+> benchmark corpus
+> workload specifications
+> measurement methodology
+> experiment manifests
+> specialisation/A-B states
+> stage-aware contamination rules
+> artifact/provenance recording
+> ```
+>
+> Then progress through:
+>
+> ```text
+> CPU-specific codegen
+> graphics-stack A/B
+> profiling
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific optimization
+> ```
+>
+> The stock tag remains the permanent experimental control.
+>
+> ---
+>
+> # 25. Exact execution order from current HEAD
+>
+> ```text
+> 1. Do not reboot or repeat any accepted physical gate.
+> 2. Visually validate HDR using the existing known HDR MKV.
+> 3. Confirm visual return to normal SDR/sRGB.
+> 4. Confirm audible Stage Pro playback on the current Generation 38 system.
+> 5. Test Stage Pro USB replug once only if that is normal expected use; otherwise mark it N/A.
+> 6. Declare individual pre-soak validation complete.
+> 7. Consolidate docs/status.md, physical-root-validation.md, plan.md and PR #7 current truth.
+> 8. Remove stale "recovery still open" wording.
+> 9. Record current-head CI #177 as passed.
+> 10. Run local format/diff/flake checks on the consolidated evidence update.
+> 11. Push; require its CI green.
+> 12. Begin multi-day representative normal-use soak.
+> 13. Do not add new readiness tests during soak.
+> 14. Diagnose only real defects.
+> 15. At clean soak completion, refresh the external backup delta.
+> 16. Freeze ordinary stock source changes.
+> 17. Capture the final baseline collector output.
+> 18. Write the canonical baseline record.
+> 19. Run the final stock-policy/environment audit.
+> 20. Run exact frozen flake checks.
+> 21. Run the heavy VM/reconstruction suite.
+> 22. Build exact normal, persistent-root and recovery artifacts.
+> 23. Compare the exact normal closure to the accepted physical running closure.
+> 24. Run the final stock contamination audit.
+> 25. Commit the final manifest/evidence state.
+> 26. Push the exact final SHA.
+> 27. Require exact-final-head CI green.
+> 28. Make docs/status.md show zero hard gates.
+> 29. Make PR #7 current and mark it ready.
+> 30. Merge to main.
+> 31. Compare merged tree against tested tree.
+> 32. Revalidate only if merge changed the tree.
+> 33. Create annotated `nixos-26.05-pre-optimization-baseline`.
+> 34. Stop readiness.
+> 35. Perform cleanup separately.
+> 36. Create optimization-framework-v2 from the baseline tag.
+> ```
+>
+> ---
+>
+> # 26. Remaining hard-GO checklist
+>
+> ## Before soak
+>
+> ```text
+> [ ] HDR visual quality accepted
+> [ ] HDR → SDR visual return accepted
+> [ ] Stage Pro audible current-boot/post-resume playback accepted
+> [ ] Stage Pro replug PASS or NOT APPLICABLE
+> [ ] current-truth docs reconciled
+> [ ] evidence-head CI green
+> ```
+>
+> Everything else in the physical/workload acceptance phase is closed.
+>
+> ## Finalization
+>
+> ```text
+> [ ] representative multi-day soak
+> [ ] backup freshness/delta
+> [ ] stock source frozen
+> [ ] canonical baseline collector capture
+> [ ] canonical baseline record
+> [ ] final stock-policy/environment audit
+> [ ] exact frozen flake checks
+> [ ] heavy VM/reconstruction suite
+> [ ] exact normal closure
+> [ ] exact persistent-root closure
+> [ ] exact recovery ISO/hash
+> [ ] final closure comparison
+> [ ] final contamination audit
+> [ ] exact-final-head CI
+> [ ] docs/status.md zero unresolved gates
+> [ ] PR #7 ready
+> [ ] merge to main
+> [ ] merged tree verified
+> [ ] annotated baseline tag
+> ```
+>
+> ---
+>
+> # 27. Explicitly removed from the critical path
+>
+> Do not reintroduce:
+>
+> ```text
+> CPU stress testing
+> RAM stress testing
+> cooler/paste investigation
+> Blender validation
+> Unreal validation
+> native-game validation
+> Proton validation
+> KVM validation
+> GameMode validation
+> Generation 37 root-chain
+> persistent-root reboot
+> Generation 38 suspend/resume
+> recovery-media drill
+> Bluetooth functionality
+> controller
+> Android tooling
+> another Nix-store verify without evidence of corruption
+> architecture redesign
+> README cleanup
+> optimization framework implementation
+> ```
+>
+> The project now has the opposite risk from where it started:
+>
+> ```text
+> not too little validation
+> but readiness scope expanding after sufficient evidence already exists
+> ```
+>
+> Avoid that.
+>
+> ---
+>
+> # 28. Final stop condition
+>
+> The readiness phase succeeds when the machine is:
+>
+> > physically proven on the selected stock configuration, accepted for its real workloads, stable through representative normal use, reproducibly reconstructable, recoverable from known media, backed up, tied to exact Nix source and closure identities, and frozen as an immutable experimental control.
+>
+> It does not need exhaustive proof of every conceivable hardware/software state.
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS.
+> START OPTIMIZATION.
+> ```
+>
+> No new readiness requirement should be introduced after that point unless an actual baseline defect is discovered.
+>
+> The live `plan.md` itself now agrees with this narrower direction: it explicitly says Generation 38 boot/resume, Bluetooth/display persistence, Stage enumeration, Unreal, final Proton, and exact recovery are closed, leaving **visual HDR/SDR and audible Stage Pro** before the soak.
+>
+> So the next action is genuinely small now: **close those two human observations, reconcile the stale status/runbook/PR wording in one commit, and start the soak.** There is no remaining justification for another reboot, recovery exercise, stress test, game test, or Unreal test before the soak.

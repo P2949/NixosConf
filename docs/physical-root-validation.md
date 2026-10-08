@@ -222,7 +222,15 @@ recovery media and run that closure's `bin/switch-to-configuration boot`.
 This writes boot entries without enabling reset live. Validate the exact mounts
 and selected closure before this repair; it is not part of the read-only drill.
 
-Recovery-media boot and bootloader repair remain unproven until rehearsed.
+The exact read-only physical recovery-media drill is ACCEPTED: the expected
+recovery closure and ISO hash matched, the MP600 was inspected with
+`ro,rescue=nologreplay,subvolid=5`, and the production partition was unmounted
+before the normal generation38 return. Receipt `receipt-20261008T000047Z.txt`
+SHA256: `61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
+
+Bootloader-repair rehearsal has not been demonstrated. It is not an additional
+pre-optimization readiness gate; the accepted recovery requirement is the safe
+read-only media inspection described above.
 
 ## Final generation37 chain accepted — 2026-10-05
 
