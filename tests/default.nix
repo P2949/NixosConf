@@ -105,6 +105,10 @@
   };
 
   packages = rec {
+    granular-final-sync = import ../packages/granular-migration.nix {
+      inherit pkgs username;
+      inherit (desktopSystem) config;
+    };
     granular-impermanence = import ./storage/granular-impermanence.nix {
       inherit inputs pkgs;
     };

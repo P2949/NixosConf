@@ -17,6 +17,8 @@ let
         disko.devices.disk.main.device = lib.mkForce diskDevice;
         networking.hostName = lib.mkForce "reconstructed";
         hardware.commanderCore.enable = lib.mkForce false;
+        systemd.services.cpu-package-power-limit.enable = lib.mkForce false;
+        powerManagement.resumeCommands = lib.mkForce "";
         boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
         boot.loader.timeout = lib.mkForce 1;
         boot.kernelParams = [ "console=ttyS0" ];

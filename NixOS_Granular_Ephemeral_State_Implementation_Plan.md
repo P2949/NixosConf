@@ -32,6 +32,84 @@ from source changes or VM tests.
 
 Evidence paths and validation results will be added here as work progresses.
 
+### Migration and implementation evidence
+
+- Read-only pre-migration snapshots:
+  `/.snapshots/pre-granular-impermanence-home-20261008-104128` and
+  `/.snapshots/pre-granular-impermanence-var-20261008-104128`.
+- Full home safety copy: `/persist/home/p2949`, copied from the immutable home
+  snapshot with `cp -a --reflink=always` to retain metadata without duplicating
+  151 GiB of physical extents. `rsync -aHAXn --numeric-ids --delete
+  --itemize-changes` against that snapshot returned no differences. This verifies
+  the snapshot copy, not changes made by still-running applications afterward.
+- Selected `/var` backing was copied and verified: NixOS allocation state,
+  Bluetooth pairing, Btrfs scrub history, random seed, and NetworkManager's
+  identity key. Only paths/metadata and comparison exit statuses were inspected.
+- A 600-second `fatrace` session captured Firefox, VS Code, Codex, Thunar and
+  WirePlumber writes. Btrfs resolves events through `/mnt/btrfs-top/@home` and
+  `@var`, so extraction uses these prefixes. Duplicate watch warnings occurred;
+  observed events do not prove every application was exercised.
+- After snapshots created at `20261008-110009`; no-data send/receive metadata
+  diffs and all inventory/trace receipts are private in
+  `/persist/granular-migration` (directory 0700, artifacts 0600).
+- User confirms using browser, Codex, VS Code, Steam, Unity, Unreal and Blender;
+  Android Studio is planned but not installed. User specifically requests
+  auditing disposable children inside application profiles as well.
+- `.zen` owner identified from metadata as the Unreal engine's `zen` binary;
+  its invocation History/States are disposable runtime records. It is omitted
+  from persistence; Firefox profiles are actually under `.config/mozilla`.
+- User explicitly selected persistence for the specific expensive Steam shader
+  cache (218 MiB) and Unreal shared DDC/Zen caches (831 MiB). Ordinary caches,
+  diagnostics, temporary files and undeclared state remain disposable.
+- Source now omits active `@home`/`@var` mounts; physical sources are retained.
+  Dedicated Home Manager persistence and host system-state declarations added,
+  with topology assertions and volatile journal policy.
+- Application cache children are declared in `home/p2949/ephemeral-app-state.nix`
+  and mounted from root-local `.cache/ephemeral-app-state`. This permits atomic
+  profile-file replacement while caches still disappear. Known disposable
+  profile files use boot-only tmpfiles rules, disabled in recovery mode.
+- Zsh history moved to a persisted state directory, avoiding an atomic rename
+  onto a file bind mount; existing history was copied to the new backing path.
+- Global Git config similarly moves from `.gitconfig` to the standard XDG
+  `.config/git/config` directory; contents copied and compared privately.
+  The observed Markdown/VS Code association is now declarative, while
+  pavucontrol's geometry/filter/meter preferences are deliberately ephemeral.
+  Epic's application-scoped parent is retained with generated/cache exceptions
+  so project-record updates can be atomic too.
+- First VM run exposed upstream tmpfiles-created `@root/var/lib/portables`
+  subvolumes. The reset guard correctly refused deletion. The fix preserves
+  upstream tmpfiles rules but changes machines/portables/var-tmp to ordinary
+  directories, retaining the strict reset guard.
+- Second VM run exposed root-owned `.cache` scaffolding. Activation now creates
+  the cache root with the user's ownership before creating nested cache sources.
+- Subsequent cache write check exposed a fixture error: root-created sentinel
+  files prevented user writes. Home sentinels are now created as the actual
+  user, retaining the ownership check rather than bypassing it.
+- Reconstruction proved normal reset/home/var persistence and recovery topology,
+  then exposed two failures: a physical CPU power-limit service has no RAPL
+  device in QEMU, and an unseeded NetworkManager key was atomically replaced.
+  The fixture now disables physical RAPL control; production persists the
+  NetworkManager directory with boot-only deletion of leases/seen-BSSID/time
+  caches. That directory was copied and verified before changing declarations.
+- Updated reconstruction, smoke-test integration and shared root harness;
+  combined test covers normal/recovery/normal boots and application cache paths.
+  Validation is running; no passing result is claimed yet.
+- A packaged `granular-final-sync` tool is available as a flake output. Its
+  immutable manifest is generated from the evaluated real allow-list; it checks
+  the old mount topology, mirrors only declared state, migrates Git/history,
+  verifies a clean metadata dry-run, and refuses to run after cutover.
+- Live read-only verification found drift since the immutable safety copy,
+  as expected while apps are running. Final quiesced synchronization remains
+  mandatory; the initial copy must not be treated as current application state.
+- Metadata send streams were captured to private files before dumping, avoiding
+  a pipe SIGPIPE from the dump receiver. Both operations completed successfully:
+  home diff 110,006 lines, var diff 337 lines; extracted traces 28,841 home-write
+  events and 327 var-write events. Binary streams contain no file data.
+
+The live desktop still uses its original mounts. No cutover generation has been
+installed and no legacy state has been deleted. A final quiesced synchronization
+is required before next-boot rollout. Physical and application gates remain open.
+
 ---
 
 # 1. Objective and finish line

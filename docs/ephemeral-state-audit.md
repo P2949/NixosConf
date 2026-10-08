@@ -52,7 +52,8 @@ planned, with ADB keys already present.
 | .icons, .gtkrc-2.0, .zshenv | D | Observed Home Manager store symlinks |
 | .vim, .viminfo | E | Only netrw/recent editing history observed; no user configuration or plugins |
 | Library, UnrealEngine | E | Only Unreal build logs and trace-server logs/store observed; no project/assets |
-| .gitconfig, .zshrc | P | Existing manual configuration retained; Home Manager owns separate .config/zsh files |
+| .gitconfig | P, migrated | Contents move to .config/git/config under a persisted directory; Git uses its standard XDG path and can atomically save global settings |
+| .zshrc | P | Existing manual legacy configuration retained; Home Manager owns separate .config/zsh files |
 | .bash_history, .histfile, .zsh_history | P | Explicit choice to retain historical commands |
 | .pulse-cookie | P | Audio authentication identity |
 | .config, .local | M | Never persisted as whole containers; children below |
@@ -60,6 +61,9 @@ planned, with ADB keys already present.
 Zsh's active history moves from `.config/zsh/.zsh_history` to
 `.local/state/zsh/history`. Its containing directory is persisted, allowing
 atomic saves. The existing history was copied before changing the declaration.
+Existing Git configuration was likewise copied to `.config/git/config` and
+compared without printing contents. The final-sync tool repeats both migrations
+after applications stop, using the new path when it already exists.
 
 ## .config children
 
@@ -72,16 +76,18 @@ atomic saves. The existing history was copied before changing the declaration.
 | gh | P | GitHub CLI authentication/configuration, private mode |
 | StardewValley | P | Game saves outside the Steam library |
 | dconf, Thunar, pulse | P | Desktop/file-manager/audio preferences |
-| mimeapps.list, pavucontrol.ini | P | Manual application association/audio UI preferences; isolated file replacement needs physical application verification |
+| mimeapps.list | D | Observed text/markdown association with code.desktop is now reconstructed through Home Manager |
+| pavucontrol.ini | E | Window geometry/filter/meter UI preferences only; audio device routes remain separately persistent |
+| git | P | Global Git configuration in a writable containing directory |
 | Code | M | User/global/workspace state, unsaved Backups, cookies, identity, extensions' storage retained; cache exceptions listed below |
 | mozilla/firefox | M | profiles.ini, profile groups, passwords, cookies, bookmarks/history, extensions, sessions and site storage retained; cache/crash/telemetry exceptions below |
 | unityhub | M | Account/storage, install-state database, project registry, preferences, Templates and resumable editor installation payloads retained; cache exceptions below |
 | unity3d/Unity/config, unity3d/Unity/licenses | P | Licensing configuration/identity; sibling Licensing.Client logs discarded |
 | Unreal Engine | P | UnrealBuildTool/BuildConfiguration.xml is authoritative configuration |
-| Epic/Epic Games | P | KeyValueStore account/settings |
-| Epic/ProjectEditorRecords | P | Recent project records; isolated file replacement needs application verification |
+| Epic | M | App-scoped parent retained for atomic account/settings/project-record updates; exact directory/file exceptions reset generated state |
+| Epic/Epic Games, Epic/ProjectEditorRecords | P | Account/settings and recent project records |
 | Epic/UnrealEngine | M | Engine install registry, editor layouts/preferences, Content, collections/autosaves and authentication state retained; intermediate/log/cache exceptions below |
-| Epic/UnrealBuildTool, Epic root lock/analytics/generated files | E | Build logs, process locks and generated server/asset registry bookkeeping |
+| Epic/UnrealBuildTool, Epic root lock/analytics/generated files | E | Build logs reset via root-backed directory; known process/server/asset-registry lock files removed by boot-only rules |
 
 ## .local children
 
@@ -163,7 +169,7 @@ tmpfiles reactivation because they are boot-only (`r!`).
 | --- | --- | --- |
 | lib/nixos | P | Preserve uid/gid/subuid allocation and declarative account state |
 | lib/systemd/random-seed | P | Entropy seed, retain protected original metadata |
-| lib/NetworkManager/secret_key | P | Stable network identity secret; leases/timestamps/seen-bssids/runtime state remain E |
+| lib/NetworkManager | M | Enclosing directory retained for atomic identity/internal-settings updates; leases/timestamps/seen-bssids removed by boot-only rules in normal mode |
 | lib/bluetooth | P | Pairing identity and trust, mode 0700 |
 | lib/btrfs | P | Scrub progress/history |
 | lib/nixos-optimization | P | Separate @optimization mount; never copied under /persist |

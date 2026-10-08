@@ -5,7 +5,15 @@ chronological ledger, supplied guides and superseded observations.
 
 ## Source, PR and CI
 
-Branch: `feat/pre-optimization-readiness`, based on main
+Active local work is now `feat/granular-impermanence`, starting at reviewed
+`de058b4b65416249e2a1ac2e722f7514c87d5a36`. See the
+[granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+for snapshots, copies, application-state classifications and validation progress.
+No granular generation is installed yet; the accepted physical boot history below
+still describes the older whole-home/var persistence model. Existing PR/CI
+evidence does not certify these new local changes.
+
+Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.

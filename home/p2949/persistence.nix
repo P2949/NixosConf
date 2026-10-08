@@ -46,7 +46,6 @@
         mode = "0700";
       }
       ".plastic4"
-      ".zen"
       ".dotnet/corefx/cryptography"
       ".vscode"
       ".vscode-shared/sharedStorage"
@@ -55,6 +54,7 @@
       # Keep atomic application updates within one mounted directory. Known
       # cache children are instead bound to reset-root storage by the host.
       ".config/Code"
+      ".config/git"
       {
         directory = ".config/gh";
         mode = "0700";
@@ -70,8 +70,7 @@
       ".config/unity3d/Unity/config"
       ".config/unity3d/Unity/licenses"
       ".config/Unreal Engine"
-      ".config/Epic/Epic Games"
-      ".config/Epic/UnrealEngine"
+      ".config/Epic"
 
       # .local is also split: no complete share/state container is persisted.
       ".local/share/Steam"
@@ -94,15 +93,11 @@
 
     files = [
       # Manual configuration and intentionally retained command history.
-      ".gitconfig"
       ".zshrc"
       ".bash_history"
       ".histfile"
       ".zsh_history"
       ".pulse-cookie"
-      ".config/mimeapps.list"
-      ".config/pavucontrol.ini"
-      ".config/Epic/ProjectEditorRecords"
     ];
   };
 }

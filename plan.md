@@ -1,5 +1,15 @@
 # NixOS Pre-Experiment Readiness Master Plan
 
+## Granular ephemeral-state work — 2026-10-08
+
+The user explicitly started the home/var granular Impermanence implementation
+on `feat/granular-impermanence`. Its authoritative procedure and current results
+are in [NixOS_Granular_Ephemeral_State_Implementation_Plan.md](NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
+This supersedes earlier selective-home/var deferrals for this feature branch;
+the historical pre-optimization readiness evidence below remains historical.
+Source changes are not yet physical acceptance. The active desktop and all
+legacy home/var rollback sources remain intact while validation is completed.
+
 ## Final pre-soak continuation directive — adopted2026-10-07
 
 Newest full guide below supersedes older next-action sections. Reviewed5e588b7

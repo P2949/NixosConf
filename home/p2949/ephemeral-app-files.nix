@@ -20,6 +20,16 @@
     children = [ "code.lock" ];
   }
   {
+    parent = ".config/Epic";
+    children = [
+      "UE4_SessionSummary_Lock"
+      "UE_AnalyticsSessionSummaryManager_OrphanOwner"
+      "ZenServerInstall"
+      "ZenServerLaunch"
+      "*AssetRegistryCacheLock"
+    ];
+  }
+  {
     parent = ".config/mozilla/firefox";
     children = [
       "y34aofre.default/.parentlock"

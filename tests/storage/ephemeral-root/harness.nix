@@ -177,7 +177,8 @@ pkgs.testers.runNixOSTest {
       environment.systemPackages = [
         pkgs.btrfs-progs
         pkgs.openssl
-      ];
+      ]
+      ++ pkgs.lib.optionals granular [ pkgs.git ];
 
       specialisation = {
         ephemeral.configuration = btrfsConfiguration;
@@ -230,6 +231,12 @@ pkgs.testers.runNixOSTest {
       if granular:
           ephemeral_paths += application_cache_paths
           ephemeral_paths += ["/home/tester/.codex/models_cache.json", "/home/tester/.codex/logs_2.sqlite"]
+          ephemeral_paths += ["/var/lib/NetworkManager/granular-test.lease"]
+          persistent_paths += ["/var/lib/NetworkManager/granular-proof"]
+          persistent_paths += [
+              "/home/tester/.local/share/Steam/steamapps/shadercache/granular-proof",
+              "/home/tester/.config/Epic/UnrealEngine/Common/DerivedDataCache/granular-proof",
+          ]
 
       machine.start(allow_reboot=True)
       machine.wait_for_unit("multi-user.target")
@@ -274,6 +281,10 @@ pkgs.testers.runNixOSTest {
 
       machine.succeed("echo persistent > /mnt/impermanence-root/@persist/persist-sentinel")
       machine.succeed("echo repository-state > /mnt/impermanence-root/@persist/etc/nixos/persist-sentinel")
+      if granular:
+          machine.succeed("install -d -m 0700 -o 1000 -g 100 /mnt/impermanence-root/@persist/home/tester /mnt/impermanence-root/@persist/home/tester/.config /mnt/impermanence-root/@persist/home/tester/.config/git")
+          machine.succeed("printf '[impermanence]\\nfixture = seed\\n' > /mnt/impermanence-root/@persist/home/tester/.config/git/config")
+          machine.succeed("chown 1000:100 /mnt/impermanence-root/@persist/home/tester/.config/git/config")
       if not granular:
           machine.succeed("echo persistent-var > /mnt/impermanence-root/@var/var-sentinel")
           machine.succeed("echo persistent-home > /mnt/impermanence-root/@home/home-sentinel")
@@ -430,9 +441,15 @@ pkgs.testers.runNixOSTest {
               # that mount ownership permits ordinary application writes.
               machine.succeed("su - tester -c 'printf \"persistent\\n\" > ~/Documents/granular-proof; printf \"persistent\\n\" > ~/.ssh/granular-proof'")
               for path in persistent_paths[2:]:
-                  machine.succeed(f"mkdir -p $(dirname {path}); printf 'persistent\\n' > {path}")
+                  if path.startswith("/home/tester/"):
+                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); printf \"persistent\\n\" > {path}'")
+                  else:
+                      machine.succeed(f"mkdir -p $(dirname {path}); printf 'persistent\\n' > {path}")
               for path in ephemeral_paths:
-                  machine.succeed(f"mkdir -p $(dirname {path}); touch {path}")
+                  if path.startswith("/home/tester/"):
+                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); touch {path}'")
+                  else:
+                      machine.succeed(f"mkdir -p $(dirname {path}); touch {path}")
               machine.succeed("test $(stat -c %a /home/tester/.ssh) = 700")
               machine.succeed("test $(stat -c %U:%G /home/tester/Documents) = tester:users")
               for path in application_cache_paths:
@@ -441,9 +458,13 @@ pkgs.testers.runNixOSTest {
                   machine.succeed(f"findmnt -rn -o SOURCE -T {path} | grep -F '/@root/'")
                   machine.succeed(f"su - tester -c 'touch {path}'")
               # Applications must be able to save configuration atomically.
-              machine.succeed("su - tester -c 'echo first > ~/.config/Code/preferences-fixture; echo second > ~/.config/Code/preferences-fixture.new; mv ~/.config/Code/preferences-fixture.new ~/.config/Code/preferences-fixture'")
               if expected_boot_count > 1:
                   machine.succeed("grep -Fx second /home/tester/.config/Code/preferences-fixture")
+              git_value = machine.succeed("su - tester -c 'git config --global --get impermanence.fixture'").strip()
+              assert git_value == ("seed" if expected_boot_count == 1 else "edited"), git_value
+              machine.succeed("su - tester -c 'echo first > ~/.config/Code/preferences-fixture; echo second > ~/.config/Code/preferences-fixture.new; mv ~/.config/Code/preferences-fixture.new ~/.config/Code/preferences-fixture'")
+              machine.succeed("su - tester -c 'git config --global impermanence.fixture edited'")
+              machine.succeed("grep -q edited /persist/home/tester/.config/git/config")
               for path in ["/var/lib/portables", "/var/lib/machines", "/var/tmp"]:
                   machine.fail(f"btrfs subvolume show {path}")
 

@@ -1,28 +1,64 @@
 # Desktop persistence contract
 
-Desktop declares reset of `@root` as normal policy, with a `persistent-root`
-recovery specialisation that disables reset. Both retain machine identity.
-Three physical opt-in reset trials passed; exact final default/recovery boot
-acceptance remains pending and is batched with other work.
+Desktop's granular source policy resets `@root`, including ordinary home and
+var, on every normal boot. `persistent-root` disables that reset: undeclared
+root-local home/var state and application-cache overlays remain across recovery
+boots, then disappear when normal mode resumes. Explicit state works in both.
+
+Migration status: the running desktop still mounts `@home` and `@var`; the new
+generation has not been installed. Read-only snapshots and a verified home
+safety copy are prepared. Source/test changes must pass offline validation,
+quiesced final copying and repeated physical boot/application checks before
+legacy state or temporary copies are retired. The
+[granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md) records
+actual results and open gates; historic root-only evidence below does not prove
+the new home/var contract.
 
 | State | Policy | Reason |
 | --- | --- | --- |
 | `/` (`@root`) | Disposable in default; retained in recovery | Reconstructed by NixOS activation |
-| `/home` (`@home`) | Persistent | Projects, credentials, application and desktop state |
-| `/var` (`@var`) | Persistent | Journal, Bluetooth, service databases and caches |
+| `/home` | Root-local, ephemeral by default | Only declared user state survives normal boot |
+| `/var` | Root-local, ephemeral by default | Only declared service state or intentional nested mounts survive |
 | `/nix` (`@nix`) | Persistent | Store and generations |
-| `/persist` (`@persist`) | Persistent | Explicit root-state backing storage |
+| `/persist` (`@persist`) | Persistent | Explicit system/home backing storage, secrets and deliberate recovery evidence |
 | `/var/lib/nixos-optimization` (`@optimization`) | Persistent, experiments inactive | Preserve existing artifacts |
 | `/.snapshots` (`@snapshots`) | Retain pending forensic review | Not an independent backup |
 | `/etc/nixos` | Bind persisted under `/persist/etc/nixos` | Working repository and tracked master plan |
 | NetworkManager connections | Bind persisted under `/persist/etc/NetworkManager/system-connections` | Profiles and secrets |
 | `/etc/machine-id` | Persist in both variants; current identity seeded before trials | Stable journal and service identity |
+| `/var/lib/nixos` | Bind persisted | Stable UID/GID/subuid allocation |
+| `/var/lib/systemd/random-seed` | File persisted | Protected entropy state |
+| `/var/lib/NetworkManager` | Directory persisted; known runtime files reset | Stable key/internal settings; leases and timestamps discarded |
+| `/var/lib/bluetooth` | Bind persisted, mode 0700 | Pairing credentials/trust |
+| `/var/lib/btrfs` | Bind persisted | Scrub history/progress |
+| Logs/journal/coredumps, `/var/cache`, `/var/tmp`, undeclared service DBs | Ephemeral | Volatile journal is explicit policy; no whole-var persistence |
 | Password hash | `/persist/secrets/p2949-password-hash` | Declarative authentication without secrets in Git |
 | SSH host keys | Persist before enabling sshd | Stable server identity; sshd currently not declared |
 | `/tmp`, `/srv` | Reconstructed, root-local data discarded | Audit and back up any needed contents first |
 | Other mutable `/etc`, `/root` and root-local files | Root home inspected: Nix channels/cache only; ordinary root state disposable | Must be declared, persisted, backed up or approved disposable |
 
-Selective home and var Impermanence are deferred by `plan.md` Phase 4.
+Home paths persist only when listed in
+[`home/p2949/persistence.nix`](../home/p2949/persistence.nix); system paths only
+when listed in [`hosts/desktop/persistence.nix`](../hosts/desktop/persistence.nix).
+The exact `P`/`R` reasons and application exceptions are in the
+[state audit](ephemeral-state-audit.md). `.config`, `.local`, and `.cache` are
+never persisted as whole containers. Known cache children inside retained
+profiles are bound from root-local storage using
+[`ephemeral-app-state.nix`](../home/p2949/ephemeral-app-state.nix), allowing normal
+atomic profile updates. Known disposable profile files use boot-only tmpfiles
+removal, disabled in recovery. The user explicitly retains Steam shaders and
+Unreal DDC/Zen caches because rebuilding them is costly.
+
+Upstream tmpfiles rules create ordinary directories for `/var/lib/machines`,
+`/var/lib/portables` and `/var/tmp`; creating nested Btrfs subvolumes here would
+correctly trip the unchanged root-reset descendant guard.
+
+Regression: `nix flake check` executes the combined granular multi-boot VM;
+`nix build .#impermanence-home .#impermanence-var --no-link` aliases that same
+test. Blank-disk reconstruction separately uses the production Disko/desktop
+closure and rejects `@home`/`@var` creation. VM evidence does not replace
+physical application or repeated-boot acceptance.
+
 No directory contents or secret values belong in this document. The separate encrypted secrets
 backup/restore gate is completed on user-confirmed real recovery; independent
 home backup verification remains open. The declarations
@@ -34,7 +70,11 @@ declarative; a regular file is not automatically safe to discard. Inspect
 root-local work outside the separate mounts, especially `/root`, `/srv`,
 `/opt` and `/tmp`. Do not copy secrets into the repository while auditing.
 
-Recovery and physical acceptance: [physical-root-validation.md](physical-root-validation.md).
+Historic root-only recovery acceptance: [physical-root-validation.md](physical-root-validation.md).
+Current home/var rollout follows the granular plan, using `nixos-rebuild boot`,
+with final application-quiesced copying before reboot. Never replace the live
+home/var mounts with `switch`. Never delete old subvolumes or migration snapshots
+before repeated physical normal/recovery/normal and application acceptance.
 
 ## Initial root-local inventory, 2026-10-05
 

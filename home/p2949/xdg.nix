@@ -4,6 +4,13 @@
   xdg = {
     enable = true;
 
+    # Reconstruct the observed MIME association instead of bind-mounting a
+    # mutable file that GIO needs to replace atomically.
+    mimeApps = {
+      enable = true;
+      associations.added."text/markdown" = [ "code.desktop" ];
+    };
+
     userDirs = {
       enable = true;
       createDirectories = true;

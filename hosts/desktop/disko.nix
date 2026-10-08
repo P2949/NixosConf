@@ -1,3 +1,4 @@
+{ config, lib, ... }:
 let
   btrfsMountOptions = [
     "compress=zstd:1"
@@ -76,6 +77,12 @@ in
 
                 "@snapshots" = {
                   mountpoint = "/.snapshots";
+                  mountOptions = btrfsMountOptions;
+                };
+              }
+              // lib.optionalAttrs config.workstation.granularMigration.keepLegacyVar {
+                "@var" = {
+                  mountpoint = "/var";
                   mountOptions = btrfsMountOptions;
                 };
               };

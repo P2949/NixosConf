@@ -71,20 +71,21 @@
     ];
   }
   {
-    parent = ".config/Epic/UnrealEngine";
+    parent = ".config/Epic";
     children = [
-      "Intermediate"
-      "5.8/Intermediate"
-      "5.8/Saved/Logs"
-      "5.8/Saved/ShaderDebugInfo"
-      "Common/Analytics"
-      "Editor/webcache_6613/ShaderCache"
-      "Editor/webcache_6613/GrShaderCache"
-      "Editor/webcache_6613/GraphiteDawnCache"
-      "Editor/webcache_6613/Default/Cache"
-      "Editor/webcache_6613/Default/Code Cache"
-      "Editor/webcache_6613/Default/GPUCache"
-      "Editor/webcache_6613/Default/Shared Dictionary/cache"
+      "UnrealBuildTool"
+      "UnrealEngine/Intermediate"
+      "UnrealEngine/5.8/Intermediate"
+      "UnrealEngine/5.8/Saved/Logs"
+      "UnrealEngine/5.8/Saved/ShaderDebugInfo"
+      "UnrealEngine/Common/Analytics"
+      "UnrealEngine/Editor/webcache_6613/ShaderCache"
+      "UnrealEngine/Editor/webcache_6613/GrShaderCache"
+      "UnrealEngine/Editor/webcache_6613/GraphiteDawnCache"
+      "UnrealEngine/Editor/webcache_6613/Default/Cache"
+      "UnrealEngine/Editor/webcache_6613/Default/Code Cache"
+      "UnrealEngine/Editor/webcache_6613/Default/GPUCache"
+      "UnrealEngine/Editor/webcache_6613/Default/Shared Dictionary/cache"
     ];
   }
   {

@@ -96,7 +96,18 @@ in
         ${pkgs.coreutils}/bin/install -d -m 0700 -o ${lib.escapeShellArg cfg.user} -g ${
           lib.escapeShellArg config.users.users.${cfg.user}.group
         } ${lib.escapeShellArg (source entry)}
-        ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg ("/persist" + target entry)}
+          task_backing=${lib.escapeShellArg ("/persist" + target entry)}
+          task_parent=${lib.escapeShellArg "/persist${home}/${entry.parent}"}
+          task_missing=()
+          while [[ "$task_backing" != "$task_parent" ]]; do
+            if [[ ! -d "$task_backing" ]]; then task_missing+=("$task_backing"); fi
+            task_backing="''${task_backing%/*}"
+          done
+          for (( task_index=''${#task_missing[@]}-1; task_index>=0; task_index-- )); do
+            ${pkgs.coreutils}/bin/install -d -m 0700 -o ${lib.escapeShellArg cfg.user} -g ${
+              lib.escapeShellArg config.users.users.${cfg.user}.group
+            } "''${task_missing[task_index]}"
+          done
       '') entries;
     };
 
