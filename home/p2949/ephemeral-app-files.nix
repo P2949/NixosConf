@@ -4,7 +4,12 @@
 [
   {
     parent = ".codex";
-    children = [ "models_cache.json" "logs_2.sqlite" "logs_2.sqlite-wal" "logs_2.sqlite-shm" ];
+    children = [
+      "models_cache.json"
+      "logs_2.sqlite"
+      "logs_2.sqlite-wal"
+      "logs_2.sqlite-shm"
+    ];
   }
   {
     parent = ".android";
@@ -16,6 +21,9 @@
   }
   {
     parent = ".config/mozilla/firefox";
-    children = [ "y34aofre.default/.parentlock" "y34aofre.default/lock" ];
+    children = [
+      "y34aofre.default/.parentlock"
+      "y34aofre.default/lock"
+    ];
   }
 ]

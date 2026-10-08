@@ -59,11 +59,6 @@ in
                   mountOptions = btrfsMountOptions;
                 };
 
-                "@home" = {
-                  mountpoint = "/home";
-                  mountOptions = btrfsMountOptions;
-                };
-
                 "@nix" = {
                   mountpoint = "/nix";
                   mountOptions = btrfsMountOptions;
@@ -71,11 +66,6 @@ in
 
                 "@persist" = {
                   mountpoint = "/persist";
-                  mountOptions = btrfsMountOptions;
-                };
-
-                "@var" = {
-                  mountpoint = "/var";
                   mountOptions = btrfsMountOptions;
                 };
 

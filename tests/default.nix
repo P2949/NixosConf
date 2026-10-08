@@ -45,6 +45,10 @@
       inherit (desktopSystem) config;
     };
 
+    granular-impermanence = import ./storage/granular-impermanence.nix {
+      inherit inputs pkgs;
+    };
+
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
       inherit pkgs;
     };
@@ -101,6 +105,11 @@
   };
 
   packages = rec {
+    granular-impermanence = import ./storage/granular-impermanence.nix {
+      inherit inputs pkgs;
+    };
+    impermanence-home = granular-impermanence;
+    impermanence-var = granular-impermanence;
     blank-disk-reconstruction = import ./storage/ephemeral-root/reconstruction.nix {
       inherit
         desktopSystem

@@ -3,7 +3,14 @@
 [
   {
     parent = ".codex";
-    children = [ ".tmp" "tmp" "cache" "ipc" "shell_snapshots" "thread-writer-locks" ];
+    children = [
+      ".tmp"
+      "tmp"
+      "cache"
+      "ipc"
+      "shell_snapshots"
+      "thread-writer-locks"
+    ];
   }
   {
     parent = ".android";
@@ -12,40 +19,70 @@
   {
     parent = ".config/Code";
     children = [
-      "Cache" "CachedData" "CachedConfigurations" "CachedExtensionVSIXs"
-      "CachedProfilesData" "Code Cache" "Crashpad" "DawnGraphiteCache"
-      "DawnWebGPUCache" "GPUCache" "logs" "blob_storage"
-      "Service Worker/CacheStorage" "Service Worker/ScriptCache"
+      "Cache"
+      "CachedData"
+      "CachedConfigurations"
+      "CachedExtensionVSIXs"
+      "CachedProfilesData"
+      "Code Cache"
+      "Crashpad"
+      "DawnGraphiteCache"
+      "DawnWebGPUCache"
+      "GPUCache"
+      "logs"
+      "blob_storage"
+      "Service Worker/CacheStorage"
+      "Service Worker/ScriptCache"
       "Shared Dictionary/cache"
     ];
   }
   {
     parent = ".config/mozilla/firefox";
     children = [
-      "Crash Reports" "Pending Pings" "firefox-mpris"
-      "y34aofre.default/cache2" "y34aofre.default/startupCache"
-      "y34aofre.default/shader-cache" "y34aofre.default/thumbnails"
-      "y34aofre.default/minidumps" "y34aofre.default/crashes"
-      "y34aofre.default/datareporting" "y34aofre.default/saved-telemetry-pings"
+      "Crash Reports"
+      "Pending Pings"
+      "firefox-mpris"
+      "y34aofre.default/cache2"
+      "y34aofre.default/startupCache"
+      "y34aofre.default/shader-cache"
+      "y34aofre.default/thumbnails"
+      "y34aofre.default/minidumps"
+      "y34aofre.default/crashes"
+      "y34aofre.default/datareporting"
+      "y34aofre.default/saved-telemetry-pings"
     ];
   }
   {
     parent = ".config/unityhub";
     children = [
-      "Cache" "Code Cache" "Crashpad" "DawnGraphiteCache" "DawnWebGPUCache"
-      "GPUCache" "logs" "sentry" "graphqlCache" "VideoDecodeStats"
-      "Service Worker/CacheStorage" "Service Worker/ScriptCache"
+      "Cache"
+      "Code Cache"
+      "Crashpad"
+      "DawnGraphiteCache"
+      "DawnWebGPUCache"
+      "GPUCache"
+      "logs"
+      "sentry"
+      "graphqlCache"
+      "VideoDecodeStats"
+      "Service Worker/CacheStorage"
+      "Service Worker/ScriptCache"
       "Shared Dictionary/cache"
     ];
   }
   {
     parent = ".config/Epic/UnrealEngine";
     children = [
-      "Intermediate" "5.8/Intermediate" "5.8/Saved/Logs"
-      "5.8/Saved/ShaderDebugInfo" "Common/Analytics"
-      "Editor/webcache_6613/ShaderCache" "Editor/webcache_6613/GrShaderCache"
+      "Intermediate"
+      "5.8/Intermediate"
+      "5.8/Saved/Logs"
+      "5.8/Saved/ShaderDebugInfo"
+      "Common/Analytics"
+      "Editor/webcache_6613/ShaderCache"
+      "Editor/webcache_6613/GrShaderCache"
       "Editor/webcache_6613/GraphiteDawnCache"
-      "Editor/webcache_6613/Default/Cache" "Editor/webcache_6613/Default/Code Cache"
+      "Editor/webcache_6613/Default/Cache"
+      "Editor/webcache_6613/Default/Code Cache"
       "Editor/webcache_6613/Default/GPUCache"
       "Editor/webcache_6613/Default/Shared Dictionary/cache"
     ];
@@ -53,12 +90,20 @@
   {
     parent = ".local/share/Steam";
     children = [
-      "appcache" "depotcache" "logs" "config/avatarcache"
-      "config/htmlcache/ShaderCache" "config/htmlcache/GrShaderCache"
-      "config/htmlcache/GraphiteDawnCache" "config/htmlcache/Default/Cache"
-      "config/htmlcache/Default/Code Cache" "config/htmlcache/Default/GPUCache"
-      "steamapps/downloading" "steamapps/temp"
-      "userdata/1031954223/ugcmsgcache" "userdata/1031954223/inventorymsgcache"
+      "appcache"
+      "depotcache"
+      "logs"
+      "config/avatarcache"
+      "config/htmlcache/ShaderCache"
+      "config/htmlcache/GrShaderCache"
+      "config/htmlcache/GraphiteDawnCache"
+      "config/htmlcache/Default/Cache"
+      "config/htmlcache/Default/Code Cache"
+      "config/htmlcache/Default/GPUCache"
+      "steamapps/downloading"
+      "steamapps/temp"
+      "userdata/1031954223/ugcmsgcache"
+      "userdata/1031954223/inventorymsgcache"
       "userdata/1031954223/ugsmsgcache"
     ];
   }

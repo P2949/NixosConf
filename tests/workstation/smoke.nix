@@ -15,6 +15,7 @@ vmPkgs.testers.runNixOSTest {
   nodes.machine = { lib, ... }: {
     imports = [
       inputs.home-manager.nixosModules.home-manager
+      inputs.impermanence.nixosModules.impermanence
       ../../profiles/workstation.nix
       ../../modules/hardware/commander-core
       ../../modules/storage/ephemeral-btrfs-root
@@ -27,6 +28,11 @@ vmPkgs.testers.runNixOSTest {
     hardware.commanderCore.enable = lib.mkForce false;
     boot.ephemeralBtrfsRoot.enable = lib.mkForce false;
     boot.initrd.systemd.enable = true;
+    fileSystems."/persist" = {
+      device = "none";
+      fsType = "tmpfs";
+      neededForBoot = true;
+    };
     users.mutableUsers = false;
     # Never collect/optimise the host-shared store from a guest.
     nix.gc.automatic = lib.mkForce false;
