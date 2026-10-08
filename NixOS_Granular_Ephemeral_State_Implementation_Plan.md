@@ -5,6 +5,33 @@
 **Starting reviewed commit:** `de058b4b65416249e2a1ac2e722f7514c87d5a36`  
 **Primary objective:** make the workstation ephemeral by default across root, home, and system mutable state, while preserving only explicitly declared state that has a demonstrated reason to survive reboot.
 
+## Implementation status — 2026-10-08
+
+This is the active implementation record. The numbered procedure below remains
+the acceptance specification; unchecked physical gates must not be inferred
+from source changes or VM tests.
+
+- Fully read all 2,393 original lines, including the migration ordering and
+  retirement gates. No repository `AGENTS.md` applies.
+- Started `feat/granular-impermanence` at the exact reviewed commit above.
+  Tracked files were clean; this user-supplied plan was the sole untracked file
+  and is preserved and updated as part of this work.
+- Live topology confirmed: `/home` is `@home`, `/var` is `@var`, `/persist`
+  is `@persist`; the optimization mount remains independent. Passwordless
+  privileged commands are available.
+- Metadata-only inventories found 151 GiB of home state, including development
+  projects, Unity installs, Firefox profiles, VS Code shared storage and game
+  saves outside Steam. These require explicit declarations beyond the examples.
+- `@var` has nested `lib/portables`, `lib/machines`, and `tmp` subvolumes.
+  Retirement must inspect these individually and must not recursively delete.
+- In progress: snapshots, state classification ledger, migration backing,
+  granular declarations, topology guards and multi-boot regression tests.
+- Pending: all offline validation, next-boot cutovers, representative application
+  checks, physical repeated normal/recovery boots, backing-store pruning, and
+  legacy-subvolume/snapshot retirement. The goal is not complete.
+
+Evidence paths and validation results will be added here as work progresses.
+
 ---
 
 # 1. Objective and finish line
