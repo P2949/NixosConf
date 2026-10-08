@@ -193,6 +193,9 @@ These receipts do not assert physical or functional application acceptance.
   `pre-cutover-flake.log`, `combined-regression-final.log`,
   `reconstruction-final.log`, `root-suite-final.log`; the unit and shutdown log
   are in the same directory. Artifacts are 0600, directory 0700.
+- Final armed-source `nix flake check` passed after the rebuild/self-reexec
+  correction (`armed-flake-final.log`); the combined VM remained cached at its
+  passing exact derivation. `git diff --check` passes as well.
 - User chose “I'll save my work and reboot myself” for the first physical home
   cutover. No agent-initiated reboot is authorized or scheduled. Await that
   actual orderly reboot; elapsed time is not evidence it occurred. The plan and
