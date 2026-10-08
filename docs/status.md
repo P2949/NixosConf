@@ -9,12 +9,11 @@ Branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
 `git rev-parse HEAD`; documentation does not embed its own future commit hash.
 [PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-[CI run37700775543](https://github.com/P2949/NixosConf/actions/runs/37700775543)
-passed Flake checks on `9cf9fe203d4f545523fed3985abf4808ea4c19bb`.
-Recovery acceptance head `50e19fe1c395412d62893a5ab9ea917dcedd2bc3` has
-[CI run37706082277](https://github.com/P2949/NixosConf/actions/runs/37706082277)
-in progress as last checked; a prior pass does not certify this successor.
-Local offline checks previously passed the HDR/Bluetooth/VRR source.
+[CI run37706702892](https://github.com/P2949/NixosConf/actions/runs/37706702892)
+passed Flake checks on `3ff359140cc348f3f871b1ffe3f0dc80172f9d52`, which
+accepts the final human observations and starts normal-use soak. Earlier
+50e19fe and f254124 checks also passed. Later evidence heads require their
+own terminal CI; documentation updates do not invalidate runtime acceptance.
 
 ## Accepted boot candidates and physical history
 
