@@ -77,11 +77,13 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 - Stage Pro functional USB playback accepted by user with independently observed
   sink/route. Latest snapshot has HDMI3 default and active Firefox/Stardew streams
   routed to the monitor; this does not revoke the accepted USB test. Preserve
-  user routing. Stage reconnect/reboot persistence remains separate.
+  user routing. User confirms audible USB audio works after reboot and suspend;
+  audible persistence accepted. Replug is not a mandatory test without actual use.
 - HDR policy built and test-activated:10-bit desktop sRGB, automatic fullscreen
   HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual waterfall.mkv PQ/BT2020 output negotiated with native Wayland mpv;
   DRM DP-3 changed BT2020_RGB during fullscreen and Default after ordinary exit.
-  Visual quality/monitor HDR indication pending; EDID is not measured brightness.
+  User confirms correct HDR appearance, monitor HDR indication and normal SDR
+  return after exit. Visual acceptance passed; EDID is not measured brightness.
 - Exact physical recovery drill PASS: matched recovery closure and ISO hash,
   MP600 mounted `ro,rescue=nologreplay,subvolid=5`, required five subvolumes
   and repository/profiles/home/credential existence checked, clean unmount.
@@ -92,19 +94,18 @@ zero restarts; temporary capture unit removed. No further reboot scheduled.
 
 ## Validation evidence and remaining actions
 
-Remaining hard gates: visual HDR/SDR return; applicable audible audio persistence;
-representative multi-day soak; backup freshness;
+Remaining hard gates: representative multi-day soak; backup freshness;
 frozen-source capture/manifest/exact validation/CI; PR ready/merge/tag.
 Generation38 boot/resume, root-chain decision and Unreal interaction are closed.
 Expected mounts, credential-source equality, persistent journal directory and
 all12 powersave/balance_performance CPU policies passed read-only inspection.
 
-1. Obtain the remaining human observations: HDR picture/monitor indication and
-   normal SDR return; audible Stage Pro after boot/resume, with replug only if
-   normally used. Technical signalling, enumeration and user playback already
-   passed; do not repeat accepted workload or root-chain tests.
-2. After these individual gates, perform the representative multi-day mixed-use
-   soak. Application uptime alone is not evidence of completed normal work.
+1. All individual pre-soak gates are accepted by technical evidence and final
+   user confirmation on2026-10-08.
+2. Representative multi-day mixed-use soak began2026-10-08 on generation38.
+   Use the machine normally; record meaningful workloads and any faults.
+   Application uptime alone does not prove completed work. No additional
+   synthetic stress or deliberate reboot is required for the soak.
 3. Check backup freshness at freeze and protect meaningful new work incrementally.
 4. Freeze source, capture the canonical baseline, run exact final checks/heavy
    suite and stock closure audit, verify exact-head CI, ready and merge PR7,

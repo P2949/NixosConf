@@ -6,8 +6,9 @@ Newest full guide below supersedes older next-action sections. Reviewed5e588b7
 is a historical checkpoint; authoritative branch/source and terminal CI must
 be checked live. Physicalgeneration38boot/125Wresume/Bluetoothoff/display/
 Stageenumeration andinteractiveUnreal are CLOSED. No additional tests in
-those scopes without an actual relevantchange. Remaining before soak:
-visualHDR/SDRreturn, audibleStagecurrentboot/resume and replugonlyifused.
+those scopes without an actual relevantchange. All pre-soak gates are now
+accepted, including user-confirmed HDR/SDR return and Stage audio after boot/resume.
+Representative multi-day normal-use soak began 2026-10-08; completion remains pending.
 Uninterrupted final-boot Proton/exit policy and exact physical recovery
 provenance are CLOSED by the later receipts recorded below. Then follow
 soak→backupdelta→freeze→canonicalbaseline→exactchecks/heavysuite/closureaudit→
@@ -29413,3 +29414,22 @@ The previous goal turn made concrete progress by accepting and archiving the
 physical recovery receipt. Remaining human HDR/SDR and audible Stage observations
 were requested together; soak is not marked started before those gates close.
 No accepted workloads, stress tests or reboot chains are being repeated.
+
+## Final user observations accepted; representative soak started — 2026-10-08
+
+User directly confirms both remaining observation scopes work: the HDR sample
+triggered the monitor's HDR mode and returned normally to SDR; Stage Pro USB
+audio remains audible after reboot and suspend. These close visual HDR/SDR and
+audible Stage boot/resume persistence. No replug test is imposed without actual
+replug use. Together with accepted final-boot Proton/exit restoration and exact
+physical recovery, all pre-soak individual gates are closed.
+
+Representative multi-day normal-use soak begins on generation38, normal closure
+bjxxpsm7f42b909v9gpf48p7pinajc3x. Private start snapshot:
+`/persist/nixos-readiness-20261005/soak-20261008/start.txt`.
+Normal Unreal/Blender/coding/builds/browser/native and Proton games/audio/HDR/file
+work counts as representative activity; document actual use and relevant faults,
+not just process uptime. Natural suspend/reboots may be observed if used, but
+none are scheduled. Preserve the session, avoid tuning/source-policy changes and
+additional synthetic torture tests. Soak completion, freeze-time backup delta,
+canonical baseline, exact final validation, merge and baseline tag remain pending.
