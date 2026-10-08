@@ -57,48 +57,34 @@ vmPkgs.testers.runNixOSTest {
     assert !nodes.machine.boot.ephemeralBtrfsRoot.enable;
     assert !(nodes.machine.boot.initrd.systemd.services ? ephemeral-root-reset);
     ''
-            machine.start()
-            machine.wait_for_unit("multi-user.target")
+      machine.start()
+      machine.wait_for_unit("multi-user.target")
       for service in ["dbus", "systemd-logind", "NetworkManager", "home-manager-${username}"]:
           machine.wait_for_unit(service + ".service")
 
-      # Home Manager / XDG user-directory contract.
-      for directory in [
-          "Desktop",
-          "Development",
-          "Documents",
-          "Downloads",
-          "Music",
-          "Pictures",
-          "Public",
-          "Templates",
-          "Videos",
-      ]:
-          machine.succeed(
-              "runuser -u ${username} -- "
-              f"test -d /home/${username}/{directory}"
-          )
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Desktop")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Development")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Documents")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Downloads")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Music")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Pictures")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Public")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Templates")
+      machine.succeed("runuser -u ${username} -- test -d /home/${username}/Videos")
 
-      machine.succeed(
-          "runuser -u ${username} -- "
-          "sh -c 'test \"$(xdg-user-dir PROJECTS)\" = \"$HOME/Development\"'"
-      )
-
-      machine.succeed(
-          "runuser -u ${username} -- "
-          "sh -c 'test \"$(xdg-user-dir DOCUMENTS)\" = \"$HOME/Documents\"'"
-      )
+      machine.succeed("grep -Fx 'XDG_PROJECTS_DIR=\"/home/${username}/Development\"' /home/${username}/.config/user-dirs.dirs")
+      machine.succeed("grep -Fx 'XDG_DOCUMENTS_DIR=\"/home/${username}/Documents\"' /home/${username}/.config/user-dirs.dirs")
 
       machine.succeed("busctl --system list --no-pager")
       machine.succeed("nmcli general status")
       machine.succeed("test $(id -u ${username}) = 1000")
-            machine.succeed("runuser -u ${username} -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
-            machine.wait_for_unit("polkit.service")
-            status, _ = machine.execute("runuser -u nobody -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
-            assert status == 1, "GameMode helper authorization must not extend to an unrelated user"
-            machine.succeed("runuser -u ${username} -- sh -c 'test -r ~/.config/hypr/hyprland.lua'")
-            machine.succeed("test $(systemctl show commander-core.service -p LoadState --value) = not-found")
-            machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
-            machine.log("Real workstation profile and Home Manager activated; hardware/reset services absent")
+      machine.succeed("runuser -u ${username} -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
+      machine.wait_for_unit("polkit.service")
+      status, _ = machine.execute("runuser -u nobody -- sh -c 'pkcheck --action-id com.feralinteractive.GameMode.governor-helper --process $$'")
+      assert status == 1, "GameMode helper authorization must not extend to an unrelated user"
+      machine.succeed("runuser -u ${username} -- sh -c 'test -r ~/.config/hypr/hyprland.lua'")
+      machine.succeed("test $(systemctl show commander-core.service -p LoadState --value) = not-found")
+      machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
+      machine.log("Real workstation profile and Home Manager activated; XDG user directories present; hardware/reset services absent")
     '';
 }
