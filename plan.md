@@ -31416,3 +31416,19 @@ three changed checks built, unchanged checks reused). Heavy package outputs
 were evaluated, not freshly executed by this flake check; their exact-source
 final suite remains scheduled after soak/freeze. No runtime configuration
 was changed. The consolidated documentation head requires its own CI result.
+
+## Initial soak observation and consolidated-head CI wait — 2026-10-08
+
+Previous goal turn made concrete progress: full guides imported, stale runbook
+and PR claims reconciled, local checks passed and consolidated evidence pushed.
+Current consolidated head41c12e CI run37707256546 is verified live: flake-check
+job113084661323 is running. Re-poll after45seconds still reports in progress;
+no restart or success claim. Predecessor a119fd4/ac3d800 runs were cancelled.
+
+Private initial observation `/persist/nixos-readiness-20261005/soak-20261008/initial-health.txt`
+records no failed system units, Commander Core active/NRestarts0 and no current
+boot kernel matches for the checked hardware/MCE/Btrfs/amdgpu timeout-hang-fault/
+OOM patterns. This narrow early snapshot is not completed multi-day soak,
+exhaustive fault coverage or proof of representative workloads. Continue normal
+use; freeze/final validation remain dependent on the multi-day evidence.
+Do not push a bookkeeping successor merely to cancel the still-running CI.
