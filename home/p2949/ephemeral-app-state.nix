@@ -2,6 +2,19 @@
 # surrounding profile is persistent. Keep this metadata-only list audited.
 [
   {
+    parent = "Development";
+    children = [
+      "Unity/VR-AR-project/Logs"
+      "Unity/VR-AR-project/Temp"
+      "Unity/VR-AR-project-2/Logs"
+      "Unity/VR-AR-project-2/Temp"
+      "Unreal/Projects/AI_Gavin_Project/Intermediate"
+      "Unreal/Projects/AI_Gavin_Project/Saved/Logs"
+      "Unreal/Projects/AI_Gavin_Project/Saved/ShaderDebugInfo"
+      "Unreal/Projects/AI_Gavin_Project/Saved/UnrealBuildTool"
+    ];
+  }
+  {
     parent = ".codex";
     children = [
       ".tmp"

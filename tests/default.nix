@@ -43,6 +43,7 @@
     desktop-evaluation = import ./workstation/evaluation.nix {
       inherit pkgs;
       inherit (desktopSystem) config;
+      homeCutover = inputs.self.nixosConfigurations.desktop-home-cutover.config;
     };
 
     granular-impermanence = import ./storage/granular-impermanence.nix {
@@ -105,6 +106,10 @@
   };
 
   packages = rec {
+    granular-shutdown-cutover = import ../packages/granular-shutdown-cutover.nix {
+      inherit pkgs username;
+      inherit (desktopSystem) config;
+    };
     granular-physical-check = import ../packages/granular-physical-check.nix {
       inherit pkgs username;
       inherit (desktopSystem) config;

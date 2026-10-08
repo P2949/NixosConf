@@ -221,6 +221,8 @@ pkgs.testers.runNixOSTest {
           "/etc/NetworkManager/system-connections/granular-proof",
       ]
       application_cache_paths = [
+          "/home/tester/Development/Unity/VR-AR-project-2/Temp/granular-proof",
+          "/home/tester/Development/Unreal/Projects/AI_Gavin_Project/Intermediate/granular-proof",
           "/home/tester/.codex/cache/granular-proof",
           "/home/tester/.config/mozilla/firefox/y34aofre.default/cache2/granular-proof",
           "/home/tester/.config/Code/GPUCache/granular-proof",

@@ -1,4 +1,8 @@
-{ pkgs, config }:
+{
+  pkgs,
+  config,
+  homeCutover,
+}:
 
 let
   homePolicy = config.home-manager.users.p2949.home.persistence."/persist";
@@ -17,11 +21,16 @@ let
     builtins.toJSON {
       desktop = config.system.build.toplevel.drvPath;
       persistentRoot = config.specialisation.persistent-root.configuration.system.build.toplevel.drvPath;
+      homeMigration = homeCutover.system.build.toplevel.drvPath;
       stateVersion = config.system.stateVersion;
     }
   );
 in
 assert topologyValid;
+assert homeCutover.workstation.granularMigration.keepLegacyVar;
+assert !(homeCutover.fileSystems ? "/home");
+assert homeCutover.fileSystems."/var".neededForBoot;
+assert pkgs.lib.elem "subvol=@var" homeCutover.fileSystems."/var".options;
 assert pkgs.lib.all (path: !(builtins.elem path homeDirectories)) [
   ".config"
   ".local"
