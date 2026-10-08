@@ -5,11 +5,12 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: the running desktop still mounts `@home` and `@var`; the new
-generation has not been installed. Read-only snapshots and a verified home
-safety copy are prepared. Source/test changes must pass offline validation,
-quiesced final copying and repeated physical boot/application checks before
-legacy state or temporary copies are retired. The
+Migration status: the running desktop still mounts `@home` and `@var`. Home-only
+generation 42 is installed and the verified shutdown-copy service is armed;
+generation 41 remains live and selected as the rollback default. Offline
+validation passed. Read-only snapshots and migration backing are prepared,
+but quiesced final copying and repeated physical boot/application checks remain
+required before legacy state or temporary copies are retired. The
 [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md) records
 actual results and open gates; historic root-only evidence below does not prove
 the new home/var contract.
@@ -47,7 +48,8 @@ profiles are bound from root-local storage using
 [`ephemeral-app-state.nix`](../home/p2949/ephemeral-app-state.nix), allowing normal
 atomic profile updates. Known disposable profile files use boot-only tmpfiles
 removal, disabled in recovery. The user explicitly retains Steam shaders and
-Unreal DDC/Zen caches because rebuilding them is costly.
+Unreal DDC/Zen caches and both Unity project Libraries because rebuilding them
+is costly; Unity project logs and temporary files reset.
 
 Upstream tmpfiles rules create ordinary directories for `/var/lib/machines`,
 `/var/lib/portables` and `/var/tmp`; creating nested Btrfs subvolumes here would

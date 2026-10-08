@@ -3,6 +3,8 @@
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
 The live machine still uses `@home` and `@var` until a validated next-boot cutover.
+Home-only generation 42 is installed and its verified shutdown copy is armed;
+offline checks passed, while physical/application acceptance remains pending.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,

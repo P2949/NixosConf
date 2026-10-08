@@ -4,8 +4,9 @@ Desktop now declares ephemeral root as its normal policy, with a
 `persistent-root` specialisation that disables the reset service. Both variants
 persist machine identity. The granular source policy makes home and ordinary
 var root-local, persisting only audited state and keeping known application
-cache children on the reset root. The running desktop still uses the old mounts
-until the next-boot migration passes its offline gates. See the
+cache children on the reset root. Offline gates passed; home-only generation 42
+is installed with the verified shutdown copy armed. The running desktop still
+uses the old mounts pending the first physical cutover. See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 

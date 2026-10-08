@@ -9,8 +9,10 @@ Active local work is now `feat/granular-impermanence`, starting at reviewed
 `de058b4b65416249e2a1ac2e722f7514c87d5a36`. See the
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 for snapshots, copies, application-state classifications and validation progress.
-No granular generation is installed yet; the accepted physical boot history below
-still describes the older whole-home/var persistence model. Existing PR/CI
+Home-only granular generation 42 is installed and the verified shutdown-copy
+service is armed. Generation 41 remains live and selected as the rollback
+default; `/home` and `/var` still use their original mounts. The accepted history
+below describes earlier whole-home/var boots. Existing PR/CI
 evidence does not certify these new local changes.
 
 Local granular validation now passes: the combined normal/recovery/return VM,
@@ -32,8 +34,8 @@ The canonical baseline binds source, lockfile, artifacts and physical evidence.
 
 ## Accepted boot candidates and physical history
 
-Generation38 is physically booted and selected; normal candidate is
-`bjxxpsm7f42b909v9gpf48p7pinajc3x`, current boot`b07efa9b-0e60-425f-ba36-d1eb038327cd` after the recovery return.
+Generation38 was physically booted and accepted; its normal candidate was
+`bjxxpsm7f42b909v9gpf48p7pinajc3x`, boot`b07efa9b-0e60-425f-ba36-d1eb038327cd` after the recovery return.
 Fresh root and private machine-ID equality passed. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
 and persistent-root`8v183hn0p5yv7wf625yj38n6bhsjpxz6` ESP kernel/initrd copies
 match their store artifacts. Boot-only installation and the coordinated normal reboot passed.

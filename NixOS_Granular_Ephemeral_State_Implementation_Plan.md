@@ -29,7 +29,9 @@ from source changes or VM tests.
 - Passed: formatting, flake checks, the strengthened combined regression
   (three normal, two recovery, return to normal), desktop and home-only builds,
   blank-disk reconstruction, workstation smoke and five root-reset scenarios.
-- Pending: next-boot cutovers, representative application
+- Home cutover generation 42 is installed for boot; the shutdown copy is armed.
+  Current live mounts and graphical session remain on generation 41.
+- Pending: physical home/var cutovers, representative application
   checks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 
@@ -144,7 +146,8 @@ These receipts do not assert physical or functional application acceptance.
   matrix including every application cache exception, then verifies only after
   a real reboot. `granular-shutdown-cutover` refuses while desktop-user processes
   remain, seeds the matrix, performs/verifies final synchronization, and only
-  then sets a one-shot boot entry. It is built but has not been armed or run.
+  then sets a one-shot boot entry. The home cutover is now armed; its final
+  shutdown copy has not run and no physical reboot has been requested.
 - Final-sync tooling supports the later var-only migration and rejects copying
   root-local home back over active persisted profiles. A failed shutdown copy
   must leave the old boot default selected. No live mount replacement is used.
@@ -166,9 +169,41 @@ These receipts do not assert physical or functional application acceptance.
   old-default protection, reviewed stop ordering, no automatic reboot, and
   receipt-based normal/recovery checks. These tools never retire subvolumes.
 
-The live desktop still uses its original mounts. No cutover generation has been
-installed and no legacy state has been deleted. A final quiesced synchronization
-is required before next-boot rollout. Physical and application gates remain open.
+### Installed home cutover and immediate continuation
+
+- Boot-only generation 42 installed successfully from the validated closure
+  `/nix/store/vldhz13imcq9bz6pq9nkm795v69cbpqj-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Its ESP kernel and initrd copies compare equal to the store artifacts.
+- Generation 41 (`c9my1br8xhqn4rzpv2c2fl55csvzp0ny`) remains the live system and
+  EFI default. Its boot ID is `5862c6f3-22ec-4c12-b88e-6829be0edc00`. Live `/home`
+  and `/var` still use their originals. No legacy subvolume/snapshot was deleted.
+- `granular-final-copy.service` is active/exited and armed with the reviewed
+  shutdown ordering. It seeds the physical matrix, copies/verifies stopped
+  application state, then selects generation 42 for one boot. Copy failure
+  preserves the generation-41 default. A forced reset bypasses the copy.
+- Arming uses pinned rebuild-ng with `--no-reexec --store-path`: the default
+  self-reexec otherwise tries to evaluate a channel configuration even when
+  deploying a prebuilt store path. Both unsuccessful attempts retained the old
+  default; the successful installation made no live mount changes.
+- Tool and candidate GC roots: `/persist/granular-migration/arm-cutover-tool`,
+  `physical-check-tool`, `final-sync-tool`, `home-cutover-system`, `final-system`.
+  The exact final desktop closure is
+  `/nix/store/h2vbh2291h1v7vz1kk2in39hx10rq1hx-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+- Private receipts include `home-arm.log`, `boot-artifact-verification.log`,
+  `pre-cutover-flake.log`, `combined-regression-final.log`,
+  `reconstruction-final.log`, `root-suite-final.log`; the unit and shutdown log
+  are in the same directory. Artifacts are 0600, directory 0700.
+- Next gate: user saved-work/reboot readiness because reboot closes the active
+  graphical session. The plan and service are ready; do not arm another service
+  or select generation 42 manually before final-copy verification.
+- After the actual reboot, inspect `final-copy-shutdown.log`,
+  `final-sync-verified`, and `physical-boot-pending.json`, then run:
+  `sudo /persist/granular-migration/physical-check-tool/bin/granular-physical-check verify`.
+  A receipt must pass before clearing the temporary old-default EFI override
+  (`sudo bootctl set-default ''`), repeating normal/recovery trials, functional
+  app checks, pruning or any retirement. The home-only phase keeps `@var`.
+
+The physical and application gates remain open. The goal is not complete.
 
 ---
 
