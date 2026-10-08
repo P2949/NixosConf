@@ -67,6 +67,19 @@ after applications stop, using the new path when it already exists.
 
 ## .config children
 
+The project trees beneath `Development` are mixed too. Unity's observed project
+`Logs` and `Temp` directories and Unreal's `AI_Gavin_Project/Intermediate`,
+`Saved/Logs`, `Saved/ShaderDebugInfo` and `Saved/UnrealBuildTool` reset. Source,
+Assets, Packages, ProjectSettings/UserSettings, Unreal Content/Config, autosaves,
+collections and installed engine binaries remain retained. Both Unity Libraries
+currently remain retained pending the user's cache preference: the older
+`VR-AR-project` has no Assets directory, so deletion might lose recovery material.
+The actual Unity and Unreal project exception paths are in the same application
+exception list as profile caches; new projects require an audit and declaration.
+
+Official references: [Unity project directories](https://docs.unity.com/en-us/engine/6000.5/manual/get-started/project-configuration/default-directories)
+and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-directory-structure?lang=en-US).
+
 | Paths | Class | Decision |
 | --- | --- | --- |
 | alacritty, environment.d, fontconfig, fuzzel, gtk-3.0, gtk-4.0, hypr, starship.toml, systemd, user-dirs.conf, user-dirs.dirs, uwsm, zsh | D | Reconstructed by Home Manager; zcompdump is disposable and active history uses the new state path |

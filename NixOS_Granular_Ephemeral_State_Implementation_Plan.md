@@ -24,9 +24,12 @@ from source changes or VM tests.
   saves outside Steam. These require explicit declarations beyond the examples.
 - `@var` has nested `lib/portables`, `lib/machines`, and `tmp` subvolumes.
   Retirement must inspect these individually and must not recursively delete.
-- In progress: snapshots, state classification ledger, migration backing,
+- Prepared: snapshots, state classification ledger, migration backing,
   granular declarations, topology guards and multi-boot regression tests.
-- Pending: all offline validation, next-boot cutovers, representative application
+- Passed: desktop build, blank-disk reconstruction, workstation smoke and five
+  existing root-reset regression scenarios. Revalidation follows the additional
+  project cache declarations and intermediate migration configuration.
+- Pending: strengthened combined regression, next-boot cutovers, representative application
   checks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 
@@ -93,7 +96,10 @@ Evidence paths and validation results will be added here as work progresses.
   caches. That directory was copied and verified before changing declarations.
 - Updated reconstruction, smoke-test integration and shared root harness;
   combined test covers normal/recovery/normal boots and application cache paths.
-  Validation is running; no passing result is claimed yet.
+  The actual desktop, blank-disk reconstruction and workstation smoke builds
+  returned exit 0 (`/tmp/granular-build-pass7.log`). Five root scenarios returned
+  exit 0 (`/tmp/granular-root-suite-final.log`). The stronger combined test with
+  cross-boot Git/Code atomic-save checks is still running.
 - A packaged `granular-final-sync` tool is available as a flake output. Its
   immutable manifest is generated from the evaluated real allow-list; it checks
   the old mount topology, mirrors only declared state, migrates Git/history,
@@ -105,6 +111,26 @@ Evidence paths and validation results will be added here as work progresses.
   a pipe SIGPIPE from the dump receiver. Both operations completed successfully:
   home diff 110,006 lines, var diff 337 lines; extracted traces 28,841 home-write
   events and 327 var-write events. Binary streams contain no file data.
+- Added the temporary `desktop-home-cutover` output to follow stages 21–26
+  before removing `/var`. It keeps only `@var`, with `neededForBoot` required
+  by Impermanence's persisted var paths. The final `desktop` retains neither.
+  Evaluation checks both configurations. Reconstruction now consumes the actual
+  evaluated Disko devices rather than assuming the module is a literal set.
+- Project metadata audit found Unity project logs/temp and Unreal project
+  Intermediate/Logs/ShaderDebugInfo/UnrealBuildTool artifacts under the persisted
+  Development parent. These are now declared root-backed exceptions. Assets,
+  source, settings, autosaves and editor collections remain retained.
+- Unity Libraries total 3.3 GiB. The older project's Assets directory is absent;
+  its Library may contain recovery data. A user preference question is pending;
+  both Libraries remain retained while that question is unresolved.
+- Packaged `granular-physical-check` seeds a private, exact-closure/boot-ID-bound
+  matrix including every application cache exception, then verifies only after
+  a real reboot. `granular-shutdown-cutover` refuses while desktop-user processes
+  remain, seeds the matrix, performs/verifies final synchronization, and only
+  then sets a one-shot boot entry. It is built but has not been armed or run.
+- Final-sync tooling supports the later var-only migration and rejects copying
+  root-local home back over active persisted profiles. A failed shutdown copy
+  must leave the old boot default selected. No live mount replacement is used.
 
 The live desktop still uses its original mounts. No cutover generation has been
 installed and no legacy state has been deleted. A final quiesced synchronization
