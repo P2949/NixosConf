@@ -30726,3 +30726,693 @@ is introduced by this import. Replug is not required unless part of normal use.
 > The live `plan.md` itself now agrees with this narrower direction: it explicitly says Generation 38 boot/resume, Bluetooth/display persistence, Stage enumeration, Unreal, final Proton, and exact recovery are closed, leaving **visual HDR/SDR and audible Stage Pro** before the soak.
 >
 > So the next action is genuinely small now: **close those two human observations, reconcile the stale status/runbook/PR wording in one commit, and start the soak.** There is no remaining justification for another reboot, recovery exercise, stress test, game test, or Unreal test before the soak.
+
+
+## Post-tag NixOS feature recommendations — recorded 2026-10-08
+
+Read the entire attachment 42d46ef1; attachment 3a56314e is byte-identical
+(cmp verified). Both SHA256:
+`ca1981ebc0a0812b1868d4e530d1496f8e05feaa71b50467429763bbcae43772`.
+Retain the complete text once below. Its f254124 reviewed state is historical;
+HDR/audio observations have since passed and the soak started. These are future
+recommendations, not additional baseline gates or permission to change the
+productive system during soak. Do not implement these before the baseline tag.
+
+The recommendations cover specialisation experiment states and stage-aware
+contamination contracts, interactive bootloader VM variants, distributed builders
+and system features, controlled dependency replacement, repart/dm-verity images,
+nspawn testing, kexec/netboot, Facter comparisons, cross-architecture binfmt,
+immutable /etc/Userborn/perlless VM trials, build-closure images, initrd rescue
+and generated option documentation. Preserve their ranking and proposed sequence
+as reference for a separately scoped post-tag optimization-v2 phase. Claims
+about current source need verification: specifically, the guide's systemd-initrd
+premise is incorrect for the current scripted initrd; do not migrate it as part
+of readiness. Its snippets are conceptual proposals, not verified configurations.
+
+> I took a genuinely fresh look at the live repository again. The situation has changed enough that I would adjust the recommendations.
+>
+> The current `feat/pre-optimization-readiness` head is now **`f254124d79c05ff2277ed57a35c8533685246df0`**, whose latest commit reconciles readiness after the physical recovery acceptance. Exact-head Nix checks **#178 passed** on that SHA. PR #7 is still open, draft and mergeable, now at 111 commits / 63 changed files.
+>
+> More importantly, the recovery picture is now basically closed: Generation 38 is physically running, the 125 W boot/resume policy is accepted, final Proton binding is accepted, and the **exact physical recovery drill passed** against the expected recovery closure/ISO with the production NVMe mounted read-only. Your remaining hard readiness work is now mainly visual HDR acceptance, applicable audio persistence, representative multi-day soak, backup freshness, and the final freeze/manifest/exact validation/merge/tag sequence.
+>
+> That changes what I would experiment with. I would stop looking for more recovery/safety architecture and start looking for NixOS features that will become useful **after the stock baseline tag**.
+>
+> ## Updated ranking
+>
+> | Rank | Feature | Value for your project | My recommendation |
+> |---:|---|---|---|
+> | **1** | Specialisations as optimization experiment states | Extremely high | Core optimization-v2 architecture |
+> | **2** | `virtualisation.vmVariantWithBootLoader` | Extremely high | First post-tag experiment |
+> | **3** | Distributed Nix builders + builder features | Very high | Add once mass rebuilds begin |
+> | **4** | `system.replaceDependencies` | Very high research value | Controlled A/B instrument only |
+> | **5** | `image.repart` + dm-verity Nix store images | High novelty / medium practical | Definitely test |
+> | **6** | NixOS systemd-nspawn test containers | High test-speed value | Add as middle test tier |
+> | **7** | `system.build.kexecTree` / netboot | Interesting and useful | Diagnostic/dev systems |
+> | **8** | NixOS Facter | Moderate | Provenance comparison, not migration |
+> | **9** | `boot.binfmt.emulatedSystems` | Moderate | ARM/RISC-V build/testing |
+> | **10** | Immutable `/etc` + Userborn + perlless profile | Mostly educational | VM experiment only |
+> | **11** | `system.includeBuildDependencies` | Niche but fascinating | Offline rebuild experiment |
+> | **12** | Initrd emergency shell / SSH | Now low priority | Fun, but recovery is already strong |
+> | **13** | Generated `nixosOptionsDoc` | Maintenance value | Post-tag cleanup |
+>
+> The biggest **new** recommendation compared with my previous passes is **`image.repart` + a dm-verity-protected Nix store**. That's a good example of a feature that is genuinely worth exploring now that your normal recovery path is already proven.
+>
+> ### 1. Make specialisations the backbone of optimization-v2
+>
+> You already proved specialisations in one of the hardest possible ways: `persistent-root` is a physically tested alternate boot state.
+>
+> Don't stop at using them for recovery.
+>
+> For optimization-v2, I would build something conceptually like:
+>
+> ```text
+> one source revision
+> one flake.lock
+> one persistent dataset
+> one hardware configuration
+>
+>         │
+>         ├── stock
+>         ├── cpu-skylake
+>         ├── cpu-skylake-no-bmi2
+>         ├── cpu-thinlto
+>         ├── cpu-pgo
+>         ├── cpu-pgo-bolt
+>         ├── mesa-experimental
+>         └── kernel-experimental
+> ```
+>
+> That gives you something particularly powerful:
+>
+> ```text
+> boot A
+> benchmark
+> reboot
+> boot B
+> benchmark
+> ```
+>
+> while almost everything except the experimental variable remains identical.
+>
+> Then evolve your existing stock contamination mechanism into **stage-aware closure contracts**:
+>
+> ```text
+> stock
+>     CPU  forbidden
+>     LTO  forbidden
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> cpu
+>     CPU  allowed
+>     LTO  forbidden
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> lto
+>     CPU  allowed
+>     LTO  allowed
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> pgo
+>     CPU  allowed
+>     LTO  allowed
+>     PGO  allowed
+>     BOLT forbidden
+>
+> pgo-bolt
+>     exact intended final set allowed
+> ```
+>
+> Your present test suite already has a stock contamination negative fixture, while the productive optimization namespace is deliberately empty. That's a very good foundation for this model.
+>
+> I would make this one of the first things implemented in `optimization-framework-v2`.
+>
+> ### 2. `virtualisation.vmVariantWithBootLoader` should probably be the first feature you actually try
+>
+> Your present validation hierarchy is strong:
+>
+> ```text
+> evaluation/config checks
+>         ↓
+> NixOS integration VMs
+>         ↓
+> blank-disk reconstruction
+>         ↓
+> physical workstation
+> ```
+>
+> What you're missing is a convenient **interactive virtual version of the real workstation**.
+>
+> That's exactly what `virtualisation.vmVariant` and `vmVariantWithBootLoader` are good at.
+>
+> Conceptually:
+>
+> ```nix
+> virtualisation.vmVariantWithBootLoader = {
+>   hardware.commanderCore.enable = lib.mkForce false;
+>
+>   virtualisation = {
+>     memorySize = 8192;
+>     cores = 6;
+>   };
+> };
+> ```
+>
+> Then:
+>
+> ```bash
+> nixos-rebuild build-vm-with-bootloader --flake .#desktop
+> ```
+>
+> Now you have:
+>
+> ```text
+> real desktop configuration
+> real users
+> real Home Manager
+> real stock controls
+> real services
+> real packages
+> real system policy
+> real bootloader
+>
+> + VM-specific hardware substitutions
+> ```
+>
+> Your root flake is still pleasantly explicit and only exposes the desktop, recovery system, validation outputs and recovery ISO; there's no VM variant abstraction there yet.
+>
+> I'd use that VM as the **playground for developing optimization-v2 itself**.
+>
+> It does not replace your reconstruction test. Reconstruction proves a much stronger property.
+>
+> ### 3. Distributed builders become genuinely valuable once optimization starts
+>
+> Right now you don't need them badly.
+>
+> Once you're making:
+>
+> ```text
+> generic closure
+> Skylake closure
+> ThinLTO closure
+> PGO instrumentation closure
+> PGO closure
+> BOLT variants
+> LLVM variants
+> kernel variants
+> ```
+>
+> you absolutely will.
+>
+> NixOS provides `nix.distributedBuilds` and `nix.buildMachines`, so the workstation can farm derivations to remote machines.
+>
+> For your research I would go slightly further and use Nix's **system features** to encode eligibility:
+>
+> ```text
+> builder-general
+>     x86_64-linux
+>     big-parallel
+>
+> builder-skylake
+>     x86_64-linux
+>     big-parallel
+>     skylake
+>
+> benchmark workstation
+>     skylake
+>     benchmark-target
+> ```
+>
+> Then require something like:
+>
+> ```text
+> requiredSystemFeatures = [ "skylake" ];
+> ```
+>
+> for operations that actually require that ISA.
+>
+> Eventually you could distinguish:
+>
+> ```text
+> can compile here
+> can train profiles here
+> may collect authoritative benchmarks here
+> ```
+>
+> The most important rule would remain:
+>
+> > build anywhere that's valid; benchmark only on the designated physical target.
+>
+> I'd actually write a **two-machine NixOS VM test** for the builder setup before involving real machines.
+>
+> ### 4. `system.replaceDependencies` is almost tailor-made for research
+>
+> This one remains unusually interesting for your PGO/BOLT project.
+>
+> NixOS can rewrite dependencies in the assembled system closure:
+>
+> ```nix
+> system.replaceDependencies.replacements = [
+>   {
+>     oldDependency = pkgs.foo;
+>     newDependency = optimizedFoo;
+>   }
+> ];
+> ```
+>
+> The reason this interests me isn't deployment.
+>
+> It's experimental isolation.
+>
+> Suppose you optimize `zstd`.
+>
+> Normal approach:
+>
+> ```text
+> optimized zstd
+>        ↓
+> reverse-dependency propagation/rebuilds
+>        ↓
+> benchmark
+> ```
+>
+> Replacement experiment:
+>
+> ```text
+> mostly-stock system closure
+>        ↓
+> replace stock zstd with compatible optimized zstd
+>        ↓
+> benchmark
+> ```
+>
+> That can help answer:
+>
+> > Is the performance difference caused by the optimized library itself, or by the rebuild propagation around it?
+>
+> I would treat this as an **experimental instrument**, not the normal optimization architecture. Upstream itself treats dependency replacement cautiously; properly rebuilt derivations are the normal solution.
+>
+> That's exactly why it's interesting here.
+>
+> ### 5. New recommendation: build a `systemd-repart` image
+>
+> NixOS has a rather cool image-building subsystem around:
+>
+> ```nix
+> image.repart.enable = true;
+> ```
+>
+> that builds complete disk images using `systemd-repart`.
+>
+> Even more interestingly, NixOS has support for:
+>
+> ```nix
+> image.repart.verityStore.enable = true;
+> ```
+>
+> to build an image whose **Nix store is protected by dm-verity**.
+>
+> That's a genuinely fun NixOS feature to explore.
+>
+> For example, after the baseline:
+>
+> ```text
+> stock workstation flake
+>           │
+>           ├── normal installed workstation
+>           ├── recovery ISO
+>           └── immutable diagnostic appliance
+>                     │
+>                     ├── systemd-repart GPT image
+>                     ├── read-only/verity Nix store
+>                     ├── perf
+>                     ├── turbostat
+>                     ├── btrfs-progs
+>                     └── benchmark tooling
+> ```
+>
+> This would not replace your Disko-based workstation installation.
+>
+> Instead it could become a **reproducible immutable benchmark/recovery/diagnostic appliance**.
+>
+> Given how thoroughly you've already tested your ordinary recovery path, this is now much more interesting than building yet another recovery mechanism.
+>
+> ### 6. Add systemd-nspawn tests between pure tests and QEMU
+>
+> You've got a lot of QEMU-heavy testing now.
+>
+> Some future tests won't need their own kernel:
+>
+> ```text
+> optimization manifest generation
+> closure policy
+> systemd service behaviour
+> profile-processing services
+> cache server configuration
+> builder coordination
+> ```
+>
+> For those, the NixOS test framework can use systemd-nspawn containers rather than full QEMU nodes.
+>
+> I'd eventually aim for:
+>
+> ```text
+> pure Nix/shell tests
+>        ↓
+> nspawn NixOS tests
+>        ↓
+> QEMU NixOS tests
+>        ↓
+> physical machine
+> ```
+>
+> Keep QEMU for:
+>
+> ```text
+> bootloader
+> kernel
+> initrd
+> Disko
+> Btrfs root reset
+> actual VM hardware
+> ```
+>
+> Use nspawn for everything that really just needs an isolated NixOS userspace.
+>
+> That could substantially shorten your future optimization CI cycle.
+>
+> ### 7. `system.build.kexecTree` is worth playing with
+>
+> NixOS can build a tree containing:
+>
+> ```text
+> kernel
+> initrd
+> kexec boot script
+> ```
+>
+> through `system.build.kexecTree`. Nixpkgs' own netboot module exposes exactly that mechanism.
+>
+> So you could build:
+>
+> ```text
+> main workstation
+>       │
+>       │ kexec
+>       ▼
+> minimal NixOS benchmark/diagnostic environment
+>       ├── perf
+>       ├── turbostat
+>       ├── stress-ng
+>       ├── btrfs-progs
+>       └── network access
+> ```
+>
+> This is great for:
+>
+> ```text
+> quick kernel userspace experiments
+> diagnostics
+> recovery development
+> test environments
+> ```
+>
+> I would **not** use a kexec transition as authoritative performance evidence because the firmware/hardware initialization path is not equivalent to a true reboot.
+>
+> But for fast iteration, it's excellent.
+>
+> ### 8. Facter is now just an interesting comparison
+>
+> NixOS Facter lets a JSON hardware report drive hardware configuration:
+>
+> ```nix
+> hardware.facter.reportPath = ./facter.json;
+> ```
+>
+>
+>
+> I would not replace your current hardware configuration now.
+>
+> Instead:
+>
+> ```text
+> existing explicit hardware config
+>               vs
+> Facter-generated report
+> ```
+>
+> Compare:
+>
+> ```text
+> kernel modules
+> firmware
+> microcode
+> graphics
+> network devices
+> boot-related config
+> resulting closure
+> ```
+>
+> If it identifies useful facts you're currently missing, keep the report as provenance.
+>
+> If not, your small explicit configuration is easier to review.
+>
+> So this has dropped in priority now.
+>
+> ### 9. Cross-architecture execution through `boot.binfmt.emulatedSystems`
+>
+> This is easy and fun:
+>
+> ```nix
+> boot.binfmt.emulatedSystems = [
+>   "aarch64-linux"
+>   "riscv64-linux"
+> ];
+> ```
+>
+> NixOS automatically integrates these emulated systems into the Nix platform configuration; Nixpkgs itself documents this for AArch64/RISC-V testing.
+>
+> That lets the x86 workstation transparently:
+>
+> ```text
+> build AArch64 derivation
+>         ↓
+> execute AArch64 binary under QEMU user mode
+>         ↓
+> run tests
+> ```
+>
+> Given your interest in Linux ARM hardware, I'd definitely try it.
+>
+> Not for performance testing, obviously.
+>
+> ### 10. Try the perlless / immutable-`/etc` architecture in a VM
+>
+> NixOS has an unusually interesting minimal/immutable configuration style built around:
+>
+> ```text
+> systemd initrd
+> system.etc.overlay
+> Userborn
+> forbidden dependencies
+> ```
+>
+> The upstream `perlless` profile uses precisely that style.
+>
+> Your machine is particularly suited to experimenting with it because you're already running:
+>
+> ```text
+> ephemeral root
+> Impermanence
+> declarative users
+> systemd initrd
+> ```
+>
+> I'd make a VM variant with:
+>
+> ```text
+> ephemeral /
+> immutable /etc
+> Userborn
+> Impermanence
+> ```
+>
+> and see whether:
+>
+> ```text
+> Home Manager
+> NetworkManager
+> password-file login
+> machine-id persistence
+> nixos-rebuild switch
+> your activation checks
+> ```
+>
+> all behave correctly.
+>
+> I **wouldn't assume it's better** than your current system.
+>
+> This is mainly one of those:
+>
+> > “This is a very NixOS way of building a Linux system; I want to understand it.”
+>
+> experiments.
+>
+> ### 11. `system.includeBuildDependencies`
+>
+> Another delightfully extreme NixOS experiment:
+>
+> ```nix
+> system.includeBuildDependencies = true;
+> ```
+>
+> NixOS then attaches the build closure to the system rather than just its runtime closure. The option directly changes which toplevel is emitted.
+>
+> I'd build:
+>
+> ```text
+> normal recovery image
+>         vs
+> full-build-closure recovery image
+> ```
+>
+> Then disconnect the network.
+>
+> Ask:
+>
+> > How much of this exact system can I rebuild from nothing except this artifact?
+>
+> It's probably enormous.
+>
+> That's why I would never enable it on your workstation normally.
+>
+> But as a demonstration of the consequences of Nix's dependency graph, it's fantastic.
+>
+> ### 12. Initrd rescue has fallen way down the ranking
+>
+> Previously I ranked:
+>
+> ```text
+> boot.initrd.systemd.emergencyAccess
+> boot.initrd.network.ssh
+> ```
+>
+> fairly highly.
+>
+> I wouldn't anymore.
+>
+> You just completed an exact physical recovery drill using the real recovery artifact, with the internal disk mounted:
+>
+> ```text
+> ro,rescue=nologreplay,subvolid=5
+> ```
+>
+> and returned to Generation 38 successfully.
+>
+> So these are now mostly **fun additional rescue features**, not missing safety infrastructure.
+>
+> Still worth trying eventually, especially authenticated stage-1 emergency access.
+>
+> But they aren't solving an actual weakness anymore.
+>
+> ---
+>
+> ## What I would no longer spend time testing
+>
+> Your fresh state has made this much clearer.
+>
+> I would **not** add more:
+>
+> - Impermanence machinery;
+> - root-reset recovery paths;
+> - activation guards;
+> - reconstruction abstractions;
+> - ordinary workstation smoke tests;
+> - generic host abstractions;
+> - `flake-parts`;
+> - `flake-utils`;
+> - extra secret-management frameworks;
+> - generic module discovery;
+> - “one more fallback” mechanisms.
+>
+> Your configuration already has an unusually deep validation stack. `tests/default.nix` has configuration checks, shell checks, Commander Core tests, evaluation checks, stock contamination testing, reconstruction and the multi-boot root-reset suite.
+>
+> Adding more architecture here would mostly create things you'll have to maintain.
+>
+> ## What I would actually do from here
+>
+> Right now, **none of the features above should delay the baseline**.
+>
+> Your current hard path is already explicit:
+>
+> ```text
+> visual HDR acceptance
+>         ↓
+> applicable Stage Pro persistence
+>         ↓
+> multi-day representative soak
+>         ↓
+> backup freshness
+>         ↓
+> freeze source
+>         ↓
+> canonical baseline
+>         ↓
+> exact frozen validation + CI
+>         ↓
+> merge PR #7
+>         ↓
+> tag stock baseline
+> ```
+>
+> That is the right sequence.
+>
+> After the tag, I would create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from the immutable baseline—not from the old optimization branch. The old branch is still parked at `397a8c71…`, while its useful material is the experiment/manifest/runtime/stage architecture and the first CPU-codegen work.
+>
+> Then my exact first experiments would be:
+>
+> ```text
+> vmVariantWithBootLoader
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> CPU-target A/B
+>         ↓
+> distributed builder test
+>         ↓
+> system.replaceDependencies A/B experiment
+> ```
+>
+> And separately, for the **“I want to explore cool NixOS things”** side of the project, the three I'd most like to see you try are:
+>
+> **`image.repart` + dm-verity store**, **`system.build.kexecTree`**, and **cross-architecture `binfmt`**.
+>
+> Those three are different enough from what you've already built that you'll actually learn new parts of NixOS rather than just creating another variation of the reliability machinery you already mastered.
+
+
+## Consolidated pre-soak evidence checks — 2026-10-08
+
+Runbook now distinguishes accepted read-only physical recovery from unrehearsed
+bootloader repair, which is not an extra baseline gate. PR7 body was rewritten
+to current accepted evidence and remaining soak/finalization, removing
+contradictory chronological pending claims. docs/status.md records terminal
+3ff3591 CI run37706702892 PASS, plus predecessor50e19fe/f254124 PASS.
+
+Requested local checks passed: nix fmt -- --ci (62 files, no changes),
+git diff --check, and nix flake check --print-build-logs (all checks passed;
+three changed checks built, unchanged checks reused). Heavy package outputs
+were evaluated, not freshly executed by this flake check; their exact-source
+final suite remains scheduled after soak/freeze. No runtime configuration
+was changed. The consolidated documentation head requires its own CI result.
