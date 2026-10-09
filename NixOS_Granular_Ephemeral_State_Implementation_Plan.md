@@ -410,7 +410,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
 | 22 | First physical home matrix passed on exact generation 42. Generation-44 recovery is live; its corrected first recovery trial now has a strict 100-marker passing receipt. Earlier failed marker trial remains archived/unaccepted. |
-| 23 | One of four accepted generation-44 trials complete: first recovery PASS. User closed the reopened Firefox; its two removed proofs were refreshed before reboot and all 100 markers reverified. Second recovery ticket/one-shot ready; then normal → normal remain. Unchanged guard still requires the last two normal cycles. |
+| 23 | One of four accepted generation-44 trials complete: first recovery PASS. The second attempt failed strict verification after Firefox cleanup; its ticket is archived and does not count. Repeat the second recovery before normal → normal. The updated proof tool passes eight marker cases; app closure and pre-application verification remain required. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -428,7 +428,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 38 | Current generation-44 intermediate recovery services are healthy; final-var service acceptance remains pending. |
 | 39 | Automated recovery/return passed; repeated physical granular recovery/return remains pending. |
 | 40 | Final topology passes reconstruction; full final physical topology audit awaits var cutover. |
-| 41 | Exact-system physical sentinel tool implemented; Codex marker-placement fix passes seven regressions and live refusal checks. First generation-42 home matrix passed; accepted repeated-home and final matrices remain pending. |
+| 41 | Exact-system physical sentinel tool implemented; Codex/Firefox telemetry marker placement passes eight regressions without relaxing retention or whole-container reset requirements. First generation-42 home matrix and first corrected generation-44 recovery passed; remaining physical matrices are pending. |
 | 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
@@ -927,6 +927,52 @@ stale lower status claim that current home/var are both persistent. Preserve the
   event, without altering its scope or treating the project as complete. No
   further readiness permission is needed. Resume with strict ticket verification
   when the user returns after reboot; the first accepted recovery remains counted.
+
+---
+
+### Latest continuation review and failed second recovery — 2026-10-09
+
+- Fully read all four identical newly attached continuation reviews, including
+  all fourteen steps and the instruction to stop expanding application-cleanup
+  modeling. Reviewed/source head is `4d615cb9bc98e4f00a591f74b121ccc6ebfd31de`.
+  Retain generation 44 and the sequence recovery → recovery → normal → normal;
+  then freeze home, rebuild the exact final var candidate, use the unchanged
+  guarded var-only shutdown copy, prove the final chain, prune raw backing,
+  individually retire legacy subvolumes/specific snapshots, and obtain final CI.
+  No persistence architecture or home-acceptance guard change is required.
+- The review's second-trial preparation checkpoint is superseded by actual
+  boot `d0f24f81-807b-4e27-810a-b2fcdf1beae4`. It runs the exact generation-44
+  recovery closure with root ID 330/UUID unchanged, root-local home, legacy var
+  and zero failed services. Strict verification found 98/100 proofs: Firefox
+  removed the Pending Pings and saved-telemetry-pings regular files. Later media
+  artwork cleanup removed firefox-mpris too, leaving 97. No missing proof was
+  recreated after boot. Failed ticket is archived as
+  `physical-boot-failed-8566011d-bea0-4ddf-baaa-eedbad683975.json`; only its 97
+  exact surviving generated files and empty generated container were removed.
+  This attempt is unaccepted. First accepted recovery remains counted.
+- The existing source fix nests only the two Firefox telemetry proofs, as for
+  Codex. Installed Firefox 157.0's TelemetryStorage module skips directories.
+  Recovery still requires the exact token; normal reset must remove its whole
+  generated container. Eight marker regressions and all twelve unchanged home
+  guard regressions pass. New GC-rooted tool is
+  `/nix/store/crqszcdvl5hfqxqzi88wraw9bln27ld6-granular-physical-check`;
+  the previous tool is separately retained as
+  `physical-check-tool-before-firefox-markers`. No system generation is changed.
+- Firefox MPRIS cleanup can remove its entire artwork directory, so nesting
+  another marker there does not solve the observation timing. Follow the review:
+  close applications before seeding, then verify immediately after reboot before
+  starting Firefox/Steam/Unity/Unreal. If necessary, use a text console before
+  opening the graphical session. Do not weaken or replace missing postboot proof.
+- Current preparation boundary: no pending ticket, no new recovery one-shot,
+  no var cutover service. The normal default remains generation 44. Firefox is
+  active again; previous saved/closed confirmation applied to the earlier boot.
+  Finish the current-source tool checks and recheck application closure before
+  seeding the replacement second-recovery ticket. No agent reboot is initiated
+  or scheduled; no backing/subvolume/snapshot retirement is performed.
+- Private evidence: `firefox-marker-repair-20261009/failed-trial-and-source.json`,
+  extracted installed `TelemetryStorage.sys.mjs`, upstream MPRIS source copy,
+  and `granular-firefox-proof-build.out`/`.log`. The independent live home guard
+  still rejects this unaccepted boot; var stays unarmed.
 
 ---
 

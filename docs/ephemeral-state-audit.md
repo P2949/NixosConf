@@ -7,7 +7,9 @@ and legacy var retained. Generation 42's quiesced shutdown copy and first physic
 including all 82 cache exceptions. Repeated physical and functional application
 acceptance remain pending. Generation 44's first accepted recovery trial passed
 all 100 markers with unchanged root identity and healthy services. The second
-recovery trial is prepared; two normal trials follow. Fuzzel history is restored
+recovery attempt failed after Firefox cleaned generated markers and is archived,
+unaccepted. Repeat it before the two normal trials; the updated telemetry proof
+tool passes eight regressions. No replacement ticket is yet armed. Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
@@ -243,7 +245,10 @@ identity and healthy services; an earlier strict trial remains unaccepted becaus
 Codex deleted an unknown plain shell-snapshot proof file. The installed binary
 reproduces this cleanup. A corrected nested marker, seven regressions and a fresh
 100-marker recovery test now supplies the first accepted recovery receipt. The
-second recovery ticket is prepared; both subsequent normal trials are pending.
+second recovery attempt was rejected after Firefox telemetry cleanup, with later
+MPRIS artwork cleanup removing another proof. It remains unaccepted. The specific
+telemetry proof fix passes eight regressions; verify before application launch
+on the replacement second recovery. Both subsequent normal trials are pending.
 Corrected generation-44 physical/recovery and final-var gates still need
 their own acceptance; no further synthetic app QA is required without a defect.
 

@@ -13,8 +13,12 @@ passed. The redundant seed-file bind over legacy var
 is omitted from the corrected intermediate policy; final root-local var retains
 that file explicitly. Generation 44 also preserves the restored Fuzzel history
 in `.local/state/fuzzel` and is installed boot-only with both ESP artifact pairs
-verified. Its second recovery ticket/one-shot and all 100 markers are verified
-after user-confirmed application closure. No agent reboot is
+verified. The second recovery attempt failed strict verification after Firefox
+removed generated cache proofs; it is archived and does not count. The first
+accepted recovery remains valid. The updated standalone proof tool nests the
+two telemetry markers and passes eight regressions. A replacement second trial
+needs fresh application closure and verification before applications launch;
+no pending ticket or new one-shot is currently armed. No agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

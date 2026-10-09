@@ -13,9 +13,11 @@ restored and corrected with a dedicated persistent state directory. Generation
 44 contains both corrections and is installed boot-only; full checks and a fresh
 six-boot VM passed. Generation 44 persistent-root is now live: its first accepted
 recovery trial passed all 100 markers and retained root ID/UUID, with healthy
-services and Fuzzel history. Its second recovery ticket/one-shot are prepared;
-two normal home-reset trials follow. Earlier failed marker instrumentation is
-corrected and that failed attempt remains unaccepted. See the
+services and Fuzzel history. The second recovery attempt failed after Firefox
+cleaned test markers; it is archived and unaccepted. The standalone tool's
+specific telemetry-marker fix passes eight regressions. Repeat the second
+recovery, verifying before application startup, then perform two normal
+home-reset trials. No replacement ticket/one-shot is currently armed. See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 
