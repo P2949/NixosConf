@@ -31783,3 +31783,12 @@ silently exclude possible local installation modifications or saves merely to
 fit the USB. Ventoy has12,399,542,272bytes free, with4GiB reserve retained.
 Meaningful delta selection and external terminal integrity/restore proof remain
 open; no existing archive or recovery artifact has been changed.
+
+Additive delta backup launched in session4796 to Ventoy
+`NixosConf-backups/2026-10-10-delta/retained-home-delta.tar.zst.partial`.
+It includes metadata candidates (including new Unity installations), reuses the
+accepted October5 exclusions, preserves filesystem metadata, and guards4GiB free
+space. Root-private runner/list/log persist beside the inventory. Terminal zstd
+integrity, SHA256 and representative extraction/hash comparison are required;
+no PASS claimed while running. Original archive remains required for unchanged
+files. Snapshot consistency does not imply quiesced application databases.
