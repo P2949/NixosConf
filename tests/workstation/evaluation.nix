@@ -46,7 +46,19 @@ assert pkgs.lib.all (path: builtins.elem path homeDirectories) [
   ".codex"
   ".ssh"
   ".config/mozilla/firefox"
+  ".local/state/fuzzel"
 ];
+assert
+  config.home-manager.users.p2949.programs.fuzzel.settings.main.cache
+  == "${config.home-manager.users.p2949.xdg.stateHome}/fuzzel/history";
+assert
+  homeCutover.home-manager.users.p2949.programs.fuzzel.settings.main.cache
+  == "${homeCutover.home-manager.users.p2949.xdg.stateHome}/fuzzel/history";
+assert builtins.elem ".local/state/fuzzel" (
+  map (
+    entry: entry.directory
+  ) homeCutover.home-manager.users.p2949.home.persistence."/persist".directories
+);
 assert builtins.elem "/var/lib/systemd/random-seed" systemFiles;
 assert config.services.journald.storage == "volatile";
 pkgs.runCommand "check-desktop-evaluation" { inherit evaluation; } ''

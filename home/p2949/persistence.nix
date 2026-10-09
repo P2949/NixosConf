@@ -89,6 +89,10 @@
       ".local/state/wireplumber"
       ".local/state/.copilot"
       ".local/state/zsh"
+      {
+        directory = ".local/state/fuzzel";
+        mode = "0700";
+      }
     ];
 
     files = [
