@@ -70,9 +70,12 @@ a future corrected closure.
 The corrected Unity-preferences candidate is validated and installed boot-only
 as generation 46: normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`, recovery
 `7lkx40kh36s809bz1yr9bmfdddy1n80a`; both ESP pairs match. Generation 45 remains
-running/fallback. Firefox is still running, so no new physical ticket/one-shot
-is prepared yet. Wait for complete exit, then seed/check the exact normal trial
-and the retained preference backing before the user's self-reboot.
+running/fallback. Firefox has exited; the two preference versions were compared
+and the newer current working state reconciled to backing, preserving separate
+archives of both versions. All 100 proofs and nine authoritative preference
+hashes pass preboot checks; normal 46 is selected once. After the user's reboot,
+verify before apps, independently confirm the new bind/hashes, and check Unity's
+UI state before corrected recovery/recovery/normal. No var copy is repeated.
 
 ## Preparation and final copy
 

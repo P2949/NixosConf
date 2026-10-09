@@ -1542,6 +1542,47 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Latest review adopted; Unity data reconciled and generation 46 ready — 2026-10-09
+
+- Fully read the user's complete latest review attachment
+  `b8a45ff2-94a6-4b09-acc2-e4c15c0de696/Pasted text.txt`, reviewed head
+  `f7ff6c27e5a46ecf5934566e60182456c456a59b`. Live head at reading was
+  `5196d6687f092d997f14de748dec4f63ef3def4a`; completed validation/installation
+  supersedes that review's running/uninstalled checkpoint. Adopt all fifteen
+  continuation stages: finish this one omission, corrected exact normal/recovery/
+  recovery/normal, refreeze policy, refresh/prune raw backing, post-pruning normal,
+  deliberate legacy descendants/parents and specific snapshots last, then final
+  coherent docs/source/local suite/actual CI/merge/tag. No architecture changes.
+- Privately compared both Unity trees by paths, count, metadata, hashes and
+  timestamps: nine paths each, seven content-identical files, and newer layout/
+  overlay files in the current working generation-45 tree. Choose that current
+  state as authoritative. Before changing backing, protected the full older raw
+  tree at `unity-editor-preferences-raw-old-protected`; the earlier current copy
+  also remains protected. In a private non-recursive raw @persist namespace,
+  mirrored only the Preferences directory with ownership/ACL/xattr/timestamp
+  preservation. All nine post-copy hashes/metadata match the chosen state;
+  clean metadata dry-run, zero files removed. Receipt:
+  `unity-preferences-data-reconciliation-20261009.json`. This is reconciliation
+  of requested P data, not cache pruning or retirement; neither original version
+  is lost and the first corrected bind will expose known working state.
+- User confirmed Firefox is fully closed; the actual wrapper-aware check now
+  finds none of the named apps. Seeded exact normal generation 46, checked all
+  **100** tokens, the nine authoritative preference files, unchanged candidate
+  configuration/tool/lock sources and both corrected ESP artifact pairs. Selected
+  `nixos-generation-46.conf` once, retaining generation 45 as fallback default.
+  Current boot stays `3f599e92-e86e-40a9-831f-199acc327961`, root 338/reset 23.
+  Private ready record: `unity-preferences-normal-cycle-1-ready.json`.
+- After the user's self-reboot, require exact normal 46, new root/reset **24**,
+  all 100 physical requirements and an active Preferences bind backed by @persist
+  containing all nine authoritative preboot hashes. Then ask only for the Unity
+  layout/preferences/search/overlay check, before preparing corrected recovery
+  → recovery → normal. No additional home gate or var copy is required. Keep both
+  protected preference copies, all legacy subvolumes and migration snapshots;
+  no agent reboot or pruning is initiated. Final documentation contradictions
+  identified in the review remain scheduled for the required final docs freeze.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:

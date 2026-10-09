@@ -114,9 +114,17 @@ flake checks PASS; fresh granular VM 163.31 s, workstation smoke 14.26 s and
 reconstruction 259.52 s pass; five unchanged root outputs reuse their accepted
 fresh identities. Corrected generation 46 is installed boot-only, both ESP pairs
 match, and main profile is normal 46. Generation 45 remains live/fallback default.
-Firefox PID 3535 is still running despite the closure confirmation; wait for its
-exit before seeding/selecting the physical trial. No ticket or one-shot is armed.
-Receipt: `unity-preferences-candidate-build.json`. Pruning remains gated.
+Firefox is now confirmed exited. Both Unity preference versions were compared;
+the newer current working state is authoritative and all nine files/metadata
+were mirrored to backing with a clean dry-run. The old raw version and earlier
+current version are separately protected. Receipt:
+`unity-preferences-data-reconciliation-20261009.json`.
+All 100 normal proof tokens, nine preference hashes and both ESP pairs pass
+preboot checks; generation 46 normal is selected once with 45 as fallback.
+Ready record: `unity-preferences-normal-cycle-1-ready.json`. Await the user's
+self-reboot and verification before apps, then independently verify the new
+Preferences bind/data and obtain the Unity UI check. Corrected recovery/return,
+pruning and retirement remain gated.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
