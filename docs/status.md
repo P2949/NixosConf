@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 44 persistent-root is running: home is root-local and legacy `@var`
+Generation 44 normal is running: home is root-local and legacy `@var`
 remains. Generation 42's quiesced shutdown copy and first home matrix passed.
 Generation 44 fixes the intermediate random-seed bind and the observed Fuzzel
 history omission, preserving only `.local/state/fuzzel`. The user confirms the
@@ -31,23 +31,31 @@ cleanup skips directories. Eight marker regressions and the unchanged twelve
 home-guard cases pass. Full flake checks and formatting pass; unchanged VM
 results were reused. This is local validation, not GitHub CI evidence.
 
-Only after the second recovery passed, the first normal home ticket was seeded
-for exact generation 44. All 100 preboot tokens match: 89 must disappear, 11 must
-survive; normal reset must remove whole generated containers too. Normal ESP
-artifacts match their store closure. Root's only descendant is permitted `srv`.
-Normal generation 44 is selected once and remains the main/default. No agent
-reboot is initiated or scheduled. Private reviews:
-`home-recovery-accepted-cycle-2-review.json` and
-`home-normal-accepted-cycle-1-preflight.json`. The next steps are the user's
-self-reboot and immediate strict verification, then a second normal home trial.
-Only two accepted consecutive normal home receipts satisfy the independent var
-guard. Recheck important application state, freeze home policy and rebuild the
-exact final var candidate after those gates pass.
+The first normal home trial also passed all 100 requirements on boot
+`8d55631a-2013-4058-a3b7-13b55da75854`:
+`physical-boot-passed-74b64b81-8435-4cb6-82d8-e4f49aab5e96.json`.
+Root 330 was replaced by root 332/UUID `e086d07b-ef06-e64b-b131-a5ea23341a6d`.
+All 89 disposable proofs and three generated containers disappeared; 11 retained
+proofs survived and were precisely cleaned. Identity, islands, Fuzzel state and
+service checks pass. The independent home guard correctly still refuses because
+only one consecutive root-local normal receipt exists.
 
-The goal is blocked on the user's chosen first normal self-reboot. Latest check
-finds the same recovery boot, all 100 preboot proofs intact, no live shutdown job
-and no normal passing receipt. Preparation remains ready; resume with strict
-verification after that external event. The full objective is incomplete.
+After first-normal acceptance, the second normal home ticket was seeded for the
+same exact generation 44. All 100 preboot proofs match (89 disappear, 11 survive);
+ESP artifacts match, and root has only its permitted `srv` descendant. Normal
+generation 44 is selected once and remains the main/default. No agent reboot is
+initiated or scheduled. Private reviews:
+`home-normal-accepted-cycle-1-review.json` and
+`home-normal-accepted-cycle-2-preflight.json`. The next step is the user's chosen
+second normal self-reboot and immediate strict verification. Only then run the
+independent home guard, recheck important app state and freeze home before the
+exact final-var build/arming. Previous first-normal wait is superseded by this
+accepted receipt; the full objective remains incomplete.
+
+The goal is blocked on the user's chosen second normal self-reboot. Current
+boot is still the accepted first normal, all 100 next-trial proofs are intact,
+no shutdown job is running, and no second-normal receipt exists. Resume with
+strict verification and independent home acceptance after the actual reboot.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

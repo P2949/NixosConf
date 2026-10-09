@@ -5,7 +5,7 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: home-only generation 44 persistent-root is running with
+Migration status: home-only generation 44 normal is running with
 root-local home and legacy `@var`. Generation 42's quiesced final copy and first
 physical home matrix passed; both accepted generation-44 recovery trials now
 pass all 100 markers, retaining the same root identity. Offline validation
@@ -17,9 +17,11 @@ verified. Earlier Firefox/Codex cleanup failures remain archived and unaccepted.
 The updated standalone proof tool passes eight regressions. The user's immediate
 postboot verification supplied the second accepted recovery receipt; independent
 root identity, topology, Fuzzel state and service checks pass. The first normal
-home ticket now has 100 preboot proofs (89 must disappear, 11 survive), and
-normal generation 44 is selected once. Two accepted normal trials remain before
-home freeze and var arming. Verify before app use after each self-reboot. No agent reboot is
+home trial also passed all 100 requirements and replaced root 330 with root 332.
+The second normal ticket has 100 preboot proofs (89 must disappear, 11 survive),
+and normal generation 44 is selected once. One more accepted normal trial and
+independent home acceptance remain before home freeze and var arming.
+Verify before app use after each self-reboot. No agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

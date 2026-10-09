@@ -410,7 +410,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
 | 22 | First physical home matrix passed on exact generation 42. Both corrected generation-44 recovery trials now have strict 100-marker passing receipts and unchanged root ID/UUID. Earlier failed marker trials remain archived/unaccepted. |
-| 23 | Two of four accepted generation-44 trials complete: recovery → recovery PASS. First normal home ticket now has all 100 preboot proofs verified (89 must disappear, 11 survive), with generation-44 normal selected once. Normal → normal and the independent home guard remain required before var. |
+| 23 | Three of four accepted generation-44 trials complete: recovery → recovery → normal PASS. First normal reset replaced root 330 with root 332 and passed all 100 proofs. Second normal home ticket has all 100 preboot proofs verified (89 must disappear, 11 survive), with generation-44 normal selected once. The second normal receipt and independent home guard remain required before var. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -425,7 +425,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 35 | Pending: var candidate not armed/installed as a cutover; new guard prevents premature advancement. |
 | 36 | Pending: no physical root-local-var boot has occurred. |
 | 37 | Pending: physical var cache/tmp/undeclared-state reset cycles have not occurred. |
-| 38 | Current generation-44 intermediate recovery services are healthy; final-var service acceptance remains pending. |
+| 38 | Current generation-44 intermediate normal services are healthy; final-var service acceptance remains pending. |
 | 39 | Automated recovery/return passed; repeated physical granular recovery/return remains pending. |
 | 40 | Final topology passes reconstruction; full final physical topology audit awaits var cutover. |
 | 41 | Exact-system physical sentinel tool implemented; Codex/Firefox telemetry marker placement passes eight regressions without relaxing retention or whole-container reset requirements. First generation-42 home matrix and first corrected generation-44 recovery passed; remaining physical matrices are pending. |
@@ -1073,6 +1073,63 @@ stale lower status claim that current home/var are both persistent. Preserve the
   permission or readiness question is needed; no agent reboot is initiated.
   Resume with immediate strict verification after the user's self-reboot.
   Private current-state evidence: `home-normal-cycle-1-awaiting-self-reboot.json`.
+
+---
+
+### First normal accepted; second normal home trial prepared — 2026-10-09
+
+- User self-rebooted into exact normal generation 44, boot
+  `8d55631a-2013-4058-a3b7-13b55da75854`, and ran the strict verifier immediately.
+  Receipt `physical-boot-passed-74b64b81-8435-4cb6-82d8-e4f49aab5e96.json` passes
+  all 100 requirements: 89 ephemeral proofs disappeared, 11 persistent proofs
+  survived and were then precisely cleaned. All three ephemeral generated
+  containers disappeared too. Source home was root-local; this is accepted
+  repeated normal home cycle **1 of 2**, following both accepted recoveries.
+- Independent checks confirm reset replaced root 330/UUID
+  `852d109c-c584-b546-b58c-7c04dd96f728` with root **332**/UUID
+  `e086d07b-ef06-e64b-b131-a5ea23341a6d`. Machine identity, home `/@root`, legacy
+  var `/@var`, persistent islands and service health pass. Fuzzel's state
+  bind/config and eight history records remain retained. No relevant browser,
+  Steam, Unity, Unreal or Zen processes are running. Private review:
+  `home-normal-accepted-cycle-1-review.json`.
+- Independently ran the unchanged home-acceptance guard before seeding. It
+  correctly refuses with only one consecutive accepted root-local normal cycle.
+  Var remains unarmed. No guard or policy change is required.
+- Only after first-normal acceptance, seeded another mode `home` ticket from
+  this boot for the same exact normal generation-44 closure. Independently
+  re-read all 100 preboot proofs: 89 must disappear, 11 survive. Normal ESP
+  kernel/initrd match the store artifacts; root's only descendant is the allowed
+  `srv` ID 333. Same-boot verification refuses without changing the ticket.
+  Private preflight: `home-normal-accepted-cycle-2-preflight.json`.
+- Normal generation 44 is selected once and remains the main/default. Next step
+  is the user's chosen second normal self-reboot and immediate strict verifier.
+  After that receipt and independent root/service checks pass, run home
+  acceptance, recheck important application state and freeze home policy before
+  exact-source final-var builds/arming. No agent reboot is initiated/scheduled,
+  no final var service exists, and all originals/backing/snapshots remain.
+- Final ready receipt `home-normal-accepted-cycle-2-final-ready.json` confirms
+  all 100 tokens still match the unchanged ticket, applications remain closed,
+  zero failed services and both EFI default/one-shot variables select normal
+  generation 44. Documentation formatting and `git diff --check` pass. This
+  does not count as second-normal acceptance until the actual reboot/verifier.
+
+---
+
+### Second normal trial awaits the chosen self-reboot — 2026-10-09
+
+- The preparation turn and two subsequent goal continuations revalidate the
+  same dependency: the user's chosen second normal self-reboot has not occurred.
+  Boot remains `8d55631a-2013-4058-a3b7-13b55da75854`, all 100 preboot proofs
+  remain intact, zero failed services and no live shutdown jobs exist, and no
+  second-normal passing receipt exists. The previous continuation was no
+  progress, not a verified wait on a live process or job.
+- Preparation is complete. Home acceptance, policy freeze and exact final-var
+  validation/arming remain dependent on the second physical normal receipt;
+  later final trials and retirement remain gated too. Mark the goal blocked on
+  this external event, keeping its full objective. No further readiness question
+  or permission is needed; no agent reboot is initiated. Resume with strict
+  verification and the independent home guard after the user's self-reboot.
+  Private evidence: `home-normal-cycle-2-awaiting-self-reboot.json`.
 
 ---
 

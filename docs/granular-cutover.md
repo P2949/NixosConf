@@ -12,12 +12,12 @@ bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 first carried this fix. The additional observed Fuzzel history
 omission is now restored/corrected in generation 44, installed boot-only with
 both ESP artifact pairs checked.
-Generation 44 persistent-root is now live. Both accepted recovery trials passed
+Generation 44 normal is now live. Both accepted recovery trials passed
 all 100 markers with unchanged root ID/UUID, stable identity and healthy services.
 The user ran the second verifier immediately after reboot, before apps. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The required
-home sequence has reached recovery → recovery PASS, with normal → normal still
-pending. Generation 44 remains the canonical candidate.
+home sequence has reached recovery → recovery → normal PASS, with one normal
+trial still pending. Generation 44 remains the canonical candidate.
 
 The standalone checker nests only the observed Codex and Firefox telemetry
 proofs inside generated directories. Eight marker regressions and all twelve
@@ -26,13 +26,18 @@ requires exact tokens; normal reset must remove entire generated containers.
 Firefox artwork cleanup can remove its whole cache directory, so verify before
 launching applications. No additional cleanup-model architecture is introduced.
 
-After second-recovery acceptance and independent root/topology/Fuzzel/service
-checks, the first normal home ticket was seeded. All 100 preboot proofs match:
-89 must disappear, 11 survive. The existing normal ESP artifacts match the exact
-closure. Normal generation 44 is selected once and remains the main/default.
-The next user self-reboot returns from recovery to normal. Verify immediately,
-then prepare the second normal trial only if acceptance passes. No agent reboot
-is scheduled or initiated; var remains unarmed.
+The first normal home trial passed all 100 requirements: root 330 was replaced
+by root 332, 89 disposable proofs and all generated containers disappeared, and
+11 retained proofs survived. Independent identity, topology, Fuzzel and service
+checks pass. The unchanged home guard correctly refuses with only one normal.
+
+Only after that acceptance, the second normal home ticket was seeded. All 100
+preboot proofs match (89 disappear, 11 survive), normal ESP artifacts match the
+exact closure, and root's sole descendant is allowed `srv`. Normal generation 44
+is selected once and remains the main/default. The next user's self-reboot is
+normal → normal. Verify immediately, then independently run home acceptance and
+recheck important app state before freezing home and rebuilding the exact final
+var candidate. No agent reboot is scheduled or initiated; var remains unarmed.
 
 ## Preparation and final copy
 

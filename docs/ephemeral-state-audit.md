@@ -2,14 +2,15 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-Home-only generation 44 persistent-root is running with home on the reset root
+Home-only generation 44 normal is running with home on the reset root
 and legacy var retained. Generation 42's quiesced shutdown copy and first physical home matrix passed,
 including all 82 cache exceptions. Repeated physical and functional application
 acceptance remain pending. Both accepted generation-44 recovery trials passed
 all 100 markers with unchanged root identity and healthy services. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The updated
-proof tool passes eight regressions. The first normal home trial has 100 preboot
-proofs and normal generation 44 selected once; two accepted normals remain.
+proof tool passes eight regressions. The first normal home trial passed all 100
+requirements with a new root ID/UUID. The second normal has 100 preboot proofs
+and normal generation 44 selected once; one accepted normal remains.
 Verify before reopening apps.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
@@ -242,8 +243,8 @@ after their separate recovery/backup gates are satisfied.
 
 The user confirmed on 2026-10-09 that actual browser, Steam, VS Code, Git/GitHub,
 relevant VCS and Unity/Unreal project workflows are working after the home cutover
-on generation 42. Generation 44 persistent-root is now live with unchanged root
-identity and healthy services; an earlier strict trial remains unaccepted because
+on generation 42. Generation 44 normal is now live with a new root identity
+after accepted recovery → recovery → normal and healthy services. An earlier strict trial remains unaccepted because
 Codex deleted an unknown plain shell-snapshot proof file. The installed binary
 reproduces this cleanup. A corrected nested marker, seven regressions and a fresh
 100-marker recovery test now supplies the first accepted recovery receipt. The
@@ -251,7 +252,8 @@ initial second recovery attempt was rejected after Firefox telemetry cleanup,
 with later MPRIS artwork cleanup removing another proof. It remains unaccepted.
 The specific telemetry proof fix passes eight regressions. The replacement
 second recovery passed all 100 markers after immediate postboot verification.
-Both normal trials remain pending; the first is seeded for normal generation 44.
+The first normal trial passed all 100 requirements with root replaced; the
+second is seeded for the same generation 44 and remains pending.
 Corrected generation-44 physical/recovery and final-var gates still need
 their own acceptance; no further synthetic app QA is required without a defect.
 

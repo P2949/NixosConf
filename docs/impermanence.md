@@ -11,13 +11,14 @@ The intermediate policy omits the redundant random-seed file bind over legacy
 var; the final policy persists it. An observed Fuzzel usage-history omission was
 restored and corrected with a dedicated persistent state directory. Generation
 44 contains both corrections and is installed boot-only; full checks and a fresh
-six-boot VM passed. Generation 44 persistent-root is now live: both accepted
+six-boot VM passed. Generation 44 normal is now live. Both accepted
 recovery trials passed all 100 markers and retained root ID/UUID, with healthy
 services and Fuzzel history. Earlier cleanup-related failed attempts remain
 archived and unaccepted. The standalone marker fix passes eight regressions.
-The first normal home-reset trial is now seeded with 100 proofs and normal
-generation 44 selected once. Two accepted normal trials remain before home
-acceptance and var arming. Verify before application startup. See the
+The first normal home-reset trial also passed all 100 requirements, replacing
+root 330 with root 332. The second normal trial is seeded with 100 proofs and
+normal generation 44 selected once. One accepted normal trial and independent
+home acceptance remain before var arming. Verify before application startup. See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 
