@@ -10,8 +10,10 @@ Current result: generation 42 completed its quiesced copy and first physical
 home matrix. Home is root-local and legacy var remains. A redundant seed-file
 bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 is installed for future boots with both ESP artifact pairs checked.
-Generation 42 remains live. Repeated physical/app gates stay open, and the user's
-latest instruction forbids another reboot or a request for intervention.
+Generation 42 remains live. Repeated physical/app gates stay open. On 2026-10-09
+the user allowed coordinated reboot/intervention requests. The first repeat-home
+cycle is seeded for generation 43. The user chose to save active work and reboot
+themselves. No agent reboot has been scheduled or initiated.
 
 ## Preparation and final copy
 

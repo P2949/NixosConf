@@ -5,7 +5,7 @@
 **Starting reviewed commit:** `de058b4b65416249e2a1ac2e722f7514c87d5a36`  
 **Primary objective:** make the workstation ephemeral by default across root, home, and system mutable state, while preserving only explicitly declared state that has a demonstrated reason to survive reboot.
 
-## Implementation status — 2026-10-08
+## Implementation status — 2026-10-09
 
 This is the active implementation record. The numbered procedure below remains
 the acceptance specification; unchecked physical gates must not be inferred
@@ -305,7 +305,8 @@ These receipts do not assert physical or functional application acceptance.
   final hygiene or repeated-physical-acceptance gate is claimed complete.
 
 The repeated physical and remaining functional application gates remain open.
-The goal is not complete; the no-reboot/no-intervention instruction remains in force.
+The goal remained incomplete under the no-reboot/no-intervention instruction
+at this point. The 2026-10-09 coordination update below supersedes that restriction.
 
 ### Isolated retained-project editor checks — 2026-10-08
 
@@ -399,7 +400,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
 | 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
-| 23 | Pending: two consecutive normal cycles seeded from root-local home; blocked by the current no-reboot instruction. |
+| 23 | Pending: first of two consecutive root-local-home normal cycles seeded for exact generation 43; awaiting a coordinated reboot. |
 | 24 | Codex login, Code state, offline Firefox startup, Blender preferences and isolated Unity project import/shutdown and Unreal module/map load/shutdown checked; remaining full application functionality is not certified. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -433,13 +434,42 @@ the remaining physical workstation requirements. No reboot is requested or sched
 The same no-reboot dependency has persisted across at least three consecutive
 continuations. Available independent source, guard, integrity and isolated
 application checks are recorded above; these do not close the required physical
-cycles. The goal remains incomplete and is blocked at those rollout gates under
-the current instruction. No human intervention is requested. Keep generation 43
+cycles. The goal was blocked at those rollout gates under the then-current
+instruction; this historical restriction is superseded below. Keep generation 43
 as the future home-only candidate, legacy var/originals/snapshots intact, and do
 not arm the var phase or retire backing material while its prerequisites are open.
 The editor-review receipt confirms the same boot, root-local home, legacy var and
 zero failed system services (`home-first-boot-editor-review.json`).
 
+
+
+### Coordinated physical testing resumed — 2026-10-09
+
+- User now permits requesting human intervention and scheduling necessary
+  reboots, and is actively using the system. This supersedes the earlier
+  no-reboot/no-intervention restriction. Coordinate the interruption and saving
+  active work; permission to discuss/schedule a reboot is not confirmation that
+  the current session can be closed immediately.
+- Fresh preflight confirms the same first-cutover boot ID, live generation 42,
+  root-local home and legacy var. Exact corrected generation 43 is the system
+  profile and next normal default; no one-shot entry is selected. Both normal
+  and persistent-root ESP kernel/initrd pairs match their exact store closures.
+  All 82 cache-exception mounts are root-backed; zero failed system services;
+  no active final-copy service. No extra home synchronization is required for
+  this repeat cycle because selected home parents are already live persistent
+  binds. Private receipt: `home-repeat-cycle-1-preflight.json`.
+- The retained physical-check tool has seeded and independently re-read all
+  100 harmless sentinels for the first repeat normal cycle. Pending ticket:
+  `/persist/granular-migration/physical-boot-pending.json`; mode `home`, source
+  home `seeded_home_fsroot=/@root`, exact target generation 43
+  (`0g2j5q657pfd373xicqdyanwrlmwjpf0`). This is preparation, not a passed cycle.
+- User chose to save active work and perform the first repeat reboot themselves.
+  No agent reboot is scheduled or initiated. Generation 43 is already the normal
+  default; use an orderly normal reboot after saving. On return, run the retained
+  physical-check `verify` and inspect service/application health before seeding
+  the second repeat cycle. Retain the pending ticket on any verification failure. Keep
+  legacy var/originals/snapshots intact and do not advance the var phase until
+  home physical and application prerequisites pass.
 
 ---
 

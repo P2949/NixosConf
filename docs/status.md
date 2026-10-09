@@ -48,8 +48,9 @@ smoke and root regression scenarios. The staged physical procedure is in
 [granular-cutover.md](granular-cutover.md). Migration tools and exact candidate
 closures are retained under `/persist/granular-migration`. Repeated physical
 normal/recovery boots, functional application checks and final var cutover remain
-open. The user requires autonomous work without another reboot or intervention
-request; no reboot is scheduled or requested.
+open. On 2026-10-09 the user allowed coordinated reboot/intervention requests.
+The first repeat-home cycle is seeded for generation 43. The user will save work
+and reboot themselves; no agent reboot is scheduled or initiated.
 
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
