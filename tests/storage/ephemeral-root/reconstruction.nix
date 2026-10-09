@@ -17,6 +17,8 @@ let
         disko.devices.disk.main.device = lib.mkForce diskDevice;
         networking.hostName = lib.mkForce "reconstructed";
         hardware.commanderCore.enable = lib.mkForce false;
+        systemd.services.cpu-package-power-limit.enable = lib.mkForce false;
+        powerManagement.resumeCommands = lib.mkForce "";
         boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
         boot.loader.timeout = lib.mkForce 1;
         boot.kernelParams = [ "console=ttyS0" ];
@@ -35,7 +37,13 @@ pkgs.testers.runNixOSTest {
   nodes.installer = { lib, ... }: {
     imports = [
       inputs.disko.nixosModules.disko
-      { disko.devices = (import ../../../hosts/desktop/disko.nix).disko.devices; }
+      {
+        disko.devices =
+          (import ../../../hosts/desktop/disko.nix {
+            inherit (desktopSystem) config;
+            inherit lib;
+          }).disko.devices;
+      }
     ];
     disko.enableConfig = false;
     disko.devices.disk.main.device = lib.mkForce diskDevice;
@@ -101,16 +109,24 @@ pkgs.testers.runNixOSTest {
     machine.succeed("test $(readlink -f /run/current-system) = ${installed.config.system.build.toplevel}")
     machine.succeed("test $(cat /etc/machine-id) = 11111111111111111111111111111111")
     machine.succeed("test -z \"$(findmnt -rn -t 9p,overlay)\"")
-    for path in ["/nix", "/home", "/var", "/persist", "/var/lib/nixos-optimization"]:
+    for path in ["/nix", "/persist", "/var/lib/nixos-optimization", "/.snapshots", "/boot"]:
+        machine.succeed(f"mountpoint {path}")
+    for path in ["/home", "/var"]:
+        machine.fail(f"mountpoint {path}")
+    for path in ["/home/${username}/Documents", "/home/${username}/.codex", "/var/lib/nixos"]:
         machine.succeed(f"mountpoint {path}")
     machine.succeed("test \"$(getent shadow ${username} | cut -d: -f2)\" = \"$(cat /persist/secrets/${username}-password-hash)\"")
-    machine.succeed("logger -t reconstruction persistent-journal-probe")
+    machine.succeed("logger -t reconstruction ephemeral-journal-probe")
     machine.succeed("journalctl --sync")
-    machine.succeed("touch /reconstruction-local /persist/reconstruction-persistent")
+    machine.succeed("touch /reconstruction-local /persist/reconstruction-persistent /home/${username}/undeclared-proof /var/tmp/undeclared-proof /home/${username}/Documents/persistent-proof /var/lib/nixos/persistent-proof /var/lib/nixos-optimization/persistent-proof")
     machine.reboot()
     machine.wait_for_unit("multi-user.target", timeout=600)
     machine.succeed("test ! -e /reconstruction-local && test -e /persist/reconstruction-persistent")
-    machine.succeed("journalctl --no-pager --grep=persistent-journal-probe")
+    machine.fail("journalctl --no-pager --grep=ephemeral-journal-probe")
+    for path in ["/home/${username}/undeclared-proof", "/var/tmp/undeclared-proof"]:
+        machine.succeed(f"test ! -e {path}")
+    for path in ["/home/${username}/Documents/persistent-proof", "/var/lib/nixos/persistent-proof", "/var/lib/nixos-optimization/persistent-proof"]:
+        machine.succeed(f"test -e {path}")
     root_id = machine.succeed("btrfs subvolume show / | sed -n 's/.*Subvolume ID:[[:space:]]*//p'").strip()
     resets = machine.succeed("grep -c 'RESET complete' /persist/ephemeral-root-reset.log").strip()
     assert int(resets) >= 2
@@ -135,8 +151,10 @@ pkgs.testers.runNixOSTest {
     installer.wait_for_unit("multi-user.target")
     installer.succeed("mkdir -p /mnt/reconstruction-inspect")
     installer.succeed("mount -t btrfs -o ro,rescue=nologreplay,subvolid=5 ${diskDevice}-part3 /mnt/reconstruction-inspect")
-    for name in ["@root", "@home", "@var", "@nix", "@persist", "@optimization", "@snapshots"]:
+    for name in ["@root", "@nix", "@persist", "@optimization", "@snapshots"]:
         installer.succeed(f"btrfs subvolume show /mnt/reconstruction-inspect/{name}")
+    for name in ["@home", "@var"]:
+        installer.succeed(f"test ! -e /mnt/reconstruction-inspect/{name}")
     installer.succeed("test $(cat /mnt/reconstruction-inspect/@persist/etc/machine-id) = 11111111111111111111111111111111")
     installer.succeed("umount /mnt/reconstruction-inspect")
   '';

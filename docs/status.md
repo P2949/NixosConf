@@ -1,158 +1,123 @@
 # Current readiness status
 
-This file contains current truth only. [plan.md](../plan.md) preserves the
-chronological ledger, supplied guides and superseded observations.
+The finished granular persistence policy runs as generation **46 normal**.
+[The granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+and [plan.md](../plan.md) retain chronology and superseded observations.
+This page describes the current contract and separates accepted storage work
+from the remaining repository-release and stock-readiness gates.
 
-## Source, PR and CI
+## Running system and topology
 
-Branch: `feat/pre-optimization-readiness`, based on main
-`f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
-`git rev-parse HEAD`; documentation does not embed its own future commit hash.
-[PR #7](https://github.com/P2949/NixosConf/pull/7) remains open and draft.
-GitHub [PR #7 checks](https://github.com/P2949/NixosConf/pull/7/checks) on
-its current head are authoritative for CI status. Historical exact runs remain
-in plan.md. Record final exact-head CI in the PR body and annotated baseline tag
-after it completes; a source document cannot certify its own future CI run.
-The canonical baseline binds source, lockfile, artifacts and physical evidence.
+Last accepted boot: `5278eaa9-875c-48d0-8c2c-a5b021b251f2`, root **344**, UUID
+`9dda6d9e-c291-4047-adad-12a998122e7b`, reset count **26**. Root identity changes
+on each normal boot. The observed system has no failed services and full
+NetworkManager connectivity.
 
-## Accepted boot candidates and physical history
+| Path | Current policy |
+| --- | --- |
+| `/`, `/etc`, `/root`, `/srv`, `/tmp`, ordinary `/usr` state | Reset-root storage; configuration reconstructed |
+| `/home`, ordinary `/var` | Root-local; only explicit state survives normal boot |
+| `/nix`, `/persist`, `/.snapshots`, `/boot` | Deliberately persistent |
+| `/var/lib/nixos-optimization` | Separate persistent `@optimization`; experiments inactive |
+| `/run`, `/dev`, `/proc`, `/sys` | Runtime or virtual filesystems |
 
-Generation38 is physically booted and selected; normal candidate is
-`bjxxpsm7f42b909v9gpf48p7pinajc3x`, current boot`b07efa9b-0e60-425f-ba36-d1eb038327cd` after the recovery return.
-Fresh root and private machine-ID equality passed. Generation38 normal`bjxxpsm7f42b909v9gpf48p7pinajc3x`
-and persistent-root`8v183hn0p5yv7wf625yj38n6bhsjpxz6` ESP kernel/initrd copies
-match their store artifacts. Boot-only installation and the coordinated normal reboot passed.
-Version: `26.05.20261004.0d9e9b8`; kernel6.18.55.
+Legacy `@home` and `@var`, including their three nested children, are deleted.
+The four granular-migration snapshots are also deleted after explicit final
+confirmation. Unrelated forensic roots and earlier readiness backup staging
+remain under documented recovery purposes. `/persist` contains declared backing,
+empty cache mountpoint scaffolds and explicitly justified evidence/backup state;
+its raw re-audit found no undeclared home residue or hidden cache data.
 
-| Candidate | Store identity |
-|---|---|
-| Generation38 normal | `bjxxpsm7f42b909v9gpf48p7pinajc3x` |
-| Generation38 persistent-root | `8v183hn0p5yv7wf625yj38n6bhsjpxz6` |
+## Accepted persistence and physical evidence
 
-Both closures have independent GC roots; their ESP kernel/initrd copies match
-store artifacts. Generation37 remains the accepted physical root-chain baseline.
-Physical normal→persistent-root→normal chain is ACCEPTED. First normal:
-boot`d7c64889-aac3-4d09-8d14-5add9050cea3`, root300, resetcount6.
-Persistent-root: boot`c6316fb4-f649-44b0-a8f6-8c4ae75be117`, same root300/UUID
-and both sentinels retained, no reset increment. Accepted return-normal:
-boot`36b6a76b-44bb-44c7-894c-ea52a060e538`, fresh root302,
-UUID`8ec15d12-a1c8-4e40-8539-d97bde501f76`, resetcount7. Root-local sentinel
-removed, persistent sentinel retained. Identity/credentials, persistent mounts,
-journals, services, network and active Wayland login pass. Commander active,
-zero restarts; temporary capture unit removed. No further reboot scheduled.
+The [contract](persistence-contract.md) and [state audit](ephemeral-state-audit.md)
+define retained user/system state and exact generated-state exceptions.
+`.config`, `.local`, `.cache`, `/home` and `/var` are not whole-container
+persistence mechanisms. Fuzzel history and Unity editor preferences persist.
+User-selected Steam shaders, Unreal DDC/Zen and current Unity project Libraries
+remain persistent; other audited caches, logs and temporary files reset.
 
-## Accepted gates
+Home's recovery → recovery → normal → normal sequence, final generation-45
+normal → recovery → recovery → normal, corrected generation-46 equivalent,
+and one post-pruning normal boot all pass. Each final physical trial verifies
+**100** requirements: **92** disposable and **eight** persistent proofs.
+Both corrected recovery trials retain root 340/reset count 24; normal return
+replaces it with342/count 25; post-pruning normal replaces342 with344/count 26.
+All nine prepared Unity preference hashes survive, and the user confirms the UI.
 
-- Full offline suite: flake checks, five root scenarios, workstation smoke,
-  native activation actions and 45 guard fixtures.
-- Independent blank-disk reconstruction: actual desktop composition, installed
-  UEFI boot, reset/recovery/return and seven subvolumes inspected read-only.
-  Evaluated-Disko experiment was rejected after failed device rebinding;
-  retain the proven direct production source import.
-- Stock contamination negative fixture and live closure membership audit.
-- Full Nix store content verification.
-- Accessible physical KVM and successful QEMU KVM initialization.
-- Physical GameMode governor/helper tests; CPU policies restored afterward.
-- Btrfs read-only scrub147.36GiB/54s, no errors; all five counters zero.
-  NVMe SMART pass, zero media errors/critical warning. Error-log count grew
-  12143→12145; latest entry is admin InvalidFieldInCommand. Historical entries
-  are not all classified; watch meaningful growth.
-- Independent Ventoy home archive and representative restore, engine supplement,
-  and separate secrets actual-recovery evidence reported by the user.
+Private evidence under `/persist/granular-migration` includes:
 
-## Accepted representative workloads and remaining scopes
+- `post-pruning-normal-review.json`: accepted physical receipt, root/identity,
+  topology, services/network and Unity hashes.
+- `scoped-backing-prune-20261009.json`: 55 audited residue nodes removed and
+  82 hidden backing caches emptied while active cache identities remain intact.
+- `legacy-home-retirement-ready.json`: 608,511 old selected paths examined;
+  85,721 old-only paths classified into 16 cases, no unknown required state.
+- `legacy-database-generation-review.json`:18 obsolete IndexedDB blobs are
+  unreferenced; current references and private-copy integrity checks pass.
+- `legacy-subvolume-retirement.json`: home 256 and individually inspected
+  var children263/264/266, then parent 261, deleted deliberately.
+- `migration-snapshot-retirement.json`: only snapshots 326/327/328/329 deleted
+  after explicit confirmation; unrelated subvolumes unchanged.
+- `post-legacy-retirement-topology-review.json`: active topology, both exact
+  generation 46 ESP pairs and retained recovery ISO identity verified.
 
-- Selected125W CPU verification passed15minutes/12workers; peak81C,
-  no correctness failures or thermal-counter growth. Complete20GiB locked
-  memtester pass also passed. Older80C cutoff aborts remain incomplete evidence.
-- Actual Blender HIP render passed1920x1080/1024samples in105.21s,
-  source unchanged. Interactive editing/workspaces accepted by user.
-- Unreal configured map/120-second PIE lifecycle and installed-engine project
-  rebuild covering all25 project C++ files passed. Interactive editing accepted by the user after normal work with no issues;
-  these checks do not claim a full engine rebuild.
-- Stardew Valley native Linux gameplay accepted by user and running ELF verified.
-  Dark Souls gameplay/controls/audio accepted; uninterrupted final-source binding
-  is now accepted on generation38; natural exit restored all12 CPU policies.
-- Stage Pro functional USB playback accepted by user with independently observed
-  sink/route. Latest snapshot has HDMI3 default and active Firefox/Stardew streams
-  routed to the monitor; this does not revoke the accepted USB test. Preserve
-  user routing. User confirms audible USB audio works after reboot and suspend;
-  audible persistence accepted. Replug is not a mandatory test without actual use.
-- HDR policy built and test-activated:10-bit desktop sRGB, automatic fullscreen
-  HDR enabled, VRR true at155Hz. EDID advertises PQ/BT2020/static HDR metadata. Actual waterfall.mkv PQ/BT2020 output negotiated with native Wayland mpv;
-  DRM DP-3 changed BT2020_RGB during fullscreen and Default after ordinary exit.
-  User confirms correct HDR appearance, monitor HDR indication and normal SDR
-  return after exit. Visual acceptance passed; EDID is not measured brightness.
-- Exact physical recovery drill PASS: matched recovery closure and ISO hash,
-  MP600 mounted `ro,rescue=nologreplay,subvolid=5`, required five subvolumes
-  and repository/profiles/home/credential existence checked, clean unmount.
-  USB receipt `receipt-20261008T000047Z.txt` copied and compared privately;
-  SHA256 `61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
-  Return to generation38 normal closure verified, with no failed system units.
-  Earlier script failures remain historical, superseded by this terminal PASS.
+Important browser, Codex, VS Code, Git/GitHub, Steam saves/library and
+Unity/Unreal workflows are user-confirmed. Fuzzel ordering and actual Unreal
+Zen startup are corrected and accepted. Blender configuration/render/editing
+also has retained evidence. Android Studio is uninstalled: its future SDK/AVD
+state needs an actual installation audit. Existing ADB keys remain retained.
+Plastic's empty directory is reserved for future use; no current remote Plastic
+workflow is claimed. Credential/data categories and unexercisable cases are
+explicitly separated in the plan checklist.
 
-## Validation evidence and remaining actions
+## Source validation and release
 
-Remaining hard gates: representative multi-day soak; backup freshness;
-frozen-source capture/manifest/exact validation/CI; PR ready/merge/tag.
-Generation38 boot/resume, root-chain decision and Unreal interaction are closed.
-Expected mounts, credential-source equality, persistent journal directory and
-all12 powersave/balance_performance CPU policies passed read-only inspection.
+The accepted implementation comes from immutable source
+`ca08qvh8cry5msxny61hfizgaiw54y02`. Its checks and normal/recovery builds pass;
+fresh granular six-boot, reconstruction and workstation VMs pass, with five
+unchanged root-scenario identities retained. These are local/physical evidence.
+The final documentation checkpoint must receive its own exact-head complete
+local suite and GitHub CI; historical runs do not certify a later commit.
 
-1. All individual pre-soak gates are accepted by technical evidence and final
-   user confirmation on2026-10-08.
-2. Representative multi-day mixed-use soak began2026-10-08 on generation38.
-   Use the machine normally; record meaningful workloads and any faults.
-   Application uptime alone does not prove completed work. No additional
-   synthetic stress or deliberate reboot is required for the soak.
-3. Check backup freshness at freeze and protect meaningful new work incrementally.
-4. Freeze source, capture the canonical baseline, run exact final checks/heavy
-   suite and stock closure audit, verify exact-head CI, ready and merge PR7,
-   compare the merged tree, and create the annotated baseline tag.
+Integration is layered: granular changes enter `feat/pre-optimization-readiness`
+through a separate PR, then [PR #7](https://github.com/P2949/NixosConf/pull/7)
+feeds `main`. PR #7 belongs to the readiness branch; its earlier CI is not
+CI for `feat/granular-impermanence`. Updating PR #7's head requires new exact-head
+CI. Frozen source, lockfile, closures, topology and private evidence identities
+belong in the final manifest; CI/integration/tag identities belong in PR/tag
+metadata after they exist. A source document cannot certify its own future CI.
 
-Android/Gradle/emulators and controller testing are not applicable by user
-instruction. Bluetooth remains disabled by request. Unreal's normal editor exit
-already completed successfully; no repeat interaction is required. Both125W
-boot limits and their restoration after real suspend/resume are accepted.
+## Supported recovery and backup
 
-No reboot is scheduled. Preserve the live session and batch required physical
-interruptions when the user is available. No final manifest/tag exists yet.
+Supported rollback is the accepted generation 46 pair:
+normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`, persistent-root
+`7lkx40kh36s809bz1yr9bmfdddy1n80a`. Both are independently GC-rooted and have
+verified ESP kernel/initrd copies. Old generations requiring `@home` or `@var`
+are intentionally obsolete. `persistent-root` retains the current reset root;
+it does not restore data already discarded by a previous normal boot.
 
-## Recovery and backup
-
-Retain generation35 fallback, forensic roots, candidate GC roots and receipts.
-Accepted fallback closures: normal`czk5a2wn8di3pgv8a6w0b8aj3286g3h3`,
-persistent`9ppcqjkfnid501na0wc8jjysynp0kp1p`; its physical chain passed.
-Home/var deliberately remain persistent. Do not prune before final acceptance.
-
-ISO identity`d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; SHA256
+The GC-rooted recovery ISO is `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`, rechecked SHA256
 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
-Ventoy filename`nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`.
-[Backup details](backup-restore.md): archive27,844,003,241bytes, SHA256
-`9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`,
-plus47-file supplement. No format/repartition; verified restore and clean unmount.
+The prior external recovery drill and independent Ventoy archive/restore are
+accepted; their small receipts remain. External media is not currently mounted.
+[Backup details](backup-restore.md) records the 27,844,003,241-byte archive,
+SHA256 `9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`
+and 47-file engine supplement. Prior backup acceptance does not prove freshness
+of work created since then.
 
-## Retained firmware baseline
+## Separate pre-optimization readiness
 
-BIOS3201, ME14.1.53.1649/14.1.53.1649/14.0.51.1528. AI Optimized50/49,
-Auto voltage, MCE RemoveAllLimits, cachemax48, AVXoffset0, XMP I DDR4-3200,
-DRAM1.35V,100MHz BCLK. VMX/VT-d/Above4G enabled; ReBAR Auto and Linux
-GPU BAR16GiB. Uncaptured firmware fields remain unknown, not reboot prerequisites.
-See [firmware baseline](baselines/pre-optimization/firmware-20261005.md).
+Stock individual boot/resume, CPU/memory, Blender HIP, Unreal project/PIE,
+native/Proton gameplay, USB audio, HDR/SDR and external recovery gates have
+accepted evidence in [development validation](development-validation.md),
+[physical root validation](physical-root-validation.md), [reconstruction](reconstruction.md)
+and the readiness ledger. Their accepted human-observation gates need not be
+repeated without a relevant defect or configuration change.
 
-## Evidence and deferred work
-
-[Development validation](development-validation.md),
-[closure review](closure-review.md), [reconstruction](reconstruction.md),
-[activation safety](activation-safety.md) and [plan.md](../plan.md) provide scope
-and receipts. Architecture cleanup, module-doc generation and docs moves are
-POST-BASELINE. Optimization-v2, VM variants, distributed builders and other
-experimental ideas start from the accepted baseline tag; optimization remains inert.
-
-## Continuation ownership
-
-The2026-10-06 unified guide is recorded in full near the top of plan.md, with
-source provenance and direct-user overrides. README is now an architectural
-entry point; cooling thresholds and detailed inventories belong to source.
-Formatting/local links passed; source CI and pending validation remain
-separate evidence. Post-tag cleanup and optimization-v2 remain deferred.
+Representative multi-day mixed-use soak began 2026-10-08. Its completion,
+backup freshness, stock baseline capture and final readiness merge/tag remain
+separate gates; storage acceptance does not silently close them. Compiler/LTO/
+PGO/BOLT optimization, Prism and ordinary feature additions remain deferred.
+No extra reboot or synthetic stress is requested for retirement or final docs.
+Keep the active graphical session intact.

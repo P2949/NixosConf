@@ -9,6 +9,10 @@ experiments.
 - [Current status](docs/status.md): accepted evidence and remaining gates.
 - [Plan and history](plan.md): continuation directive, supplied reviews and
   chronological evidence.
+- [Granular ephemeral-state plan](NixOS_Granular_Ephemeral_State_Implementation_Plan.md):
+  active home/var migration and acceptance record.
+- [Granular cutover procedure](docs/granular-cutover.md): staged boot-only
+  rollout, verified shutdown copy and physical acceptance receipts.
 - [Desktop policy](hosts/desktop/default.nix): authoritative host settings,
   including cooling policy.
 - [Flake](flake.nix): pinned inputs, configurations, development shells and
@@ -43,7 +47,8 @@ nix develop .#default
 Building does not activate the configuration. Review
 [activation safety](docs/activation-safety.md) and
 [closure review](docs/closure-review.md) before deployment.
-Heavy VM outputs and physical acceptance are separate from ordinary checks;
+The combined granular persistence VM is a permanent flake check. Other heavy
+VM outputs and physical acceptance are separate from ordinary checks;
 see [reconstruction](docs/reconstruction.md) and
 [development validation](docs/development-validation.md).
 
@@ -51,7 +56,9 @@ see [reconstruction](docs/reconstruction.md) and
 
 Normal boots reset the disposable Btrfs root. The `persistent-root`
 specialisation disables reset; home and persistent system state have their
-own persistence contract. See [root design](docs/impermanence.md),
+own explicit allow-list. Source home/var are root-local; physical migration
+status and application cache exceptions are recorded in the
+[state audit](docs/ephemeral-state-audit.md). See [root design](docs/impermanence.md),
 [persistence contract](docs/persistence-contract.md),
 [physical validation](docs/physical-root-validation.md) and
 [backup/restore](docs/backup-restore.md).

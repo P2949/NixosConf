@@ -4,6 +4,7 @@
   persistMachineId ? false,
   recovery ? false,
   persistentFallback ? false,
+  granular ? false,
 }:
 
 let
@@ -12,7 +13,9 @@ in
 assert !persistentFallback || persistMachineId;
 pkgs.testers.runNixOSTest {
   name =
-    if persistentFallback then
+    if granular then
+      "granular-impermanence"
+    else if persistentFallback then
       "impermanence-root-fallback"
     else if recovery then
       "impermanence-root-recovery"
@@ -25,6 +28,8 @@ pkgs.testers.runNixOSTest {
     { pkgs, ... }:
     let
       btrfsConfiguration = {
+        imports = pkgs.lib.optionals granular [ ../../../hosts/desktop/persistence.nix ];
+        _module.args.username = "tester";
         virtualisation = {
           useDefaultFilesystems = false;
 
@@ -50,6 +55,8 @@ pkgs.testers.runNixOSTest {
               neededForBoot = true;
             };
 
+          }
+          // pkgs.lib.optionalAttrs (!granular) {
             "/var" = {
               device = diskDevice;
               fsType = "btrfs";
@@ -69,34 +76,47 @@ pkgs.testers.runNixOSTest {
                 "noatime"
               ];
             };
+          }
+          // pkgs.lib.optionalAttrs granular {
+            "/var/lib/nixos-optimization" = {
+              device = diskDevice;
+              fsType = "btrfs";
+              options = [ "subvol=@optimization" ];
+            };
           };
         };
 
         boot.ephemeralBtrfsRoot.enable = true;
 
-        environment.persistence."/persist" = {
-          hideMounts = true;
-
-          files = pkgs.lib.optional persistMachineId "/etc/machine-id";
-
-          directories = [
+        environment.persistence."/persist" =
+          if granular then
             {
-              directory = "/etc/nixos";
-              user = "tester";
-              group = "users";
-              mode = "0755";
+              files = [ "/var/lib/impermanence-fixture" ];
             }
-
+          else
             {
-              directory = "/etc/NetworkManager/system-connections";
-              mode = "0700";
-            }
-          ];
-        };
+              hideMounts = true;
+
+              files = pkgs.lib.optional persistMachineId "/etc/machine-id";
+
+              directories = [
+                {
+                  directory = "/etc/nixos";
+                  user = "tester";
+                  group = "users";
+                  mode = "0755";
+                }
+
+                {
+                  directory = "/etc/NetworkManager/system-connections";
+                  mode = "0700";
+                }
+              ];
+            };
 
         networking.networkmanager.enable = true;
 
-        services.journald.storage = pkgs.lib.mkIf persistMachineId "persistent";
+        services.journald.storage = pkgs.lib.mkIf (persistMachineId && !granular) "persistent";
 
         users.users.tester = {
           isNormalUser = true;
@@ -112,11 +132,13 @@ pkgs.testers.runNixOSTest {
           verbose = true;
 
           users.tester = {
+            imports = pkgs.lib.optionals granular [ ../../../home/p2949/persistence.nix ];
             home.username = "tester";
             home.homeDirectory = "/home/tester";
             home.stateVersion = "26.05";
 
             home.activationGenerateGcRoot = false;
+            home.file.".config/reconstruction-proof".text = "declarative\n";
           };
         };
       };
@@ -155,7 +177,8 @@ pkgs.testers.runNixOSTest {
       environment.systemPackages = [
         pkgs.btrfs-progs
         pkgs.openssl
-      ];
+      ]
+      ++ pkgs.lib.optionals granular [ pkgs.git ];
 
       specialisation = {
         ephemeral.configuration = btrfsConfiguration;
@@ -182,7 +205,40 @@ pkgs.testers.runNixOSTest {
 
       recovery = ${if recovery then "True" else "False"}
       persist_machine_id = ${if persistMachineId then "True" else "False"}
+      granular = ${if granular then "True" else "False"}
       machine_ids = []
+      ephemeral_paths = [
+          "/etc/granular-proof", "/root/granular-proof", "/tmp/granular-proof",
+          "/srv/granular-proof", "/usr/local/granular-proof",
+          "/home/tester/.cache/granular-proof", "/home/tester/undeclared/granular-proof",
+          "/var/cache/granular-proof", "/var/tmp/granular-proof",
+          "/var/lib/undeclared-service/granular-proof",
+      ]
+      persistent_paths = [
+          "/home/tester/Documents/granular-proof", "/home/tester/.ssh/granular-proof",
+          "/var/lib/nixos/granular-proof", "/var/lib/impermanence-fixture",
+          "/var/lib/nixos-optimization/granular-proof", "/persist/granular-proof",
+          "/etc/NetworkManager/system-connections/granular-proof",
+      ]
+      application_cache_paths = [
+          "/home/tester/Development/Unity/VR-AR-project-2/Temp/granular-proof",
+          "/home/tester/Development/Unreal/Projects/AI_Gavin_Project/Intermediate/granular-proof",
+          "/home/tester/.codex/cache/granular-proof",
+          "/home/tester/.config/mozilla/firefox/y34aofre.default/cache2/granular-proof",
+          "/home/tester/.config/Code/GPUCache/granular-proof",
+          "/home/tester/.config/unityhub/Cache/granular-proof",
+          "/home/tester/.config/Epic/UnrealEngine/5.8/Intermediate/granular-proof",
+          "/home/tester/.local/share/Steam/appcache/granular-proof",
+      ]
+      if granular:
+          ephemeral_paths += application_cache_paths
+          ephemeral_paths += ["/home/tester/.codex/models_cache.json", "/home/tester/.codex/logs_2.sqlite"]
+          ephemeral_paths += ["/var/lib/NetworkManager/granular-test.lease"]
+          persistent_paths += ["/var/lib/NetworkManager/granular-proof"]
+          persistent_paths += [
+              "/home/tester/.local/share/Steam/steamapps/shadercache/granular-proof",
+              "/home/tester/.config/Epic/UnrealEngine/Common/DerivedDataCache/granular-proof",
+          ]
 
       machine.start(allow_reboot=True)
       machine.wait_for_unit("multi-user.target")
@@ -205,11 +261,14 @@ pkgs.testers.runNixOSTest {
           machine.succeed("echo disposable > /mnt/impermanence-root/@root/root-sentinel")
 
       machine.succeed("btrfs subvolume create /mnt/impermanence-root/@persist")
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@var")
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@home")
-      machine.succeed("mkdir -p /mnt/impermanence-root/@home/tester")
-      machine.succeed("chown 1000:100 /mnt/impermanence-root/@home/tester")
-      machine.succeed("chmod 0755 /mnt/impermanence-root/@home/tester")
+      if granular:
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@optimization")
+      else:
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@var")
+          machine.succeed("btrfs subvolume create /mnt/impermanence-root/@home")
+          machine.succeed("mkdir -p /mnt/impermanence-root/@home/tester")
+          machine.succeed("chown 1000:100 /mnt/impermanence-root/@home/tester")
+          machine.succeed("chmod 0755 /mnt/impermanence-root/@home/tester")
 
       machine.succeed("mkdir -p /mnt/impermanence-root/@persist/secrets")
       machine.succeed("mkdir -p /mnt/impermanence-root/@persist/etc/nixos")
@@ -224,8 +283,13 @@ pkgs.testers.runNixOSTest {
 
       machine.succeed("echo persistent > /mnt/impermanence-root/@persist/persist-sentinel")
       machine.succeed("echo repository-state > /mnt/impermanence-root/@persist/etc/nixos/persist-sentinel")
-      machine.succeed("echo persistent-var > /mnt/impermanence-root/@var/var-sentinel")
-      machine.succeed("echo persistent-home > /mnt/impermanence-root/@home/home-sentinel")
+      if granular:
+          machine.succeed("install -d -m 0700 -o 1000 -g 100 /mnt/impermanence-root/@persist/home/tester /mnt/impermanence-root/@persist/home/tester/.config /mnt/impermanence-root/@persist/home/tester/.config/git")
+          machine.succeed("printf '[impermanence]\\nfixture = seed\\n' > /mnt/impermanence-root/@persist/home/tester/.config/git/config")
+          machine.succeed("chown 1000:100 /mnt/impermanence-root/@persist/home/tester/.config/git/config")
+      if not granular:
+          machine.succeed("echo persistent-var > /mnt/impermanence-root/@var/var-sentinel")
+          machine.succeed("echo persistent-home > /mnt/impermanence-root/@home/home-sentinel")
 
       machine.succeed("umount /mnt/impermanence-root")
 
@@ -359,8 +423,52 @@ pkgs.testers.runNixOSTest {
           machine.succeed("test ! -e /root-sentinel")
           machine.succeed("test -f /persist/persist-sentinel")
           machine.succeed("test -f /etc/nixos/persist-sentinel")
-          machine.succeed("test -f /var/var-sentinel")
-          machine.succeed("test -f /home/home-sentinel")
+          if not granular:
+              machine.succeed("test -f /var/var-sentinel")
+              machine.succeed("test -f /home/home-sentinel")
+          else:
+              for path in ["/home", "/var", "/home/tester/.cache"]:
+                  machine.fail(f"mountpoint {path}")
+              machine.succeed("findmnt -rn -o OPTIONS /var/lib/nixos-optimization | grep -q 'subvol=/@optimization'")
+              machine.succeed("grep -Fx declarative /home/tester/.config/reconstruction-proof")
+              for path in ["/home/tester/Documents", "/home/tester/.ssh", "/var/lib/nixos"]:
+                  machine.succeed(f"mountpoint {path}")
+              for path in ephemeral_paths:
+                  machine.succeed(f"test ! -e {path}")
+              if expected_boot_count > 1:
+                  for path in persistent_paths:
+                      machine.succeed(f"grep -Fx persistent {path}")
+                  machine.succeed("cmp /var/lib/impermanence-fixture /persist/var/lib/impermanence-fixture")
+              # Write through the active user mounts as the actual user, proving
+              # that mount ownership permits ordinary application writes.
+              machine.succeed("su - tester -c 'printf \"persistent\\n\" > ~/Documents/granular-proof; printf \"persistent\\n\" > ~/.ssh/granular-proof'")
+              for path in persistent_paths[2:]:
+                  if path.startswith("/home/tester/"):
+                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); printf \"persistent\\n\" > {path}'")
+                  else:
+                      machine.succeed(f"mkdir -p $(dirname {path}); printf 'persistent\\n' > {path}")
+              for path in ephemeral_paths:
+                  if path.startswith("/home/tester/"):
+                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); touch {path}'")
+                  else:
+                      machine.succeed(f"mkdir -p $(dirname {path}); touch {path}")
+              machine.succeed("test $(stat -c %a /home/tester/.ssh) = 700")
+              machine.succeed("test $(stat -c %U:%G /home/tester/Documents) = tester:users")
+              for path in application_cache_paths:
+                  # The overlay must come from reset-root storage, not the
+                  # persistent application's underlying directory.
+                  machine.succeed(f"findmnt -rn -o SOURCE -T {path} | grep -F '/@root/'")
+                  machine.succeed(f"su - tester -c 'touch {path}'")
+              # Applications must be able to save configuration atomically.
+              if expected_boot_count > 1:
+                  machine.succeed("grep -Fx second /home/tester/.config/Code/preferences-fixture")
+              git_value = machine.succeed("su - tester -c 'git config --global --get impermanence.fixture'").strip()
+              assert git_value == ("seed" if expected_boot_count == 1 else "edited"), git_value
+              machine.succeed("su - tester -c 'echo first > ~/.config/Code/preferences-fixture; echo second > ~/.config/Code/preferences-fixture.new; mv ~/.config/Code/preferences-fixture.new ~/.config/Code/preferences-fixture'")
+              machine.succeed("su - tester -c 'git config --global impermanence.fixture edited'")
+              machine.succeed("grep -q edited /persist/home/tester/.config/git/config")
+              for path in ["/var/lib/portables", "/var/lib/machines", "/var/tmp"]:
+                  machine.fail(f"btrfs subvolume show {path}")
 
           machine.succeed("mkdir /tmp/ephemeral-root-probe")
           machine.succeed("rmdir /tmp/ephemeral-root-probe")
@@ -378,6 +486,9 @@ pkgs.testers.runNixOSTest {
               machine.succeed("cmp /etc/machine-id /persist/etc/machine-id")
               machine.succeed("test -s /persist/etc/machine-id")
               machine.log(f"Boot {expected_boot_count} machine-id: {machine_id}")
+          else:
+              machine.succeed("test ! -e /persist/etc/machine-id")
+          if persist_machine_id and not granular:
               machine.succeed(f"test -d /var/log/journal/{machine_id}")
               machine.succeed(
                   f"logger -t impermanence-journal 'persistent-boot-{expected_boot_count}'"
@@ -388,8 +499,6 @@ pkgs.testers.runNixOSTest {
                       "journalctl -t impermanence-journal --no-pager -o cat "
                       f"| grep -Fx 'persistent-boot-{previous_boot}'"
                   )
-          else:
-              machine.succeed("test ! -e /persist/etc/machine-id")
 
           machine.succeed("mkdir -p /mnt/impermanence-root")
           machine.succeed("mount -t btrfs -o subvolid=5 ${diskDevice} /mnt/impermanence-root")
@@ -495,11 +604,12 @@ pkgs.testers.runNixOSTest {
       machine.succeed("grep -Fx keep-on-recovery /root-sentinel")
       assert machine.succeed("cat /etc/machine-id").strip() == machine_ids[0]
       machine.succeed("cmp /etc/machine-id /persist/etc/machine-id")
-      for previous_boot in range(1, 4):
-          machine.succeed(
-              "journalctl -t impermanence-journal --no-pager -o cat "
-              f"| grep -Fx 'persistent-boot-{previous_boot}'"
-          )
+      if not granular:
+          for previous_boot in range(1, 4):
+              machine.succeed(
+                  "journalctl -t impermanence-journal --no-pager -o cat "
+                  f"| grep -Fx 'persistent-boot-{previous_boot}'"
+              )
       for service in ["NetworkManager", "dbus", "systemd-logind", "home-manager-tester"]:
           machine.wait_for_unit(service + ".service")
       machine.succeed(
@@ -508,5 +618,32 @@ pkgs.testers.runNixOSTest {
       )
       machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
       machine.log("Persistent-root fallback retained root, identity, journal and credentials")
+    ''
+    + pkgs.lib.optionalString granular ''
+      # A second recovery boot must retain ordinary home/var state as well.
+      for path in ephemeral_paths:
+          machine.succeed(f"test -e {path}")
+      for path in persistent_paths:
+          machine.succeed(f"grep -Fx persistent {path}")
+      machine.reboot()
+      machine.wait_for_unit("multi-user.target")
+      machine.wait_for_unit("home-manager-tester.service")
+      machine.succeed("test \"$(readlink -f /run/current-system)\" = '${fallbackSystem}'")
+      assert machine.succeed("cat /persist/ephemeral-root-reset.log") == reset_log_before_fallback
+      for path in ephemeral_paths:
+          machine.succeed(f"test -e {path}")
+      for path in persistent_paths:
+          machine.succeed(f"grep -Fx persistent {path}")
+
+      # Installing the recovery-only profile above lets bootloader cleanup
+      # remove the normal initrd. Reinstall the normal generation, as a real
+      # nixos-rebuild boot does, before selecting it for the return boot.
+      machine.succeed("ln -sfn '${ephemeralSystem}' /nix/var/nix/profiles/system-1-link")
+      machine.succeed("${ephemeralSystem}/bin/switch-to-configuration boot")
+      arm_ephemeral_boot()
+      machine.reboot()
+      validate_boot(4)
+      assert machine.succeed("cat /etc/machine-id").strip() == machine_ids[0]
+      machine.succeed("test -z \"$(systemctl --failed --no-legend --plain)\"")
     '';
 }

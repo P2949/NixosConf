@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   programs.fuzzel = {
     enable = true;
@@ -5,6 +7,8 @@
     settings = {
       main = {
         layer = "overlay";
+        # Launch counts are user history despite Fuzzel's default cache path.
+        cache = "${config.xdg.stateHome}/fuzzel/history";
       };
 
       colors = {
