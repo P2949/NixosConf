@@ -94,10 +94,12 @@ user's self-reboot. Return-normal and retirement gates remain pending.
 
 Second corrected recovery passes the same root/count, all 100 proofs and nine
 Unity hashes; receipt `physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`.
-Corrected return-normal is prepared and selected once; ready record:
-`unity-preferences-return-normal-ready.json`. Verify before apps after self-reboot:
-new root/reset count 25, disposable proofs gone and declared/Unity state retained.
-Refreeze/pruning/post-prune/retirement gates remain pending.
+Corrected return-normal passes receipt
+`physical-boot-passed-3919c82a-ef26-4b58-be41-9633439795bb.json`: new root 342,
+reset count 25, 92 disposable proofs gone, eight persistent proofs and nine Unity
+hashes retained. The corrected normal → recovery → recovery → normal chain is
+accepted; `corrected-policy-freeze-20261009.json` refreezes the accepted policy.
+Fresh raw inventory precedes pruning. Post-prune and retirement gates remain.
 
 ## Preparation and final copy
 

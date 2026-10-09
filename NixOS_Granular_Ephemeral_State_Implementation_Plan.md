@@ -1649,6 +1649,29 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Corrected return-normal accepted and policy refrozen — 2026-10-09
+
+- Receipt `physical-boot-passed-3919c82a-ef26-4b58-be41-9633439795bb.json`
+  accepts exact generation-46 normal on boot
+  `1107c458-f65a-4bbc-82f1-cf85eaf11a4e`. Root **342**, UUID
+  `26e79c1f-5a3f-c446-8f2f-c5434ccf8a45`, replaces recovery root 340;
+  reset count advances **24 → 25**. All **92** disposable proofs disappear,
+  all **eight** persistent proofs and **nine** Unity preference hashes survive.
+  Identity, topology, services and network pass independently. Review:
+  `unity-preferences-return-normal-review.json`.
+- Corrected **normal → recovery → recovery → normal** acceptance is complete.
+  `corrected-policy-freeze-20261009.json` records immutable source, closures and
+  matching configuration/tool hashes. The fresh read-only raw inventory is
+  `unity-preferences-backing-inventory.json`: **55** undeclared home residues,
+  **82** hidden cache directories, boot-managed files left to boot, and **49**
+  justified top-level purposes with none unknown. No pruning or retirement yet.
+- Next remove only verified E/D residue and hidden cache contents in a private
+  non-recursive raw view. Keep empty active cache mountpoint scaffolds and every
+  declared path, Unity preference directory, recovery source and snapshot.
+  A post-pruning normal physical proof remains required before retirement.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:

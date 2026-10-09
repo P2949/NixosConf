@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 46 persistent-root is running: home and ordinary var are root-local.
+Generation 46 normal is running: home and ordinary var are root-local.
 Its quiesced var-only shutdown copy, first final physical matrix and discovery
 checks pass; the user confirms representative application state works. Both
 policies are frozen. Generation 42's shutdown copy and first home matrix passed.
@@ -143,9 +143,15 @@ Second corrected recovery is accepted by
 `physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`, boot
 `90a06fd5-8f0e-4e35-8497-26be2a38e332`: all 100 proofs, root 340/UUID/reset
 count 24 and nine Unity hashes retained again; services/network pass.
-Corrected return-normal is prepared and selected once. Ready record:
-`unity-preferences-return-normal-ready.json`. Require new root/reset count 25,
-92 disposable proofs gone and persistent/Unity state retained before pruning.
+Corrected return-normal passes receipt
+`physical-boot-passed-3919c82a-ef26-4b58-be41-9633439795bb.json` on boot
+`1107c458-f65a-4bbc-82f1-cf85eaf11a4e`. Root 342/reset count 25 replaces
+root 340; all 92 disposable proofs disappear, eight persistent proofs and all
+nine Unity preference hashes survive. Services/network/topology pass.
+The corrected normal → recovery → recovery → normal chain is accepted and
+policy refrozen in `corrected-policy-freeze-20261009.json`. The refreshed raw
+inventory identifies 55 undeclared residues and 82 hidden cache directories;
+pruning, post-pruning normal proof and retirement remain pending.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
