@@ -1398,6 +1398,27 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### First final recovery accepted; second recovery prepared — 2026-10-09
+
+- User's immediate verifier passed receipt
+  `physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json` on boot
+  `6d1eb85e-cd9e-4857-a553-48bbf6384776`, exact generation-45 persistent-root
+  closure `6fl58xj2f8yqccmaxa4k89508nahigyc`. All **100** recovery proofs
+  survived before precise successful cleanup. Independently verified root
+  **336**, UUID `1d408d1a-0e0a-af4e-ada5-8095ba3b5d1d` and reset count **22**
+  retained; home/var and persistent islands correct, identity unchanged, system
+  running, zero failed services and full connectivity. Private review:
+  `final-recovery-accepted-cycle-1-review.json`.
+- Named apps remain closed; accepted configuration/tool hashes and main normal
+  generation-45 profile are unchanged. Seeded another exact recovery ticket,
+  checked all **100** retained tokens, and selected the same installed recovery
+  entry once. Private ready record: `final-recovery-cycle-2-ready.json`.
+  Second recovery must again retain root ID/UUID and reset count 22. Await the
+  user's self-reboot and verification before apps; then prepare return-normal.
+  No agent reboot, pruning or retirement occurs. The full goal remains open.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:

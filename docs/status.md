@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 45 normal is running: both home and ordinary var are root-local.
+Generation 45 persistent-root is running: both home and ordinary var are root-local.
 Its quiesced var-only shutdown copy, first final physical matrix and discovery
 checks pass; the user confirms representative application state works. Both
 policies are frozen. Generation 42's shutdown copy and first home matrix passed.
@@ -83,12 +83,14 @@ The user has saved/closed the named apps for the first recovery trial and will
 verify from a text console before reopening them. No agent reboot is initiated
 or scheduled; the full goal remains incomplete.
 
-First final recovery trial is prepared: all 100 recovery proofs are present,
-the exact generation-45 persistent-root entry is selected once, and normal 45
-remains the default. Private ready record: `final-recovery-cycle-1-ready.json`.
-After the user's self-reboot, verify promptly before apps and independently
-confirm root 336/UUID retained with reset count still 22. This is preparation,
-not recovery acceptance.
+First final recovery passes all 100 proofs on boot
+`6d1eb85e-cd9e-4857-a553-48bbf6384776`; receipt
+`physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json`. Root 336/UUID
+and reset count 22 are retained; identity, topology, services and connectivity
+pass independent review. Second recovery is prepared with all 100 tokens present
+and exact recovery entry selected once; normal 45 remains installed/default.
+Ready record: `final-recovery-cycle-2-ready.json`. Await the user's self-reboot
+and immediate verification before apps. Return-normal and later gates remain open.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

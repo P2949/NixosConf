@@ -52,11 +52,13 @@ pruning and one further normal sentinel boot before retirement. Verify each
 ticket before opening apps; its disappearance after success is expected.
 No agent reboot or retirement is initiated.
 
-The first final recovery ticket is now seeded against generation 45's exact
-persistent-root closure; all 100 tokens passed the preboot check and its recovery
-entry is selected once. Normal 45 remains default. Await the user's self-reboot
-and immediate verification before apps. Root 336/UUID must remain unchanged and
-reset count must stay 22. Receipt: `final-recovery-cycle-1-ready.json`.
+The first final recovery is accepted by
+`physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json`: all 100 proofs,
+root 336/UUID and reset count 22 retained. The second recovery ticket is seeded
+against the same exact closure, all 100 tokens pass the preboot check and its
+entry is selected once. Normal 45 remains installed/default. Await the user's
+self-reboot and immediate verification before apps. The same root identity and
+reset count must survive again. Ready record: `final-recovery-cycle-2-ready.json`.
 
 ## Preparation and final copy
 
