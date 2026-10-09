@@ -50,10 +50,14 @@ closures are retained under `/persist/granular-migration`. Repeated physical
 normal/recovery boots, functional application checks and final var cutover remain
 open. On 2026-10-09 the user allowed coordinated reboot/intervention requests.
 The user confirmed the important browser/Steam/Code/Git/VCS/project workflows
-work after the home migration. Generation 43 will now follow recovery → recovery
-→ normal → normal, preserving the consecutive-normal gate. The first recovery
-ticket is seeded and its boot entry selected once; normal generation 43 remains
-the default. No agent reboot is scheduled or initiated. Fresh API queries show
+work after the home migration, then identified missing Fuzzel ordering history.
+Original/recent counts were merged and restored; the user confirmed ordering is
+restored. Source persists its dedicated state directory and points Fuzzel there.
+A corrected home candidate is built; full checks/boot installation are in progress.
+The previous unbooted recovery ticket and one-shot were withdrawn for this fix.
+Use the corrected candidate throughout recovery → recovery → normal → normal,
+preserving the consecutive-normal gate. No reboot is ready/scheduled yet. Fresh
+API queries show
 zero workflow runs and no PR directly for this branch; exact-head CI remains
 required after final freeze.
 

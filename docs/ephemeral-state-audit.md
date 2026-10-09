@@ -5,7 +5,8 @@ This ledger records paths, classifications and policy, never credential contents
 Home-only generation 42 is running with home on the reset root and legacy var
 retained. Its quiesced shutdown copy and first physical home matrix passed,
 including all 82 cache exceptions. Repeated physical and functional application
-acceptance remain pending; no further reboot is authorized.
+acceptance remain pending. Coordinated reboots are now permitted; the next trial
+is held while the observed Fuzzel history omission is corrected.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
@@ -52,7 +53,7 @@ planned, with ADB keys already present.
 | .epic | E | Only UnrealBuildAccelerator CAS/temp/session cache was observed |
 | .steam | M | Runtime pipe/PID/token and generated launcher symlinks/registry/exported settings; actual profile and library under .local/share/Steam retained; verify launcher reconstruction physically |
 | .steampid, .steampath | E | Generated aliases into Steam runtime |
-| .cache, .dbus | E | Runtime/cache state; all undeclared children disappear |
+| .cache, .dbus | E after history migration | Runtime/cache state; Fuzzel launch history was the discovered exception and is moved into explicitly persisted state/fuzzel |
 | .nix-defexpr, .nix-profile, .local/state/nix | D/E | Legacy channel/profile aliases; profiles directory empty, current packages are declared by NixOS/Home Manager |
 | .icons, .gtkrc-2.0, .zshenv | D | Observed Home Manager store symlinks |
 | .vim, .viminfo | E | Only netrw/recent editing history observed; no user configuration or plugins |
@@ -129,6 +130,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | state/wireplumber | P | Selected audio routes/profiles and stream preferences |
 | state/.copilot | P | Editor AI assistant state |
 | state/zsh | P | Active atomic-save shell history |
+| state/fuzzel | P | Launcher usage counts and user ordering; migrated from the misleading `.cache/fuzzel` default; private directory supports normal/atomic updates |
 | share/flatpak | E | Only empty database directory; no installed Flatpak apps observed |
 | share/hyprland, share/recently-used.xbel, state/lesshst | E | Nag/runtime/recent document/pager state; deliberately disposable |
 | share/vulkan | D/E | Steam-generated overlay layer registration; validate regeneration with Steam |
@@ -188,6 +190,14 @@ Known disposable files and boot-only behavior are in
 exceptions use native tmpfiles removal, rather than file bind mounts that would
 block atomic saves. Rules are absent in `persistent-root` and ignored by live
 tmpfiles reactivation because they are boot-only (`r!`).
+
+Fuzzel history omission found on 2026-10-09: recoverable original eight records
+and three post-cutover records were merged into eight IDs. Source now configures
+`${xdg.stateHome}/fuzzel/history` and persists `.local/state/fuzzel` only. The user
+confirmed restored usage ordering. The temporary live `.cache/fuzzel` symlink
+writes into the same backing until the corrected home candidate boots. That
+candidate and the physical home sequence must be validated before cleanup;
+legacy cache/history copies remain safety evidence until then.
 
 ## /var classification
 

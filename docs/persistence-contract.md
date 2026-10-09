@@ -47,7 +47,11 @@ The exact `P`/`R` reasons and application exceptions are in the
 never persisted as whole containers. Known cache children inside retained
 profiles are bound from root-local storage using
 [`ephemeral-app-state.nix`](../home/p2949/ephemeral-app-state.nix), allowing normal
-atomic profile updates. Known disposable profile files use boot-only tmpfiles
+atomic profile updates. Fuzzel launch counts are user history: its configured
+`.local/state/fuzzel/history` lives in the explicitly persisted directory
+`.local/state/fuzzel`; its default `.cache/fuzzel` history was restored from the
+inactive original. The corrected home candidate still needs physical acceptance.
+Known disposable profile files use boot-only tmpfiles
 removal, disabled in recovery. The user explicitly retains Steam shaders and
 Unreal DDC/Zen caches and both Unity project Libraries because rebuilding them
 is costly; Unity project logs and temporary files reset.

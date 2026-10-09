@@ -13,10 +13,12 @@ generation 43 is installed for future boots with both ESP artifact pairs checked
 Generation 42 remains live. The user confirmed the important application workflows
 work after the home cutover and allows coordinated reboots. Following the supplied
 2026-10-09 review, the home sequence is recovery → recovery → normal → normal
-on generation 43. Its first `home-recovery` ticket is seeded and the recovery
-entry is selected once; generation 43 normal remains the main profile/default.
-The previous unbooted normal ticket was archived as superseded, not accepted.
-No agent reboot has been scheduled or initiated.
+on the latest corrected home candidate. A specific Fuzzel usage-history omission
+was found/restored and its persistence/configuration corrected; full checks and
+boot-only installation are in progress. The unbooted generation-43 normal and
+recovery tickets were archived as superseded, not accepted; the recovery one-shot
+was cleared. No reboot is ready/scheduled until the corrected candidate is
+installed, verified and a new recovery ticket is seeded.
 
 ## Preparation and final copy
 
@@ -83,7 +85,8 @@ Do not install a recovery-only system profile and later select a stale normal
 entry: the bootloader may prune its initrd. Keep the candidate's main generation
 installed with both boot entries, or reinstall the exact normal generation.
 
-Use generation 43 for recovery → recovery → normal → normal, verifying each
+Use the latest corrected home generation for recovery → recovery → normal →
+normal, verifying each
 `home-recovery`, `home-recovery`, `home`, `home` ticket in that order. Repeated
 recovery must retain root/home; return-normal must discard recovery-only state.
 This ends with the two consecutive accepted normal receipts required by the

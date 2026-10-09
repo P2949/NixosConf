@@ -400,7 +400,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
 | 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
-| 23 | Pending: generation 43 recovery → recovery → normal → normal; first recovery ticket seeded and recovery entry selected once. Last two normal cycles must pass the unchanged guard. |
+| 23 | Pending: recovery → recovery → normal → normal on the newly corrected home candidate. Previous unbooted generation-43 recovery ticket superseded for the observed Fuzzel defect; unchanged guard still requires the last two normal cycles. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Recheck after generation-43 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -553,6 +553,55 @@ requests, so local checks cannot be represented as branch CI. Obtain exact-head
 CI/PR checks after the final source freeze, before merge readiness. Corrected the
 stale lower status claim that current home/var are both persistent. Preserve the
 49-stage original acceptance specification and honest unchecked physical gates.
+
+
+### Observed Fuzzel history exception corrected — 2026-10-09
+
+- User observed the launcher returned to alphabetical ordering after the home
+  migration. This is a small specific missed authoritative state path, not an
+  application-startup failure. Its usage counts were stored in the otherwise
+  disposable `.cache/fuzzel` file. The eight-entry original survives in inactive
+  `@home`; three current entries recorded launches after the cutover.
+- Read the installed Fuzzel 1.14.1 manual and exact packaged upstream source:
+  `main.c` reads/writes application IDs and counts (`id|count`); `config.c` and
+  `doc/fuzzel.ini.5.scd` support `main.cache`. The source writes through an open
+  file descriptor, so a temporary compatibility symlink safely preserves live
+  writes. This is actual user history (`P`), regardless of the default cache
+  pathname; the rest of `.cache` remains reset-root storage.
+- Recovered the original read-only inside a private mount namespace. Kept both
+  original/recent histories privately, merged counts for matching IDs (the recent
+  file was reset by cutover, so its counts are additional), and restored all eight
+  resulting entries to `/persist/home/p2949/.local/state/fuzzel/history`, UID
+  1000, directory 0700/file 0600. Replaced only the current cache file with a
+  compatibility symlink to that backing; no Fuzzel process was running and the
+  original bytes were rechecked before replacement. User then explicitly
+  confirmed **the ordering is restored**. New live launches go to that backing.
+- Source now configures `${xdg.stateHome}/fuzzel/history` and persists only
+  `.local/state/fuzzel`; the mounted directory permits ordinary/atomic writes.
+  Both final/intermediate evaluation checks require the configured path and
+  dedicated persistence declaration to agree. No root reset or migration guard
+  was altered. Restoring this observed omission is the exception to home freeze
+  permitted by the supplied continuation review.
+- Cleared the recovery one-shot while fixing the omission, archived its still-
+  unbooted ticket as superseded, and removed only its 100 exact generated token
+  files. No physical cycle was counted; no application directories, originals,
+  snapshots or migration backing were pruned. No pending physical ticket exists
+  while checks/installation are in progress. Do not reboot this incomplete
+  preparation. Generation 42 remains live, generation 43 remains the installed
+  normal default until the correction is installed and verified.
+- Corrected home closure built:
+  `/nix/store/m5kmyzchvyax9k2dbaikwx0m9zrn14i0-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Workstation evaluation passes; the generated Fuzzel INI passes the actual
+  binary's `--check-config`. Full flake checks are in progress before boot-only
+  installation. Use the resulting corrected generation for **all four** home
+  trials (recovery → recovery → normal → normal), superseding the review's
+  generation-43 reference because a specific additional defect was found.
+- Private evidence: `fuzzel-legacy-history`, `fuzzel-post-cutover-history`,
+  `fuzzel-history-restoration.json`, `fuzzel-home-build.out`/`.log` and
+  `fuzzel-home-flake.log`. Historical raw backing inventories remain preserved;
+  future pruning must account for the now-declared history before deleting
+  redundant old cache copies. Final-var exact-source builds/physical acceptance,
+  raw cleanup, retirement and final exact-head CI remain gated as specified.
 
 ---
 
