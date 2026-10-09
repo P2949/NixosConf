@@ -18,10 +18,11 @@ The updated standalone proof tool passes eight regressions. The user's immediate
 postboot verification supplied the second accepted recovery receipt; independent
 root identity, topology, Fuzzel state and service checks pass. The first normal
 home trial also passed all 100 requirements and replaced root 330 with root 332.
-The second normal ticket has 100 preboot proofs (89 must disappear, 11 survive),
-and normal generation 44 is selected once. One more accepted normal trial and
-independent home acceptance remain before home freeze and var arming.
-Verify before app use after each self-reboot. No agent reboot is
+The second normal also passed, replacing root 332 with root 334. Independent
+home acceptance passes and the user reconfirmed all important application state
+works after the trials. Home policy is frozen. Validate exact current-source
+final-var desktop/recovery and the required suite before arming var. No pending
+physical ticket or var service exists; no agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

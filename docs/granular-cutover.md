@@ -16,8 +16,7 @@ Generation 44 normal is now live. Both accepted recovery trials passed
 all 100 markers with unchanged root ID/UUID, stable identity and healthy services.
 The user ran the second verifier immediately after reboot, before apps. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The required
-home sequence has reached recovery → recovery → normal PASS, with one normal
-trial still pending. Generation 44 remains the canonical candidate.
+home sequence recovery → recovery → normal → normal is fully accepted. Generation 44 remains the canonical candidate.
 
 The standalone checker nests only the observed Codex and Firefox telemetry
 proofs inside generated directories. Eight marker regressions and all twelve
@@ -26,18 +25,19 @@ requires exact tokens; normal reset must remove entire generated containers.
 Firefox artwork cleanup can remove its whole cache directory, so verify before
 launching applications. No additional cleanup-model architecture is introduced.
 
-The first normal home trial passed all 100 requirements: root 330 was replaced
-by root 332, 89 disposable proofs and all generated containers disappeared, and
-11 retained proofs survived. Independent identity, topology, Fuzzel and service
-checks pass. The unchanged home guard correctly refuses with only one normal.
+Both normal home trials now pass all 100 requirements. Root 330 was replaced by
+332 then 334; each normal removed 89 disposable proofs/three containers and
+retained 11 persistent proofs before cleanup. The required recovery → recovery
+→ normal → normal sequence is accepted, the independent home guard passes, and
+the user reconfirmed important application state works after these trials.
+Home policy is frozen at its recorded fingerprint; change only for a defect.
 
-Only after that acceptance, the second normal home ticket was seeded. All 100
-preboot proofs match (89 disappear, 11 survive), normal ESP artifacts match the
-exact closure, and root's sole descendant is allowed `srv`. Normal generation 44
-is selected once and remains the main/default. The next user's self-reboot is
-normal → normal. Verify immediately, then independently run home acceptance and
-recheck important app state before freezing home and rebuilding the exact final
-var candidate. No agent reboot is scheduled or initiated; var remains unarmed.
+The next phase validates the exact current-source final desktop/recovery and
+complete relevant suite before var arming. Use an immutable source snapshot,
+record source/lock and closures, and distinguish fresh VM runs from matching
+cached test results. Rerun home acceptance independently before using the
+existing var-only shutdown copy. Legacy var/default generation 44 remain while
+validation is pending. No var service or reboot is armed yet.
 
 ## Preparation and final copy
 

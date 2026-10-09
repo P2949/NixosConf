@@ -15,10 +15,11 @@ six-boot VM passed. Generation 44 normal is now live. Both accepted
 recovery trials passed all 100 markers and retained root ID/UUID, with healthy
 services and Fuzzel history. Earlier cleanup-related failed attempts remain
 archived and unaccepted. The standalone marker fix passes eight regressions.
-The first normal home-reset trial also passed all 100 requirements, replacing
-root 330 with root 332. The second normal trial is seeded with 100 proofs and
-normal generation 44 selected once. One accepted normal trial and independent
-home acceptance remain before var arming. Verify before application startup. See the
+Both normal home-reset trials also pass all 100 requirements, replacing roots
+330 → 332 → 334. Independent home acceptance passes and important application
+state is user-confirmed after the trials. Home policy is frozen; exact-source
+final-var validation precedes arming. No pending ticket or var service exists.
+See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 

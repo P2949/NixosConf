@@ -31,31 +31,25 @@ cleanup skips directories. Eight marker regressions and the unchanged twelve
 home-guard cases pass. Full flake checks and formatting pass; unchanged VM
 results were reused. This is local validation, not GitHub CI evidence.
 
-The first normal home trial also passed all 100 requirements on boot
-`8d55631a-2013-4058-a3b7-13b55da75854`:
-`physical-boot-passed-74b64b81-8435-4cb6-82d8-e4f49aab5e96.json`.
-Root 330 was replaced by root 332/UUID `e086d07b-ef06-e64b-b131-a5ea23341a6d`.
-All 89 disposable proofs and three generated containers disappeared; 11 retained
-proofs survived and were precisely cleaned. Identity, islands, Fuzzel state and
-service checks pass. The independent home guard correctly still refuses because
-only one consecutive root-local normal receipt exists.
+Both normal home trials also pass all 100 requirements:
+`physical-boot-passed-74b64b81-8435-4cb6-82d8-e4f49aab5e96.json` and
+`physical-boot-passed-c0483ba7-38e8-46b1-a5cf-5ba61b7f9b0e.json`.
+The latest boot is `de9406f5-9eac-4e3a-9051-68797c98b8e4`. Normal reset replaced
+roots 330 → 332 → 334; latest UUID is `f7efa8c4-1329-af44-916a-2f8060f3a3ca`.
+Each normal removed all 89 disposable proofs/three containers and retained the
+11 persistent proofs before precise cleanup. Identity, islands, Fuzzel and
+service checks pass. The unchanged independent home guard now passes two
+consecutive verified normal cycles. No physical ticket remains pending.
 
-After first-normal acceptance, the second normal home ticket was seeded for the
-same exact generation 44. All 100 preboot proofs match (89 disappear, 11 survive);
-ESP artifacts match, and root has only its permitted `srv` descendant. Normal
-generation 44 is selected once and remains the main/default. No agent reboot is
-initiated or scheduled. Private reviews:
-`home-normal-accepted-cycle-1-review.json` and
-`home-normal-accepted-cycle-2-preflight.json`. The next step is the user's chosen
-second normal self-reboot and immediate strict verification. Only then run the
-independent home guard, recheck important app state and freeze home before the
-exact final-var build/arming. Previous first-normal wait is superseded by this
-accepted receipt; the full objective remains incomplete.
-
-The goal is blocked on the user's chosen second normal self-reboot. Current
-boot is still the accepted first normal, all 100 next-trial proofs are intact,
-no shutdown job is running, and no second-normal receipt exists. Resume with
-strict verification and independent home acceptance after the actual reboot.
+The user reconfirmed all important application state is checked and working after
+these generation-44 trials. Home acceptance is complete, superseding the earlier
+reboot wait. Freeze home policy at its recorded source hashes, changing it only
+for an observed defect. The final-var desktop/recovery and complete relevant
+suite are now being prepared from an immutable current-source snapshot. Record
+exact source/lock/closures and distinguish fresh runtime from matching cached
+results. Independently rerun home acceptance before arming the unchanged var-only
+shutdown copy. Legacy var remains active; no var service is armed and no reboot
+is initiated or scheduled. The full goal remains incomplete.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

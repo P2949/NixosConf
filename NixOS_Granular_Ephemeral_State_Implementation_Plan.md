@@ -32,8 +32,11 @@ from source changes or VM tests.
 - Home cutover generation 42 has booted. Its quiesced shutdown copy and first
   physical home sentinel matrix passed; home is root-local and legacy var remains.
   A redundant random-seed bind on legacy var was diagnosed and corrected below.
-- Pending: repeated physical home acceptance and the var cutover, post-trial
-  application rechecks, physical repeated normal/recovery boots, backing-store pruning, and
+- Generation-44 home acceptance is now complete: recovery → recovery → normal
+  → normal passed, the independent home guard passes, and the user confirms
+  important application state still works after these trials. Freeze home policy.
+- Pending: exact final-var candidate validation and cutover, final application
+  rechecks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
   fixture leaked private PIDs into host shared memory. Stale runtime records were
@@ -410,9 +413,9 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
 | 22 | First physical home matrix passed on exact generation 42. Both corrected generation-44 recovery trials now have strict 100-marker passing receipts and unchanged root ID/UUID. Earlier failed marker trials remain archived/unaccepted. |
-| 23 | Three of four accepted generation-44 trials complete: recovery → recovery → normal PASS. First normal reset replaced root 330 with root 332 and passed all 100 proofs. Second normal home ticket has all 100 preboot proofs verified (89 must disappear, 11 survive), with generation-44 normal selected once. The second normal receipt and independent home guard remain required before var. |
-| 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
-| 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
+| 23 | All four generation-44 trials PASS: recovery → recovery → normal → normal. Root 330 was retained through recovery, then replaced by roots 332 and 334. Every trial passes 100 requirements. Independent home guard passes two consecutive verified normal cycles. |
+| 24 | Application gate PASS after the full generation-44 sequence: user confirms Firefox, Steam saves/library, Code, Git/VCS credentials and Unity/Unreal project access all checked and working. Earlier Fuzzel/Zen corrections remain accepted; Android Studio remains uninstalled. |
+| 25 | Narrow home allow-list/cache policy frozen after physical and app acceptance. Fingerprint receipt `home-policy-freeze-20261009.json` records source hashes; change only for an actual defect. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
 | 27 | Var metadata/write/diff audit recorded; physical phase advancement waits for home acceptance. |
 | 28 | Stable identity/state retained; volatile diagnostics/cache/undeclared-state policy explicit. |
@@ -1130,6 +1133,72 @@ stale lower status claim that current home/var are both persistent. Preserve the
   or permission is needed; no agent reboot is initiated. Resume with strict
   verification and the independent home guard after the user's self-reboot.
   Private evidence: `home-normal-cycle-2-awaiting-self-reboot.json`.
+
+---
+
+### Home accepted and policy frozen; final-var validation begins — 2026-10-09
+
+- Second normal self-reboot is accepted on boot
+  `de9406f5-9eac-4e3a-9051-68797c98b8e4`, exact generation-44 normal closure.
+  Receipt `physical-boot-passed-c0483ba7-38e8-46b1-a5cf-5ba61b7f9b0e.json`
+  passes all 100 requirements, including 89 disposable proofs/three containers
+  gone and 11 retained proofs surviving before precise cleanup. Root reset
+  replaced ID 332 with **334**, UUID `f7efa8c4-1329-af44-916a-2f8060f3a3ca`.
+  Machine identity, home/root/legacy-var topology, persistent islands, Fuzzel
+  state/config/history and zero failed services independently pass. Private
+  review: `home-normal-accepted-cycle-2-review.json`.
+- Independently ran the unchanged home guard: **"Home acceptance passed: 2
+  consecutive verified normal boots."** The required generation-44 recovery →
+  recovery → normal → normal sequence is complete. Both failed cleanup trials
+  remain archived/unaccepted. No pending physical ticket remains.
+- User explicitly reconfirmed **"All checked and working"** for important
+  Firefox profile/tabs/logins, Steam library/saves, Code settings/extensions/
+  workspaces, Git/VCS credentials and Unity/Unreal project access after the
+  repeated generation-44 trials. This closes the final home application gate,
+  superseding the second-normal wait. Home is now a completed subsystem.
+- Freeze the accepted home allow-list, cache/file exceptions and home-directory
+  module, including the Fuzzel configuration. Record their hashes/source and
+  accepted receipts privately; only a specifically observed defect may change
+  this policy. No new architecture or synthetic application testing is planned.
+- Rebuild/validate the final desktop and recovery specialisation from an
+  immutable snapshot of the then-current source/lock. Run formatting, flake
+  checks, granular six-boot VM, blank-disk reconstruction, workstation evaluation
+  and root/physical-marker/home-guard regressions; record exact resulting store
+  closures and identify cached versus fresh runtime evidence honestly. Recheck
+  home acceptance independently before arming the existing var-only shutdown
+  transition. Until those checks pass, legacy var/default generation 44 remain
+  intact, no copy service is armed, and no agent reboot or retirement occurs.
+
+---
+
+### Exact final-var candidate built; runtime suite underway — 2026-10-09
+
+- Accepted home policy fingerprint is private in
+  `home-policy-freeze-20261009.json`. Immutable source is
+  `/nix/store/0bqznjpxlyivhzr3d6dy4851qdx2h4ch-source`, captured from head
+  `7233c783b03e10ded3cb93600b077df4084f47d2` plus the recorded ledger/status
+  updates. Its NAR hash and lock SHA256 are recorded; source and all six locked
+  input paths are independently GC-rooted. Validation uses this snapshot,
+  preventing subsequent IDE documentation commits from changing an in-flight
+  candidate. Final whole-project source freeze/CI still occurs after corrections.
+- Home-only evaluation from this snapshot resolves to the exact accepted
+  generation-44 normal closure. Frozen policy hashes still match the live repo.
+  No home configuration changed while preparing var.
+- Exact final desktop and recovery build successfully:
+  `/nix/store/xbw73avz8hvpqq6p5qh6srnimxd8ism3-nixos-system-desktop-26.05.20261004.0d9e9b8`
+  and `/nix/store/6fl58xj2f8yqccmaxa4k89508nahigyc-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  The normal closure's recovery link matches the separately built recovery.
+  Guarded arming/shutdown/sync/physical tools build and have separate GC roots.
+  Workstation evaluation and physical-marker/home-guard checks pass; full flake
+  checks pass, including formatting/statix/deadnix. Receipts:
+  `final-var-candidate-build.json`, `granular-final-var-build.out`/`.log`,
+  `granular-final-var-flake.log`, `granular-final-var-home-equivalence.out`/`.log`.
+- Runtime validation remains underway: fresh current-source blank-disk
+  reconstruction/workstation smoke, plus forced actual rebuilds of the granular
+  six-boot VM and all five root regression scenarios. These are live jobs, not
+  inferred passes from older cached results. No final var closure is installed
+  or armed yet; generation 44 and legacy var remain live. Await successful
+  terminal results, then independently re-run home acceptance before arming.
 
 ---
 
