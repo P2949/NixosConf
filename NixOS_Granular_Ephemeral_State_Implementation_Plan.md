@@ -1278,6 +1278,53 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Current-head review adopted; armed physical cutover remains next — 2026-10-09
+
+- Fully read the user's latest review attachment
+  `7dfe8ea4-9264-4293-8921-baf5c1044fd6/Pasted text.txt`, covering head
+  `6cf1d062eda37a3ba4fcc3b17119d824b4b1f7e2`. Adopt its complete remaining
+  sequence. Home is accepted/frozen; do not reopen home work, redesign the
+  implementation or add another validation framework. Defer the identified
+  stale home-acceptance sentence in `docs/persistence-contract.md` to final
+  documentation freeze as explicitly requested.
+- Independently rechecked the live machine: still source boot
+  `de9406f5-9eac-4e3a-9051-68797c98b8e4`, exact generation 44 normal,
+  root ID 334/UUID unchanged, reset count 21, home root-local and var `/@var`.
+  Generation 45 is installed; the var-only shutdown copy remains active/exited.
+  Generation 44 is still the EFI default, no one-shot or physical ticket is
+  present, the copy log remains empty, and there are no failed services/jobs.
+  Frozen home hashes and recorded normal/recovery/rollback ESP artifact hashes
+  match. The unchanged home guard again passes. Private receipt:
+  `final-var-current-head-review-20261009.json`.
+- Immediate action remains the already chosen **user orderly self-reboot after
+  saving work**. Do not manually select generation 45 or stop/re-arm the copy
+  service. Its verified shutdown copy alone selects generation 45 once. If copy
+  fails, retain generation 44 and diagnose evidence; never force the candidate.
+- Before opening applications after boot, inspect `final-copy-shutdown.log`,
+  `final-sync-verified` and `physical-boot-pending.json`, then run the retained
+  strict verifier. Accept only exact generation 45 normal, a new root, home and
+  ordinary var on `/@root`, correct persistent islands, unchanged identity and
+  every physical proof. Follow with discovery checks of services/network/login,
+  Home Manager/Fuzzel/audio, declared var databases/random seed/optimization,
+  and disposable cache/tmp/undeclared var/log policy. Fix only an observed exact
+  missing authoritative path. One brief representative application recheck then
+  freezes both home and var; existing home acceptance remains valid.
+- Required remainder: accepted final normal → recovery → recovery → normal,
+  proving repeated same-root recovery without resets and a fresh normal root;
+  complete filesystem-topology audit; gated private, non-recursive raw-persist
+  audit/pruning against evaluated declarations; one additional final normal
+  sentinel boot; final authoritative-state comparison and retirement of old
+  home; individual inspection/retirement of var descendants before its parent;
+  specific migration snapshots last, preserving unrelated snapshots and any
+  required final-confirmation gate. Retain originals/evidence until their gates.
+- After physical corrections and retirement, freeze the final source/lock,
+  closures, receipts, topology and policy hashes; run the exact-head local suite,
+  obtain actual GitHub CI, then merge. Local/physical receipts do not certify CI.
+  No configuration, boot selection, legacy backing or snapshot was changed in
+  this review turn. Final-var physical acceptance and the full goal remain open.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
