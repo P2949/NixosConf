@@ -408,10 +408,10 @@ Private receipts below are under `/persist/granular-migration`.
 | 18 | Actual desktop/intermediate topology and narrow-parent assertions pass. |
 | 19 | Combined automated test covers repeated home reset/persistence and atomic saves. |
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
-| 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
-| 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
-| 23 | Pending: generation 44 recovery → recovery → normal → normal. First recovery ticket/one-shot prepared; previous unbooted generation-43 tickets superseded for the observed Fuzzel defect; unchanged guard still requires the last two normal cycles. |
-| 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Recheck after generation-43 trials; Android Studio remains uninstalled. |
+| 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
+| 22 | First physical home matrix passed on exact generation 42. Generation-44 recovery is live; its corrected first recovery trial now has a strict 100-marker passing receipt. Earlier failed marker trial remains archived/unaccepted. |
+| 23 | One of four accepted generation-44 trials complete: first recovery PASS. Second recovery has a fresh 100-marker ticket/one-shot prepared; then normal → normal remain. Unchanged guard still requires the last two normal cycles. |
+| 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
 | 27 | Var metadata/write/diff audit recorded; physical phase advancement waits for home acceptance. |
@@ -425,10 +425,10 @@ Private receipts below are under `/persist/granular-migration`.
 | 35 | Pending: var candidate not armed/installed as a cutover; new guard prevents premature advancement. |
 | 36 | Pending: no physical root-local-var boot has occurred. |
 | 37 | Pending: physical var cache/tmp/undeclared-state reset cycles have not occurred. |
-| 38 | Current intermediate services are healthy; final-var service acceptance remains pending. |
+| 38 | Current generation-44 intermediate recovery services are healthy; final-var service acceptance remains pending. |
 | 39 | Automated recovery/return passed; repeated physical granular recovery/return remains pending. |
 | 40 | Final topology passes reconstruction; full final physical topology audit awaits var cutover. |
-| 41 | Exact-system physical sentinel tool implemented; first home matrix passed, final matrix remains pending. |
+| 41 | Exact-system physical sentinel tool implemented; Codex marker-placement fix passes seven regressions and live refusal checks. First generation-42 home matrix passed; accepted repeated-home and final matrices remain pending. |
 | 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
@@ -726,6 +726,153 @@ stale lower status claim that current home/var are both persistent. Preserve the
   verification and all normal-reset requirements. No production persistence or
   reset guard is weakened. Generation 44 remains the home candidate; var is
   unarmed. Subsequent preparation/validation is recorded below.
+
+### Physical marker correction and repeat recovery prepared — 2026-10-09
+
+- Corrected only the `.codex/shell_snapshots` proof location: it now uses a
+  generated directory containing the token file, on the same root-local cache
+  bind mount. All other paths and the 100-path scope are unchanged. Recovery
+  still requires the exact file/token; normal mode requires both its token file
+  and generated container to disappear. Verification does not ignore missing
+  proofs or consult a post-boot replacement. Cleanup unlinks only generated
+  files and removes the one generated directory only if empty, never recursively.
+- Added seven marker regressions covering reproduced regular-file cleanup,
+  missing/corrupt recovery tokens, normal removal of both token/container,
+  precise cleanup, preserving unexpected extra files, malformed containers and
+  existing flat-marker receipts. Packaged regressions and the unchanged twelve
+  home-acceptance regressions pass. Full flake checks completed successfully;
+  unchanged VM/reconstruction results were reused, not newly claimed as physical
+  evidence. Formatting, statix and deadnix also pass. Live refusal checks confirm
+  the new packaged verifier rejects same-boot acceptance and preserves its
+  ticket, and the independent home guard still refuses incomplete acceptance.
+- Archived the unaccepted ticket as `physical-boot-failed-<token>.json`. The
+  initial strict attempt found 99 retained markers; subsequent Firefox use
+  removed three further markers in Pending Pings, firefox-mpris and saved
+  telemetry pings. The archive records both observations. Removed only the 96
+  remaining exact generated proof files. No passing receipt was created, no
+  application directories were removed, and no physical cycle is counted.
+- New retained physical-check tool:
+  `/nix/store/d0n49wyi4bzc8jcw40ynknrbz8dixh7w-granular-physical-check`.
+  The previous tool remains independently GC-rooted as
+  `physical-check-tool-before-codex-marker`; registration for old/current tool
+  aliases was verified. Future var tooling must be built from current source,
+  as already required after home freeze, so it incorporates this marker fix.
+- Verified the new generation-44 Fuzzel state bind/config and eight retained
+  history records, and removed only the temporary `.cache/fuzzel` symlink. Actual
+  Fuzzel `--check-config` passes; the configured state history remains intact.
+- Seeded/re-read all 100 fresh `home-recovery` proofs from current recovery boot
+  `9079c962-37b7-4a7f-af7d-33e73c5c1718`, retaining root ID 330 and its UUID as the
+  next recovery expectation. Selected generation-44 recovery once; main/default
+  remains normal generation 44. Independently verified both ESP kernel/initrd
+  pairs against the existing closures and zero failed services. No rebuild or
+  production policy change is needed for this standalone test-tool defect.
+- The required accepted sequence is still generation-44 **recovery → recovery
+  → normal → normal**; the observed unaccepted boot supplies none of these
+  receipts. After the next boot verify promptly before exercising applications,
+  since ordinary cache cleanup can remove proof files independently of boot.
+  If applications remove generated markers before reboot, refresh only the
+  current ticket's exact generated files before reboot, never after it.
+  Private evidence: `home-first-recovery-unaccepted-review.json`,
+  `codex-marker-cleanup-reproduction.json`, `granular-codex-proof-build.out`/`.log`
+  and `home-recovery-codex-marker-preflight.json`. No reboot is initiated/scheduled.
+  Full-check evidence: `granular-codex-proof-flake.log`; live refusal evidence:
+  `codex-marker-guard-refusals.json`. App use must pause for the physical proof
+  interval: save/close ordinary applications, verify markers before reboot, and
+  return here after reboot before relaunching Firefox/Steam/Unity/Unreal.
+
+### Independent live recovery binding audit — 2026-10-09
+
+- On unchanged recovery boot `9079c962-37b7-4a7f-af7d-33e73c5c1718`, independently
+  verified every one of the 82 selected cache mounts resolves to its exact
+  `/@root/home/p2949/.cache/ephemeral-app-state/<relative>` backing, with UID
+  1000 ownership. Used `findmnt` JSON to preserve spaces in application paths.
+  This is runtime topology evidence, not a substitute for a physical receipt.
+- Sample normal-only Codex generated-file and VS Code lock cleanup rules are
+  absent in recovery. Root still has only its permitted `srv` descendant. Private
+  evidence: `home-recovery-runtime-binding-audit.json`.
+- Rechecked the pending replacement recovery ticket: all 100 generated markers
+  remain intact, selected one-shot is generation-44 recovery, and there are no
+  failed services. No reboot has occurred since reseeding. Firefox is still
+  running; the user's app-close/readiness question remains unanswered. The next
+  dependent action is the final marker check after application shutdown, then
+  the user's chosen self-reboot. No applications were stopped by the agent, no
+  reboot was initiated, and var remains unarmed.
+
+### Continuation gate remains blocked on user readiness — 2026-10-09
+
+- Revalidated the same required user-readiness/reboot gate across the three
+  consecutive goal turns ending here, including the correction/preparation turn
+  and subsequent runtime audit. Independent implementation and runtime checks
+  are complete for this home candidate; the next authorized dependent action
+  cannot proceed while the user is still using Firefox and has not answered the
+  app-close/readiness question. Do not infer saved work or reboot permission from
+  an automatic goal continuation, and do not stop the user's applications.
+- Latest live check: unchanged recovery boot
+  `9079c962-37b7-4a7f-af7d-33e73c5c1718`, all 100 replacement proofs intact,
+  generation-44 recovery one-shot still selected, Firefox still running. No
+  reboot since seeding and no accepted replacement physical receipt exist.
+- Updated stale generation references in the 49-stage audit to current
+  generation-44 evidence. The goal is blocked on the required readiness/self-
+  reboot event, not complete. Resume with the final marker check once the user
+  confirms apps are closed, or verify the exact pending ticket immediately if
+  the user has already rebooted. Final builds/var cutover, backing pruning,
+  retirement and final CI remain behind the unchanged physical home gate.
+
+---
+
+### User readiness confirmed; final pre-reboot check passed — 2026-10-09
+
+- User answered: **"Saved and closed; I'll reboot myself after your check"**.
+  Readiness is now confirmed; do not request the same permission again. The
+  compositor initially still reported one Firefox window. An attempted legacy
+  dispatch was rejected by Hyprland's Lua dispatcher; Firefox subsequently
+  exited. Independent process scanning now finds no Firefox/Steam/Unity/Unreal
+  or Zen server processes. No process was forcibly terminated.
+- Rechecked the same seeded boot before making any proof refresh. Application
+  shutdown had removed one generated marker; recreated only that exact missing
+  user-owned proof file before reboot and independently verified all 100 token
+  files. The ticket bytes/hash are unchanged. This is pre-boot preparation, not
+  replacement of evidence after reboot, and no physical receipt is counted.
+- Generation-44 recovery one-shot, normal main profile, original root ID 330
+  and UUID, zero failed services and all eight Fuzzel history records remain
+  verified. The system is ready for the user's self-reboot. No agent reboot was
+  initiated or scheduled. Private final evidence:
+  `home-recovery-final-ready-after-app-close.json`.
+- After reboot verify the pending exact recovery ticket promptly before ordinary
+  applications restart, then record acceptance and prepare the second recovery
+  trial only if verification succeeds. Var remains unarmed.
+
+---
+
+### First accepted recovery passed; second recovery prepared — 2026-10-09
+
+- User self-rebooted into generation-44 recovery on new boot
+  `99c7b457-caa8-4599-9d87-6b74f10ccb20`. The corrected strict verifier passed
+  all 100 markers, exact closure, source/target topology, machine identity and
+  persistent islands. Receipt:
+  `physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json`.
+  Generated survivors were removed by the verifier after recording acceptance.
+  This is **accepted recovery 1 of 2**, not a normal home-reset cycle. The earlier
+  failed trial remains unaccepted and is never substituted for this receipt.
+- Independently confirmed unchanged root ID 330 and UUID
+  `852d109c-c584-b546-b58c-7c04dd96f728`, zero failed services, Fuzzel's exact
+  persistent state bind/config, all eight history records and absence of the
+  removed compatibility symlink. Actual Fuzzel `--check-config` passes. No
+  Firefox/Steam/Unity/Unreal/Zen server processes are running. Private review:
+  `home-recovery-accepted-cycle-1-review.json`.
+- Only after acceptance, seeded all 100 new `home-recovery` markers from the
+  current root-local home for the same exact generation-44 recovery closure.
+  Independently re-read every token and selected
+  `nixos-generation-44-specialisation-persistent-root.conf` once. Normal/main
+  generation 44 remains installed. Private preparation:
+  `home-recovery-accepted-cycle-2-preflight.json`.
+- Next user self-reboot is **accepted recovery trial 2**. Verify unchanged root
+  ID/UUID and the strict pending ticket promptly before opening other apps.
+  If it passes, prepare generation-44 normal → normal; only those subsequent
+  two consecutive root-local normal receipts satisfy the independent var guard.
+  Updated current-status/contract/audit/runbook documentation accordingly.
+  No agent reboot is scheduled/initiated, no var cutover is armed, and no
+  migration backing, legacy subvolume or snapshot was retired.
 
 ---
 

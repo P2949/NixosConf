@@ -12,7 +12,7 @@ bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 first carried this fix. The additional observed Fuzzel history
 omission is now restored/corrected in generation 44, installed boot-only with
 both ESP artifact pairs checked.
-Generation 42 remains live. The user confirmed the important application workflows
+Generation 44 persistent-root is now live. The user confirmed the important application workflows
 work after the home cutover and allows coordinated reboots. Following the supplied
 2026-10-09 review, the home sequence is recovery → recovery → normal → normal
 on the latest corrected home candidate. A specific Fuzzel usage-history omission
@@ -21,7 +21,14 @@ builds and full checks pass, including a fresh combined six-boot VM. The unboote
 generation-43 tickets were archived as superseded, not accepted. A new 100-sentinel
 `home-recovery` ticket targets generation 44; its recovery entry is selected once,
 with normal generation 44 still the main profile/default. The first recovery
-reboot is ready for the user; no agent reboot is scheduled or initiated.
+boot retained root ID/UUID and healthy services, but Codex startup deleted the
+plain shell-snapshot proof file. That strict attempt is unaccepted and its failed
+ticket is archived. The standalone test tool now nests only that cache's marker
+inside a generated directory, with seven regression cases and unchanged strict
+normal/recovery checks. The corrected first recovery trial now passes all 100
+markers, retaining root ID/UUID and healthy services. A fresh 100-marker second
+recovery ticket is prepared for the same generation 44; both normal trials follow.
+No agent reboot is scheduled or initiated.
 
 ## Preparation and final copy
 
@@ -63,6 +70,15 @@ root-local home, the phase-specific var mount, persistent islands, stable
 machine identity and all sentinels. Every declared cache exception is checked.
 Success saves a private receipt and removes only the generated surviving
 sentinels. Failure retains the pending ticket for diagnosis.
+
+Application cleanup may delete cache proof files independently of a reboot.
+Verify promptly after boot before exercising apps, and re-read generated markers
+before reboot if applications have been used since seeding. Codex shell-snapshot
+startup deletes unknown regular files but skips directories; that one proof uses
+a generated directory/token pair. Recovery requires its token, and normal boot
+requires both token and directory to disappear. No missing marker may be recreated
+after boot to manufacture a passing receipt. Archive failed attempts explicitly;
+they do not count toward the physical gate.
 
 Once the first home boot is accepted, clear the temporary EFI default override
 with `bootctl set-default ''`; the boot-only installation's `loader.conf` then

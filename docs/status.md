@@ -13,7 +13,7 @@ Home-only granular generation 44 persistent-root is now running. Generation 42's
 quiesced shutdown copy and first
 physical home sentinel matrix passed; home is root-local while legacy var remains.
 Generation 41 remains available as rollback. The redundant random-seed bind over
-legacy var is corrected in source and runtime-masked in this session; the final
+legacy var is corrected in the running intermediate policy; the final
 policy still persists the seed when var becomes root-local. The accepted history
 below describes earlier whole-home/var boots. Existing PR/CI
 evidence does not certify these new local changes.
@@ -73,10 +73,28 @@ recovery one-shot are verified. Use generation 44 throughout recovery → recove
 reboot retained root ID/UUID and healthy services, but its strict receipt is
 unaccepted: Codex removed one plain shell-snapshot marker during startup. The
 installed binary reproduces the deletion; a nested test marker survives.
-No physical cycle is counted. No agent reboot is scheduled or initiated. Fresh
+The standalone proof tool now uses that nested marker and passes seven regression
+cases; the twelve home-acceptance cases and full flake checks pass. Same-boot
+acceptance still refuses without changing the ticket. The failed ticket was archived
+without a passing receipt. A fresh 100-marker ticket and generation-44 recovery
+one-shot are verified. Fuzzel's state bind/config/history pass, and the temporary
+compatibility symlink is removed. That failed physical attempt is not counted. Verify promptly
+after each boot before application cache cleanup. No agent reboot is scheduled
+or initiated. Fresh
 API queries show
 zero workflow runs and no PR directly for this branch; exact-head CI remains
 required after final freeze.
+
+The user's replacement self-reboot has now passed the first accepted generation-44
+recovery trial: all 100 markers, exact closure/topology, stable identity and
+unchanged root ID/UUID. Services are healthy; Fuzzel's persistent state/config and
+eight history records are verified. Receipt:
+`physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json`.
+Only after acceptance, a fresh 100-marker second recovery ticket and one-shot
+were prepared for the same generation 44. Apps remain closed. The next self-reboot
+tests repeated recovery retention; then two consecutive normal trials follow.
+Private reviews: `home-recovery-accepted-cycle-1-review.json` and
+`home-recovery-accepted-cycle-2-preflight.json`.
 
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with

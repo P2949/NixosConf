@@ -5,13 +5,15 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: home-only generation 42 is running with root-local home and
-legacy `@var`. The quiesced final copy and first physical home sentinel matrix
-passed. Offline validation passed. The redundant seed-file bind over legacy var
+Migration status: home-only generation 44 persistent-root is running with
+root-local home and legacy `@var`. Generation 42's quiesced final copy and first
+physical home matrix passed; generation 44's first accepted recovery trial now
+passes all 100 markers, retaining the same root identity. Offline validation
+passed. The redundant seed-file bind over legacy var
 is omitted from the corrected intermediate policy; final root-local var retains
 that file explicitly. Generation 44 also preserves the restored Fuzzel history
 in `.local/state/fuzzel` and is installed boot-only with both ESP artifact pairs
-verified. Its first recovery ticket/one-shot are ready; no agent reboot is
+verified. Its second recovery ticket/one-shot are ready; no agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

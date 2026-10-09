@@ -2,12 +2,13 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-Home-only generation 42 is running with home on the reset root and legacy var
-retained. Its quiesced shutdown copy and first physical home matrix passed,
+Home-only generation 44 persistent-root is running with home on the reset root
+and legacy var retained. Generation 42's quiesced shutdown copy and first physical home matrix passed,
 including all 82 cache exceptions. Repeated physical and functional application
-acceptance remain pending. Coordinated reboots are now permitted; the next trial
-is prepared for corrected generation 44 after the observed Fuzzel history
-omission was restored; no agent reboot is scheduled.
+acceptance remain pending. Generation 44's first accepted recovery trial passed
+all 100 markers with unchanged root identity and healthy services. The second
+recovery trial is prepared; two normal trials follow. Fuzzel history is restored
+and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
@@ -237,7 +238,13 @@ after their separate recovery/backup gates are satisfied.
 
 The user confirmed on 2026-10-09 that actual browser, Steam, VS Code, Git/GitHub,
 relevant VCS and Unity/Unreal project workflows are working after the home cutover
-on generation 42. Corrected generation-44 physical/recovery and final-var gates still need
+on generation 42. Generation 44 persistent-root is now live with unchanged root
+identity and healthy services; an earlier strict trial remains unaccepted because
+Codex deleted an unknown plain shell-snapshot proof file. The installed binary
+reproduces this cleanup. A corrected nested marker, seven regressions and a fresh
+100-marker recovery test now supplies the first accepted recovery receipt. The
+second recovery ticket is prepared; both subsequent normal trials are pending.
+Corrected generation-44 physical/recovery and final-var gates still need
 their own acceptance; no further synthetic app QA is required without a defect.
 
 The first home copy/boot and offline validation passed. Codex reads its retained

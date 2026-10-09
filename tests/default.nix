@@ -51,6 +51,7 @@
     };
 
     granular-home-acceptance = import ./storage/home-acceptance.nix { inherit pkgs; };
+    granular-physical-markers = import ./storage/physical-check.nix { inherit pkgs; };
 
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
       inherit pkgs;
