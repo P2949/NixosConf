@@ -163,7 +163,10 @@ records nine Unity hashes. The post-pruning normal receipt
 `physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` now passes:
 root 344/reset count 26, all 100 proofs and nine Unity hashes verified, healthy
 services/network/topology. Read-only final legacy comparison is underway;
-no original subvolume or migration snapshot has been retired.
+the original home256 and var261 are retired after formal reconciliation, with
+var children263/264/266 deleted individually. Independent topology/health and
+both generation46 ESP pairs pass. Four migration snapshots remain pending the
+plan's final confirmation; no extra reboot is required.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
@@ -178,7 +181,8 @@ normal: Zen ready in 0.058 seconds, editor startup 12.612 seconds, no errors.
 Production policy and the retained expensive caches were unchanged.
 
 Final var cutover, the corrected physical normal/recovery chain and scoped raw
-backing pruning and post-pruning proof pass. Legacy retirement remains gated.
+backing pruning, post-pruning proof and legacy home/var retirement pass.
+Four exact migration snapshots remain pending final confirmation.
 Cache overlays propagate into apparent persist
 paths; later pruning requires a private non-recursive raw backing view. No
 backing, legacy subvolume or snapshot was retired. Fresh GitHub API queries at
@@ -300,12 +304,12 @@ interruptions when the user is available. No final manifest/tag exists yet.
 
 ## Recovery and backup
 
-Retain generation35 fallback, forensic roots, candidate GC roots and receipts.
-Accepted fallback closures: normal`czk5a2wn8di3pgv8a6w0b8aj3286g3h3`,
-persistent`9ppcqjkfnid501na0wc8jjysynp0kp1p`; its physical chain passed.
-The fallback generation keeps legacy home/var mounts. The current generation
-has root-local home and legacy var; preserve originals and snapshots until final
-granular physical/application acceptance and retirement prerequisites pass.
+Retain forensic roots, candidate GC roots and receipts under their documented
+purposes. Supported current recovery is the accepted generation46
+normal/persistent-root pair with active `/persist`. Legacy home/var are retired;
+older generations requiring those mounts are obsolete. Four migration snapshots
+remain until final confirmation. The prior ISO/Ventoy backup/restore evidence
+is retained; external media is not currently mounted.
 
 ISO identity`d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; SHA256
 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.

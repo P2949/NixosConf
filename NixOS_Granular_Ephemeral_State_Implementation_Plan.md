@@ -445,7 +445,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 42 | Scoped raw pruning complete: zero undeclared residue and zero hidden cache data, 49 justified top-level purposes, all declared paths and active cache mount identities retained. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
-| 45 | Pending: preserve legacy subvolumes and inspect nested var children individually after all technical gates. |
+| 45 | Complete: formal semantic reconciliation certifies home and var; legacy home256, portables263, machines264, tmp266 and var261 retired individually. Post-retirement topology/health and both generation46 ESP artifact pairs pass. |
 | 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
 | 48 | Checklist keeps unproven physical, application and hygiene items open. |
@@ -1825,6 +1825,33 @@ stale lower status claim that current home/var are both persistent. Preserve the
   become obsolete; the accepted, GC-rooted generation-46 normal/persistent-root
   pair remains supported. Named migration snapshots remain until the original
   final confirmation gate. No source/runtime-policy change or extra reboot.
+
+---
+
+### Legacy home/var retired; snapshot confirmation prepared — 2026-10-09
+
+- Executed the reviewed retirement sequence after formal reconciliation and all
+  accepted technical/application gates. Transaction:
+  `legacy-subvolume-retirement.json`. Removed only legacy home **256**, individually
+  inspected var children **263** (portables), **264** (machines), **266** (tmp),
+  then parent var **261**. Empty children and exact obsolete tmp proof were
+  rechecked before deletion; no recursive subvolume deletion. Formal var readiness
+  was written after child removal and before parent deletion. Filesystem sync and
+  independent listing confirm legacy home/var absent.
+- `post-legacy-retirement-topology-review.json` verifies accepted generation46
+  still runs on root344: home/var root-local, every retained island correct,
+  zero failed services, full networking and exact kernel/initrd hashes for both
+  normal/recovery ESP entries. No reboot or live policy change. Rollback is now
+  intentionally bounded to the accepted layout; old generations requiring
+  `@home`/`@var` are obsolete. Unrelated forensic roots and prior readiness backup
+  staging are preserved under their separate purposes/gates.
+- All four exact migration snapshots remain unchanged: **326**, **327**, **328**,
+  **329**. `migration-snapshot-retirement-ready.json` records their names, IDs,
+  UUIDs, readonly flags and satisfied prerequisites. Original stage46 explicitly
+  requires final confirmation before deleting them; prepare that concrete decision
+  rather than broad snapshot cleanup. Small JSON/log receipts remain retained.
+- Final coherent documents/checklist, source/lock/closure/topology/evidence freeze,
+  exact-head suite and correct layered PR/CI/release workflow remain pending.
 
 ---
 
@@ -4143,11 +4170,11 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 ## Persistent storage hygiene
 
-- [ ] `/persist` has been audited.
+- [x] `/persist` has been audited (49 justified purposes, scoped pruning and clean raw re-audit).
 - [ ] no unexplained full-home migration copy remains.
 - [ ] no unexplained full-var migration copy remains.
-- [ ] old active `@home` persistence has been retired.
-- [ ] old active `@var` persistence has been retired.
+- [x] old active `@home` persistence has been retired (ID256, formal reconciliation receipt).
+- [x] old active `@var` persistence has been retired (children263/264/266 individually, then parent261).
 - [ ] obsolete migration snapshots have been deliberately handled.
 - [ ] `docs/persistence-contract.md` describes the final actual state.
 

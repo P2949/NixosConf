@@ -122,7 +122,11 @@ Private database-generation checks reconcile all 18 old IndexedDB blobs; old
 Trash discard is explicitly confirmed. Legacy var identity/state comparison also
 passes. Retirement bounds supported rollback to the accepted generation-46
 normal/persistent-root pair; generations requiring `@home` or `@var` become
-obsolete. Keep the exact migration snapshots until their final confirmation gate.
+obsolete. Legacy home256 and var children263/264/266 plus parent261 are now retired.
+`legacy-subvolume-retirement.json` records individual deletions; the independent
+post-retirement check confirms correct active topology, healthy services/network
+and both exact generation46 ESP artifact pairs. Keep the four exact migration
+snapshots326/327/328/329 until their final confirmation gate. No extra reboot.
 
 ## Preparation and final copy
 
