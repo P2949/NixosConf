@@ -704,6 +704,29 @@ stale lower status claim that current home/var are both persistent. Preserve the
   If further application use removes markers, refresh them again before the
   test; do not mistake application cleanup for boot-reset behavior.
 
+### First generation-44 recovery observed; strict receipt not accepted — 2026-10-09
+
+- User rebooted; boot `9079c962-37b7-4a7f-af7d-33e73c5c1718` runs the exact
+  generation-44 recovery closure `66s40b8r4ijbm5jmyf0xb9w56g69y2zn`. Root ID 330
+  and UUID `852d109c-c584-b546-b58c-7c04dd96f728` are unchanged, consistent with
+  recovery retaining the root. Home is root-local and legacy var remains.
+  There are zero failed system services. Fuzzel's dedicated state directory is
+  mounted from `/persist`, and its generated configuration selects that history.
+- The unmodified physical verifier refused: 99 of 100 markers matched, but the
+  plain file under `.codex/shell_snapshots` was absent. This boot has **no passing
+  receipt and does not count**. Do not recreate a missing marker after reboot
+  and count it as proof of retention.
+- Reproduced cleanup with the actual installed Codex binary in a separate
+  temporary `CODEX_HOME`, isolated network namespace and no submitted model turn:
+  the plain generated marker was deleted on thread initialization; a marker
+  inside a dedicated generated directory survived. Private evidence:
+  `codex-marker-cleanup-reproduction.json`. This is an instrumentation defect;
+  the production cache mount retains the original root-local backing. Correct
+  this specific marker placement before another recovery trial; keep strict
+  verification and all normal-reset requirements. No production persistence or
+  reset guard is weakened. Generation 44 remains the home candidate; var is
+  unarmed. Subsequent preparation/validation is recorded below.
+
 ---
 
 # 1. Objective and finish line

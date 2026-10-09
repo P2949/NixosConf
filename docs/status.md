@@ -9,7 +9,8 @@ Active local work is now `feat/granular-impermanence`, starting at reviewed
 `de058b4b65416249e2a1ac2e722f7514c87d5a36`. See the
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 for snapshots, copies, application-state classifications and validation progress.
-Home-only granular generation 42 is running. The quiesced shutdown copy and first
+Home-only granular generation 44 persistent-root is now running. Generation 42's
+quiesced shutdown copy and first
 physical home sentinel matrix passed; home is root-local while legacy var remains.
 Generation 41 remains available as rollback. The redundant random-seed bind over
 legacy var is corrected in source and runtime-masked in this session; the final
@@ -20,7 +21,7 @@ evidence does not certify these new local changes.
 The seed correction was first installed as generation 43. A subsequent observed
 Fuzzel usage-history omission was restored and its narrow state persistence added.
 Both corrections are now installed boot-only as generation 44; generation 42
-remains live. Generation-44 normal/recovery ESP artifacts match their store
+was the previous live system. Generation-44 normal/recovery ESP artifacts match their store
 closures. Full flake checks/build pass, including a fresh six-boot granular VM.
 The user confirmed Fuzzel usage ordering is restored. The private first-boot review passes 32 checks, with matching selected
 application identities and healthy databases. Blender also loads its retained
@@ -69,7 +70,10 @@ Generation 44 is built/checked/installed boot-only. The previous unbooted ticket
 were withdrawn for this fix; a new 100-sentinel recovery ticket and generation-44
 recovery one-shot are verified. Use generation 44 throughout recovery → recovery
 → normal → normal, preserving the consecutive-normal gate. The first recovery
-reboot is ready for the user; no agent reboot is scheduled or initiated. Fresh
+reboot retained root ID/UUID and healthy services, but its strict receipt is
+unaccepted: Codex removed one plain shell-snapshot marker during startup. The
+installed binary reproduces the deletion; a nested test marker survives.
+No physical cycle is counted. No agent reboot is scheduled or initiated. Fresh
 API queries show
 zero workflow runs and no PR directly for this branch; exact-head CI remains
 required after final freeze.
