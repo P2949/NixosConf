@@ -110,8 +110,13 @@ The corrected preference candidate is built from immutable source
 `ca08qvh8cry5msxny61hfizgaiw54y02`; normal/recovery are
 `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`/`7lkx40kh36s809bz1yr9bmfdddy1n80a`.
 Its evaluated manifest persists only the requested preference directory. Full
-flake checks and runtime/regression/reconstruction validation are still running;
-no new candidate is installed yet. Receipt: `unity-preferences-candidate-build.json`.
+flake checks PASS; fresh granular VM 163.31 s, workstation smoke 14.26 s and
+reconstruction 259.52 s pass; five unchanged root outputs reuse their accepted
+fresh identities. Corrected generation 46 is installed boot-only, both ESP pairs
+match, and main profile is normal 46. Generation 45 remains live/fallback default.
+Firefox PID 3535 is still running despite the closure confirmation; wait for its
+exit before seeding/selecting the physical trial. No ticket or one-shot is armed.
+Receipt: `unity-preferences-candidate-build.json`. Pruning remains gated.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

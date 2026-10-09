@@ -67,6 +67,13 @@ declaration amendment. Protect both versions and validate/physically accept the
 exact corrected candidate before pruning and retirement. No old receipt proves
 a future corrected closure.
 
+The corrected Unity-preferences candidate is validated and installed boot-only
+as generation 46: normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`, recovery
+`7lkx40kh36s809bz1yr9bmfdddy1n80a`; both ESP pairs match. Generation 45 remains
+running/fallback. Firefox is still running, so no new physical ticket/one-shot
+is prepared yet. Wait for complete exit, then seed/check the exact normal trial
+and the retained preference backing before the user's self-reboot.
+
 ## Preparation and final copy
 
 Finish formatting, flake checks, the combined reboot regression, desktop and

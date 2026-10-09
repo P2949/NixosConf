@@ -1515,6 +1515,33 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Unity-preferences candidate validated and installed as generation 46 — 2026-10-09
+
+- Immutable corrected-source full flake checks PASS. Fresh runtime results:
+  granular six-boot **163.31 s**, workstation smoke **14.26 s**, blank-disk
+  reconstruction **259.52 s**. All five unchanged root outputs pass using the
+  exact previously fresh validated output identities; no fresh rerun is claimed.
+  Normal/recovery builds, evaluated manifest, formatting and `git diff --check`
+  pass. Suite outputs/closures/source/inputs are independently GC-rooted; logs
+  and completed metadata are private in `unity-preferences-candidate-build.json`.
+- Installed corrected normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp` boot-only as
+  **generation 46**, with recovery `7lkx40kh36s809bz1yr9bmfdddy1n80a`.
+  Both ESP kernel/initrd pairs match their closures; main profile is normal 46.
+  Generation 45 remains running and is explicitly the EFI fallback default.
+  No live mount switch or new shutdown copy is needed: var migration already
+  passed and the requested preference backing is retained in raw @persist.
+- User confirmed saved/closed apps for this trial, but the actual process check
+  still finds Firefox PID **3535**, comm `.firefox-wrappe`. Detection must include
+  wrapper names with a leading dot; no production check/tool was changed.
+  Do not seed or select the trial until that process exits, because Firefox's
+  observed cleanup can delete proof markers. Asked for complete Firefox exit.
+  No pending physical ticket exists and no one-shot candidate is selected yet.
+  After exit, seed exact normal 46 and verify all markers plus the preference
+  backing hashes before the user's self-reboot; independently verify its new
+  bind and retained data after boot. Pruning/retirement remain gated.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
