@@ -30,9 +30,15 @@ def write_user_file(path, token, username):
 
 def proof_target(directory, leaf):
     target = Path(directory) / leaf
-    # Codex removes unrecognized regular files when initializing shell snapshots,
-    # but skips directories. Keep the proof in the same reset-backed cache mount.
-    if Path(directory).parts[-2:] == (".codex", "shell_snapshots"):
+    # Codex snapshot and Firefox telemetry cleanup skip directories, but delete
+    # unknown regular files. Keep proofs inside those same reset-backed mounts.
+    parts = Path(directory).parts
+    if (
+        parts[-2:] == (".codex", "shell_snapshots")
+        or parts[-4:] == (".config", "mozilla", "firefox", "Pending Pings")
+        or (parts[-5:-2] == (".config", "mozilla", "firefox")
+            and parts[-1] == "saved-telemetry-pings")
+    ):
         return target / "token", target
     return target, None
 
