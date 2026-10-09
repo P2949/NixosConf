@@ -8,8 +8,11 @@ cache children on the reset root. Offline gates passed; home-only generation 42
 has booted with a verified quiesced copy and passing first physical home matrix.
 Home is now root-local; legacy var remains until its separate acceptance phase.
 The intermediate policy omits the redundant random-seed file bind over legacy
-var; the final policy persists it. Further physical reboots are currently not
-authorized. See the
+var; the final policy persists it. An observed Fuzzel usage-history omission was
+restored and corrected with a dedicated persistent state directory. Generation
+44 contains both corrections and is installed boot-only; full checks and a fresh
+six-boot VM passed. Coordinated physical reboots are permitted. Its first recovery
+ticket and recovery one-shot are ready; generation 42 remains live. See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 

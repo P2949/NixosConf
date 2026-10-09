@@ -32,8 +32,8 @@ from source changes or VM tests.
 - Home cutover generation 42 has booted. Its quiesced shutdown copy and first
   physical home sentinel matrix passed; home is root-local and legacy var remains.
   A redundant random-seed bind on legacy var was diagnosed and corrected below.
-- Pending: repeated physical home acceptance and the var cutover, representative application
-  checks, physical repeated normal/recovery boots, backing-store pruning, and
+- Pending: repeated physical home acceptance and the var cutover, post-trial
+  application rechecks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 
 Evidence paths and validation results will be added here as work progresses.
@@ -595,8 +595,7 @@ stale lower status claim that current home/var are both persistent. Preserve the
   binary's `--check-config`. Full flake checks passed, including a fresh combined
   six-boot VM run in 141.57 seconds. Installed boot-only as generation **44**;
   both normal/recovery ESP kernel/initrd pairs match their exact store closures.
-  Use generation 44 for **all four** home
-  trials (recovery → recovery → normal → normal), superseding the review's
+  Use generation 44 for **all four** home trials (recovery → recovery → normal → normal), superseding the review's
   generation-43 reference because a specific additional defect was found.
 - Generation 44 recovery closure:
   `/nix/store/66s40b8r4ijbm5jmyf0xb9w56g69y2zn-nixos-system-desktop-26.05.20261004.0d9e9b8`.
@@ -610,6 +609,9 @@ stale lower status claim that current home/var are both persistent. Preserve the
   aliases and prior final-sync/arming tools remain independently retained as
   `-before-fuzzel`; current packaged tools use the corrected evaluated policy.
   Generation 42, generation 41, original subvolumes/snapshots remain available.
+  Independent indirect GC-root registration was verified for all four prior
+  home/tool aliases and `granular-vm-fuzzel`, whose fresh passing result is
+  `/nix/store/w9k5kx6v8knsjjhidybv7slsl5m75fnc-vm-test-run-granular-impermanence`.
   On return verify the physical ticket and root ID/UUID, then check the Fuzzel
   state-directory mount, generated cache setting, user history, and services.
   Remove only the temporary live compatibility symlink once the new configured
@@ -618,8 +620,7 @@ stale lower status claim that current home/var are both persistent. Preserve the
   `fuzzel-history-restoration.json`, `fuzzel-home-build.out`/`.log` and
   `fuzzel-home-flake.log`, `fuzzel-home-install.json`/`.log`, and
   `home-recovery-cycle-1-fuzzel-preflight.json`. Historical raw backing inventories
-  remain preserved;
-  future pruning must account for the now-declared history before deleting
+  remain preserved; future pruning must account for the now-declared history before deleting
   redundant old cache copies. Final-var exact-source builds/physical acceptance,
   raw cleanup, retirement and final exact-head CI remain gated as specified.
 

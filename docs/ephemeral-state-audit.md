@@ -32,8 +32,10 @@ WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
 `/var` aliases. Duplicate filesystem-watch warnings and process-exit races mean
 the trace is observational evidence, not complete coverage. No-data Btrfs diffs
 capture changed paths independently. Unity, Unreal, Blender and Steam functional
-sessions still need validation. The user uses all these apps; Android Studio is
-planned, with ADB keys already present.
+sessions were not established by that trace; the user subsequently confirmed
+important real application workflows on 2026-10-09. Recheck state after the next
+physical trials. The user uses all these apps; Android Studio is planned, with
+ADB keys already present.
 
 ## Home top-level entries
 

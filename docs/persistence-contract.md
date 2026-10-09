@@ -9,7 +9,10 @@ Migration status: home-only generation 42 is running with root-local home and
 legacy `@var`. The quiesced final copy and first physical home sentinel matrix
 passed. Offline validation passed. The redundant seed-file bind over legacy var
 is omitted from the corrected intermediate policy; final root-local var retains
-that file explicitly. Read-only snapshots and migration backing remain available;
+that file explicitly. Generation 44 also preserves the restored Fuzzel history
+in `.local/state/fuzzel` and is installed boot-only with both ESP artifact pairs
+verified. Its first recovery ticket/one-shot are ready; no agent reboot is
+scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The
 [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md) records
