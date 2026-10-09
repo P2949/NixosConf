@@ -67,6 +67,8 @@
       ".config/Thunar"
       ".config/pulse"
       ".config/unityhub"
+      # User-requested editor layouts, search filters and overlay preferences.
+      ".config/unity3d/Preferences"
       ".config/unity3d/Unity/config"
       ".config/unity3d/Unity/licenses"
       ".config/Unreal Engine"

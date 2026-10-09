@@ -124,6 +124,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | mozilla/firefox | M | profiles.ini, profile groups, passwords, cookies, bookmarks/history, extensions, sessions and site storage retained; cache/crash/telemetry exceptions below |
 | unityhub | M | Account/storage, install-state database, project registry, preferences, Templates and resumable editor installation payloads retained; cache exceptions below |
 | unity3d/Unity/config, unity3d/Unity/licenses | P | Licensing configuration/identity; sibling Licensing.Client logs discarded |
+| unity3d/Preferences | P | User explicitly requests preserving editor layouts, search filters and overlay settings; protected backing identified during the final raw-persist audit |
 | Unreal Engine | P | UnrealBuildTool/BuildConfiguration.xml is authoritative configuration |
 | Epic | M | App-scoped parent retained for atomic account/settings/project-record updates; exact directory/file exceptions reset generated state |
 | Epic/Epic Games, Epic/ProjectEditorRecords | P | Account/settings and recent project records |
