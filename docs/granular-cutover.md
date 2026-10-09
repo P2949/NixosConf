@@ -114,6 +114,16 @@ root. The post-pruning physical receipt
 root 344/reset count 26, retaining all nine Unity hashes. Final read-only legacy
 comparison now precedes retirement; all original subvolumes and snapshots remain.
 
+## Legacy retirement boundary
+
+`legacy-home-retirement-ready.json` classifies every old-only selected path and
+certifies no required authoritative state exists exclusively in legacy home.
+Private database-generation checks reconcile all 18 old IndexedDB blobs; old
+Trash discard is explicitly confirmed. Legacy var identity/state comparison also
+passes. Retirement bounds supported rollback to the accepted generation-46
+normal/persistent-root pair; generations requiring `@home` or `@var` become
+obsolete. Keep the exact migration snapshots until their final confirmation gate.
+
 ## Preparation and final copy
 
 Finish formatting, flake checks, the combined reboot regression, desktop and

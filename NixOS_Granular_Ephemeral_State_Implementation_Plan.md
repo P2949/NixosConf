@@ -1797,6 +1797,37 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Legacy home reconciliation certified — 2026-10-09
+
+- `legacy-home-retirement-ready.json` groups all **85,721** old-only selected
+  paths into **16** semantic cases, recording count, logical/block sizes,
+  classification, replacements and evidence. **Zero** unknown groups remain.
+  The full audit examined **608,511** old selected files. Old Trash discard is
+  explicitly user-authorized; current installed versions replace old runtimes,
+  extensions and plugin distributions. No current project source, game save,
+  credential, memory file or retained shader-cache path is missing in this audit.
+- `legacy-database-generation-review.json` reconciles all **18** old IndexedDB
+  blobs: none is referenced by the three healthy current databases, and every
+  current referenced blob exists. Private stable copies also pass places/cookies/
+  form-history integrity checks. Old CacheStorage responses/runtime markers and
+  current LevelDB generations are superseded; the rotated bookmark backup has
+  the same count/content identifier. Full current memory-repository Git fsck
+  passes. Private copies were cleaned without changing source databases.
+- `legacy-final-inspection.json` verifies the exact old proof-directory token
+  and active selected var backing. NixOS allocation, Bluetooth, scrub-history and
+  NetworkManager secret/config contents match the old authoritative files.
+  Random seed and NetworkManager runtime timestamps legitimately change;
+  missing leases/seen-bssids and test proof are deliberately disposable.
+- Certification identifies legacy home ID **256** and its UUID alongside active
+  root/persist identities, recovery evidence and explicit conclusion: **no
+  required authoritative state exists only in legacy `@home`**. Before retirement,
+  record the rollback boundary: generations requiring legacy `@home`/`@var`
+  become obsolete; the accepted, GC-rooted generation-46 normal/persistent-root
+  pair remains supported. Named migration snapshots remain until the original
+  final confirmation gate. No source/runtime-policy change or extra reboot.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
