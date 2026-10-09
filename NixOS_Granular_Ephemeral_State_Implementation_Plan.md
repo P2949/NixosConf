@@ -1287,6 +1287,14 @@ stale lower status claim that current home/var are both persistent. Preserve the
   implementation or add another validation framework. Defer the identified
   stale home-acceptance sentence in `docs/persistence-contract.md` to final
   documentation freeze as explicitly requested.
+- Fully read the subsequent attachment
+  `fd36da4f-106a-4add-87fa-54846f22cef0/Pasted text.txt`; byte comparison confirms
+  it repeats the same review. Live head `b2593520f1d17b6737fd9d72cfc87560ad6716bb`
+  adds only the preceding review ledger. Live recheck still finds the same
+  generation-44 boot, root-local home/legacy var, active/exited copy unit,
+  generation-44 default, no one-shot/ticket, empty copy log and no failed
+  services or jobs. The physical cutover has not occurred; the adopted sequence
+  and user's chosen self-reboot remain the next gate.
 - Independently rechecked the live machine: still source boot
   `de9406f5-9eac-4e3a-9051-68797c98b8e4`, exact generation 44 normal,
   root ID 334/UUID unchanged, reset count 21, home root-local and var `/@var`.
