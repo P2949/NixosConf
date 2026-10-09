@@ -151,7 +151,12 @@ nine Unity preference hashes survive. Services/network/topology pass.
 The corrected normal → recovery → recovery → normal chain is accepted and
 policy refrozen in `corrected-policy-freeze-20261009.json`. The refreshed raw
 inventory identifies 55 undeclared residues and 82 hidden cache directories;
-pruning, post-pruning normal proof and retirement remain pending.
+Scoped pruning is complete: 55 audited residue nodes removed and 82 hidden
+backing caches emptied, keeping empty mountpoint scaffolds. All declared paths,
+active cache identities and nine Unity hashes are intact. Independent re-audit
+finds no undeclared residue or hidden cache data; zero failed services.
+Receipt: `scoped-backing-prune-20261009.json`. Post-pruning normal physical proof
+and retirement remain pending; no boot ticket is armed while Firefox is running.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

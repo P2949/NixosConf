@@ -99,7 +99,13 @@ Corrected return-normal passes receipt
 reset count 25, 92 disposable proofs gone, eight persistent proofs and nine Unity
 hashes retained. The corrected normal → recovery → recovery → normal chain is
 accepted; `corrected-policy-freeze-20261009.json` refreezes the accepted policy.
-Fresh raw inventory precedes pruning. Post-prune and retirement gates remain.
+Fresh raw inventory and scoped pruning are complete. Private non-recursive
+`@persist` pruning removed 55 audited E/D nodes and emptied 82 hidden backing
+caches, retaining empty mountpoint scaffolds, active cache identities, every
+declared path and all nine Unity hashes. Originals and snapshots remain intact.
+Receipt: `scoped-backing-prune-20261009.json`. Read-only re-audit finds zero
+undeclared residue or hidden cache data. Post-prune physical proof and retirement
+gates remain; wait for closed apps before seeding the next normal trial.
 
 ## Preparation and final copy
 

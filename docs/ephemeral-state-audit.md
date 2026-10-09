@@ -6,8 +6,9 @@ Generation 46 normal is running with home and var on the reset root.
 The generation-45 normal/recovery/recovery/normal chain passes. The raw-persist
 audit identified Unity editor preferences; the user requests their preservation.
 That narrow correction passes first normal, active preference bind/nine hashes
-and the user's Unity UI check; corrected recovery/return remains required
-before pruning.
+and the user's Unity UI check; its corrected normal/recovery/recovery/normal
+chain is accepted. Scoped raw-backing pruning is complete; a post-pruning normal
+physical proof remains required before legacy retirement.
 Its verified var-only shutdown copy, first final physical matrix, discovery and
 user application recheck pass; both policies are frozen. Generation 42's first
 home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed
@@ -19,8 +20,7 @@ recheck pass; home policy is frozen. Exact-source final-var validation passes,
 including fresh VM runs. Final generation 45's first normal receipt is
 `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`: 92 disposable
 proofs gone, eight persistent proofs retained, new root 336 and reset count 22.
-Recovery → recovery → normal, raw-backing pruning, post-pruning normal proof,
-legacy retirement and final source/CI remain gated.
+Post-pruning normal proof, legacy retirement and final source/CI remain gated.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
@@ -297,5 +297,13 @@ undeclared residue paths, 82 hidden cache directories and 5 boot-managed file
 exceptions. All 49 top-level persist entries have recorded purposes. The private
 inventory is `backing-pruning-inventory.json` under the migration evidence
 directory. Allocated sizes include shared reflink/snapshot extents and do not
-estimate reclaimed space. No backing data was deleted; physical gates still
-prevent pruning.
+estimate reclaimed space. Following the accepted corrected generation-46 chain,
+the fresh inventory excluded preserved Unity editor preferences. Scoped private
+raw-view pruning removed 55 verified E/D residue nodes and emptied 82 hidden
+cache directories, preserving empty active mountpoint scaffolds. All declared
+paths, nine Unity hashes and active cache identities survived. Boot-managed files
+were left to boot. Three tiny opaque Unity runtime preference files are retained
+as explicitly named private recovery evidence, not runtime persistence.
+Receipt: `scoped-backing-prune-20261009.json`; independent re-audit finds no
+undeclared residue or hidden cache data. All originals and snapshots remain.
+Post-pruning physical acceptance precedes their retirement.

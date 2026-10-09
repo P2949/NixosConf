@@ -1672,6 +1672,35 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Scoped backing pruning completed — 2026-10-09
+
+- After corrected generation-46 physical acceptance and policy refreeze,
+  `scoped-backing-prune.py` validated the fresh inventory, immutable allow-list,
+  active overlay identities and retained original/snapshot sources before any
+  deletion. A private non-recursive writable `@persist` bind removed **55**
+  audited E/D residue nodes without following symlinks and emptied **82** hidden
+  cache directories. Empty cache mountpoint scaffolds remain intentionally;
+  their underlying directory identities and all active cache identities remain
+  unchanged. Boot-managed disposable files were left to normal boot.
+- All declared backing paths and **nine** Unity preference hashes remain intact.
+  Three opaque 289-byte Unity runtime preference files were protected as tiny
+  private recovery evidence in `unity-runtime-prefs-pruning-evidence`; this is
+  not an added runtime persistence declaration. Original `@home`, `@var` and
+  every migration snapshot remain intact. No retirement or agent reboot.
+- Durable transaction: `scoped-backing-prune-20261009.json`. Original inventory:
+  `backing-inventory-before-prune-20261009.json`. Independent read-only re-audit
+  finds **zero** undeclared residue nodes and **82** empty hidden cache targets
+  with zero allocated bytes; all **49** top-level purposes remain justified.
+  Seven currently present boot-managed file exceptions remain untouched.
+  Zero failed services after pruning. Allocation totals do not prove reclaimed
+  space because snapshots/reflinks remain.
+- The required post-pruning normal physical proof is next. Firefox is running;
+  asked the user to save/close named applications before final marker seeding.
+  No boot ticket or one-shot entry has been armed. Legacy comparison/retirement,
+  final documentation/source freeze, exact-head checks and CI remain pending.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
