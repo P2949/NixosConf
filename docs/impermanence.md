@@ -6,12 +6,12 @@ persist machine identity. The granular source policy makes home and ordinary
 var root-local, persisting only audited state and keeping known application
 cache children on the reset root. Offline gates passed; home-only generation 42
 has booted with a verified quiesced copy and passing first physical home matrix.
-Home is now root-local; legacy var remains until its separate acceptance phase.
+Home and ordinary var are now root-local in accepted generation 45 normal.
 The intermediate policy omits the redundant random-seed file bind over legacy
 var; the final policy persists it. An observed Fuzzel usage-history omission was
 restored and corrected with a dedicated persistent state directory. Generation
 44 contains both corrections and is installed boot-only; full checks and a fresh
-six-boot VM passed. Generation 44 normal is now live. Both accepted
+six-boot VM passed. Generation 44 home acceptance is complete. Both accepted
 recovery trials passed all 100 markers and retained root ID/UUID, with healthy
 services and Fuzzel history. Earlier cleanup-related failed attempts remain
 archived and unaccepted. The standalone marker fix passes eight regressions.
@@ -19,9 +19,13 @@ Both normal home-reset trials also pass all 100 requirements, replacing roots
 330 → 332 → 334. Independent home acceptance passes and important application
 state is user-confirmed after the trials. Home policy is frozen. Exact-source
 final-var validation passes, including fresh VM runs; generation 45 is installed
-boot-only with the existing guarded shutdown copy armed. Current generation 44/
-legacy var and fallback default remain until verified shutdown copy. No pending
-physical ticket exists yet and no agent reboot is initiated.
+boot-only and its guarded var-only shutdown copy verified before selecting it.
+First final normal receipt `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`
+passes all 100 proofs on new root 336. Discovery and the user's representative
+application recheck pass; both home and var policies are frozen. Final normal
+is now the default after clearing the temporary fallback override. Final
+recovery → recovery → normal, gated pruning/post-pruning normal proof and
+legacy retirement remain pending; no agent reboot is initiated.
 See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).

@@ -5,8 +5,9 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: home-only generation 44 normal is running with
-root-local home and legacy `@var`. Generation 42's quiesced final copy and first
+Migration status: generation 45 normal is running with both home and var on
+@root. The first final normal matrix, service discovery and representative
+application recheck pass; both policies are frozen. Generation 42's copy and first
 physical home matrix passed; both accepted generation-44 recovery trials now
 pass all 100 markers, retaining the same root identity. Offline validation
 passed. The redundant seed-file bind over legacy var
@@ -22,12 +23,13 @@ The second normal also passed, replacing root 332 with root 334. Independent
 home acceptance passes and the user reconfirmed all important application state
 works after the trials. Home policy is frozen. Exact-source final desktop/recovery
 and the required suite pass, including fresh VM runs. Final generation 45 is
-installed boot-only and its guarded var-only shutdown copy is armed. Generation
-44 and legacy var remain live/default until the verified copy selects 45 once.
-No physical ticket exists before that shutdown copy; no agent reboot is
-scheduled. Read-only snapshots and migration backing remain available;
-repeated physical boot/application checks and the final var cutover remain
-required before legacy state or temporary copies are retired. The
+installed boot-only and its guarded var-only shutdown copy verified successfully
+before selecting 45 once. Receipt `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`
+accepts all 100 proofs on new root 336; final normal is now default after clearing
+the fallback override. Final recovery → recovery → normal and the post-pruning
+normal proof remain required. No agent reboot is scheduled. Read-only snapshots
+and migration backing remain available; no legacy state or temporary copies are
+retired before their remaining gates. The
 [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md) records
 actual results and open gates; historic root-only evidence below does not prove
 the new home/var contract.

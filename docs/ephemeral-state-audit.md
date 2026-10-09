@@ -2,17 +2,20 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-Home-only generation 44 normal is running with home on the reset root
-and legacy var retained. Generation 42's quiesced shutdown copy and first physical home matrix passed,
-including all 82 cache exceptions. Final-var physical/application acceptance remains pending; the home phase is accepted. Both accepted generation-44 recovery trials passed
+Generation 45 normal is running with home and var on the reset root.
+Its verified var-only shutdown copy, first final physical matrix, discovery and
+user application recheck pass; both policies are frozen. Generation 42's first
+home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed
 all 100 markers with unchanged root identity and healthy services. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The updated
 proof tool passes eight regressions. Both normal trials pass all 100 requirements,
 with roots 330 → 332 → 334. The independent home guard and user application
 recheck pass; home policy is frozen. Exact-source final-var validation passes,
-including fresh VM runs. Final generation 45 is installed boot-only and the
-guarded var-only shutdown copy is armed; current generation 44/legacy var remain
-until the user self-reboots and the copy verifies.
+including fresh VM runs. Final generation 45's first normal receipt is
+`physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`: 92 disposable
+proofs gone, eight persistent proofs retained, new root 336 and reset count 22.
+Recovery → recovery → normal, raw-backing pruning, post-pruning normal proof,
+legacy retirement and final source/CI remain gated.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).

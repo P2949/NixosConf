@@ -10,8 +10,10 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 44 normal is running: home is root-local and legacy `@var`
-remains. Generation 42's quiesced shutdown copy and first home matrix passed.
+Generation 45 normal is running: both home and ordinary var are root-local.
+Its quiesced var-only shutdown copy, first final physical matrix and discovery
+checks pass; the user confirms representative application state works. Both
+policies are frozen. Generation 42's shutdown copy and first home matrix passed.
 Generation 44 fixes the intermediate random-seed bind and the observed Fuzzel
 history omission, preserving only `.local/state/fuzzel`. The user confirms the
 restored ordering. Both normal/recovery ESP artifact pairs match the exact store
@@ -34,7 +36,7 @@ results were reused. This is local validation, not GitHub CI evidence.
 Both normal home trials also pass all 100 requirements:
 `physical-boot-passed-74b64b81-8435-4cb6-82d8-e4f49aab5e96.json` and
 `physical-boot-passed-c0483ba7-38e8-46b1-a5cf-5ba61b7f9b0e.json`.
-The latest boot is `de9406f5-9eac-4e3a-9051-68797c98b8e4`. Normal reset replaced
+The last home-only boot was `de9406f5-9eac-4e3a-9051-68797c98b8e4`. Home reset replaced
 roots 330 → 332 → 334; latest UUID is `f7efa8c4-1329-af44-916a-2f8060f3a3ca`.
 Each normal removed all 89 disposable proofs/three containers and retained the
 11 persistent proofs before precise cleanup. Identity, islands, Fuzzel and
@@ -55,24 +57,38 @@ After independently rerunning home acceptance, the existing var arming helper
 installed the final candidate boot-only as generation 45. Normal closure:
 `xbw73avz8hvpqq6p5qh6srnimxd8ism3`; recovery:
 `6fl58xj2f8yqccmaxa4k89508nahigyc`. Both ESP pairs and generation-44 rollback
-artifacts match their store closures. The running generation 44 and legacy var
-are unchanged. The final-copy service is active/exited with verified shutdown
-ordering and the immutable var-only copy command. EFI default stays generation
-44; no one-shot or physical ticket is selected before verified shutdown copy.
-Zero failed services. Private receipt: `final-var-armed-preflight.json`.
+artifacts match their store closures. The user's orderly reboot completed the
+var-only copy at `2026-10-09T21:05:09+01:00`; its immutable-policy comparison
+passed before selecting generation 45. Source boot was
+`de9406f5-9eac-4e3a-9051-68797c98b8e4`.
 
-Next is the user's orderly self-reboot after saving work. The shutdown service
-checks user-process quiescence, seeds final normal proofs, copies/verifies only
-declared var state, and selects generation 45 once after success. Inspect the
-shutdown/sync evidence and verify the physical ticket immediately after boot.
-Do not manually select generation 45 before a verified copy. Final-var physical
-normal/recovery acceptance, pruning and retirement remain pending. No agent
-reboot is initiated or scheduled; the full goal is incomplete.
+First final normal boot `971b1496-f119-46ac-a248-d23202cdab92` is accepted by
+`physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`: all 100 proofs,
+92 disposable proofs/three containers gone and eight persistent proofs retained
+before cleanup. Root 334 became 336, UUID `1d408d1a-0e0a-af4e-ada5-8095ba3b5d1d`;
+reset count 21 became 22. Home/var are on @root; persistent islands, selected
+service-state binds and protected random seed are correct. System running,
+zero failed services, full connectivity, successful Home Manager/seed services,
+Fuzzel history and configured audio route pass discovery checks. The user
+reconfirmed representative apps work. Both policies are frozen in
+`final-policy-freeze-20261009.json`; independent review is
+`final-normal-accepted-cycle-1-review.json`. The missing pending ticket after
+successful verification is expected cleanup.
 
-The goal is blocked on the user's chosen orderly self-reboot. The latest check
-still finds source generation 44/legacy var, an armed but non-executing copy
-unit, no shutdown job, an empty copy log and no seeded ticket. Validation and
-arming remain ready; resume with actual shutdown/cutover evidence after reboot.
+Cleared the temporary generation-44 EFI fallback override after acceptance;
+generation 45 normal is now default and both final entries remain installed.
+Next is final recovery → recovery → normal, then gated raw-persist pruning,
+post-pruning normal proof, legacy/snapshot retirement and final source/CI.
+The user has saved/closed the named apps for the first recovery trial and will
+verify from a text console before reopening them. No agent reboot is initiated
+or scheduled; the full goal remains incomplete.
+
+First final recovery trial is prepared: all 100 recovery proofs are present,
+the exact generation-45 persistent-root entry is selected once, and normal 45
+remains the default. Private ready record: `final-recovery-cycle-1-ready.json`.
+After the user's self-reboot, verify promptly before apps and independently
+confirm root 336/UUID retained with reset count still 22. This is preparation,
+not recovery acceptance.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

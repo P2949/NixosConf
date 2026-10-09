@@ -17,7 +17,7 @@ from source changes or VM tests.
   Tracked files were clean; this user-supplied plan was the sole untracked file
   and is preserved and updated as part of this work.
 - Initial topology: `/home` used `@home`, `/var` used `@var`, `/persist`
-  used `@persist`. Current home is root-local; legacy var remains. The
+  used `@persist`. Current home and var are both root-local. The
   optimization mount stays independent; privileged commands are available.
 - Metadata-only inventories found 151 GiB of home state, including development
   projects, Unity installs, Firefox profiles, VS Code shared storage and game
@@ -36,9 +36,11 @@ from source changes or VM tests.
   → normal passed, the independent home guard passes, and the user confirms
   important application state still works after these trials. Freeze home policy.
 - Exact frozen-source final-var desktop/recovery and full required suite PASS;
-  final generation 45 is installed boot-only with the guarded shutdown copy armed.
-- Pending: verified shutdown copy and first final-var physical boot, final application
-  rechecks, physical repeated normal/recovery boots, backing-store pruning, and
+  final generation 45 completed its verified shutdown copy and first physical
+  normal boot. All 100 proofs pass; discovery checks and the user's final-var
+  application recheck pass. Both home and var policies are frozen.
+- Pending: physical final recovery → recovery → normal, backing-store pruning,
+  the post-pruning normal sentinel boot, final source/CI acceptance, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
   fixture leaked private PIDs into host shared memory. Stale runtime records were
@@ -427,13 +429,13 @@ Private receipts below are under `/persist/granular-migration`.
 | 32 | Final/intermediate topology, persistent islands and recovery configuration assertions pass. |
 | 33 | Combined automated var test passes, including persistence/disappearance across normal/recovery/return. |
 | 34 | Exact frozen-source final desktop/recovery, full flake checks, evaluation, eight marker/twelve home guard cases, fresh six-boot granular VM, fresh blank-disk reconstruction/smoke and all five fresh root scenarios PASS. |
-| 35 | Final var generation 45 installed boot-only and existing shutdown copy armed only after independent home acceptance PASS. Generation 44 is the fallback default; candidate one-shot is deferred until shutdown copy verifies. Physical cutover remains pending. |
-| 36 | Pending: no physical root-local-var boot has occurred. |
-| 37 | Pending: physical var cache/tmp/undeclared-state reset cycles have not occurred. |
-| 38 | Current generation-44 intermediate normal services are healthy; final-var service acceptance remains pending. |
-| 39 | Automated recovery/return passed; repeated physical granular recovery/return remains pending. |
-| 40 | Final topology passes reconstruction; full final physical topology audit awaits var cutover. |
-| 41 | Exact-system physical sentinel tool implemented; Codex/Firefox telemetry marker placement passes eight regressions without relaxing retention or whole-container reset requirements. First generation-42 home matrix and first corrected generation-44 recovery passed; remaining physical matrices are pending. |
+| 35 | Final var generation 45 installed boot-only after home acceptance. Its quiesced var-only copy verified and selected 45 once; first physical normal acceptance now passes. Generation 45 normal is now the default. |
+| 36 | PASS: exact generation 45 normal; home and var on @root, optimization independently mounted, selected var state bound from @persist. |
+| 37 | First physical final normal PASS: var cache/tmp/undeclared proofs gone; NixOS/optimization proofs survived. Repeated final recovery/return and post-pruning normal remain pending. |
+| 38 | PASS: system running, zero failed services, full NetworkManager connectivity, stable identity/allocation, Home Manager/random-seed services healthy, Fuzzel preserved; user confirms final-var applications work. |
+| 39 | Automated recovery/return passed; first generation-45 physical recovery trial is prepared with all 100 proofs present and exact recovery entry selected once. Repeated physical recovery/return acceptance remains pending. |
+| 40 | First final physical topology matches the intended layout; repeat the full audit after final recovery/return, before pruning and retirement. |
+| 41 | Exact-system sentinel tool implemented; eight placement regressions pass without relaxing retention/container reset. Home sequence and first final normal matrix pass; final recovery/return and post-pruning normal remain pending. |
 | 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
@@ -441,7 +443,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
 | 48 | Checklist keeps unproven physical, application and hygiene items open. |
-| 49 | Not achieved: var remains a persistent island and repeated physical/final-retirement proof is missing. |
+| 49 | Not achieved: first fully granular physical normal and application acceptance pass; repeated final recovery/return, pruning, post-pruning proof, retirement and final source/CI acceptance remain. |
 
 No VM, static audit, copied-profile startup or elapsed time is substituted for
 the remaining physical workstation requirements. No reboot is requested or scheduled.
@@ -1330,6 +1332,69 @@ stale lower status claim that current home/var are both persistent. Preserve the
   obtain actual GitHub CI, then merge. Local/physical receipts do not certify CI.
   No configuration, boot selection, legacy backing or snapshot was changed in
   this review turn. Final-var physical acceptance and the full goal remain open.
+
+---
+
+### First final normal accepted; both policies frozen — 2026-10-09
+
+- User's orderly reboot completed the armed var-only copy. Shutdown log records
+  all 100 proofs seeded, final sync at `2026-10-09T21:05:09+01:00`, a clean
+  evaluated-policy comparison and one-shot generation 45 selection only after
+  success. `final-sync-boot-id` matches source boot
+  `de9406f5-9eac-4e3a-9051-68797c98b8e4`. No manual candidate selection occurred.
+- User ran the strict verifier immediately after boot. Receipt
+  `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json` accepts exact
+  generation-45 normal `xbw73avz8hvpqq6p5qh6srnimxd8ism3`, boot
+  `971b1496-f119-46ac-a248-d23202cdab92`: **100 proofs**, 92 disposable proofs
+  and all three generated containers gone; eight persistent proofs survived
+  before precise cleanup. Missing pending ticket and the subsequent no-ticket
+  verifier message are expected successful cleanup, not a failed trial.
+- Root changed from ID 334 to **336**, UUID
+  `1d408d1a-0e0a-af4e-ada5-8095ba3b5d1d`; reset count **21 → 22**.
+  Home and ordinary var resolve to `/@root`; all persistent islands remain
+  correct. Only allowed descendant `@root/srv` (337) exists; machines/portables/
+  var-tmp are ordinary directories. All 82 cache exceptions remain root-backed.
+- Discovery passes: system running, zero failed services, full network
+  connectivity, unchanged machine identity and UID 1000, active graphical login,
+  successful Home Manager/random-seed services, eight Fuzzel history entries and
+  configured audio route available. NixOS/NetworkManager/Bluetooth/Btrfs state
+  binds resolve to @persist; random seed is the same protected root-owned 0600
+  backing file. Logs/cache/tmp are root-local; runtime journal exists without a
+  persistent journal directory. No missing authoritative var path was observed.
+- User confirms **"All checked and working"** for Firefox, Codex, Code, Git/
+  GitHub, Steam, Unity/Unreal and Fuzzel after the final-var cutover. Freeze both
+  accepted policies; all configuration/tool/lock files still match the validated
+  immutable source. Private review: `final-normal-accepted-cycle-1-review.json`;
+  policy fingerprint: `final-policy-freeze-20261009.json`. Final whole-project
+  source freeze/CI remains later, after physical corrections and retirement.
+- After acceptance, cleared the temporary EFI fallback override and verified
+  generation 45 normal is default. Both final normal/recovery ESP pairs and
+  generation-44 rollback hashes match. Next is generation-45 recovery → recovery
+  → normal, with exact tickets, same-root/no-reset checks for recovery and fresh
+  root/disposable-state reset on return. User has saved/closed the named apps and
+  agreed to verify from a text console before reopening them; wait for the final
+  marker/entry check before the self-reboot. No agent reboot or retirement occurs.
+
+---
+
+### First final recovery trial prepared — 2026-10-09
+
+- User confirmed the named applications are saved/closed and will run the
+  verifier from a text console before reopening them. Process check confirms
+  Firefox, Steam, Unity and Unreal are absent. Formatting and `git diff --check`
+  pass; accepted configuration/tool/lock hashes remain unchanged.
+- Seeded the existing strict tool in `recovery` mode against exact generation-45
+  recovery `6fl58xj2f8yqccmaxa4k89508nahigyc`. Verified all **100** token files
+  before selecting `nixos-generation-45-specialisation-persistent-root.conf`
+  for one boot; inspected the actual EFI one-shot value. Normal default remains
+  generation 45, with the main normal profile and both ESP entries intact.
+- Pending ticket originates on accepted normal boot
+  `971b1496-f119-46ac-a248-d23202cdab92`. First recovery must retain root **336**,
+  UUID `1d408d1a-0e0a-af4e-ada5-8095ba3b5d1d`, home/var on @root and all 100
+  proofs, without incrementing reset count **22**. Private ready record:
+  `final-recovery-cycle-1-ready.json`. Await the user's self-reboot and immediate
+  strict verification; preparation is not an accepted recovery boot. No agent
+  reboot, pruning or retirement occurs.
 
 ---
 
@@ -3573,7 +3638,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 - [x] `@root` provides `/`.
 - [x] no `@home` subvolume is mounted at `/home`.
-- [ ] no `@var` subvolume is mounted at `/var`.
+- [x] no `@var` subvolume is mounted at `/var`.
 - [x] `/nix` remains persistent.
 - [x] `/persist` remains persistent.
 - [x] `/.snapshots` remains persistent.
@@ -3588,7 +3653,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] `/srv` state disappears on normal reboot.
 - [x] `/etc/machine-id` survives.
 - [x] `/etc/nixos` survives.
-- [ ] NetworkManager connections survive.
+- [x] NetworkManager connections survive (generation-45 discovery: full connectivity).
 
 ## Home
 
@@ -3606,20 +3671,20 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 ## Var
 
-- [ ] `/var` is root-local rather than a separate persistent filesystem.
-- [ ] `/var/cache` disappears.
-- [ ] `/var/tmp` disappears.
-- [ ] undeclared service state disappears.
-- [ ] `/var/lib/nixos` survives.
-- [ ] system random-seed state survives.
+- [x] `/var` is root-local rather than a separate persistent filesystem.
+- [x] `/var/cache` disappears (generation-45 physical proof).
+- [x] `/var/tmp` disappears (generation-45 physical proof).
+- [x] undeclared service state disappears (generation-45 physical proof).
+- [x] `/var/lib/nixos` survives.
+- [x] system random-seed state survives (verified shutdown copy, bound file and healthy seed service).
 - [x] every additional persistent service DB has an explicit justification.
-- [ ] `/var/lib/nixos-optimization` survives independently.
+- [x] `/var/lib/nixos-optimization` survives independently.
 - [x] log persistence/ephemerality is an explicit policy rather than a side effect.
 
 ## Boot modes
 
-- [ ] normal boot resets root.
-- [ ] normal boot therefore resets undeclared home and var state.
+- [x] normal boot resets root.
+- [x] normal boot therefore resets undeclared home and var state.
 - [ ] `persistent-root` disables reset.
 - [ ] root-local recovery sentinels survive repeated `persistent-root` boots.
 - [ ] returning from `persistent-root` to normal mode discards those undeclared sentinels.

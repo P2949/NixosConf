@@ -12,7 +12,7 @@ bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 first carried this fix. The additional observed Fuzzel history
 omission is now restored/corrected in generation 44, installed boot-only with
 both ESP artifact pairs checked.
-Generation 44 normal is now live. Both accepted recovery trials passed
+Generation 44 home acceptance is complete. Both accepted recovery trials passed
 all 100 markers with unchanged root ID/UUID, stable identity and healthy services.
 The user ran the second verifier immediately after reboot, before apps. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The required
@@ -37,16 +37,26 @@ now pass, including fresh six-boot granular, five root, blank-disk reconstructio
 and workstation tests. Source/lock and exact closures are recorded in
 `final-var-candidate-build.json`; local checks do not certify final-head CI.
 
-The existing var helper installed final generation 45 boot-only and armed the
-reviewed shutdown copy after independent home acceptance passed. Current normal
-44/home/legacy-var mounts remain; EFI default stays 44. Both generation-45 ESP
-pairs and generation-44 rollback artifacts match their store closures. The copy
-service is active/exited and no one-shot/ticket exists before verified shutdown
-copy. Next is the user's orderly self-reboot after saving work; the service seeds
-final normal proofs, copies/verifies only var state and then selects 45 once.
-Never select 45 manually after a failed copy. After boot inspect copy evidence,
-verify promptly, and accept final system state before clearing the fallback EFI
-default. No agent reboot or retirement is initiated.
+The existing var helper installed final generation 45 boot-only and its reviewed
+shutdown copy completed on the user's orderly reboot. A clean var-only policy
+comparison preceded one-shot selection. First final normal boot
+`971b1496-f119-46ac-a248-d23202cdab92` passes all 100 proofs: 92 disposable proofs
+gone, eight persistent proofs retained. Root 336 is new; both home and var are
+on @root. Discovery and the user's representative application recheck pass;
+both policies are frozen. Receipt:
+`physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`.
+The temporary fallback override was cleared after acceptance; generation 45
+normal is default. Both final ESP pairs and generation-44 rollback artifacts
+match. Next is final recovery → recovery → normal, then gated raw-backing
+pruning and one further normal sentinel boot before retirement. Verify each
+ticket before opening apps; its disappearance after success is expected.
+No agent reboot or retirement is initiated.
+
+The first final recovery ticket is now seeded against generation 45's exact
+persistent-root closure; all 100 tokens passed the preboot check and its recovery
+entry is selected once. Normal 45 remains default. Await the user's self-reboot
+and immediate verification before apps. Root 336/UUID must remain unchanged and
+reset count must stay 22. Receipt: `final-recovery-cycle-1-ready.json`.
 
 ## Preparation and final copy
 
