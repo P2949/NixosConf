@@ -31767,3 +31767,19 @@ metadata to accepted granular root-local home/var, generation46 closures, PR8
 integration and that exact CI result. Updated current-status release wording.
 This attachment/evidence commit is documentation-only; its successor CI is
 required without repeating accepted physical or VM gates for reassurance.
+
+## Backup delta inventory — 2026-10-10
+
+Created read-only retained-state snapshot `/.snapshots/readiness-persist-20261010`
+(ro property verified), preserving the accepted live persistence policy. Private
+inventory under `/persist/nixos-readiness-20261005/backup-delta-20261010/inventory.json`
+compares current retained home with the accepted October5 source snapshot,
+reusing its explicit engine exclusions. Scan completed with zero traversal errors:
+204,781 metadata-change candidates, 26,819,299,127 logical bytes. This is candidate
+selection, not content-hash comparison or backup acceptance. The largest new
+category is Unity editor installations (18.3GB); other major groups are Steam
+(5.12GB), Unity project state (1.52GB) and VS Code extensions (0.96GB). Do not
+silently exclude possible local installation modifications or saves merely to
+fit the USB. Ventoy has12,399,542,272bytes free, with4GiB reserve retained.
+Meaningful delta selection and external terminal integrity/restore proof remain
+open; no existing archive or recovery artifact has been changed.
