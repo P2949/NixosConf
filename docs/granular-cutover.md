@@ -9,42 +9,42 @@ the staged commands below are historical and must not be rerun on this system.
 
 ## Accepted physical sequence
 
-Home acceptance used generation44 recovery → recovery → normal → normal,
+Home acceptance used generation 44 recovery → recovery → normal → normal,
 with an unchanged independent guard requiring two consecutive verified normals.
-Final-var generation45 normal → recovery → recovery → normal passed after an
+Final-var generation 45 normal → recovery → recovery → normal passed after an
 actual orderly, quiesced var-only copy. The narrow Unity-preferences correction
-then passed its own exact generation46 normal → recovery → recovery → normal,
+then passed its own exact generation 46 normal → recovery → recovery → normal,
 with user UI acceptance and all nine preference hashes retained.
 
-Scoped private raw-view pruning removed55 audited residue nodes and emptied82
+Scoped private raw-view pruning removed 55 audited residue nodes and emptied 82
 hidden backing caches, retaining active mounts and empty target scaffolds.
 The post-pruning normal receipt
-`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` proves root344,
-reset count26, all92 disposable proofs removed, eight persistent proofs and nine
+`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` proves root 344,
+reset count 26, all 92 disposable proofs removed, eight persistent proofs and nine
 Unity files retained. Earlier failed application-cleanup trials remain archived
 and do not count toward acceptance. No marker was recreated after boot.
 
 ## Legacy retirement and supported rollback
 
-`legacy-home-retirement-ready.json` classifies85,721 old-only selected paths
-into16 semantic cases with no unknown required state. Private database checks
-reconcile18 superseded IndexedDB blobs; old Trash discard was explicitly
+`legacy-home-retirement-ready.json` classifies 85,721 old-only selected paths
+into 16 semantic cases with no unknown required state. Private database checks
+reconcile 18 superseded IndexedDB blobs; old Trash discard was explicitly
 confirmed. Selected authoritative var data is present in active backing.
-`legacy-subvolume-retirement.json` records home256 deletion, individual var
-children263/264/266 deletion, then parent261. The independent post-retirement
-review verifies active topology, health and both exact generation46 ESP pairs.
+`legacy-subvolume-retirement.json` records home 256 deletion, individual var
+children263/264/266 deletion, then parent 261. The independent post-retirement
+review verifies active topology, health and both exact generation 46 ESP pairs.
 
 The user separately confirmed deletion of the four exact migration snapshots;
 `migration-snapshot-retirement.json` records326/327/328/329 removed with every
 unrelated subvolume retained. Keep the small receipts, forensic roots and
 separately justified earlier readiness backup staging. No extra reboot is needed.
-Supported rollback is the accepted, GC-rooted generation46 normal/persistent-root
+Supported rollback is the accepted, GC-rooted generation 46 normal/persistent-root
 pair. Older generations requiring `@home` or `@var` are obsolete. Recovery retains
 the current root and does not restore data discarded by earlier normal resets.
 
 Final documentation/source freeze and exact-head local/CI integration are
 separate release gates. The correct integration path is a granular PR into the
-readiness branch, then fresh exact-head CI for its changed PR#7 head.
+readiness branch, then fresh exact-head CI for its changed PR #7 head.
 
 ## Historical staged procedure (completed)
 

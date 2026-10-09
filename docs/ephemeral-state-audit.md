@@ -1,6 +1,6 @@
 # Ephemeral state audit
 
-Initial inventory2026-10-08; finalized storage policy2026-10-09 on
+Initial inventory 2026-10-08; finalized storage policy 2026-10-09 on
 `feat/granular-impermanence`. This audit records categories/reasons, never secrets.
 Generation46 normal has root-local home/var and a physically accepted allow-list.
 Corrected normal/recovery/recovery/normal and post-pruning normal pass; Fuzzel
@@ -193,8 +193,8 @@ block atomic saves. Rules are absent in `persistent-root` and ignored by live
 tmpfiles reactivation because they are boot-only (`r!`).
 
 Fuzzel history was restored and migrated to `.local/state/fuzzel/history`;
-the user confirms usage ordering. The generation44 home chain and final
-corrected generation46/post-pruning trials accept this dedicated state path.
+the user confirms usage ordering. The generation 44 home chain and final
+corrected generation 46/post-pruning trials accept this dedicated state path.
 No cache-backed history workaround is required in the finished configuration.
 
 ## /var classification
@@ -223,27 +223,27 @@ the second boot. No reset guard is weakened or recursively broadened.
 `/persist/etc` and `/persist/var` contain declared system backing;
 `/persist/home/p2949` contains declared user backing and intentional empty cache
 mountpoint scaffolds. `/persist/secrets` retains the private password source.
-All49 top-level purposes are classified. Earlier backup-staging snapshots,
+All 49 top-level purposes are classified. Earlier backup-staging snapshots,
 validation receipts, alternate repository checkouts and forensic identity/root
 artifacts are deliberately retained under separate readiness recovery gates.
 Tiny archived Unity preference versions and three opaque runtime preference
 files have explicit recovery-evidence purposes, not runtime persistence.
 
 Cache mounts propagate into apparent live `/persist` paths. Pruning used a
-private, non-recursive raw `@persist` view; it removed55 verified E/D residue nodes
-and emptied82 hidden cache targets while preserving active mount identities,
+private, non-recursive raw `@persist` view; it removed 55 verified E/D residue nodes
+and emptied 82 hidden cache targets while preserving active mount identities,
 every declared backing path and all nine Unity preference files. Independent
 read-only re-audit found no undeclared residue or hidden cache data. Boot-managed
 files remain governed by their normal boot rules. Allocation totals do not imply
 reclaimed bytes because reflinks/snapshots can share extents.
 
-The corrected final chain and post-pruning normal pass all100 proofs. Actual
+The corrected final chain and post-pruning normal pass all 100 proofs. Actual
 browser/Codex/VS Code/Git/Steam and Unity/Unreal state is user-confirmed; Blender
-configuration/render/editing has accepted evidence. All18 old IndexedDB blobs
+configuration/render/editing has accepted evidence. All 18 old IndexedDB blobs
 are superseded and unreferenced in healthy current DBs. Old Trash discard is
-explicitly confirmed. All85,721 old-only paths are classified into16 groups,
-with no required authoritative data left only in legacy home. Legacy home256,
-var children263/264/266 and parent261, and the four confirmed migration snapshots
+explicitly confirmed. All 85,721 old-only paths are classified into 16 groups,
+with no required authoritative data left only in legacy home. Legacy home 256,
+var children263/264/266 and parent 261, and the four confirmed migration snapshots
 326/327/328/329 are retired. Unrelated backup/forensic state remains intentional.
 
 Android Studio is absent: audit its SDK/AVD and tool state after installation.
@@ -254,9 +254,9 @@ installed editors/runtimes are retained R state; old versions need not remain
 when current accepted versions replace them. Future applications/projects need
 fresh path audits rather than whole-container persistence.
 
-The October8 copied-editor fixture leaked Zen runtime IPC into the host. Proven
+The October 8 copied-editor fixture leaked Zen runtime IPC into the host. Proven
 unused records were archived/removed; the fixture now isolates IPC and `/dev/shm`.
-The user's actual relaunch is accepted: Zen0.058s, editor12.612s, no errors.
+The user's actual relaunch is accepted: Zen 0.058s, editor 12.612s, no errors.
 Production policy and expensive Zen/DDC retention were unchanged. Earlier
 fixture evidence is not retroactively treated as proof of full IPC isolation.
 

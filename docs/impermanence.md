@@ -3,14 +3,14 @@
 Desktop replaces `@root` on every normal boot; `persistent-root` disables that
 reset for recovery. Both modes retain machine identity and explicitly declared
 state. Home and ordinary var are root-local, with audited profile/cache splitting.
-The corrected generation46 normal → recovery → recovery → normal sequence and
+The corrected generation 46 normal → recovery → recovery → normal sequence and
 post-pruning normal all pass100 requirements, including nine Unity preference
-hashes. Latest accepted root344/reset count26 is in
+hashes. Latest accepted root 344/reset count 26 is in
 `post-pruning-normal-review.json`.
 
 Scoped backing pruning, semantic legacy reconciliation, individual home/var
 retirement and explicitly confirmed migration-snapshot retirement are complete.
-Both accepted generation46 closures/ESP pairs and the recovery ISO are retained.
+Both accepted generation 46 closures/ESP pairs and the recovery ISO are retained.
 Older generations requiring legacy mounts are obsolete. No additional physical
 boot chain is required solely for inactive-data retirement or documentation.
 
@@ -210,4 +210,4 @@ All fast checks pass with 43 rejected and four accepted configurations.
 Earlier result tables describe the preceding 26-case revision; their closures
 do not prove this follow-up code. At that historical checkpoint, refreshed-input boot tests and candidate builds
 were still required before deployment. Subsequent immutable-source builds,
-physical generation46 acceptance and retirement are recorded in the granular plan.
+physical generation 46 acceptance and retirement are recorded in the granular plan.

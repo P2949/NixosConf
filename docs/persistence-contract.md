@@ -27,7 +27,7 @@ previously discarded data.
 | `/var/lib/nixos` | Persisted directory | UID/GID/subuid allocation |
 | `/var/lib/systemd/random-seed` | Persisted file | Protected entropy state |
 | `/var/lib/NetworkManager` | Persisted directory with boot-only runtime cleanup | Stable key/internal configuration; leases, timestamps and seen-bssids discarded normally |
-| `/var/lib/bluetooth` | Persisted directory, declared mode0700 | Pairing identity/trust |
+| `/var/lib/bluetooth` | Persisted directory, declared mode 0700 | Pairing identity/trust |
 | `/var/lib/btrfs` | Persisted directory | Scrub history/progress |
 | Logs/journal/coredumps, `/var/cache`, `/var/tmp`, undeclared service state | Ephemeral | Journal storage explicitly volatile |
 | `/persist/secrets/p2949-password-hash` | Private persistent source | Declarative account authentication; no secrets in Git |
@@ -67,13 +67,13 @@ or weakened guard is part of this contract.
 
 ## Acceptance and storage hygiene
 
-The corrected generation46 normal → recovery → recovery → normal chain and
-post-pruning normal pass all100 physical requirements; user application and
+The corrected generation 46 normal → recovery → recovery → normal chain and
+post-pruning normal pass all 100 physical requirements; user application and
 Unity preference checks are accepted. `/persist` has no undeclared home residue
 or hidden cache data after scoped raw-view pruning. Empty cache mountpoint
 scaffolds and explicitly justified evidence/backup subtrees remain.
 Legacy `@home`/`@var` and their dedicated migration snapshots are retired.
-Supported rollback is generation46 normal/persistent-root; older generations
+Supported rollback is generation 46 normal/persistent-root; older generations
 requiring legacy mounts are obsolete. Unrelated forensic/readiness backups
 remain under their separate retention purposes.
 

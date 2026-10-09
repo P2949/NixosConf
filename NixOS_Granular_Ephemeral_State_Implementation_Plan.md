@@ -443,13 +443,13 @@ Private receipts below are under `/persist/granular-migration`.
 | 40 | Full final physical topology audit after generation-45 return-normal PASS; root/home/var/etc/root/srv/tmp/usr root-local, persistent islands and separate ESP/runtime mounts correct. |
 | 41 | Exact-system sentinel tool implemented; eight placement regressions pass. Home and corrected final chains and post-pruning normal pass all 100 proofs each. |
 | 42 | Scoped raw pruning complete: zero undeclared residue and zero hidden cache data, 49 justified top-level purposes, all declared paths and active cache mount identities retained. |
-| 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
+| 43 | Complete normative contract describes finished topology, profile exceptions, recovery semantics and retired legacy storage. Chronology remains in ledgers. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
 | 45 | Complete: formal semantic reconciliation certifies home and var; legacy home256, portables263, machines264, tmp266 and var261 retired individually. Post-retirement topology/health and both generation46 ESP artifact pairs pass. |
 | 46 | Complete after explicit final user confirmation: only migration snapshots326/327/328/329 deleted; independent listing confirms every unrelated subvolume retained. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
-| 48 | Checklist keeps unproven physical, application and hygiene items open. |
-| 49 | Not achieved: corrected physical/application acceptance, pruning and post-pruning proof pass; retirement and final source/CI acceptance remain. |
+| 48 | Physical/application scope and storage hygiene reconciled honestly; Studio and empty Plastic are future-use/unexercisable cases. Final exact-head release evidence remains separate. |
+| 49 | Functional storage and retirement complete; final exact-source local/CI validation and layered integration/readiness baseline release remain. |
 
 No VM, static audit, copied-profile startup or elapsed time is substituted for
 the remaining physical workstation requirements. No reboot is requested or scheduled.
@@ -1874,6 +1874,39 @@ stale lower status claim that current home/var are both persistent. Preserve the
   closure/topology/physical/pruning/retirement freeze, full exact-head local suite
   and the correctly layered GitHub CI/integration/release sequence. Do not claim
   GitHub acceptance from historical PR #7 runs or local physical/VM passes.
+
+---
+
+### Final review adopted and documentation reconciled — 2026-10-09
+
+- Fully read attachment `a1b593a0-b93d-4f19-bc04-f9a1676b28e8/Pasted text.txt`
+  reviewing `e8f8d5f88f57c0f29a6ae7df5d98767c98ed3d9b`. Its exact remaining
+  sequence is adopted: confirmed snapshots only, independent final topology and
+  complete retirement receipt, explained migration-copy hygiene, final normative
+  documents/scope checklist, final source/lock/closure/policy/topology/evidence/
+  recovery freeze, complete exact-head local suite, layered granular PR into
+  readiness and fresh exact-head PR #7 CI/integration/release. Snapshot deletion
+  had already completed under the explicit user confirmation; no repeat action
+  or extra reboot. Prism and ordinary new features remain outside this freeze.
+- `docs/status.md` is now a compact current snapshot with historical chronology
+  in the ledgers. `docs/persistence-contract.md` describes only the finished
+  architecture. Cutover instructions are clearly historical/completed;
+  impermanence/audit documents no longer claim active legacy mounts or pending
+  accepted physical gates. Unrelated earlier readiness backups/forensic copies
+  have explicit separate recovery purposes, rather than unexplained migration
+  residue. The final snapshot receipt now also records active root/persist
+  identities, both system closures, prerequisites and post-deletion topology.
+- `final-application-scope-review.json` verifies current ADB keys against backing
+  (private key0600, correct owner), records absent Studio SDK/AVD validation as
+  N/A until installation, and confirms Plastic's retained directory is empty
+  with no invented remote-use claim. Accepted and deliberately retained but
+  unexercisable P/R categories are enumerated below.
+- Current GitHub inspection confirms PR #7 is open/draft from
+  `feat/pre-optimization-readiness` at `de058b4b...` into main; there is no
+  granular-head PR yet. Its CI cannot certify this branch. Source/runtime policy
+  is unchanged during docs reconciliation. Final exact-head local/CI validation
+  and integration remain pending; earlier stock-readiness soak/backup gates are
+  preserved and must be resolved before claiming that separate baseline ready.
 
 ---
 
@@ -4174,10 +4207,23 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] Zen/browser required profile state works (actual Firefox confirmed on generation 42).
 - [x] Codex required state works.
 - [x] VS Code required state works (user confirmed on generation 42).
-- [ ] Android state selected for persistence works.
+- [x] Android scope resolved: existing ADB identity matches backing with private key0600; Android Studio is uninstalled, SDK/AVD audit N/A/deferred until installation, no unexercised remote-device claim.
 - [x] Steam state selected for persistence works (actual library/game saves confirmed on generation 42).
-- [ ] Plastic/Unity VCS state selected for persistence works.
-- [ ] any other path classified `P` or `R` has been functionally checked.
+- [x] Plastic/Unity VCS scope resolved: user accepts relevant Git/VCS credentials; retained `.plastic4` is empty/future-use, no current remote Plastic workflow claimed.
+- [x] Other P/R scope explicitly accounted for by accepted, deliberately retained and currently unexercisable categories below; no blanket functional claim.
+
+| Category | Acceptance scope |
+| --- | --- |
+| User data and project trees | Quiesced allow-list metadata/content comparisons; post-trial user project/data workflow acceptance; final old-only reconciliation |
+| Browser, Codex, VS Code, Git/GitHub, Steam | Representative retained state/credentials accepted; profile/database checks; libraries/saves confirmed |
+| Unity/Unreal and Blender | Actual project/editing workflows and configuration/render evidence; Unity UI/preference hashes; Zen correction accepted |
+| Fuzzel, shell history/configuration, Git settings and desktop/audio state | Specific history restoration and atomic-save migrations; current user ordering and declared backing verified |
+| Machine/account/network/Bluetooth/Btrfs/random seed | Stable identity/allocation; authoritative backing comparison; legitimate runtime rotation distinguished |
+| Installed tool/editor/runtime distributions and expensive caches | Deliberate R retention of current accepted installations/caches; not every superseded historical version |
+| Android Studio, empty Plastic and future credential/template/data directories | Studio absent; Plastic empty; reservations explicit; no invented current workflows |
+| Conservatively retained NSS/.pki and .NET cryptography state | Identity/state retained; no claim that every possible remote-service workflow was exercised |
+
+Private scope receipt: `final-application-scope-review.json`.
 
 ## Tests
 
@@ -4198,7 +4244,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] old active `@home` persistence has been retired (ID256, formal reconciliation receipt).
 - [x] old active `@var` persistence has been retired (children263/264/266 individually, then parent261).
 - [x] obsolete migration snapshots have been deliberately handled (four exact IDs retired after final user confirmation).
-- [ ] `docs/persistence-contract.md` describes the final actual state.
+- [x] `docs/persistence-contract.md` describes the final actual state (normative architecture, retired legacy storage, explicit app exceptions and recovery boundary).
 
 ---
 

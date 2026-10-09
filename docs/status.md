@@ -41,8 +41,8 @@ Home's recovery → recovery → normal → normal sequence, final generation-45
 normal → recovery → recovery → normal, corrected generation-46 equivalent,
 and one post-pruning normal boot all pass. Each final physical trial verifies
 **100** requirements: **92** disposable and **eight** persistent proofs.
-Both corrected recovery trials retain root340/reset count24; normal return
-replaces it with342/count25; post-pruning normal replaces342 with344/count26.
+Both corrected recovery trials retain root 340/reset count 24; normal return
+replaces it with342/count 25; post-pruning normal replaces342 with344/count 26.
 All nine prepared Unity preference hashes survive, and the user confirms the UI.
 
 Private evidence under `/persist/granular-migration` includes:
@@ -52,15 +52,15 @@ Private evidence under `/persist/granular-migration` includes:
 - `scoped-backing-prune-20261009.json`: 55 audited residue nodes removed and
   82 hidden backing caches emptied while active cache identities remain intact.
 - `legacy-home-retirement-ready.json`: 608,511 old selected paths examined;
-  85,721 old-only paths classified into16 cases, no unknown required state.
+  85,721 old-only paths classified into 16 cases, no unknown required state.
 - `legacy-database-generation-review.json`:18 obsolete IndexedDB blobs are
   unreferenced; current references and private-copy integrity checks pass.
-- `legacy-subvolume-retirement.json`: home256 and individually inspected
-  var children263/264/266, then parent261, deleted deliberately.
-- `migration-snapshot-retirement.json`: only snapshots326/327/328/329 deleted
+- `legacy-subvolume-retirement.json`: home 256 and individually inspected
+  var children263/264/266, then parent 261, deleted deliberately.
+- `migration-snapshot-retirement.json`: only snapshots 326/327/328/329 deleted
   after explicit confirmation; unrelated subvolumes unchanged.
 - `post-legacy-retirement-topology-review.json`: active topology, both exact
-  generation46 ESP pairs and retained recovery ISO identity verified.
+  generation 46 ESP pairs and retained recovery ISO identity verified.
 
 Important browser, Codex, VS Code, Git/GitHub, Steam saves/library and
 Unity/Unreal workflows are user-confirmed. Fuzzel ordering and actual Unreal
@@ -90,7 +90,7 @@ metadata after they exist. A source document cannot certify its own future CI.
 
 ## Supported recovery and backup
 
-Supported rollback is the accepted generation46 pair:
+Supported rollback is the accepted generation 46 pair:
 normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`, persistent-root
 `7lkx40kh36s809bz1yr9bmfdddy1n80a`. Both are independently GC-rooted and have
 verified ESP kernel/initrd copies. Old generations requiring `@home` or `@var`
@@ -101,9 +101,9 @@ The GC-rooted recovery ISO is `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`, rechecked SHA2
 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
 The prior external recovery drill and independent Ventoy archive/restore are
 accepted; their small receipts remain. External media is not currently mounted.
-[Backup details](backup-restore.md) records the27,844,003,241-byte archive,
+[Backup details](backup-restore.md) records the 27,844,003,241-byte archive,
 SHA256 `9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`
-and47-file engine supplement. Prior backup acceptance does not prove freshness
+and 47-file engine supplement. Prior backup acceptance does not prove freshness
 of work created since then.
 
 ## Separate pre-optimization readiness
@@ -115,7 +115,7 @@ accepted evidence in [development validation](development-validation.md),
 and the readiness ledger. Their accepted human-observation gates need not be
 repeated without a relevant defect or configuration change.
 
-Representative multi-day mixed-use soak began2026-10-08. Its completion,
+Representative multi-day mixed-use soak began 2026-10-08. Its completion,
 backup freshness, stock baseline capture and final readiness merge/tag remain
 separate gates; storage acceptance does not silently close them. Compiler/LTO/
 PGO/BOLT optimization, Prism and ordinary feature additions remain deferred.
