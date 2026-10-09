@@ -9,16 +9,19 @@ subvolume is deleted during either cutover.
 Current result: generation 42 completed its quiesced copy and first physical
 home matrix. Home is root-local and legacy var remains. A redundant seed-file
 bind over native legacy var was removed from the intermediate policy; corrected
-generation 43 is installed for future boots with both ESP artifact pairs checked.
+generation 43 first carried this fix. The additional observed Fuzzel history
+omission is now restored/corrected in generation 44, installed boot-only with
+both ESP artifact pairs checked.
 Generation 42 remains live. The user confirmed the important application workflows
 work after the home cutover and allows coordinated reboots. Following the supplied
 2026-10-09 review, the home sequence is recovery → recovery → normal → normal
 on the latest corrected home candidate. A specific Fuzzel usage-history omission
-was found/restored and its persistence/configuration corrected; full checks and
-boot-only installation are in progress. The unbooted generation-43 normal and
-recovery tickets were archived as superseded, not accepted; the recovery one-shot
-was cleared. No reboot is ready/scheduled until the corrected candidate is
-installed, verified and a new recovery ticket is seeded.
+was found/restored and its persistence/configuration corrected. Generation 44
+builds and full checks pass, including a fresh combined six-boot VM. The unbooted
+generation-43 tickets were archived as superseded, not accepted. A new 100-sentinel
+`home-recovery` ticket targets generation 44; its recovery entry is selected once,
+with normal generation 44 still the main profile/default. The first recovery
+reboot is ready for the user; no agent reboot is scheduled or initiated.
 
 ## Preparation and final copy
 
@@ -85,7 +88,7 @@ Do not install a recovery-only system profile and later select a stale normal
 entry: the bootloader may prune its initrd. Keep the candidate's main generation
 installed with both boot entries, or reinstall the exact normal generation.
 
-Use the latest corrected home generation for recovery → recovery → normal →
+Use corrected generation 44 for recovery → recovery → normal →
 normal, verifying each
 `home-recovery`, `home-recovery`, `home`, `home` ticket in that order. Repeated
 recovery must retain root/home; return-normal must discard recovery-only state.

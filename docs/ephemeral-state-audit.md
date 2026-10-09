@@ -6,7 +6,8 @@ Home-only generation 42 is running with home on the reset root and legacy var
 retained. Its quiesced shutdown copy and first physical home matrix passed,
 including all 82 cache exceptions. Repeated physical and functional application
 acceptance remain pending. Coordinated reboots are now permitted; the next trial
-is held while the observed Fuzzel history omission is corrected.
+is prepared for corrected generation 44 after the observed Fuzzel history
+omission was restored; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
@@ -196,7 +197,8 @@ and three post-cutover records were merged into eight IDs. Source now configures
 `${xdg.stateHome}/fuzzel/history` and persists `.local/state/fuzzel` only. The user
 confirmed restored usage ordering. The temporary live `.cache/fuzzel` symlink
 writes into the same backing until the corrected home candidate boots. That
-candidate and the physical home sequence must be validated before cleanup;
+candidate is built/checked/installed boot-only as generation 44; the four-boot
+home sequence is still required before cleanup;
 legacy cache/history copies remain safety evidence until then.
 
 ## /var classification
@@ -233,7 +235,7 @@ after their separate recovery/backup gates are satisfied.
 
 The user confirmed on 2026-10-09 that actual browser, Steam, VS Code, Git/GitHub,
 relevant VCS and Unity/Unreal project workflows are working after the home cutover
-on generation 42. Generation-43 physical/recovery and final-var gates still need
+on generation 42. Corrected generation-44 physical/recovery and final-var gates still need
 their own acceptance; no further synthetic app QA is required without a defect.
 
 The first home copy/boot and offline validation passed. Codex reads its retained

@@ -17,10 +17,12 @@ policy still persists the seed when var becomes root-local. The accepted history
 below describes earlier whole-home/var boots. Existing PR/CI
 evidence does not certify these new local changes.
 
-The correction is installed boot-only as generation 43 and selected for future
-boots; generation 42 remains live. Both generation-43 normal/recovery ESP
-artifacts match their store closures. Corrected-source flake checks and build
-pass. The private first-boot review passes 32 checks, with matching selected
+The seed correction was first installed as generation 43. A subsequent observed
+Fuzzel usage-history omission was restored and its narrow state persistence added.
+Both corrections are now installed boot-only as generation 44; generation 42
+remains live. Generation-44 normal/recovery ESP artifacts match their store
+closures. Full flake checks/build pass, including a fresh six-boot granular VM.
+The user confirmed Fuzzel usage ordering is restored. The private first-boot review passes 32 checks, with matching selected
 application identities and healthy databases. Blender also loads its retained
 configuration in background mode. These do not certify full interactive app use.
 
@@ -53,10 +55,11 @@ The user confirmed the important browser/Steam/Code/Git/VCS/project workflows
 work after the home migration, then identified missing Fuzzel ordering history.
 Original/recent counts were merged and restored; the user confirmed ordering is
 restored. Source persists its dedicated state directory and points Fuzzel there.
-A corrected home candidate is built; full checks/boot installation are in progress.
-The previous unbooted recovery ticket and one-shot were withdrawn for this fix.
-Use the corrected candidate throughout recovery → recovery → normal → normal,
-preserving the consecutive-normal gate. No reboot is ready/scheduled yet. Fresh
+Generation 44 is built/checked/installed boot-only. The previous unbooted tickets
+were withdrawn for this fix; a new 100-sentinel recovery ticket and generation-44
+recovery one-shot are verified. Use generation 44 throughout recovery → recovery
+→ normal → normal, preserving the consecutive-normal gate. The first recovery
+reboot is ready for the user; no agent reboot is scheduled or initiated. Fresh
 API queries show
 zero workflow runs and no PR directly for this branch; exact-head CI remains
 required after final freeze.

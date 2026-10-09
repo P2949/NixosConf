@@ -400,7 +400,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
 | 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
-| 23 | Pending: recovery → recovery → normal → normal on the newly corrected home candidate. Previous unbooted generation-43 recovery ticket superseded for the observed Fuzzel defect; unchanged guard still requires the last two normal cycles. |
+| 23 | Pending: generation 44 recovery → recovery → normal → normal. First recovery ticket/one-shot prepared; previous unbooted generation-43 tickets superseded for the observed Fuzzel defect; unchanged guard still requires the last two normal cycles. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Recheck after generation-43 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -511,14 +511,15 @@ zero failed system services (`home-first-boot-editor-review.json`).
   both entries. Private receipt: `home-recovery-cycle-1-preflight.json`.
   No reboot was initiated or scheduled by the agent.
 
-The revised home sequence is mandatory for this continuation:
+The revised home sequence is mandatory for this continuation (generation 44
+below supersedes the review's generation 43 after the observed Fuzzel correction):
 
 | Order | Next boot / ticket | Acceptance before proceeding |
 | --- | --- | --- |
-| 1 | Generation 43 persistent-root / `home-recovery` | Verify exact recovery closure, retained root/home/cache sentinels, legacy var, identity/islands and service health. |
-| 2 | Same generation 43 persistent-root / `home-recovery` | Seed a new ticket only after order 1 passes; verify repeated retention and unchanged root identity. |
-| 3 | Generation 43 normal / `home` | Seed from root-local recovery home; verify recovery-only/root/home/cache state disappears while declared state and legacy var survive. |
-| 4 | Generation 43 normal / `home` | Verify the second consecutive root-local-home normal cycle, then independently run home acceptance. |
+| 1 | Generation 44 persistent-root / `home-recovery` | Verify exact recovery closure, retained root/home/cache sentinels, legacy var, identity/islands and service health. |
+| 2 | Same generation 44 persistent-root / `home-recovery` | Seed a new ticket only after order 1 passes; verify repeated retention and unchanged root identity. |
+| 3 | Generation 44 normal / `home` | Seed from root-local recovery home; verify recovery-only/root/home/cache state disappears while declared state and legacy var survive. |
+| 4 | Generation 44 normal / `home` | Verify the second consecutive root-local-home normal cycle, then independently run home acceptance. |
 
 After those trials and important app state pass, freeze the home phase. Before
 arming var, build/validate the exact current-source final desktop **and** its
@@ -585,20 +586,39 @@ stale lower status claim that current home/var are both persistent. Preserve the
 - Cleared the recovery one-shot while fixing the omission, archived its still-
   unbooted ticket as superseded, and removed only its 100 exact generated token
   files. No physical cycle was counted; no application directories, originals,
-  snapshots or migration backing were pruned. No pending physical ticket exists
-  while checks/installation are in progress. Do not reboot this incomplete
-  preparation. Generation 42 remains live, generation 43 remains the installed
-  normal default until the correction is installed and verified.
+  snapshots or migration backing were pruned. The preparation interval had no
+  pending ticket and was held against reboot until validation/install completed.
+  Generation 42 remains live; generation 44 is now installed for future boots.
 - Corrected home closure built:
   `/nix/store/m5kmyzchvyax9k2dbaikwx0m9zrn14i0-nixos-system-desktop-26.05.20261004.0d9e9b8`.
   Workstation evaluation passes; the generated Fuzzel INI passes the actual
-  binary's `--check-config`. Full flake checks are in progress before boot-only
-  installation. Use the resulting corrected generation for **all four** home
+  binary's `--check-config`. Full flake checks passed, including a fresh combined
+  six-boot VM run in 141.57 seconds. Installed boot-only as generation **44**;
+  both normal/recovery ESP kernel/initrd pairs match their exact store closures.
+  Use generation 44 for **all four** home
   trials (recovery → recovery → normal → normal), superseding the review's
   generation-43 reference because a specific additional defect was found.
+- Generation 44 recovery closure:
+  `/nix/store/66s40b8r4ijbm5jmyf0xb9w56g69y2zn-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  The fresh `home-recovery` ticket has all 100 sentinels independently re-read;
+  EFI one-shot is independently confirmed as
+  `nixos-generation-44-specialisation-persistent-root.conf`. Normal generation
+  44 is the default/main system profile. Source root ID 330 and its UUID are
+  recorded for the two recovery-retention checks. Next ordinary orderly reboot
+  will enter recovery once; **no agent reboot is scheduled or initiated**.
+- Current home GC-root aliases reference generation 44. Generation-43 home
+  aliases and prior final-sync/arming tools remain independently retained as
+  `-before-fuzzel`; current packaged tools use the corrected evaluated policy.
+  Generation 42, generation 41, original subvolumes/snapshots remain available.
+  On return verify the physical ticket and root ID/UUID, then check the Fuzzel
+  state-directory mount, generated cache setting, user history, and services.
+  Remove only the temporary live compatibility symlink once the new configured
+  state path is verified; seed the second recovery trial only after acceptance.
 - Private evidence: `fuzzel-legacy-history`, `fuzzel-post-cutover-history`,
   `fuzzel-history-restoration.json`, `fuzzel-home-build.out`/`.log` and
-  `fuzzel-home-flake.log`. Historical raw backing inventories remain preserved;
+  `fuzzel-home-flake.log`, `fuzzel-home-install.json`/`.log`, and
+  `home-recovery-cycle-1-fuzzel-preflight.json`. Historical raw backing inventories
+  remain preserved;
   future pruning must account for the now-declared history before deleting
   redundant old cache copies. Final-var exact-source builds/physical acceptance,
   raw cleanup, retirement and final exact-head CI remain gated as specified.
