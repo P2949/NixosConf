@@ -87,10 +87,14 @@ First final recovery passes all 100 proofs on boot
 `6d1eb85e-cd9e-4857-a553-48bbf6384776`; receipt
 `physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json`. Root 336/UUID
 and reset count 22 are retained; identity, topology, services and connectivity
-pass independent review. Second recovery is prepared with all 100 tokens present
-and exact recovery entry selected once; normal 45 remains installed/default.
-Ready record: `final-recovery-cycle-2-ready.json`. Await the user's self-reboot
-and immediate verification before apps. Return-normal and later gates remain open.
+pass independent review. Second recovery also passes all 100 proofs on boot
+`20d82f78-9bb0-4106-839e-849bcb2f4ae8`, receipt
+`physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json`, with the same
+root identity/reset count and healthy services/network. Return-normal is now
+prepared with all 100 tokens present and normal generation 45 selected once.
+Ready record: `final-return-normal-ready.json`. After the user's self-reboot,
+verify before apps: a new root/reset count 23, 92 disposable proofs gone and
+eight persistent proofs retained are required. Pruning and retirement stay gated.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

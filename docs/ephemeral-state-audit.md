@@ -2,7 +2,9 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-Generation 45 normal is running with home and var on the reset root.
+Generation 45 persistent-root is running with home and var on the retained root.
+Both final recovery trials pass all 100 proofs with the same root/reset count;
+return-normal is prepared but not yet accepted.
 Its verified var-only shutdown copy, first final physical matrix, discovery and
 user application recheck pass; both policies are frozen. Generation 42's first
 home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed

@@ -39,7 +39,7 @@ from source changes or VM tests.
   final generation 45 completed its verified shutdown copy and first physical
   normal boot. All 100 proofs pass; discovery checks and the user's final-var
   application recheck pass. Both home and var policies are frozen.
-- Pending: physical final recovery → recovery → normal, backing-store pruning,
+- Pending: physical final return-normal, backing-store pruning,
   the post-pruning normal sentinel boot, final source/CI acceptance, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
@@ -433,7 +433,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 36 | PASS: exact generation 45 normal; home and var on @root, optimization independently mounted, selected var state bound from @persist. |
 | 37 | First physical final normal PASS: var cache/tmp/undeclared proofs gone; NixOS/optimization proofs survived. Repeated final recovery/return and post-pruning normal remain pending. |
 | 38 | PASS: system running, zero failed services, full NetworkManager connectivity, stable identity/allocation, Home Manager/random-seed services healthy, Fuzzel preserved; user confirms final-var applications work. |
-| 39 | Automated recovery/return passed; first generation-45 physical recovery trial is prepared with all 100 proofs present and exact recovery entry selected once. Repeated physical recovery/return acceptance remains pending. |
+| 39 | Two generation-45 physical recovery trials PASS: all 100 proofs and root 336/UUID retained, reset count unchanged at 22. Return-normal is prepared; physical return acceptance remains pending. |
 | 40 | First final physical topology matches the intended layout; repeat the full audit after final recovery/return, before pruning and retirement. |
 | 41 | Exact-system sentinel tool implemented; eight placement regressions pass without relaxing retention/container reset. Home sequence and first final normal matrix pass; final recovery/return and post-pruning normal remain pending. |
 | 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
@@ -1416,6 +1416,37 @@ stale lower status claim that current home/var are both persistent. Preserve the
   Second recovery must again retain root ID/UUID and reset count 22. Await the
   user's self-reboot and verification before apps; then prepare return-normal.
   No agent reboot, pruning or retirement occurs. The full goal remains open.
+
+---
+
+### Second final recovery accepted; return-normal prepared — 2026-10-09
+
+- Receipt `physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json`
+  accepts second generation-45 recovery on boot
+  `20d82f78-9bb0-4106-839e-849bcb2f4ae8`, exact `6fl58xj2f8yqccmaxa4k89508nahigyc`.
+  All **100** proofs survived. Independently verified root **336**, UUID
+  `1d408d1a-0e0a-af4e-ada5-8095ba3b5d1d`, reset count **22**, unchanged identity,
+  correct home/var/island topology, running system, zero failed services and
+  full connectivity. Private review: `final-recovery-accepted-cycle-2-review.json`.
+  Together with the first accepted recovery, this proves repeated retention;
+  return-normal remains a separate required gate.
+- Named apps remain closed; frozen policy hashes and main normal profile match.
+  Seeded `normal` against exact generation 45 normal
+  `xbw73avz8hvpqq6p5qh6srnimxd8ism3`, checked all **100** tokens, and selected
+  `nixos-generation-45.conf` once. Return must replace root 336/UUID, increment
+  reset count **22 → 23**, remove all 92 disposable proofs/three containers and
+  retain eight declared/island proofs. Ready record: `final-return-normal-ready.json`.
+  Await the user's self-reboot and verification before apps. Only after its
+  acceptance may final topology/raw-persist pruning proceed. No agent reboot,
+  pruning, legacy retirement or snapshot deletion occurs.
+
+- Continuation check: still source recovery boot
+  `20d82f78-9bb0-4106-839e-849bcb2f4ae8`, no executing systemd shutdown job and
+  no return-normal receipt. All 100 pending tokens and the normal one-shot remain
+  intact. The preceding turn made progress by accepting recovery/preparing normal;
+  this continuation is an external self-reboot wait, not a verified running-job
+  wait. Leave the full goal active and do not advance pruning. Private evidence:
+  `final-return-normal-awaiting-self-reboot.json`.
 
 ---
 
@@ -3706,10 +3737,10 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 - [x] normal boot resets root.
 - [x] normal boot therefore resets undeclared home and var state.
-- [ ] `persistent-root` disables reset.
-- [ ] root-local recovery sentinels survive repeated `persistent-root` boots.
+- [x] `persistent-root` disables reset (both generation-45 recoveries retain reset count 22).
+- [x] root-local recovery sentinels survive repeated `persistent-root` boots (100 proofs each).
 - [ ] returning from `persistent-root` to normal mode discards those undeclared sentinels.
-- [ ] explicitly persisted state works in both modes.
+- [x] explicitly persisted state works in both modes (generation-45 normal and two recovery receipts).
 
 ## Applications
 

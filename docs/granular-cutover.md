@@ -54,11 +54,13 @@ No agent reboot or retirement is initiated.
 
 The first final recovery is accepted by
 `physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json`: all 100 proofs,
-root 336/UUID and reset count 22 retained. The second recovery ticket is seeded
-against the same exact closure, all 100 tokens pass the preboot check and its
-entry is selected once. Normal 45 remains installed/default. Await the user's
-self-reboot and immediate verification before apps. The same root identity and
-reset count must survive again. Ready record: `final-recovery-cycle-2-ready.json`.
+root 336/UUID and reset count 22 retained. The second recovery is accepted by
+`physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json` with those same
+100 proofs/root/reset invariants. Return-normal is prepared against exact normal
+generation 45; all 100 tokens pass preboot checks and its entry is selected once.
+Await the user's self-reboot and verification before apps: new root, reset count
+23, 92 disposable proofs gone and eight persistent proofs retained. Ready record:
+`final-return-normal-ready.json`. Pruning and retirement remain gated.
 
 ## Preparation and final copy
 
