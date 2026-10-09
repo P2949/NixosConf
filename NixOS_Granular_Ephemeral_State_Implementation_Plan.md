@@ -1755,6 +1755,48 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Current-tip review adopted; old Trash decision resolved — 2026-10-09
+
+- Fully read the supplied review in attachment
+  `9e311972-2d14-4812-8793-f1fcc68e363f/Pasted text.txt`, reviewing head
+  `0dd1c0e672c36348e1dbb8629aef20df75b307cf`. Its complete remaining sequence
+  is adopted: semantic old-only retirement report; Unity/project and rotated
+  profile/database reconciliation; exact proof-directory inspection; formal
+  home retirement readiness; home retirement with rollback boundary documented;
+  var parent comparison; individual child deletion and formal var readiness;
+  var retirement; read-only topology/recovery check; exact migration snapshots
+  only after the original confirmation gate; compact current-status/checklist
+  reconciliation; exact source/lock/closure/topology/retirement freeze; full
+  exact-head local suite; layered granular PR into pre-optimization-readiness,
+  exact-head CI, then the separately gated PR #7 readiness/merge/baseline tag.
+  No extra physical chain, Nix policy change or architecture rewrite is needed.
+- User explicitly confirms **clearing Trash was intentional; discard these old
+  trashed files**. This resolves the old Trash retention question, including its
+  Library and deleted assets/settings/git/documents/media. Read-only hash coverage
+  independently matched 117 non-Library files and 27,727 Library files with
+  current Unity content; 83 non-Library files and 12,656 Library files differ or
+  are absent. No restoration or new recovery archive is requested. Receipt:
+  `legacy-trash-coverage.json`. No legacy deletion yet.
+- Var parent comparison examined 20 selected files; the six absent old paths are
+  one obsolete physical proof, four lease files and empty seen-bssids, consistent
+  with the accepted volatile NetworkManager diagnostics policy. Steam's three
+  absent compatibility-prefix files are library artwork, not game saves.
+  Current OpenAI extension versions supersede the absent older installed versions.
+  Firefox's absent objects comprise 585 CacheStorage response blobs, one runtime
+  marker, 18 IndexedDB blobs and one rotated bookmark backup; all nine related
+  origin directories remain. The newer bookmark backup has the same count and
+  content identifier as the old one. IndexedDB/database generation reconciliation
+  remains open; a direct live quick-check was locked by running Firefox, so this
+  failed read is not treated as integrity evidence. No private contents exposed.
+- Final documentation will explicitly distinguish uninstalled Android Studio and
+  currently empty/unexercisable Plastic from accepted application gates, and
+  enumerate P/R categories rather than mechanically checking vague boxes. PR #7
+  belongs to pre-optimization-readiness, not this granular branch; its earlier CI
+  does not certify the granular tip. The older stock-readiness soak/freeze gates
+  are not silently declared complete by this project's physical acceptance.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
