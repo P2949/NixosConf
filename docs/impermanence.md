@@ -1,48 +1,25 @@
 # Ephemeral root validation
 
-Desktop now declares ephemeral root as its normal policy, with a
-`persistent-root` specialisation that disables the reset service. Both variants
-persist machine identity. The granular source policy makes home and ordinary
-var root-local, persisting only audited state and keeping known application
-cache children on the reset root. Offline gates passed; home-only generation 42
-has booted with a verified quiesced copy and passing first physical home matrix.
-Home and ordinary var are now root-local. Generation 45's first normal and both
-recovery trials and return-normal are accepted; normal is currently running on
-root 344/reset count 26 in corrected generation 46. The raw-persist audit identified Unity editor
-preferences, which the user explicitly requests retaining. This narrow policy
-addition passes first corrected normal, active preference bind/nine hashes and
-the user's UI check. Corrected recovery/return and scoped raw pruning pass;
-the post-pruning normal trial passes all 100 proofs and nine Unity hashes.
-Final legacy comparison and retirement remain pending.
-The intermediate policy omits the redundant random-seed file bind over legacy
-var; the final policy persists it. An observed Fuzzel usage-history omission was
-restored and corrected with a dedicated persistent state directory. Generation
-44 contains both corrections and is installed boot-only; full checks and a fresh
-six-boot VM passed. Generation 44 home acceptance is complete. Both accepted
-recovery trials passed all 100 markers and retained root ID/UUID, with healthy
-services and Fuzzel history. Earlier cleanup-related failed attempts remain
-archived and unaccepted. The standalone marker fix passes eight regressions.
-Both normal home-reset trials also pass all 100 requirements, replacing roots
-330 → 332 → 334. Independent home acceptance passes and important application
-state is user-confirmed after the trials. Home policy is frozen. Exact-source
-final-var validation passes, including fresh VM runs; generation 45 is installed
-boot-only and its guarded var-only shutdown copy verified before selecting it.
-First final normal receipt `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`
-passes all 100 proofs on new root 336. Discovery and the user's representative
-application recheck pass; both home and var policies are frozen. Final normal
-is now the default after clearing the temporary fallback override. Final
-recovery → recovery → normal, gated pruning/post-pruning normal proof and
-legacy retirement remain pending; no agent reboot is initiated.
-See the
-[active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
-and [state audit](ephemeral-state-audit.md).
+Desktop replaces `@root` on every normal boot; `persistent-root` disables that
+reset for recovery. Both modes retain machine identity and explicitly declared
+state. Home and ordinary var are root-local, with audited profile/cache splitting.
+The corrected generation46 normal → recovery → recovery → normal sequence and
+post-pruning normal all pass100 requirements, including nine Unity preference
+hashes. Latest accepted root344/reset count26 is in
+`post-pruning-normal-review.json`.
 
-Three physical reset trials passed on 2026-10-05 using the original opt-in
-entry. The stable-refresh normal/persistent-root/normal sequence also passed,
-ending on root 297. See [current status](status.md) for exact artifacts.
-Future final-candidate physical checks are batched to preserve the graphical
-session. See the [physical runbook](physical-root-validation.md) and
-[persistence contract](persistence-contract.md).
+Scoped backing pruning, semantic legacy reconciliation, individual home/var
+retirement and explicitly confirmed migration-snapshot retirement are complete.
+Both accepted generation46 closures/ESP pairs and the recovery ISO are retained.
+Older generations requiring legacy mounts are obsolete. No additional physical
+boot chain is required solely for inactive-data retirement or documentation.
+
+The [current status](status.md), [contract](persistence-contract.md),
+[state audit](ephemeral-state-audit.md) and
+[granular ledger](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+separate current results from the historical root-module evidence below.
+Final exact-head validation/CI and the separate stock-readiness soak/backup gates
+remain distinct from accepted migration. The root-reset guard is unchanged.
 
 ## Reset contract
 
@@ -180,11 +157,11 @@ do not repeat these reboots merely to rerun the initial trial.
 - Repeat physical boots and validate authentication, networking, Home Manager,
   Hyprland, cooling, persistent state, machine identity and reset logs.
 
-The master `plan.md` Phase 4 supersedes the earlier proposed home migration:
-selective home and var Impermanence are deferred for the pre-experiment
-baseline. Both remain persistent. Compiler tuning, LTO, PGO and BOLT belong
-after the final baseline tag. Maintenance and repository cleanup follow the
-master plan's dependency gates.
+The earlier root-only Phase4 deferred selective home/var persistence. The
+subsequent explicit granular goal superseded that storage deferral: home and
+var are now root-local with a physically accepted explicit allow-list. Compiler
+tuning, LTO, PGO and BOLT remain after the final baseline tag; unrelated readiness
+soak/backup/release gates are not waived by storage acceptance.
 
 ## Physical evidence and recovery transition
 
@@ -231,5 +208,6 @@ log metadata remains intact. The positive control creates a safe log directory,
 resets root, retains persistent data and writes a regular 0600 completion log.
 All fast checks pass with 43 rejected and four accepted configurations.
 Earlier result tables describe the preceding 26-case revision; their closures
-do not prove this follow-up code. Refreshed-input boot tests and candidate
-builds must be repeated before deployment. No physical activation occurred.
+do not prove this follow-up code. At that historical checkpoint, refreshed-input boot tests and candidate builds
+were still required before deployment. Subsequent immutable-source builds,
+physical generation46 acceptance and retirement are recorded in the granular plan.

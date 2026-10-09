@@ -1,29 +1,13 @@
 # Ephemeral state audit
 
-Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
-This ledger records paths, classifications and policy, never credential contents.
-Generation 46 normal is running with home and var on the reset root.
-The generation-45 normal/recovery/recovery/normal chain passes. The raw-persist
-audit identified Unity editor preferences; the user requests their preservation.
-That narrow correction passes first normal, active preference bind/nine hashes
-and the user's Unity UI check; its corrected normal/recovery/recovery/normal
-chain is accepted. Scoped raw-backing pruning and its post-pruning normal
-physical proof pass; final legacy comparison precedes retirement.
-Its verified var-only shutdown copy, first final physical matrix, discovery and
-user application recheck pass; both policies are frozen. Generation 42's first
-home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed
-all 100 markers with unchanged root identity and healthy services. Earlier
-cleanup-related failed attempts remain archived and unaccepted. The updated
-proof tool passes eight regressions. Both normal trials pass all 100 requirements,
-with roots 330 → 332 → 334. The independent home guard and user application
-recheck pass; home policy is frozen. Exact-source final-var validation passes,
-including fresh VM runs. Final generation 45's first normal receipt is
-`physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`: 92 disposable
-proofs gone, eight persistent proofs retained, new root 336 and reset count 22.
-Legacy retirement and final source/CI remain gated.
-Fuzzel history is restored
-and verified in its persistent state directory; no agent reboot is scheduled.
-The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
+Initial inventory2026-10-08; finalized storage policy2026-10-09 on
+`feat/granular-impermanence`. This audit records categories/reasons, never secrets.
+Generation46 normal has root-local home/var and a physically accepted allow-list.
+Corrected normal/recovery/recovery/normal and post-pruning normal pass; Fuzzel
+history, Unity editor preferences and user-selected expensive caches persist.
+Raw backing pruning and deliberately certified legacy/snapshot retirement are
+complete. The [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+retains chronology, exact receipts and remaining final source/CI release gates.
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
 `D` declarative reconstruction, `E` disposable runtime/cache data, `M` mixed
@@ -32,15 +16,13 @@ does not make its known cache children persistent.
 
 ## Evidence and migration
 
-Privileged metadata inventories and mount/subvolume/usage receipts are stored
-under `/persist/granular-migration`, protected by 0700/0600 modes. Before snapshots
-were made at `20261008-104128`; after snapshots at `20261008-110009`. A full
-metadata-preserving reflink home copy from the immutable before snapshot passed
-an itemized rsync dry run with no differences. It is a temporary safety copy;
-applications subsequently changed state; the orderly shutdown performed and
-verified a fresh allow-list copy before selecting generation 42. `/var` selected
-data was separately copied and compared and must be resynchronized for its later
-cutover. Originals and snapshots remain intact.
+Privileged metadata, write traces and private receipts are retained under
+`/persist/granular-migration`. Initial metadata-preserving copies and orderly
+quiesced allow-list synchronizations passed before the staged home/var cutovers.
+The original whole-home safety copy is transformed into declared backing with
+all audited undeclared residue removed. Legacy sources and four specifically
+confirmed migration snapshots are retired; small evidence remains. This is
+completed historical migration, not an active whole-home/whole-var mechanism.
 
 The 600-second write trace identifies Firefox, VS Code, Codex, Thunar and
 WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
@@ -48,8 +30,7 @@ WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
 the trace is observational evidence, not complete coverage. No-data Btrfs diffs
 capture changed paths independently. Unity, Unreal, Blender and Steam functional
 sessions were not established by that trace; the user subsequently confirmed
-important real application workflows on 2026-10-09. Recheck state after the next
-physical trials. The user uses all these apps; Android Studio is planned, with
+important real application workflows on 2026-10-09. Required post-trial application rechecks are accepted. The user uses all these apps; Android Studio is planned, with
 ADB keys already present.
 
 ## Home top-level entries
@@ -103,8 +84,9 @@ exception list as profile caches; new projects require an audit and declaration.
 
 After the user's pre-reboot file transaction, the inactive original and active
 persisted trees both contain Assets/Library under `VR-AR-project`;
-`VR-AR-project-2` is empty except for cache mount scaffolding, and a Library is in
-retained Trash. This supersedes the earlier absence-of-Assets observation.
+`VR-AR-project-2` is empty except for cache mount scaffolding. The user later
+intentionally cleared Trash, explicitly confirming discard of its old Library
+and deleted assets/settings/git/documents before legacy retirement. This supersedes the earlier absence-of-Assets observation.
 Libraries remain class R; the migration follows the user's actual file changes
 and does not restore old project layouts without a reason.
 
@@ -210,14 +192,10 @@ exceptions use native tmpfiles removal, rather than file bind mounts that would
 block atomic saves. Rules are absent in `persistent-root` and ignored by live
 tmpfiles reactivation because they are boot-only (`r!`).
 
-Fuzzel history omission found on 2026-10-09: recoverable original eight records
-and three post-cutover records were merged into eight IDs. Source now configures
-`${xdg.stateHome}/fuzzel/history` and persists `.local/state/fuzzel` only. The user
-confirmed restored usage ordering. The temporary live `.cache/fuzzel` symlink
-writes into the same backing until the corrected home candidate boots. That
-candidate is built/checked/installed boot-only as generation 44; the four-boot
-home sequence is still required before cleanup;
-legacy cache/history copies remain safety evidence until then.
+Fuzzel history was restored and migrated to `.local/state/fuzzel/history`;
+the user confirms usage ordering. The generation44 home chain and final
+corrected generation46/post-pruning trials accept this dedicated state path.
+No cache-backed history workaround is required in the finished configuration.
 
 ## /var classification
 
@@ -240,70 +218,49 @@ subvolumes. Overrides preserve the upstream rules but create ordinary
 directories; otherwise the strict root-reset descendant guard correctly refuses
 the second boot. No reset guard is weakened or recursively broadened.
 
-## /persist hygiene and remaining gates
+## /persist hygiene and acceptance scope
 
-`/persist/etc` holds explicit machine/repository/network state; `/persist/secrets`
-holds the existing password source. `/persist/home/p2949` currently includes a
-full temporary home migration copy, and `/persist/var` only selected system state.
-`/persist/granular-migration` holds this migration's private evidence. Existing
-backup-staging snapshots, validation receipts, alternate repository checkouts and
-pretrial identity/reset artifacts are preexisting migration/recovery evidence,
-not active whole-home or whole-var mounts. Inventory these and retire them only
-after their separate recovery/backup gates are satisfied.
+`/persist/etc` and `/persist/var` contain declared system backing;
+`/persist/home/p2949` contains declared user backing and intentional empty cache
+mountpoint scaffolds. `/persist/secrets` retains the private password source.
+All49 top-level purposes are classified. Earlier backup-staging snapshots,
+validation receipts, alternate repository checkouts and forensic identity/root
+artifacts are deliberately retained under separate readiness recovery gates.
+Tiny archived Unity preference versions and three opaque runtime preference
+files have explicit recovery-evidence purposes, not runtime persistence.
 
-The user confirmed on 2026-10-09 that actual browser, Steam, VS Code, Git/GitHub,
-relevant VCS and Unity/Unreal project workflows are working after the home cutover
-on generation 42. Generation 44 normal is now live with a new root identity
-after accepted recovery → recovery → normal → normal and healthy services. An earlier strict trial remains unaccepted because
-Codex deleted an unknown plain shell-snapshot proof file. The installed binary
-reproduces this cleanup. A corrected nested marker, seven regressions and a fresh
-100-marker recovery test now supplies the first accepted recovery receipt. The
-initial second recovery attempt was rejected after Firefox telemetry cleanup,
-with later MPRIS artwork cleanup removing another proof. It remains unaccepted.
-The specific telemetry proof fix passes eight regressions. The replacement
-second recovery passed all 100 markers after immediate postboot verification.
-Both normal trials pass all 100 requirements with root replaced. Independent
-home acceptance and the user application recheck pass; home policy is frozen.
-Corrected generation-44 physical/recovery and final-var gates still need
-their own acceptance; no further synthetic app QA is required without a defect.
+Cache mounts propagate into apparent live `/persist` paths. Pruning used a
+private, non-recursive raw `@persist` view; it removed55 verified E/D residue nodes
+and emptied82 hidden cache targets while preserving active mount identities,
+every declared backing path and all nine Unity preference files. Independent
+read-only re-audit found no undeclared residue or hidden cache data. Boot-managed
+files remain governed by their normal boot rules. Allocation totals do not imply
+reclaimed bytes because reflinks/snapshots can share extents.
 
-The first home copy/boot and offline validation passed. Codex reads its retained
-login, and Firefox starts from a private offline profile copy with bookmarks
-intact. Unity loads a private retained-project/profile copy, compiles scripts and
-exits successfully without changing the real project. Unreal loads the retained
-compiled module and default map with zero map errors/warnings and exits normally
-from a private copy. These copied-state checks
-do not certify full interactive or remote-service workflows. Remaining gates are
-repeated physical home/recovery acceptance, remaining
-application checks, var-only quiesced synchronization/cutover, the final physical
-sentinel matrix, backing-store pruning and deliberate legacy retirement.
+The corrected final chain and post-pruning normal pass all100 proofs. Actual
+browser/Codex/VS Code/Git/Steam and Unity/Unreal state is user-confirmed; Blender
+configuration/render/editing has accepted evidence. All18 old IndexedDB blobs
+are superseded and unreferenced in healthy current DBs. Old Trash discard is
+explicitly confirmed. All85,721 old-only paths are classified into16 groups,
+with no required authoritative data left only in legacy home. Legacy home256,
+var children263/264/266 and parent261, and the four confirmed migration snapshots
+326/327/328/329 are retired. Unrelated backup/forensic state remains intentional.
 
-The October-8 editor fixture had incomplete IPC isolation: private PIDs were
-written into host POSIX shared memory, causing an 85-second Zen startup timeout
-on the user's later launch. This was corrected on October 9 by archiving/removing
-the two proven-unused Zen runtime records and adding both a private IPC namespace
-and private `/dev/shm` tmpfs to the fixture. The corrected copied-project check
-passes with host Zen IPC unchanged. The user's actual relaunch is accepted:
-Zen initialization 0.058 seconds, editor startup 12.612 seconds, zero error lines,
-and user confirmation of normal startup. Zen/DDC caches remain retained; no
-production persistence declarations or launch wrapper changed. Historical fixture
-startup/project-integrity evidence does not certify complete host IPC isolation.
+Android Studio is absent: audit its SDK/AVD and tool state after installation.
+Existing ADB keys persist; remote-device functionality is currently unexercised.
+Plastic's empty directory and future credential/data reservations are deliberate
+but cannot establish a current remote workflow. Current Unity Libraries and
+installed editors/runtimes are retained R state; old versions need not remain
+when current accepted versions replace them. Future applications/projects need
+fresh path audits rather than whole-container persistence.
 
-Shared mount propagation mirrors cache overlays into the apparent `/persist`
-backing paths. Inventory and eventual pruning must inspect a non-recursive raw
-`@persist` view in a private mount namespace; deleting through the live overlay
-can affect an active cache. A read-only raw-view inventory identified 56
-undeclared residue paths, 82 hidden cache directories and 5 boot-managed file
-exceptions. All 49 top-level persist entries have recorded purposes. The private
-inventory is `backing-pruning-inventory.json` under the migration evidence
-directory. Allocated sizes include shared reflink/snapshot extents and do not
-estimate reclaimed space. Following the accepted corrected generation-46 chain,
-the fresh inventory excluded preserved Unity editor preferences. Scoped private
-raw-view pruning removed 55 verified E/D residue nodes and emptied 82 hidden
-cache directories, preserving empty active mountpoint scaffolds. All declared
-paths, nine Unity hashes and active cache identities survived. Boot-managed files
-were left to boot. Three tiny opaque Unity runtime preference files are retained
-as explicitly named private recovery evidence, not runtime persistence.
-Receipt: `scoped-backing-prune-20261009.json`; independent re-audit finds no
-undeclared residue or hidden cache data. All originals and snapshots remain.
-Post-pruning physical acceptance now passes; final comparison precedes retirement.
+The October8 copied-editor fixture leaked Zen runtime IPC into the host. Proven
+unused records were archived/removed; the fixture now isolates IPC and `/dev/shm`.
+The user's actual relaunch is accepted: Zen0.058s, editor12.612s, no errors.
+Production policy and expensive Zen/DDC retention were unchanged. Earlier
+fixture evidence is not retroactively treated as proof of full IPC isolation.
+
+The plan records exact private receipt names for pruning, physical proofs,
+semantic reconciliation and deliberate retirement. Final source freeze/local
+suite/CI integration remains a repository-release task, not another migration
+or a reason to repeat accepted human-observation gates.

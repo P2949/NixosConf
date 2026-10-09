@@ -1,134 +1,52 @@
 # Physical granular Impermanence cutover
 
-The [active plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
-records acceptance. Source/VM success does not complete the physical gates.
-The first candidate is `desktop-home-cutover`: home is root-local and `@var`
-remains mounted. The final `desktop` removes both legacy mounts. Neither old
-subvolume is deleted during either cutover.
+The [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+records the completed migration and release gates. Generation46 normal runs
+with home and ordinary var on reset-root storage. Legacy `@home`, `@var`, their
+three nested children and the four exact migration snapshots are retired.
+The [persistence contract](persistence-contract.md) describes the finished policy;
+the staged commands below are historical and must not be rerun on this system.
 
-Current result: generation 42 completed its quiesced copy and first physical
-home matrix. Home is root-local and legacy var remains. A redundant seed-file
-bind over native legacy var was removed from the intermediate policy; corrected
-generation 43 first carried this fix. The additional observed Fuzzel history
-omission is now restored/corrected in generation 44, installed boot-only with
-both ESP artifact pairs checked.
-Generation 44 home acceptance is complete. Both accepted recovery trials passed
-all 100 markers with unchanged root ID/UUID, stable identity and healthy services.
-The user ran the second verifier immediately after reboot, before apps. Earlier
-cleanup-related failed attempts remain archived and unaccepted. The required
-home sequence recovery → recovery → normal → normal is fully accepted. Generation 44 remains the canonical candidate.
+## Accepted physical sequence
 
-The standalone checker nests only the observed Codex and Firefox telemetry
-proofs inside generated directories. Eight marker regressions and all twelve
-unchanged home-acceptance cases pass, as do full flake checks. Retention still
-requires exact tokens; normal reset must remove entire generated containers.
-Firefox artwork cleanup can remove its whole cache directory, so verify before
-launching applications. No additional cleanup-model architecture is introduced.
+Home acceptance used generation44 recovery → recovery → normal → normal,
+with an unchanged independent guard requiring two consecutive verified normals.
+Final-var generation45 normal → recovery → recovery → normal passed after an
+actual orderly, quiesced var-only copy. The narrow Unity-preferences correction
+then passed its own exact generation46 normal → recovery → recovery → normal,
+with user UI acceptance and all nine preference hashes retained.
 
-Both normal home trials now pass all 100 requirements. Root 330 was replaced by
-332 then 334; each normal removed 89 disposable proofs/three containers and
-retained 11 persistent proofs before cleanup. The required recovery → recovery
-→ normal → normal sequence is accepted, the independent home guard passes, and
-the user reconfirmed important application state works after these trials.
-Home policy is frozen at its recorded fingerprint; change only for a defect.
+Scoped private raw-view pruning removed55 audited residue nodes and emptied82
+hidden backing caches, retaining active mounts and empty target scaffolds.
+The post-pruning normal receipt
+`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` proves root344,
+reset count26, all92 disposable proofs removed, eight persistent proofs and nine
+Unity files retained. Earlier failed application-cleanup trials remain archived
+and do not count toward acceptance. No marker was recreated after boot.
 
-Exact immutable-source final desktop/recovery and the complete required suite
-now pass, including fresh six-boot granular, five root, blank-disk reconstruction
-and workstation tests. Source/lock and exact closures are recorded in
-`final-var-candidate-build.json`; local checks do not certify final-head CI.
+## Legacy retirement and supported rollback
 
-The existing var helper installed final generation 45 boot-only and its reviewed
-shutdown copy completed on the user's orderly reboot. A clean var-only policy
-comparison preceded one-shot selection. First final normal boot
-`971b1496-f119-46ac-a248-d23202cdab92` passes all 100 proofs: 92 disposable proofs
-gone, eight persistent proofs retained. Root 336 is new; both home and var are
-on @root. Discovery and the user's representative application recheck pass;
-both policies are frozen. Receipt:
-`physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`.
-The temporary fallback override was cleared after acceptance; generation 45
-normal is default. Both final ESP pairs and generation-44 rollback artifacts
-match. Next is final recovery → recovery → normal, then gated raw-backing
-pruning and one further normal sentinel boot before retirement. Verify each
-ticket before opening apps; its disappearance after success is expected.
-No agent reboot or retirement is initiated.
+`legacy-home-retirement-ready.json` classifies85,721 old-only selected paths
+into16 semantic cases with no unknown required state. Private database checks
+reconcile18 superseded IndexedDB blobs; old Trash discard was explicitly
+confirmed. Selected authoritative var data is present in active backing.
+`legacy-subvolume-retirement.json` records home256 deletion, individual var
+children263/264/266 deletion, then parent261. The independent post-retirement
+review verifies active topology, health and both exact generation46 ESP pairs.
 
-The first final recovery is accepted by
-`physical-boot-passed-8fd21368-c8c4-40ee-b40c-34b2fa71b345.json`: all 100 proofs,
-root 336/UUID and reset count 22 retained. The second recovery is accepted by
-`physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json` with those same
-100 proofs/root/reset invariants. Return-normal is prepared against exact normal
-generation 45; all 100 tokens pass preboot checks and its entry is selected once.
-Return-normal is accepted by
-`physical-boot-passed-b07b3cd2-79b2-40c6-80b7-719e61c7a8e7.json`: new root 338,
-reset count 23, 92 disposable proofs gone and eight persistent proofs retained.
-The refreshed raw-persist audit found previously unclassified Unity editor
-preferences. The user requested their preservation, authorizing a narrow home
-declaration amendment. Protect both versions and validate/physically accept the
-exact corrected candidate before pruning and retirement. No old receipt proves
-a future corrected closure.
+The user separately confirmed deletion of the four exact migration snapshots;
+`migration-snapshot-retirement.json` records326/327/328/329 removed with every
+unrelated subvolume retained. Keep the small receipts, forensic roots and
+separately justified earlier readiness backup staging. No extra reboot is needed.
+Supported rollback is the accepted, GC-rooted generation46 normal/persistent-root
+pair. Older generations requiring `@home` or `@var` are obsolete. Recovery retains
+the current root and does not restore data discarded by earlier normal resets.
 
-The corrected Unity-preferences candidate is validated and installed boot-only
-as generation 46: normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`, recovery
-`7lkx40kh36s809bz1yr9bmfdddy1n80a`; both ESP pairs match. Generation 45 remains
-running/fallback. Firefox has exited; the two preference versions were compared
-and the newer current working state reconciled to backing, preserving separate
-archives of both versions. All 100 proofs and nine authoritative preference
-hashes pass preboot checks; normal 46 is selected once. After the user's reboot,
-verify before apps, independently confirm the new bind/hashes, and check Unity's
-UI state before corrected recovery/recovery/normal. No var copy is repeated.
+Final documentation/source freeze and exact-head local/CI integration are
+separate release gates. The correct integration path is a granular PR into the
+readiness branch, then fresh exact-head CI for its changed PR#7 head.
 
-Corrected normal 46 is accepted by
-`physical-boot-passed-cb942ba2-6d02-4541-9a24-e6c34da85f45.json`: all 100 proofs,
-new root 340/reset count 24 and active @persist Preferences bind with all nine
-authoritative hashes. User confirms Unity preferences look right; normal 46 is
-now default. First corrected recovery is prepared and selected once. Verify
-before apps after the user's reboot; root 340/reset count 24 and all preference
-data must survive. Ready record: `unity-preferences-recovery-cycle-1-ready.json`.
-
-First corrected recovery passes all 100 proofs, retained root 340/reset count 24
-and all nine Unity hashes; receipt
-`physical-boot-passed-2348e96a-9c34-4ce8-8cd1-3b807c32b4d0.json`.
-Second corrected recovery is prepared and selected once. Ready record:
-`unity-preferences-recovery-cycle-2-ready.json`; verify before apps after the
-user's self-reboot. Return-normal and retirement gates remain pending.
-
-Second corrected recovery passes the same root/count, all 100 proofs and nine
-Unity hashes; receipt `physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`.
-Corrected return-normal passes receipt
-`physical-boot-passed-3919c82a-ef26-4b58-be41-9633439795bb.json`: new root 342,
-reset count 25, 92 disposable proofs gone, eight persistent proofs and nine Unity
-hashes retained. The corrected normal → recovery → recovery → normal chain is
-accepted; `corrected-policy-freeze-20261009.json` refreezes the accepted policy.
-Fresh raw inventory and scoped pruning are complete. Private non-recursive
-`@persist` pruning removed 55 audited E/D nodes and emptied 82 hidden backing
-caches, retaining empty mountpoint scaffolds, active cache identities, every
-declared path and all nine Unity hashes. Originals and snapshots remain intact.
-Receipt: `scoped-backing-prune-20261009.json`. Read-only re-audit finds zero
-undeclared residue or hidden cache data. Post-prune physical proof and retirement
-gates remain. User confirms apps closed and process inspection agrees. The
-post-pruning normal trial is now seeded and selected once: all 100 tokens,
-generation-46 ESP artifact hashes and the Unity bind/nine hashes pass preboot
-checks. `post-pruning-normal-ready.json` records expected reset count 26 and new
-root. The post-pruning physical receipt
-`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` passes on
-root 344/reset count 26, retaining all nine Unity hashes. Final read-only legacy
-comparison now precedes retirement; all original subvolumes and snapshots remain.
-
-## Legacy retirement boundary
-
-`legacy-home-retirement-ready.json` classifies every old-only selected path and
-certifies no required authoritative state exists exclusively in legacy home.
-Private database-generation checks reconcile all 18 old IndexedDB blobs; old
-Trash discard is explicitly confirmed. Legacy var identity/state comparison also
-passes. Retirement bounds supported rollback to the accepted generation-46
-normal/persistent-root pair; generations requiring `@home` or `@var` become
-obsolete. Legacy home256 and var children263/264/266 plus parent261 are now retired.
-`legacy-subvolume-retirement.json` records individual deletions; the independent
-post-retirement check confirms correct active topology, healthy services/network
-and both exact generation46 ESP artifact pairs. Keep the four exact migration
-snapshots326/327/328/329 until their final confirmation gate. No extra reboot.
-
-## Preparation and final copy
+## Historical staged procedure (completed)
 
 Finish formatting, flake checks, the combined reboot regression, desktop and
 home-only builds, reconstruction, workstation smoke and root safety checks.
@@ -237,8 +155,9 @@ receipts cannot count as separate boots.
 Audit `/persist` and remove undeclared migration copies and hidden underlying
 cache data only after application and physical acceptance. Compare originals
 one last time, inspect each old var descendant subvolume, then follow stages
-45–46 for deliberate retirement. The full copied home and snapshots are still
-temporary safety material until those gates pass. Snapshot removal requires
+45–46 for deliberate retirement. The original staged safety copies were temporary until these gates passed.
+Legacy sources and the four specifically confirmed migration snapshots are now
+retired; the receipts below record the completed transaction. Snapshot removal requires
 the plan's final confirmation; no helper here deletes subvolumes or snapshots.
 
 Cache mounts propagate into the apparent `/persist` paths on this machine.
