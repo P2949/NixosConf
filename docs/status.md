@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 45 normal is running: both home and ordinary var are root-local.
+Generation 46 normal is running: both home and ordinary var are root-local.
 Its quiesced var-only shutdown copy, first final physical matrix and discovery
 checks pass; the user confirms representative application state works. Both
 policies are frozen. Generation 42's shutdown copy and first home matrix passed.
@@ -121,10 +121,15 @@ current version are separately protected. Receipt:
 `unity-preferences-data-reconciliation-20261009.json`.
 All 100 normal proof tokens, nine preference hashes and both ESP pairs pass
 preboot checks; generation 46 normal is selected once with 45 as fallback.
-Ready record: `unity-preferences-normal-cycle-1-ready.json`. Await the user's
-self-reboot and verification before apps, then independently verify the new
-Preferences bind/data and obtain the Unity UI check. Corrected recovery/return,
-pruning and retirement remain gated.
+Corrected normal receipt `physical-boot-passed-cb942ba2-6d02-4541-9a24-e6c34da85f45.json`
+passes all 100 proofs on boot `02df7ca1-88b9-4b02-aa53-d010cd84c0ef`: new root
+340/UUID `11d42ced-4134-4c44-a97b-486904976a8e`, reset count 24. Preferences
+is @persist-backed and all nine prepared hashes match; user confirms its UI
+looks right. Services/network/identity/islands pass. Normal 46 is now default.
+First corrected recovery is prepared with all 100 tokens and post-UI preference
+hashes; recovery is selected once. Ready record:
+`unity-preferences-recovery-cycle-1-ready.json`. Expect root 340/reset count 24
+retained. Corrected recovery/return, pruning and retirement remain gated.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

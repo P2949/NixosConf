@@ -77,6 +77,14 @@ hashes pass preboot checks; normal 46 is selected once. After the user's reboot,
 verify before apps, independently confirm the new bind/hashes, and check Unity's
 UI state before corrected recovery/recovery/normal. No var copy is repeated.
 
+Corrected normal 46 is accepted by
+`physical-boot-passed-cb942ba2-6d02-4541-9a24-e6c34da85f45.json`: all 100 proofs,
+new root 340/reset count 24 and active @persist Preferences bind with all nine
+authoritative hashes. User confirms Unity preferences look right; normal 46 is
+now default. First corrected recovery is prepared and selected once. Verify
+before apps after the user's reboot; root 340/reset count 24 and all preference
+data must survive. Ready record: `unity-preferences-recovery-cycle-1-ready.json`.
+
 ## Preparation and final copy
 
 Finish formatting, flake checks, the combined reboot regression, desktop and

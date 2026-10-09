@@ -2,11 +2,12 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-Generation 45 normal is running with home and var on the reset root.
-Its full normal/recovery/recovery/normal chain passes. The subsequent raw-persist
+Generation 46 normal is running with home and var on the reset root.
+The generation-45 normal/recovery/recovery/normal chain passes. The raw-persist
 audit identified Unity editor preferences; the user requests their preservation.
-That narrow source-policy addition now needs corrected-candidate validation and
-physical acceptance before pruning.
+That narrow correction passes first normal, active preference bind/nine hashes
+and the user's Unity UI check; corrected recovery/return remains required
+before pruning.
 Its verified var-only shutdown copy, first final physical matrix, discovery and
 user application recheck pass; both policies are frozen. Generation 42's first
 home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed

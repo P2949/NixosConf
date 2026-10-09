@@ -8,9 +8,10 @@ cache children on the reset root. Offline gates passed; home-only generation 42
 has booted with a verified quiesced copy and passing first physical home matrix.
 Home and ordinary var are now root-local. Generation 45's first normal and both
 recovery trials and return-normal are accepted; normal is currently running on
-root 338/reset count 23. The raw-persist audit then identified Unity editor
+root 340/reset count 24 in corrected generation 46. The raw-persist audit identified Unity editor
 preferences, which the user explicitly requests retaining. This narrow policy
-addition requires a corrected candidate and physical acceptance before pruning.
+addition passes first corrected normal, active preference bind/nine hashes and
+the user's UI check. Corrected recovery/return remains required before pruning.
 The intermediate policy omits the redundant random-seed file bind over legacy
 var; the final policy persists it. An observed Fuzzel usage-history omission was
 restored and corrected with a dedicated persistent state directory. Generation

@@ -42,7 +42,10 @@ from source changes or VM tests.
   physical chain is complete. The raw audit then identified Unity editor
   preferences; the user explicitly requested retaining them in a narrow new
   declaration. That corrected candidate still needs validation/physical proof.
-- Pending: corrected Unity-preferences candidate build/physical acceptance, backing-store pruning,
+- Corrected generation 46 first normal PASS: all 100 proofs, active Unity
+  preference backing and all nine reconciled files verified; user confirms the
+  editor UI/preferences look right. Corrected recovery/return remains pending.
+- Pending: corrected repeated recovery/return, backing-store pruning,
   the post-pruning normal sentinel boot, final source/CI acceptance, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
@@ -1580,6 +1583,31 @@ stale lower status claim that current home/var are both persistent. Preserve the
   protected preference copies, all legacy subvolumes and migration snapshots;
   no agent reboot or pruning is initiated. Final documentation contradictions
   identified in the review remain scheduled for the required final docs freeze.
+
+---
+
+### Corrected generation 46 normal accepted; first recovery ready — 2026-10-09
+
+- Receipt `physical-boot-passed-cb942ba2-6d02-4541-9a24-e6c34da85f45.json`
+  accepts exact normal `15f6c5dsjl047j7my4c7cpkdhk6ly2xp` on boot
+  `02df7ca1-88b9-4b02-aa53-d010cd84c0ef`: all **100** proofs pass, 92 disposable
+  gone and eight retained. Root 338 became **340**, UUID
+  `11d42ced-4134-4c44-a97b-486904976a8e`, reset count **23 → 24**.
+  Topology, identity, services and connectivity independently pass. Private
+  review: `unity-preferences-normal-cycle-1-review.json`.
+- Unity Preferences is an active bind from
+  `/@persist/home/p2949/.config/unity3d/Preferences`; all **nine** authoritative
+  preboot hashes match. User confirms **"Unity preferences look right"**.
+  Cleared the temporary EFI fallback override; normal 46 is now default.
+  Both preference archives remain protected. No home gate or var copy is repeated.
+- Named apps are closed. Seeded exact recovery `7lkx40kh36s809bz1yr9bmfdddy1n80a`,
+  checked all **100** retained tokens, captured post-UI preference hashes, and
+  selected generation-46 recovery once. Require root **340**/UUID and reset
+  count **24** retained, all proofs and Unity data surviving. Ready record:
+  `unity-preferences-recovery-cycle-1-ready.json`. Await the user's self-reboot
+  and verification before apps. Corrected recovery → recovery → normal, policy
+  refreeze, pruning/post-prune proof and retirement remain pending. No agent
+  reboot or destructive cleanup occurs.
 
 ---
 
