@@ -9,7 +9,10 @@ all 100 markers with unchanged root identity and healthy services. Earlier
 cleanup-related failed attempts remain archived and unaccepted. The updated
 proof tool passes eight regressions. Both normal trials pass all 100 requirements,
 with roots 330 → 332 → 334. The independent home guard and user application
-recheck pass; home policy is frozen. Exact-source final-var validation is next.
+recheck pass; home policy is frozen. Exact-source final-var validation passes,
+including fresh VM runs. Final generation 45 is installed boot-only and the
+guarded var-only shutdown copy is armed; current generation 44/legacy var remain
+until the user self-reboots and the copy verifies.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).

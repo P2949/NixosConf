@@ -35,7 +35,9 @@ from source changes or VM tests.
 - Generation-44 home acceptance is now complete: recovery → recovery → normal
   → normal passed, the independent home guard passes, and the user confirms
   important application state still works after these trials. Freeze home policy.
-- Pending: exact final-var candidate validation and cutover, final application
+- Exact frozen-source final-var desktop/recovery and full required suite PASS;
+  final generation 45 is installed boot-only with the guarded shutdown copy armed.
+- Pending: verified shutdown copy and first final-var physical boot, final application
   rechecks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
@@ -411,7 +413,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 18 | Actual desktop/intermediate topology and narrow-parent assertions pass. |
 | 19 | Combined automated test covers repeated home reset/persistence and atomic saves. |
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
-| 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
+| 21 | Home-only generations 42/43/44 installed and accepted as recorded; final generation 45 installed boot-only with both ESP artifact pairs verified and generation 44 preserved as the EFI fallback default. |
 | 22 | First physical home matrix passed on exact generation 42. Both corrected generation-44 recovery trials now have strict 100-marker passing receipts and unchanged root ID/UUID. Earlier failed marker trials remain archived/unaccepted. |
 | 23 | All four generation-44 trials PASS: recovery → recovery → normal → normal. Root 330 was retained through recovery, then replaced by roots 332 and 334. Every trial passes 100 requirements. Independent home guard passes two consecutive verified normal cycles. |
 | 24 | Application gate PASS after the full generation-44 sequence: user confirms Firefox, Steam saves/library, Code, Git/VCS credentials and Unity/Unreal project access all checked and working. Earlier Fuzzel/Zen corrections remain accepted; Android Studio remains uninstalled. |
@@ -424,8 +426,8 @@ Private receipts below are under `/persist/granular-migration`.
 | 31 | Final source omits `@var`; live intermediate still mounts legacy var. |
 | 32 | Final/intermediate topology, persistent islands and recovery configuration assertions pass. |
 | 33 | Combined automated var test passes, including persistence/disappearance across normal/recovery/return. |
-| 34 | Final desktop/offline suite passed; new migration guards receive their own checks. |
-| 35 | Pending: var candidate not armed/installed as a cutover; new guard prevents premature advancement. |
+| 34 | Exact frozen-source final desktop/recovery, full flake checks, evaluation, eight marker/twelve home guard cases, fresh six-boot granular VM, fresh blank-disk reconstruction/smoke and all five fresh root scenarios PASS. |
+| 35 | Final var generation 45 installed boot-only and existing shutdown copy armed only after independent home acceptance PASS. Generation 44 is the fallback default; candidate one-shot is deferred until shutdown copy verifies. Physical cutover remains pending. |
 | 36 | Pending: no physical root-local-var boot has occurred. |
 | 37 | Pending: physical var cache/tmp/undeclared-state reset cycles have not occurred. |
 | 38 | Current generation-44 intermediate normal services are healthy; final-var service acceptance remains pending. |
@@ -1199,6 +1201,80 @@ stale lower status claim that current home/var are both persistent. Preserve the
   inferred passes from older cached results. No final var closure is installed
   or armed yet; generation 44 and legacy var remain live. Await successful
   terminal results, then independently re-run home acceptance before arming.
+
+---
+
+### Final-var suite passes; generation 45 shutdown cutover armed — 2026-10-09
+
+- The exact immutable-source suite completed successfully. Fresh six-boot
+  granular VM: **185.78 s**. Fresh root scenarios: safety **40.31 s**, reset A
+  **96.57 s**, identity B **98.28 s**, interrupted recovery **99.63 s**, persistent
+  fallback **114.89 s**. Forced rebuilds ran the actual tests and verified their
+  deterministic outputs. Fresh blank-disk reconstruction: **287.38 s**, output
+  `/nix/store/f6pqg4m66mz4bsxhcvlqk7spclk44lgw-vm-test-run-blank-disk-reconstruction`.
+  Fresh workstation smoke also passes. Full flake checks, evaluation, desktop/
+  recovery builds and marker/home-guard checks pass; all current Nix/Python/shell/
+  lock sources still match the snapshot. No policy changed to obtain these passes.
+- Completed suite receipts and all test outputs are privately retained/GC-rooted:
+  `final-var-candidate-build.json`, `granular-final-var-regressions.out`/`.log`,
+  `granular-final-var-fresh-vms.out`/`.log`,
+  `granular-final-var-reconstruction-runtime.log`,
+  `granular-final-var-workstation-runtime.log`. Earlier home shutdown artifacts
+  were preserved in `pre-var-arming-20261009` before the arming helper replaced
+  its fixed-name working evidence. Local results are not exact-final-head CI.
+- Independently re-ran the packaged unchanged home guard: two consecutive
+  verified normals PASS on the actual current boot. Then ran the existing
+  `granular-arm-cutover var` with exact final normal `xbw73avz8hvpqq6p5qh6srnimxd8ism3`.
+  Boot-only installation succeeded as generation **45**. Normal/recovery are
+  `xbw73avz8hvpqq6p5qh6srnimxd8ism3`/`6fl58xj2f8yqccmaxa4k89508nahigyc`.
+  Running generation 44/home/root/legacy-var mounts were unchanged.
+- `granular-final-copy.service` is active/exited. Independently checked its
+  immutable var-only ExecStop and ordering: copy runs after desktop/session,
+  greeter, NetworkManager, Bluetooth, random seed and Nix services stop, before
+  required mounts go away. It refuses surviving desktop-user processes, seeds
+  the final normal matrix, copies/verifies only declared var state, and selects
+  generation 45 once only after success. No live copy or mount switch was done.
+- Independently verified normal/recovery generation-45 ESP kernel/initrd pairs
+  and generation-44 rollback artifacts; generation 41 remains available.
+  EFI default is **generation 44**, no one-shot is selected before copying, zero
+  failed services, no physical ticket yet. Source boot remains
+  `de9406f5-9eac-4e3a-9051-68797c98b8e4`, root 334/UUID unchanged, reset count 21.
+  Private receipts: `granular-final-var-arm.log`, `final-var-armed-preflight.json`.
+- Next required event is the user's ordinary orderly self-reboot after saving
+  application work. Do not stop the armed service manually or select generation
+  45 before its shutdown copy verifies. On return inspect the shutdown/sync
+  receipts and run strict `granular-physical-check verify` promptly before apps,
+  then check root-local var, service/network/seed/allocation/optimization state.
+  Only after first final normal acceptance clear the temporary EFI fallback
+  override; keep both final entries installed for recovery → recovery → normal.
+  No agent reboot is scheduled/initiated and no backing/subvolume/snapshot is
+  retired. The home subsystem is accepted; the whole objective is incomplete.
+- Final ready receipt `final-var-final-ready.json` rechecks the same live
+  generation-44 boot, installed final generation 45, active shutdown-copy unit,
+  no pending ticket/one-shot/shutdown job, frozen home hashes and zero failed
+  services. Final documentation formatting and `git diff --check` pass. The
+  next accepted physical result still requires the user's orderly self-reboot;
+  this arming/preflight is not final-var physical acceptance.
+
+---
+
+### Final-var cutover awaits orderly self-reboot — 2026-10-09
+
+- The validated preparation/arming turn and two subsequent goal continuations
+  all end at the same external event: the user's chosen orderly self-reboot.
+  Source boot remains `de9406f5-9eac-4e3a-9051-68797c98b8e4`, current generation
+  44 and legacy var are unchanged. The copy unit is active/exited, but no live
+  shutdown job or copy process exists, its log is empty, no ticket has been
+  seeded and zero failed services remain. The previous continuation was no
+  progress, not a verified wait on an executing copy/reboot job.
+- Required validation and reviewed arming are complete. No further independent
+  work may substitute for the physical cutover; final recovery trials, pruning,
+  retirement and final source/CI acceptance depend on it. Mark the goal blocked
+  on the orderly self-reboot event, preserving its complete objective. Do not
+  stop the armed unit manually, start another copy or select 45 prematurely.
+  No new readiness question is required; no agent reboot is initiated. Resume
+  with shutdown-copy evidence and strict physical verification after boot.
+  Private evidence: `final-var-awaiting-orderly-self-reboot.json`.
 
 ---
 
@@ -3465,10 +3541,10 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] `.cache` disappears across normal reboot.
 - [x] undeclared home directories disappear.
 - [x] declared user data survives.
-- [ ] credentials selected for persistence survive.
-- [ ] browser profile selected for persistence survives.
-- [ ] development/project data survives.
-- [ ] stateful development tools selected for persistence survive.
+- [x] credentials selected for persistence survive (generation-44 home trials and user recheck).
+- [x] browser profile selected for persistence survives (generation-44 home trials and user recheck).
+- [x] development/project data survives (generation-44 home trials and user recheck).
+- [x] stateful development tools selected for persistence survive (generation-44 home trials and user recheck).
 - [x] Home Manager reconstructs declarative configuration.
 - [x] `.config` has been audited rather than blindly persisted as a whole.
 - [x] `.local` has been audited rather than blindly persisted as a whole.

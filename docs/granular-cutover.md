@@ -32,12 +32,21 @@ retained 11 persistent proofs before cleanup. The required recovery → recovery
 the user reconfirmed important application state works after these trials.
 Home policy is frozen at its recorded fingerprint; change only for a defect.
 
-The next phase validates the exact current-source final desktop/recovery and
-complete relevant suite before var arming. Use an immutable source snapshot,
-record source/lock and closures, and distinguish fresh VM runs from matching
-cached test results. Rerun home acceptance independently before using the
-existing var-only shutdown copy. Legacy var/default generation 44 remain while
-validation is pending. No var service or reboot is armed yet.
+Exact immutable-source final desktop/recovery and the complete required suite
+now pass, including fresh six-boot granular, five root, blank-disk reconstruction
+and workstation tests. Source/lock and exact closures are recorded in
+`final-var-candidate-build.json`; local checks do not certify final-head CI.
+
+The existing var helper installed final generation 45 boot-only and armed the
+reviewed shutdown copy after independent home acceptance passed. Current normal
+44/home/legacy-var mounts remain; EFI default stays 44. Both generation-45 ESP
+pairs and generation-44 rollback artifacts match their store closures. The copy
+service is active/exited and no one-shot/ticket exists before verified shutdown
+copy. Next is the user's orderly self-reboot after saving work; the service seeds
+final normal proofs, copies/verifies only var state and then selects 45 once.
+Never select 45 manually after a failed copy. After boot inspect copy evidence,
+verify promptly, and accept final system state before clearing the fallback EFI
+default. No agent reboot or retirement is initiated.
 
 ## Preparation and final copy
 

@@ -17,8 +17,11 @@ services and Fuzzel history. Earlier cleanup-related failed attempts remain
 archived and unaccepted. The standalone marker fix passes eight regressions.
 Both normal home-reset trials also pass all 100 requirements, replacing roots
 330 → 332 → 334. Independent home acceptance passes and important application
-state is user-confirmed after the trials. Home policy is frozen; exact-source
-final-var validation precedes arming. No pending ticket or var service exists.
+state is user-confirmed after the trials. Home policy is frozen. Exact-source
+final-var validation passes, including fresh VM runs; generation 45 is installed
+boot-only with the existing guarded shutdown copy armed. Current generation 44/
+legacy var and fallback default remain until verified shutdown copy. No pending
+physical ticket exists yet and no agent reboot is initiated.
 See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).

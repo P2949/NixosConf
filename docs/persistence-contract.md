@@ -20,9 +20,11 @@ root identity, topology, Fuzzel state and service checks pass. The first normal
 home trial also passed all 100 requirements and replaced root 330 with root 332.
 The second normal also passed, replacing root 332 with root 334. Independent
 home acceptance passes and the user reconfirmed all important application state
-works after the trials. Home policy is frozen. Validate exact current-source
-final-var desktop/recovery and the required suite before arming var. No pending
-physical ticket or var service exists; no agent reboot is
+works after the trials. Home policy is frozen. Exact-source final desktop/recovery
+and the required suite pass, including fresh VM runs. Final generation 45 is
+installed boot-only and its guarded var-only shutdown copy is armed. Generation
+44 and legacy var remain live/default until the verified copy selects 45 once.
+No physical ticket exists before that shutdown copy; no agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

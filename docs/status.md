@@ -41,15 +41,38 @@ Each normal removed all 89 disposable proofs/three containers and retained the
 service checks pass. The unchanged independent home guard now passes two
 consecutive verified normal cycles. No physical ticket remains pending.
 
-The user reconfirmed all important application state is checked and working after
-these generation-44 trials. Home acceptance is complete, superseding the earlier
-reboot wait. Freeze home policy at its recorded source hashes, changing it only
-for an observed defect. The final-var desktop/recovery and complete relevant
-suite are now being prepared from an immutable current-source snapshot. Record
-exact source/lock/closures and distinguish fresh runtime from matching cached
-results. Independently rerun home acceptance before arming the unchanged var-only
-shutdown copy. Legacy var remains active; no var service is armed and no reboot
-is initiated or scheduled. The full goal remains incomplete.
+The user reconfirmed all important application state after these generation-44
+trials. Home acceptance is complete and its policy is frozen at recorded hashes.
+Immutable source `/nix/store/0bqznjpxlyivhzr3d6dy4851qdx2h4ch-source` reproduces the
+accepted home candidate and builds final desktop/recovery. Full flake checks,
+evaluation, marker/home-guard checks and formatting pass. Fresh actual runs pass:
+granular six-boot VM 185.78 seconds, all five root scenarios, blank-disk
+reconstruction 287.38 seconds, and workstation smoke. Durable source/lock/closure
+and runtime receipts are in `final-var-candidate-build.json` and the associated
+`granular-final-var-*` logs; this is local evidence, not final exact-head CI.
+
+After independently rerunning home acceptance, the existing var arming helper
+installed the final candidate boot-only as generation 45. Normal closure:
+`xbw73avz8hvpqq6p5qh6srnimxd8ism3`; recovery:
+`6fl58xj2f8yqccmaxa4k89508nahigyc`. Both ESP pairs and generation-44 rollback
+artifacts match their store closures. The running generation 44 and legacy var
+are unchanged. The final-copy service is active/exited with verified shutdown
+ordering and the immutable var-only copy command. EFI default stays generation
+44; no one-shot or physical ticket is selected before verified shutdown copy.
+Zero failed services. Private receipt: `final-var-armed-preflight.json`.
+
+Next is the user's orderly self-reboot after saving work. The shutdown service
+checks user-process quiescence, seeds final normal proofs, copies/verifies only
+declared var state, and selects generation 45 once after success. Inspect the
+shutdown/sync evidence and verify the physical ticket immediately after boot.
+Do not manually select generation 45 before a verified copy. Final-var physical
+normal/recovery acceptance, pruning and retirement remain pending. No agent
+reboot is initiated or scheduled; the full goal is incomplete.
+
+The goal is blocked on the user's chosen orderly self-reboot. The latest check
+still finds source generation 44/legacy var, an armed but non-executing copy
+unit, no shutdown job, an empty copy log and no seeded ticket. Validation and
+arming remain ready; resume with actual shutdown/cutover evidence after reboot.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
