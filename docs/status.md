@@ -159,7 +159,11 @@ Receipt: `scoped-backing-prune-20261009.json`. Post-pruning normal physical proo
 and retirement remain pending. User confirms saved/closed apps; independent
 process inspection agrees. All 100 post-pruning normal tokens and generation-46
 ESP hashes pass; normal is selected once. `post-pruning-normal-ready.json`
-records nine Unity hashes. Await self-reboot and verification before apps.
+records nine Unity hashes. The post-pruning normal receipt
+`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` now passes:
+root 344/reset count 26, all 100 proofs and nine Unity hashes verified, healthy
+services/network/topology. Read-only final legacy comparison is underway;
+no original subvolume or migration snapshot has been retired.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

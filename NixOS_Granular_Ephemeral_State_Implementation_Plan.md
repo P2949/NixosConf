@@ -1717,6 +1717,24 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Post-pruning physical normal accepted — 2026-10-09
+
+- Receipt `physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json`
+  accepts exact generation-46 normal on boot
+  `5278eaa9-875c-48d0-8c2c-a5b021b251f2`. Root **344**, UUID
+  `9dda6d9e-c291-4047-adad-12a998122e7b`, replaces root 342;
+  reset count advances **25 → 26**. All **92** disposable proofs disappear,
+  **eight** persistent proofs and **nine** prepared Unity hashes survive.
+  Stable identity, complete topology, zero failed services and full networking
+  pass independently. Review: `post-pruning-normal-review.json`.
+- The post-pruning physical gate is now complete. Started a read-only private
+  top-level audit of inactive `@home` against declared active paths and individual
+  nested `@var` children. Missing old selected files require reconciliation;
+  no legacy source or snapshot has been deleted. Retirement, final documentation
+  and source freeze, exact-head validation and CI remain pending.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:

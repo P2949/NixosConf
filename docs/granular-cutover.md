@@ -109,7 +109,10 @@ gates remain. User confirms apps closed and process inspection agrees. The
 post-pruning normal trial is now seeded and selected once: all 100 tokens,
 generation-46 ESP artifact hashes and the Unity bind/nine hashes pass preboot
 checks. `post-pruning-normal-ready.json` records expected reset count 26 and new
-root. Self-reboot and verify before opening applications.
+root. The post-pruning physical receipt
+`physical-boot-passed-11eafc82-f18c-4ef2-930a-7cc1c8892ae6.json` passes on
+root 344/reset count 26, retaining all nine Unity hashes. Final read-only legacy
+comparison now precedes retirement; all original subvolumes and snapshots remain.
 
 ## Preparation and final copy
 
