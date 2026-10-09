@@ -77,11 +77,12 @@ The accepted implementation comes from immutable source
 `ca08qvh8cry5msxny61hfizgaiw54y02`. Its checks and normal/recovery builds pass;
 fresh granular six-boot, reconstruction and workstation VMs pass, with five
 unchanged root-scenario identities retained. These are local/physical evidence.
-The final documentation checkpoint must receive its own exact-head complete
-local suite and GitHub CI; historical runs do not certify a later commit.
+The frozen granular head has passed exact-head local validation and GitHub CI
+and is integrated through merged PR8. Its tree equals the readiness merge tree.
+Current-head PR checks are authoritative; later commits require their own CI.
 
 Integration is layered: granular changes enter `feat/pre-optimization-readiness`
-through a separate PR, then [PR #7](https://github.com/P2949/NixosConf/pull/7)
+through merged [PR #8](https://github.com/P2949/NixosConf/pull/8), then [PR #7](https://github.com/P2949/NixosConf/pull/7)
 feeds `main`. PR #7 belongs to the readiness branch; its earlier CI is not
 CI for `feat/granular-impermanence`. Updating PR #7's head requires new exact-head
 CI. Frozen source, lockfile, closures, topology and private evidence identities

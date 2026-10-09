@@ -31515,3 +31515,255 @@ from readiness completion and must not delay the immutable baseline.
 > So the practical sequence I would use is: **finish soak → freeze/tag the current stock system → make one closure-preserving cleanup series containing the RAPL module, Commander Core policy cleanup, Bluetooth/VS Code ownership fixes, test alias cleanup and documentation archival → prove that those source-only refactors did not change the stock closure → then begin optimization-v2.**
 >
 > That would leave you with a repository that is cleaner because its boundaries are sharper, not because it has more layers.
+
+
+## Integrated granular release continuation — adopted 2026-10-10
+
+Attachment fully read; SHA256 `fa78482e05bbaf84971f823322784313ac9e7f264ae8e40a15d367ae747b23f8`.
+Live verification confirms PR8 merged96678c3 into readiness atc981a6f; both
+trees equal d6a7144715cffa8b5673ce8eb8be2783a692f53c. Active local branch
+now follows feat/pre-optimization-readiness by fast-forward. Granular branch
+remains frozen historical evidence. Running closure is accepted generation46
+normal15f6c5dsjl047j7my4c7cpkdhk6ly2xp. No runtime activation/reboot performed.
+Integrated CI38003540343 remains in progress as checked; no new source is pushed
+while that run is live. PR7 remains open/draft. Its persistent-home/var and
+generation38-only main summary is stale and will be reconciled after terminal CI.
+
+User reports everything worked perfectly during normal use sinceOctober8.
+No particular workload list was supplied; do not invent workload durations.
+Read-only journal scan since the soak start finds no matches for selected
+hardware/MCE/Btrfs/amdgpu timeout-hang-fault/OOM patterns; no failed units.
+Granular migration/physical trials occurred within the interval, so this is
+not proof of several days on an unchanged generation46 closure. Preserve
+accepted storage/workload gates; assess normal productive use separately.
+Ventoy backup remains available, with12,399,542,272bytes free. It was mounted
+read-only for backup inventory and cleanly unmounted. Backup freshness is still
+open; original accepted archive/engine supplement remain untouched.
+
+> I re-checked the branch, PR #8, the linked CI job, the merged readiness branch, and PR #7. The project has moved another important step forward: **the granular-Impermanence work itself is now finished and integrated into the readiness branch.**
+>
+> ## Where things stand now
+>
+> The granular branch is still frozen at:
+>
+> ```text
+> 96678c3a974755ca285c734999c70acfc0bfd254
+> ```
+>
+> That is good. There has been no post-freeze source churn.
+>
+> PR **#8 — “Make home and var ephemeral with explicit retained state” — has already been merged** into `feat/pre-optimization-readiness`. It merged at `c981a6ffd9b484c53adf0a374f6915c772d12a83`. PR #8 explicitly binds its validation to `96678c3a…`, records all 17 flake checks passing, the normal/recovery outputs matching the accepted generation-46 closures, the full VM suite passing, and the marker/home-acceptance regressions passing.
+>
+> The CI link you supplied is also exactly the evidence we wanted. **Nix checks run `38002362044` completed successfully against exact head `96678c3a…`**, not some earlier commit.
+>
+> So the previous missing release gate:
+>
+> ```text
+> final granular head
+>         ↓
+> GitHub CI on that exact head
+> ```
+>
+> is now **closed**.
+>
+> Even better, the readiness merge is clean. `feat/pre-optimization-readiness` now points at merge commit `c981a6ff…`, whose tree is `d6a71447…`—the same tree as the frozen granular head. In other words, the merge introduced **no content drift** from the reviewed granular tree.
+>
+> ## Granular Impermanence is complete
+>
+> I would now consider the granular project itself **100% complete**, including release integration.
+>
+> The final implementation has all of the intended properties:
+>
+> | Area | Result |
+> |---|---|
+> | Resettable `@root` | **Accepted** |
+> | `/home` root-local / ephemeral-by-default | **Accepted** |
+> | ordinary `/var` root-local / ephemeral-by-default | **Accepted** |
+> | Explicit HM user persistence | **Accepted** |
+> | Explicit NixOS system persistence | **Accepted** |
+> | Mixed persistent-profile / disposable-cache model | **Accepted** |
+> | `persistent-root` recovery semantics | **Repeatedly physically proven** |
+> | Fuzzel correction | **Accepted** |
+> | Unity Preferences correction | **Accepted** |
+> | `/persist` pruning | **Complete + clean re-audit** |
+> | Post-pruning physical proof | **Accepted** |
+> | Legacy `@home` | **Retired** |
+> | Legacy `@var` + children | **Retired** |
+> | Migration snapshots 326–329 | **Retired deliberately** |
+> | Final documentation/contract | **Reconciled** |
+> | Application-scope checklist | **Reconciled** |
+> | Exact-head local validation | **Recorded PASS** |
+> | Exact-head GitHub CI | **PASS** |
+> | Granular → readiness integration | **Merged** |
+>
+> The plan's final checklist now reflects this cleanly: all application-scope, test, and persistent-storage-hygiene items are checked, including removal of unexplained migration copies and final documentation of the actual contract.
+>
+> The current status document likewise describes the migration as finished rather than continuing to carry migration-era instructions.
+>
+> So I would **not do any more work on `feat/granular-impermanence`**.
+>
+> Freeze it permanently as historical feature evidence.
+>
+> ---
+>
+> # The project continuation has moved to PR #7
+>
+> PR #7 has automatically advanced to the new readiness head:
+>
+> ```text
+> PR #7
+> base: main
+>
+> head:
+> feat/pre-optimization-readiness
+>
+> new head SHA:
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> It remains **open, draft, and mergeable**.
+>
+> This is exactly the layered workflow we had planned:
+>
+> ```text
+> feat/granular-impermanence
+>           │
+>           │ PR #8 ✓
+>           ▼
+> feat/pre-optimization-readiness
+>           │
+>           │ PR #7
+>           ▼
+>         main
+> ```
+>
+> And GitHub has already automatically started a **fresh PR #7 CI run on the new integrated head**.
+>
+> Current run:
+>
+> ```text
+> run:       38003540343
+> workflow:  Nix checks
+> head:      c981a6ffd9b484c53adf0a374f6915c772d12a83
+> PR:        #7
+> status:    in progress
+> ```
+>
+>
+>
+> I checked the job as well: setup, checkout and Nix installation have succeeded, and **`Run flake checks` is currently executing**.
+>
+> That means you don't need to manually trigger another integration CI job right now.
+>
+> # What should happen next
+>
+> The continuation should now be very conservative:
+>
+> 1. **Let the current PR #7 CI finish.** Do not push unrelated changes while run `38003540343` is evaluating `c981a6ff…`. If it succeeds, you have direct CI evidence for the complete integrated readiness+granular tree. If it fails, diagnose the actual failure before changing source; because PR #8's exact granular CI is already green, a failure here would be useful evidence about the integrated readiness context rather than evidence that the granular implementation was fundamentally bad.
+>
+> 2. **Do not repeat the Impermanence physical tests.** There is no reason to reboot through another normal/recovery matrix, recreate sentinels, inspect the deleted legacy subvolumes, or repeat pruning. The merge tree is content-identical to the physically accepted granular tree. Another migration campaign would add risk without useful evidence.
+>
+> 3. **Finish only PR #7's genuinely separate readiness gates.** Its body still correctly lists the multi-day representative-use soak, backup freshness/delta at freeze, canonical baseline/stock-policy capture, final evidence reconciliation, and final exact-head acceptance as remaining readiness work.  The granular work should not be used to mark those unrelated gates complete.
+>
+> 4. **Update PR #7's description once the current CI is terminal.** Its body is now stale in one important respect: it still talks about “Home and var remain persistent under the adopted baseline policy,” while the head now includes the finished granular model. It also cites an older CI head. Rewrite it to describe the final root-local home/var policy and cite PR #8 plus the new `c981a6ff…` CI run. This documentation change is PR metadata only, so it will not invalidate the source SHA or CI.
+>
+> 5. **Complete the backup freshness gate.** The older Ventoy archive/representative restore remains good recovery evidence, but the status document explicitly notes that it does not prove freshness of work created afterward.  Take whatever meaningful delta/final backup the readiness plan requires and record its identity without disturbing the accepted live storage policy.
+>
+> 6. **Close the normal-use soak honestly.** The existing readiness plan says the mixed-use soak began October 8. Don't invent another synthetic stress campaign: record the actual productive-use interval and whether any meaningful defect appeared. The already-accepted CPU, memory, GPU, Unreal, Blender, HDR, audio, gaming and recovery tests don't need gratuitous repetition absent a configuration-relevant defect.
+>
+> 7. **Capture the canonical pre-optimization baseline at the final readiness head.** Bind together the Git SHA, `flake.lock`, normal/persistent-root closures, final granular topology, physical receipts, recovery ISO/backup identities, stock policy, and CI identity. Keep optimization disabled while doing this.
+>
+> 8. **Run/reconfirm the exact-final readiness suite only if the source changes after `c981a6ff…`.** If you merely update the PR body or evidence outside Git, the current successful CI—assuming run `38003540343` finishes green—remains tied to the source. If you commit source/doc changes to the branch, that creates a new head and you should rerun exact-head CI.
+>
+> 9. **When the independent readiness gates and fresh CI are green, mark PR #7 ready and merge it to `main`.** After the merge, verify the resulting main-tree content matches the reviewed readiness tree before declaring the baseline final.
+>
+> 10. **Create the annotated `nixos-26.05-pre-optimization-baseline` tag only after the main merge.** The tag should point back to the final source/lock/closures, granular physical evidence, backup/recovery identity and final CI run. Only after that baseline exists should you move on to Prism, ordinary workstation additions, or the PGO/BOLT experiment.
+>
+> ## The important distinction now
+>
+> There are really two projects here:
+>
+> ```text
+> GRANULAR IMPERMANENCE
+> 100% COMPLETE
+> ✓ implementation
+> ✓ testing
+> ✓ physical acceptance
+> ✓ cleanup
+> ✓ retirement
+> ✓ exact-head CI
+> ✓ PR #8 merged
+>
+>
+> PRE-OPTIMIZATION READINESS
+> STILL FINALIZING
+> ✓ now contains granular Impermanence
+> → fresh integrated CI currently running
+> → soak closure
+> → backup freshness
+> → canonical baseline capture
+> → final evidence reconciliation
+> → PR #7 ready
+> → merge main
+> → baseline tag
+> ```
+>
+> That distinction is useful because it prevents unnecessary work.
+>
+> If the current PR #7 CI fails, **do not reopen the entire granular migration**. PR #8's exact frozen head has already independently passed its CI and was merged with an identical tree. The failure would need to be evaluated in the context of the integrated readiness head.
+>
+> ## One thing I would change immediately in the planning mindset
+>
+> At this point, stop using `feat/granular-impermanence` as the “active project branch.”
+>
+> It has served its purpose.
+>
+> The active line of development is now:
+>
+> ```text
+> feat/pre-optimization-readiness
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> and PR #7.
+>
+> The granular branch should now be treated as a frozen historical feature branch whose canonical integration is PR #8 / merge `c981a6ff…`.
+>
+> ### Updated critical path
+>
+> ```text
+> GRANULAR
+> ✓ final source 96678c3a
+> ✓ exact-head local suite
+> ✓ exact-head GitHub CI 38002362044
+> ✓ PR #8
+> ✓ merged into readiness
+> ✓ merge tree unchanged
+>
+> CURRENT
+> → PR #7 CI run 38003540343
+>    currently running flake checks
+>
+> THEN
+> → close normal-use soak
+> → refresh/finalize backup
+> → canonical baseline/stock-policy capture
+> → reconcile PR #7 evidence/body
+> → ensure exact current-head CI green
+> → mark PR #7 ready
+> → merge PR #7 → main
+> → verify main tree
+> → annotated nixos-26.05-pre-optimization-baseline tag
+>
+> AFTER BASELINE
+> → Prism / normal feature additions
+> → PGO/BOLT optimization work
+> ```
+>
+> So this is a cleaner situation than at the previous review: **there is no continuation left for the granular implementation itself.** The feature is built, physically proven, cleaned up, CI-proven, and merged. The continuation is now the final pre-optimization baseline release process.
+
+Integrated CI38003540343 is now terminal PASS on exactc981a6f. Updated PR7
+metadata to accepted granular root-local home/var, generation46 closures, PR8
+integration and that exact CI result. Updated current-status release wording.
+This attachment/evidence commit is documentation-only; its successor CI is
+required without repeating accepted physical or VM gates for reassurance.
