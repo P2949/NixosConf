@@ -38,8 +38,11 @@ from source changes or VM tests.
 - Exact frozen-source final-var desktop/recovery and full required suite PASS;
   final generation 45 completed its verified shutdown copy and first physical
   normal boot. All 100 proofs pass; discovery checks and the user's final-var
-  application recheck pass. Both home and var policies are frozen.
-- Pending: physical final return-normal, backing-store pruning,
+  application recheck pass. Its final normal → recovery → recovery → normal
+  physical chain is complete. The raw audit then identified Unity editor
+  preferences; the user explicitly requested retaining them in a narrow new
+  declaration. That corrected candidate still needs validation/physical proof.
+- Pending: corrected Unity-preferences candidate build/physical acceptance, backing-store pruning,
   the post-pruning normal sentinel boot, final source/CI acceptance, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 - Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
@@ -433,8 +436,8 @@ Private receipts below are under `/persist/granular-migration`.
 | 36 | PASS: exact generation 45 normal; home and var on @root, optimization independently mounted, selected var state bound from @persist. |
 | 37 | First physical final normal PASS: var cache/tmp/undeclared proofs gone; NixOS/optimization proofs survived. Repeated final recovery/return and post-pruning normal remain pending. |
 | 38 | PASS: system running, zero failed services, full NetworkManager connectivity, stable identity/allocation, Home Manager/random-seed services healthy, Fuzzel preserved; user confirms final-var applications work. |
-| 39 | Two generation-45 physical recovery trials PASS: all 100 proofs and root 336/UUID retained, reset count unchanged at 22. Return-normal is prepared; physical return acceptance remains pending. |
-| 40 | First final physical topology matches the intended layout; repeat the full audit after final recovery/return, before pruning and retirement. |
+| 39 | Complete generation-45 normal → recovery → recovery → normal PASS: repeated root 336/UUID retained at count 22, then replaced by root 338 at count 23 with disposable proofs removed. A user-requested Unity-preferences correction now needs acceptance on its exact new candidate. |
+| 40 | Full final physical topology audit after generation-45 return-normal PASS; root/home/var/etc/root/srv/tmp/usr root-local, persistent islands and separate ESP/runtime mounts correct. |
 | 41 | Exact-system sentinel tool implemented; eight placement regressions pass without relaxing retention/container reset. Home sequence and first final normal matrix pass; final recovery/return and post-pruning normal remain pending. |
 | 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
@@ -1447,6 +1450,46 @@ stale lower status claim that current home/var are both persistent. Preserve the
   this continuation is an external self-reboot wait, not a verified running-job
   wait. Leave the full goal active and do not advance pruning. Private evidence:
   `final-return-normal-awaiting-self-reboot.json`.
+
+---
+
+### Final generation-45 chain accepted; Unity preferences protected — 2026-10-09
+
+- Return-normal receipt
+  `physical-boot-passed-b07b3cd2-79b2-40c6-80b7-719e61c7a8e7.json` accepts exact
+  generation 45 normal on boot `3f599e92-e86e-40a9-831f-199acc327961`.
+  All **100** requirements pass: 92 disposable proofs/three containers gone,
+  eight declared/island proofs survived before cleanup. Root 336 became **338**,
+  UUID `9ece7cc1-ebd0-dd45-ae0b-ff25cf896f74`; reset count **22 → 23**.
+  Full filesystem audit, unchanged identity, running system, zero failed
+  services and full connectivity pass. Private review:
+  `final-return-normal-accepted-review.json`. The complete generation-45 chain
+  normal → recovery → recovery → normal is accepted; both pasted reports name
+  the same receipt and count as one physical return, not two boots.
+- Refreshed the read-only raw-persist audit in a private mount namespace with
+  private propagation and a non-recursive read-only bind; proved @persist FSROOT
+  and absence of descendant mounts. Used the final evaluated manifest, including
+  Fuzzel history. Inventory: 56 undeclared home residue paths (~1.91 GB allocated),
+  82 hidden cache directories (~1.89 GB), seven live boot-managed file exceptions
+  left to their lifecycle, and 49 justified top-level entries. Sizes overlap and
+  reflinks/snapshots prevent interpreting these totals as reclaimable space.
+  Receipt: `final-backing-pruning-inventory.json`; no deletion occurred.
+- That inventory includes nine old Unity editor preference/layout files under
+  `.config/unity3d/Preferences`, whose authoritative classification was missing.
+  User explicitly answered **"Preserve Unity editor preferences"**. Add only
+  that application-scoped directory to home persistence; no cache/reset guard
+  changes. The existing raw backing is retained, its file hashes recorded in
+  `unity-editor-preferences-preservation-20261009.json`; the current root-local
+  version is separately protected at
+  `unity-editor-preferences-pre-correction-current`. Do not overwrite either
+  version or delete these files as undeclared residue.
+- This explicit user preference authorizes the narrow home-policy amendment
+  after freeze. Build/evaluate/validate a new immutable-source normal/recovery
+  candidate before installing it boot-only; prove the requested preference bind
+  and repeated normal/recovery semantics on the exact corrected closure. Existing
+  generation-45 receipts remain accepted historical proof, not evidence for a
+  future closure. Hold pruning/post-pruning retirement until corrected acceptance.
+  No reboot, pruning, legacy-subvolume or snapshot deletion has been initiated.
 
 ---
 
@@ -3739,7 +3782,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] normal boot therefore resets undeclared home and var state.
 - [x] `persistent-root` disables reset (both generation-45 recoveries retain reset count 22).
 - [x] root-local recovery sentinels survive repeated `persistent-root` boots (100 proofs each).
-- [ ] returning from `persistent-root` to normal mode discards those undeclared sentinels.
+- [x] returning from `persistent-root` to normal mode discards those undeclared sentinels (generation-45 return receipt).
 - [x] explicitly persisted state works in both modes (generation-45 normal and two recovery receipts).
 
 ## Applications

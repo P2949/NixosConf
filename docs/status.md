@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 45 persistent-root is running: both home and ordinary var are root-local.
+Generation 45 normal is running: both home and ordinary var are root-local.
 Its quiesced var-only shutdown copy, first final physical matrix and discovery
 checks pass; the user confirms representative application state works. Both
 policies are frozen. Generation 42's shutdown copy and first home matrix passed.
@@ -92,9 +92,19 @@ pass independent review. Second recovery also passes all 100 proofs on boot
 `physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json`, with the same
 root identity/reset count and healthy services/network. Return-normal is now
 prepared with all 100 tokens present and normal generation 45 selected once.
-Ready record: `final-return-normal-ready.json`. After the user's self-reboot,
-verify before apps: a new root/reset count 23, 92 disposable proofs gone and
-eight persistent proofs retained are required. Pruning and retirement stay gated.
+Return-normal is accepted by
+`physical-boot-passed-b07b3cd2-79b2-40c6-80b7-719e61c7a8e7.json` on boot
+`3f599e92-e86e-40a9-831f-199acc327961`: new root 338/UUID
+`9ece7cc1-ebd0-dd45-ae0b-ff25cf896f74`, reset count 23, 92 disposable proofs
+gone and eight persistent proofs retained. Full topology/services/network pass.
+The generation-45 final physical chain is complete.
+
+The refreshed private raw-persist audit identified undeclared Unity editor
+preferences/layouts. The user explicitly requests their preservation; the source
+now declares `.config/unity3d/Preferences`. Old backing and the current root-local
+version are protected independently. This narrow authorized policy amendment
+requires a new exact candidate and physical acceptance before pruning or retirement.
+Generation 45 remains running; no reboot or deletion has been initiated.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and

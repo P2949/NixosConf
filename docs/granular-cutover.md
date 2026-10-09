@@ -58,9 +58,14 @@ root 336/UUID and reset count 22 retained. The second recovery is accepted by
 `physical-boot-passed-a41581f2-d86b-43a6-a7bb-1b6673b3f608.json` with those same
 100 proofs/root/reset invariants. Return-normal is prepared against exact normal
 generation 45; all 100 tokens pass preboot checks and its entry is selected once.
-Await the user's self-reboot and verification before apps: new root, reset count
-23, 92 disposable proofs gone and eight persistent proofs retained. Ready record:
-`final-return-normal-ready.json`. Pruning and retirement remain gated.
+Return-normal is accepted by
+`physical-boot-passed-b07b3cd2-79b2-40c6-80b7-719e61c7a8e7.json`: new root 338,
+reset count 23, 92 disposable proofs gone and eight persistent proofs retained.
+The refreshed raw-persist audit found previously unclassified Unity editor
+preferences. The user requested their preservation, authorizing a narrow home
+declaration amendment. Protect both versions and validate/physically accept the
+exact corrected candidate before pruning and retirement. No old receipt proves
+a future corrected closure.
 
 ## Preparation and final copy
 

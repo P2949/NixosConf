@@ -5,9 +5,11 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: generation 45 persistent-root is running with home and var on
-@root; two final recoveries retain all 100 proofs/root identity/reset count.
-Return-normal is prepared and remains unaccepted. The first final normal matrix, service discovery and representative
+Migration status: generation 45 normal is running with home and var on @root;
+its full normal/recovery/recovery/normal chain passes. A subsequent raw-persist
+audit prompted the user's explicit request to preserve Unity editor preferences;
+the new narrow declaration still needs a corrected candidate and physical
+acceptance. Pruning remains gated. The first final normal matrix, service discovery and representative
 application recheck pass; both policies are frozen. Generation 42's copy and first
 physical home matrix passed; both accepted generation-44 recovery trials now
 pass all 100 markers, retaining the same root identity. Offline validation
