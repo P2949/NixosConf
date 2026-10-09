@@ -12,30 +12,27 @@ bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 first carried this fix. The additional observed Fuzzel history
 omission is now restored/corrected in generation 44, installed boot-only with
 both ESP artifact pairs checked.
-Generation 44 persistent-root is now live. The user confirmed the important
-application workflows after the home cutover and permits coordinated reboots.
-Generation 44 remains the canonical home candidate for recovery → recovery →
-normal → normal. The corrected first recovery passed all 100 markers, retaining
-root ID/UUID, identity and healthy services. The second attempt failed after
-Firefox cleanup removed generated markers; its failed ticket is archived and
-does not count. No missing proof was replaced after boot.
+Generation 44 persistent-root is now live. Both accepted recovery trials passed
+all 100 markers with unchanged root ID/UUID, stable identity and healthy services.
+The user ran the second verifier immediately after reboot, before apps. Earlier
+cleanup-related failed attempts remain archived and unaccepted. The required
+home sequence has reached recovery → recovery PASS, with normal → normal still
+pending. Generation 44 remains the canonical candidate.
 
 The standalone checker nests only the observed Codex and Firefox telemetry
 proofs inside generated directories. Eight marker regressions and all twelve
 unchanged home-acceptance cases pass, as do full flake checks. Retention still
 requires exact tokens; normal reset must remove entire generated containers.
-Firefox artwork cleanup can remove its whole cache directory, so proof timing
-still matters. Verify before launching applications, using a text console before
-the graphical session if needed; no additional cleanup-model architecture is
-being introduced.
+Firefox artwork cleanup can remove its whole cache directory, so verify before
+launching applications. No additional cleanup-model architecture is introduced.
 
-The user confirmed apps are saved/closed and will verify before reopening them.
-A replacement second-recovery ticket has all 100 markers verified. Both existing
-ESP entries and every cache bind pass fresh preflight. Generation-44 recovery is
-selected once; normal generation 44 remains the main profile/default. After the
-user's self-reboot, verify the exact pending ticket before starting Firefox,
-Steam, Unity or Unreal. Then normal → normal remains. No agent reboot is
-scheduled or initiated.
+After second-recovery acceptance and independent root/topology/Fuzzel/service
+checks, the first normal home ticket was seeded. All 100 preboot proofs match:
+89 must disappear, 11 survive. The existing normal ESP artifacts match the exact
+closure. Normal generation 44 is selected once and remains the main/default.
+The next user self-reboot returns from recovery to normal. Verify immediately,
+then prepare the second normal trial only if acceptance passes. No agent reboot
+is scheduled or initiated; var remains unarmed.
 
 ## Preparation and final copy
 

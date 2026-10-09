@@ -5,12 +5,12 @@ This ledger records paths, classifications and policy, never credential contents
 Home-only generation 44 persistent-root is running with home on the reset root
 and legacy var retained. Generation 42's quiesced shutdown copy and first physical home matrix passed,
 including all 82 cache exceptions. Repeated physical and functional application
-acceptance remain pending. Generation 44's first accepted recovery trial passed
-all 100 markers with unchanged root identity and healthy services. The second
-recovery attempt failed after Firefox cleaned generated markers and is archived,
-unaccepted. Repeat it before the two normal trials; the updated telemetry proof
-tool passes eight regressions. After user-confirmed app closure, all 100 fresh
-proofs match and recovery is selected once. Verify before reopening apps.
+acceptance remain pending. Both accepted generation-44 recovery trials passed
+all 100 markers with unchanged root identity and healthy services. Earlier
+cleanup-related failed attempts remain archived and unaccepted. The updated
+proof tool passes eight regressions. The first normal home trial has 100 preboot
+proofs and normal generation 44 selected once; two accepted normals remain.
+Verify before reopening apps.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
@@ -247,10 +247,11 @@ identity and healthy services; an earlier strict trial remains unaccepted becaus
 Codex deleted an unknown plain shell-snapshot proof file. The installed binary
 reproduces this cleanup. A corrected nested marker, seven regressions and a fresh
 100-marker recovery test now supplies the first accepted recovery receipt. The
-second recovery attempt was rejected after Firefox telemetry cleanup, with later
-MPRIS artwork cleanup removing another proof. It remains unaccepted. The specific
-telemetry proof fix passes eight regressions; verify before application launch
-on the replacement second recovery. Both subsequent normal trials are pending.
+initial second recovery attempt was rejected after Firefox telemetry cleanup,
+with later MPRIS artwork cleanup removing another proof. It remains unaccepted.
+The specific telemetry proof fix passes eight regressions. The replacement
+second recovery passed all 100 markers after immediate postboot verification.
+Both normal trials remain pending; the first is seeded for normal generation 44.
 Corrected generation-44 physical/recovery and final-var gates still need
 their own acceptance; no further synthetic app QA is required without a defect.
 

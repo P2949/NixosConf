@@ -409,8 +409,8 @@ Private receipts below are under `/persist/granular-migration`.
 | 19 | Combined automated test covers repeated home reset/persistence and atomic saves. |
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
-| 22 | First physical home matrix passed on exact generation 42. Generation-44 recovery is live; its corrected first recovery trial now has a strict 100-marker passing receipt. Earlier failed marker trial remains archived/unaccepted. |
-| 23 | One of four accepted generation-44 trials complete: first recovery PASS. The second attempt failed strict verification after Firefox cleanup; its ticket is archived and does not count. Replacement second recovery has all 100 fresh proofs verified and a generation-44 recovery one-shot, after user-confirmed app closure. Verify before app startup, then normal → normal. |
+| 22 | First physical home matrix passed on exact generation 42. Both corrected generation-44 recovery trials now have strict 100-marker passing receipts and unchanged root ID/UUID. Earlier failed marker trials remain archived/unaccepted. |
+| 23 | Two of four accepted generation-44 trials complete: recovery → recovery PASS. First normal home ticket now has all 100 preboot proofs verified (89 must disappear, 11 survive), with generation-44 normal selected once. Normal → normal and the independent home guard remain required before var. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -1014,6 +1014,65 @@ stale lower status claim that current home/var are both persistent. Preserve the
   generation 44/recovery generation 44. `git diff --check` and final documentation
   formatting pass. This is preboot readiness only; a second passing recovery
   receipt still requires the user's actual self-reboot and strict verification.
+
+---
+
+### Second recovery accepted; first normal home trial prepared — 2026-10-09
+
+- User self-rebooted and ran the strict verifier immediately before applications:
+  boot `50c48157-a1fd-4542-a418-628b594f8106` now has passing receipt
+  `physical-boot-passed-56ff8f4f-9ba4-4c25-b6c5-0c45ae130634.json`. Independently
+  validated its source/target boot IDs, mode `home-recovery`, exact generation-44
+  recovery closure, source home `/@root`, all 100 retained-path requirements and
+  machine identity. The ticket and exact generated survivors were removed only
+  after successful verification. This is accepted recovery **2 of 2**.
+- Independently verified unchanged root ID 330 and UUID
+  `852d109c-c584-b546-b58c-7c04dd96f728`, home `/@root`, legacy var `/@var`, all
+  persistent islands and zero failed services. Fuzzel's state bind/config and
+  eight history records remain correct. No Firefox/Steam/Unity/Unreal/Zen
+  processes are running. Private review:
+  `home-recovery-accepted-cycle-2-review.json`. The earlier failed trials remain
+  unaccepted; both successful recovery receipts are separately retained.
+- Only after acceptance, seeded mode `home` from this root-local recovery home
+  for exact normal generation 44
+  `/nix/store/m5kmyzchvyax9k2dbaikwx0m9zrn14i0-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Independently re-read all 100 preboot tokens: **89 must disappear**, **11 must
+  survive**. Normal reset must also remove all three generated proof containers.
+  Legacy var intentionally survives this home-only trial. Normal ESP kernel and
+  initrd compare equal to the exact store artifacts; root's only descendant is
+  the permitted `srv`. Same-boot verification refuses and leaves the ticket
+  unchanged. Private preflight: `home-normal-accepted-cycle-1-preflight.json`.
+- Selected `nixos-generation-44.conf` once; normal generation 44 also remains
+  the main/default. Next step is the user's chosen self-reboot into normal mode,
+  then the same strict verifier before app use. Independently confirm a new root
+  ID/UUID and healthy services after acceptance. Only then seed the second
+  normal home trial; independently run home acceptance after that trial passes.
+  Freeze home policy after application rechecks. Var cutover, raw backing
+  cleanup and legacy/snapshot retirement remain gated. No agent reboot is
+  initiated or scheduled and no var service is armed.
+- Final ready receipt `home-normal-accepted-cycle-1-final-ready.json` confirms
+  all 100 proofs still match the unchanged ticket, relevant apps remain closed,
+  zero failed services and both EFI default/one-shot variables select normal
+  generation 44. Documentation formatting and `git diff --check` pass. No new
+  normal physical receipt exists yet; this is preparation for the self-reboot.
+
+---
+
+### First normal trial awaits the chosen self-reboot — 2026-10-09
+
+- The preparation turn and two subsequent goal continuations all end at the
+  same required external event: the user's chosen self-reboot into normal
+  generation 44. Current boot remains `50c48157-a1fd-4542-a418-628b594f8106`.
+  All 100 preboot proofs match, no failed services or live shutdown jobs exist,
+  and no first-normal passing receipt exists. The previous continuation was
+  no progress, not a verified wait on a running reboot job.
+- Required preparation and independent checks are complete. Remaining home
+  acceptance, exact final-var build/arming, final physical tests, pruning and
+  retirement depend on crossing the unchanged physical gate. Mark the goal
+  blocked on this external event, preserving its full objective. No additional
+  permission or readiness question is needed; no agent reboot is initiated.
+  Resume with immediate strict verification after the user's self-reboot.
+  Private current-state evidence: `home-normal-cycle-1-awaiting-self-reboot.json`.
 
 ---
 

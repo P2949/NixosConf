@@ -7,19 +7,19 @@ boots, then disappear when normal mode resumes. Explicit state works in both.
 
 Migration status: home-only generation 44 persistent-root is running with
 root-local home and legacy `@var`. Generation 42's quiesced final copy and first
-physical home matrix passed; generation 44's first accepted recovery trial now
-passes all 100 markers, retaining the same root identity. Offline validation
+physical home matrix passed; both accepted generation-44 recovery trials now
+pass all 100 markers, retaining the same root identity. Offline validation
 passed. The redundant seed-file bind over legacy var
 is omitted from the corrected intermediate policy; final root-local var retains
 that file explicitly. Generation 44 also preserves the restored Fuzzel history
 in `.local/state/fuzzel` and is installed boot-only with both ESP artifact pairs
-verified. The second recovery attempt failed strict verification after Firefox
-removed generated cache proofs; it is archived and does not count. The first
-accepted recovery remains valid. The updated standalone proof tool nests the
-two telemetry markers and passes eight regressions. A replacement second trial
-has now been seeded after user-confirmed application closure; all 100 markers
-are verified and generation-44 recovery is selected once. Verify before
-applications launch after the user's self-reboot. No agent reboot is
+verified. Earlier Firefox/Codex cleanup failures remain archived and unaccepted.
+The updated standalone proof tool passes eight regressions. The user's immediate
+postboot verification supplied the second accepted recovery receipt; independent
+root identity, topology, Fuzzel state and service checks pass. The first normal
+home ticket now has 100 preboot proofs (89 must disappear, 11 survive), and
+normal generation 44 is selected once. Two accepted normal trials remain before
+home freeze and var arming. Verify before app use after each self-reboot. No agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

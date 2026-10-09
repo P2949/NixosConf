@@ -17,33 +17,37 @@ history omission, preserving only `.local/state/fuzzel`. The user confirms the
 restored ordering. Both normal/recovery ESP artifact pairs match the exact store
 closures; generation 41, original subvolumes and snapshots remain available.
 
-The first accepted generation-44 recovery retained all 100 markers and the same
-root ID 330/UUID, with stable identity, correct islands and healthy services:
-`physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json`.
-The second attempt on boot `d0f24f81-807b-4e27-810a-b2fcdf1beae4` failed strict
-verification after Firefox deleted telemetry proofs; later artwork cleanup
-removed another proof. That attempt is archived and never counted. No missing
-postboot proof was recreated. The first accepted recovery remains valid.
+Both accepted generation-44 recovery trials retained all 100 markers and the
+same root ID 330/UUID, with stable identity, correct islands and healthy services:
+`physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json` and
+`physical-boot-passed-56ff8f4f-9ba4-4c25-b6c5-0c45ae130634.json`.
+The second accepted boot is `50c48157-a1fd-4542-a418-628b594f8106`; the user ran
+the strict verifier immediately before applications. Independent receipt,
+root identity, topology, Fuzzel state and service checks pass. Earlier failed
+Codex/Firefox cleanup attempts remain archived and unaccepted.
 
-The standalone checker now nests proofs only where observed Codex/Firefox
-telemetry cleanup skips directories. Eight marker regressions pass; recovery
-still requires exact tokens and normal reset must remove entire generated
-containers. The unchanged twelve-case home guard still refuses this unaccepted
-boot. Full current-source flake checks and formatting pass; unchanged VM results
-were reused. This is local validation, not new physical or GitHub CI evidence.
+The standalone checker nests proofs only where observed Codex/Firefox telemetry
+cleanup skips directories. Eight marker regressions and the unchanged twelve
+home-guard cases pass. Full flake checks and formatting pass; unchanged VM
+results were reused. This is local validation, not GitHub CI evidence.
 
-After the user confirmed applications were saved/closed and agreed to verify
-before reopening them, the replacement second recovery ticket was seeded and
-all 100 markers independently re-read. All 82 cache binds, user ownership,
-ESP artifact pairs and zero failed services pass fresh preflight. The new
-GC-rooted checker also refuses same-boot verification without altering the
-ticket. Generation-44 recovery is selected once; normal generation 44 remains
-the main profile/default. No agent reboot is initiated or scheduled.
-Private evidence: `home-recovery-cycle-2-firefox-preparation.json` and
-`home-recovery-cycle-2-firefox-seeded.json`. Verify before starting Firefox or
-other cache-cleaning applications, using a text console if needed. Then complete
-normal → normal on generation 44, independently run home acceptance, and freeze
-home policy before rebuilding the exact final var candidate.
+Only after the second recovery passed, the first normal home ticket was seeded
+for exact generation 44. All 100 preboot tokens match: 89 must disappear, 11 must
+survive; normal reset must remove whole generated containers too. Normal ESP
+artifacts match their store closure. Root's only descendant is permitted `srv`.
+Normal generation 44 is selected once and remains the main/default. No agent
+reboot is initiated or scheduled. Private reviews:
+`home-recovery-accepted-cycle-2-review.json` and
+`home-normal-accepted-cycle-1-preflight.json`. The next steps are the user's
+self-reboot and immediate strict verification, then a second normal home trial.
+Only two accepted consecutive normal home receipts satisfy the independent var
+guard. Recheck important application state, freeze home policy and rebuild the
+exact final var candidate after those gates pass.
+
+The goal is blocked on the user's chosen first normal self-reboot. Latest check
+finds the same recovery boot, all 100 preboot proofs intact, no live shutdown job
+and no normal passing receipt. Preparation remains ready; resume with strict
+verification after that external event. The full objective is incomplete.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
