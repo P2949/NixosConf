@@ -446,7 +446,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
 | 45 | Complete: formal semantic reconciliation certifies home and var; legacy home256, portables263, machines264, tmp266 and var261 retired individually. Post-retirement topology/health and both generation46 ESP artifact pairs pass. |
-| 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
+| 46 | Complete after explicit final user confirmation: only migration snapshots326/327/328/329 deleted; independent listing confirms every unrelated subvolume retained. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
 | 48 | Checklist keeps unproven physical, application and hygiene items open. |
 | 49 | Not achieved: corrected physical/application acceptance, pruning and post-pruning proof pass; retirement and final source/CI acceptance remain. |
@@ -1852,6 +1852,28 @@ stale lower status claim that current home/var are both persistent. Preserve the
   rather than broad snapshot cleanup. Small JSON/log receipts remain retained.
 - Final coherent documents/checklist, source/lock/closure/topology/evidence freeze,
   exact-head suite and correct layered PR/CI/release workflow remain pending.
+
+---
+
+### Exact migration snapshots retired after confirmation — 2026-10-09
+
+- User explicitly approves **Delete these four migration snapshots**. Revalidated
+  each exact name, ID, UUID and readonly flag against
+  `migration-snapshot-retirement-ready.json`, then deleted only **326/327/328/329**.
+  Receipt: `migration-snapshot-retirement.json`. Filesystem sync and independent
+  listing prove the final subvolume set differs by exactly those four IDs;
+  unrelated forensic roots and earlier readiness backups are unchanged.
+  Small recovery/reconciliation/acceptance receipts remain retained.
+- Generation46 remains running with zero failed services. No reboot or runtime
+  policy change. Normal/recovery ESP pairs and the GC-rooted recovery ISO hash
+  were verified before snapshot retirement. Current active root is344, home/var
+  are root-local, and the legacy always-persistent architecture and its dedicated
+  migration snapshots are now gone. Earlier readiness backup freshness/soak
+  remains a separate gate; external media was not assumed currently mounted.
+- Remaining work is final coherent documentation/checklist, exact source/lock/
+  closure/topology/physical/pruning/retirement freeze, full exact-head local suite
+  and the correctly layered GitHub CI/integration/release sequence. Do not claim
+  GitHub acceptance from historical PR #7 runs or local physical/VM passes.
 
 ---
 
@@ -4171,11 +4193,11 @@ The ephemeral-state project is **not complete** until every item below passes.
 ## Persistent storage hygiene
 
 - [x] `/persist` has been audited (49 justified purposes, scoped pruning and clean raw re-audit).
-- [ ] no unexplained full-home migration copy remains.
-- [ ] no unexplained full-var migration copy remains.
+- [x] no unexplained full-home migration copy remains (raw backing pruned, legacy source and exact migration snapshots retired; unrelated readiness backup staging explicitly justified).
+- [x] no unexplained full-var migration copy remains (legacy source and exact migration snapshots retired).
 - [x] old active `@home` persistence has been retired (ID256, formal reconciliation receipt).
 - [x] old active `@var` persistence has been retired (children263/264/266 individually, then parent261).
-- [ ] obsolete migration snapshots have been deliberately handled.
+- [x] obsolete migration snapshots have been deliberately handled (four exact IDs retired after final user confirmation).
 - [ ] `docs/persistence-contract.md` describes the final actual state.
 
 ---
