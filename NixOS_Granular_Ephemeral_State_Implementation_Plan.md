@@ -426,7 +426,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 23 | All four generation-44 trials PASS: recovery → recovery → normal → normal. Root 330 was retained through recovery, then replaced by roots 332 and 334. Every trial passes 100 requirements. Independent home guard passes two consecutive verified normal cycles. |
 | 24 | Application gate PASS after the full generation-44 sequence: user confirms Firefox, Steam saves/library, Code, Git/VCS credentials and Unity/Unreal project access all checked and working. Earlier Fuzzel/Zen corrections remain accepted; Android Studio remains uninstalled. |
 | 25 | Narrow home allow-list/cache policy frozen after physical and app acceptance. Fingerprint receipt `home-policy-freeze-20261009.json` records source hashes; change only for an actual defect. |
-| 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
+| 26 | Corrected generation-46 physical/application acceptance complete; 55 audited raw residue nodes removed, 82 hidden backing caches emptied, declared state and recovery sources retained. |
 | 27 | Var metadata/write/diff audit recorded; physical phase advancement waits for home acceptance. |
 | 28 | Stable identity/state retained; volatile diagnostics/cache/undeclared-state policy explicit. |
 | 29 | Final var declarations implemented; intermediate seed-bind collision corrected without changing native seed state. |
@@ -437,19 +437,19 @@ Private receipts below are under `/persist/granular-migration`.
 | 34 | Exact frozen-source final desktop/recovery, full flake checks, evaluation, eight marker/twelve home guard cases, fresh six-boot granular VM, fresh blank-disk reconstruction/smoke and all five fresh root scenarios PASS. |
 | 35 | Final var generation 45 installed boot-only after home acceptance. Its quiesced var-only copy verified and selected 45 once; first physical normal acceptance now passes. Generation 45 normal is now the default. |
 | 36 | PASS: exact generation 45 normal; home and var on @root, optimization independently mounted, selected var state bound from @persist. |
-| 37 | First physical final normal PASS: var cache/tmp/undeclared proofs gone; NixOS/optimization proofs survived. Repeated final recovery/return and post-pruning normal remain pending. |
+| 37 | Final normal and repeated recovery/return PASS on generations 45 and corrected 46. Post-pruning normal proof is prepared and pending. |
 | 38 | PASS: system running, zero failed services, full NetworkManager connectivity, stable identity/allocation, Home Manager/random-seed services healthy, Fuzzel preserved; user confirms final-var applications work. |
-| 39 | Complete generation-45 normal → recovery → recovery → normal PASS: repeated root 336/UUID retained at count 22, then replaced by root 338 at count 23 with disposable proofs removed. A user-requested Unity-preferences correction now needs acceptance on its exact new candidate. |
+| 39 | Complete generation-45 and corrected generation-46 normal → recovery → recovery → normal PASS; corrected root 340/count 24 retained in both recovery boots, then root 342/count 25 replaced it, retaining all nine Unity preference hashes. |
 | 40 | Full final physical topology audit after generation-45 return-normal PASS; root/home/var/etc/root/srv/tmp/usr root-local, persistent islands and separate ESP/runtime mounts correct. |
-| 41 | Exact-system sentinel tool implemented; eight placement regressions pass without relaxing retention/container reset. Home sequence and first final normal matrix pass; final recovery/return and post-pruning normal remain pending. |
-| 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
+| 41 | Exact-system sentinel tool implemented; eight placement regressions pass. Home and corrected final chains pass all 100 proofs each; post-pruning normal trial is prepared. |
+| 42 | Scoped raw pruning complete: zero undeclared residue and zero hidden cache data, 49 justified top-level purposes, all declared paths and active cache mount identities retained. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
 | 45 | Pending: preserve legacy subvolumes and inspect nested var children individually after all technical gates. |
 | 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
 | 48 | Checklist keeps unproven physical, application and hygiene items open. |
-| 49 | Not achieved: first fully granular physical normal and application acceptance pass; repeated final recovery/return, pruning, post-pruning proof, retirement and final source/CI acceptance remain. |
+| 49 | Not achieved: corrected physical/application acceptance and pruning pass; post-pruning proof, retirement and final source/CI acceptance remain. |
 
 No VM, static audit, copied-profile startup or elapsed time is substituted for
 the remaining physical workstation requirements. No reboot is requested or scheduled.
@@ -1698,6 +1698,22 @@ stale lower status claim that current home/var are both persistent. Preserve the
   asked the user to save/close named applications before final marker seeding.
   No boot ticket or one-shot entry has been armed. Legacy comparison/retirement,
   final documentation/source freeze, exact-head checks and CI remain pending.
+
+---
+
+### Post-pruning normal trial ready — 2026-10-09
+
+- User confirms named applications saved/closed; process inspection independently
+  finds none running, including the dotted Firefox wrapper. Seeded **100** exact
+  tokens for generation-46 normal and checked every token before selecting
+  `nixos-generation-46.conf` once. ESP kernel/initrd hashes match its immutable
+  closure, and the explicit Unity preference bind and nine current hashes are
+  recorded in `post-pruning-normal-ready.json`.
+- Expected next boot replaces root 342 and advances reset count **25 → 26**;
+  **92** disposable proofs must disappear, **eight** persistent proofs and all
+  nine prepared Unity files must retain. User self-reboots, then runs the strict
+  verifier from a text console before opening applications. No agent reboot.
+  Last legacy comparisons and retirement remain gated on this proof.
 
 ---
 

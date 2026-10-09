@@ -9,8 +9,9 @@ Migration status: generation 46 normal is running with home and var on @root;
 the generation-45 normal/recovery/recovery/normal chain passes. A raw-persist
 audit prompted the user's explicit request to preserve Unity editor preferences;
 the corrected normal now passes all 100 proofs, the new preference bind/nine
-hashes and the user's Unity UI check. Corrected recovery/return and pruning
-remain gated. The first final normal matrix, service discovery and representative
+hashes and the user's Unity UI check. Corrected recovery/return and scoped raw
+pruning now pass; post-pruning normal proof and legacy retirement remain gated.
+The first final normal matrix, service discovery and representative
 application recheck pass; both policies are frozen. Generation 42's copy and first
 physical home matrix passed; both accepted generation-44 recovery trials now
 pass all 100 markers, retaining the same root identity. Offline validation
@@ -72,7 +73,7 @@ profiles are bound from root-local storage using
 atomic profile updates. Fuzzel launch counts are user history: its configured
 `.local/state/fuzzel/history` lives in the explicitly persisted directory
 `.local/state/fuzzel`; its default `.cache/fuzzel` history was restored from the
-inactive original. The corrected home candidate still needs physical acceptance.
+inactive original. The corrected home candidate has passed physical acceptance.
 Known disposable profile files use boot-only tmpfiles
 removal, disabled in recovery. The user explicitly retains Steam shaders and
 Unreal DDC/Zen caches and both Unity project Libraries because rebuilding them

@@ -156,7 +156,10 @@ backing caches emptied, keeping empty mountpoint scaffolds. All declared paths,
 active cache identities and nine Unity hashes are intact. Independent re-audit
 finds no undeclared residue or hidden cache data; zero failed services.
 Receipt: `scoped-backing-prune-20261009.json`. Post-pruning normal physical proof
-and retirement remain pending; no boot ticket is armed while Firefox is running.
+and retirement remain pending. User confirms saved/closed apps; independent
+process inspection agrees. All 100 post-pruning normal tokens and generation-46
+ESP hashes pass; normal is selected once. `post-pruning-normal-ready.json`
+records nine Unity hashes. Await self-reboot and verification before apps.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
@@ -170,8 +173,9 @@ namespace and private `/dev/shm`. The user confirms actual Unreal relaunch is
 normal: Zen ready in 0.058 seconds, editor startup 12.612 seconds, no errors.
 Production policy and the retained expensive caches were unchanged.
 
-Final var cutover, final physical normal/recovery chain, raw backing pruning and
-legacy retirement remain gated. Cache overlays propagate into apparent persist
+Final var cutover, the corrected physical normal/recovery chain and scoped raw
+backing pruning pass. Post-pruning proof and legacy retirement remain gated.
+Cache overlays propagate into apparent persist
 paths; later pruning requires a private non-recursive raw backing view. No
 backing, legacy subvolume or snapshot was retired. Fresh GitHub API queries at
 the reviewed head found zero branch workflow runs, zero check runs and no open

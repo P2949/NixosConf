@@ -105,7 +105,11 @@ caches, retaining empty mountpoint scaffolds, active cache identities, every
 declared path and all nine Unity hashes. Originals and snapshots remain intact.
 Receipt: `scoped-backing-prune-20261009.json`. Read-only re-audit finds zero
 undeclared residue or hidden cache data. Post-prune physical proof and retirement
-gates remain; wait for closed apps before seeding the next normal trial.
+gates remain. User confirms apps closed and process inspection agrees. The
+post-pruning normal trial is now seeded and selected once: all 100 tokens,
+generation-46 ESP artifact hashes and the Unity bind/nine hashes pass preboot
+checks. `post-pruning-normal-ready.json` records expected reset count 26 and new
+root. Self-reboot and verify before opening applications.
 
 ## Preparation and final copy
 
