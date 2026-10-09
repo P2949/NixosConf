@@ -106,6 +106,13 @@ version are protected independently. This narrow authorized policy amendment
 requires a new exact candidate and physical acceptance before pruning or retirement.
 Generation 45 remains running; no reboot or deletion has been initiated.
 
+The corrected preference candidate is built from immutable source
+`ca08qvh8cry5msxny61hfizgaiw54y02`; normal/recovery are
+`15f6c5dsjl047j7my4c7cpkdhk6ly2xp`/`7lkx40kh36s809bz1yr9bmfdddy1n80a`.
+Its evaluated manifest persists only the requested preference directory. Full
+flake checks and runtime/regression/reconstruction validation are still running;
+no new candidate is installed yet. Receipt: `unity-preferences-candidate-build.json`.
+
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
 database integrity checks, Codex login, Blender configuration and isolated

@@ -1493,6 +1493,28 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### Corrected Unity-preferences candidate built; validation running — 2026-10-09
+
+- Immutable source `/nix/store/ca08qvh8cry5msxny61hfizgaiw54y02-source` and all
+  six inputs are GC-rooted. Compared every configuration/tool/lock hash with the
+  accepted policy: only `home/p2949/persistence.nix` changes, adding the exact
+  user-requested `.config/unity3d/Preferences` directory. No whole Unity/config
+  container or cache policy changes. Source/NAR/lock identity and outputs are in
+  `unity-preferences-candidate-build.json`.
+- Corrected normal/recovery builds pass: `15f6c5dsjl047j7my4c7cpkdhk6ly2xp` and
+  `7lkx40kh36s809bz1yr9bmfdddy1n80a`. The new evaluated sync manifest includes
+  the preference directory and excludes the whole `.config/unity3d` parent.
+  Physical tool is unchanged. Closures/tools have independent GC roots.
+- Full immutable-source flake checks and the required regression/reconstruction/
+  workstation suite remain live jobs. The changed granular VM is actually
+  executing; unchanged root outputs may be reused, with cache/fresh evidence
+  distinguished in the final receipt. Logs are `granular-unity-preferences-*`.
+  No corrected candidate is installed or selected yet; generation 45 normal
+  remains running/default. Wait for successful terminal validation before any
+  boot-only installation/physical trial; pruning and retirement remain gated.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:
