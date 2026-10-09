@@ -29,11 +29,11 @@
 
       files = [
         "/etc/machine-id"
-        {
-          file = "/var/lib/systemd/random-seed";
-          parentDirectory.mode = "0755";
-        }
-      ];
+      ]
+      ++ lib.optional (!config.workstation.granularMigration.keepLegacyVar) {
+        file = "/var/lib/systemd/random-seed";
+        parentDirectory.mode = "0755";
+      };
 
       directories = [
         {

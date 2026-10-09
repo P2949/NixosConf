@@ -31,6 +31,10 @@ assert homeCutover.workstation.granularMigration.keepLegacyVar;
 assert !(homeCutover.fileSystems ? "/home");
 assert homeCutover.fileSystems."/var".neededForBoot;
 assert pkgs.lib.elem "subvol=@var" homeCutover.fileSystems."/var".options;
+assert
+  !(builtins.elem "/var/lib/systemd/random-seed" (
+    map (entry: entry.file) homeCutover.environment.persistence."/persist".files
+  ));
 assert pkgs.lib.all (path: !(builtins.elem path homeDirectories)) [
   ".config"
   ".local"

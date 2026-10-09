@@ -9,18 +9,47 @@ Active local work is now `feat/granular-impermanence`, starting at reviewed
 `de058b4b65416249e2a1ac2e722f7514c87d5a36`. See the
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 for snapshots, copies, application-state classifications and validation progress.
-Home-only granular generation 42 is installed and the verified shutdown-copy
-service is armed. Generation 41 remains live and selected as the rollback
-default; `/home` and `/var` still use their original mounts. The accepted history
+Home-only granular generation 42 is running. The quiesced shutdown copy and first
+physical home sentinel matrix passed; home is root-local while legacy var remains.
+Generation 41 remains available as rollback. The redundant random-seed bind over
+legacy var is corrected in source and runtime-masked in this session; the final
+policy still persists the seed when var becomes root-local. The accepted history
 below describes earlier whole-home/var boots. Existing PR/CI
 evidence does not certify these new local changes.
+
+The correction is installed boot-only as generation 43 and selected for future
+boots; generation 42 remains live. Both generation-43 normal/recovery ESP
+artifacts match their store closures. Corrected-source flake checks and build
+pass. The private first-boot review passes 32 checks, with matching selected
+application identities and healthy databases. Blender also loads its retained
+configuration in background mode. These do not certify full interactive app use.
+
+Codex also reads the retained login, and Firefox starts successfully from a
+private profile copy with networking isolated. A read-only backing inventory
+records all 49 top-level persist entries and the remaining migration residue.
+Live cache overlays also propagate into `/persist` paths: eventual pruning must
+use a private raw backing view. No backing data was removed.
+
+Unity also loads a private retained-project/profile copy, rebuilds its scripts,
+connects the shader compiler and exits successfully in batch mode. Original
+project sources are unchanged. Unreal also loads the compiled project module
+and default map, reports zero map errors/warnings and shuts down normally from
+a private project/profile copy. These do not certify interactive work or VCS.
+
+Var arming now refuses before EFI/profile/service changes unless the repeated
+physical home gate is proved by receipts, including their source topology.
+Twelve regression cases and a live refusal on the present incomplete history
+validate this guard. All 49 implementation stages are audited in the active plan;
+physical and retirement requirements remain open.
 
 Local granular validation now passes: the combined normal/recovery/return VM,
 actual Disko blank-disk reconstruction, desktop/home-only builds, workstation
 smoke and root regression scenarios. The staged physical procedure is in
 [granular-cutover.md](granular-cutover.md). Migration tools and exact candidate
-closures are retained under `/persist/granular-migration`; all physical and
-application acceptance gates remain open.
+closures are retained under `/persist/granular-migration`. Repeated physical
+normal/recovery boots, functional application checks and final var cutover remain
+open. The user requires autonomous work without another reboot or intervention
+request; no reboot is scheduled or requested.
 
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with

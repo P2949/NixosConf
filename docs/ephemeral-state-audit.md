@@ -2,9 +2,10 @@
 
 Inventory date: 2026-10-08. Source branch: `feat/granular-impermanence`.
 This ledger records paths, classifications and policy, never credential contents.
-The live machine still uses `@home` and `@var` until a validated next-boot cutover.
-Home-only generation 42 is installed and its verified shutdown copy is armed;
-offline checks passed, while physical/application acceptance remains pending.
+Home-only generation 42 is running with home on the reset root and legacy var
+retained. Its quiesced shutdown copy and first physical home matrix passed,
+including all 82 cache exceptions. Repeated physical and functional application
+acceptance remain pending; no further reboot is authorized.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
@@ -19,8 +20,10 @@ under `/persist/granular-migration`, protected by 0700/0600 modes. Before snapsh
 were made at `20261008-104128`; after snapshots at `20261008-110009`. A full
 metadata-preserving reflink home copy from the immutable before snapshot passed
 an itemized rsync dry run with no differences. It is a temporary safety copy;
-live applications have continued writing and must be synchronized while stopped
-before cutover. `/var` selected data was separately copied and compared.
+applications subsequently changed state; the orderly shutdown performed and
+verified a fresh allow-list copy before selecting generation 42. `/var` selected
+data was separately copied and compared and must be resynchronized for its later
+cutover. Originals and snapshots remain intact.
 
 The 600-second write trace identifies Firefox, VS Code, Codex, Thunar and
 WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
@@ -78,6 +81,13 @@ selected retaining both Unity Libraries (class R): the older `VR-AR-project` has
 no Assets directory, so deletion might also lose recovery material.
 The actual Unity and Unreal project exception paths are in the same application
 exception list as profile caches; new projects require an audit and declaration.
+
+After the user's pre-reboot file transaction, the inactive original and active
+persisted trees both contain Assets/Library under `VR-AR-project`;
+`VR-AR-project-2` is empty except for cache mount scaffolding, and a Library is in
+retained Trash. This supersedes the earlier absence-of-Assets observation.
+Libraries remain class R; the migration follows the user's actual file changes
+and does not restore old project layouts without a reason.
 
 Official references: [Unity project directories](https://docs.unity.com/en-us/engine/6000.5/manual/get-started/project-configuration/default-directories)
 and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-directory-structure?lang=en-US).
@@ -211,8 +221,24 @@ pretrial identity/reset artifacts are preexisting migration/recovery evidence,
 not active whole-home or whole-var mounts. Inventory these and retire them only
 after their separate recovery/backup gates are satisfied.
 
-Still required: final synchronization with applications stopped, builds and all
-VM checks, staged boot cutover, repeated physical normal/recovery/normal boots,
-application functional checks, final sentinel matrix, granular backing-store
-pruning and deliberate old-subvolume/snapshot retirement. No data has been
-deleted to claim migration completion.
+The first home copy/boot and offline validation passed. Codex reads its retained
+login, and Firefox starts from a private offline profile copy with bookmarks
+intact. Unity loads a private retained-project/profile copy, compiles scripts and
+exits successfully without changing the real project. Unreal loads the retained
+compiled module and default map with zero map errors/warnings and exits normally
+from a private copy. These copied-state checks
+do not certify full interactive or remote-service workflows. Remaining gates are
+repeated physical home/recovery acceptance, remaining
+application checks, var-only quiesced synchronization/cutover, the final physical
+sentinel matrix, backing-store pruning and deliberate legacy retirement.
+
+Shared mount propagation mirrors cache overlays into the apparent `/persist`
+backing paths. Inventory and eventual pruning must inspect a non-recursive raw
+`@persist` view in a private mount namespace; deleting through the live overlay
+can affect an active cache. A read-only raw-view inventory identified 56
+undeclared residue paths, 82 hidden cache directories and 5 boot-managed file
+exceptions. All 49 top-level persist entries have recorded purposes. The private
+inventory is `backing-pruning-inventory.json` under the migration evidence
+directory. Allocated sizes include shared reflink/snapshot extents and do not
+estimate reclaimed space. No backing data was deleted; physical gates still
+prevent pruning.

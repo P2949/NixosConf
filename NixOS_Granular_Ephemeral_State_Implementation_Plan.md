@@ -16,9 +16,9 @@ from source changes or VM tests.
 - Started `feat/granular-impermanence` at the exact reviewed commit above.
   Tracked files were clean; this user-supplied plan was the sole untracked file
   and is preserved and updated as part of this work.
-- Live topology confirmed: `/home` is `@home`, `/var` is `@var`, `/persist`
-  is `@persist`; the optimization mount remains independent. Passwordless
-  privileged commands are available.
+- Initial topology: `/home` used `@home`, `/var` used `@var`, `/persist`
+  used `@persist`. Current home is root-local; legacy var remains. The
+  optimization mount stays independent; privileged commands are available.
 - Metadata-only inventories found 151 GiB of home state, including development
   projects, Unity installs, Firefox profiles, VS Code shared storage and game
   saves outside Steam. These require explicit declarations beyond the examples.
@@ -29,9 +29,10 @@ from source changes or VM tests.
 - Passed: formatting, flake checks, the strengthened combined regression
   (three normal, two recovery, return to normal), desktop and home-only builds,
   blank-disk reconstruction, workstation smoke and five root-reset scenarios.
-- Home cutover generation 42 is installed for boot; the shutdown copy is armed.
-  Current live mounts and graphical session remain on generation 41.
-- Pending: physical home/var cutovers, representative application
+- Home cutover generation 42 has booted. Its quiesced shutdown copy and first
+  physical home sentinel matrix passed; home is root-local and legacy var remains.
+  A redundant random-seed bind on legacy var was diagnosed and corrected below.
+- Pending: repeated physical home acceptance and the var cutover, representative application
   checks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
 
@@ -115,7 +116,7 @@ These receipts do not assert physical or functional application acceptance.
   The actual desktop, blank-disk reconstruction and workstation smoke builds
   returned exit 0 (`/tmp/granular-build-pass7.log`). Five root scenarios returned
   exit 0 (`/tmp/granular-root-suite-final.log`). The stronger combined test with
-  cross-boot Git/Code atomic-save checks is still running.
+  cross-boot Git/Code atomic-save checks subsequently passed; see the receipts above.
 - A packaged `granular-final-sync` tool is available as a flake output. Its
   immutable manifest is generated from the evaluated real allow-list; it checks
   the old mount topology, mirrors only declared state, migrates Git/history,
@@ -146,8 +147,8 @@ These receipts do not assert physical or functional application acceptance.
   matrix including every application cache exception, then verifies only after
   a real reboot. `granular-shutdown-cutover` refuses while desktop-user processes
   remain, seeds the matrix, performs/verifies final synchronization, and only
-  then sets a one-shot boot entry. The home cutover is now armed; its final
-  shutdown copy has not run and no physical reboot has been requested.
+  then sets a one-shot boot entry. The first shutdown copy subsequently completed
+  successfully; its physical boot result is recorded below.
 - Final-sync tooling supports the later var-only migration and rejects copying
   root-local home back over active persisted profiles. A failed shutdown copy
   must leave the old boot default selected. No live mount replacement is used.
@@ -169,7 +170,7 @@ These receipts do not assert physical or functional application acceptance.
   old-default protection, reviewed stop ordering, no automatic reboot, and
   receipt-based normal/recovery checks. These tools never retire subvolumes.
 
-### Installed home cutover and immediate continuation
+### Home cutover preparation — historical preboot record, 12:00–12:06
 
 - Boot-only generation 42 installed successfully from the validated closure
   `/nix/store/vldhz13imcq9bz6pq9nkm795v69cbpqj-nixos-system-desktop-26.05.20261004.0d9e9b8`.
@@ -208,7 +209,237 @@ These receipts do not assert physical or functional application acceptance.
   (`sudo bootctl set-default ''`), repeating normal/recovery trials, functional
   app checks, pruning or any retirement. The home-only phase keeps `@var`.
 
-The physical and application gates remain open. The goal is not complete.
+### First physical home boot — 2026-10-08 12:17
+
+- User rebooted independently. New boot ID:
+  `3166d07f-d1a9-4d86-830b-91d29d277a3d`; exact running closure is generation 42
+  (`vldhz13imcq9bz6pq9nkm795v69cbpqj`). The shutdown log ends with a verified
+  quiesced copy and successful one-shot selection; final-sync receipt is dated
+  `2026-10-08T12:16:35+01:00`. This supplies actual shutdown-handoff evidence.
+- `granular-physical-check verify` passed and saved
+  `/persist/granular-migration/physical-boot-passed-457180b3-d53c-4233-a7a3-ee7c404ec151.json`.
+  Root/home ephemeral sentinels disappeared; declared state, identity and all
+  persistent islands survived. Legacy var intentionally remains mounted.
+- An independent check confirmed all 82 cache-exception mounts point into
+  root-local `.cache/ephemeral-app-state` and are owned by UID 1000. Steam shader
+  cache and Unreal shared DDC/Zen remain on persisted application parents.
+- The sole startup failure was Impermanence attempting a file bind over the
+  existing random seed on legacy `@var`. The actual random-seed load succeeded.
+  The intermediate home-only policy now omits that redundant file declaration;
+  the final root-local-var policy continues to persist it. The obsolete failed
+  unit was runtime-masked/reset without moving, replacing or reading seed data;
+  zero failed services remain. Private failure receipt:
+  `home-first-boot-seed-collision.log`. Evaluation now asserts both phase policies.
+- User now explicitly requires autonomous work, no requests for human
+  intervention, and **no reboot**. This supersedes previous reboot discussions.
+  Continue non-disruptive diagnostics, corrections and offline validation.
+  Repeated physical normal/recovery cycles and final var cutover cannot be
+  certified from this first home boot; keep those gates open and retain originals,
+  snapshots and migration backing. Do not schedule or request another reboot.
+- Private comparisons against the now-inactive original home confirm identical
+  Codex authentication/configuration, ADB identity, GitHub CLI authentication,
+  Firefox key database/profile registry, VS Code settings and PulseAudio cookie.
+  Firefox places/cookies and both VS Code state databases pass SQLite quick-check.
+  Extension, Steam library/userdata and Blender version-directory inventories
+  match. These are state-integrity checks, not interactive functional acceptance.
+- The user's pre-reboot file transaction changed the Unity projects: the old
+  and active trees both now have Assets/Library under `VR-AR-project`, while
+  `VR-AR-project-2` is empty except for generated cache mount scaffolding. A
+  Library exists in retained Trash. No project was silently restored or deleted;
+  these current results supersede the initial inventory without weakening the
+  user's policy to retain Libraries. Unreal and Unity project metadata compare
+  equal to the quiesced original.
+- Corrected home-only closure built and installed as generation 43, boot-only:
+  `/nix/store/0g2j5q657pfd373xicqdyanwrlmwjpf0-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Normal and persistent-root ESP kernel/initrd comparisons both pass. After the
+  first physical home matrix passed, generation 43 was selected as the future
+  default to avoid returning to the now-inactive legacy home by accident.
+  Generation 42 remains the running session; no live activation or reboot ran.
+  Generation 41 and original subvolumes remain available as deliberate rollback.
+  Both first-boot and corrected closures have separate migration GC roots.
+- Corrected-source formatting, flake checks and home-only build pass. The final
+  desktop still evaluates to the previously validated `h2vbh2291h1v7vz1kk2in39hx10rq1hx`
+  closure; combined VM derivation is unchanged and its passing result is cached.
+  Private receipts: `home-correction-flake.log`, `home-correction-install.log`.
+- Postboot live review passes all 32 checks, including every declared directory
+  bind, password-source/private-mode equality, app identity comparisons, SQLite
+  integrity, expensive-cache backing, corrected normal/recovery ESP artifacts,
+  Home Manager and random-seed health. Receipt: `home-first-boot-live-review.json`.
+  Temporary test files proved user atomic replacement under Documents, Code,
+  Git and Codex, and writes to Firefox/Code/Steam/Unity cache mounts; all test
+  files were removed. Blender 5.2.2 LTS loaded persisted configuration and eight
+  addons in background mode and exited successfully (`home-first-boot-blender.log`).
+  This does not certify gameplay, browser sign-in, Unity/Unreal interactive work,
+  or the pending repeated physical boot/recovery requirements.
+
+### Autonomous application checks and backing audit — 2026-10-08, begun 12:34
+
+- Codex CLI login status, executed as `p2949`, confirms the retained ChatGPT
+  login. Auth/config content comparisons already passed; the resumed running
+  Codex session also works. Private receipt: `home-first-boot-codex-login.log`.
+  VS Code CLI successfully reads the retained extension inventory; its active
+  graphical session and private user-state/database checks remain healthy.
+- Firefox successfully starts headlessly from a private reflink copy of the
+  retained profile, renders `about:blank`, preserves the bookmark count and
+  exits successfully. It ran inside an isolated network namespace, without
+  modifying the real profile or opening a graphical window. The temporary copy
+  was removed. Private receipts: `home-first-boot-firefox-startup.json` and `.log`.
+  This proves offline profile startup, not sign-in to remote websites.
+- A read-only backing audit found that shared mount propagation also exposes
+  live root-backed cache overlays beneath `/persist/home/p2949`. Directly
+  deleting these apparent backing paths could affect an active cache. Audit and
+  later pruning must use a non-recursive view of `@persist` inside a private mount
+  namespace, with its propagation made private before creating the view. The
+  inventory view was read-only; live host mounts were unchanged.
+- The raw backing inventory identifies 56 undeclared migration-residue paths
+  (1,912,860,672 allocated bytes), 82 hidden cache directories (1,885,999,104
+  bytes), and 5 boot-managed disposable files (6,221,824 bytes). File exceptions
+  can be live and must be left to their boot-only rules. Allocated totals can
+  share reflink/snapshot extents and do not predict reclaimed disk space.
+- All 49 top-level `/persist` entries have recorded purposes: explicit backing,
+  credentials, current migration evidence, earlier validation evidence and
+  backup/recovery staging. Historical material retains separate retirement
+  gates. Private inventory/script: `backing-pruning-inventory.json`/`.py`;
+  immutable evaluated file-policy copy: `disposable-files-policy.json`.
+  This is preparation for stages 26/42; **no backing data was pruned** and no
+  final hygiene or repeated-physical-acceptance gate is claimed complete.
+
+The repeated physical and remaining functional application gates remain open.
+The goal is not complete; the no-reboot/no-intervention instruction remains in force.
+
+### Isolated retained-project editor checks — 2026-10-08
+
+- Unity 6000.6.4f1 loaded a private reflink copy of `VR-AR-project` and the
+  retained profile/license state. The log confirms resolved entitlements,
+  successful assembly reload/build, a connected shader compiler and successful
+  batch-mode shutdown; exit status 0 in 19.10 seconds. Assets, Packages,
+  ProjectSettings and UserSettings in the original project are unchanged.
+  Private evidence: `home-first-boot-unity-startup.json`, `-editor.log` and
+  `-launcher.log` under `/persist/granular-migration`.
+- The first editor attempt used bare `steam-run`, which lacks the `libtinfo.so.6`
+  already supplied by the configured Unity Hub. It imported the copied project
+  but failed its shader subprocess (exit 134). The successful retry provides
+  the same existing ncurses library only inside the test launch; no production
+  package, global library environment or project was changed. Failed evidence
+  is retained separately with `-first-editor-failure-` names.
+- Unreal 5.8.2 loaded the retained `AI_Gavin_Project` compiled module and
+  `L_FirstPlayableRoom` default map from a private project/profile copy. Engine
+  initialization and map check (zero errors/warnings) passed; `QUIT_EDITOR`
+  requested an orderly shutdown, exit 0 in 18.20 seconds. Original Source,
+  Config, Content, Binaries and `.uproject` files are unchanged. Private evidence:
+  `home-first-boot-unreal-startup.json`, `-editor.log` and `-launcher.log`.
+- An earlier positional project argument failed before initialization (exit 139);
+  using the engine's supported explicit `-project=` argument loaded the project.
+  A second attempt loaded the map but generic `quit` did not close this editor
+  and its 180-second fixture deadline expired (exit 124). The installed engine
+  source routes `QUIT_EDITOR` to `UUnrealEdEngine::CloseEditor`; the final retry
+  uses this command and logs normal editor/engine shutdown. Earlier failures
+  remain separate `-first-editor-failure-` and `-generic-quit-timeout-` receipts;
+  none are counted as passing tests and no production launch wrapper changed.
+- Both editor fixtures use private mount, PID and network namespaces, private
+  home/project copies, read-only editor installs and loopback-only networking.
+  `HOME` is unchanged. Initial fixture-path failures did not launch an editor;
+  temporary copies are removed after each terminal result. The isolated Unity
+  check certifies retained-project startup/import and local license handling,
+  not interactive editing, Unity VCS remote access, Unreal PIE/gameplay, GPU
+  rendering or a complete build workflow.
+- Unity command-line behavior is documented in the
+  [official Unity editor argument reference](https://docs.unity.com/en-us/engine/6000.5/manual/unity-editor/command-line-arguments/editor).
+  Unreal unattended/headless flags are documented in the
+  [official Unreal argument reference](https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-command-line-arguments-reference?lang=en-US).
+
+### Migration gate enforcement and stage audit — 2026-10-08
+
+- The var-arming helper now validates physical home receipts before writing
+  migration evidence, changing EFI defaults, installing a generation or creating
+  its runtime service. Stage 22's initial legacy-home cutover does not count as
+  either root-local-home reboot cycle required by stage 23. Future sentinel
+  tickets record `seeded_home_fsroot`; old receipts without that evidence cannot
+  be used to satisfy the repeated-cycle gate.
+- Twelve regression cases cover empty/single histories, duplicate boots,
+  unaccepted current boot/closure, intervening recovery, wrong phase, receipt
+  order, valid consecutive cycles, same-boot receipts, malformed timestamps,
+  legacy-home initial cutover and receipts without source topology.
+- Live execution of the packaged var-arming tool refuses on the actual one-boot
+  state. EFI entries/selection, running/system profiles, original migration
+  evidence, pending-ticket state and runtime-service state remain unchanged.
+  Private receipts: `var-home-gate-refusal.json` and `.log`.
+- Updated packaged arming/physical tools build and shellcheck successfully;
+  the full flake check, including all twelve receipt regression cases, passes.
+  Receipts: `home-gate-build.log`, `home-gate-flake.log`, `home-gate-regression.log`.
+  Current migration GC-root aliases now reference the guarded tools; previous
+  versions are independently retained with `-before-home-gate` names. This
+  changes no running/installed system closure, boot choice or live mount.
+
+The following audit covers all numbered stages. “Source complete” certifies only
+the implementation/artifact named; it does not certify later physical gates.
+Private receipts below are under `/persist/granular-migration`.
+
+| Stage | Current evidence and remaining obligation |
+| --- | --- |
+| 1 | Objective preserved; final root-local var, repeated physical modes and retirement remain incomplete. |
+| 2 | Initial topology recorded; current root-local home/legacy var verified live. |
+| 3 | Originals/snapshots retained, boot-only boundary changes, private secrets and verified final copy respected. |
+| 4 | Implementation branch exists at the reviewed starting commit; current changes preserved. |
+| 5 | `topology-before.txt`, `subvolumes-before.txt`, `usage-before.txt` capture the initial host. |
+| 6 | Read-only before/after home/var snapshots exist; UUID/readonly metadata verified. |
+| 7 | `docs/ephemeral-state-audit.md` classifies authoritative, rebuildable, generated and mixed state. |
+| 8 | Full home metadata inventory and protected copy recorded; no secret contents added to Git. |
+| 9 | `.config`/`.local` split; application/project children classified individually. |
+| 10 | Trace covers observed browser/Code/Codex/desktop writes; complete representative coverage of every app remains partial. |
+| 11 | Before/after snapshots and no-data Btrfs diffs retained privately. |
+| 12 | Audited initial home classes implemented, including user-selected expensive caches and Unity Libraries. |
+| 13 | Dedicated Home Manager persistence module imported and tested. |
+| 14 | Protected home backing prepared; user ownership/private modes verified. |
+| 15 | Initial reflink copy and dry-run passed; orderly shutdown performed/verified the final allow-list copy. |
+| 16 | Selected credential comparisons/private modes and password-source equality passed. |
+| 17 | Home is root-local on generation 42; original `@home` is retained inactive. |
+| 18 | Actual desktop/intermediate topology and narrow-parent assertions pass. |
+| 19 | Combined automated test covers repeated home reset/persistence and atomic saves. |
+| 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
+| 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
+| 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
+| 23 | Pending: two consecutive normal cycles seeded from root-local home; blocked by the current no-reboot instruction. |
+| 24 | Codex login, Code state, offline Firefox startup, Blender preferences and isolated Unity project import/shutdown and Unreal module/map load/shutdown checked; remaining full application functionality is not certified. |
+| 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
+| 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
+| 27 | Var metadata/write/diff audit recorded; physical phase advancement waits for home acceptance. |
+| 28 | Stable identity/state retained; volatile diagnostics/cache/undeclared-state policy explicit. |
+| 29 | Final var declarations implemented; intermediate seed-bind collision corrected without changing native seed state. |
+| 30 | Selected var backing copied; another quiesced var-only copy is required immediately before its actual cutover. |
+| 31 | Final source omits `@var`; live intermediate still mounts legacy var. |
+| 32 | Final/intermediate topology, persistent islands and recovery configuration assertions pass. |
+| 33 | Combined automated var test passes, including persistence/disappearance across normal/recovery/return. |
+| 34 | Final desktop/offline suite passed; new migration guards receive their own checks. |
+| 35 | Pending: var candidate not armed/installed as a cutover; new guard prevents premature advancement. |
+| 36 | Pending: no physical root-local-var boot has occurred. |
+| 37 | Pending: physical var cache/tmp/undeclared-state reset cycles have not occurred. |
+| 38 | Current intermediate services are healthy; final-var service acceptance remains pending. |
+| 39 | Automated recovery/return passed; repeated physical granular recovery/return remains pending. |
+| 40 | Final topology passes reconstruction; full final physical topology audit awaits var cutover. |
+| 41 | Exact-system physical sentinel tool implemented; first home matrix passed, final matrix remains pending. |
+| 42 | Read-only raw backing inventory records 49 top-level purposes and residual paths; final hygiene/pruning remains pending. |
+| 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
+| 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
+| 45 | Pending: preserve legacy subvolumes and inspect nested var children individually after all technical gates. |
+| 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
+| 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
+| 48 | Checklist keeps unproven physical, application and hygiene items open. |
+| 49 | Not achieved: var remains a persistent island and repeated physical/final-retirement proof is missing. |
+
+No VM, static audit, copied-profile startup or elapsed time is substituted for
+the remaining physical workstation requirements. No reboot is requested or scheduled.
+
+The same no-reboot dependency has persisted across at least three consecutive
+continuations. Available independent source, guard, integrity and isolated
+application checks are recorded above; these do not close the required physical
+cycles. The goal remains incomplete and is blocked at those rollout gates under
+the current instruction. No human intervention is requested. Keep generation 43
+as the future home-only candidate, legacy var/originals/snapshots intact, and do
+not arm the var phase or retire backing material while its prerequisites are open.
+The editor-review receipt confirms the same boot, root-local home, legacy var and
+zero failed system services (`home-first-boot-editor-review.json`).
+
 
 ---
 
@@ -2450,36 +2681,36 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 ## Filesystem topology
 
-- [ ] `@root` provides `/`.
-- [ ] no `@home` subvolume is mounted at `/home`.
+- [x] `@root` provides `/`.
+- [x] no `@home` subvolume is mounted at `/home`.
 - [ ] no `@var` subvolume is mounted at `/var`.
-- [ ] `/nix` remains persistent.
-- [ ] `/persist` remains persistent.
-- [ ] `/.snapshots` remains persistent.
-- [ ] `/boot` remains persistent.
-- [ ] `/var/lib/nixos-optimization` remains persistent.
+- [x] `/nix` remains persistent.
+- [x] `/persist` remains persistent.
+- [x] `/.snapshots` remains persistent.
+- [x] `/boot` remains persistent.
+- [x] `/var/lib/nixos-optimization` remains persistent.
 
 ## Root
 
-- [ ] undeclared `/etc` state disappears on normal reboot.
-- [ ] `/root` state disappears on normal reboot.
-- [ ] `/tmp` state disappears on normal reboot.
-- [ ] `/srv` state disappears on normal reboot.
-- [ ] `/etc/machine-id` survives.
-- [ ] `/etc/nixos` survives.
+- [x] undeclared `/etc` state disappears on normal reboot.
+- [x] `/root` state disappears on normal reboot.
+- [x] `/tmp` state disappears on normal reboot.
+- [x] `/srv` state disappears on normal reboot.
+- [x] `/etc/machine-id` survives.
+- [x] `/etc/nixos` survives.
 - [ ] NetworkManager connections survive.
 
 ## Home
 
-- [ ] `/home/p2949` is root-local rather than a separate persistent filesystem.
-- [ ] `.cache` disappears across normal reboot.
-- [ ] undeclared home directories disappear.
-- [ ] declared user data survives.
+- [x] `/home/p2949` is root-local rather than a separate persistent filesystem.
+- [x] `.cache` disappears across normal reboot.
+- [x] undeclared home directories disappear.
+- [x] declared user data survives.
 - [ ] credentials selected for persistence survive.
 - [ ] browser profile selected for persistence survives.
 - [ ] development/project data survives.
 - [ ] stateful development tools selected for persistence survive.
-- [ ] Home Manager reconstructs declarative configuration.
+- [x] Home Manager reconstructs declarative configuration.
 - [x] `.config` has been audited rather than blindly persisted as a whole.
 - [x] `.local` has been audited rather than blindly persisted as a whole.
 
@@ -2507,7 +2738,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 ## Applications
 
 - [ ] Zen/browser required profile state works.
-- [ ] Codex required state works.
+- [x] Codex required state works.
 - [ ] VS Code required state works.
 - [ ] Android state selected for persistence works.
 - [ ] Steam state selected for persistence works.

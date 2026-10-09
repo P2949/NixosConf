@@ -5,11 +5,12 @@ var, on every normal boot. `persistent-root` disables that reset: undeclared
 root-local home/var state and application-cache overlays remain across recovery
 boots, then disappear when normal mode resumes. Explicit state works in both.
 
-Migration status: the running desktop still mounts `@home` and `@var`. Home-only
-generation 42 is installed and the verified shutdown-copy service is armed;
-generation 41 remains live and selected as the rollback default. Offline
-validation passed. Read-only snapshots and migration backing are prepared,
-but quiesced final copying and repeated physical boot/application checks remain
+Migration status: home-only generation 42 is running with root-local home and
+legacy `@var`. The quiesced final copy and first physical home sentinel matrix
+passed. Offline validation passed. The redundant seed-file bind over legacy var
+is omitted from the corrected intermediate policy; final root-local var retains
+that file explicitly. Read-only snapshots and migration backing remain available;
+repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The
 [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md) records
 actual results and open gates; historic root-only evidence below does not prove
@@ -28,7 +29,7 @@ the new home/var contract.
 | NetworkManager connections | Bind persisted under `/persist/etc/NetworkManager/system-connections` | Profiles and secrets |
 | `/etc/machine-id` | Persist in both variants; current identity seeded before trials | Stable journal and service identity |
 | `/var/lib/nixos` | Bind persisted | Stable UID/GID/subuid allocation |
-| `/var/lib/systemd/random-seed` | File persisted | Protected entropy state |
+| `/var/lib/systemd/random-seed` | File persisted in final policy; native legacy var retains it during home-only migration | Protected entropy state without a duplicate bind over an existing file |
 | `/var/lib/NetworkManager` | Directory persisted; known runtime files reset | Stable key/internal settings; leases and timestamps discarded |
 | `/var/lib/bluetooth` | Bind persisted, mode 0700 | Pairing credentials/trust |
 | `/var/lib/btrfs` | Bind persisted | Scrub history/progress |

@@ -6,6 +6,13 @@ The first candidate is `desktop-home-cutover`: home is root-local and `@var`
 remains mounted. The final `desktop` removes both legacy mounts. Neither old
 subvolume is deleted during either cutover.
 
+Current result: generation 42 completed its quiesced copy and first physical
+home matrix. Home is root-local and legacy var remains. A redundant seed-file
+bind over native legacy var was removed from the intermediate policy; corrected
+generation 43 is installed for future boots with both ESP artifact pairs checked.
+Generation 42 remains live. Repeated physical/app gates stay open, and the user's
+latest instruction forbids another reboot or a request for intervention.
+
 ## Preparation and final copy
 
 Finish formatting, flake checks, the combined reboot regression, desktop and
@@ -76,6 +83,14 @@ cutover. Its final copy is var-only and refuses to overwrite active persisted
 home profiles with root-local scaffolding. Repeat the system/application and
 normal/recovery/return checks against the final configuration.
 
+The arming helper enforces stage 23 before any var installation/EFI/service
+change: two consecutive verified normal cycles must have been seeded with
+root-local home, and the latest receipt must match the current boot and running
+closure. The initial legacy-home cutover is not a repeated root-local cycle.
+New tickets record the source topology; old receipts without it cannot count.
+Recovery interrupts the consecutive normal-cycle history, and duplicated
+receipts cannot count as separate boots.
+
 ## Retirement
 
 Audit `/persist` and remove undeclared migration copies and hidden underlying
@@ -84,3 +99,12 @@ one last time, inspect each old var descendant subvolume, then follow stages
 45–46 for deliberate retirement. The full copied home and snapshots are still
 temporary safety material until those gates pass. Snapshot removal requires
 the plan's final confirmation; no helper here deletes subvolumes or snapshots.
+
+Cache mounts propagate into the apparent `/persist` paths on this machine.
+Before any later pruning, create a private mount namespace, make propagation
+private, and use a non-recursive raw view of `@persist`. Confirm that the path to
+prune resolves to `@persist`, and that the active application's cache still
+resolves to root-local backing. Avoid deleting through the live propagated cache
+mount. The read-only preparation inventory is retained as
+`/persist/granular-migration/backing-pruning-inventory.json`; it authorizes no
+deletions and boot-managed file exceptions must be left to their lifecycle rules.

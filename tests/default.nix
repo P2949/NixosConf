@@ -50,6 +50,8 @@
       inherit inputs pkgs;
     };
 
+    granular-home-acceptance = import ./storage/home-acceptance.nix { inherit pkgs; };
+
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
       inherit pkgs;
     };

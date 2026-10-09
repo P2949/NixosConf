@@ -76,6 +76,7 @@ if args[0] == "seed":
                 target.write_text(token)
             paths.append({"path": str(target), "retained": retained})
     data = {"boot_id": boot_id, "mode": mode, "system": system,
+            "seeded_home_fsroot": fsroot(home),
             "token": token, "paths": paths,
             "machine_id": Path("/etc/machine-id").read_text().strip()}
     ticket.write_text(json.dumps(data, indent=2) + "\n")

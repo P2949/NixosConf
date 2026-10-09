@@ -18,6 +18,9 @@ fi
 if [[ "$task_phase" == home ]]; then task_home=/@home; else task_home=/@root; fi
 [[ "$(findmnt -rn -o FSROOT -T /home)" == "$task_home" ]]
 [[ "$(findmnt -rn -o FSROOT --mountpoint /persist)" == /@persist ]]
+if [[ "$task_phase" == var ]]; then
+  "$home_acceptance/bin/granular-home-acceptance"
+fi
 
 umask 077
 task_evidence=/persist/granular-migration
