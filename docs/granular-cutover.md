@@ -85,6 +85,20 @@ now default. First corrected recovery is prepared and selected once. Verify
 before apps after the user's reboot; root 340/reset count 24 and all preference
 data must survive. Ready record: `unity-preferences-recovery-cycle-1-ready.json`.
 
+First corrected recovery passes all 100 proofs, retained root 340/reset count 24
+and all nine Unity hashes; receipt
+`physical-boot-passed-2348e96a-9c34-4ce8-8cd1-3b807c32b4d0.json`.
+Second corrected recovery is prepared and selected once. Ready record:
+`unity-preferences-recovery-cycle-2-ready.json`; verify before apps after the
+user's self-reboot. Return-normal and retirement gates remain pending.
+
+Second corrected recovery passes the same root/count, all 100 proofs and nine
+Unity hashes; receipt `physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`.
+Corrected return-normal is prepared and selected once; ready record:
+`unity-preferences-return-normal-ready.json`. Verify before apps after self-reboot:
+new root/reset count 25, disposable proofs gone and declared/Unity state retained.
+Refreeze/pruning/post-prune/retirement gates remain pending.
+
 ## Preparation and final copy
 
 Finish formatting, flake checks, the combined reboot regression, desktop and

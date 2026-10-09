@@ -1611,6 +1611,44 @@ stale lower status claim that current home/var are both persistent. Preserve the
 
 ---
 
+### First corrected recovery accepted; second prepared — 2026-10-09
+
+- Receipt `physical-boot-passed-2348e96a-9c34-4ce8-8cd1-3b807c32b4d0.json`
+  accepts exact generation-46 recovery on boot
+  `7a7c767e-f23a-497b-9fba-546a2f6f86ba`. All **100** proofs retained;
+  independent checks retain root **340**, UUID
+  `11d42ced-4134-4c44-a97b-486904976a8e`, reset count **24**, correct topology,
+  stable identity, healthy services and full connectivity. Unity's @persist bind
+  and all **nine** post-UI preference hashes survive exactly. Private review:
+  `unity-preferences-recovery-cycle-1-review.json`.
+- Named apps remain closed. Seeded another exact recovery ticket, checked all
+  100 retained tokens, selected generation-46 recovery once and recorded
+  `unity-preferences-recovery-cycle-2-ready.json`. Second recovery must again
+  retain root identity/count and Unity hashes. Await the user's self-reboot and
+  verification before apps; return-normal and cleanup gates remain pending.
+  No agent reboot, pruning or retirement occurs.
+
+---
+
+### Second corrected recovery accepted; return-normal ready — 2026-10-09
+
+- Receipt `physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`
+  accepts exact generation-46 recovery on boot
+  `90a06fd5-8f0e-4e35-8497-26be2a38e332`. All **100** recovery proofs and all
+  **nine** Unity hashes survive. Root **340**, UUID
+  `11d42ced-4134-4c44-a97b-486904976a8e`, reset count **24** again retain;
+  independent identity/topology/services/network checks pass. Review:
+  `unity-preferences-recovery-cycle-2-review.json`.
+- Named apps remain closed. Seeded exact normal 46, checked all 100 tokens
+  (92 disposable/eight persistent), and selected its normal entry once.
+  Ready record: `unity-preferences-return-normal-ready.json`. Require a new root
+  and reset count **25**, disposable proofs gone, persistent proofs and Unity
+  bind/data retained. Await the user's self-reboot and verification before apps.
+  Only after acceptance refreeze policy and refresh the authorized raw prune
+  set. No agent reboot, pruning or retirement occurs.
+
+---
+
 # 1. Objective and finish line
 
 This plan has one objective only:

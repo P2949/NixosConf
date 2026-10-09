@@ -10,7 +10,7 @@ Active local work is `feat/granular-impermanence`, starting at reviewed
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 records actual receipts, application policies and the remaining gates.
 
-Generation 46 normal is running: both home and ordinary var are root-local.
+Generation 46 persistent-root is running: home and ordinary var are root-local.
 Its quiesced var-only shutdown copy, first final physical matrix and discovery
 checks pass; the user confirms representative application state works. Both
 policies are frozen. Generation 42's shutdown copy and first home matrix passed.
@@ -130,6 +130,22 @@ First corrected recovery is prepared with all 100 tokens and post-UI preference
 hashes; recovery is selected once. Ready record:
 `unity-preferences-recovery-cycle-1-ready.json`. Expect root 340/reset count 24
 retained. Corrected recovery/return, pruning and retirement remain gated.
+
+First corrected recovery passes all 100 proofs on boot
+`7a7c767e-f23a-497b-9fba-546a2f6f86ba`, receipt
+`physical-boot-passed-2348e96a-9c34-4ce8-8cd1-3b807c32b4d0.json`. Root 340/UUID,
+reset count 24, Unity bind and all nine hashes retain correctly; services/network
+pass. Second corrected recovery is prepared and selected once; ready record
+`unity-preferences-recovery-cycle-2-ready.json`. Await self-reboot/verification
+before apps, then return-normal. Pruning and retirement remain gated.
+
+Second corrected recovery is accepted by
+`physical-boot-passed-1873d5c4-88e9-4444-9fed-9589d62b26cb.json`, boot
+`90a06fd5-8f0e-4e35-8497-26be2a38e332`: all 100 proofs, root 340/UUID/reset
+count 24 and nine Unity hashes retained again; services/network pass.
+Corrected return-normal is prepared and selected once. Ready record:
+`unity-preferences-return-normal-ready.json`. Require new root/reset count 25,
+92 disposable proofs gone and persistent/Unity state retained before pruning.
 
 The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
 Unity/Unreal project workflows after the home migration. Selected identity and
