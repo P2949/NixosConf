@@ -49,8 +49,13 @@ smoke and root regression scenarios. The staged physical procedure is in
 closures are retained under `/persist/granular-migration`. Repeated physical
 normal/recovery boots, functional application checks and final var cutover remain
 open. On 2026-10-09 the user allowed coordinated reboot/intervention requests.
-The first repeat-home cycle is seeded for generation 43. The user will save work
-and reboot themselves; no agent reboot is scheduled or initiated.
+The user confirmed the important browser/Steam/Code/Git/VCS/project workflows
+work after the home migration. Generation 43 will now follow recovery → recovery
+→ normal → normal, preserving the consecutive-normal gate. The first recovery
+ticket is seeded and its boot entry selected once; normal generation 43 remains
+the default. No agent reboot is scheduled or initiated. Fresh API queries show
+zero workflow runs and no PR directly for this branch; exact-head CI remains
+required after final freeze.
 
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
@@ -170,7 +175,9 @@ interruptions when the user is available. No final manifest/tag exists yet.
 Retain generation35 fallback, forensic roots, candidate GC roots and receipts.
 Accepted fallback closures: normal`czk5a2wn8di3pgv8a6w0b8aj3286g3h3`,
 persistent`9ppcqjkfnid501na0wc8jjysynp0kp1p`; its physical chain passed.
-Home/var deliberately remain persistent. Do not prune before final acceptance.
+The fallback generation keeps legacy home/var mounts. The current generation
+has root-local home and legacy var; preserve originals and snapshots until final
+granular physical/application acceptance and retirement prerequisites pass.
 
 ISO identity`d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; SHA256
 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.

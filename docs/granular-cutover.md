@@ -10,10 +10,13 @@ Current result: generation 42 completed its quiesced copy and first physical
 home matrix. Home is root-local and legacy var remains. A redundant seed-file
 bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 is installed for future boots with both ESP artifact pairs checked.
-Generation 42 remains live. Repeated physical/app gates stay open. On 2026-10-09
-the user allowed coordinated reboot/intervention requests. The first repeat-home
-cycle is seeded for generation 43. The user chose to save active work and reboot
-themselves. No agent reboot has been scheduled or initiated.
+Generation 42 remains live. The user confirmed the important application workflows
+work after the home cutover and allows coordinated reboots. Following the supplied
+2026-10-09 review, the home sequence is recovery → recovery → normal → normal
+on generation 43. Its first `home-recovery` ticket is seeded and the recovery
+entry is selected once; generation 43 normal remains the main profile/default.
+The previous unbooted normal ticket was archived as superseded, not accepted.
+No agent reboot has been scheduled or initiated.
 
 ## Preparation and final copy
 
@@ -80,10 +83,24 @@ Do not install a recovery-only system profile and later select a stale normal
 entry: the bootloader may prune its initrd. Keep the candidate's main generation
 installed with both boot entries, or reinstall the exact normal generation.
 
-After home acceptance, use `granular-arm-cutover var FINAL_SYSTEM` for the var
-cutover. Its final copy is var-only and refuses to overwrite active persisted
+Use generation 43 for recovery → recovery → normal → normal, verifying each
+`home-recovery`, `home-recovery`, `home`, `home` ticket in that order. Repeated
+recovery must retain root/home; return-normal must discard recovery-only state.
+This ends with the two consecutive accepted normal receipts required by the
+unchanged var guard. Recheck important application state and freeze home policy
+unless a specific defect appears.
+
+Before arming var, build/check the exact current-source desktop and its recovery
+specialisation, granular VM regression, blank-disk reconstruction and workstation
+evaluation again. Record source/lock identity and exact resulting closures;
+run the independent home-acceptance guard. Then use
+`granular-arm-cutover var FINAL_SYSTEM` for the var cutover. Its final copy is var-only and refuses to overwrite active persisted
 home profiles with root-local scaffolding. Repeat the system/application and
-normal/recovery/return checks against the final configuration.
+normal/recovery/return checks against the final configuration. The final chain
+is first accepted normal → recovery → recovery → normal. After gated raw-backing
+pruning, run one further complete sentinel matrix before legacy retirement.
+Freeze final source and obtain exact-head local and CI/PR checks before merge
+readiness; local receipts alone are not CI.
 
 The arming helper enforces stage 23 before any var installation/EFI/service
 change: two consecutive verified normal cycles must have been seeded with

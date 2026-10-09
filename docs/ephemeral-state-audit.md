@@ -221,6 +221,11 @@ pretrial identity/reset artifacts are preexisting migration/recovery evidence,
 not active whole-home or whole-var mounts. Inventory these and retire them only
 after their separate recovery/backup gates are satisfied.
 
+The user confirmed on 2026-10-09 that actual browser, Steam, VS Code, Git/GitHub,
+relevant VCS and Unity/Unreal project workflows are working after the home cutover
+on generation 42. Generation-43 physical/recovery and final-var gates still need
+their own acceptance; no further synthetic app QA is required without a defect.
+
 The first home copy/boot and offline validation passed. Codex reads its retained
 login, and Firefox starts from a private offline profile copy with bookmarks
 intact. Unity loads a private retained-project/profile copy, compiles scripts and

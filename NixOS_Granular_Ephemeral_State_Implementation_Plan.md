@@ -400,8 +400,8 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43 installed boot-only; normal/recovery ESP artifact pairs verified. |
 | 22 | First physical home matrix passed on exact generation 42; correction 43 is installed for future boots. |
-| 23 | Pending: first of two consecutive root-local-home normal cycles seeded for exact generation 43; awaiting a coordinated reboot. |
-| 24 | Codex login, Code state, offline Firefox startup, Blender preferences and isolated Unity project import/shutdown and Unreal module/map load/shutdown checked; remaining full application functionality is not certified. |
+| 23 | Pending: generation 43 recovery → recovery → normal → normal; first recovery ticket seeded and recovery entry selected once. Last two normal cycles must pass the unchanged guard. |
+| 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Recheck after generation-43 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
 | 27 | Var metadata/write/diff audit recorded; physical phase advancement waits for home acceptance. |
@@ -456,20 +456,103 @@ zero failed system services (`home-first-boot-editor-review.json`).
   and persistent-root ESP kernel/initrd pairs match their exact store closures.
   All 82 cache-exception mounts are root-backed; zero failed system services;
   no active final-copy service. No extra home synchronization is required for
-  this repeat cycle because selected home parents are already live persistent
+  a repeat cycle because selected home parents are already live persistent
   binds. Private receipt: `home-repeat-cycle-1-preflight.json`.
-- The retained physical-check tool has seeded and independently re-read all
-  100 harmless sentinels for the first repeat normal cycle. Pending ticket:
+- At this point the retained physical-check tool seeded and independently
+  re-read all 100 harmless sentinels for the first repeat normal cycle. This
+  unbooted ticket was subsequently superseded by the recovery-first sequence
+  below. Its original pending ticket was:
   `/persist/granular-migration/physical-boot-pending.json`; mode `home`, source
   home `seeded_home_fsroot=/@root`, exact target generation 43
   (`0g2j5q657pfd373xicqdyanwrlmwjpf0`). This is preparation, not a passed cycle.
 - User chose to save active work and perform the first repeat reboot themselves.
   No agent reboot is scheduled or initiated. Generation 43 is already the normal
-  default; use an orderly normal reboot after saving. On return, run the retained
+  default; the recovery-first instructions below subsequently changed the next
+  boot to recovery once. On return, run the retained
   physical-check `verify` and inspect service/application health before seeding
   the second repeat cycle. Retain the pending ticket on any verification failure. Keep
   legacy var/originals/snapshots intact and do not advance the var phase until
   home physical and application prerequisites pass.
+
+
+### Supplied continuation review adopted in full — 2026-10-09
+
+- Fully read the user's pasted review/instructions (all eleven continuation
+  steps, both physical sequences, and the final prohibitions). Its reviewed
+  head `c79f246529e646d1025197146b477846040e5e1d` is historical; the fresh starting
+  local head is `15883f6` with a clean tree before these documentation updates.
+  Continue by crossing existing gates. Do not redesign persistence/reset
+  architecture, weaken the home-acceptance guard, prune backing, or retire
+  originals/snapshots before their prerequisites.
+- User explicitly confirmed **all checked and working** for the requested
+  actual Firefox profile/tabs/logins, Steam library/game saves, VS Code
+  settings/extensions/workspaces, Git/GitHub and relevant Unity VCS credentials,
+  and Unity/Unreal project access. This closes the initial post-home-cutover
+  high-value application gate on live generation 42, in addition to earlier
+  Codex/Blender and isolated-editor checks. It is not a claim that Android
+  Studio is installed or that future generation-43/final-var sessions are
+  accepted before they occur. Avoid further synthetic application QA without
+  an observed defect; recheck authoritative state after the physical trials.
+- No reboot had occurred since the normal ticket was seeded. Archived that
+  unbooted ticket as `physical-boot-superseded-<token>.json` (explicitly not a
+  passed receipt), validated exact token contents/regular files, and removed
+  only its 99 still-present generated files; one original generated file was
+  already absent. No application data, cache contents, directories, backing
+  copies or subvolumes were deleted. The superseded ticket does not count
+  toward any physical gate.
+- Reverified exact generation-43 normal and recovery ESP artifacts against
+  their store closures and healthy services, then seeded/re-read all 100
+  sentinels for mode `home-recovery`. The new pending target is
+  `/nix/store/i81b2klc6z76slxn911mwlla3jm6s6pg-nixos-system-desktop-26.05.20261004.0d9e9b8`,
+  source home `/@root`, original boot ID
+  `3166d07f-d1a9-4d86-830b-91d29d277a3d`.
+  Selected `nixos-generation-43-specialisation-persistent-root.conf` **once**;
+  normal generation 43 remains the default/main installed profile, preserving
+  both entries. Private receipt: `home-recovery-cycle-1-preflight.json`.
+  No reboot was initiated or scheduled by the agent.
+
+The revised home sequence is mandatory for this continuation:
+
+| Order | Next boot / ticket | Acceptance before proceeding |
+| --- | --- | --- |
+| 1 | Generation 43 persistent-root / `home-recovery` | Verify exact recovery closure, retained root/home/cache sentinels, legacy var, identity/islands and service health. |
+| 2 | Same generation 43 persistent-root / `home-recovery` | Seed a new ticket only after order 1 passes; verify repeated retention and unchanged root identity. |
+| 3 | Generation 43 normal / `home` | Seed from root-local recovery home; verify recovery-only/root/home/cache state disappears while declared state and legacy var survive. |
+| 4 | Generation 43 normal / `home` | Verify the second consecutive root-local-home normal cycle, then independently run home acceptance. |
+
+After those trials and important app state pass, freeze the home phase. Before
+arming var, build/validate the exact current-source final desktop **and** its
+persistent-root specialisation, granular VM test, blank-disk reconstruction and
+workstation evaluation again; record the source/lock identity and exact closure.
+Run home acceptance independently first, then use the existing var-only shutdown
+copy/verification/sentinel/one-shot machinery without changing its design. Never
+manually select the final system after a failed shutdown copy.
+
+Treat the first final-var normal boot as discovery/acceptance: verify the ticket,
+root-local var, service health, NetworkManager identity/connectivity, allocation,
+random seed, Btrfs service state, optimization storage and login; verify cache,
+tmp, ordinary logs and undeclared var state reset. Add only a specifically proven
+missing authoritative service path if a defect appears. Then perform final
+recovery → recovery → normal, verifying each ticket before seeding the next.
+The initial final normal boot plus return-normal supplies two accepted final
+normal boots; repeated recovery must retain root/home/var.
+
+Only after final physical/application acceptance, prune allow-listed E/D residue
+and hidden disposable backing copies via a private mount namespace and raw
+non-recursive `@persist` view. Leave boot-managed file exceptions to their boot
+rules; run the complete sentinel matrix once after pruning. Compare/inspect
+legacy home/var and each nested var subvolume for unique authoritative data,
+explicitly acknowledge loss of those old rollback generations, retire inactive
+home then var/descendants individually, verify the five-island topology, then
+handle specifically identified migration snapshots with the required final
+confirmation. No such cleanup or retirement is authorized by an unpassed gate.
+
+Fresh GitHub API queries find zero workflow runs directly on this branch and no
+PR for this branch. The current workflow triggers pushes to main and pull
+requests, so local checks cannot be represented as branch CI. Obtain exact-head
+CI/PR checks after the final source freeze, before merge readiness. Corrected the
+stale lower status claim that current home/var are both persistent. Preserve the
+49-stage original acceptance specification and honest unchecked physical gates.
 
 ---
 
@@ -2767,11 +2850,11 @@ The ephemeral-state project is **not complete** until every item below passes.
 
 ## Applications
 
-- [ ] Zen/browser required profile state works.
+- [x] Zen/browser required profile state works (actual Firefox confirmed on generation 42).
 - [x] Codex required state works.
-- [ ] VS Code required state works.
+- [x] VS Code required state works (user confirmed on generation 42).
 - [ ] Android state selected for persistence works.
-- [ ] Steam state selected for persistence works.
+- [x] Steam state selected for persistence works (actual library/game saves confirmed on generation 42).
 - [ ] Plastic/Unity VCS state selected for persistence works.
 - [ ] any other path classified `P` or `R` has been functionally checked.
 
