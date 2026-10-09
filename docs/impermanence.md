@@ -17,7 +17,8 @@ services and Fuzzel history. The second recovery attempt failed after Firefox
 cleaned test markers; it is archived and unaccepted. The standalone tool's
 specific telemetry-marker fix passes eight regressions. Repeat the second
 recovery, verifying before application startup, then perform two normal
-home-reset trials. No replacement ticket/one-shot is currently armed. See the
+home-reset trials. After confirmed application closure, a fresh 100-marker
+replacement ticket and generation-44 recovery one-shot are ready. See the
 [active granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 and [state audit](ephemeral-state-audit.md).
 

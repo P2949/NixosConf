@@ -12,23 +12,30 @@ bind over native legacy var was removed from the intermediate policy; corrected
 generation 43 first carried this fix. The additional observed Fuzzel history
 omission is now restored/corrected in generation 44, installed boot-only with
 both ESP artifact pairs checked.
-Generation 44 persistent-root is now live. The user confirmed the important application workflows
-work after the home cutover and allows coordinated reboots. Following the supplied
-2026-10-09 review, the home sequence is recovery → recovery → normal → normal
-on the latest corrected home candidate. A specific Fuzzel usage-history omission
-was found/restored and its persistence/configuration corrected. Generation 44
-builds and full checks pass, including a fresh combined six-boot VM. The unbooted
-generation-43 tickets were archived as superseded, not accepted. A new 100-sentinel
-`home-recovery` ticket targets generation 44; its recovery entry is selected once,
-with normal generation 44 still the main profile/default. The first recovery
-boot retained root ID/UUID and healthy services, but Codex startup deleted the
-plain shell-snapshot proof file. That strict attempt is unaccepted and its failed
-ticket is archived. The standalone test tool now nests only that cache's marker
-inside a generated directory, with seven regression cases and unchanged strict
-normal/recovery checks. The corrected first recovery trial now passes all 100
-markers, retaining root ID/UUID and healthy services. A fresh 100-marker second
-recovery ticket is prepared for the same generation 44; both normal trials follow.
-No agent reboot is scheduled or initiated.
+Generation 44 persistent-root is now live. The user confirmed the important
+application workflows after the home cutover and permits coordinated reboots.
+Generation 44 remains the canonical home candidate for recovery → recovery →
+normal → normal. The corrected first recovery passed all 100 markers, retaining
+root ID/UUID, identity and healthy services. The second attempt failed after
+Firefox cleanup removed generated markers; its failed ticket is archived and
+does not count. No missing proof was replaced after boot.
+
+The standalone checker nests only the observed Codex and Firefox telemetry
+proofs inside generated directories. Eight marker regressions and all twelve
+unchanged home-acceptance cases pass, as do full flake checks. Retention still
+requires exact tokens; normal reset must remove entire generated containers.
+Firefox artwork cleanup can remove its whole cache directory, so proof timing
+still matters. Verify before launching applications, using a text console before
+the graphical session if needed; no additional cleanup-model architecture is
+being introduced.
+
+The user confirmed apps are saved/closed and will verify before reopening them.
+A replacement second-recovery ticket has all 100 markers verified. Both existing
+ESP entries and every cache bind pass fresh preflight. Generation-44 recovery is
+selected once; normal generation 44 remains the main profile/default. After the
+user's self-reboot, verify the exact pending ticket before starting Firefox,
+Steam, Unity or Unreal. Then normal → normal remains. No agent reboot is
+scheduled or initiated.
 
 ## Preparation and final copy
 
@@ -74,9 +81,11 @@ sentinels. Failure retains the pending ticket for diagnosis.
 Application cleanup may delete cache proof files independently of a reboot.
 Verify promptly after boot before exercising apps, and re-read generated markers
 before reboot if applications have been used since seeding. Codex shell-snapshot
-startup deletes unknown regular files but skips directories; that one proof uses
-a generated directory/token pair. Recovery requires its token, and normal boot
-requires both token and directory to disappear. No missing marker may be recreated
+and Firefox telemetry cleanup delete unknown regular files but skip directories;
+those specific proofs use generated directory/token pairs. Recovery requires
+their tokens, and normal boot requires both tokens and directories to disappear.
+Firefox MPRIS artwork cleanup removes its whole directory, so applications must
+remain closed until verification. No missing marker may be recreated
 after boot to manufacture a passing receipt. Archive failed attempts explicitly;
 they do not count toward the physical gate.
 

@@ -410,7 +410,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
 | 22 | First physical home matrix passed on exact generation 42. Generation-44 recovery is live; its corrected first recovery trial now has a strict 100-marker passing receipt. Earlier failed marker trial remains archived/unaccepted. |
-| 23 | One of four accepted generation-44 trials complete: first recovery PASS. The second attempt failed strict verification after Firefox cleanup; its ticket is archived and does not count. Repeat the second recovery before normal → normal. The updated proof tool passes eight marker cases; app closure and pre-application verification remain required. |
+| 23 | One of four accepted generation-44 trials complete: first recovery PASS. The second attempt failed strict verification after Firefox cleanup; its ticket is archived and does not count. Replacement second recovery has all 100 fresh proofs verified and a generation-44 recovery one-shot, after user-confirmed app closure. Verify before app startup, then normal → normal. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -973,6 +973,47 @@ stale lower status claim that current home/var are both persistent. Preserve the
   extracted installed `TelemetryStorage.sys.mjs`, upstream MPRIS source copy,
   and `granular-firefox-proof-build.out`/`.log`. The independent live home guard
   still rejects this unaccepted boot; var stays unarmed.
+
+---
+
+### Replacement second recovery ready after confirmed closure — 2026-10-09
+
+- User confirmed **"Saved and closed; I'll verify before opening apps"**. Fresh
+  process scanning confirms Firefox/Steam/Unity/Unreal/Zen are stopped. This
+  confirmation applies to the replacement trial; no further readiness request
+  is needed. No application was forcibly stopped by the agent.
+- Formatting and full flake checks pass at the reviewed source, including the
+  eight marker cases and unchanged twelve home-acceptance cases. Unchanged VM
+  results were cached, not rerun or claimed as new physical evidence. Private
+  receipts: `granular-firefox-proof-fmt.log`, `granular-firefox-proof-flake.log`.
+  Fresh GitHub API checks find zero branch workflow runs, zero check runs on the
+  reviewed head, and no open branch PR. Exact-final-head CI remains required.
+- Fresh preflight verifies exact generation-44 recovery/current and normal/main
+  closures, root ID 330/UUID unchanged, root-local home/legacy var, all five
+  root/persistent islands, all 82 cache binds and UID 1000 ownership, both
+  normal/recovery ESP kernel/initrd pairs, and zero failed services. Used findmnt
+  JSON for paths containing spaces. Private receipt:
+  `home-recovery-cycle-2-firefox-preparation.json`.
+- Only after these checks, seeded a new `home-recovery` ticket from current boot
+  `d0f24f81-807b-4e27-810a-b2fcdf1beae4` for the same generation-44 recovery
+  closure. Independently verified all 100 exact tokens and the three generated
+  containers. Same-boot verification still refuses, leaving ticket bytes/hash
+  unchanged and creating no passing receipt. Private seeded evidence:
+  `home-recovery-cycle-2-firefox-seeded.json`.
+- Selected `nixos-generation-44-specialisation-persistent-root.conf` once;
+  normal generation 44 remains the main/default. Next step is the user's chosen
+  self-reboot. Before starting Firefox or other cache-cleaning apps, run
+  `sudo /persist/granular-migration/physical-check-tool/bin/granular-physical-check verify`
+  from a text console if necessary. On failure leave the ticket for diagnosis;
+  never replace missing postboot proof. On success, independently recheck root
+  identity/services and only then prepare normal → normal. Var remains unarmed,
+  all legacy state/snapshots remain, and no agent reboot is initiated/scheduled.
+- Final ready receipt `home-recovery-cycle-2-firefox-final-ready.json` confirms
+  all 100 proofs intact, applications still closed, no failed services, unchanged
+  ticket hash, and separately read EFI default/one-shot variables matching normal
+  generation 44/recovery generation 44. `git diff --check` and final documentation
+  formatting pass. This is preboot readiness only; a second passing recovery
+  receipt still requires the user's actual self-reboot and strict verification.
 
 ---
 

@@ -9,7 +9,9 @@ acceptance remain pending. Generation 44's first accepted recovery trial passed
 all 100 markers with unchanged root identity and healthy services. The second
 recovery attempt failed after Firefox cleaned generated markers and is archived,
 unaccepted. Repeat it before the two normal trials; the updated telemetry proof
-tool passes eight regressions. No replacement ticket is yet armed. Fuzzel history is restored
+tool passes eight regressions. After user-confirmed app closure, all 100 fresh
+proofs match and recovery is selected once. Verify before reopening apps.
+Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
 

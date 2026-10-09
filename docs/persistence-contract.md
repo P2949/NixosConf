@@ -17,8 +17,9 @@ verified. The second recovery attempt failed strict verification after Firefox
 removed generated cache proofs; it is archived and does not count. The first
 accepted recovery remains valid. The updated standalone proof tool nests the
 two telemetry markers and passes eight regressions. A replacement second trial
-needs fresh application closure and verification before applications launch;
-no pending ticket or new one-shot is currently armed. No agent reboot is
+has now been seeded after user-confirmed application closure; all 100 markers
+are verified and generation-44 recovery is selected once. Verify before
+applications launch after the user's self-reboot. No agent reboot is
 scheduled. Read-only snapshots and migration backing remain available;
 repeated physical boot/application checks and the final var cutover remain
 required before legacy state or temporary copies are retired. The

@@ -5,99 +5,64 @@ chronological ledger, supplied guides and superseded observations.
 
 ## Source, PR and CI
 
-Active local work is now `feat/granular-impermanence`, starting at reviewed
-`de058b4b65416249e2a1ac2e722f7514c87d5a36`. See the
+Active local work is `feat/granular-impermanence`, starting at reviewed
+`de058b4b65416249e2a1ac2e722f7514c87d5a36`. The
 [granular implementation plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
-for snapshots, copies, application-state classifications and validation progress.
-Home-only granular generation 44 persistent-root is now running. Generation 42's
-quiesced shutdown copy and first
-physical home sentinel matrix passed; home is root-local while legacy var remains.
-Generation 41 remains available as rollback. The redundant random-seed bind over
-legacy var is corrected in the running intermediate policy; the final
-policy still persists the seed when var becomes root-local. The accepted history
-below describes earlier whole-home/var boots. Existing PR/CI
-evidence does not certify these new local changes.
+records actual receipts, application policies and the remaining gates.
 
-The seed correction was first installed as generation 43. A subsequent observed
-Fuzzel usage-history omission was restored and its narrow state persistence added.
-Both corrections are now installed boot-only as generation 44; generation 42
-was the previous live system. Generation-44 normal/recovery ESP artifacts match their store
-closures. Full flake checks/build pass, including a fresh six-boot granular VM.
-The user confirmed Fuzzel usage ordering is restored. The private first-boot review passes 32 checks, with matching selected
-application identities and healthy databases. Blender also loads its retained
-configuration in background mode. These do not certify full interactive app use.
+Generation 44 persistent-root is running: home is root-local and legacy `@var`
+remains. Generation 42's quiesced shutdown copy and first home matrix passed.
+Generation 44 fixes the intermediate random-seed bind and the observed Fuzzel
+history omission, preserving only `.local/state/fuzzel`. The user confirms the
+restored ordering. Both normal/recovery ESP artifact pairs match the exact store
+closures; generation 41, original subvolumes and snapshots remain available.
 
-Codex also reads the retained login, and Firefox starts successfully from a
-private profile copy with networking isolated. A read-only backing inventory
-records all 49 top-level persist entries and the remaining migration residue.
-Live cache overlays also propagate into `/persist` paths: eventual pruning must
-use a private raw backing view. No backing data was removed.
-
-Unity also loads a private retained-project/profile copy, rebuilds its scripts,
-connects the shader compiler and exits successfully in batch mode. Original
-project sources are unchanged. Unreal also loads the compiled project module
-and default map, reports zero map errors/warnings and shuts down normally from
-a private project/profile copy. These do not certify interactive work or VCS.
-
-The earlier editor fixture shared host IPC despite its private PIDs, leaving a
-stale Zen record that delayed the user's Unreal launch by about 85 seconds.
-On 2026-10-09 the unused runtime records were archived/removed and the fixture
-corrected with a separate IPC namespace and private `/dev/shm` tmpfs. The corrected
-fixture passes without host IPC changes. The user confirmed the actual relaunch
-works normally; its full log shows Zen ready in 0.058 seconds, editor startup
-12.612 seconds and no errors. Retained expensive caches and production policy
-were unchanged. Private evidence is under `zen-ipc-repair-20261009` in the
-migration evidence directory. Generation 44 and its recovery ticket remain ready.
-
-Var arming now refuses before EFI/profile/service changes unless the repeated
-physical home gate is proved by receipts, including their source topology.
-Twelve regression cases and a live refusal on the present incomplete history
-validate this guard. All 49 implementation stages are audited in the active plan;
-physical and retirement requirements remain open.
-
-Local granular validation now passes: the combined normal/recovery/return VM,
-actual Disko blank-disk reconstruction, desktop/home-only builds, workstation
-smoke and root regression scenarios. The staged physical procedure is in
-[granular-cutover.md](granular-cutover.md). Migration tools and exact candidate
-closures are retained under `/persist/granular-migration`. Repeated physical
-normal/recovery boots, functional application checks and final var cutover remain
-open. On 2026-10-09 the user allowed coordinated reboot/intervention requests.
-The user confirmed the important browser/Steam/Code/Git/VCS/project workflows
-work after the home migration, then identified missing Fuzzel ordering history.
-Original/recent counts were merged and restored; the user confirmed ordering is
-restored. Source persists its dedicated state directory and points Fuzzel there.
-Generation 44 is built/checked/installed boot-only. The previous unbooted tickets
-were withdrawn for this fix; a new 100-sentinel recovery ticket and generation-44
-recovery one-shot are verified. Use generation 44 throughout recovery → recovery
-→ normal → normal, preserving the consecutive-normal gate. The first recovery
-reboot retained root ID/UUID and healthy services, but its strict receipt is
-unaccepted: Codex removed one plain shell-snapshot marker during startup. The
-installed binary reproduces the deletion; a nested test marker survives.
-The standalone proof tool now uses that nested marker and passes seven regression
-cases; the twelve home-acceptance cases and full flake checks pass. Same-boot
-acceptance still refuses without changing the ticket. The failed ticket was archived
-without a passing receipt. A fresh 100-marker ticket and generation-44 recovery
-one-shot are verified. Fuzzel's state bind/config/history pass, and the temporary
-compatibility symlink is removed. That failed physical attempt is not counted. Verify promptly
-after each boot before application cache cleanup. No agent reboot is scheduled
-or initiated. Fresh
-API queries show
-zero workflow runs and no PR directly for this branch; exact-head CI remains
-required after final freeze.
-
-The user's replacement self-reboot has now passed the first accepted generation-44
-recovery trial: all 100 markers, exact closure/topology, stable identity and
-unchanged root ID/UUID. Services are healthy; Fuzzel's persistent state/config and
-eight history records are verified. Receipt:
+The first accepted generation-44 recovery retained all 100 markers and the same
+root ID 330/UUID, with stable identity, correct islands and healthy services:
 `physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json`.
-Only after acceptance, a fresh 100-marker second recovery ticket and one-shot
-were prepared for the same generation 44. Firefox subsequently reopened and
-removed two cache proofs before reboot; the user then confirmed it was saved
-and closed. Its exit is independently verified, both generated markers were
-refreshed before reboot, and all 100 proofs match the unchanged ticket. The next self-reboot
-tests repeated recovery retention; then two consecutive normal trials follow.
-Private reviews: `home-recovery-accepted-cycle-1-review.json` and
-`home-recovery-accepted-cycle-2-preflight.json`.
+The second attempt on boot `d0f24f81-807b-4e27-810a-b2fcdf1beae4` failed strict
+verification after Firefox deleted telemetry proofs; later artwork cleanup
+removed another proof. That attempt is archived and never counted. No missing
+postboot proof was recreated. The first accepted recovery remains valid.
+
+The standalone checker now nests proofs only where observed Codex/Firefox
+telemetry cleanup skips directories. Eight marker regressions pass; recovery
+still requires exact tokens and normal reset must remove entire generated
+containers. The unchanged twelve-case home guard still refuses this unaccepted
+boot. Full current-source flake checks and formatting pass; unchanged VM results
+were reused. This is local validation, not new physical or GitHub CI evidence.
+
+After the user confirmed applications were saved/closed and agreed to verify
+before reopening them, the replacement second recovery ticket was seeded and
+all 100 markers independently re-read. All 82 cache binds, user ownership,
+ESP artifact pairs and zero failed services pass fresh preflight. The new
+GC-rooted checker also refuses same-boot verification without altering the
+ticket. Generation-44 recovery is selected once; normal generation 44 remains
+the main profile/default. No agent reboot is initiated or scheduled.
+Private evidence: `home-recovery-cycle-2-firefox-preparation.json` and
+`home-recovery-cycle-2-firefox-seeded.json`. Verify before starting Firefox or
+other cache-cleaning applications, using a text console if needed. Then complete
+normal → normal on generation 44, independently run home acceptance, and freeze
+home policy before rebuilding the exact final var candidate.
+
+The user already confirmed browser, Steam, VS Code, Git/GitHub, relevant VCS and
+Unity/Unreal project workflows after the home migration. Selected identity and
+database integrity checks, Codex login, Blender configuration and isolated
+Firefox/Unity/Unreal startup checks also passed. Android Studio remains
+uninstalled; audit its actual paths after installation.
+
+The earlier editor fixture leaked Zen runtime state through shared host IPC.
+The unused records were archived/removed and the fixture corrected with an IPC
+namespace and private `/dev/shm`. The user confirms actual Unreal relaunch is
+normal: Zen ready in 0.058 seconds, editor startup 12.612 seconds, no errors.
+Production policy and the retained expensive caches were unchanged.
+
+Final var cutover, final physical normal/recovery chain, raw backing pruning and
+legacy retirement remain gated. Cache overlays propagate into apparent persist
+paths; later pruning requires a private non-recursive raw backing view. No
+backing, legacy subvolume or snapshot was retired. Fresh GitHub API queries at
+the reviewed head found zero branch workflow runs, zero check runs and no open
+PR for this branch. Obtain exact-head CI after final source freeze.
 
 Prior readiness branch: `feat/pre-optimization-readiness`, based on main
 `f89205c07e4d3a77900b046a5bf937944488647b`. Obtain the current source with
