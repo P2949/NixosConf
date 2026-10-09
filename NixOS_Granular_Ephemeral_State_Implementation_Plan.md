@@ -410,7 +410,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 20 | Home builds, formatting, checks, smoke and reconstruction passed. |
 | 21 | Home-only generations 42/43/44 installed; generation-44 normal/recovery ESP artifact pairs independently verified. |
 | 22 | First physical home matrix passed on exact generation 42. Generation-44 recovery is live; its corrected first recovery trial now has a strict 100-marker passing receipt. Earlier failed marker trial remains archived/unaccepted. |
-| 23 | One of four accepted generation-44 trials complete: first recovery PASS. Second recovery has a fresh 100-marker ticket/one-shot prepared; then normal → normal remain. Unchanged guard still requires the last two normal cycles. |
+| 23 | One of four accepted generation-44 trials complete: first recovery PASS. User closed the reopened Firefox; its two removed proofs were refreshed before reboot and all 100 markers reverified. Second recovery ticket/one-shot ready; then normal → normal remain. Unchanged guard still requires the last two normal cycles. |
 | 24 | Initial home application gate passed: technical integrity/startup checks plus user confirmation on generation 42 that browser, Steam, Code, Git/GitHub, relevant VCS and Unity/Unreal workflows all work. Fuzzel ordering restored/confirmed; actual Unreal Zen startup delay resolved/confirmed. Recheck after accepted generation-44 trials; Android Studio remains uninstalled. |
 | 25 | Source already uses narrow audited parents and cache exceptions; no whole `.config`/`.local` persistence. |
 | 26 | Raw backing inventory prepared; pruning waits for repeated physical/application acceptance. |
@@ -873,6 +873,60 @@ stale lower status claim that current home/var are both persistent. Preserve the
   Updated current-status/contract/audit/runbook documentation accordingly.
   No agent reboot is scheduled/initiated, no var cutover is armed, and no
   migration backing, legacy subvolume or snapshot was retired.
+
+---
+
+### Second recovery awaits another application-close check — 2026-10-09
+
+- Revalidated current boot `99c7b457-caa8-4599-9d87-6b74f10ccb20`: the second
+  recovery reboot has not occurred, and systemd reports no active shutdown jobs.
+  First recovery acceptance is unchanged. The next ticket has 98/100 markers;
+  Firefox has reopened and removed the flat proofs under `Pending Pings` and
+  `y34aofre.default/saved-telemetry-pings` before reboot. This is pre-boot cache
+  cleanup, not another failed physical trial.
+- Asked the user to save/close the reopened Firefox so the final generated-marker
+  refresh can occur after its cleanup. The earlier saved/closed confirmation
+  applied to the previous trial; do not assume newly reopened work is saved or
+  terminate the browser. No existing ticket, marker expectation, strict verifier
+  or EFI selection was changed, and no reboot was initiated/scheduled. Private
+  readiness evidence: `home-recovery-cycle-2-awaiting-firefox-close.json`.
+- Next action after closure: refresh only the current ticket's exact missing
+  generated proof files while still on its source boot, independently verify all
+  100 proofs, then return the prepared self-reboot step to the user. Do not
+  advance to normal trials before the second recovery receipt passes.
+
+---
+
+### Second recovery final readiness restored — 2026-10-09
+
+- User confirmed **"Firefox is saved and closed"**. Independent process scanning
+  confirms Firefox/Steam/Unity/Unreal/Zen server have all exited. On unchanged
+  source boot `99c7b457-caa8-4599-9d87-6b74f10ccb20`, recreated only the two
+  missing, exact token-named user proof files before reboot. All 100 proofs now
+  match the unchanged ticket. No expectation or verifier rule was altered.
+- Generation-44 recovery one-shot is independently confirmed; services have no
+  failures. Second recovery self-reboot is ready again. Leave ordinary apps
+  closed until the next boot's strict receipt has been verified. Private final
+  evidence: `home-recovery-cycle-2-final-ready-after-app-close.json`.
+  No agent reboot is initiated/scheduled; the first accepted recovery receipt
+  remains the only counted trial, and var is unarmed.
+
+---
+
+### Second recovery waits on the chosen self-reboot — 2026-10-09
+
+- The readiness-confirmation turn and two following goal continuations all end
+  at the same remaining external gate: the user has chosen to reboot themselves,
+  but source boot `99c7b457-caa8-4599-9d87-6b74f10ccb20` is still live. Latest
+  revalidation finds all 100 proofs intact, no active systemd shutdown jobs and
+  no failed services. The previous continuation added no new acceptance evidence;
+  it was not a verified wait on a live reboot job.
+- Required preparation and independent checks are complete. No safe independent
+  work remains before the second physical recovery receipt; normal trials and
+  final-var advancement depend on it. Mark the goal blocked on this self-reboot
+  event, without altering its scope or treating the project as complete. No
+  further readiness permission is needed. Resume with strict ticket verification
+  when the user returns after reboot; the first accepted recovery remains counted.
 
 ---
 

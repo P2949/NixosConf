@@ -91,7 +91,10 @@ unchanged root ID/UUID. Services are healthy; Fuzzel's persistent state/config a
 eight history records are verified. Receipt:
 `physical-boot-passed-f27d98d2-004e-4b1b-a803-68af4b8c4f20.json`.
 Only after acceptance, a fresh 100-marker second recovery ticket and one-shot
-were prepared for the same generation 44. Apps remain closed. The next self-reboot
+were prepared for the same generation 44. Firefox subsequently reopened and
+removed two cache proofs before reboot; the user then confirmed it was saved
+and closed. Its exit is independently verified, both generated markers were
+refreshed before reboot, and all 100 proofs match the unchanged ticket. The next self-reboot
 tests repeated recovery retention; then two consecutive normal trials follow.
 Private reviews: `home-recovery-accepted-cycle-1-review.json` and
 `home-recovery-accepted-cycle-2-preflight.json`.
