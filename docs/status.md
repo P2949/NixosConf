@@ -38,6 +38,16 @@ project sources are unchanged. Unreal also loads the compiled project module
 and default map, reports zero map errors/warnings and shuts down normally from
 a private project/profile copy. These do not certify interactive work or VCS.
 
+The earlier editor fixture shared host IPC despite its private PIDs, leaving a
+stale Zen record that delayed the user's Unreal launch by about 85 seconds.
+On 2026-10-09 the unused runtime records were archived/removed and the fixture
+corrected with a separate IPC namespace and private `/dev/shm` tmpfs. The corrected
+fixture passes without host IPC changes. The user confirmed the actual relaunch
+works normally; its full log shows Zen ready in 0.058 seconds, editor startup
+12.612 seconds and no errors. Retained expensive caches and production policy
+were unchanged. Private evidence is under `zen-ipc-repair-20261009` in the
+migration evidence directory. Generation 44 and its recovery ticket remain ready.
+
 Var arming now refuses before EFI/profile/service changes unless the repeated
 physical home gate is proved by receipts, including their source topology.
 Twelve regression cases and a live refusal on the present incomplete history

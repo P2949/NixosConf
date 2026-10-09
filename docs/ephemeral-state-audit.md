@@ -251,6 +251,17 @@ repeated physical home/recovery acceptance, remaining
 application checks, var-only quiesced synchronization/cutover, the final physical
 sentinel matrix, backing-store pruning and deliberate legacy retirement.
 
+The October-8 editor fixture had incomplete IPC isolation: private PIDs were
+written into host POSIX shared memory, causing an 85-second Zen startup timeout
+on the user's later launch. This was corrected on October 9 by archiving/removing
+the two proven-unused Zen runtime records and adding both a private IPC namespace
+and private `/dev/shm` tmpfs to the fixture. The corrected copied-project check
+passes with host Zen IPC unchanged. The user's actual relaunch is accepted:
+Zen initialization 0.058 seconds, editor startup 12.612 seconds, zero error lines,
+and user confirmation of normal startup. Zen/DDC caches remain retained; no
+production persistence declarations or launch wrapper changed. Historical fixture
+startup/project-integrity evidence does not certify complete host IPC isolation.
+
 Shared mount propagation mirrors cache overlays into the apparent `/persist`
 backing paths. Inventory and eventual pruning must inspect a non-recursive raw
 `@persist` view in a private mount namespace; deleting through the live overlay

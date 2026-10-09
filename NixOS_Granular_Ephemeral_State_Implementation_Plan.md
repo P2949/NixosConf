@@ -35,6 +35,10 @@ from source changes or VM tests.
 - Pending: repeated physical home acceptance and the var cutover, post-trial
   application rechecks, physical repeated normal/recovery boots, backing-store pruning, and
   legacy-subvolume/snapshot retirement. The goal is not complete.
+- Observed Unreal Zen startup delay corrected on 2026-10-09: the earlier editor
+  fixture leaked private PIDs into host shared memory. Stale runtime records were
+  removed and fixture IPC isolation corrected. Actual relaunch: Zen ready in
+  0.058 seconds, editor startup 12.612 seconds; user confirms normal startup.
 
 Evidence paths and validation results will be added here as work progresses.
 
@@ -344,6 +348,12 @@ at this point. The 2026-10-09 coordination update below supersedes that restrict
   check certifies retained-project startup/import and local license handling,
   not interactive editing, Unity VCS remote access, Unreal PIE/gameplay, GPU
   rendering or a complete build workflow.
+- Qualification discovered on 2026-10-09: these original fixtures did not isolate
+  SysV IPC or the POSIX `/dev/shm` filesystem. Their project-integrity claims
+  remain valid, but they leaked Zen runtime state into the host. The correction
+  and independent actual-launch acceptance are recorded below. General-named
+  Unreal receipts were refreshed by the diagnostic rerun; the 18.20-second
+  October-8 result above is historical, not the contents of those latest files.
 - Unity command-line behavior is documented in the
   [official Unity editor argument reference](https://docs.unity.com/en-us/engine/6000.5/manual/unity-editor/command-line-arguments/editor).
   Unreal unattended/headless flags are documented in the
@@ -623,6 +633,76 @@ stale lower status claim that current home/var are both persistent. Preserve the
   remain preserved; future pruning must account for the now-declared history before deleting
   redundant old cache copies. Final-var exact-source builds/physical acceptance,
   raw cleanup, retirement and final exact-head CI remain gated as specified.
+
+---
+
+### Observed Unreal Zen startup delay corrected — 2026-10-09
+
+- Fully read the user's reported launch log (4,632 lines) and subsequent normal
+  launch log (2,528 lines). The first contains 3,571 permission warnings for PID
+  76 and a failed Zen auto-launch taking 85.422 seconds. Unreal subsequently
+  falls back to filesystem DDC and remains usable; this was a startup delay,
+  not lost project data or a reason to discard the retained expensive cache.
+- Installed Epic source `ZenServerState.h/.cpp` confirms the 64-byte shared-table
+  layout and process liveness check. Host `/dev/shm/UnrealEngineZen` entry zero
+  held PID 76, desired/effective port 8558 and session ID matching the companion
+  `ZenI_0ad925b0ba22bb42f8e8cbea`. Host PID 76 is root kernel thread `cpuhp/10`.
+  Its permission denial causes Zen to assume a server exists. The shared-table
+  modification timestamp, 2026-10-08T12:25:20.554425Z, matches the earlier private
+  editor test. That fixture isolated PIDs but shared host IPC: this was an agent
+  test-isolation defect, not an Impermanence cache-retention defect.
+- Archived and removed exactly those two unused shared-memory runtime files
+  after confirming no actual editor/Zen process, no port-8558 listener and no
+  process mapping of either file. No process was signalled; persistent Zen/DDC,
+  profiles, projects and migration snapshots were untouched.
+- Corrected the private editor harness to use `unshare --ipc` and mount a private
+  tmpfs at `/dev/shm` inside its private mount namespace. Both are necessary:
+  SysV namespace isolation alone does not isolate POSIX shared-memory files.
+  The harness verifies separate namespace/filesystem identities, unchanged host
+  Zen shared-memory contents and unchanged authoritative project files. Its
+  old version is archived; the retained executable fixture is corrected.
+- A root write to the user-owned `/tmp` harness was denied by `protected_regular`;
+  the command sequence erroneously continued with the old fixture. That rerun
+  exited successfully in 17.14 seconds after initial cleanup, but leaked another
+  private Zen record. Its receipts/records are archived under `uncorrected-rerun`;
+  the unused records were removed after the same independent inactivity checks.
+  The corrected run then passed in 16.20 seconds, Zen initialization 0.040
+  seconds, status OK, no permission/time-out warnings, and no host Zen records
+  created. Original project authoritative files remained unchanged.
+- The user's ordinary relaunch then created a valid host Zen server, PID 139689,
+  listening on 8558; this legitimate live state was left intact. Its full new
+  attached log confirms Zen ready in **0.058 seconds**, `ZenLocal` status OK,
+  editor initialization and **12.612-second editor startup**, orderly shutdown,
+  zero error lines and no prior repeated Zen permission/startup failures. Five
+  other warnings concern Vulkan bindless options, absent `.nix-profile`, a render
+  console variable and a missing RecastNavMesh; none indicates this Zen failure.
+  User explicitly confirmed **"Yes, Zen starts normally"**.
+- Private evidence under `/persist/granular-migration/zen-ipc-repair-20261009`:
+  original runtime bytes and `cleanup.json`, both attached logs,
+  `editor-check-before-ipc-fix.py`, `editor-check-with-ipc-fix.py`,
+  `uncorrected-rerun/`, corrected `isolated-unreal-*` receipts/logs and
+  `verification.json`. The retained general editor fixture also has the fix.
+  Production Unreal wrapper and persistence policy are unchanged; generation 44,
+  the pending 100-sentinel recovery ticket and recovery one-shot remain prepared.
+  This app defect is resolved; repeated physical home/var and retirement gates
+  remain open. No reboot was initiated or scheduled.
+
+### Recovery readiness refreshed after application use — 2026-10-09
+
+- Before advising the next reboot, rechecked the unchanged live generation-42
+  boot, exact generation-44 recovery ticket/closure, recovery EFI one-shot and
+  zero failed system services. Three generated sentinel files were absent in
+  Unity project `Temp`, Firefox `firefox-mpris` and Steam HTML cache. These are
+  application-managed temporary directories; disappearance before reboot is not
+  a physical recovery failure and no boot is counted.
+- Restored only those three exact token-named generated proof files as the user
+  and independently verified all 100 ticket paths/contents. Ticket, source boot
+  identity and EFI selection are unchanged. Private refresh evidence:
+  `home-recovery-marker-refresh-20261009.json`. The next step remains the user's
+  orderly reboot into generation-44 recovery after saving work, then exact
+  physical receipt/root-identity/service/Fuzzel checks before the second trial.
+  If further application use removes markers, refresh them again before the
+  test; do not mistake application cleanup for boot-reset behavior.
 
 ---
 
