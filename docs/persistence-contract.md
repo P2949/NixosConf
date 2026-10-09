@@ -10,7 +10,7 @@ the generation-45 normal/recovery/recovery/normal chain passes. A raw-persist
 audit prompted the user's explicit request to preserve Unity editor preferences;
 the corrected normal now passes all 100 proofs, the new preference bind/nine
 hashes and the user's Unity UI check. Corrected recovery/return and scoped raw
-pruning now pass; post-pruning normal proof and legacy retirement remain gated.
+pruning and post-pruning normal proof now pass; legacy retirement remains gated.
 The first final normal matrix, service discovery and representative
 application recheck pass; both policies are frozen. Generation 42's copy and first
 physical home matrix passed; both accepted generation-44 recovery trials now

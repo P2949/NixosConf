@@ -7,8 +7,8 @@ The generation-45 normal/recovery/recovery/normal chain passes. The raw-persist
 audit identified Unity editor preferences; the user requests their preservation.
 That narrow correction passes first normal, active preference bind/nine hashes
 and the user's Unity UI check; its corrected normal/recovery/recovery/normal
-chain is accepted. Scoped raw-backing pruning is complete; a post-pruning normal
-physical proof remains required before legacy retirement.
+chain is accepted. Scoped raw-backing pruning and its post-pruning normal
+physical proof pass; final legacy comparison precedes retirement.
 Its verified var-only shutdown copy, first final physical matrix, discovery and
 user application recheck pass; both policies are frozen. Generation 42's first
 home matrix passed, including all 82 cache exceptions. Both accepted generation-44 recovery trials passed
@@ -20,7 +20,7 @@ recheck pass; home policy is frozen. Exact-source final-var validation passes,
 including fresh VM runs. Final generation 45's first normal receipt is
 `physical-boot-passed-f0309ac2-5ee1-49c5-96a6-ae7610598589.json`: 92 disposable
 proofs gone, eight persistent proofs retained, new root 336 and reset count 22.
-Post-pruning normal proof, legacy retirement and final source/CI remain gated.
+Legacy retirement and final source/CI remain gated.
 Fuzzel history is restored
 and verified in its persistent state directory; no agent reboot is scheduled.
 The active work record is [the granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
@@ -306,4 +306,4 @@ were left to boot. Three tiny opaque Unity runtime preference files are retained
 as explicitly named private recovery evidence, not runtime persistence.
 Receipt: `scoped-backing-prune-20261009.json`; independent re-audit finds no
 undeclared residue or hidden cache data. All originals and snapshots remain.
-Post-pruning physical acceptance precedes their retirement.
+Post-pruning physical acceptance now passes; final comparison precedes retirement.

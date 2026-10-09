@@ -178,7 +178,7 @@ normal: Zen ready in 0.058 seconds, editor startup 12.612 seconds, no errors.
 Production policy and the retained expensive caches were unchanged.
 
 Final var cutover, the corrected physical normal/recovery chain and scoped raw
-backing pruning pass. Post-pruning proof and legacy retirement remain gated.
+backing pruning and post-pruning proof pass. Legacy retirement remains gated.
 Cache overlays propagate into apparent persist
 paths; later pruning requires a private non-recursive raw backing view. No
 backing, legacy subvolume or snapshot was retired. Fresh GitHub API queries at

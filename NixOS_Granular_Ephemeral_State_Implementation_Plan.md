@@ -437,11 +437,11 @@ Private receipts below are under `/persist/granular-migration`.
 | 34 | Exact frozen-source final desktop/recovery, full flake checks, evaluation, eight marker/twelve home guard cases, fresh six-boot granular VM, fresh blank-disk reconstruction/smoke and all five fresh root scenarios PASS. |
 | 35 | Final var generation 45 installed boot-only after home acceptance. Its quiesced var-only copy verified and selected 45 once; first physical normal acceptance now passes. Generation 45 normal is now the default. |
 | 36 | PASS: exact generation 45 normal; home and var on @root, optimization independently mounted, selected var state bound from @persist. |
-| 37 | Final normal and repeated recovery/return PASS on generations 45 and corrected 46. Post-pruning normal proof is prepared and pending. |
+| 37 | Final normal and repeated recovery/return PASS on generations 45 and corrected 46. Post-pruning generation-46 normal proof also passes. |
 | 38 | PASS: system running, zero failed services, full NetworkManager connectivity, stable identity/allocation, Home Manager/random-seed services healthy, Fuzzel preserved; user confirms final-var applications work. |
 | 39 | Complete generation-45 and corrected generation-46 normal → recovery → recovery → normal PASS; corrected root 340/count 24 retained in both recovery boots, then root 342/count 25 replaced it, retaining all nine Unity preference hashes. |
 | 40 | Full final physical topology audit after generation-45 return-normal PASS; root/home/var/etc/root/srv/tmp/usr root-local, persistent islands and separate ESP/runtime mounts correct. |
-| 41 | Exact-system sentinel tool implemented; eight placement regressions pass. Home and corrected final chains pass all 100 proofs each; post-pruning normal trial is prepared. |
+| 41 | Exact-system sentinel tool implemented; eight placement regressions pass. Home and corrected final chains and post-pruning normal pass all 100 proofs each. |
 | 42 | Scoped raw pruning complete: zero undeclared residue and zero hidden cache data, 49 justified top-level purposes, all declared paths and active cache mount identities retained. |
 | 43 | Persistence contract reflects final source and actual staged rollout; final-actual acceptance remains pending. |
 | 44 | Combined permanent flake regression registered; new home-acceptance guard is also checked. |
@@ -449,7 +449,7 @@ Private receipts below are under `/persist/granular-migration`.
 | 46 | Pending: specifically identified snapshots remain required safety material; none retired. |
 | 47 | Required host/home/module/test/document structure exists; no root-reset guard was weakened. |
 | 48 | Checklist keeps unproven physical, application and hygiene items open. |
-| 49 | Not achieved: corrected physical/application acceptance and pruning pass; post-pruning proof, retirement and final source/CI acceptance remain. |
+| 49 | Not achieved: corrected physical/application acceptance, pruning and post-pruning proof pass; retirement and final source/CI acceptance remain. |
 
 No VM, static audit, copied-profile startup or elapsed time is substituted for
 the remaining physical workstation requirements. No reboot is requested or scheduled.
@@ -1732,6 +1732,26 @@ stale lower status claim that current home/var are both persistent. Preserve the
   nested `@var` children. Missing old selected files require reconciliation;
   no legacy source or snapshot has been deleted. Retirement, final documentation
   and source freeze, exact-head validation and CI remain pending.
+
+---
+
+### Final legacy comparison: initial read-only findings — 2026-10-09
+
+- `legacy-pre-retirement-audit.json` examined **608,511** old selected home
+  file paths in a private read-only top-level view. **85,721** no longer exist
+  under their original active names. Most group under old software versions,
+  Steam runtimes, Firefox site storage and old Trash contents. Absence alone
+  does not establish lost data or authorize retirement: old Trash Assets/git
+  and Library data must be reconciled against current Unity project locations;
+  rotated profile/database objects also require review. Current retained Steam
+  shader cache exists (226 MiB), with no missing shader-cache paths reported.
+- Only one old undeclared node falls outside the prior residue list:
+  `granular-undeclared`, an earlier physical-proof directory requiring exact
+  content inspection. Individually inspected legacy var children:
+  `lib/portables` and `lib/machines` are empty; `tmp` contains one prior
+  generation-45 proof file. No recursive deletion, source retirement or snapshot
+  retirement has occurred. Final comparison remains open until required data
+  is accounted for rather than assuming missing paths are disposable.
 
 ---
 
@@ -4046,7 +4066,7 @@ The ephemeral-state project is **not complete** until every item below passes.
 - [x] var multi-boot test passes.
 - [x] combined granular-Impermanence regression test passes.
 - [x] changed Disko layout passes reconstruction testing.
-- [ ] physical repeated-boot sentinel tests pass.
+- [x] physical repeated-boot sentinel tests pass (corrected generation-46 chain and post-pruning normal, 100 proofs each).
 
 ## Persistent storage hygiene
 
