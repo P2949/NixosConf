@@ -113,6 +113,41 @@
         // optimization.packages
         // {
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
+          module-docs =
+            (pkgs.nixosOptionsDoc {
+              options =
+                let
+                  opts = inputs.self.nixosConfigurations.desktop.options;
+                in
+                {
+                  boot.ephemeralBtrfsRoot = opts.boot.ephemeralBtrfsRoot;
+                  workstation = {
+                    activationSafety = opts.workstation.activationSafety;
+                    ephemeralApplicationState = opts.workstation.ephemeralApplicationState;
+                  };
+                  hardware = {
+                    commanderCore = opts.hardware.commanderCore;
+                    intelPackagePower = opts.hardware.intelPackagePower;
+                  };
+                };
+              transformOptions =
+                option:
+                option
+                // {
+                  declarations = map (
+                    declaration:
+                    let
+                      path =
+                        nixpkgs.lib.removePrefix "${inputs.self}/" (toString declaration)
+                        + nixpkgs.lib.optionalString (builtins.pathExists "${declaration}/default.nix") "/default.nix";
+                    in
+                    {
+                      name = path;
+                      url = "https://github.com/P2949/NixosConf/blob/${inputs.self.rev or "main"}/${path}";
+                    }
+                  ) option.declarations;
+                };
+            }).optionsCommonMark;
         };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
