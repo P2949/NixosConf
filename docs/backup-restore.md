@@ -16,8 +16,23 @@ user authorization, along with failed drill receipts and the obsolete script cop
 The 10.33 GB local staged archive was also removed. Other existing OS ISOs were
 left intact. Approximately 38 GiB is now free on Ventoy.
 
-No independent home/application backup or freshness test is a release gate under
-this user-selected scope. This is a scope decision, not a claim that removed
+No whole-home/application archive is a release gate under this user-selected
+scope. The targeted minimal recovery-source audit now identifies three local
+authored exceptions: Blender changes/recovery copy and a Unity settings change.
+These are protected in a 260,598-byte exceptions-only archive on Ventoy. Zstd
+integrity, extraction of all three files, source/restored hash comparisons and
+external-copy hashes passed; Ventoy was synced and cleanly unmounted.
+Archive SHA-256:
+`b4fea7ae78e2083198ce3847f8ab00a15567ad43a3a4304ada481d265a8232cf`.
+Private recovery-source manifest SHA-256:
+`ebc0990e3ebe8052983bcd672c484b736e64a71929c49838612022f1b116144b`.
+Relevant project repositories have no local commits ahead of their upstream;
+working-tree exceptions are covered separately. The extra Unity directory
+contains only disposable Logs/Temp. Application/game state remains deliberately
+excluded under the user's policy; Steam Cloud coverage is not independently
+claimed. The separate secrets restore remains accepted on user evidence.
+
+This is a scope decision, not a claim that removed
 archives remain available or that local uncommitted files are remotely backed up.
 The earlier verified project clone/LFS restore and physical recovery evidence
 remain valid. Final runtime soak and baseline release gates remain separate.

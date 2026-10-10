@@ -127,5 +127,8 @@ The user narrowed backup scope on October 10 to GitHub project recovery,
 application reinstall and the separately tested secrets backup. Whole-home and
 application-state archives are not required; the oversized archives/partial were
 removed from Ventoy, leaving the minimal recovery kit. A larger backup drive is
-no longer a blocker. Final generation-46 soak, collector correction and baseline
-freeze/release remain pending.
+no longer a blocker. The minimal recovery manifest and three-file exception
+archive passed external copy, integrity and restore verification. The baseline
+collector now resolves containing filesystems for root-local home/var and
+references accepted ELF32 Vulkan evidence. Formatting and flake checks passed.
+Final generation-46 soak and baseline freeze/release remain pending.
