@@ -20,7 +20,8 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Known-good Commander Core support used on the previous Gentoo system.
+    # Pinned Commander Core fw2 support from upstream PR #886.
+    # Remove only after the required support is released and available in Nixpkgs.
     liquidctl-pr886 = {
       url = "github:indyfive11/liquidctl/48e8dd07bdc1c5dca330a844aca7fb22218e6e59";
       flake = false;

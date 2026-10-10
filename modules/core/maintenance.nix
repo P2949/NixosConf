@@ -9,8 +9,6 @@
   };
 
   services.journald.extraConfig = ''
-    SystemMaxUse=2G
-    SystemKeepFree=4G
     MaxRetentionSec=90day
   '';
 
