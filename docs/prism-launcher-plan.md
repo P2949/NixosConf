@@ -56,6 +56,11 @@ Pasted citation placeholders are not usable source references.
   did not mutate state; the user closed Prism normally.
 - [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
   GPU/audio/input and test-world acceptance; structural first-run audit.
+  Launcher/UI/Java gates pass as above. Microsoft/vanilla-world acceptance is
+  now requested from the user with Prism reopened. Host `amdgpu` binds Navi48;
+  PipeWire, PipeWire Pulse and WirePlumber are active; GameMode is available
+  and inactive outside a requested GameMode session. These host checks do not
+  establish actual game rendering/audio. Post-boot documentation check passed.
 - [ ] Phase 1 state survival proof and acceptance commit.
 - [ ] Evidence-backed cache/log exclusions, checks and boot-only installation.
 - [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;
@@ -70,13 +75,13 @@ No credentials or runtime game data belong in this ledger or Git.
 
 ## Next user-controlled gate
 
-Reboot normally into generation 48, not `persistent-root`, then return here
-before launching Prism. Verify the private persistence mount and system health
-first. The agent can capture the structural pre-account tree after first launch;
-then the user completes Microsoft authentication and vanilla instance/world
-checks. Preserve all state and keep the whole launcher root persistent until
-that evidence is accepted. The existing package checkpoint commits record
-implementation only, not completed physical/runtime acceptance.
+Generation 48 normal boot, private mount, launcher and Java acceptance have
+passed. The pre-account structural tree is captured. Complete Microsoft
+authentication and vanilla instance/world checks, then close game and launcher
+normally so the agent can audit the real post-workload state. Preserve all state
+and keep the whole launcher root persistent until that evidence is accepted.
+The existing package checkpoint commits record implementation only, not
+completed physical/runtime acceptance.
 
 ---
 
