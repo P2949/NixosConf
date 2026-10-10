@@ -10,11 +10,6 @@
 
   networking.networkmanager.enable = true;
 
-  hardware.bluetooth = {
-    enable = false;
-    powerOnBoot = false;
-  };
-
   security.polkit.enable = true;
 
   services.udisks2.enable = true;
