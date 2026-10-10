@@ -95,12 +95,22 @@ Pasted citation placeholders are not usable source references.
   translations372KiB, metacache and all other children remain retained pending
   separate evidence. No Prism-managed Java directory observed.
 - [ ] Phase 1 state survival proof and acceptance commit.
-- [ ] Evidence-backed cache/log exclusions, checks and boot-only installation.
+- [x] Evidence-backed cache/log exclusions, checks and boot-only installation.
   Root cache/feed and logs candidates are now declared after both real workloads;
   only those two children are excluded. Candidate desktop build passed:
   `/nix/store/yn3n1p5wgcgwcnqfxi29nv26g22d1hm4-nixos-system-desktop-26.05.20261004.0d9e9b8`.
-  Full flake checks remain running. Quiesced post-game inventory, sentinels,
-  private retained-state hashes and boot installation are still pending.
+  Full flake checks including storage regression passed. User normal Quit
+  independently verified (no Prism/Java process). Stable post-game tree/size
+  inventories and private SHA256 manifest for accounts/config, complete
+  instances, assets/libraries are captured; self-check passes before reboot.
+  Boot-only installation passed as generation49; generation48 remains available
+  and running. No live persistence/cache mount mutation was performed.
+  All plan parent/cache/log sentinels exist. Additional root-local cache/log
+  source sentinels exist under `.cache/ephemeral-app-state` on current `@root349`;
+  verify these disappear too, since initial persistent-child markers alone
+  demonstrate hiding rather than deletion. Existing root-owned intermediate
+  scaffolding required privileged creation of the exact new Prism source
+  directories; no existing data/permissions were broadly changed.
 - [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;
   account/instance/world/assets/libraries and game functionality survive.
 - [ ] Remove proof state, final review/checks, acceptance commit and integration.
@@ -114,14 +124,14 @@ No credentials or runtime game data belong in this ledger or Git.
 
 ## Next user-controlled gate
 
-Generation 48 normal boot, private mount, launcher, Java, account and vanilla
-world acceptance passed. Await normal launcher Quit to capture stable state
-and prepare sentinels. After candidate checks pass, stage cache/log mounts
-boot-only and perform a user-controlled normal reboot. Verify retained state
-and two-sided markers before reopening Prism, then confirm account/world/game
-and cache/log regeneration. The full launcher root remains private/persistent;
-only the audited two children change. Prior checkpoint commits do not establish
-completed reboot acceptance.
+Generation49 cache/log candidate is staged and validated. Reboot normally into
+generation49, not persistent-root, and return before opening Prism. Compare
+boot ID, closure and topology; verify parent proof survives, both visible
+cache/log proofs and actual reset-root source proofs disappear. Check the
+private retained-state manifest before application writes can change it.
+Then confirm account/world/game and cache/log regeneration. The full launcher
+root remains private/persistent; only the audited two children change. Prior
+checkpoint commits do not establish completed reboot acceptance.
 
 ---
 
