@@ -16,10 +16,10 @@ boot chain is required solely for inactive-data retirement or documentation.
 
 The [current status](status.md), [contract](persistence-contract.md),
 [state audit](ephemeral-state-audit.md) and
-[granular ledger](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+[granular ledger](https://github.com/P2949/NixosConf/blob/nixos-26.05-pre-optimization-baseline/NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 separate current results from the historical root-module evidence below.
-Final exact-head validation/CI and the separate stock-readiness soak/backup gates
-remain distinct from accepted migration. The root-reset guard is unchanged.
+Readiness is complete at the immutable baseline tag; the additional soak was
+waived by the user. The root-reset guard remains unchanged.
 
 ## Reset contract
 
@@ -61,10 +61,10 @@ host activation, installing boot entries or repartitioning physical storage.
 ```sh
 nix flake check --no-write-lock-file --print-build-logs
 nix build '.#impermanence-root-safety' --no-link --no-write-lock-file -L
-nix build '.#impermanence-root-recovery' --no-link --no-write-lock-file -L
-nix build '.#impermanence-root-test-a' --no-link --no-write-lock-file -L
-nix build '.#impermanence-root-test-b' --no-link --no-write-lock-file -L
-nix build '.#impermanence-root-fallback' --no-link --no-write-lock-file -L
+nix build '.#interrupted-recovery' --no-link --no-write-lock-file -L
+nix build '.#reset-control' --no-link --no-write-lock-file -L
+nix build '.#persistent-identity' --no-link --no-write-lock-file -L
+nix build '.#persistent-fallback' --no-link --no-write-lock-file -L
 ```
 
 The lightweight `ephemeral-root-config` check forces NixOS evaluation for

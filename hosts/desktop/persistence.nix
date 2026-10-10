@@ -9,12 +9,6 @@
 {
   imports = [ ../../modules/storage/ephemeral-home-directories ];
 
-  options.workstation.granularMigration.keepLegacyVar = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = "Keep the legacy var mount only for the intermediate home migration boot.";
-  };
-
   config = {
 
     workstation.ephemeralHomeDirectories = {
@@ -29,11 +23,11 @@
 
       files = [
         "/etc/machine-id"
-      ]
-      ++ lib.optional (!config.workstation.granularMigration.keepLegacyVar) {
-        file = "/var/lib/systemd/random-seed";
-        parentDirectory.mode = "0755";
-      };
+        {
+          file = "/var/lib/systemd/random-seed";
+          parentDirectory.mode = "0755";
+        }
+      ];
 
       directories = [
         {
@@ -88,7 +82,7 @@
         message = "Granular Impermanence requires /home to live inside the ephemeral root.";
       }
       {
-        assertion = config.workstation.granularMigration.keepLegacyVar || !(config.fileSystems ? "/var");
+        assertion = !(config.fileSystems ? "/var");
         message = "Granular Impermanence requires /var to live inside the ephemeral root.";
       }
       {

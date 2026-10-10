@@ -77,15 +77,14 @@ Supported rollback is generation 46 normal/persistent-root; older generations
 requiring legacy mounts are obsolete. Unrelated forensic/readiness backups
 remain under their separate retention purposes.
 
-The [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+The [granular plan](https://github.com/P2949/NixosConf/blob/nixos-26.05-pre-optimization-baseline/NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
 retains chronology and private-receipt names. Automated validation permanently
 covers root/home/var reset and persistence, identity, optimization, repeated
 recovery and return-normal. `nix flake check` runs the combined regression;
-`nix build .#impermanence-home .#impermanence-var --no-link` aliases that same
-test. Blank-disk reconstruction rejects `@home`/`@var` creation. Final exact-head
+`nix build .#granular-impermanence --no-link` runs that same test. Blank-disk reconstruction rejects `@home`/`@var` creation. Final exact-head
 local/CI release validation is distinct from accepted physical migration.
 
 No private directory contents or secret values belong in this contract.
-Separate secrets recovery and the prior independent home archive/restore are
-accepted evidence; backup freshness remains its own readiness gate. Snapshots
-and successful boot tests do not replace an independent current backup.
+Recovery follows the user-selected minimal policy: GitHub/reinstall, separately
+tested secrets recovery and local-only exceptions. See [backup and recovery](backup-restore.md).
+Persistence across reboot is distinct from disaster recovery.
