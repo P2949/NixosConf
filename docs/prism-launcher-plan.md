@@ -233,7 +233,7 @@ Ordinary user desktop applications currently live under:
 home/p2949/desktop/
 ```
 
-and `home/p2949/desktop/default.nix` presently installs applications such as Thunar, `pavucontrol`, and VS Code through `home.packages`. 
+and `home/p2949/desktop/default.nix` presently installs applications such as Thunar, `pavucontrol`, and VS Code through `home.packages`.
 
 System-level gaming infrastructure lives separately in:
 
@@ -241,7 +241,7 @@ System-level gaming infrastructure lives separately in:
 modules/gaming/default.nix
 ```
 
-where Steam, GameMode, Gamescope and MangoHud are configured. 
+where Steam, GameMode, Gamescope and MangoHud are configured.
 
 That distinction should remain:
 
@@ -265,9 +265,9 @@ Do not globally install Java just for Minecraft.
 
 Do not create a Prism-specific flake input.
 
-The standard Nixpkgs `prismlauncher` wrapper already provides the relevant Linux runtime environment and supplies Java 25, 21, 17 and 8 through `PRISMLAUNCHER_JAVA_PATHS`. 
+The standard Nixpkgs `prismlauncher` wrapper already provides the relevant Linux runtime environment and supplies Java 25, 21, 17 and 8 through `PRISMLAUNCHER_JAVA_PATHS`.
 
-The current pinned NixOS 26.05 package is Prism Launcher **11.1.1**. 
+The current pinned NixOS 26.05 package is Prism Launcher **11.1.1**.
 
 ---
 
@@ -438,7 +438,7 @@ Do **not** print the contents of files such as:
 accounts.json
 ```
 
-Prism loads its account list from `accounts.json`, so treat the application directory as potentially containing authentication material. 
+Prism loads its account list from `accounts.json`, so treat the application directory as potentially containing authentication material.
 
 ### Expected case
 
@@ -494,7 +494,7 @@ Edit:
 home/p2949/desktop/default.nix
 ```
 
-Current architecture already places desktop applications here. 
+Current architecture already places desktop applications here.
 
 Add:
 
@@ -554,7 +554,7 @@ jdk17
 jdk8
 ```
 
-to Prism. 
+to Prism.
 
 ---
 
@@ -572,7 +572,7 @@ Your current configuration persists selected user state through:
 home.persistence."/persist"
 ```
 
-rather than preserving all of `/home`. 
+rather than preserving all of `/home`.
 
 Add Prism to the `directories` list.
 
@@ -620,7 +620,7 @@ Edit:
 docs/ephemeral-state-audit.md
 ```
 
-Your persistence configuration explicitly states that persisted entries are classified in this audit. 
+Your persistence configuration explicitly states that persisted entries are classified in this audit.
 
 Add Prism as a mixed application container.
 
@@ -644,7 +644,7 @@ E = disposable runtime/cache data
 M = mixed container
 ```
 
-Your current audit already uses this model. 
+Your current audit already uses this model.
 
 At this stage do **not** claim that:
 
@@ -888,7 +888,7 @@ Check:
 [ ] audio-related settings/UI do not error
 ```
 
-The Nixpkgs wrapper includes Qt Wayland support plus the Linux runtime libraries needed by Minecraft/Prism. 
+The Nixpkgs wrapper includes Qt Wayland support plus the Linux runtime libraries needed by Minecraft/Prism.
 
 ---
 
@@ -1205,7 +1205,7 @@ Your existing file already uses:
 }
 ```
 
-for exactly this model: a persisted application container with selected children redirected to reset-root storage. 
+for exactly this model: a persisted application container with selected children redirected to reset-root storage.
 
 Add:
 
@@ -1488,7 +1488,7 @@ but those are **not part of the NixOS Prism installation acceptance gate**.
 
 # 35. Consider GameMode only after vanilla works
 
-The Nixpkgs Prism wrapper already includes GameMode runtime support, and your NixOS configuration has `programs.gamemode.enable = true`.  
+The Nixpkgs Prism wrapper already includes GameMode runtime support, and your NixOS configuration has `programs.gamemode.enable = true`.
 
 Once the normal instance works, you can test Minecraft with GameMode.
 
@@ -1524,7 +1524,7 @@ Minecraft only works because of GameMode
 
 # 36. MangoHud is optional validation, not a Prism dependency
 
-MangoHud is already installed by the system gaming module. 
+MangoHud is already installed by the system gaming module.
 
 Use it later if useful for confirming:
 
@@ -1542,7 +1542,7 @@ but do not change the Prism package just to integrate MangoHud during initial se
 
 # 37. Do not use Gamescope by default initially
 
-Gamescope is also already installed. 
+Gamescope is also already installed.
 
 For vanilla Minecraft launcher validation:
 
