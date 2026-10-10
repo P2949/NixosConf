@@ -1,46 +1,46 @@
 # Stock workstation policy
 
-The evaluated stable-refresh candidate at source commit
-`909700b33d7b524a8f517f3d804ab6e294244359` uses the standard NixOS kernel
-6.18.55. Kernel parameters contain root/fstab, log level and the configured
-LSM list; no mitigation disable, isolated CPUs, tickless CPU isolation or RCU
-offload parameters are declared. Firmware and hardware acceptance remain open.
+## Immutable control
 
-No permanent CPU governor is declared. The current physical generation uses
-intel_pstate powersave with balance_performance EPP; retain that default while
-collecting representative loaded evidence. GameMode's temporary governor
-request is separate and still needs physical acceptance after activation.
+The control is `nixos-26.05-pre-optimization-baseline`, merged at
+`1e3bdd13d179f88d6f1f0497d0ee75da88e67165`. Its normal closure begins
+`15f6c5dsjl047j7my4c7cpkdhk6ly2xp`; persistent-root begins
+`7lkx40kh36s809bz1yr9bmfdddy1n80a`. Stable nixpkgs is
+`0d9e9b832d03ac387417e16ce1febf73b2e631e1`.
+See the [canonical baseline](baselines/pre-optimization/baseline-final.md)
+for full identities and accepted evidence. Preparation history is available
+through the [history index](history/README.md).
 
-IRQ balancing and zram are disabled. The existing disk swap partition remains
-configured without an explicit priority. No swappiness, dirty-page, THP or
-scheduler tuning pack is declared. Evaluated VM/inotify limits are upstream
-NixOS values, not performance experiments. Keep kernel-selected NVMe scheduling
-until measurements establish a reason to change it. Representative pressure
-and interrupt-distribution comparisons are still required.
+## CPU
 
-The evaluated system and Home Manager environment variable names contain no
-CFLAGS, CXXFLAGS, LDFLAGS, NIX_CFLAGS_COMPILE, NIX_LDFLAGS, LD_LIBRARY_PATH,
-RADV_PERFTEST or MALLOC_CONF. The optimization module is empty. NIX_LD and
-NIX_LD_LIBRARY_PATH are deliberate nix-ld compatibility integration. The editor
-process's inherited libdbusmenu path is not a declared system/HM override;
-validation children clear their own inherited LD_LIBRARY_PATH where needed.
+PL1 and PL2 are both 125 W, applied at boot and resume. The stock system
+retains intel_pstate default policy; GameMode's accepted temporary request
+restores the previous policy on exit. No experimental governor, CPU isolation,
+mitigation disabling or RCU offload is declared. Commander Core cooling remains
+at its accepted policy.
 
-Private evaluated receipt: /persist/nixos-stock-policy-audit-20261005.json.
-Only environment names are recorded, not values. This verifies candidate
-declarations; it does not prove final running policy, thermals, absence of
-per-application settings or workload performance. Freeze follows acceptance.
+## Memory and storage
 
-## Loaded preparation interval, 2026-10-05
+Disk swap remains configured. IRQ balancing and zram are disabled. No
+experimental swappiness, dirty-page, THP, NUMA or scheduler tuning is declared.
+Retain kernel-selected NVMe scheduling and the declared Btrfs policy.
+Maintenance should run outside benchmark intervals. Root, home and ordinary
+var are disposable; journald uses volatile storage. Persistent journal size
+knobs in the maintenance module require a separate policy review.
 
-A 55-second sample during the existing Proton game and USB home backup had
-about 25 GiB available RAM, 4.5 GiB occupied disk swap, 4,904 pages swapped in,
-zero pages swapped out and zero OOM events. Memory PSI some/full avg10 ended
-at0.01%; GPU interrupt42945 was on CPU7. These concurrent activities and the
-preceding VM tests make this preparation evidence rather than a controlled
-idle/load comparison. Do not infer balanced interrupts from aggregate timer
-counts or disable disk swap because available RAM is high. No policy was
-changed. Representative final-candidate compiler/Unreal workloads still need
-pressure and interrupt deltas before the stock policy is frozen.
+## Build environment and graphics
 
-Private receipt:
-`/persist/nixos-readiness-20261005/pressure-game-backup-interval.json`.
+No global experimental CFLAGS, CXXFLAGS, LDFLAGS, NIX_CFLAGS_COMPILE,
+NIX_LDFLAGS, allocator preload, LTO, PGO, BOLT or march policy is declared.
+NIX_LD and NIX_LD_LIBRARY_PATH are compatibility integration. Application-local
+library paths are not evidence of global compiler optimization.
+The accepted productive kernel/Mesa/graphics closure remains the control;
+package inputs are pinned during closure-preserving cleanup.
+
+## Experiment boundary
+
+`optimization/default.nix` is inert. Future experiments must be explicitly
+selected and carry provenance, runtime and result manifests. The productive
+stock closure rejects project-owned optimization output namespaces; see the
+[stock closure contract](stock-control.md). Runtime-policy changes, package
+refreshes and workstation features belong on separate branches.

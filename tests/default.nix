@@ -43,15 +43,11 @@
     desktop-evaluation = import ./workstation/evaluation.nix {
       inherit pkgs;
       inherit (desktopSystem) config;
-      homeCutover = inputs.self.nixosConfigurations.desktop-home-cutover.config;
     };
 
     granular-impermanence = import ./storage/granular-impermanence.nix {
       inherit inputs pkgs;
     };
-
-    granular-home-acceptance = import ./storage/home-acceptance.nix { inherit pkgs; };
-    granular-physical-markers = import ./storage/physical-check.nix { inherit pkgs; };
 
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
       inherit pkgs;
@@ -108,28 +104,10 @@
         '';
   };
 
-  packages = rec {
-    granular-arm-cutover = import ../packages/granular-arm-cutover.nix {
-      inherit pkgs username;
-      inherit (desktopSystem) config;
-    };
-    granular-shutdown-cutover = import ../packages/granular-shutdown-cutover.nix {
-      inherit pkgs username;
-      inherit (desktopSystem) config;
-    };
-    granular-physical-check = import ../packages/granular-physical-check.nix {
-      inherit pkgs username;
-      inherit (desktopSystem) config;
-    };
-    granular-final-sync = import ../packages/granular-migration.nix {
-      inherit pkgs username;
-      inherit (desktopSystem) config;
-    };
+  packages = {
     granular-impermanence = import ./storage/granular-impermanence.nix {
       inherit inputs pkgs;
     };
-    impermanence-home = granular-impermanence;
-    impermanence-var = granular-impermanence;
     blank-disk-reconstruction = import ./storage/ephemeral-root/reconstruction.nix {
       inherit
         desktopSystem
@@ -140,10 +118,6 @@
     };
     activation-safety-actions = import ./workstation/activation-safety/actions.nix { inherit pkgs; };
     stock-contamination-negative = import ./workstation/stock-contamination.nix { inherit pkgs; };
-    impermanence-root-test-a = reset-control;
-    impermanence-root-test-b = persistent-identity;
-    impermanence-root-recovery = interrupted-recovery;
-    impermanence-root-fallback = persistent-fallback;
     workstation-smoke = import ./workstation/smoke.nix {
       inherit
         inputs

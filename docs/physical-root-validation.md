@@ -170,7 +170,7 @@ After boot one, create an unmistakable disposable `/root-reset-probe` and a
 persistent `/persist/root-reset-probe`; check the former disappears and the
 latter survives on boots two and three. Check one BEGIN and one RESET for
 each distinct boot ID. Validate ordinary work between boots. Keep the parent
-default until repeated physical acceptance is recorded in `plan.md`.
+default until repeated physical acceptance is recorded in the historical readiness journal (see [history index](history/README.md)).
 
 ## Historical ISO staging and recovery drill procedure
 
@@ -183,7 +183,7 @@ The ISO was added on 2026-10-05 to the existing Ventoy data partition as
 `nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
 replacing any existing images. Copy checksum matched; clean unmount completed
 and a subsequent read-only exFAT check reported clean. Post-remount checksum
-verification is recorded in `plan.md`. This older filename is retained as staging history. For a new drill use the
+verification is recorded in the historical readiness journal (see [history index](history/README.md)). This older filename is retained as staging history. For a new drill use the
 current stable ISO identified in the maintenance-window section above. The user's previous
 successful recovery with another ISO does not establish this artifact's boot.
 Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.

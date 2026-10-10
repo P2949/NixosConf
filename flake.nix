@@ -134,11 +134,6 @@
         ];
       };
 
-      # Temporary first physical cutover: verify home before removing @var.
-      nixosConfigurations.desktop-home-cutover = inputs.self.nixosConfigurations.desktop.extendModules {
-        modules = [ { workstation.granularMigration.keepLegacyVar = true; } ];
-      };
-
       nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./images/recovery.nix ];

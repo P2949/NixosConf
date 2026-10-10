@@ -6,8 +6,8 @@ Generation46 normal has root-local home/var and a physically accepted allow-list
 Corrected normal/recovery/recovery/normal and post-pruning normal pass; Fuzzel
 history, Unity editor preferences and user-selected expensive caches persist.
 Raw backing pruning and deliberately certified legacy/snapshot retirement are
-complete. The [granular plan](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
-retains chronology, exact receipts and remaining final source/CI release gates.
+complete. The [granular plan](https://github.com/P2949/NixosConf/blob/nixos-26.05-pre-optimization-baseline/NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+retains the complete migration chronology and private-receipt identities.
 
 Classes: `P` authoritative state, `R` deliberately retained expensive rebuilds,
 `D` declarative reconstruction, `E` disposable runtime/cache data, `M` mixed
@@ -67,8 +67,8 @@ Zsh's active history moves from `.config/zsh/.zsh_history` to
 `.local/state/zsh/history`. Its containing directory is persisted, allowing
 atomic saves. The existing history was copied before changing the declaration.
 Existing Git configuration was likewise copied to `.config/git/config` and
-compared without printing contents. The final-sync tool repeats both migrations
-after applications stop, using the new path when it already exists.
+compared without printing contents. The historical final-sync tool performed both migrations after applications
+stopped, using the new path when it already existed. It is retired from current source.
 
 ## .config children
 

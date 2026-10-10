@@ -14,5 +14,9 @@ contract. The normal desktop build supplies the positive control.
 
 Upstream exempts `system.extraDependencies` from this closure check. Do not use
 that option to retain optimization artifacts in stock/control systems. Naming
-contracts also cannot detect unnamed modifications to otherwise ordinary
-packages; retain the environment/source and full closure audits in plan.md.
+contracts cannot detect unnamed modifications to otherwise ordinary packages.
+Retain source revision, lock/input identity, environment, runtime and full
+system/toolchain closure identities in each experiment's provenance manifest.
+Record stage/profile parameters, workload identity and benchmark results, then
+compare against the immutable stock baseline. Historical qualification audits
+remain available through the [history index](history/README.md).

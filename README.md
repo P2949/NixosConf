@@ -6,17 +6,13 @@ experiments.
 
 ## Where to start
 
-- [Current status](docs/status.md): accepted evidence and remaining gates.
-- [Plan and history](plan.md): continuation directive, supplied reviews and
-  chronological evidence.
-- [Granular ephemeral-state plan](NixOS_Granular_Ephemeral_State_Implementation_Plan.md):
-  active home/var migration and acceptance record.
-- [Granular cutover procedure](docs/granular-cutover.md): staged boot-only
-  rollout, verified shutdown copy and physical acceptance receipts.
-- [Desktop policy](hosts/desktop/default.nix): authoritative host settings,
-  including cooling policy.
-- [Flake](flake.nix): pinned inputs, configurations, development shells and
-  validation outputs.
+- [Current system](docs/status.md).
+- [Immutable stock baseline](docs/baselines/pre-optimization/baseline-final.md).
+- Persistence: [contract](docs/persistence-contract.md), [architecture](docs/impermanence.md), [state audit](docs/ephemeral-state-audit.md).
+- Recovery: [backup and restore](docs/backup-restore.md), [secrets bootstrap](docs/bootstrap-secrets.md).
+- Experiments: [stock control](docs/stock-control.md), [stock policy](docs/stock-policy.md).
+- [Historical implementation records](docs/history/README.md).
+- [Desktop policy](hosts/desktop/default.nix) and [flake outputs](flake.nix).
 
 ## Organization
 
@@ -56,8 +52,8 @@ see [reconstruction](docs/reconstruction.md) and
 
 Normal boots reset the disposable Btrfs root. The `persistent-root`
 specialisation disables reset; home and persistent system state have their
-own explicit allow-list. Source home/var are root-local; physical migration
-status and application cache exceptions are recorded in the
+own explicit allow-list. Source home/var are root-local; persistence classification
+rationale and application/cache exceptions are recorded in the
 [state audit](docs/ephemeral-state-audit.md). See [root design](docs/impermanence.md),
 [persistence contract](docs/persistence-contract.md),
 [physical validation](docs/physical-root-validation.md) and
