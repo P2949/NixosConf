@@ -131,4 +131,4 @@ no longer a blocker. The minimal recovery manifest and three-file exception
 archive passed external copy, integrity and restore verification. The baseline
 collector now resolves containing filesystems for root-local home/var and
 references accepted ELF32 Vulkan evidence. Formatting and flake checks passed.
-Final generation-46 soak and baseline freeze/release remain pending.
+The additional final-generation-46 soak is disregarded by explicit human intervention on October 10; it is not claimed as a measured PASS. The user reports the operational system works well. Baseline freeze/validation and release now proceed without another observation delay.
