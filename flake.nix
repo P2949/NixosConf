@@ -50,6 +50,7 @@
         inherit pkgs inputs;
         repository = inputs.self;
         systemConfig = inputs.self.nixosConfigurations.desktop;
+        recoverySystem = inputs.self.nixosConfigurations.recovery;
       };
       validation = import ./tests {
         inherit

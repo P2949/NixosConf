@@ -32,15 +32,15 @@
     {
       id = "level-1";
       description = "Single-thread Silesia compression and decompression.";
-      command = [
-        "zstd"
+      executable = "bin/zstd";
+      arguments = [
         "-b1"
         "-T1"
       ];
-      corpusAttribute = "silesia-corpus";
+      corpusId = "silesia";
       cpu = 2;
       warmupRuns = 2;
-      minimumSeconds = 1;
+      minimumSeconds = 3;
       metrics = [
         {
           id = "compression";
@@ -54,10 +54,10 @@
         }
       ];
       sampling = {
-        pilotPairs = 4;
-        minimumPairs = 6;
+        pilotPairs = 6;
+        minimumPairs = 10;
         maximumPairs = 30;
-        relativePrecision = 0.02;
+        targetDeltaHalfWidth = 0.02;
         effectThreshold = 0.01;
         orderSeed = 20261010;
       };

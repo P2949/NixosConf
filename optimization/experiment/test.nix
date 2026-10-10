@@ -1,7 +1,7 @@
 { lib }:
 let
   model = import ./model.nix { inherit lib; };
-  fixture = import ./fixture.nix;
+  fixture = import ../experiments/zstd-skylake/spec.nix;
   accepts = value: (builtins.tryEval (builtins.deepSeq (model.normalizeSpec value) true)).success;
   workload = builtins.head fixture.workloads;
 in

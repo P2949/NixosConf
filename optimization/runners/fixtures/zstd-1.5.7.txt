@@ -1,0 +1,7 @@
+Loading /nix/store/31akvrvkd85111q097ngy6xvas36phhn-silesia-corpus/silesia...       
+
+                                                                      
+ |-silesia           : 211938580 -> 
+ |-silesia           : 211938580 ->  73213479 (x2.895),  1.0 MB/s 
+ |-silesia           : 211938580 ->  73213479 (x2.895),  1.0 MB/s, 1.0 MB/s
+ 1#

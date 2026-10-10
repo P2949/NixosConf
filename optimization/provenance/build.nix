@@ -20,7 +20,7 @@ let
     schemaVersion = 1;
     kind = "nixos-experiment-build";
     specificationSha256 = builtins.hashString "sha256" (builtins.toJSON specification + "\n");
-    qualificationBaseline = import ../control/baseline.nix;
+    qualificationBaseline = import ../control/qualification.nix;
     source = {
       revision = repository.rev or (repository.dirtyRev or null);
       narHash = repository.narHash or null;
@@ -28,6 +28,8 @@ let
       lockSha256 = builtins.hashFile "sha256" (repository + "/flake.lock");
     };
     workingStock = import ../control/stock.nix;
+    evaluatedPersistentRoot = artifact systemConfig.config.specialisation.persistent-root.configuration.system.build.toplevel;
+    selectedNixpkgsRevision = inputs.nixpkgs.rev;
     evaluatedSystem = artifact systemConfig.config.system.build.toplevel;
     inputs = builtins.mapAttrs (_: identity) (pkgs.lib.filterAttrs (name: _: name != "self") inputs);
     toolchain = {
@@ -38,8 +40,19 @@ let
     };
     kernel = artifact systemConfig.config.boot.kernelPackages.kernel;
     inherit (specification) stage;
-    packages = builtins.mapAttrs (_: artifact) targets;
-    workloadCorpus = artifact corpus;
+    packages = builtins.listToAttrs (
+      map (target: {
+        name = target.id;
+        value = artifact targets.${target.id} // {
+          inherit (target) id;
+          flakeAttribute = target.attribute;
+        };
+      }) specification.targets
+    );
+    workloadCorpus = artifact corpus // {
+      id = "silesia";
+      flakeAttribute = "silesia-corpus";
+    };
   };
 in
 # This records derivation/output identities, without realizing every referenced

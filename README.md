@@ -36,7 +36,7 @@ policy. The flake remains explicit for this workstation.
 ```bash
 nix build .#nixosConfigurations.desktop.config.system.build.toplevel
 nix fmt -- --ci
-nix flake check --print-build-logs
+nix flake check --no-write-lock-file --print-build-logs
 nix develop .#default
 ```
 
@@ -71,3 +71,5 @@ branch. Each experiment must retain source, toolchain, profile, derivation
 and workload identity. BOLT outputs are new immutable derivations; existing
 Nix-store outputs are never modified. Readiness and experiment status belong
 in [current status](docs/status.md), rather than this overview.
+
+[Optimization framework](docs/optimization.md) describes isolated experiments and evidence.

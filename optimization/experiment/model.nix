@@ -26,7 +26,7 @@ let
       "pilotPairs"
       "minimumPairs"
       "maximumPairs"
-      "relativePrecision"
+      "targetDeltaHalfWidth"
       "effectThreshold"
       "orderSeed"
     ] value) "invalid sampling fields";
@@ -40,9 +40,9 @@ let
       && value.maximumPairs >= value.minimumPairs
     ) "invalid pair bounds";
     assert require (
-      builtins.isFloat value.relativePrecision
-      && value.relativePrecision > 0
-      && value.relativePrecision < 1
+      builtins.isFloat value.targetDeltaHalfWidth
+      && value.targetDeltaHalfWidth > 0
+      && value.targetDeltaHalfWidth < 1
     ) "invalid relative precision";
     assert require (
       builtins.isFloat value.effectThreshold && value.effectThreshold >= 0 && value.effectThreshold < 1
@@ -54,21 +54,22 @@ let
     assert require (closed [
       "id"
       "description"
-      "command"
+      "executable"
+      "arguments"
       "metrics"
       "warmupRuns"
       "minimumSeconds"
       "sampling"
-      "corpusAttribute"
+      "corpusId"
       "cpu"
     ] value) "invalid workload fields";
     assert require (builtins.isInt value.cpu && value.cpu >= 0) "invalid pinned CPU";
     assert require (
-      text value.id && text value.description && text value.corpusAttribute
+      text value.id && text value.description && text value.corpusId
     ) "invalid workload identity";
     assert require (
-      builtins.isList value.command && value.command != [ ] && builtins.all text value.command
-    ) "command must be argv";
+      text value.executable && builtins.isList value.arguments && builtins.all text value.arguments
+    ) "executable and argument list required";
     assert require (
       builtins.isInt value.warmupRuns
       && value.warmupRuns >= 0
