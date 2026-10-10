@@ -26,7 +26,8 @@ let
       dirty = !(repository ? rev);
       lockSha256 = builtins.hashFile "sha256" (repository + "/flake.lock");
     };
-    workingStock = artifact systemConfig.config.system.build.toplevel;
+    workingStock = import ../control/stock.nix;
+    evaluatedSystem = artifact systemConfig.config.system.build.toplevel;
     inputs = builtins.mapAttrs (_: identity) (pkgs.lib.filterAttrs (name: _: name != "self") inputs);
     toolchain = {
       compiler = artifact pkgs.stdenv.cc;
@@ -35,9 +36,14 @@ let
       compilerVersion = pkgs.stdenv.cc.cc.version;
     };
     kernel = artifact systemConfig.config.boot.kernelPackages.kernel;
-    stage = specification.stage;
+    inherit (specification) stage;
     packages = builtins.mapAttrs (_: artifact) targets;
     workloadCorpus = artifact corpus;
   };
 in
-pkgs.writeText "experiment-build-provenance.json" (builtins.toJSON manifest + "\n")
+# This records derivation/output identities, without realizing every referenced
+# system/compiler/source closure merely to serialize the manifest. The runner
+# must independently verify its measured binaries and corpus exist and hash them.
+pkgs.writeText "experiment-build-provenance.json" (
+  builtins.unsafeDiscardStringContext (builtins.toJSON manifest) + "\n"
+)
