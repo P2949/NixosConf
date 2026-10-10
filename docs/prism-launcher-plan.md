@@ -126,6 +126,9 @@ Pasted citation placeholders are not usable source references.
   Final `nix flake check` passes; desktop build matches the booted generation49
   closure. Private final check/build logs are retained with the reboot receipt.
 - [ ] Remove proof state, final review/checks, acceptance commit and integration.
+  Draft [PR #16](https://github.com/P2949/NixosConf/pull/16) is open for review.
+  Remote validation is running against checkpoint `b754004`; the PR explicitly
+  retains the pending interactive acceptance and cleanup gates.
 
 Initial real-workload and reboot storage acceptance passed. Final post-reboot
 interactive game acceptance remains pending.
@@ -141,6 +144,13 @@ Confirm the retained account and instances, launch the existing vanilla world,
 check graphics/input/audio and absence of full assets/libraries downloads, then
 quit Minecraft and Prism normally. Verify regenerated cache/log files, remove
 proof state, and complete source validation and integration.
+Current runtime inspection finds only `26.3` with Fabric Loader and its saved
+`New World`; the earlier separate vanilla instance is no longer present.
+The user has been asked whether this reflects an intentional instance change
+and which instance was used for the post-reboot test. Do not infer vanilla
+post-reboot acceptance from retained file hashes or the earlier vanilla run.
+Content/performance mods were not installed or exercised; instance-tree
+persistence covers their storage location without claiming mod compatibility.
 
 ---
 

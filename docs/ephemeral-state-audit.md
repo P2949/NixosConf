@@ -121,7 +121,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | Paths | Class | Decision |
 | --- | --- | --- |
 | share/Steam | M | Library/manifests, client installation, configuration, userdata, saves and compatdata retained; disposable cache children below |
-| share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E and have candidate reset-root exclusions; physical reboot proof is pending in the [Prism plan](prism-launcher-plan.md). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
+| share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E with reboot-proven reset-root mounts; final post-reboot gameplay acceptance is pending in the [Prism plan](prism-launcher-plan.md). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
 | share/keyrings | P | Future desktop credential stores, private mode; absent initially |
 | share/Trash | P | Potentially recoverable user files, retained conservatively |
 | share/applications, share/icons/hicolor | P | User/game launchers and icons |
