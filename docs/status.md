@@ -39,8 +39,10 @@ decompression regression. The candidate was therefore not adopted.
 
 Prism Launcher integration is in progress on `feat/prism-launcher`; see the
 [live plan](prism-launcher-plan.md). Its Phase 1 candidate retains the complete
-private launcher root. Runtime/reboot acceptance and cache classification are
-pending. Ordinary desktop changes may proceed while the immutable benchmark
+private launcher root. Normal boot, launcher/Java and real vanilla world
+validation pass; refreshed account online features are user-confirmed. Cache/log
+exclusions are staged; reboot persistence/reset acceptance remains pending.
+Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 
 Further optimization investigation is intentionally deferred. General

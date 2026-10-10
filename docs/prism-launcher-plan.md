@@ -54,7 +54,7 @@ Pasted citation placeholders are not usable source references.
   `accounts.json` exists, which alone does not establish authentication. No
   account contents were read. The rejected automatic compositor close attempt
   did not mutate state; the user closed Prism normally.
-- [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
+- [x] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
   GPU/audio/input and test-world acceptance; structural first-run audit.
   Launcher/UI/Java gates pass as above. Microsoft/vanilla-world acceptance is
   now requested from the user with Prism reopened. Host `amdgpu` binds Navi48;
@@ -75,10 +75,20 @@ Pasted citation placeholders are not usable source references.
   log proves world join/save and exit0, Java25, native Wayland, RX9070XT
   Zink/RADV and OpenAL startup. Realms/friends errors remain; these features
   are not accepted. User confirms graphics/input/audible sound work.
-  User also reports vanilla acceptance and closure, but current structural
-  inspection finds only `26.3` with Fabric components and Prism PID5203 still
-  active. Requested the vanilla instance name/completion before accepting that
-  specific gate. No account file contents are inspected.
+  Separate `26.3(1)` was subsequently created with only Minecraft/LWJGL
+  components. Its live log proves native Wayland, RX9070XT radeonsi, sound-engine
+  initialization, world join/save and normal shutdown. User explicitly confirms
+  the fully vanilla run works, including earlier graphics/input/audio checks.
+  The earlier run was Fabric with no extra mods. No account contents inspected.
+  Realms/friends remain a separate unresolved workflow: user is testing Accounts
+  Refresh with Minecraft closed, after creating the previously absent profile.
+  Account Refresh subsequently resolved the online-feature issue: user reports
+  everything working; account UI shows Ready. Latest supplied vanilla log has
+  world entry and exit0, with no ERROR/profile-claims/friends403 messages.
+  Remaining warnings did not prevent this accepted session: Java native/Unsafe
+  deprecation, unsupported Wayland window icon, missing end_of_frame post effect,
+  and RADV diagnostic while active game renderer is radeonsi. No runtime-policy
+  or package change is justified by those warnings for this integration.
   Observed tree is approximately 655MiB: assets472MiB and libraries124MiB
   retained R; instances59MiB hold authoritative worlds/settings. Root logs200KiB
   and cache336KiB (feed child) are disposable candidates. Meta880KiB,
@@ -86,25 +96,32 @@ Pasted citation placeholders are not usable source references.
   separate evidence. No Prism-managed Java directory observed.
 - [ ] Phase 1 state survival proof and acceptance commit.
 - [ ] Evidence-backed cache/log exclusions, checks and boot-only installation.
+  Root cache/feed and logs candidates are now declared after both real workloads;
+  only those two children are excluded. Candidate desktop build passed:
+  `/nix/store/yn3n1p5wgcgwcnqfxi29nv26g22d1hm4-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Full flake checks remain running. Quiesced post-game inventory, sentinels,
+  private retained-state hashes and boot installation are still pending.
 - [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;
   account/instance/world/assets/libraries and game functionality survive.
 - [ ] Remove proof state, final review/checks, acceptance commit and integration.
 
-Runtime acceptance is pending. Do not add cache/log exclusions before the
-observed workload gate. `meta` and `java` require separate later evidence.
+Initial real-workload acceptance passed. Cache/log exclusions are staged after
+that gate; reboot survival/reset acceptance remains pending.
+`meta` and `java` require separate later evidence.
 Microsoft authentication and physical visual/audio observations require the
 user; automated builds cannot satisfy those gates. Reboots remain user-controlled.
 No credentials or runtime game data belong in this ledger or Git.
 
 ## Next user-controlled gate
 
-Generation 48 normal boot, private mount, launcher and Java acceptance have
-passed. The pre-account structural tree is captured. Complete Microsoft
-authentication and vanilla instance/world checks, then close game and launcher
-normally so the agent can audit the real post-workload state. Preserve all state
-and keep the whole launcher root persistent until that evidence is accepted.
-The existing package checkpoint commits record implementation only, not
-completed physical/runtime acceptance.
+Generation 48 normal boot, private mount, launcher, Java, account and vanilla
+world acceptance passed. Await normal launcher Quit to capture stable state
+and prepare sentinels. After candidate checks pass, stage cache/log mounts
+boot-only and perform a user-controlled normal reboot. Verify retained state
+and two-sided markers before reopening Prism, then confirm account/world/game
+and cache/log regeneration. The full launcher root remains private/persistent;
+only the audited two children change. Prior checkpoint commits do not establish
+completed reboot acceptance.
 
 ---
 
