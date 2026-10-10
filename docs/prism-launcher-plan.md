@@ -129,7 +129,7 @@ Pasted citation placeholders are not usable source references.
   Launcher cache/feed and logs already regenerate on the fresh root-local mounts.
   Final `nix flake check` passes; desktop build matches the booted generation49
   closure. Private final check/build logs are retained with the reboot receipt.
-- [ ] Remove proof state, final review/checks, acceptance commit and integration.
+- [x] Remove proof state, final review/checks and acceptance commit.
   Proof cleanup passes, including both hidden pre-split markers through a
   temporary parent-only bind view. No authentication backup existed.
   User explicitly authorized deletion of the three inspected old disposable
@@ -137,12 +137,17 @@ Pasted citation placeholders are not usable source references.
   and logs/PrismLauncher-0.log (156314). Exact-file cleanup passes; hidden
   cache/log trees contain no files and regenerated live cache/log files remain.
   Private receipts: prism-proof-cleanup.txt and prism-old-cache-cleanup.txt.
-  Draft [PR #16](https://github.com/P2949/NixosConf/pull/16) is open for review.
-  Final acceptance update will supersede the draft's pending runtime/cleanup
-  description; exact-head CI and merge remain required.
+  Full final local flake checks and desktop build pass; desktop closure still
+  matches booted generation49. The source diff contains only the reviewed eight
+  Nix/documentation files, including the explicitly approved optimization gate
+  adjustment. No credentials or runtime Minecraft files are committed.
+  [PR #16](https://github.com/P2949/NixosConf/pull/16) carries the integration
+  record: final head, exact-head remote CI and merge receipt belong in its
+  metadata and private evidence rather than self-referential source claims.
 
 Initial real-workload, reboot storage and final post-reboot interactive game
-acceptance pass. Proof and approved old-cache cleanup pass; integration remains.
+acceptance pass. Proof and approved old-cache cleanup pass. Implementation is
+accepted; source integration is tracked by PR #16.
 `meta` and `java` require separate later evidence.
 Microsoft authentication and physical visual/audio observations require the
 user; automated builds cannot satisfy those gates. Reboots remain user-controlled.

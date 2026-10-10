@@ -37,14 +37,16 @@ The first authoritative package experiment,
 compression inconclusive at the declared practical threshold and a material
 decompression regression. The candidate was therefore not adopted.
 
-Prism Launcher integration is in progress on `feat/prism-launcher`; see the
+Prism Launcher implementation is accepted; source integration is tracked by
+[PR #16](https://github.com/P2949/NixosConf/pull/16). See the
 [live plan](prism-launcher-plan.md). Its Phase 1 candidate retains the complete
 private launcher root. Normal boot, launcher/Java and real vanilla world
 validation pass; refreshed account online features are user-confirmed. Cache/log
 exclusions pass normal-reboot persistence/reset and retained-file hash proofs.
 Post-reboot Fabric world, retained settings, graphics/input/audio and absence
 of full assets/library downloads are user-confirmed. Proof and approved old
-cache/log cleanup pass; final source/CI integration remains pending.
+cache/log cleanup and final local source checks pass. Exact-head CI and merge
+evidence are recorded in PR metadata.
 Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 
