@@ -94,7 +94,9 @@ Pasted citation placeholders are not usable source references.
   and cache336KiB (feed child) are disposable candidates. Meta880KiB,
   translations372KiB, metacache and all other children remain retained pending
   separate evidence. No Prism-managed Java directory observed.
-- [ ] Phase 1 state survival proof and acceptance commit.
+- [x] Phase 1 retained-state survival proof: the private SHA256 manifest matches
+  accounts/config, complete instances/worlds and assets/libraries after reboot,
+  before starting Prism. Final application acceptance remains below.
 - [x] Evidence-backed cache/log exclusions, checks and boot-only installation.
   Root cache/feed and logs candidates are now declared after both real workloads;
   only those two children are excluded. Candidate desktop build passed:
@@ -111,12 +113,22 @@ Pasted citation placeholders are not usable source references.
   demonstrate hiding rather than deletion. Existing root-owned intermediate
   scaffolding required privileged creation of the exact new Prism source
   directories; no existing data/permissions were broadly changed.
-- [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;
-  account/instance/world/assets/libraries and game functionality survive.
+- [x] Generation49 normal reboot storage proof. Boot ID
+  `b584e8ab-470c-4915-8f96-10064f6d39a1` differs from the pre-split boot;
+  the expected candidate is booted. System running with no failed units.
+  Parent sentinel survives; both visible and both actual reset-root source
+  sentinels are absent. All retained hashes match before launcher start.
+  Parent resolves to `@persist`; cache/logs resolve to fresh normal `@root`;
+  all three directories remain `p2949:users`, mode700. Private receipt:
+  `Documents/.prism-integration/prism-cache-split-postboot.txt`.
+- [ ] Post-reboot account/world/game acceptance and cache/log regeneration.
+  Launcher cache/feed and logs already regenerate on the fresh root-local mounts.
+  Final `nix flake check` passes; desktop build matches the booted generation49
+  closure. Private final check/build logs are retained with the reboot receipt.
 - [ ] Remove proof state, final review/checks, acceptance commit and integration.
 
-Initial real-workload acceptance passed. Cache/log exclusions are staged after
-that gate; reboot survival/reset acceptance remains pending.
+Initial real-workload and reboot storage acceptance passed. Final post-reboot
+interactive game acceptance remains pending.
 `meta` and `java` require separate later evidence.
 Microsoft authentication and physical visual/audio observations require the
 user; automated builds cannot satisfy those gates. Reboots remain user-controlled.
@@ -124,14 +136,11 @@ No credentials or runtime game data belong in this ledger or Git.
 
 ## Next user-controlled gate
 
-Generation49 cache/log candidate is staged and validated. Reboot normally into
-generation49, not persistent-root, and return before opening Prism. Compare
-boot ID, closure and topology; verify parent proof survives, both visible
-cache/log proofs and actual reset-root source proofs disappear. Check the
-private retained-state manifest before application writes can change it.
-Then confirm account/world/game and cache/log regeneration. The full launcher
-root remains private/persistent; only the audited two children change. Prior
-checkpoint commits do not establish completed reboot acceptance.
+Prism has been reopened after the successful generation49 storage proof.
+Confirm the retained account and instances, launch the existing vanilla world,
+check graphics/input/audio and absence of full assets/libraries downloads, then
+quit Minecraft and Prism normally. Verify regenerated cache/log files, remove
+proof state, and complete source validation and integration.
 
 ---
 

@@ -41,7 +41,8 @@ Prism Launcher integration is in progress on `feat/prism-launcher`; see the
 [live plan](prism-launcher-plan.md). Its Phase 1 candidate retains the complete
 private launcher root. Normal boot, launcher/Java and real vanilla world
 validation pass; refreshed account online features are user-confirmed. Cache/log
-exclusions are staged; reboot persistence/reset acceptance remains pending.
+exclusions pass normal-reboot persistence/reset and retained-file hash proofs;
+final post-reboot interactive world acceptance remains pending.
 Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 

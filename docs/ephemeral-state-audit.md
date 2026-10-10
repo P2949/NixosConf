@@ -180,9 +180,11 @@ copies below those mountpoints must be pruned after physical acceptance.
 - Prism Launcher: first real Fabric and separate vanilla26.3 worlds were joined
   and saved. Root `cache/feed/feed.xml` and launcher logs are observed disposable
   data, consistent with upstream [data locations](https://prismlauncher.org/wiki/getting-started/data-location/).
-  Only root `cache` and `logs` have candidate reset-root mounts. Instance worlds,
+  Only root `cache` and `logs` have reset-root mounts. Instance worlds,
   mods, settings, assets/libraries and all unclassified children remain retained.
-  Cache regeneration and two-sided normal reboot proof are still pending.
+  Normal reboot proved parent persistence, reset of both root-local source
+  markers and exact retained file hashes. Cache/feed and launcher logs have
+  regenerated; final post-reboot interactive world acceptance remains pending.
 
 Deliberate `R` exceptions: Steam's 218 MiB shadercache and Unreal's approximately
 831 MiB shared DDC/Zen cache plus the small per-version DDC are reconstructable

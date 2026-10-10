@@ -77,7 +77,7 @@
       # .local is also split: no complete share/state container is persisted.
       ".local/share/Steam"
       # Minecraft authentication, instances/worlds and expensive game data.
-      # Persist the complete root until real workload cache classification.
+      # Audited cache/log children reset through ephemeral-app-state.nix.
       {
         directory = ".local/share/PrismLauncher";
         mode = "0700";
