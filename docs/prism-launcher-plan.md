@@ -21,11 +21,20 @@ Pasted citation placeholders are not usable source references.
   Java 25/21/17/8, Qt Wayland, driver/runtime libraries and GameMode support.
 - [ ] Candidate formatting, checks, closure build and evaluated mount review.
   Formatting/diff review and evaluated package/private bind mount passed.
-  Candidate flake check currently fails at `optimization-control-identity`:
+  Initial candidate flake check failed at `optimization-control-identity`:
   the newer framework asserts that every desktop change has the exact frozen
-  stock closure. Prism necessarily changes it. Keep `stock.nix`, immutable
-  tags and benchmark runtime gates intact; resolve ordinary-application policy
-  with the user before changing this gate or staging activation.
+  stock closure. Prism necessarily changes it. The user explicitly chose
+  "Allow ordinary desktop changes; preserve frozen benchmark control".
+  Exact closure admission now lives in the explicit
+  `.#optimization-control-identity` build target; ordinary checks retain input
+  identity and the existing forbidden optimization dependency guard. The frozen
+  `stock.nix`, tags and benchmark runtime rejection remain unchanged.
+  Negative validation correctly rejects the Prism candidate with the specific
+  frozen-control diagnostic; positive frozen-tag validation is in progress.
+  Candidate desktop build passed:
+  `/nix/store/2mmvgbyd32qahwhy3y01l66s7vqwn3yk-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Closure contains wrapped Prism and Java 25/21/17/8; generated systemd mount
+  binds `/persist/home/p2949/.local/share/PrismLauncher` to the live root.
 - [ ] Boot-only installation; preserve prior accepted generation.
 - [ ] User-controlled normal reboot and private mount verification.
 - [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
