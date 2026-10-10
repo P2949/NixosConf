@@ -35753,3 +35753,1529 @@ nix fmt -- --ci passed with zero changes; git diff --check passed after normaliz
 The user explicitly waived the additional roughly-three-day final-runtime soak and instructed immediate continuation: the system is operational and working well. The requirement is **DISREGARDED BY HUMAN INTERVENTION**, not a completed measured soak or synthetic PASS. Earlier accepted normal-use reports, physical/runtime acceptance and clean health observations remain evidence. No waiting period or repeated physical campaign is required. This supersedes all older soak-dependent execution/blocker instructions.
 
 Exact tooling/minimal-backup head ea57eb9ff2f3309e35acd65721df1543017d4a08 passed GitHub CI run 38033970046. Next commit records this scope decision and establishes freeze F; canonical private collector, exact artifact/stock/automated validation, sanitized baseline evidence E, exact E CI, PR readiness, main-tree verification and annotated tag remain required. No ordinary runtime changes are authorized during freeze.
+
+## Final frozen release directive — adopted 2026-10-10
+
+Attachment read in full; SHA-256 `be3a97f3fb0ab02bfca2e76e009653a00d89addd5a75c67487faa86c73fccf71`. F remains 9df40f6a06229a4c5263f957787fe802ff5ce198; no new freeze or productive change. Minimal recovery closed and additional soak DISREGARDED BY HUMAN INTERVENTION. Exact F local collector and positive/heavy builds have completed; terminal F CI is still being polled. The contamination-negative output must fail specifically on its forbidden dependency, as docs/stock-control.md requires; its expected diagnostic was observed, so it is accepted rather than treated as a positive build. Full directive below (trailing spaces normalized).
+
+> I re-reviewed the attached continuation guide and the live repository. The previous guide correctly established the two important policy corrections: **minimal backup instead of large whole-home archives**, and fixing the stale baseline collector rather than changing the storage architecture. Assess NixOS Performance Ceiling Both of those are now actually implemented.
+>
+> The branch has moved substantially since that guide. The current head is **`9df40f6a06229a4c5263f957787fe802ff5ce198`**, whose explicit purpose is to waive the additional soak by user direction and establish the baseline freeze.  The minimal recovery gate is closed with a **260,598-byte three-file exception archive**, verified by zstd integrity, complete extraction/hash comparison, and external-copy verification; the large 27.8 GB/10.3 GB backup artifacts have been retired under the chosen recovery policy.  The collector now correctly uses containing-filesystem/`FSROOT` topology and references the accepted ELF32 Vulkan evidence.
+>
+> The extra soak is now explicitly **DISREGARDED BY HUMAN INTERVENTION**, not falsely recorded as a measured PASS. Freeze **F is therefore the current `9df40f6…` head**.  PR #7 remains open, draft, and mergeable.  The immediately preceding tooling/minimal-backup head `ea57eb9…` passed CI run `38033970046`; exact freeze-F CI **#202 / `38035009618` is currently still in progress**.
+>
+> So the previous plan can now be shortened significantly. The critical path is no longer backup → soak → collector → freeze. Those stages are done or explicitly disposed of. The project is now in **final frozen validation and release**.
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## 0. Purpose and authority
+>
+> This document is the forward-only continuation directive for completing `plan.md`.
+>
+> Historical entries in `plan.md` remain useful evidence and chronology, but they must not be interpreted as instructions to repeat work that has since been accepted, superseded, waived, or deliberately retired.
+>
+> The project is now in:
+>
+> ```text
+> FROZEN BASELINE VALIDATION
+>         ↓
+> CANONICAL BASELINE EVIDENCE
+>         ↓
+> FINAL CI
+>         ↓
+> PR #7 RELEASE
+>         ↓
+> MERGE
+>         ↓
+> TREE IDENTITY
+>         ↓
+> ANNOTATED BASELINE TAG
+>         ↓
+> STOP READINESS
+> ```
+>
+> The project is no longer in:
+>
+> ```text
+> storage design
+> granular Impermanence development
+> backup design
+> hardware qualification
+> application qualification
+> recovery qualification
+> soak waiting
+> baseline-tool development
+> ```
+>
+> Those scopes are closed.
+>
+> ---
+>
+> # 1. Authoritative current checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current source freeze:
+>
+> ```text
+> F =
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> Tree:
+>
+> ```text
+> df1527cd14c6509515ba398bb8dba0c46673e534
+> ```
+>
+> Commit purpose:
+>
+> ```text
+> Waive additional soak by user direction
+> and establish baseline freeze
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> Complete stock workstation pre-optimization readiness
+>
+> state: open
+> draft: yes
+> mergeable: yes
+> base: main
+> ```
+>
+> Accepted normal system closure:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Accepted persistent-root closure:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Accepted recovery ISO identity:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> Accepted recovery ISO SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> `optimization/default.nix` remains intentionally empty.
+>
+> That must remain true through the baseline tag.
+>
+> ---
+>
+> # 2. Freeze F is already established
+>
+> Do not create another "freeze" commit.
+>
+> Freeze F is:
+>
+> ```text
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> From this point onward, there must be no ordinary productive-source change before release evidence is complete.
+>
+> Forbidden before the baseline tag:
+>
+> ```text
+> package changes
+> flake.lock refresh
+> kernel changes
+> Mesa changes
+> persistence changes
+> Hyprland/session changes
+> greetd/autologin
+> Prism Launcher
+> module cleanup
+> file reorganization
+> RAPL refactoring
+> Commander Core refactoring
+> Bluetooth policy movement
+> new workstation features
+> optimization work
+> ```
+>
+> The only expected successor to F is an evidence/documentation commit E.
+>
+> If a productive source change becomes genuinely necessary, F is invalidated for that changed scope and a new freeze must be established.
+>
+> Do not do that casually.
+>
+> ---
+>
+> # 3. Granular Impermanence remains completely closed
+>
+> Do not reopen:
+>
+> ```text
+> [x] root reset architecture
+> [x] root-local /home
+> [x] root-local ordinary /var
+> [x] explicit retained user state
+> [x] explicit retained system state
+> [x] disposable cache overlays
+> [x] Fuzzel persistence
+> [x] Unity Preferences persistence
+> [x] physical home migration
+> [x] physical var migration
+> [x] corrected generation-46 physical trials
+> [x] post-pruning physical normal boot
+> [x] raw /persist pruning
+> [x] raw /persist clean re-audit
+> [x] legacy @home retirement
+> [x] legacy @var retirement
+> [x] migration snapshot retirement
+> [x] application persistence acceptance
+> [x] PR #8
+> [x] granular exact-head CI
+> [x] readiness integration
+> ```
+>
+> Never rerun another:
+>
+> ```text
+> normal
+> → recovery
+> → recovery
+> → normal
+> ```
+>
+> sequence for readiness.
+>
+> ---
+>
+> # 4. Existing physical/workload acceptance remains closed
+>
+> Do not repeat:
+>
+> ```text
+> CPU 125 W stress
+> 20 GiB memtester
+> KVM validation
+> Btrfs scrub
+> NVMe health
+> full Nix store verification
+>
+> Blender HIP render
+> Blender interactive workflow
+>
+> Unreal rebuild
+> Unreal PIE
+> Unreal interactive workflow
+>
+> native Stardew
+> Proton/Dark Souls
+> GameMode policy restoration
+>
+> HDR signalling
+> HDR visual confirmation
+> HDR → SDR return
+>
+> Stage Pro audio
+>
+> physical recovery ISO drill
+>
+> generation-37 root chain
+> generation-38 boot/resume
+> granular generation-46 chains
+> ```
+>
+> A new physical test requires either:
+>
+> ```text
+> an actual relevant defect
+> ```
+>
+> or:
+>
+> ```text
+> a productive source/runtime change
+> that affects that exact acceptance scope
+> ```
+>
+> Nothing else justifies reopening them.
+>
+> ---
+>
+> # 5. Minimal recovery/backup gate is CLOSED
+>
+> The old whole-home backup policy is superseded.
+>
+> The current recovery model is:
+>
+> ```text
+> Nix / GitHub / reinstall
+>         +
+> separately accepted secrets recovery
+>         +
+> small local-only exception archive
+> ```
+>
+> There is no requirement to back up:
+>
+> ```text
+> Steam library
+> Steam binaries
+> Unity installations
+> Unreal installation
+> browser/application profiles
+> large application state
+> Unity Library caches
+> Unreal DDC/Zen
+> shader caches
+> downloadable packages
+> Nix store
+> whole /home
+> whole /persist
+> ```
+>
+> The targeted audit identified three local authored exceptions.
+>
+> Source size:
+>
+> ```text
+> 314,333 bytes
+> ```
+>
+> Independent Ventoy archive:
+>
+> ```text
+> 260,598 bytes
+> ```
+>
+> Archive SHA-256:
+>
+> ```text
+> b4fea7ae78e2083198ce3847f8ab00a15567ad43a3a4304ada481d265a8232cf
+> ```
+>
+> Recovery manifest SHA-256:
+>
+> ```text
+> ebc0990e3ebe8052983bcd672c484b736e64a71929c49838612022f1b116144b
+> ```
+>
+> Accepted proof:
+>
+> ```text
+> [x] external copy
+> [x] zstd integrity
+> [x] extraction of all three exceptions
+> [x] restored/source hash comparison
+> [x] manifest external-copy hash
+> [x] archive external-copy hash
+> [x] sync
+> [x] clean unmount
+> ```
+>
+> Therefore:
+>
+> ```text
+> MINIMAL RECOVERY GATE = PASS
+> ```
+>
+> Do not perform another backup inventory before release unless genuinely new, unique local work is created after the audited point.
+>
+> Do not purchase or attach another disk for readiness.
+>
+> ---
+>
+> # 6. Old large backup artifacts are historical only
+>
+> The following no longer gate release:
+>
+> ```text
+> 27.84 GB October 5 home archive
+> 47-file engine supplement
+> 8.11 GB failed delta partial
+> 10.33 GB same-disk staged delta
+> ```
+>
+> Their history may remain in `plan.md` and `docs/backup-restore.md`.
+>
+> Their physical preservation is not required.
+>
+> The recovery ISO remains useful and should remain available.
+>
+> ---
+>
+> # 7. Additional final-runtime soak is CLOSED BY WAIVER
+>
+> Do not wait another three days.
+>
+> Do not describe the soak as:
+>
+> ```text
+> PASS
+> ```
+>
+> because the adopted roughly-three-day unchanged-final-runtime measurement was not completed.
+>
+> Record it accurately as:
+>
+> ```text
+> DISREGARDED BY HUMAN INTERVENTION
+> ```
+>
+> The evidence supporting that decision includes:
+>
+> ```text
+> earlier normal-use stability
+> accepted physical/runtime tests
+> clean health observations
+> user report that the operational system works well
+> ```
+>
+> The waiver supersedes every older instruction saying:
+>
+> ```text
+> wait for soak
+> soak blocks collector
+> soak blocks freeze
+> soak blocks release
+> ```
+>
+> There is no remaining soak gate.
+>
+> Do not start another observation timer.
+>
+> ---
+>
+> # 8. Baseline collector correction is CLOSED
+>
+> The collector has already been fixed.
+>
+> It now resolves:
+>
+> ```text
+> /
+>  /home
+>  /var
+>  /nix
+>  /persist
+>  /.snapshots
+>  /boot
+>  /var/lib/nixos-optimization
+> ```
+>
+> using containing-path resolution and `FSROOT`.
+>
+> This correctly proves:
+>
+> ```text
+> /home → @root
+> /var  → @root
+>
+> /nix     → @nix
+> /persist → @persist
+> /.snapshots → @snapshots
+>
+> /var/lib/nixos-optimization
+>     → @optimization
+> ```
+>
+> It no longer incorrectly requires `/home` or `/var` to be independent mounts.
+>
+> The stale:
+>
+> ```text
+> 32-bit Vulkan practical validation: pending
+> ```
+>
+> statement is also gone.
+>
+> The collector now references:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> vulkan32-render-20261005.txt
+> ```
+>
+> Do not rerun Vulkan rendering.
+>
+> ---
+>
+> # 9. Current CI state
+>
+> The exact tooling/minimal-recovery head:
+>
+> ```text
+> ea57eb9ff2f3309e35acd65721df1543017d4a08
+> ```
+>
+> already passed:
+>
+> ```text
+> Nix checks #201
+> run 38033970046
+> PASS
+> ```
+>
+> Freeze F currently has:
+>
+> ```text
+> Nix checks #202
+> run 38035009618
+> head:
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> At the latest review it is still:
+>
+> ```text
+> IN PROGRESS
+> ```
+>
+> This is useful exact-F evidence.
+>
+> Do not block local frozen validation on it; those tasks can proceed independently.
+>
+> When #202 terminates:
+>
+> - if PASS, record it as exact-F CI;
+> - if FAIL, inspect only the failing CI scope;
+> - do not reopen physical/runtime evidence merely because a documentation/static check failed.
+>
+> E will later require its own exact-head CI regardless of #202.
+>
+> ---
+>
+> # 10. Immediate next step: capture the canonical private runtime snapshot
+>
+> Work from exact F:
+>
+> ```bash
+> git status --short
+> git rev-parse HEAD
+> git rev-parse HEAD^{tree}
+> ```
+>
+> Required:
+>
+> ```text
+> HEAD =
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+>
+> working tree =
+> clean
+> ```
+>
+> Then run:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh \
+>   > /persist/nixos-readiness-20261005/final-baseline-runtime.md
+> ```
+>
+> Keep this raw collector output private.
+>
+> Review every collector:
+>
+> ```text
+> [exit=N]
+> ```
+>
+> Unexpected non-zero exits are missing evidence that must be understood.
+>
+> Do not simply strip failing sections from the report.
+>
+> ---
+>
+> # 11. Record freeze identities
+>
+> For F, privately record:
+>
+> ```text
+> Git SHA
+> tree SHA
+>
+> flake.lock SHA256
+> nixpkgs revision
+>
+> collector script SHA256
+>
+> running /run/current-system
+> running system derivation
+>
+> accepted normal closure
+> accepted persistent-root closure
+>
+> recovery ISO output/hash
+>
+> filesystem topology
+>
+> persistence-policy source hashes
+>
+> minimal-recovery manifest/hash
+> exception archive/hash
+>
+> physical recovery receipt/hash
+>
+> soak disposition:
+> DISREGARDED BY HUMAN INTERVENTION
+> ```
+>
+> Do not publish raw machine IDs or secret data unnecessarily.
+>
+> ---
+>
+> # 12. Build the exact frozen normal system
+>
+> From exact F:
+>
+> ```bash
+> normal="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$normal"
+> ```
+>
+> Expected identity:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> The preceding tooling head already resolved to the accepted generation-46 normal output.
+>
+> Still verify exact F.
+>
+> If it matches:
+>
+> ```text
+> F normal runtime = physically accepted generation 46
+> ```
+>
+> Therefore all corresponding physical evidence remains bound.
+>
+> If it does not match, stop release finalization and inspect the derivation/closure difference.
+>
+> Do not immediately retest hardware.
+>
+> ---
+>
+> # 13. Build the exact persistent-root specialization
+>
+> Run:
+>
+> ```bash
+> persistent="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$persistent"
+> ```
+>
+> Expected:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> If identical, retain all accepted persistent-root evidence.
+>
+> If different, inspect the exact source/closure difference first.
+>
+> ---
+>
+> # 14. Build and verify the recovery ISO
+>
+> Run:
+>
+> ```bash
+> recovery="$(
+>   nix build \
+>     '.#recovery-iso' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$recovery"
+> ```
+>
+> Identify the ISO produced under the output and calculate SHA-256.
+>
+> Expected accepted SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> If identical:
+>
+> ```text
+> reuse the accepted physical recovery drill
+> ```
+>
+> Do not boot it again.
+>
+> If unexpectedly different:
+>
+> ```text
+> investigate why
+> ```
+>
+> before deciding whether any recovery evidence is invalidated.
+>
+> ---
+>
+> # 15. Compare frozen runtime with the accepted running system
+>
+> Run:
+>
+> ```bash
+> nix store diff-closures \
+>   /run/current-system \
+>   "$normal"
+> ```
+>
+> Ideal result:
+>
+> ```text
+> no meaningful difference
+> ```
+>
+> Also record the exact current running closure:
+>
+> ```bash
+> readlink -f /run/current-system
+> ```
+>
+> If F's normal output equals:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> then there is no reason to rerun physical readiness tests.
+>
+> ---
+>
+> # 16. Exact stock contamination audit
+>
+> First confirm:
+>
+> ```text
+> optimization/default.nix = intentionally empty
+> ```
+>
+> Then verify the stock closure contains none of the future experiment namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> Also check that no unintended experiment policy has entered the stock configuration through:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> LDFLAGS
+> NIX_CFLAGS_COMPILE
+> LD_LIBRARY_PATH
+> allocator preloads
+> -march=native
+> LTO
+> ThinLTO
+> PGO
+> BOLT
+> ```
+>
+> Do not interpret ordinary package-local compiler flags as contamination.
+>
+> The gate concerns system-wide experimental policy entering the control build.
+>
+> Required result:
+>
+> ```text
+> STOCK CONTROL = CLEAN
+> ```
+>
+> ---
+>
+> # 17. Run exact-F repository validation
+>
+> Run on F:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> All must pass.
+>
+> Current `nix flake check` includes the relevant static/configuration/integration gates, including:
+>
+> ```text
+> activation safety
+> Btrfs maintenance
+> Commander Core config/python
+> baseline collector shell validation
+> desktop evaluation
+>
+> granular-impermanence
+> granular-home-acceptance
+> granular-physical-markers
+>
+> ephemeral-root config
+>
+> formatting
+> statix
+> deadnix
+> ```
+>
+> Do not manually duplicate tests already represented by these outputs.
+>
+> ---
+>
+> # 18. Resolve the remaining heavy validation outputs
+>
+> Build:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --no-link
+> nix build .#activation-safety-actions --no-link
+> nix build .#stock-contamination-negative --no-link
+> nix build .#workstation-smoke --no-link
+>
+> nix build .#reset-control --no-link
+> nix build .#impermanence-root-safety --no-link
+> nix build .#interrupted-recovery --no-link
+> nix build .#persistent-identity --no-link
+> nix build .#persistent-fallback --no-link
+> ```
+>
+> The current live output is:
+>
+> ```text
+> impermanence-root-safety
+> ```
+>
+> not an older historical `reset-safety` name.
+>
+> Nix cache reuse is valid evidence of source-output identity.
+>
+> Do not use:
+>
+> ```text
+> --rebuild
+> ```
+>
+> or otherwise force successful identical derivations to execute again merely for ceremony.
+>
+> ---
+>
+> # 19. Freeze-F acceptance condition
+>
+> F is accepted when all of these are true:
+>
+> ```text
+> [x] minimal recovery gate already closed
+> [x] additional soak explicitly waived
+> [x] collector corrected
+> [x] no ordinary runtime changes after freeze
+>
+> [ ] private final collector clean
+> [ ] normal closure exact
+> [ ] persistent-root closure exact
+> [ ] recovery artifact exact
+> [ ] closure comparison understood/accepted
+> [ ] stock contamination audit clean
+> [ ] exact-F fmt/diff/flake PASS
+> [ ] heavy outputs accepted
+> [ ] F CI terminal and understood
+> ```
+>
+> At that point F is the immutable tested runtime source.
+>
+> ---
+>
+> # 20. Create the canonical public baseline document
+>
+> There is not yet a final canonical `baseline-final.md`.
+>
+> Create:
+>
+> ```text
+> docs/baselines/pre-optimization/baseline-final.md
+> ```
+>
+> This document should summarize rather than copy every receipt.
+>
+> Record:
+>
+> ```text
+> runtime freeze F SHA
+> F tree SHA
+>
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery ISO identity/hash
+>
+> Nix version
+> NixOS version
+> kernel
+> BIOS / ME / microcode baseline
+>
+> CPU topology/policy
+> 125 W PL1/PL2 policy
+>
+> Commander Core policy
+>
+> display policy
+> audio policy
+> Bluetooth disabled policy
+>
+> final Btrfs topology
+> ephemeral-root contract
+> granular persistence contract
+>
+> PR #8 identity
+> granular exact-head CI identity
+>
+> accepted physical/workload evidence
+> accepted recovery drill
+>
+> minimal recovery policy
+> three-file exception archive hash
+> manifest hash
+> secrets recovery disposition
+>
+> additional final soak:
+> DISREGARDED BY HUMAN INTERVENTION
+>
+> exact-F automated validation
+> stock contamination audit
+> ```
+>
+> Do not publish:
+>
+> ```text
+> machine-id
+> secret contents
+> credentials
+> private paths unnecessarily
+> full raw receipts
+> ```
+>
+> Where private evidence matters, record only:
+>
+> ```text
+> receipt name
+> date
+> SHA-256
+> scope
+> result
+> ```
+>
+> ---
+>
+> # 21. Reconcile current documentation while creating E
+>
+> Some current text still reflects older intermediate states.
+>
+> In particular, PR #7 still contains wording describing the representative soak as a remaining item even though the latest source has explicitly waived it.
+>
+> The final evidence update must make the current state unambiguous.
+>
+> Update as necessary:
+>
+> ```text
+> docs/baselines/pre-optimization/baseline-final.md
+> docs/status.md
+> docs/backup-restore.md
+> plan.md
+> ```
+>
+> Rules:
+>
+> 1. Preserve historical chronology in `plan.md`.
+> 2. Do not delete the history of the earlier large backup attempts.
+> 3. Do not pretend the soak passed.
+> 4. State that the soak was waived/disregarded by user direction.
+> 5. State that minimal backup/recovery passed.
+> 6. State that F is the tested runtime freeze.
+> 7. Remove current-status wording that still presents closed gates as pending.
+> 8. Do not introduce new runtime policy.
+>
+> ---
+>
+> # 22. Create final evidence commit E
+>
+> Once the canonical baseline and status reconciliation are complete, commit them.
+>
+> Conceptually:
+>
+> ```text
+> F = frozen productive/runtime source
+>
+> E = F + final evidence/documentation
+> ```
+>
+> Expected E changes should be documentation only.
+>
+> No:
+>
+> ```text
+> Nix module changes
+> flake.lock changes
+> package changes
+> persistence changes
+> runtime scripts used by activation
+> workstation policy changes
+> optimization changes
+> ```
+>
+> The baseline document should reference F.
+>
+> It cannot sensibly certify the future CI result for E itself.
+>
+> ---
+>
+> # 23. Validate E locally
+>
+> On E run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then resolve at minimum:
+>
+> ```bash
+> nix build \
+>   '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>   --no-link \
+>   --print-out-paths
+>
+> nix build \
+>   '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>   --no-link \
+>   --print-out-paths
+> ```
+>
+> Required:
+>
+> ```text
+> E normal output = F normal output
+>
+> E persistent-root output = F persistent-root output
+> ```
+>
+> If E is documentation-only and those identities remain equal:
+>
+> ```text
+> E has not changed the accepted runtime
+> ```
+>
+> No physical retest follows.
+>
+> ---
+>
+> # 24. Push E and require exact-E CI
+>
+> Push E.
+>
+> Require GitHub Actions to run on the exact E SHA.
+>
+> That CI, not #201 or #202, becomes the final release-head CI.
+>
+> Do not create another commit solely to write:
+>
+> ```text
+> E passed CI
+> ```
+>
+> That would create another head requiring CI and produce an unnecessary loop.
+>
+> Record exact-E CI externally in:
+>
+> ```text
+> PR #7 body
+> annotated baseline tag
+> ```
+>
+> ---
+>
+> # 25. Reconcile PR #7
+>
+> After exact-E CI succeeds, update PR #7's body.
+>
+> The current PR metadata still contains some pre-waiver wording.
+>
+> The final PR body should explicitly record:
+>
+> ```text
+> final branch head E
+> runtime freeze F
+>
+> E exact CI run/result
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> granular PR #8
+> granular exact-head CI
+>
+> minimal recovery policy
+> exception archive SHA-256
+> manifest SHA-256
+> secrets recovery disposition
+>
+> soak disposition:
+> DISREGARDED BY HUMAN INTERVENTION
+>
+> canonical baseline path
+>
+> stock contamination PASS
+> exact frozen validation PASS
+> ```
+>
+> Do not describe the waived soak as pending.
+>
+> Do not describe it as PASS.
+>
+> ---
+>
+> # 26. PR readiness gate
+>
+> Only after:
+>
+> ```text
+> [x] F validation complete
+> [x] canonical baseline written
+> [x] E local validation complete
+> [x] E runtime output = F runtime output
+> [x] E exact CI PASS
+> [x] PR metadata reconciled
+> [x] no unresolved hard readiness gate
+> ```
+>
+> change:
+>
+> ```text
+> PR #7
+> draft → ready
+> ```
+>
+> At that point the readiness feature branch is finished.
+>
+> ---
+>
+> # 27. Merge PR #7
+>
+> Merge through the normal repository workflow.
+>
+> Do not insert cleanup or convenience commits before merging.
+>
+> After merge, record:
+>
+> ```text
+> E commit SHA
+> E tree SHA
+>
+> merged main SHA
+> merged main tree SHA
+> ```
+>
+> Compare the trees.
+>
+> If:
+>
+> ```text
+> merged main tree
+> =
+> tested E tree
+> ```
+>
+> then:
+>
+> ```text
+> all E/F evidence transfers
+> ```
+>
+> No retesting.
+>
+> If trees differ:
+>
+> ```text
+> inspect the exact diff
+> ```
+>
+> and validate only the changed scope.
+>
+> ---
+>
+> # 28. Create the immutable baseline tag
+>
+> After main-tree identity is accepted, create the annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The annotation should bind:
+>
+> ```text
+> merged main SHA
+> merged main tree
+>
+> final feature head E
+> runtime freeze F
+>
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> PR #8
+> granular CI
+>
+> PR #7
+> final E CI
+>
+> minimal recovery archive/hash
+> minimal recovery manifest/hash
+>
+> soak waiver disposition
+>
+> canonical baseline document
+>
+> physical recovery receipt/hash
+> ```
+>
+> Push the annotated tag.
+>
+> ---
+>
+> # 29. Final STOP condition
+>
+> When:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists on the verified main tree:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Stop.
+>
+> Do not add:
+>
+> ```text
+> one more stress test
+> one more recovery boot
+> one more backup
+> one more migration check
+> one more soak
+> one more storage audit
+> one more application test
+> one more cleanup commit
+> ```
+>
+> Any later issue is a normal bug against a known immutable control.
+>
+> ---
+>
+> # 30. Exact execution order from the current repository state
+>
+> ```text
+> CURRENT
+> F = 9df40f6a06229a4c5263f957787fe802ff5ce198
+>
+> 1. Do not change productive source.
+>
+> 2. Allow CI #202 / 38035009618 to reach a terminal result.
+>    Do not block local final validation on it.
+>
+> 3. Run the corrected private baseline collector from exact F.
+>
+> 4. Review all collector command exit statuses.
+>
+> 5. Record F/tree/lock/nixpkgs/evidence identities.
+>
+> 6. Build exact normal system.
+>    Require:
+>    15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+>
+> 7. Build exact persistent-root system.
+>    Require:
+>    7lkx40kh36s809bz1yr9bmfdddy1n80a
+>
+> 8. Build exact recovery ISO.
+>    Verify accepted ISO hash.
+>
+> 9. Compare /run/current-system with F normal closure.
+>
+> 10. Run final stock-contamination audit.
+>
+> 11. Run exact-F:
+>     nix fmt -- --ci
+>     git diff --check
+>     nix flake check --print-build-logs
+>
+> 12. Resolve/build remaining heavy outputs.
+>
+> 13. If all frozen validation passes, declare F accepted.
+>
+> 14. Write:
+>     docs/baselines/pre-optimization/baseline-final.md
+>
+> 15. Reconcile current status/backup/plan text.
+>
+> 16. Commit those documentation changes as E.
+>
+> 17. Run exact-E local checks.
+>
+> 18. Verify E normal/persistent outputs equal F.
+>
+> 19. Push E.
+>
+> 20. Require exact-E GitHub CI PASS.
+>
+> 21. Update PR #7 body with final evidence and correct soak disposition.
+>
+> 22. Ensure docs/status.md has zero unresolved readiness gates.
+>
+> 23. Mark PR #7 ready.
+>
+> 24. Merge PR #7 to main.
+>
+> 25. Compare merged-main tree with tested E tree.
+>
+> 26. If identical, transfer all evidence.
+>
+> 27. If different, validate only the changed scope.
+>
+> 28. Create annotated:
+>     nixos-26.05-pre-optimization-baseline
+>
+> 29. Push tag.
+>
+> 30. STOP READINESS.
+> ```
+>
+> ---
+>
+> # 31. Remaining checklist
+>
+> ## Frozen validation
+>
+> ```text
+> [ ] private final collector captured
+> [ ] collector exits reviewed
+>
+> [ ] exact normal closure confirmed
+> [ ] exact persistent-root closure confirmed
+> [ ] exact recovery ISO/hash confirmed
+>
+> [ ] running/frozen closure comparison accepted
+>
+> [ ] stock contamination audit PASS
+>
+> [ ] exact-F fmt PASS
+> [ ] exact-F diff-check PASS
+> [ ] exact-F flake check PASS
+>
+> [ ] heavy outputs accepted
+>
+> [ ] F CI terminal result recorded
+> ```
+>
+> ## Final evidence
+>
+> ```text
+> [ ] baseline-final.md created
+>
+> [ ] docs/status.md reconciled
+> [ ] docs/backup-restore.md reconciled if required
+> [ ] plan.md final current-state ledger added
+>
+> [ ] evidence commit E created
+>
+> [ ] E local validation PASS
+> [ ] E runtime outputs equal F
+> [ ] exact-E GitHub CI PASS
+> ```
+>
+> ## Release
+>
+> ```text
+> [ ] PR #7 body reconciled
+> [ ] PR #7 ready
+> [ ] PR #7 merged
+>
+> [ ] merged-main tree equals tested E tree
+>
+> [ ] annotated baseline tag created
+> [ ] annotated baseline tag pushed
+> ```
+>
+> Everything else is closed or post-baseline.
+>
+> ---
+>
+> # 32. Explicitly deferred work
+>
+> After the tag, ordinary feature work may resume.
+>
+> Potential separate branches include:
+>
+> ```text
+> feat/post-baseline-cleanup
+> feat/prism-launcher
+> feat/greetd-autologin
+> feat/optimization-framework-v2
+> ```
+>
+> Post-baseline structural cleanup may include:
+>
+> ```text
+> Intel RAPL module extraction
+> Commander Core policy-boundary cleanup
+> Bluetooth host-policy ownership
+> VS Code HM organization
+> historical output aliases
+> plan.md archival
+> documentation reorganization
+> generated module documentation
+> ```
+>
+> These must not be slipped into the readiness release.
+>
+> ---
+>
+> # 33. Optimization-v2 starting point
+>
+> Only after the immutable tag exists:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> Begin with:
+>
+> ```text
+> immutable stock control
+>         ↓
+> VM variant
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> experiment/provenance manifests
+>         ↓
+> CPU-target A/B
+>         ↓
+> ThinLTO
+>         ↓
+> PGO
+>         ↓
+> BOLT
+> ```
+>
+> The baseline tag remains untouched as the control.
+>
+> Do not rebase/resume the historical optimization branch wholesale.
+>
+> Use previous optimization work only as reference/donor material.
+>
+> ---
+>
+> # 34. Final governing principle
+>
+> The project no longer needs more breadth.
+>
+> It needs exact binding.
+>
+> The remaining proof is:
+>
+> ```text
+> accepted physical machine
+> +
+> accepted generation-46 runtime
+> +
+> accepted granular storage contract
+> +
+> minimal user-selected recovery coverage
+> +
+> explicit soak waiver
+> +
+> frozen reproducible source F
+> +
+> exact artifacts
+> +
+> clean stock policy
+> +
+> canonical evidence E
+> +
+> exact final CI
+> +
+> verified merged tree
+> +
+> immutable tag
+> ```
+>
+> Once that chain exists, `plan.md` has served its purpose.
+>
+> Do not expand readiness beyond it.
+>
+> One repository inconsistency is worth keeping in mind while executing this: the **latest source correctly waives the soak**, but PR #7's body still contains older wording listing the representative soak among the remaining items.  The freeze commit explicitly supersedes those older soak-dependent instructions, so the PR body should be reconciled during final release metadata rather than reopening the soak.
+>
+> The other important point is that no `baseline-final.md` exists yet in the current pre-optimization baseline directory, so **canonical baseline capture is now the first substantive missing artifact after frozen validation**.
+
+### Frozen validation complete; canonical evidence release — 2026-10-10
+
+Freeze F remains `9df40f6a06229a4c5263f957787fe802ff5ce198`, tree `df1527cd14c6509515ba398bb8dba0c46673e534`. Exact F CI run `38035009618` completed SUCCESS. Private collector captured 57 sections with every command exit 0; raw report and source/artifact/persistence hashes remain private. Formatting, diff check and flake checks passed on F. All eight heavy positive VM outputs resolved/built successfully; cache reuse was accepted. The stock-contamination-negative build exited 1 specifically on forbidden `nixos-opt-pgo-fixture`, the required negative result.
+
+Normal output exactly matches running/accepted generation46 `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`; persistent-root matches `7lkx40kh36s809bz1yr9bmfdddy1n80a`. Recovery output matches `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; computed ISO SHA-256 remains `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`. Closure comparison is empty. Productive namespace/global-environment audit is clean; inherited session LD_LIBRARY_PATH points only to ordinary libdbusmenu, and package-local Unity library routing is not global optimization contamination. No productive source changed after F.
+
+Canonical sanitized baseline-final.md created, binding F, lock/nixpkgs/artifacts, storage/policy, accepted physical/workload evidence, minimal recovery and explicit human soak waiver. Current PR metadata was reconciled to remove obsolete soak waiting text. The documentation successor is evidence/release E; exact E local checks, output equality, exact E CI, PR readiness/merge, tested-main tree equality and annotated tag remain. No extra physical tests or backups were added.

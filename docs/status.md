@@ -132,3 +132,21 @@ archive passed external copy, integrity and restore verification. The baseline
 collector now resolves containing filesystems for root-local home/var and
 references accepted ELF32 Vulkan evidence. Formatting and flake checks passed.
 The additional final-generation-46 soak is disregarded by explicit human intervention on October 10; it is not claimed as a measured PASS. The user reports the operational system works well. Baseline freeze/validation and release now proceed without another observation delay.
+
+## Final frozen baseline validation — 2026-10-10
+
+Runtime freeze F is `9df40f6a06229a4c5263f957787fe802ff5ce198`.
+Canonical evidence: [baseline-final.md](baselines/pre-optimization/baseline-final.md).
+Private collector: 57 sections, all command exits zero. Exact normal,
+persistent-root and recovery outputs equal accepted generation-46/artifact
+identities; recovery ISO hash matches. Closure comparison is empty. Stock audit,
+formatting/diff/flake checks and heavy positive outputs passed. The negative
+contamination fixture rejected the intended forbidden dependency.
+
+Minimal recovery coverage passed. Additional final-runtime soak is
+**DISREGARDED BY HUMAN INTERVENTION**, not a measured PASS. No remaining
+physical/application/backup/soak gate requires more tests or a reboot.
+
+Remaining release steps: exact evidence-head local checks and CI, PR #7 ready,
+merge, tested/main tree equality and annotated baseline tag. Their terminal
+identities belong in PR/tag metadata, avoiding a source/CI self-reference loop.
