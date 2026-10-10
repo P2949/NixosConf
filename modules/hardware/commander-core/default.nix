@@ -8,6 +8,7 @@
 
 let
   cfg = config.hardware.commanderCore;
+  watchdogSeconds = 35;
 
   liquidctlPr886 = import ../../../packages/liquidctl-pr886.nix {
     inherit pkgs;
@@ -125,8 +126,8 @@ in
         message = "hardware.commanderCore.cooling highDelay and lowDelay must be nonnegative seconds.";
       }
       {
-        assertion = 2 * lib.max cfg.cooling.tempInterval cfg.cooling.wakeInterval < 35;
-        message = "hardware.commanderCore.cooling tempInterval and wakeInterval must each be below 17.5 seconds to leave two intervals of margin within the 35-second watchdog.";
+        assertion = 2 * lib.max cfg.cooling.tempInterval cfg.cooling.wakeInterval < watchdogSeconds;
+        message = "hardware.commanderCore.cooling tempInterval and wakeInterval must leave two intervals of margin within the ${toString watchdogSeconds}-second watchdog.";
       }
     ];
 
@@ -167,13 +168,14 @@ in
             --low-delay ${toString cfg.cooling.lowDelay} \
             --temp-interval ${toString cfg.cooling.tempInterval} \
             --wake-interval ${toString cfg.cooling.wakeInterval} \
-            --reset-delay ${toString cfg.cooling.resetDelay}
+            --reset-delay ${toString cfg.cooling.resetDelay} \
+            --watchdog-seconds ${toString watchdogSeconds}
         '';
 
         Restart = "on-failure";
         RestartSec = "5s";
 
-        WatchdogSec = "35s";
+        WatchdogSec = "${toString watchdogSeconds}s";
         TimeoutStopSec = "10s";
       };
     };

@@ -1,3 +1,4 @@
+{ config, lib, ... }:
 let
   btrfsMountOptions = [
     "compress=zstd:1"
@@ -59,11 +60,6 @@ in
                   mountOptions = btrfsMountOptions;
                 };
 
-                "@home" = {
-                  mountpoint = "/home";
-                  mountOptions = btrfsMountOptions;
-                };
-
                 "@nix" = {
                   mountpoint = "/nix";
                   mountOptions = btrfsMountOptions;
@@ -71,11 +67,6 @@ in
 
                 "@persist" = {
                   mountpoint = "/persist";
-                  mountOptions = btrfsMountOptions;
-                };
-
-                "@var" = {
-                  mountpoint = "/var";
                   mountOptions = btrfsMountOptions;
                 };
 
@@ -88,6 +79,12 @@ in
                   mountpoint = "/.snapshots";
                   mountOptions = btrfsMountOptions;
                 };
+              }
+              // lib.optionalAttrs config.workstation.granularMigration.keepLegacyVar {
+                "@var" = {
+                  mountpoint = "/var";
+                  mountOptions = btrfsMountOptions;
+                };
               };
             };
           };
@@ -96,5 +93,10 @@ in
     };
   };
 
-  fileSystems."/persist".neededForBoot = true;
+  fileSystems = {
+    "/persist".neededForBoot = true;
+  }
+  // lib.optionalAttrs config.workstation.granularMigration.keepLegacyVar {
+    "/var".neededForBoot = true;
+  };
 }

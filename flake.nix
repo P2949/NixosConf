@@ -45,6 +45,16 @@
         inherit system;
         config.allowUnfree = true;
       };
+      validation = import ./tests {
+        inherit
+          inputs
+          pkgs
+          pkgsUnstable
+          username
+          ;
+        desktopSystem = inputs.self.nixosConfigurations.desktop;
+        repoSource = ./.;
+      };
     in
     {
 
@@ -90,120 +100,9 @@
         };
       };
 
-      checks.${system} = {
-        maintenance-guard = import ./tests/maintenance-guard.nix {
-          inherit pkgs;
-        };
-
-        commander-core-config = import ./tests/commander-core-config.nix {
-          inherit pkgs inputs;
-        };
-
-        commander-core-python = import ./tests/commander-core-python.nix {
-          inherit pkgs;
-          src = inputs.liquidctl-pr886;
-        };
-
-        baseline-collector =
-          pkgs.runCommand "check-baseline-collector"
-            {
-              nativeBuildInputs = [
-                pkgs.bash
-                pkgs.shellcheck
-              ];
-            }
-            ''
-              bash -n ${./scripts/nixos-baseline-info.sh}
-              shellcheck ${./scripts/nixos-baseline-info.sh}
-              touch "$out"
-            '';
-
-        desktop-evaluation = import ./tests/desktop-evaluation.nix {
-          inherit pkgs;
-          config = inputs.self.nixosConfigurations.desktop.config;
-        };
-
-        ephemeral-root-config = import ./tests/impermanence-root-config.nix {
-          inherit pkgs;
-        };
-
-        formatting =
-          pkgs.runCommand "check-nix-formatting"
-            {
-              src = ./.;
-              nativeBuildInputs = [
-                pkgs.nixfmt-tree
-              ];
-            }
-            ''
-              cp -r "$src" source
-              chmod -R u+w source
-              cd source
-
-              treefmt             --ci             --tree-root .             --walk filesystem
-
-              touch "$out"
-            '';
-
-        statix =
-          pkgs.runCommand "check-statix"
-            {
-              src = ./.;
-              nativeBuildInputs = [
-                pkgs.statix
-              ];
-            }
-            ''
-              cd "$src"
-
-              statix check .
-
-              touch "$out"
-            '';
-
-        deadnix =
-          pkgs.runCommand "check-deadnix"
-            {
-              src = ./.;
-              nativeBuildInputs = [
-                pkgs.deadnix
-              ];
-            }
-            ''
-              cd "$src"
-
-              deadnix             --fail             --exclude hosts/desktop/hardware-configuration.nix             --             .
-
-              touch "$out"
-            '';
-      };
-
-      packages.${system} = {
-        workstation-smoke = import ./tests/workstation-smoke.nix {
-          inherit inputs pkgs pkgsUnstable;
-        };
-
+      checks.${system} = validation.checks;
+      packages.${system} = validation.packages // {
         recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
-
-        impermanence-root-test-a = import ./tests/impermanence-root-a.nix {
-          inherit inputs pkgs;
-        };
-
-        impermanence-root-safety = import ./tests/impermanence-root-safety.nix {
-          inherit pkgs;
-        };
-
-        impermanence-root-recovery = import ./tests/impermanence-root-recovery.nix {
-          inherit inputs pkgs;
-        };
-
-        impermanence-root-test-b = import ./tests/impermanence-root-b.nix {
-          inherit inputs pkgs;
-        };
-
-        impermanence-root-fallback = import ./tests/impermanence-root-fallback.nix {
-          inherit inputs pkgs;
-        };
       };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
@@ -235,9 +134,14 @@
         ];
       };
 
+      # Temporary first physical cutover: verify home before removing @var.
+      nixosConfigurations.desktop-home-cutover = inputs.self.nixosConfigurations.desktop.extendModules {
+        modules = [ { workstation.granularMigration.keepLegacyVar = true; } ];
+      };
+
       nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = [ ./hosts/recovery ];
+        modules = [ ./images/recovery.nix ];
       };
     };
 }

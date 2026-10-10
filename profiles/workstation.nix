@@ -11,8 +11,8 @@
   networking.networkmanager.enable = true;
 
   hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
+    enable = false;
+    powerOnBoot = false;
   };
 
   security.polkit.enable = true;

@@ -1,15 +1,25 @@
 # Ephemeral root validation
 
-Desktop now declares ephemeral root as its normal policy, with a
-`persistent-root` specialisation that disables the reset service. Both variants
-persist machine identity; home and var remain persistent.
+Desktop replaces `@root` on every normal boot; `persistent-root` disables that
+reset for recovery. Both modes retain machine identity and explicitly declared
+state. Home and ordinary var are root-local, with audited profile/cache splitting.
+The corrected generation 46 normal → recovery → recovery → normal sequence and
+post-pruning normal all pass100 requirements, including nine Unity preference
+hashes. Latest accepted root 344/reset count 26 is in
+`post-pruning-normal-review.json`.
 
-Three physical reset trials passed on 2026-10-05 using the original opt-in
-entry. The proposed final default and recovery closures build and evaluate,
-but their exact physical boot acceptance remains pending. No reboot or live
-activation is scheduled: remaining work is batched to preserve the graphical
-session. See the [physical runbook](physical-root-validation.md) and
-[persistence contract](persistence-contract.md).
+Scoped backing pruning, semantic legacy reconciliation, individual home/var
+retirement and explicitly confirmed migration-snapshot retirement are complete.
+Both accepted generation 46 closures/ESP pairs and the recovery ISO are retained.
+Older generations requiring legacy mounts are obsolete. No additional physical
+boot chain is required solely for inactive-data retirement or documentation.
+
+The [current status](status.md), [contract](persistence-contract.md),
+[state audit](ephemeral-state-audit.md) and
+[granular ledger](../NixOS_Granular_Ephemeral_State_Implementation_Plan.md)
+separate current results from the historical root-module evidence below.
+Final exact-head validation/CI and the separate stock-readiness soak/backup gates
+remain distinct from accepted migration. The root-reset guard is unchanged.
 
 ## Reset contract
 
@@ -129,9 +139,8 @@ activation failure.
 
 ## Original physical trial procedure
 
-The three completed opt-in trials used the following procedure. Acceptance of
-the final default/recovery policy remains pending for a later maintenance
-window; do not repeat these reboots merely to rerun the initial trial.
+The three completed opt-in trials used the following procedure. The later stable-refresh default/recovery policy was also physically accepted;
+do not repeat these reboots merely to rerun the initial trial.
 
 - Inventory current root-local data and preserve anything needed explicitly.
 - Inspect actual Btrfs topology and verify persistent credentials without
@@ -148,11 +157,11 @@ window; do not repeat these reboots merely to rerun the initial trial.
 - Repeat physical boots and validate authentication, networking, Home Manager,
   Hyprland, cooling, persistent state, machine identity and reset logs.
 
-The master `plan.md` Phase 4 supersedes the earlier proposed home migration:
-selective home and var Impermanence are deferred for the pre-experiment
-baseline. Both remain persistent. Compiler tuning, LTO, PGO and BOLT belong
-after the final baseline tag. Maintenance and repository cleanup follow the
-master plan's dependency gates.
+The earlier root-only Phase4 deferred selective home/var persistence. The
+subsequent explicit granular goal superseded that storage deferral: home and
+var are now root-local with a physically accepted explicit allow-list. Compiler
+tuning, LTO, PGO and BOLT remain after the final baseline tag; unrelated readiness
+soak/backup/release gates are not waived by storage acceptance.
 
 ## Physical evidence and recovery transition
 
@@ -199,5 +208,6 @@ log metadata remains intact. The positive control creates a safe log directory,
 resets root, retains persistent data and writes a regular 0600 completion log.
 All fast checks pass with 43 rejected and four accepted configurations.
 Earlier result tables describe the preceding 26-case revision; their closures
-do not prove this follow-up code. Refreshed-input boot tests and candidate
-builds must be repeated before deployment. No physical activation occurred.
+do not prove this follow-up code. At that historical checkpoint, refreshed-input boot tests and candidate builds
+were still required before deployment. Subsequent immutable-source builds,
+physical generation 46 acceptance and retirement are recorded in the granular plan.

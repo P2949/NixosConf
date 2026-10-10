@@ -27,7 +27,7 @@ active scrub or collection merely to start a benchmark.
 
 ## Recovery artifacts and first cleanup
 
-Ten explicit GC roots under `/nix/var/nix/gcroots/workstation-preparation`
+Explicit preparation GC roots under `/nix/var/nix/gcroots/workstation-preparation`
 protect known persistent generation 31, parent/reset generation 33, prepared
 root-policy and workstation closures, the newer maintenance/GameMode/stable-refresh candidates, and both pinned
 recovery ISOs. Their
@@ -60,7 +60,8 @@ processing limit, while oversized external files are omitted. Reproduce under
 a controlled debugger when a full larger core is necessary. Core contents are
 private process memory and must not be committed to Git.
 
-The source policy is pending installation/physical acceptance. One-time store
+The source policy was included in the physically accepted stable-refresh
+closure; the ownership refactor preserved that exact closure. One-time store
 optimisation and content verification remain separate idle-period tasks.
 
 Pressure-triggered `min-free` / `max-free` GC is deferred: 763 GiB free of

@@ -1,7 +1,7 @@
 { lib, ... }:
 
 {
-  imports = [ ../../modules/storage/ephemeral-btrfs-root.nix ];
+  imports = [ ../../modules/storage/ephemeral-btrfs-root ];
 
   boot.initrd.systemd.enable = true;
   boot.ephemeralBtrfsRoot.enable = true;

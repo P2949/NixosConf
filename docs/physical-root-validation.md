@@ -1,17 +1,49 @@
 # Controlled physical root validation
 
-Status: the original opt-in entry passed three hardware reset boots. The
-runbook below records that initial rollout; it is historical for the now
-proposed final policy. Desktop now declares reset by default and a
-`persistent-root` recovery entry, with identity persistence in both. Build
-and validate offline while retaining the current session; do not install or
-reboot the final policy until the batched boot-validation window.
+Status: source `c5e036b6e87d9aa77700909b508ccc0c3978d5b2` already
+passed physical normal → persistent-root → normal validation on 2026-10-05,
+ending at root subvolume297. The original three opt-in trials also passed;
+these are separate accepted historical results. The current readiness candidate
+is now installed as generation37. Its current normal boot has fresh-root,
+reset-log, identity/credentials, service, graphical login, network and persistent
+mount evidence. Its complete generation37 physical chain now passes; exact evidence is below.
+Keep the graphical session alive during offline preparation.
 
-Exact final default/recovery hardware acceptance is pending. Do not install or select the
-reset entry until the preflight gates below are satisfied. All commands here
-are operator commands; documenting them does not mean they have been run.
+The supplied guide reports an earlier read-only recovery drill. Its exact ISO,
+date and physical inspection receipt still need reconciliation; existing build,
+hash and copy receipts alone cannot establish that event. Reconcile before
+scheduling another drill. The older artifact-specific procedure below is
+historical and does not supersede the current stable ISO or this evidence status.
 
-## Final-policy maintenance window
+## Current maintenance preflight, 2026-10-05
+
+Generation37 is already installed by the user's earlier switch: normal
+`nixos-generation-37.conf` targets0p67xd3scigqmmn65a0x5skdcsf6025b;
+persistent-root entry targetsph12l3y4k9jjmp5vhxwlkc11x4js2gjx.
+Kernel and initrd copies on the ESP match both store artifacts byte-for-byte.
+Accepted generation35 normal/persistent entries remain available. Both new
+candidate closures have independent GC roots; full store verification passed.
+No second boot installation is needed unless the candidate changes.
+
+The user enabled VMX and rebooted normal generation37; /dev/kvm and actual
+KVM initialization now pass. Firmware photo/runtime evidence is recorded in
+[firmware baseline](baselines/pre-optimization/firmware-20261005.md).
+CPU-heavy editor acceptance aborted at84C under the80C guard; review cooling
+and operating conditions before further heavy tests. Preserve the live session.
+
+The staged generation37 sequence is complete: persistent-root retained
+root300 and reset count6, then return-normal created root302/count7, removed
+the root-local sentinel and retained the persistent sentinel. The private
+preparation, persistent-boot and return-normal receipts are terminal accepted
+evidence, detailed below. No remaining generation37 root-chain reboot is
+required. The tuned cooling candidate is separately test-active with unchanged
+kernel/initrd; see [current status](status.md) for its incomplete load validation.
+
+## Physical validation procedure (generation37 sequence completed)
+
+The normal/persistent-root/return sequence below is a reusable procedure,
+not a request to repeat accepted generation37 boots. Any genuinely new
+required physical window must be coordinated to preserve user work.
 
 This section supersedes the historical opt-in installation commands below.
 Do not repeat the three successful reset trials. Complete remaining offline
@@ -24,11 +56,12 @@ specialisation; do not infer those paths from an earlier build.
    Preview activation changes; use boot-only installation when ready, preserving
    the live session. Inspect systemd-boot entries and verify each points at its
    recorded closure. Do not run live `test` or `switch` for this transition.
-2. Boot the matching recovery ISO from Ventoy and perform the read-only drill
-   below. For the selected stable refresh, the staged filename is
+2. Reconcile the reported earlier physical drill first. If it does not establish
+   the required artifact and inspection, batch the matching Ventoy ISO drill
+   below into this maintenance window. For the selected stable refresh, the staged filename is
    `nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso`,
    SHA-256 `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
-   Its copy/remount checks passed; its physical boot remains pending.
+   Its copy/remount checks passed; exact physical drill acceptance is unverified.
 3. Select the accepted normal default entry, which now resets root. Verify the
    exact running closure, fresh root, one reset invocation, identity, credentials,
    persistent state, networking, cooling and graphical login. Record private
@@ -139,7 +172,7 @@ latter survives on boots two and three. Check one BEGIN and one RESET for
 each distinct boot ID. Validate ordinary work between boots. Keep the parent
 default until repeated physical acceptance is recorded in `plan.md`.
 
-## Recovery drill and failure handling
+## Historical ISO staging and recovery drill procedure
 
 Build the pinned, secret-free ISO with `nix build '.#recovery-iso' --no-link`.
 The 2026-10-05 build produced
@@ -150,17 +183,26 @@ The ISO was added on 2026-10-05 to the existing Ventoy data partition as
 `nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
 replacing any existing images. Copy checksum matched; clean unmount completed
 and a subsequent read-only exFAT check reported clean. Post-remount checksum
-verification is recorded in `plan.md`. Select this exact filename in Ventoy
-for the pending physical boot and read-only recovery drill. The user's previous
+verification is recorded in `plan.md`. This older filename is retained as staging history. For a new drill use the
+current stable ISO identified in the maintenance-window section above. The user's previous
 successful recovery with another ISO does not establish this artifact's boot.
 Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.
 
 Boot recovery media and first identify the disk by its MP600 model/serial,
 partition layout and Btrfs label; device enumeration can differ on recovery
 media. Never run Disko, `mkfs`, repartitioning or recursive deletion for this
-drill. Mount top-level read-only using the verified partition, list subvolumes
-and read the reset log under `@persist`. Mount each of `@nix`, `@var`, `@home`
-and `@persist` read-only at separate mountpoints to verify expected state.
+drill. Mount the verified Btrfs partition with `ro,rescue=nologreplay,subvolid=5`, list
+subvolumes and read the reset log under `@persist`. Use `ro,rescue=nologreplay`
+with the corresponding `subvol=@nix`, `subvol=@var`, `subvol=@home` and
+`subvol=@persist` options for separate inspection mounts. Btrfs can replay its
+tree log even with `ro`; `rescue=nologreplay` suppresses that behavior for this drill.
+See the [official Btrfs mount-option reference](https://btrfs.readthedocs.io/en/latest/ch-mount-options.html).
+First confirm the production partition is not already mounted read-write;
+if it is, stop and resolve that mount before the read-only inspection.
+Record `findmnt` options for every inspection mount, exact ISO/hash, media,
+time, target disk identity and observed topology in the drill receipt.
+Keep the receipt on recovery RAM storage during inspection, then export it
+to the external backup media rather than writing it to the inspected MP600.
 The repository is `@persist/etc/nixos`; profile generations live in
 `@nix/var/nix/profiles`. Unmount everything and exit without disk changes.
 
@@ -180,4 +222,26 @@ recovery media and run that closure's `bin/switch-to-configuration boot`.
 This writes boot entries without enabling reset live. Validate the exact mounts
 and selected closure before this repair; it is not part of the read-only drill.
 
-Recovery-media boot and bootloader repair remain unproven until rehearsed.
+The exact read-only physical recovery-media drill is ACCEPTED: the expected
+recovery closure and ISO hash matched, the MP600 was inspected with
+`ro,rescue=nologreplay,subvolid=5`, and the production partition was unmounted
+before the normal generation38 return. Receipt `receipt-20261008T000047Z.txt`
+SHA256: `61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
+
+Bootloader-repair rehearsal has not been demonstrated. It is not an additional
+pre-optimization readiness gate; the accepted recovery requirement is the safe
+read-only media inspection described above.
+
+## Final generation37 chain accepted — 2026-10-05
+
+Normal0p67xd root300/resetcount6 → persistentph12l3 root300/count6 retained
+→ normal0p67xd root302/count7. Persistent-root retained root UUID and both
+sentinels. Return-normal changed UUID, removed root-local sentinel, retained
+persistent sentinel and matched persisted identity/credentials. Correct mounts,
+retained journals, active network/cooling/HomeManager/services, zero failed
+units and active Wayland login passed. Private0600 receipts:
+final-persistent-boot.json and final-return-normal-boot.json under
+/persist/nixos-readiness-20261005. Temporary capture wiring removed.
+The earlier pending-leg statements above are superseded by this acceptance.
+No additional root-chain rehearsal is required for reassurance. Any firmware
+policy change or runtime source change needs its relevant evidence reassessed.

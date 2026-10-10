@@ -127,31 +127,33 @@ def update_heartbeat():
 def parse_args(argv=None):
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--base-fan-duty", type=int, default=60)
-    parser.add_argument("--high-fan-duty", type=int, default=100)
-    parser.add_argument("--pump-duty", type=int, default=100)
+    parser.add_argument("--base-fan-duty", type=int, required=True)
+    parser.add_argument("--high-fan-duty", type=int, required=True)
+    parser.add_argument("--pump-duty", type=int, required=True)
 
-    parser.add_argument("--high-temp", type=float, default=65.0)
-    parser.add_argument("--low-temp", type=float, default=60.0)
+    parser.add_argument("--high-temp", type=float, required=True)
+    parser.add_argument("--low-temp", type=float, required=True)
 
-    parser.add_argument("--high-delay", type=float, default=1.0)
-    parser.add_argument("--low-delay", type=float, default=10.0)
+    parser.add_argument("--high-delay", type=float, required=True)
+    parser.add_argument("--low-delay", type=float, required=True)
 
-    parser.add_argument("--temp-interval", type=float, default=1.0)
-    parser.add_argument("--wake-interval", type=float, default=10.0)
-    parser.add_argument("--reset-delay", type=float, default=3.0)
+    parser.add_argument("--temp-interval", type=float, required=True)
+    parser.add_argument("--wake-interval", type=float, required=True)
+    parser.add_argument("--reset-delay", type=float, required=True)
 
     parser.add_argument("--usbreset", required=True)
 
     parser.add_argument(
         "--usb-id",
-        default="1b1c:0c1c",
+        required=True,
     )
 
     parser.add_argument(
         "--usb-serial",
-        default="e3072091824547ba7680aee53091005f",
+        required=True,
     )
+
+    parser.add_argument("--watchdog-seconds", type=float, required=True)
 
     args = parser.parse_args(argv)
 
@@ -185,8 +187,12 @@ def parse_args(argv=None):
         if not math.isfinite(value) or value < 0:
             parser.error(f"--{name.replace('_', '-')} must be finite and nonnegative")
 
-    if 2 * max(args.temp_interval, args.wake_interval) >= 35:
-        parser.error("polling and wake intervals must each be below 17.5s for the 35s watchdog")
+    if not math.isfinite(args.watchdog_seconds) or args.watchdog_seconds <= 0:
+        parser.error("--watchdog-seconds must be finite and positive")
+    if 2 * max(args.temp_interval, args.wake_interval) >= args.watchdog_seconds:
+        parser.error(
+            "polling and wake intervals require two intervals of watchdog margin"
+        )
 
     return args
 
@@ -288,9 +294,7 @@ def main():
         )
 
         sd_notify(
-            "READY=1\n"
-            "STATUS=Commander Core cooling controller active\n"
-            "WATCHDOG=1"
+            "READY=1\nSTATUS=Commander Core cooling controller active\nWATCHDOG=1"
         )
 
         while running:
@@ -319,8 +323,7 @@ def main():
                         heartbeat_time = update_heartbeat()
 
                         print(
-                            f"CPU {temp:.1f}C: "
-                            f"switching fans to {current_duty}%",
+                            f"CPU {temp:.1f}C: switching fans to {current_duty}%",
                             flush=True,
                         )
                 else:
@@ -346,8 +349,7 @@ def main():
                         heartbeat_time = update_heartbeat()
 
                         print(
-                            f"CPU {temp:.1f}C: "
-                            f"switching fans to {current_duty}%",
+                            f"CPU {temp:.1f}C: switching fans to {current_duty}%",
                             flush=True,
                         )
                 else:

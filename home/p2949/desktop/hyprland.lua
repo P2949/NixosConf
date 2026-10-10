@@ -14,19 +14,19 @@
 ----------------
 
 -- Use the EDID description rather than DP-3 so this survives connector
--- renumbering.  This is the proven SDR baseline:
---   3440x1440 @ 155 Hz, scale 1, 8 bpc, sRGB.
+-- renumbering. Desktop output uses sRGB with 10-bit precision:
+--   3440x1440 @ 155 Hz, scale 1. HDR switches for fullscreen HDR content.
 --
--- VRR is intentionally disabled here. HDR/10-bit are also intentionally
--- left out of the baseline and can be reintroduced separately.
+-- Keep Adaptive Sync enabled for desktop and fullscreen workloads.
+-- Actual HDR content and return-to-desktop behavior require validation.
 hl.monitor({
     output = "desc:Microstep MSI MAG401QR EA5H156300816",
     mode = "3440x1440@155",
     position = "0x0",
     scale = 1,
     transform = 0,
-    vrr = 0,
-    bitdepth = 8,
+    vrr = 1,
+    bitdepth = 10,
     cm = "srgb",
 })
 
@@ -97,9 +97,8 @@ hl.config({
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
 
-        -- Disabled because this monitor/setup is being kept on the
-        -- known-good fixed-refresh baseline for now.
-        vrr = 0,
+        -- Adaptive Sync enabled at all times, as requested.
+        vrr = 1,
 
         enable_swallow = true,
         swallow_regex = "^(Alacritty)$",
@@ -118,12 +117,11 @@ hl.config({
         allow_session_lock_restore = true,
     },
 
-    -- Keep rendering conservative while establishing the workstation
-    -- baseline. HDR, FP16 and direct scanout can be tested independently.
+    -- Switch to HDR for fullscreen content while keeping the desktop sRGB.
     render = {
         direct_scanout = 0,
         cm_enabled = true,
-        cm_auto_hdr = 0,
+        cm_auto_hdr = 1,
     },
 
     cursor = {

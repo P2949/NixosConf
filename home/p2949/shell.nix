@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   programs.zsh = {
@@ -34,6 +34,9 @@
     };
 
     history = {
+      # Persist the containing state directory: Zsh saves by atomic rename,
+      # which cannot replace an individually bind-mounted history file.
+      path = "${config.xdg.stateHome}/zsh/history";
       size = 50000;
       save = 50000;
 

@@ -1,8 +1,7157 @@
 # NixOS Pre-Experiment Readiness Master Plan
 
-**Project:** `P2949/NixosConf`  
-**Purpose:** take the current NixOS workstation from its present state to a **final, stable, reproducible, optimization-ready baseline** before any system-wide `-march=native`, LTO, PGO, BOLT, or combined binary-optimization work begins.  
-**Plan date:** 2026-10-05  
+## Granular ephemeral-state work — 2026-10-08
+
+The user explicitly started the home/var granular Impermanence implementation
+on `feat/granular-impermanence`. Its authoritative procedure and current results
+are in [NixOS_Granular_Ephemeral_State_Implementation_Plan.md](NixOS_Granular_Ephemeral_State_Implementation_Plan.md).
+This supersedes earlier selective-home/var deferrals for this feature branch;
+the historical pre-optimization readiness evidence below remains historical.
+Source changes are not yet physical acceptance. The active desktop and all
+legacy home/var rollback sources remain intact while validation is completed.
+
+## Final pre-soak continuation directive — adopted2026-10-07
+
+Newest full guide below supersedes older next-action sections. Reviewed5e588b7
+is a historical checkpoint; authoritative branch/source and terminal CI must
+be checked live. Physicalgeneration38boot/125Wresume/Bluetoothoff/display/
+Stageenumeration andinteractiveUnreal are CLOSED. No additional tests in
+those scopes without an actual relevantchange. All pre-soak gates are now
+accepted, including user-confirmed HDR/SDR return and Stage audio after boot/resume.
+Representative multi-day normal-use soak began 2026-10-08; completion remains pending.
+Uninterrupted final-boot Proton/exit policy and exact physical recovery
+provenance are CLOSED by the later receipts recorded below. Then follow
+soak→backupdelta→freeze→canonicalbaseline→exactchecks/heavysuite/closureaudit→
+exactheadCI→merge/treecomparison→annotatedtag. PreservecurrentGUI. No new
+readiness categories, architecture cleanup or optimization beforetag.
+
+Full attachment follows, trailing whitespace normalized; SHA256 `6a2c38efe30f5f2d4353f69f8b65ade9ad060993c0d4560347b5395b8bad603d`.
+
+> I re-reviewed the attached continuation guide, the live branch, PR #7, `docs/status.md`, current `plan.md`, recent commits, CI, and the relevant source policy.
+>
+> The attached guide was already moving the project toward finalization, but it was still written before Generation 38 had actually completed its physical boot/resume acceptance. Assess NixOS Performance Ceiling The live branch is now **`5e588b7a251270dcefc8e9aa1e63d7731d585c84`**, with the latest commit explicitly accepting normal interactive Unreal work.  Generation 38 is physically selected, its fresh-root and identity checks passed, and a real deep suspend/resume proved that the power-limit service restarted and restored both 125 W limits while Wayland, networking, Commander Core, Bluetooth-off, 155 Hz/10-bit/VRR and Stage Pro enumeration returned correctly.   Unreal interactive work is now explicitly accepted and should not be requested again.
+>
+> The three commits since the previous `fa8b015…` guide altered only `docs/status.md` and `plan.md`, so they do not invalidate the tested runtime closure. Current-head CI #169 is still **in progress**, so that specific head is not yet CI-accepted.  The source boundary is also still correct: the host declaratively applies the 125 W boot/resume policy, Bluetooth is disabled in the workstation profile, stock closures reject the optimization namespaces, and `optimization/default.nix` remains empty.
+>
+> So the previous guide should now be revised to this narrower final plan:
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## Purpose
+>
+> This document is the single forward-looking continuation directive for `plan.md`.
+>
+> Historical sections of `plan.md` remain valid as chronological evidence, but they must not be interpreted as fresh instructions when newer accepted evidence supersedes them.
+>
+> The objective is now:
+>
+> ```text
+> finish the last real workstation acceptance scopes
+> → reconcile recovery evidence
+> → representative soak
+> → backup freshness
+> → freeze
+> → canonical baseline
+> → exact final validation
+> → merge
+> → immutable baseline tag
+> → stop readiness
+> ```
+>
+> The project is no longer in:
+>
+> ```text
+> architecture design
+> hardware-stability exploration
+> CPU tuning selection
+> RAM qualification
+> Impermanence design
+> reconstruction design
+> general workstation validation
+> ```
+>
+> Those phases are complete enough for this project's stated acceptance criteria.
+>
+> ---
+>
+> # 1. Current authoritative checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed source:
+>
+> ```text
+> 5e588b7a251270dcefc8e9aa1e63d7731d585c84
+> Accept user-confirmed normal interactive Unreal workflow
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> base: main
+> ```
+>
+> Current exact-head CI:
+>
+> ```text
+> Nix checks #169
+> IN PROGRESS at review time
+> ```
+>
+> Do not claim current-head CI acceptance until that run reaches a successful terminal state.
+>
+> The runtime configuration itself has not changed since the previously accepted Generation 38 candidate; recent commits are documentation/evidence updates only.
+>
+> ---
+>
+> # 2. Current physical baseline candidate
+>
+> Generation 38 is now physically booted and selected.
+>
+> Normal closure:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> Persistent-root closure:
+>
+> ```text
+> 8v183hn0p5yv7wf625yj38n6bhsjpxz6
+> ```
+>
+> Generation 38 normal boot has already proven:
+>
+> ```text
+> actual Generation 38 selection
+> fresh ephemeral root
+> private machine-ID equality
+> persistent mounts
+> NetworkManager
+> Home Manager
+> Commander Core
+> active Wayland session
+> no failed units
+> PL1 = 125 W
+> PL2 = 125 W
+> Bluetooth disabled
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> VRR enabled
+> Stage Pro device/sink enumeration
+> ```
+>
+> A real deep suspend/resume has also proven:
+>
+> ```text
+> actual system suspend/resume
+> same boot resumed
+> generated resume hook executed
+> cpu-package-power-limit.service restarted
+> service InvocationID changed
+> PL1 = 125 W after resume
+> PL2 = 125 W after resume
+> Wayland returned
+> network returned
+> Commander Core returned
+> Bluetooth remained disabled
+> 155 Hz / 10-bit / VRR remained correct
+> Stage Pro ALSA/PipeWire sink returned
+> ```
+>
+> Therefore:
+>
+> ```text
+> GENERATION 38 PHYSICAL BOOT = ACCEPTED
+> 125 W BOOT POLICY = ACCEPTED
+> 125 W RESUME POLICY = ACCEPTED
+> BLUETOOTH-OFF PERSISTENCE = ACCEPTED
+> 155 HZ / 10-BIT / VRR PERSISTENCE = ACCEPTED
+> ```
+>
+> Do not schedule another reboot for these items.
+>
+> ---
+>
+> # 3. Root-chain evidence remains accepted
+>
+> The project has already compared Generation 38 against the accepted Generation 37 root/persistence implementation.
+>
+> Relevant semantics remain unchanged:
+>
+> ```text
+> kernel/initrd contract
+> ephemeral-root reset implementation
+> fstab/mount structure
+> persistence modules
+> machine-ID contract
+> user-generation persistence
+> persistent-root specialisation
+> activation safety
+> ```
+>
+> Generation 37 already completed:
+>
+> ```text
+> normal
+> → persistent-root
+> → normal
+> ```
+>
+> with the expected reset/retention semantics.
+>
+> Therefore:
+>
+> ```text
+> NO NEW PERSISTENT-ROOT PHYSICAL SEQUENCE IS REQUIRED.
+> ```
+>
+> Do not repeat the three-trial root-reset program.
+>
+> Do not perform another persistent-root boot merely to obtain a missing counter that was not captured before the Generation 38 boot.
+>
+> Only reopen this gate if later source changes touch root/initrd/persistence semantics or the machine shows an actual root-reset defect.
+>
+> ---
+>
+> # 4. Gates that are now closed
+>
+> Treat the following as accepted unless later source changes specifically invalidate them:
+>
+> ```text
+> [x] repository architecture
+> [x] explicit one-host flake structure
+> [x] stable NixOS 26.05 refresh
+> [x] stable/unstable package boundary
+> [x] optimization separation
+> [x] forbidden optimization dependency namespaces
+> [x] activation-safety framework
+> [x] 45 activation guard fixtures
+> [x] five root VM scenarios
+> [x] interrupted recovery
+> [x] persistence contract
+> [x] machine identity persistence
+> [x] Generation 37 physical root chain
+> [x] Generation 38 normal physical boot
+> [x] Generation 38 fresh ephemeral root
+> [x] Generation 38 identity/persistence checks
+> [x] blank-disk reconstruction
+> [x] direct production Disko source import
+> [x] full Nix-store verification
+> [x] stock closure audit
+> [x] stock-negative contamination fixture
+> [x] physical VMX/KVM
+> [x] GameMode helpers/governor
+> [x] CPU policy restoration after GameMode
+> [x] Btrfs scrub
+> [x] Btrfs device counters
+> [x] NVMe SMART/media health
+> [x] external backup integrity
+> [x] representative restore
+> [x] Unreal engine supplement backup
+> [x] secrets recovery
+> [x] 125 W selected package-power policy
+> [x] 15-minute 125 W CPU validation
+> [x] real boot application of 125 W policy
+> [x] real resume reapplication of 125 W policy
+> [x] complete 20 GiB memtester loop
+> [x] Blender 1024-sample HIP render
+> [x] Blender interactive editing
+> [x] Unreal project rebuild covering all 25 project C++ files
+> [x] Unreal configured-map 120-second PIE lifecycle
+> [x] Unreal normal interactive workflow
+> [x] native Stardew Valley gameplay
+> [x] initial Dark Souls Proton gameplay/controls/audio
+> [x] basic Stage Pro USB playback
+> [x] Stage Pro sink enumeration after reboot/resume
+> [x] Bluetooth disabled by policy
+> [x] Bluetooth disabled after physical boot/resume
+> [x] VRR enabled
+> [x] VRR persisted after boot/resume
+> [x] 10-bit/155 Hz display persisted
+> [x] Android/Gradle/AVD NOT APPLICABLE
+> [x] controller NOT APPLICABLE
+> [x] README ownership cleanup
+> [x] runtime optimization module remains inert
+> ```
+>
+> Do not rerun these for reassurance.
+>
+> In particular, there is no valid reason now to repeat:
+>
+> ```text
+> CPU stress
+> RAM memtester
+> Blender render
+> Blender interaction
+> Unreal interactive workflow
+> Stardew Valley
+> Generation 37 root chain
+> blank-disk reconstruction
+> 125 W suspend/resume
+> ```
+>
+> unless a relevant configuration change occurs.
+>
+> ---
+>
+> # 5. The actual remaining pre-soak hard gates
+>
+> The critical path is now very small.
+>
+> Before the project enters its representative soak, finish:
+>
+> ```text
+> 1. visual HDR acceptance and visual HDR→SDR return
+> 2. one uninterrupted Generation 38 Proton session with natural exit
+> 3. audible Stage Pro postboot/resume confirmation
+> 4. Stage Pro USB replug only if reconnect is a normal intended workflow
+> 5. recovery-drill provenance reconciliation
+> ```
+>
+> Unreal interactive editing is no longer on this list.
+>
+> CPU/RAM are no longer on this list.
+>
+> Physical boot/resume is no longer on this list.
+>
+> Bluetooth and VRR are no longer on this list.
+>
+> ---
+>
+> # 6. Immediate next step — visual HDR acceptance
+>
+> The technical HDR path is already substantially proven.
+>
+> Existing evidence establishes:
+>
+> ```text
+> 10-bit desktop output
+> normal sRGB desktop
+> automatic fullscreen HDR enabled
+> EDID advertises PQ/BT.2020/static HDR metadata
+> HDR MKV recognized as PQ/BT.2020
+> native Wayland mpv output negotiated HDR
+> DRM output changed to BT2020_RGB while fullscreen
+> ordinary exit returned DRM output to Default
+> VRR remained functional
+> ```
+>
+> Do not repeat low-level capability discovery.
+>
+> What remains is the part only the user can meaningfully accept: whether the actual display result looks correct.
+>
+> Use the already downloaded HDR MKV sample.
+>
+> Check:
+>
+> ```text
+> before playback:
+>     desktop looks normal in SDR/sRGB
+>
+> during fullscreen HDR playback:
+>     image visibly transitions into HDR correctly
+>     monitor HDR indicator/state is sensible if available
+>     highlights and colour look plausible
+>     image is not obviously washed out
+>     image is not obviously clipped/broken
+>     no flicker or compositor instability
+>     no display mode failure
+>
+> after ordinary exit:
+>     desktop returns visually to normal SDR/sRGB
+>     colours are not stuck in HDR/wide-gamut appearance
+>     155 Hz remains correct
+>     VRR remains sane
+> ```
+>
+> Acceptance:
+>
+> ```text
+> HDR VISUAL QUALITY = PASS
+> HDR → SDR VISUAL RETURN = PASS
+> ```
+>
+> Do not require a separate HDR game if the real HDR video path works correctly.
+>
+> The readiness requirement is the display stack, not a specific game.
+>
+> ---
+>
+> # 7. Final Proton binding
+>
+> Dark Souls Remastered has already demonstrated:
+>
+> ```text
+> successful launch
+> gameplay
+> controls
+> audio
+> GameMode functionality
+> GameMode exit
+> CPU-policy restoration
+> no relevant scoped kernel fault
+> ```
+>
+> The remaining qualification is that the earlier session crossed a test-activation boundary.
+>
+> Now that Generation 38 is cleanly booted, perform one uninterrupted session entirely under the final physical candidate.
+>
+> Requirements:
+>
+> ```text
+> launch normally from current boot
+> play normally
+> audio works
+> controls work
+> GameMode enters expected state
+> no obvious graphics/runtime regression
+> exit naturally through the game
+> GameMode becomes inactive
+> all expected CPU policies are restored
+> no matching new GPU timeout/hang/fault
+> no relevant new kernel hardware fault
+> ```
+>
+> No arbitrary duration is required.
+>
+> No benchmark run is required.
+>
+> No controller testing is required.
+>
+> Quantitative frametime comparisons belong to the future optimization project.
+>
+> If successful:
+>
+> ```text
+> PROTON FINAL-CANDIDATE BINDING = ACCEPTED
+> ```
+>
+> ---
+>
+> # 8. Finish Stage Pro persistence evidence
+>
+> Functional Stage Pro USB playback was already accepted before the Generation 38 reboot.
+>
+> Generation 38 boot/resume has now proven that:
+>
+> ```text
+> USB device returns
+> ALSA card returns
+> PipeWire analog-stereo sink returns
+> PipeWire/WirePlumber remain active
+> ```
+>
+> Do not require Stage Pro to be the default sink.
+>
+> HDMI may legitimately remain the user's chosen saved default.
+>
+> The remaining evidence should be human audible confirmation:
+>
+> ```text
+> select/use Stage Pro
+> play ordinary audio
+> confirm audible playback
+> ```
+>
+> Because a real suspend/resume already occurred, this can close postboot/resume playback simultaneously if audio has not been disrupted.
+>
+> If physical USB replug is normal expected usage, also do once:
+>
+> ```text
+> unplug Stage Pro
+> replug Stage Pro
+> confirm ALSA/PipeWire device returns
+> confirm audible playback
+> ```
+>
+> If replug is not part of intended normal usage, mark that narrower scope NOT APPLICABLE rather than inventing a new requirement.
+>
+> Do not return to low-level ALSA debugging unless audible playback fails.
+>
+> ---
+>
+> # 9. Do not retest Unreal
+>
+> Interactive Unreal is now accepted by direct user report from real ongoing work.
+>
+> Existing evidence collectively covers:
+>
+> ```text
+> actual AI_Gavin_Project
+> native Wayland editor
+> project Git-clean
+> normal interactive work
+> viewport/editor use
+> configured-map PIE
+> 120-second PIE
+> end play
+> continued normal work
+> broad project C++ rebuild
+> all 25 project C++ files
+> successful linking
+> Epic bundled Clang/toolchain
+> no observed interaction problem
+> ```
+>
+> The current editor may be allowed to exit naturally later.
+>
+> If that normal exit is observed, record it as additional evidence.
+>
+> Do not hold readiness hostage to reproducing another equivalent Unreal session.
+>
+> Do not force the currently open editor to exit solely to manufacture an extra receipt.
+>
+> ---
+>
+> # 10. Consolidate workflow evidence rather than creating micro-commits
+>
+> After HDR, Proton and Stage Pro are finished, update the evidence as one coherent batch where practical.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> plan.md chronological ledger
+> PR #7 body
+> ```
+>
+> Important reconciliation:
+>
+> The PR body and portions of current status/history still contain earlier wording where:
+>
+> ```text
+> interactive Unreal = open
+> physical boot/resume = open
+> ```
+>
+> Those statements are superseded.
+>
+> The consolidated update should make current truth unambiguous:
+>
+> ```text
+> Generation 38 physical boot = PASS
+> 125 W real resume = PASS
+> Bluetooth boot persistence = PASS
+> VRR/10-bit/155 Hz boot persistence = PASS
+> Stage sink boot/resume enumeration = PASS
+> Unreal interactive workflow = PASS
+> ```
+>
+> Do not rewrite historical observations inside the chronological ledger.
+>
+> Record newer evidence as superseding them.
+>
+> ---
+>
+> # 11. Current CI handling
+>
+> Current-head CI #169 was still running at the time of this review.
+>
+> Do not block the current interactive workflow tests waiting for it because:
+>
+> ```text
+> the recent commits are documentation-only
+> the tested runtime closure has not changed
+> ```
+>
+> When the run completes:
+>
+> ```text
+> if PASS:
+>     record current documentation checkpoint CI as PASS
+>
+> if FAIL:
+>     inspect whether failure is substantive or documentation/check related
+>     fix only the actual issue
+> ```
+>
+> This checkpoint CI is not the final readiness CI anyway.
+>
+> A new exact-source CI pass is required after the final freeze/evidence state.
+>
+> ---
+>
+> # 12. Recovery-drill provenance
+>
+> This remains an evidence problem first, not automatically a testing problem.
+>
+> Known recovery image:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> Known SHA256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Existing accepted evidence already covers:
+>
+> ```text
+> recovery image build
+> recovery image hash
+> Ventoy copy
+> media remount/copy verification
+> external backup
+> representative restore
+> ```
+>
+> What remains is binding the previously reported physical read-only recovery inspection to exact provenance.
+>
+> Search the retained receipts/private evidence for:
+>
+> ```text
+> exact ISO filename
+> exact ISO hash or uniquely matching artifact
+> date/time
+> physical Ventoy device
+> target MP600 identity
+> read-only top-level Btrfs mount
+> expected seven/subvolume topology inspection
+> no disk modification/destructive operation
+> ```
+>
+> If existing receipts establish that chain:
+>
+> ```text
+> RECOVERY PHYSICAL DRILL = ACCEPTED
+> ```
+>
+> Do not reboot again.
+>
+> If they do not:
+>
+> schedule exactly one read-only recovery drill.
+>
+> During a new drill:
+>
+> ```text
+> DO:
+> boot the exact recovery ISO
+> identify the internal NVMe
+> mount the Btrfs top-level read-only
+> inspect expected subvolumes
+> confirm intended data visibility
+> record artifact/media/device identity
+> shut down cleanly
+>
+> DO NOT:
+> run Disko
+> run mkfs
+> partition
+> delete subvolumes
+> run reset logic
+> modify the production filesystem
+> ```
+>
+> This should be the final recovery exercise.
+>
+> ---
+>
+> # 13. Begin the representative soak immediately after those gates close
+>
+> Once:
+>
+> ```text
+> HDR = accepted
+> Proton = accepted
+> Stage Pro audible persistence = accepted
+> recovery provenance = accepted
+> ```
+>
+> stop inventing new individual tests.
+>
+> Enter a multi-day representative soak on the same Generation 38 candidate.
+>
+> The soak is primarily normal use.
+>
+> Good representative activity includes:
+>
+> ```text
+> Unreal work
+> Blender work
+> Firefox/general desktop
+> coding
+> C/C++ builds
+> Nix builds
+> native game
+> Proton game
+> Stage Pro
+> HDR video
+> normal file operations
+> normal package/system use
+> suspend/resume if naturally used
+> normal reboots only if naturally needed
+> ```
+>
+> Do not deliberately torture the system continuously.
+>
+> Observe for:
+>
+> ```text
+> machine freeze
+> GPU reset outside expected suspend reset path
+> amdgpu timeout/hang/fault
+> MCE/hardware error
+> Btrfs/filesystem error
+> new failed service
+> Commander Core failure/restart
+> unexpected thermal throttling
+> root-reset failure
+> identity/persistence failure
+> Wayland/login regression
+> audio disappearance
+> network regression
+> HDR state stuck after exit
+> VRR regression
+> unexpected severe swap/memory pressure
+> meaningful NVMe error-log growth
+> ```
+>
+> Distinguish real faults from expected messages.
+>
+> For example, AMDGPU MODE1 reset messages associated specifically with suspend/resume are not by themselves proof of a spontaneous GPU failure.
+>
+> If the soak remains clean:
+>
+> ```text
+> REPRESENTATIVE SOAK = ACCEPTED
+> ```
+>
+> If a real defect appears:
+>
+> ```text
+> record exact failure
+> → diagnose
+> → make the smallest declarative fix
+> → determine which prior evidence the fix invalidates
+> → rerun only affected scope
+> → restart soak only if change is system-wide enough to justify it
+> ```
+>
+> ---
+>
+> # 14. Backup freshness at the end of soak
+>
+> The independent backup itself is already accepted.
+>
+> Do not recreate the entire 27.8 GB backup merely for ceremony.
+>
+> Original accepted archive:
+>
+> ```text
+> 27,844,003,241 bytes
+> SHA256:
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> At freeze time, protect meaningful changes created since that snapshot.
+>
+> Review:
+>
+> ```text
+> Git repositories
+> uncommitted/untracked work
+> valuable ignored files
+> Unreal project changes
+> Blender files
+> documents
+> new assets
+> important configuration/data not recreated elsewhere
+> ```
+>
+> Use an incremental update/supplement where that correctly covers the delta.
+>
+> Record:
+>
+> ```text
+> backup date
+> destination/media
+> scope of changed data
+> verification result
+> ```
+>
+> Then mark:
+>
+> ```text
+> BACKUP FRESHNESS = ACCEPTED
+> ```
+>
+> ---
+>
+> # 15. Freeze ordinary source changes
+>
+> After the representative soak and backup freshness pass:
+>
+> ```text
+> FREEZE THE STOCK CANDIDATE.
+> ```
+>
+> From that moment:
+>
+> ```text
+> no new tuning
+> no architecture cleanup
+> no random upgrades
+> no kernel change
+> no Mesa change
+> no compiler experiment
+> no PGO
+> no BOLT
+> no LTO
+> no new performance sysctls
+> no module reshuffling for aesthetics
+> ```
+>
+> Repository state must be:
+>
+> ```text
+> clean working tree
+> all intended changes committed
+> no staged leftovers
+> no relevant untracked configuration
+> flake.lock frozen
+> optimization/default.nix still inert
+> ```
+>
+> Only final evidence/documentation corrections should be allowed unless a genuine defect is discovered.
+>
+> ---
+>
+> # 16. Capture the canonical pre-optimization baseline
+>
+> Use the existing baseline collector:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> Capture it on the accepted final physical candidate, not an older preparation state.
+>
+> The canonical baseline record should bind:
+>
+> ```text
+> Git source
+> flake.lock
+> evaluated system
+> built normal closure
+> running normal closure
+> persistent-root closure
+> recovery image
+> physical hardware/runtime state
+> accepted workload state
+> ```
+>
+> Store the canonical baseline record under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> Record at least:
+>
+> ```text
+> source commit
+> flake.lock hash
+> nixpkgs revision
+> NixOS version
+> Nix version
+>
+> normal closure
+> persistent-root closure
+> recovery ISO store path
+> recovery ISO SHA256
+>
+> kernel version
+> Mesa version
+> microcode
+>
+> BIOS
+> ME versions
+> CPU ratio/cache policy
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR size
+> NVMe model/firmware
+> Btrfs mount policy
+>
+> CPU governor
+> EPP
+> THP
+> swap/zram
+> I/O scheduler
+> irqbalance state
+>
+> Commander Core policy
+> maintenance timers
+>
+> accepted CPU result
+> accepted RAM result
+> Generation 37 root-chain evidence
+> Generation 38 boot evidence
+> Generation 38 resume evidence
+> Blender acceptance
+> Unreal acceptance
+> native-game acceptance
+> Proton acceptance
+> HDR acceptance
+> Stage Pro acceptance
+> backup identity/freshness
+> recovery-drill evidence
+> representative soak result
+> ```
+>
+> Do not commit secrets.
+>
+> Do not expose private raw identifiers that the existing repository deliberately stores only in private receipts/hashes.
+>
+> ---
+>
+> # 17. Final stock-policy/environment audit
+>
+> Before calling the baseline frozen, explicitly confirm that the final workstation still represents the intended stock control.
+>
+> Require:
+>
+> ```text
+> optimization/default.nix inert
+> forbidden optimization namespaces active
+>
+> no global CFLAGS
+> no global CXXFLAGS
+> no global LDFLAGS
+> no NIX_CFLAGS_COMPILE optimization leakage
+> no unexpected LD_LIBRARY_PATH tuning
+> no global RADV experimental performance switch
+> no hidden allocator tuning
+> no accidental -march=native policy
+> no system-wide PGO/BOLT/LTO experiment
+> ```
+>
+> Also confirm the intended baseline policy:
+>
+> ```text
+> kernel unchanged
+> Mesa unchanged unless explicitly accepted
+> 125 W package limits
+> selected cooling policy
+> Bluetooth disabled
+> VRR enabled
+> 10-bit/sRGB desktop
+> automatic HDR
+> normal scheduler/governor/EPP policy
+> no unexpected permanent performance governor
+> ```
+>
+> Anything unexplained at this stage is a freeze blocker.
+>
+> ---
+>
+> # 18. Run exact frozen offline validation
+>
+> On the exact frozen source:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then explicitly run the heavier outputs that are not necessarily all covered by ordinary CI:
+>
+> ```text
+> blank-disk-reconstruction
+> workstation-smoke
+> activation-safety-actions
+> stock-contamination-negative
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> This is appropriate here because it binds the final exact source.
+>
+> It is not a reason to rerun the physical root-chain.
+>
+> Build and record exact final artifacts:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Protect them with GC roots until the baseline is finalized.
+>
+> ---
+>
+> # 19. Final closure comparison
+>
+> Compare the current accepted running closure against the exact final build.
+>
+> Use:
+>
+> ```bash
+> nix store diff-closures /run/current-system "$final_candidate"
+> ```
+>
+> If final changes since Generation 38 are documentation-only:
+>
+> ```text
+> expected runtime closure should remain unchanged
+> ```
+>
+> If it changes unexpectedly:
+>
+> investigate before freeze.
+>
+> Require no unexplained:
+>
+> ```text
+> kernel change
+> Mesa change
+> LLVM/toolchain change
+> large package-universe refresh
+> unstable dependency spread
+> optimization namespace
+> global optimization flag
+> unexpected service/policy change
+> ```
+>
+> If the runtime closure is identical, that is strong evidence that documentation/finalization work has not invalidated physical acceptance.
+>
+> ---
+>
+> # 20. Do not rerun full Nix-store verification without cause
+>
+> Full store verification already passed.
+>
+> Do not repeat it solely because "final validation sounds safer."
+>
+> Rerun it only if there is new evidence of:
+>
+> ```text
+> store corruption
+> unexpected hash failure
+> disk corruption
+> filesystem fault
+> failed realization suggesting content damage
+> ```
+>
+> The exact final build/check suite is sufficient in the normal case.
+>
+> ---
+>
+> # 21. Exact-final-head CI
+>
+> After all final source/evidence changes are committed:
+>
+> push the exact frozen source.
+>
+> Require GitHub Actions to complete successfully on that exact SHA.
+>
+> This final CI is authoritative.
+>
+> Do not rely on:
+>
+> ```text
+> #166
+> #169
+> or any other ancestor run
+> ```
+>
+> as proof of a later final commit.
+>
+> Only after exact-final CI succeeds should the project say:
+>
+> ```text
+> FINAL SOURCE = ACCEPTED
+> ```
+>
+> ---
+>
+> # 22. Final documentation reconciliation
+>
+> At this point update current-truth documentation one last time.
+>
+> `docs/status.md` should contain no stale open gates.
+>
+> PR #7 should accurately summarize final accepted state.
+>
+> `plan.md` should preserve chronology but end with a final acceptance ledger.
+>
+> Canonical baseline documentation should point to exact final artifact identities.
+>
+> Required final state:
+>
+> ```text
+> docs/status.md:
+>     zero unresolved hard readiness gates
+>
+> PR #7:
+>     no "still draft" technical blockers
+>
+> plan.md:
+>     chronological record preserved
+>
+> baseline record:
+>     exact source/artifacts/evidence identified
+> ```
+>
+> Do not erase superseded historical failures.
+>
+> ---
+>
+> # 23. Mark PR #7 ready
+>
+> Only after all hard gates are complete:
+>
+> ```text
+> mark PR #7 ready for review
+> ```
+>
+> PR #7 is currently open, draft and mergeable.
+>
+> Its readiness transition should mean exactly:
+>
+> ```text
+> there is no known unfinished pre-optimization gate
+> ```
+>
+> Do not mark it ready simply because the branch has existed for a long time.
+>
+> ---
+>
+> # 24. Merge into main
+>
+> Merge through the intended main-branch workflow.
+>
+> After merging:
+>
+> compare the tested feature branch tree with the resulting main tree.
+>
+> If tree-identical:
+>
+> ```text
+> reuse accepted build/runtime evidence
+> ```
+>
+> Do not perform another full physical validation cycle.
+>
+> If the merge changes content because of conflict resolution or intervening base changes:
+>
+> ```text
+> identify changed scope
+> rebuild exact main
+> rerun affected checks
+> update artifact identity
+> ```
+>
+> Do not blindly assume merge commits preserve the tested tree.
+>
+> ---
+>
+> # 25. Create the immutable stock baseline tag
+>
+> Create an annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The tagged baseline must identify:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> recovery ISO SHA256
+> canonical baseline record
+> accepted readiness evidence
+> ```
+>
+> That tag becomes the permanent control for optimization work.
+>
+> Once it exists:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Stop adding readiness tests.
+>
+> ---
+>
+> # 26. Post-tag cleanup
+>
+> Repository maintainability cleanup belongs after the stock tag.
+>
+> Candidate work:
+>
+> ```text
+> archive plan.md/history appropriately
+> organize docs into design/runbooks/validation/history
+> move stock-control ownership if still desirable
+> move VS Code ownership into development if desirable
+> remove historical compatibility aliases
+> add generated module option documentation
+> add Markdown/link validation
+> other non-runtime cleanup
+> ```
+>
+> These tasks must not retroactively delay the baseline.
+>
+> ---
+>
+> # 27. Optimization-v2 begins only from the immutable tag
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not revive the old optimization branch wholesale.
+>
+> Treat it as donor/reference code.
+>
+> First construct the experimental framework:
+>
+> ```text
+> benchmark corpus
+> workload definitions
+> measurement protocol
+> experiment manifests
+> specialisation/A-B states
+> stage-aware closure contamination rules
+> artifact/provenance recording
+> ```
+>
+> Then proceed through the actual optimization program:
+>
+> ```text
+> CPU-target code generation
+> graphics-stack A/B
+> profiling infrastructure
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific optimization
+> ```
+>
+> The tagged stock baseline remains the control for every experiment.
+>
+> ---
+>
+> # 28. Exact execution order from the present live state
+>
+> Execute this sequence:
+>
+> ```text
+> 1. Preserve the current Generation 38 session.
+> 2. Do not reboot again for already accepted evidence.
+> 3. Let current CI #169 reach a terminal result.
+> 4. Complete human visual HDR acceptance using the existing HDR MKV.
+> 5. Confirm ordinary HDR→SDR visual return.
+> 6. Confirm audible Stage Pro playback on the current postboot/resumed system.
+> 7. If USB replug is a normal intended workflow, test one replug; otherwise mark it N/A.
+> 8. Run one uninterrupted Dark Souls session entirely on Generation 38.
+> 9. Exit Dark Souls naturally.
+> 10. Confirm GameMode inactive after exit.
+> 11. Confirm CPU policies restored after Proton exit.
+> 12. Check for relevant new GPU/kernel faults.
+> 13. Do NOT repeat Unreal; it is accepted.
+> 14. Consolidate these results into status/plan/PR rather than many tiny commits.
+> 15. Run local flake checks for that documentation/evidence commit.
+> 16. Require CI on the resulting exact head.
+> 17. Reconcile existing recovery-drill provenance.
+> 18. Only schedule another recovery boot if existing receipts cannot establish provenance.
+> 19. Once recovery evidence closes, enter representative multi-day soak.
+> 20. Make no ordinary tuning changes during soak.
+> 21. Investigate only genuine failures.
+> 22. Refresh the external backup delta at the end of soak.
+> 23. Freeze ordinary source changes.
+> 24. Capture the final baseline collector snapshot.
+> 25. Write the canonical pre-optimization baseline record.
+> 26. Audit stock policy/environment.
+> 27. Run exact frozen flake checks.
+> 28. Run the heavy VM/reconstruction validation suite.
+> 29. Build exact normal/persistent/recovery artifacts.
+> 30. Run final closure comparison.
+> 31. Run final stock-contamination audit.
+> 32. Push the exact frozen final state.
+> 33. Require exact-final-head CI green.
+> 34. Reconcile docs/status.md and PR #7 to zero hard gates.
+> 35. Mark PR #7 ready.
+> 36. Merge to main.
+> 37. Compare merged tree against tested tree.
+> 38. Resolve/revalidate only if the tree changed.
+> 39. Create annotated nixos-26.05-pre-optimization-baseline tag.
+> 40. End readiness work.
+> 41. Perform maintainability cleanup separately.
+> 42. Create optimization-framework-v2 from the baseline tag.
+> ```
+>
+> ---
+>
+> # 29. Remaining hard-GO checklist
+>
+> ## Remaining before soak
+>
+> ```text
+> [ ] HDR visually accepted
+> [ ] HDR→SDR visual return accepted
+> [ ] Stage Pro audible postboot/resume playback confirmed
+> [ ] Stage Pro replug confirmed OR explicitly N/A
+> [ ] uninterrupted Generation 38 Proton session
+> [ ] natural Proton exit
+> [ ] GameMode/CPU policies restored after that session
+> [ ] no relevant final-boot Proton GPU/kernel fault
+> [ ] recovery-drill provenance reconciled
+> ```
+>
+> ## Finalization
+>
+> ```text
+> [ ] representative multi-day soak
+> [ ] backup freshness/delta
+> [ ] stock source frozen
+> [ ] final baseline collector capture
+> [ ] canonical baseline record
+> [ ] stock-policy/environment audit
+> [ ] exact frozen flake checks
+> [ ] exact heavy validation suite
+> [ ] exact normal closure recorded
+> [ ] exact persistent-root closure recorded
+> [ ] exact recovery ISO recorded
+> [ ] final closure audit
+> [ ] final stock-contamination audit
+> [ ] exact-final-head CI green
+> [ ] docs/status.md zero hard gates
+> [ ] PR #7 ready
+> [ ] merge
+> [ ] merged tree verified
+> [ ] annotated baseline tag
+> ```
+>
+> ---
+>
+> # 30. Explicitly removed from the critical path
+>
+> Do not reintroduce these unless their relevant configuration changes:
+>
+> ```text
+> CPU stress testing
+> RAM stress testing
+> cooler/paste investigation
+> Blender rendering
+> Blender interactive testing
+> Unreal interactive testing
+> Unreal rebuild
+> native Stardew testing
+> KVM testing
+> GameMode helper testing
+> Generation 37 root-chain
+> another persistent-root boot
+> another Generation 38 suspend/resume
+> Bluetooth functionality testing
+> controller testing
+> Android tooling
+> blank-disk reconstruction outside final exact suite
+> general architecture redesign
+> README cleanup
+> optimization infrastructure
+> ```
+>
+> This is important.
+>
+> The main risk now is not insufficient testing.
+>
+> The main risk is **allowing readiness to expand indefinitely after the important evidence is already sufficient**.
+>
+> ---
+>
+> # 31. Final stop condition
+>
+> The readiness project is complete when the stock machine is:
+>
+> > physically running the selected configuration, accepted for its real workloads, reproducibly reconstructable, recoverable, backed up, stable through representative use, bound to exact Nix source and closure identities, and preserved as an immutable tagged control for future experiments.
+>
+> It does not require:
+>
+> ```text
+> proof of every RAM cell
+> every possible application
+> every peripheral
+> every suspend cycle
+> every game
+> every conceivable hardware state
+> ```
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS.
+> START OPTIMIZATION.
+> ```
+>
+> No further readiness gate should be added unless a concrete defect in the supposedly frozen baseline is discovered.
+>
+> The main correction versus the attached version is substantial: **the Generation 38 boot, actual 125 W suspend/resume path, Bluetooth/display persistence, and Unreal interactive workflow are all now closed gates**. The repository itself says the remaining live scopes are visual HDR, final-source Proton, remaining audible Stage Pro persistence, recovery provenance, and then soak/freeze/final validation.
+>
+> I would now resist adding any more readiness categories. Once those four pre-soak scopes close, the project has enough evidence to move into normal-use soak and baseline finalization rather than continuing to expand `plan.md`.
+
+## Unified final continuation update — adopted2026-10-07
+
+Newest supplied guide is adopted for the remaining finalization sequence.
+Its reviewedfa8b015/preboot checkpoint is historical: generation38 actualboot,
+125Wboot/resume, Bluetoothoff/displaypersistence and root-contract comparison
+have since passed; Unreal interactive work is explicitly accepted by user.
+Do not repeat those gates. Current runtime remains bjxx/8v183; no new
+runtime architecture or optimization work before baseline tag. Remaining
+visualHDR/SDRreturn, finalbootProton/exitpolicy, applicableaudio persistence,
+recoveryprovenance, soak/backup/freeze/exactvalidation/merge/tag govern continuation.
+Consolidate evidence updates; retain current working graphical session.
+The attached instruction to perform the prepared reboot has already been
+fulfilled, not fresh authorization for another reboot.
+
+Full guide follows, trailing whitespace normalized. Historical source/CI
+claims are snapshot data; current evidence takes precedence.
+Attachment SHA256: `05bd7565ceefa3e509dc4ff149f7a08548aa94bb5cada3fcb3a72cef208d4f1a`.
+
+> I re-ran the review against the live GitHub state and reconciled it with the attached continuation guide.
+>
+> There are several meaningful updates since the attached guide. That guide still listed physical boot, boot/resume power-limit validation, HDR, Unreal, Proton, recovery provenance, soak, freeze and merge/tag as the remaining path. Assess NixOS Performance Ceiling The branch is now at **`fa8b015ced221aebb5662d27100d4a2793784a90`**, whose latest commit records the authorized Generation 38 reboot handoff; PR #7 remains open, draft and mergeable.   Exact-head Nix checks **#166 have passed** on that SHA.
+>
+> Crucially, the four commits since the attached guide's `4f0cb2f…` snapshot modify only `docs/status.md` and `plan.md`; the actual runtime configuration has not changed.  Generation 38 is already installed as the next-boot default, while the currently selected physical boot is still Generation 37. The repository has also determined that the already accepted normal→persistent-root→normal chain remains valid because the root/initrd/persistence semantics did not change. HDR signalling has progressed substantially: native-Wayland mpv already negotiated PQ/BT.2020, DRM switched to BT2020_RGB during fullscreen and returned afterward; what remains is perceptual/monitor acceptance.
+>
+> The latest handoff is especially important: the project has already captured preboot state, verified Generation 38 as the default, and explicitly authorized **one normal reboot followed by a suspend/resume check**. It also explicitly says not to repeat the root-chain, CPU or RAM tests.  The source still declares the 125 W boot/resume policy, Commander Core cooling policy, 155 Hz/10-bit/sRGB/VRR configuration and automatic fullscreen HDR, while `optimization/default.nix` remains intentionally empty.
+>
+> So I would now supersede the previous next-action sections of `plan.md` with this:
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## Current objective
+>
+> Finish the pre-optimization readiness project with the smallest possible amount of additional churn, establish one immutable and well-evidenced stock NixOS baseline, merge and tag it, then stop readiness work and begin optimization work separately.
+>
+> The project is no longer in architecture, hardware-stability or broad workstation-validation mode.
+>
+> It is in the final:
+>
+> ```text
+> physical binding
+> → remaining real workflows
+> → evidence reconciliation
+> → soak
+> → freeze
+> → exact validation
+> → merge/tag
+> ```
+>
+> phase.
+>
+> Do not reopen already accepted gates unless a later source change genuinely invalidates their evidence.
+>
+> ---
+>
+> # 1. Current checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed head:
+>
+> ```text
+> fa8b015ced221aebb5662d27100d4a2793784a90
+> Record authorized generation38 reboot and postboot validation handoff
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> ```
+>
+> Exact-current-head CI:
+>
+> ```text
+> Nix checks #166
+> PASS
+> ```
+>
+> Generation 38 has already been installed using boot-only activation.
+>
+> Its intended normal closure is:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> and its persistent-root closure is:
+>
+> ```text
+> 8v183hn0p5yv7wf625yj38n6bhsjpxz6
+> ```
+>
+> The machine is still physically running the previously accepted Generation 37 session until the authorized final normal reboot occurs.
+>
+> The current source configuration has not changed since the previously reviewed runtime source; the recent commits are evidence/documentation commits.
+>
+> ---
+>
+> # 2. Governing rules from this point onward
+>
+> Use this source-of-truth order:
+>
+> ```text
+> 1. direct physical observations / explicit user results
+> 2. current source tree
+> 3. docs/status.md
+> 4. exact-source automated evidence and private receipts
+> 5. plan.md chronology
+> 6. older imported continuation guides
+> 7. historical branches
+> ```
+>
+> Continue using these classifications:
+>
+> ```text
+> ACCEPTED
+> PARTIAL
+> OPEN
+> NOT APPLICABLE
+> DEFERRED
+> HISTORICAL / SUPERSEDED
+> ```
+>
+> Do not convert historical failures into passes. Record later evidence that supersedes them.
+>
+> Do not repeatedly revalidate accepted areas for reassurance.
+>
+> Do not introduce compiler optimization work before the baseline tag.
+>
+> Do not perform architectural cleanup before the baseline tag unless it fixes an actual readiness defect.
+>
+> ---
+>
+> # 3. Gates that are closed
+>
+> The following should be treated as complete unless a relevant source change later invalidates them:
+>
+> ```text
+> [x] repository architecture
+> [x] stable NixOS 26.05 refresh
+> [x] stock/optimization separation
+> [x] optimization namespace contamination guard
+> [x] activation-safety framework
+> [x] root-reset VM scenarios
+> [x] interrupted reset recovery
+> [x] machine identity persistence
+> [x] persistent-root specialisation
+> [x] generation37 normal→persistent-root→normal physical chain
+> [x] blank-disk reconstruction
+> [x] full Nix-store verification
+> [x] physical KVM/VMX
+> [x] GameMode helper/governor operation
+> [x] GameMode policy restoration evidence
+> [x] Btrfs scrub
+> [x] Btrfs device counters
+> [x] NVMe SMART/media health
+> [x] independent external backup
+> [x] representative backup restore
+> [x] Unreal engine supplement backup
+> [x] secrets recovery
+> [x] selected 125 W CPU package policy
+> [x] 15-minute 125 W CPU stress acceptance
+> [x] complete 20 GiB memtester loop
+> [x] Unreal project rebuild covering all 25 project source files
+> [x] Unreal configured-map 120-second PIE lifecycle
+> [x] Blender 1024-sample HIP render
+> [x] Blender interactive workflow
+> [x] native Stardew Valley gameplay
+> [x] Dark Souls basic Proton gameplay/controls/audio
+> [x] Stage Pro functional USB playback
+> [x] VRR functionality
+> [x] Bluetooth-off policy
+> [x] controller NOT APPLICABLE
+> [x] Android/Gradle/AVD NOT APPLICABLE
+> [x] README ownership cleanup
+> [x] current runtime optimization module remains inert
+> [x] exact-head CI at current documentation checkpoint
+> ```
+>
+> In particular, do **not** rerun:
+>
+> ```text
+> 15-minute CPU stress
+> 20 GiB memtester
+> Blender rendering
+> Blender interaction
+> Stardew native gameplay
+> generation37 root-chain
+> blank-disk reconstruction merely for reassurance
+> ```
+>
+> unless something relevant changes.
+>
+> ---
+>
+> # 4. Root-chain decision is now closed
+>
+> Earlier guidance treated another normal→persistent-root→normal sequence as conditional.
+>
+> That comparison has now been performed.
+>
+> Generation 38 retains the accepted root/persistence semantics:
+>
+> ```text
+> kernel/initrd contract
+> root-reset implementation
+> fstab/mount structure
+> machine-ID handling
+> persistence contract
+> user-generation handling
+> persistent-root specialisation
+> ```
+>
+> Therefore:
+>
+> ```text
+> NO additional persistent-root physical sequence is required.
+> ```
+>
+> The upcoming Generation 38 normal boot only needs to prove that the expected normal boot actually occurred and that ordinary root reset still behaved normally.
+>
+> Do not boot persistent-root again unless a future source change touches the root/persistence implementation or the normal Generation 38 boot exposes a genuine regression.
+>
+> ---
+>
+> # 5. Immediate next action — perform the already-authorized Generation 38 normal boot
+>
+> This is now the highest-priority action.
+>
+> Do not create another documentation-only source commit before the reboot merely to update a CI SHA. The current head is already green and preboot evidence has already been captured.
+>
+> Before reboot, only confirm there is no new uncommitted configuration change that would make the installed candidate stale.
+>
+> Then reboot normally.
+>
+> Generation 38 should be selected as the installed default.
+>
+> ## Postboot evidence
+>
+> Immediately after login, verify and record:
+>
+> ```text
+> running /run/current-system closure
+> Generation 38 selected
+> new boot ID
+> fresh normal-root subvolume
+> normal root-reset count advanced as expected
+> machine identity unchanged
+> persistent mounts correct
+> credentials available
+> journals correct
+> failed systemd units
+> active Wayland session
+> NetworkManager
+> Home Manager
+> Commander Core
+> CPU governor/EPP
+> 125 W PL1
+> 125 W PL2
+> Bluetooth disabled
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> VRR true
+> audio devices/routes
+> ```
+>
+> Expected normal closure:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> If that closure is selected and the above checks pass:
+>
+> ```text
+> GENERATION38 NORMAL BOOT = ACCEPTED
+> ```
+>
+> Do not stress-test the CPU again.
+>
+> ---
+>
+> # 6. Prove the 125 W resume path
+>
+> This is a distinct gate from the already accepted 15-minute CPU workload.
+>
+> The source deliberately applies the package limits:
+>
+> ```text
+> PL1 = 125 W
+> PL2 = 125 W
+> ```
+>
+> at boot and restarts the power-limit service after resume.
+>
+> The real remaining question is therefore not whether the CPU is stable at 125 W.
+>
+> It is:
+>
+> > Does the declared resume mechanism actually restore the selected policy after a real suspend/resume cycle?
+>
+> ## Procedure
+>
+> Before suspend:
+>
+> ```text
+> confirm PL1 = 125 W
+> confirm PL2 = 125 W
+> record cpu-package-power-limit service state/timestamp
+> record relevant sleep-actions service state
+> ```
+>
+> Perform one ordinary deep suspend/resume.
+>
+> After resume:
+>
+> ```text
+> confirm machine resumed successfully
+> confirm PL1 = 125 W
+> confirm PL2 = 125 W
+> confirm generated resume action actually executed
+> confirm Wayland usable
+> confirm network restored
+> confirm Commander Core active
+> confirm audio usable
+> confirm no new failed unit
+> ```
+>
+> Also inspect the actual generated `sleep-actions.service`/`ExecStop` implementation rather than looking for guessed system-sleep scripts.
+>
+> If all passes:
+>
+> ```text
+> 125 W BOOT/RESUME POLICY = ACCEPTED
+> ```
+>
+> No additional suspend loops are necessary.
+>
+> ---
+>
+> # 7. Finish the remaining display gate — HDR perceptual acceptance
+>
+> The technical HDR path has already demonstrated substantially more than the previous guide assumed.
+>
+> Already proven:
+>
+> ```text
+> 10-bit desktop output
+> sRGB normal desktop
+> automatic fullscreen HDR enabled
+> PQ/BT.2020 HDR source recognized
+> native Wayland mpv HDR output negotiated
+> DRM connector switched to BT2020_RGB in fullscreen
+> ordinary exit restored normal/default DRM state
+> VRR remains enabled
+> ```
+>
+> Do not redo that entire instrumentation sequence merely to prove it again.
+>
+> What remains is the human-facing part.
+>
+> Use one of the downloaded known HDR MKV samples, such as the existing `waterfall.mkv`.
+>
+> Confirm:
+>
+> ```text
+> normal SDR desktop looks correct before playback
+> HDR fullscreen visually engages correctly
+> monitor HDR indication/state is consistent with HDR operation if exposed
+> highlights/colour do not look obviously clipped, washed out or broken
+> no compositor/display instability
+> exit fullscreen/player normally
+> desktop returns visually to correct SDR/sRGB appearance
+> VRR/display mode remains sane afterward
+> ```
+>
+> If the visual result is acceptable and return-to-SDR is normal:
+>
+> ```text
+> HDR = ACCEPTED
+> ```
+>
+> Do not require HDR gaming as an additional independent gate unless the video result exposes a game-specific reason to test it.
+>
+> ---
+>
+> # 8. Finish Unreal human-interaction acceptance
+>
+> Automated and compile-side Unreal validation is already strong:
+>
+> ```text
+> real project
+> all 25 C++ project files rebuilt
+> Epic bundled compiler/toolchain
+> successful link
+> Git-clean project
+> configured map
+> 28 actors
+> 120-second PIE
+> normal end-play
+> ordinary editor exit
+> ```
+>
+> Only genuine interactive editor use remains.
+>
+> Use the actual project normally.
+>
+> Exercise:
+>
+> ```text
+> viewport movement
+> camera navigation
+> object selection
+> transform/edit operations
+> Details panel interaction
+> content browsing
+> opening relevant assets
+> PIE
+> stop PIE
+> continue editing
+> ordinary editor exit
+> ```
+>
+> The acceptance criterion is not a long artificial timer.
+>
+> It is:
+>
+> ```text
+> no freeze
+> no crash
+> no GPU reset
+> no broken input
+> editor remains responsive
+> PIE transition works
+> editing still works after PIE
+> normal exit succeeds
+> ```
+>
+> Then:
+>
+> ```text
+> UNREAL INTERACTIVE WORKFLOW = ACCEPTED
+> ```
+>
+> ---
+>
+> # 9. Bind the Proton evidence to the final boot
+>
+> Dark Souls has already demonstrated:
+>
+> ```text
+> launch
+> gameplay
+> controls
+> audio
+> GameMode behavior
+> CPU-policy restoration
+> ```
+>
+> The only weakness in that evidence is that the earlier session crossed a live activation boundary.
+>
+> After the clean Generation 38 boot, perform one uninterrupted Dark Souls session.
+>
+> Check:
+>
+> ```text
+> launch normally
+> play normally
+> audio works
+> GameMode active while expected
+> no visible regression
+> exit through the normal game path
+> GameMode inactive afterward
+> all CPU policies restored
+> no matching GPU reset/kernel fault
+> ```
+>
+> No synthetic benchmark or minimum gameplay duration is needed.
+>
+> No controller-specific validation is required.
+>
+> If this passes:
+>
+> ```text
+> PROTON FINAL-SOURCE BINDING = ACCEPTED
+> ```
+>
+> ---
+>
+> # 10. Stage Pro persistence without changing user routing
+>
+> Do not make “Stage Pro must always be the default sink” an acceptance criterion.
+>
+> The current evidence shows that the Stage Pro functional USB path works, while the user may at other times intentionally route audio through HDMI.
+>
+> Preserve the user's chosen routing.
+>
+> The remaining question is persistence/re-enumeration.
+>
+> After the Generation 38 boot verify:
+>
+> ```text
+> Stage Pro enumerates correctly
+> its expected PipeWire sink/profile exists
+> it can be selected
+> actual playback works when selected
+> ```
+>
+> If USB reconnect is an expected normal workflow:
+>
+> ```text
+> disconnect Stage Pro
+> reconnect it
+> confirm sink/profile returns
+> confirm playback works
+> ```
+>
+> Do not redo low-level ALSA diagnostics unless this fails.
+>
+> If successful:
+>
+> ```text
+> STAGE PRO PERSISTENCE = ACCEPTED
+> ```
+>
+> ---
+>
+> # 11. Bluetooth and VRR only require persistence checks
+>
+> Bluetooth is intentionally disabled.
+>
+> Therefore test:
+>
+> ```text
+> Bluetooth remains disabled after boot
+> no unwanted automatic power-on
+> no unexpected Bluetooth service activation
+> ```
+>
+> Do not test Bluetooth pairing/functionality.
+>
+> VRR has already been demonstrated live.
+>
+> After boot simply confirm:
+>
+> ```text
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> VRR = true
+> ```
+>
+> Do not create another VRR benchmark gate.
+>
+> ---
+>
+> # 12. Consolidate the physical evidence into the repository
+>
+> Once the Generation 38 boot, suspend/resume and remaining workflows above have been completed, update the evidence once.
+>
+> Avoid making one commit per tiny observation unless there is a real reason.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> plan.md chronological ledger
+> PR #7 body
+> ```
+>
+> The current `docs/status.md` and PR body contain older CI wording even though current-head CI #166 has passed.
+>
+> Correct that as part of this consolidated evidence update rather than producing another bookkeeping commit before the physical work.
+>
+> After the evidence commit:
+>
+> ```text
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> push
+> ```
+>
+> Require CI on the new exact head.
+>
+> ---
+>
+> # 13. Reconcile recovery-drill provenance
+>
+> Do this as an evidence-reconciliation exercise first.
+>
+> Known recovery artifact:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> SHA256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Existing evidence already establishes:
+>
+> ```text
+> ISO build
+> ISO hash
+> Ventoy copy
+> backup integrity
+> representative restore
+> ```
+>
+> What remains uncertain is the exact binding of the earlier physical recovery drill to:
+>
+> ```text
+> this ISO
+> this hash
+> date
+> physical media
+> MP600 device identity
+> read-only mount
+> expected Btrfs subvolumes
+> absence of modifications
+> ```
+>
+> Inspect existing private receipts first.
+>
+> If those facts can be tied together:
+>
+> ```text
+> RECOVERY DRILL = ACCEPTED
+> ```
+>
+> Do nothing more.
+>
+> Only if the provenance cannot be reconstructed should another physical recovery boot be scheduled.
+>
+> If another drill is required, perform one read-only drill.
+>
+> Never invoke:
+>
+> ```text
+> Disko
+> mkfs
+> repartitioning
+> destructive Btrfs operations
+> ```
+>
+> during that validation.
+>
+> ---
+>
+> # 14. Enter the final representative soak
+>
+> When all individual physical gates have passed, stop changing ordinary workstation policy.
+>
+> Run the final candidate normally for several days.
+>
+> This should resemble actual machine use rather than another synthetic torture campaign.
+>
+> Representative activity should naturally include some combination of:
+>
+> ```text
+> Unreal
+> Blender
+> Firefox
+> normal development work
+> C/C++ or Nix builds
+> native gaming
+> Proton gaming
+> Stage Pro
+> HDR/SDR use
+> ordinary filesystem operations
+> normal boots
+> suspend/resume if actually used
+> ```
+>
+> Watch for:
+>
+> ```text
+> system freeze
+> application crashes suggesting systemic problems
+> GPU reset
+> MCE/hardware errors
+> filesystem errors
+> new failed services
+> Commander Core failures/restarts
+> unexpected thermal throttling
+> root-reset failure
+> login/session failure
+> audio disappearance
+> network regression
+> VRR regression
+> HDR/SDR state problems
+> unexpected memory/swap pathology
+> meaningful NVMe error-log growth
+> ```
+>
+> Do not continuously poke the machine with synthetic tests during the soak.
+>
+> The value of this phase is exposure to representative mixed use.
+>
+> If no meaningful defect appears:
+>
+> ```text
+> MULTI-DAY REPRESENTATIVE SOAK = ACCEPTED
+> ```
+>
+> If a defect appears:
+>
+> ```text
+> record
+> → diagnose
+> → fix declaratively
+> → identify which accepted evidence the fix invalidates
+> → rerun only that affected scope
+> → restart soak if the change is materially system-wide
+> ```
+>
+> ---
+>
+> # 15. Refresh backup freshness immediately before freeze
+>
+> The original backup/restore gate is already accepted.
+>
+> Do not recreate the entire backup from scratch merely as ritual.
+>
+> Instead protect meaningful changes since the accepted backup.
+>
+> Review especially:
+>
+> ```text
+> Git repositories
+> untracked source
+> ignored but valuable source/assets
+> Unreal project changes
+> Blender files
+> documents
+> new assets
+> other irreplaceable user work
+> ```
+>
+> Perform an incremental backup/update where appropriate.
+>
+> Record:
+>
+> ```text
+> date
+> destination
+> scope
+> integrity/hash or equivalent verification
+> ```
+>
+> Then:
+>
+> ```text
+> BACKUP FRESHNESS = ACCEPTED
+> ```
+>
+> ---
+>
+> # 16. Freeze the candidate
+>
+> Once the soak and backup freshness pass:
+>
+> ```text
+> STOP ordinary readiness changes.
+> ```
+>
+> The repository must be:
+>
+> ```text
+> clean
+> fully committed
+> no relevant untracked config
+> no staged changes
+> flake.lock frozen
+> optimization/default.nix still empty/inert
+> ```
+>
+> From this point until the baseline tag, only evidence/finalization changes should occur unless a genuine defect is found.
+>
+> Do not:
+>
+> ```text
+> reorganize modules
+> move documentation trees
+> introduce new frameworks
+> upgrade random packages
+> change kernel
+> change Mesa
+> experiment with compiler flags
+> begin PGO/LTO/BOLT
+> ```
+>
+> ---
+>
+> # 17. Capture the canonical baseline
+>
+> Run the existing baseline collector on the accepted final machine:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> Do not rely on a preparation snapshot from before the final boot.
+>
+> The final baseline must bind:
+>
+> ```text
+> source
+> lock file
+> built closure
+> running closure
+> physical configuration
+> accepted runtime state
+> ```
+>
+> Create one canonical baseline record under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> Record at least:
+>
+> ```text
+> Git commit
+> flake.lock hash
+> nixpkgs revision
+> NixOS version
+> Nix version
+>
+> normal closure
+> persistent-root closure
+> recovery ISO path
+> recovery ISO SHA256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME versions
+> CPU ratios/cache
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR size
+> NVMe identity/firmware
+> Btrfs mount options
+>
+> CPU governor/EPP
+> THP state
+> swap/zram
+> I/O scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+>
+> CPU acceptance result
+> RAM acceptance result
+> root-chain evidence identity
+> normal Generation38 boot evidence
+> resume evidence
+> HDR acceptance
+> Unreal acceptance
+> native gaming acceptance
+> Proton acceptance
+> audio acceptance
+> backup identity/freshness
+> recovery-drill identity
+> soak result
+> ```
+>
+> Never commit secrets or raw sensitive identifiers where the existing project deliberately stores only hashes/private receipts.
+>
+> ---
+>
+> # 18. Run the frozen exact-source validation suite
+>
+> On the frozen candidate:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then explicitly run the heavier outputs that are deliberately not all part of ordinary CI:
+>
+> ```text
+> blank-disk reconstruction
+> workstation smoke
+> activation-safety actions
+> stock-contamination negative fixture
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Build and record the exact:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Perform the final closure review.
+>
+> Require no unexplained introduction of:
+>
+> ```text
+> optimization namespaces
+> global CFLAGS/CXXFLAGS
+> NIX_CFLAGS_COMPILE
+> global LDFLAGS
+> unexpected kernel
+> unexpected Mesa
+> unexpected LLVM/toolchain
+> unexpected unstable packages
+> global performance hacks
+> ```
+>
+> Do not repeat full Nix-store content verification unless there is new evidence suggesting store corruption.
+>
+> Do not repeat the physical root-chain because its relevant implementation remains unchanged.
+>
+> ---
+>
+> # 19. Run exact-final-head CI
+>
+> Push the frozen exact source/evidence state.
+>
+> Require GitHub Nix checks to pass on that exact SHA.
+>
+> No statement of:
+>
+> ```text
+> FINAL SOURCE ACCEPTED
+> ```
+>
+> should rely on CI from an ancestor.
+>
+> After exact-head CI passes, reconcile:
+>
+> ```text
+> docs/status.md
+> PR #7 body
+> canonical baseline record
+> plan.md final chronology
+> ```
+>
+> `docs/status.md` should now contain:
+>
+> ```text
+> zero unresolved hard readiness gates
+> ```
+>
+> Historical failures and superseded attempts stay in `plan.md`.
+>
+> ---
+>
+> # 20. Close PR #7
+>
+> Only when the previous stages pass:
+>
+> ```text
+> mark PR #7 ready for review
+> ```
+>
+> Then merge through the normal main-branch workflow.
+>
+> After merging, compare the tested feature tree against the merged main tree.
+>
+> If the tree is identical:
+>
+> ```text
+> reuse the accepted artifact/evidence identity
+> ```
+>
+> Do not rerun the entire readiness program.
+>
+> If conflict resolution or another change altered the tree:
+>
+> ```text
+> identify actual changed scope
+> rebuild
+> rerun affected checks
+> update the baseline identity
+> ```
+>
+> ---
+>
+> # 21. Create the immutable stock baseline tag
+>
+> Create an annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The baseline/tag evidence must identify:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> recovery ISO hash
+> canonical manifest
+> accepted validation evidence
+> ```
+>
+> Once the tag exists:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Do not continue adding more readiness gates.
+>
+> ---
+>
+> # 22. Post-tag cleanup is a separate project
+>
+> Only after the baseline tag should repository cleanup resume.
+>
+> Candidate cleanup remains:
+>
+> ```text
+> archive historical plan material
+> organize docs into clearer categories
+> move stock-control ownership if desired
+> move VS Code policy toward development ownership
+> remove obsolete compatibility aliases
+> generate module option documentation
+> add Markdown/link checking
+> other maintainability cleanup
+> ```
+>
+> None of these should block the stock baseline.
+>
+> ---
+>
+> # 23. Start optimization-framework-v2 only from the tag
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not rebase the old optimization branch wholesale.
+>
+> Use it only as donor/reference material.
+>
+> The optimization project should begin with experiment infrastructure such as:
+>
+> ```text
+> benchmark/workload corpus
+> specialisation-based A/B system states
+> stage-aware contamination rules
+> experiment provenance
+> reproducible CPU-target experiments
+> ```
+>
+> and then progress into:
+>
+> ```text
+> CPU-target code generation
+> graphics-stack A/B
+> profiling
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific optimization
+> ```
+>
+> The stock tag remains the permanent control.
+>
+> ---
+>
+> # 24. Exact execution order from the present state
+>
+> ```text
+> 1. Do not make another bookkeeping commit before the prepared physical boot.
+> 2. Confirm local working tree has no uncommitted runtime change.
+> 3. Reboot normally into installed Generation38.
+> 4. Confirm expected normal closure.
+> 5. Confirm fresh ephemeral root/reset.
+> 6. Confirm identity and persistent mounts.
+> 7. Confirm services/session/network/Commander Core.
+> 8. Confirm governor/EPP.
+> 9. Confirm PL1 = 125 W.
+> 10. Confirm PL2 = 125 W.
+> 11. Confirm Bluetooth remains disabled.
+> 12. Confirm 3440×1440@155 Hz.
+> 13. Confirm 10-bit output.
+> 14. Confirm VRR=true.
+> 15. Confirm audio device availability without altering intentional routing.
+> 16. Perform one real suspend/resume.
+> 17. Prove the generated resume mechanism executed.
+> 18. Confirm PL1/PL2 remain 125 W after resume.
+> 19. Confirm GUI/network/audio/Commander Core recovered.
+> 20. Complete HDR visual/perceptual acceptance with the HDR MKV.
+> 21. Confirm correct visual SDR return.
+> 22. Complete human Unreal editing acceptance.
+> 23. Run one uninterrupted final-boot Dark Souls session.
+> 24. Verify natural exit and GameMode/CPU-policy restoration.
+> 25. Verify Stage Pro reboot/reconnect persistence as applicable.
+> 26. Consolidate new evidence into status/plan/PR rather than many tiny commits.
+> 27. Run flake checks and require CI on that evidence head.
+> 28. Reconcile existing recovery-drill receipts.
+> 29. Only perform another recovery drill if provenance cannot be established.
+> 30. Begin multi-day normal-use soak.
+> 31. Fix only genuine defects and rerun only invalidated scopes.
+> 32. Refresh external backup delta.
+> 33. Freeze ordinary source changes.
+> 34. Capture the final baseline collector snapshot.
+> 35. Write the canonical baseline manifest.
+> 36. Run the exact frozen offline suite.
+> 37. Run the heavy VM/reconstruction suite.
+> 38. Build and record normal/persistent/recovery artifacts.
+> 39. Run final closure/stock-contamination audit.
+> 40. Push the exact final state.
+> 41. Require exact-final-head CI green.
+> 42. Make docs/status.md show no hard gate remaining.
+> 43. Mark PR #7 ready.
+> 44. Merge to main.
+> 45. Verify merged tree identity.
+> 46. Create the annotated stock baseline tag.
+> 47. End readiness work.
+> 48. Perform cleanup separately.
+> 49. Create optimization-framework-v2 from the baseline tag.
+> ```
+>
+> ---
+>
+> # 25. Remaining hard-GO checklist
+>
+> ```text
+> [ ] Generation38 physically booted
+> [ ] expected Generation38 closure confirmed
+> [ ] normal ephemeral-root reset confirmed
+> [ ] identity/persistence confirmed
+> [ ] 125 W boot readback
+> [ ] Bluetooth-off boot persistence
+> [ ] 155 Hz / 10-bit / VRR boot persistence
+> [ ] Stage Pro reboot persistence as applicable
+> [ ] actual suspend/resume
+> [ ] 125 W resume reapplication
+> [ ] GUI/network/audio/Commander resume
+> [ ] HDR visual acceptance
+> [ ] correct visual HDR→SDR return
+> [ ] Unreal interactive workflow
+> [ ] uninterrupted final-boot Proton session
+> [ ] natural-exit GameMode policy restoration
+> [ ] Stage Pro reconnect persistence as applicable
+> [ ] recovery-drill provenance
+> [ ] multi-day representative soak
+> [ ] backup freshness
+> [ ] source frozen
+> [ ] final baseline capture
+> [ ] canonical manifest
+> [ ] exact frozen flake checks
+> [ ] heavy VM/reconstruction suite
+> [ ] final closure audit
+> [ ] final stock-contamination audit
+> [ ] exact-final-head CI
+> [ ] docs/status.md zero hard gates
+> [ ] PR #7 ready
+> [ ] merge
+> [ ] merged-tree verification
+> [ ] annotated baseline tag
+> ```
+>
+> There is deliberately **no** item here for another CPU stress test, RAM test, Blender test, native-game test, Generation 37 root-chain test, controller test or Android test.
+>
+> ---
+>
+> # 26. Stop condition
+>
+> The readiness project is finished when the machine is:
+>
+> > physically running and proven against the selected stock policy; stable for its actual representative workload; reproducibly reconstructable; recoverable; backed up; tied to exact immutable Nix closures and source; and tagged as the control state for later optimization experiments.
+>
+> It does not need to prove every theoretically possible workload or hardware state.
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS WORK.
+> START OPTIMIZATION WORK.
+> ```
+>
+> Do not allow `plan.md` to become an indefinitely expanding certification exercise after that point.
+>
+> The main difference from the attached guide is that I would **not** spend another commit cycle preparing for the reboot: that preparation is already complete, the reboot is explicitly authorized in the newest evidence, Generation 38 is already installed, and the exact current documentation head has green CI. The correct next substantive action is now the Generation 38 boot and its postboot/resume checks. After that, the remaining interactive gates are quite small before the project can enter soak/freeze.
+>
+> I would also treat the **extra root-chain run as definitively removed from the current critical path**, rather than merely conditional as in the attached guide: the project has now compared the relevant semantics and documented that the accepted Generation 37 evidence remains applicable.
+
+## Final acceptance/freeze continuation directive — adopted2026-10-07
+
+The newest user-supplied guide below is adopted for readiness sequencing.
+Direct user instructions and verified live evidence override stale snapshots.
+The guide reviewed4f0cb2f; branch already advanced throughc8307a8 before import.
+HDR configuration is now built/test-activated, while physical final boot,
+resume, HDR content/return, interactive Unreal, Proton binding, recovery
+provenance and soak/freeze remain open. No reboot is authorized by importing
+this document alone: preserve the graphical session and arrange one final
+window after preparatory artifact/closure checks. Retain generation37 root-chain
+acceptance unless actual root/initrd/persistence semantic differences require
+one new chain. Do not repeat accepted CPU/RAM/Blender/native-game/basic USB
+checks. Controller/Android N/A. Post-tag cleanup/optimization remain deferred.
+
+Full supplied document follows as a quoted snapshot with trailing whitespace
+normalized, including its
+historical references and claims; those references are not independently
+verified citations. Attachment SHA256: `e4b70c0f849512a94b9ce5eb439414f08327f5438599769d3cf66104fd2d4cd1`.
+
+> I did a fresh live review rather than treating the attached plan as current. The attached unified guide was based on `db93568…`/CI #141 and was explicitly intended as the continuation directive at that snapshot. Assess NixOS Performance Ceiling The branch has since advanced **21 commits** to `4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76`; PR #7 is still open/draft/mergeable, and exact-head CI run **#162 passed**.
+>
+> The biggest change is that the CPU/RAM stability phase is now effectively complete **under the criteria you selected**. The live plan explicitly supersedes the old arbitrary 80 °C stop, adopts 125 W and a 15-minute CPU criterion, marks controller/Android not applicable, Bluetooth intentionally disabled, and records Blender interaction and Stage Pro playback as accepted.  The new critical path is therefore much shorter.
+>
+> Here is the version I would now place above the older imported guide in `plan.md` as the new continuation directive.
+>
+> # NixOS Pre-Optimization Readiness — Final Continuation Guide
+>
+> **Repository:** `P2949/NixosConf`
+> **Branch:** `feat/pre-optimization-readiness`
+> **Reviewed HEAD:** `4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76`
+> **PR:** #7 — open, draft, mergeable
+> **Exact-head CI:** Nix checks #162 — PASS
+> **Purpose:** finish the remaining work in `plan.md`, freeze the stock workstation, merge/tag it, and stop readiness work before beginning optimization-v2.
+>
+> ---
+>
+> # 1. Governing conclusion
+>
+> The readiness project is now in its **final acceptance/freeze phase**.
+>
+> Do not return to general architecture work.
+>
+> Do not add new optimization infrastructure.
+>
+> Do not repeat already accepted tests merely because an older section of `plan.md` still describes them as pending.
+>
+> The correct progression is now:
+>
+> ```text
+> bind current source to physical machine
+>         ↓
+> finish the few remaining applicable workflows
+>         ↓
+> recovery provenance
+>         ↓
+> multi-day soak
+>         ↓
+> final backup delta
+>         ↓
+> freeze source
+>         ↓
+> canonical baseline evidence
+>         ↓
+> exact-source validation
+>         ↓
+> merge + tag
+> ```
+>
+> Post-baseline cleanup, VM variants, initrd rescue, module-doc generation, distributed builders and optimization-framework-v2 remain explicitly deferred until the tag.
+>
+> ---
+>
+> # 2. Source-of-truth order
+>
+> Use this precedence from now on:
+>
+> 1. Current physical machine state and direct user observations.
+> 2. Current branch source.
+> 3. `docs/status.md`.
+> 4. Evidence tied to an exact source/closure.
+> 5. Private receipts under `/persist`.
+> 6. `plan.md` chronology.
+> 7. Older attached reviews/guides.
+> 8. Historical branches.
+>
+> Keep classifications explicit:
+>
+> ```text
+> ACCEPTED
+> PARTIAL
+> OPEN
+> NOT APPLICABLE
+> DEFERRED
+> HISTORICAL / SUPERSEDED
+> ```
+>
+> The top of `plan.md` already records the current direct-user overrides: 125 W is adopted; CPU validation is 15 minutes rather than 30; the old 80 °C criterion is withdrawn; Android and controller are not applicable; Bluetooth should be disabled; Blender interaction and Stage Pro playback are accepted.
+>
+> ---
+>
+> # 3. Current source state
+>
+> Current head:
+>
+> ```text
+> 4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76
+> Accept verified native Stardew Valley gameplay
+> ```
+>
+> Exact-head PR CI #162 passed.
+>
+> The productive optimization module remains intentionally empty:
+>
+> ```nix
+> {
+>   # PGO/BOLT/system-wide optimization work will be developed here
+>   # after the workstation baseline has been established.
+> }
+> ```
+>
+>
+>
+> That boundary must remain intact until the baseline tag exists.
+>
+> ---
+>
+> # 4. Evidence that is already accepted
+>
+> Do **not** reopen these gates unless a later change materially invalidates them.
+>
+> ## Repository and reproducibility
+>
+> - Repository architecture and one-host explicit flake model accepted.
+> - README has already been simplified into the intended timeless architectural entry point.
+> - `docs/status.md` owns current operational truth.
+> - Root-reset VM matrix accepted.
+> - Activation safety and 45 guard fixtures accepted.
+> - Stock contamination negative fixture accepted.
+> - Live stock closure audit accepted.
+> - Full Nix-store content verification accepted.
+> - Blank-disk reconstruction accepted.
+> - Direct production Disko source import retained after the evaluated-Disko rebinding experiment failed.
+> - Recovery ISO builds reproducibly.
+> - Optimization remains inert.
+>
+> The older attached guide correctly established that readiness and optimization are separate projects; retain that architectural decision. :chatgpt-content-reference{index="10"}
+>
+> ## Root/persistence
+>
+> Generation 37's complete:
+>
+> ```text
+> normal
+> → persistent-root
+> → normal
+> ```
+>
+> physical chain passed, including root replacement/retention behavior, machine identity, credentials, journals, persistent mounts, networking, services and Wayland login.
+>
+> Do not repeat the historical three-trial Impermanence program.
+>
+> ## Firmware and hardware platform
+>
+> Accepted/captured baseline remains:
+>
+> ```text
+> BIOS 3201
+> AI Optimized 50/49
+> Auto core/cache voltage
+> MCE Remove All Limits
+> cache 48
+> AVX offset 0
+> XMP I DDR4-3200 1.35 V
+> VMX enabled
+> VT-d enabled
+> Above 4G enabled
+> ReBAR Auto
+> 16 GiB GPU BAR
+> ```
+>
+> No firmware update is required for readiness unless a real defect appears.
+>
+> ## CPU
+>
+> The selected stock CPU policy is now:
+>
+> ```text
+> 125 W long-term package limit
+> 125 W short-term package limit
+> ```
+>
+> and the source declaratively reapplies it at boot and after resume.
+>
+> Accepted CPU test:
+>
+> ```text
+> 900.38 seconds
+> 12 workers
+> passed = 12
+> failed = 0
+> peak = 81 °C
+> thermal-throttle counters = unchanged at 0
+> PL1 = 125 W
+> PL2 = 125 W
+> no guard stop
+> no matching new kernel hardware fault
+> ```
+>
+> This satisfies the user-selected 15-minute readiness criterion.
+>
+> Do not repeat CPU stress testing unless the CPU power/clock/firmware policy changes.
+>
+> ## RAM
+>
+> Accepted substantial RAM test:
+>
+> ```text
+> 20 GiB
+> mlock successful
+> one complete loop
+> 16 enabled patterns passed
+> 3036.55 seconds
+> exit 0
+> no guard stop
+> thermal counters unchanged
+> peak 79 °C
+> minimum available RAM ~7.9 GiB
+> swap growth ~1084 KiB
+> ```
+>
+>
+>
+> This is accepted substantial tested-memory scope. It is not a claim that every physical cell of 32 GiB was exhaustively certified, and it does not need to be.
+>
+> Do not repeat the failed 24/22 GiB attempts.
+>
+> ## Storage
+>
+> Accepted:
+>
+> ```text
+> Btrfs scrub: PASS
+> 147.36 GiB
+> no scrub errors
+>
+> Btrfs device counters: zero
+>
+> NVMe SMART: PASS
+> media errors: zero
+> critical warning: zero
+> ```
+>
+> Keep watching meaningful NVMe admin-error growth, but this is not an open baseline gate.
+>
+> ## Backup/secrets
+>
+> Accepted:
+>
+> ```text
+> Ventoy archive:
+> 27,844,003,241 bytes
+>
+> SHA256:
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+>
+> representative restore: PASS
+> 47-file engine supplement: PASS
+> separate secrets actual-recovery evidence: ACCEPTED
+> ```
+>
+> Only freshness/delta work remains at freeze.
+>
+> ## KVM
+>
+> VMX and actual physical KVM initialization accepted.
+>
+> Android/Gradle/AVD are explicitly NOT APPLICABLE.
+>
+> ## GameMode
+>
+> Physical helper/governor behavior accepted. CPU policies restore correctly after exit.
+>
+> ## Blender
+>
+> Accepted now includes:
+>
+> ```text
+> actual project
+> RX 9070 XT HIP
+> 1920×1080 1024-sample render
+> 105.21 s
+> source unchanged
+> no matching GPU fault
+>
+> interactive:
+> Layout
+> Modeling
+> UV Editing
+> Shading
+> Animation
+> ```
+>
+> The user reported no freezes/crashes during the interactive workflow.
+>
+> Blender is no longer an open gate unless the final graphics/runtime policy changes materially.
+>
+> ## Unreal
+>
+> Already accepted:
+>
+> ```text
+> Epic bundled Clang 20.1.8
+> Rocky Linux 8 sysroot
+> bundled libc++
+> shared PCH rebuild
+> unity compilation covering all 25 project C++ files
+> link/metadata
+> 40.24 s
+> Git clean
+>
+> configured map
+> 28 actors
+> 120-second PIE
+> end-play
+> ordinary editor exit
+> ```
+>
+>
+>
+> Only genuine human interactive editing remains open.
+>
+> ## Gaming
+>
+> Accepted:
+>
+> ```text
+> Dark Souls Remastered:
+> gameplay/controls/audio worked
+> GameMode restored CPU policy after exit
+>
+> Stardew Valley:
+> native Linux ELF
+> Steam Linux Runtime
+> actual gameplay accepted
+> ```
+>
+> Native gaming is therefore closed. The Dark Souls session has one remaining qualification: it crossed a live test-activation, so one uninterrupted final-candidate binding run remains appropriate.
+>
+> Controller is NOT APPLICABLE.
+>
+> ## Audio
+>
+> Stage Pro functional USB playback is accepted by direct user observation, and PipeWire independently confirmed it as the default sink with active Firefox playback links.
+>
+> Only boot/reconnect persistence remains worth checking.
+>
+> ## Bluetooth
+>
+> Bluetooth is intentionally disabled:
+>
+> ```nix
+> hardware.bluetooth.enable = false;
+> hardware.bluetooth.powerOnBoot = false;
+> ```
+>
+>
+>
+> That is policy, not a missing feature.
+>
+> ## VRR
+>
+> Always-on VRR is applicable and already live at:
+>
+> ```text
+> 3440×1440 @ 155 Hz
+> VRR = true
+> ```
+>
+> Source explicitly declares `vrr = 1`.
+>
+> Only confirm persistence after final boot.
+>
+> ---
+>
+> # 5. The actual remaining hard gates
+>
+> At the current source state, the remaining readiness work is:
+>
+> ```text
+> 1. Reconcile current source/CI documentation.
+> 2. Bind the current final-policy source to an actual boot.
+> 3. Validate 125 W service at boot.
+> 4. Validate 125 W reapplication after suspend/resume.
+> 5. Verify Bluetooth-off and VRR policy survive that boot.
+> 6. Complete actual HDR content + return-to-SDR behavior.
+> 7. Complete one uninterrupted final-candidate Proton session.
+> 8. Complete human Unreal interactive editing.
+> 9. Confirm Stage Pro survives boot/reconnect.
+> 10. Reconcile recovery-drill provenance.
+> 11. Complete representative multi-day soak.
+> 12. Refresh backup delta.
+> 13. Freeze source and capture final baseline evidence.
+> 14. Run exact-source final validation and CI.
+> 15. Merge and tag.
+> ```
+>
+> Everything else is either accepted, not applicable, or post-baseline.
+>
+> ---
+>
+> # 6. Phase A — Reconcile current documentation truth
+>
+> This should be the next source-only task.
+>
+> `docs/status.md` still points its Source/PR/CI section at an older reviewed CI/head, while exact current head `4f0cb2f...` has already passed run #162.
+>
+> PR #7's body also contains intermediate-source wording from earlier in the sequence even though GitHub correctly reports the PR head as `4f0cb2f...`.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> PR #7 body
+> ```
+>
+> so they no longer describe an older CI run as the latest accepted source.
+>
+> Do not add the exact HEAD everywhere else.
+>
+> The desired model remains:
+>
+> ```text
+> source:
+>     Git itself
+>
+> current operational truth:
+>     docs/status.md
+>
+> historical sequence:
+>     plan.md
+> ```
+>
+> Gate:
+>
+> ```text
+> nix fmt -- --ci
+> git diff --check
+> nix flake check
+> exact-head CI green
+> ```
+>
+> No physical testing is required for this documentation-only change.
+>
+> ---
+>
+> # 7. Phase B — Freeze the intended runtime configuration
+>
+> The current source now includes all intended ordinary workstation policy:
+>
+> ```text
+> 125 W CPU power policy
+> 60/100 fan policy
+> 100% pump policy
+> Bluetooth disabled
+> VRR always enabled
+> 10-bit desktop output
+> sRGB desktop
+> automatic HDR for fullscreen HDR content
+> ```
+>
+> The 125 W implementation is owned by `hosts/desktop/default.nix` and reapplied after resume.
+>
+> Display policy is owned by Home Manager/Hyprland and currently declares:
+>
+> ```text
+> 3440×1440@155
+> 10 bit
+> sRGB desktop
+> VRR = 1
+> cm_auto_hdr = 1
+> ```
+>
+>
+>
+> Do not add more ordinary tuning.
+>
+> Before the physical window:
+>
+> ```bash
+> nix build \
+>   '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>   --no-link --print-out-paths
+> ```
+>
+> Also obtain the persistent-root closure and recovery ISO.
+>
+> The status file records an offline candidate beginning:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> but do **not** infer that a later commit has the same exact closure merely because later commits appear documentation-only.
+>
+> Build it again from the exact chosen source and record the result.
+>
+> Then:
+>
+> ```bash
+> nix store diff-closures /run/current-system "$candidate"
+> ```
+>
+> Explain every material runtime difference.
+>
+> Expected categories are now mainly:
+>
+> ```text
+> 125 W power-limit service/resume hook
+> Bluetooth-off policy
+> Hyprland/VRR/HDR user policy
+> generated top-level configuration identities
+> ```
+>
+> Unexpected kernel, Mesa, LLVM, package-universe or optimization changes are blockers.
+>
+> ---
+>
+> # 8. Phase C — One final physical normal boot
+>
+> Once no more ordinary runtime policy changes are expected:
+>
+> ```bash
+> sudo nixos-rebuild boot --flake '.#desktop'
+> ```
+>
+> Prefer boot-only installation rather than another unnecessary live `switch`.
+>
+> Reboot during a planned window.
+>
+> After boot, bind the exact physical machine to the exact candidate.
+>
+> Record:
+>
+> ```text
+> /run/current-system
+> boot ID
+> root subvolume ID/UUID
+> reset count
+> machine ID equality
+> persistent mounts
+> failed units
+> Wayland session
+> NetworkManager
+> Home Manager
+> Commander Core
+> CPU governor/EPP
+> 125 W PL1/PL2 readback
+> Bluetooth state
+> monitor mode
+> 10-bit output
+> VRR state
+> Stage Pro sink/default route
+> ```
+>
+> The existing generation-37 root chain remains accepted; this boot is about binding the **new final policy source** to the machine.
+>
+> ---
+>
+> # 9. Phase D — Resume acceptance
+>
+> This is now a real remaining gate because the 125 W service explicitly has a resume hook.
+>
+> From the final candidate:
+>
+> ```text
+> read PL1/PL2 = 125 W
+>         ↓
+> suspend
+>         ↓
+> resume
+>         ↓
+> verify cpu-package-power-limit.service restarted
+>         ↓
+> read PL1/PL2 = 125 W again
+> ```
+>
+> Also verify:
+>
+> ```text
+> Wayland session usable
+> network returns
+> audio returns
+> Commander Core active
+> no failed units
+> ```
+>
+> If the host does not normally use suspend, this may be classified as a narrower implementation check rather than a major workflow acceptance, but the declared resume hook itself should still be proven once.
+>
+> Do not rerun the 15-minute CPU test merely because the reboot occurred.
+>
+> ---
+>
+> # 10. Phase E — Finish the remaining workload gates
+>
+> ## Unreal interactive workflow
+>
+> Automated PIE and the broad rebuild are already accepted.
+>
+> What remains is simply human interactive editing.
+>
+> Use the real project and exercise normal editor behavior:
+>
+> ```text
+> viewport movement
+> object selection
+> property inspection/editing
+> normal editor panels
+> normal PIE interaction
+> stop PIE
+> continue editing
+> ordinary exit
+> ```
+>
+> No arbitrary long duration is needed.
+>
+> Do not invent another automation harness to replace the missing human-interaction evidence.
+>
+> Gate:
+>
+> ```text
+> no freeze/crash
+> no GPU reset
+> editor remains responsive
+> normal exit
+> ```
+>
+> ## Proton final-source binding
+>
+> Launch Dark Souls Remastered after the clean final boot.
+>
+> A short representative session is sufficient because functionality was already accepted.
+>
+> Require:
+>
+> ```text
+> normal launch
+> normal gameplay
+> controls
+> Stage Pro audio
+> GameMode active while appropriate
+> clean natural exit
+> GameMode inactive afterwards
+> 12 CPU policies restored
+> no matching new GPU/kernel fault
+> ```
+>
+> Do not make quantitative frametime benchmarking a readiness blocker.
+>
+> That belongs to the optimization benchmark corpus.
+>
+> ## HDR
+>
+> This is the most important remaining display gate.
+>
+> Current source deliberately enables automatic HDR while retaining an sRGB 10-bit desktop.
+>
+> Use actual HDR content, with Sky: Children of the Light already identified as the candidate.
+>
+> Prove:
+>
+> ```text
+> start from normal SDR/sRGB desktop
+>         ↓
+> launch actual HDR content fullscreen
+>         ↓
+> HDR mode actually engages
+>         ↓
+> image/display remains usable
+>         ↓
+> VRR behavior remains acceptable
+>         ↓
+> exit HDR content
+>         ↓
+> desktop returns correctly to SDR/sRGB
+> ```
+>
+> Record compositor/output state before, during and after where useful.
+>
+> Do not treat `cm_auto_hdr=1` alone as proof.
+>
+> ## Stage Pro persistence
+>
+> Functional playback is already accepted.
+>
+> After final boot:
+>
+> ```text
+> Stage Pro visible
+> expected PipeWire profile/sink
+> expected default route
+> audible playback
+> ```
+>
+> Then, if USB replug is part of normal use:
+>
+> ```text
+> unplug
+> replug
+> sink returns
+> audio works
+> ```
+>
+> Do not redo low-level ALSA diagnostics unless this fails.
+>
+> ## Bluetooth
+>
+> Do not test Bluetooth functionality.
+>
+> Verify the requested opposite:
+>
+> ```text
+> Bluetooth remains disabled after reboot
+> no unwanted power-on
+> no unexpected service activation
+> ```
+>
+> ## Native game
+>
+> Stardew Valley native Linux gameplay is already accepted at current branch HEAD.
+>
+> Do not repeat it unless later runtime changes affect gaming.
+>
+> ## Controller
+>
+> NOT APPLICABLE.
+>
+> ## Blender
+>
+> Accepted.
+>
+> Do not repeat it.
+>
+> ## CPU/RAM
+>
+> Accepted.
+>
+> Do not repeat them.
+>
+> ---
+>
+> # 11. Phase F — Recovery-drill provenance
+>
+> This remains an evidence problem, not necessarily a testing problem.
+>
+> The current runbook still says the earlier read-only drill lacks exact ISO/date/physical-inspection receipt binding.
+>
+> First inspect the existing private receipts and establish whether they identify:
+>
+> ```text
+> ISO:
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+>
+> SHA256:
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+>
+> media
+> date
+> MP600 identity
+> read-only top-level mount
+> expected Btrfs subvolumes
+> no disk modifications
+> ```
+>
+> If yes:
+>
+> ```text
+> RECOVERY DRILL = ACCEPTED
+> ```
+>
+> and stop.
+>
+> Only if those facts cannot be tied to the existing drill should another reboot be scheduled.
+>
+> If a new drill is required, perform exactly one matching read-only drill.
+>
+> Never run:
+>
+> ```text
+> Disko
+> mkfs
+> repartitioning
+> recursive deletion
+> ```
+>
+> during the drill.
+>
+> ---
+>
+> # 12. Phase G — Decide whether another root-chain boot is actually necessary
+>
+> Do not automatically repeat:
+>
+> ```text
+> normal → persistent-root → normal
+> ```
+>
+> just because it appears in older final-freeze instructions.
+>
+> Before deciding, compare the final candidate against generation 37.
+>
+> Specifically determine whether any of these materially changed:
+>
+> ```text
+> initrd
+> ephemeral-root reset script
+> persistent-root specialisation
+> Btrfs topology
+> activation safety
+> machine-ID persistence
+> credential contract
+> ```
+>
+> If they are unchanged and the final candidate's differences are only ordinary stage-2 services/Home Manager policy:
+>
+> > retain the already accepted generation-37 root-chain evidence and avoid two unnecessary reboots.
+>
+> If root/initrd/persistence semantics **did** change:
+>
+> perform one exact-source:
+>
+> ```text
+> normal
+> → persistent-root
+> → normal
+> ```
+>
+> sequence.
+>
+> Do not repeat three trials.
+>
+> This conditional approach is stronger than ritualistically rerunning destructive boot tests regardless of what changed.
+>
+> ---
+>
+> # 13. Phase H — Multi-day representative soak
+>
+> Once all individual applicable gates pass, stop changing ordinary system policy.
+>
+> Use the final candidate normally for several days.
+>
+> Include normal use rather than synthetic punishment:
+>
+> ```text
+> Unreal work
+> Blender work
+> native game
+> Proton game
+> Firefox
+> Stage Pro
+> large C/C++ or Nix build
+> normal filesystem activity
+> multiple boots as naturally required
+> suspend/resume if normally used
+> ```
+>
+> Watch for:
+>
+> ```text
+> freeze
+> GPU reset
+> MCE/hardware error
+> filesystem error
+> failed service
+> Commander Core restart/failure
+> unexpected thermal throttling
+> login failure
+> root-reset failure
+> audio disappearance
+> HDR/SDR transition problem
+> VRR regression
+> network problem
+> unexpected swap pathology
+> meaningful new NVMe error-log growth
+> ```
+>
+> If a defect appears:
+>
+> ```text
+> record
+> → diagnose
+> → fix declaratively
+> → rerun only the affected acceptance scope
+> → restart soak if the fix materially changes the candidate
+> ```
+>
+> Do not silently patch around a failure.
+>
+> ---
+>
+> # 14. Phase I — Freeze-time backup freshness
+>
+> The independent backup itself is already proven.
+>
+> Immediately before final freeze, protect the delta created since the accepted 2026-10-05 snapshot.
+>
+> Review:
+>
+> ```text
+> Git repositories
+> untracked/ignored source
+> Unreal Saved/autosave state judged worth keeping
+> Blender projects
+> documents
+> new project assets
+> meaningful application state
+> ```
+>
+> Incrementally update the external backup where practical.
+>
+> Record:
+>
+> ```text
+> date
+> destination
+> changed-data scope
+> integrity result
+> ```
+>
+> Do not blindly recreate the entire 27.8 GB archive if a verified incremental update accurately covers the delta.
+>
+> ---
+>
+> # 15. Phase J — Freeze the source
+>
+> Once soak passes:
+>
+> ```text
+> STOP ordinary readiness changes
+> ```
+>
+> Record the candidate source commit.
+>
+> The repository must be:
+>
+> ```text
+> clean
+> committed
+> no staged leftovers
+> no untracked configuration fix
+> flake.lock frozen
+> optimization/default.nix still inert
+> ```
+>
+> At this point, documentation may be updated to reflect final evidence, but avoid starting architecture cleanup.
+>
+> ---
+>
+> # 16. Phase K — Capture the canonical baseline
+>
+> Use the existing baseline collector rather than inventing a large new pre-tag subsystem.
+>
+> The repository already provides:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> It records Git/lock and running-closure identities separately and captures CPU, firmware, memory, graphics, storage, services, timers, cooling, persistence, pressure, IRQ state, schedulers, zswap and THP.
+>
+> Capture it again on the **accepted final candidate**.
+>
+> Create a small canonical baseline record under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> containing at minimum:
+>
+> ```text
+> Git commit
+> flake.lock hash
+> Nixpkgs revision
+> NixOS version
+> Nix version
+>
+> normal closure
+> persistent-root closure
+> recovery ISO store path
+> recovery ISO SHA256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME
+> CPU ratios/cache
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR size
+> NVMe identity/firmware
+> Btrfs mount options
+>
+> governor
+> EPP
+> THP
+> swap/zram
+> scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+>
+> accepted CPU result
+> accepted RAM result
+> root-chain evidence identity
+> backup identity
+> recovery-drill identity
+> workload acceptance
+> soak result
+> ```
+>
+> Do not commit secret values.
+>
+> I would **not** add a new `.#desktop-policy` API at this late stage unless it is actually needed. The existing Nix configuration plus baseline collector already provide the necessary authority, and minimizing source churn is more valuable this close to freeze.
+>
+> Generated policy/documentation outputs can be added post-tag.
+>
+> ---
+>
+> # 17. Phase L — Exact final validation
+>
+> On the frozen source run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then run the explicit heavy suite:
+>
+> ```text
+> blank-disk-reconstruction
+> workstation-smoke
+> activation-safety-actions
+> stock-contamination-negative
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Build and record exact:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Run closure review.
+>
+> Require no unexplained:
+>
+> ```text
+> kernel change
+> Mesa change
+> LLVM/toolchain change
+> unstable dependency introduction
+> optimization namespace
+> global compiler flag
+> global performance hack
+> ```
+>
+> Reconfirm stock contamination policy.
+>
+> Do not rerun Nix-store content verification purely ceremonially unless there is new evidence of store corruption.
+>
+> ---
+>
+> # 18. Phase M — Exact-head CI and truth reconciliation
+>
+> Push the exact frozen source.
+>
+> Require `Nix checks` to pass on that exact SHA.
+>
+> Then update:
+>
+> ```text
+> docs/status.md
+> PR #7 body
+> baseline manifest
+> ```
+>
+> with the exact final identity.
+>
+> At this point `docs/status.md` should contain **zero unresolved hard readiness gates**.
+>
+> Historical failed tests remain in `plan.md` as history.
+>
+> Do not rewrite them.
+>
+> ---
+>
+> # 19. Phase N — Merge
+>
+> Mark PR #7 ready only after all applicable gates are complete.
+>
+> Merge through protected `main`.
+>
+> After merging, compare the merged tree with the tested feature-head tree.
+>
+> If identical:
+>
+> ```text
+> the tested artifact identity remains valid
+> ```
+>
+> and another giant validation cycle is unnecessary.
+>
+> If merge conflict resolution or another base change alters the tree:
+>
+> ```text
+> rebuild
+> re-run relevant checks
+> confirm baseline identity again
+> ```
+>
+> ---
+>
+> # 20. Phase O — Create the baseline tag
+>
+> Create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The tag documentation should point to:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+> baseline manifest
+> accepted evidence set
+> ```
+>
+> That tag becomes the immutable control for all optimization experiments.
+>
+> Only then is:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> ---
+>
+> # 21. Post-tag work — explicitly outside readiness
+>
+> After the tag, create a small cleanup branch.
+>
+> Recommended cleanup:
+>
+> ```text
+> archive plan.md under docs/history/
+> organize docs into design/runbooks/validation/history
+> move stock-control.nix from core → workstation
+> move VS Code ownership from desktop → development
+> remove historical test aliases
+> add generated nixosOptionsDoc documentation
+> add Markdown link checking
+> ```
+>
+> Do not perform these changes before the baseline simply because they are aesthetically cleaner.
+>
+> The currently simplified README is already in the right shape.
+>
+> ---
+>
+> # 22. Optimization boundary
+>
+> After the baseline tag:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> must be created from the tag.
+>
+> Do not revive/rebase the old optimization branch wholesale.
+>
+> Keep it as donor/reference code only.
+>
+> The first post-baseline infrastructure should still be:
+>
+> ```text
+> vmVariantWithBootLoader
+> specialisation-based experiment states
+> stage-aware closure contamination rules
+> benchmark corpus
+> ```
+>
+> Then proceed:
+>
+> ```text
+> CPU-target codegen A/B
+> graphics-stack A/B
+> profiling
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific ceiling work
+> ```
+>
+> These are not tasks for the readiness branch.
+>
+> ---
+>
+> # 23. New immediate execution order
+>
+> This is the actual handoff sequence from current HEAD:
+>
+> ```text
+> 1. Update docs/status.md current-head/CI truth.
+> 2. Update PR #7 body current-head/CI truth.
+> 3. Rebuild exact current normal/persistent/recovery artifacts.
+> 4. Closure-diff current candidate.
+> 5. Confirm no unintended package/toolchain/optimization changes.
+> 6. Install final candidate with boot-only activation.
+> 7. Reboot final candidate.
+> 8. Verify exact running closure and ordinary root reset.
+> 9. Verify 125 W PL1/PL2 after boot.
+> 10. Verify Bluetooth remains disabled.
+> 11. Verify 155 Hz / 10-bit / VRR=true.
+> 12. Verify Stage Pro default sink and playback.
+> 13. Suspend/resume once and prove 125 W is reapplied.
+> 14. Complete human Unreal interactive editing.
+> 15. Run one uninterrupted final-candidate Dark Souls session.
+> 16. Verify GameMode restoration after natural exit.
+> 17. Run real HDR content.
+> 18. Verify HDR engagement.
+> 19. Exit HDR content and verify correct SDR/sRGB return.
+> 20. Confirm Stage Pro reconnect if replug behavior is expected.
+> 21. Reconcile existing recovery-drill provenance.
+> 22. Perform a new recovery drill only if provenance cannot be established.
+> 23. Decide from closure/initrd diff whether final root-chain repetition is needed.
+> 24. If needed, run one normal→persistent-root→normal exact-source sequence.
+> 25. Begin multi-day representative soak.
+> 26. Fix only genuine problems found.
+> 27. Incrementally refresh backup for post-2026-10-05 work.
+> 28. Freeze source.
+> 29. Capture final baseline collector output.
+> 30. Write canonical baseline manifest.
+> 31. Run full flake checks.
+> 32. Run heavy VM/reconstruction suite.
+> 33. Build/record final normal/persistent/recovery identities.
+> 34. Run final closure and stock-contamination audit.
+> 35. Push exact final source.
+> 36. Require exact-head GitHub CI green.
+> 37. Make docs/status.md show no unresolved hard gate.
+> 38. Mark PR #7 ready.
+> 39. Merge to protected main.
+> 40. Confirm merged tree identity.
+> 41. Create annotated baseline tag.
+> 42. End readiness work.
+> 43. Start post-tag cleanup separately.
+> 44. Start optimization-framework-v2 from the tag.
+> ```
+>
+> ---
+>
+> # 24. Updated hard-GO checklist
+>
+> ## Accepted — do not repeat without invalidating changes
+>
+> ```text
+> [x] architecture
+> [x] README ownership cleanup
+> [x] stable NixOS refresh
+> [x] root-reset safety
+> [x] interrupted recovery
+> [x] persistent identity
+> [x] generation-37 normal/persistent/normal
+> [x] activation safety
+> [x] stock contamination fixture
+> [x] blank-disk reconstruction
+> [x] Nix store verification
+> [x] KVM/VMX
+> [x] GameMode helper/governor
+> [x] Btrfs scrub/device health
+> [x] NVMe SMART/media health
+> [x] independent backup/representative restore
+> [x] secrets recovery evidence
+> [x] 125 W selected CPU policy
+> [x] 15-minute 125 W CPU validation
+> [x] complete 20 GiB memtester loop
+> [x] Unreal broad C++ rebuild
+> [x] Unreal 120s PIE lifecycle
+> [x] Blender long HIP render
+> [x] Blender human interactive workflow
+> [x] native Linux Stardew Valley gameplay
+> [x] functional Stage Pro USB playback
+> [x] VRR live
+> [x] Bluetooth disabled by policy
+> [x] controller N/A
+> [x] Android/Gradle/AVD N/A
+> [x] optimization module inert
+> [x] current-head CI #162
+> ```
+>
+> ## Remaining
+>
+> ```text
+> [ ] current source physically booted
+> [ ] 125 W boot readback accepted
+> [ ] 125 W resume readback accepted
+> [ ] final Bluetooth-off boot persistence
+> [ ] final VRR/10-bit boot persistence
+> [ ] Stage Pro boot/reconnect persistence
+> [ ] human Unreal interactive editing
+> [ ] uninterrupted final-candidate Proton gameplay
+> [ ] actual HDR content acceptance
+> [ ] correct HDR → SDR return
+> [ ] recovery-drill provenance reconciled
+> [ ] final root-chain repeat only if source diff requires it
+> [ ] multi-day representative soak
+> [ ] backup freshness/delta
+> [ ] frozen final source
+> [ ] final baseline collector capture
+> [ ] canonical manifest
+> [ ] exact-source offline suite
+> [ ] exact-source heavy VM suite
+> [ ] exact closure audit
+> [ ] exact stock-contamination audit
+> [ ] exact-final-head CI
+> [ ] PR ready
+> [ ] merge
+> [ ] annotated baseline tag
+> ```
+>
+> ---
+>
+> # 25. Stop condition
+>
+> Do not keep adding readiness tests after the checklist closes.
+>
+> The readiness project succeeds when the system is:
+>
+> > stable enough for its intended real workloads, reproducibly reconstructable, recoverable, backed up, physically bound to a known stock configuration, and cleanly identifiable as the control for later experiments.
+>
+> It does **not** need to prove that every conceivable workload, every byte of RAM, every firmware field or every peripheral in existence is perfect.
+>
+> Once the final tag exists:
+>
+> ```text
+> STOP READINESS
+> START EXPERIMENTS
+> ```
+>
+> That separation is essential to preventing `plan.md` from growing indefinitely and delaying the actual PGO/LTO/BOLT research.
+>
+> The strongest change from the previous guide is that I would now **remove CPU stress, RAM validation, Blender, native gaming, README cleanup, controller, Android, and basic Stage Pro functionality from the critical path**. They are already resolved under the project's current criteria. The next substantive action is to build and physically boot the current final-policy source, then use that boot to close power-resume, HDR, Proton source-binding, audio persistence, and the last interactive Unreal evidence.
+
+## User workflow decisions — 2026-10-07
+
+Blender interactive acceptance PASS by user report: viewport navigation,
+selection/editing and Layout/Modeling/UV/Shading/Animation workspaces worked
+perfectly, without freezes or crashes. Controller NOT APPLICABLE by user
+instruction. Bluetooth unused and explicitly requested disabled. Stage Pro
+USB audio, HDR, always-enabled VRR/FreeSync and native Linux games ARE
+APPLICABLE. Stage Pro functional USB playback PASS: user already tested it,
+uses it regularly and confirms active audible playback; PipeWire independently
+confirmed its default sink and Firefox routing. Do not request this confirmation
+again or interrupt playback for a redundant test. These answers supersede the pending-input block.
+Continue the complete plan; do not repeat accepted CPU/RAM/render tests.
+
+## Current continuation directive — adopted2026-10-06
+
+**Latest direct-user correction:**80C is not a hardware failure boundary.
+The historical80C aborts are incomplete tests, not proof of overheating,
+instability or bad cooler contact. Withdrawal of that arbitrary acceptance
+cutoff overrides attached-guide instructions to retain it. Current15minute
+125W validation uses Intel/coretemp100C critical limit, thermal-throttle
+counter growth, correctness/errors, cooling/power/workload guards and
+temperature/power trends. Block/paste history is no longer a prerequisite.
+Coolant warming is user-explained behavior; load-time telemetry was not
+measured, so its exact contribution remains unquantified.
+
+
+The unified guide below supersedes competing next-action sections; prior
+ledger remains intact as historical evidence. Physical state/current source
+and docs/status.md override snapshot statements. Direct user instructions
+override attached recommendations:125W CPUbaseline is now explicitly
+adopted; sustained CPUverification target is15minutes, not30minutes.
+Android/Gradle/AVD are NOT APPLICABLE. Avoidreboots, keepGUIalive.
+The reviewed db93568/CI141 snapshot is historical after subsequent commits.
+
+Execute readiness before freeze/tag; post-tag cleanup and optimization-v2
+remain deferred until hardgates pass. Do not repeat accepted infrastructure
+for reassurance. README cleanup is authorized now. CPU/RAM/fullworkloads,
+recoveryprovenance, freshness, soak and exactfinalvalidation remain required.
+Evaluatedpolicy/canonicalmanifests belong atfreeze, not before acceptance.
+Controller/nativegaming/HDR/VRR only block where actuallyapplicable.
+
+Attachment provenance: /home/p2949/.codex/attachments/0fa941d9-fef2-4ea8-8624-9eb3fd448544/Pasted text.txt
+SHA256: `d09789c90c6412507cd69c65a382e49c2544fed46090046859a8865b58552e2e`. Full supplied text retained as a quote below (trailing whitespace normalized);
+embedded content-reference tokens belong to the supplied review and are not
+independently verified citations. No information from the guide is discarded.
+
+### Full unified continuation guide (supplied snapshot)
+
+> I rechecked the live branch one final time while consolidating this. The current authoritative head is now **`db93568a2fc2a314ca97bee1ceb260b95736f414`**, and exact-head **Nix checks run #141 has completed successfully**. So CI is no longer an immediate blocker at this snapshot; it becomes a gate that must remain green again on whatever commit is ultimately frozen.
+>
+> The guide below is intended to replace the competing “next action” sections as the **single continuation directive** for `plan.md`. It preserves completed evidence rather than asking for it again, incorporates the maintainability and NixOS-feature reviews, and continues all the way through the stock tag and into the correct starting architecture for optimization-v2.
+>
+> # NixOS Pre-Optimization Readiness — Unified Continuation Guide
+>
+> **Repository:** `P2949/NixosConf`
+> **Active branch:** `feat/pre-optimization-readiness`
+> **Current reviewed HEAD:** `db93568a2fc2a314ca97bee1ceb260b95736f414`
+> **Pull request:** #7, open, draft, mergeable
+> **Exact-head CI:** Nix checks run #141 — PASS
+> **Date of this consolidation:** 2026-10-06
+> **Primary objective:** finish `plan.md`, freeze a trustworthy stock NixOS workstation baseline, cleanly retire the readiness project, and then begin a separate `optimization-framework-v2` project from the immutable baseline.
+>
+> ---
+>
+> # 1. Governing conclusion
+>
+> The architectural phase is effectively complete.
+>
+> Do **not** restart broad restructuring of:
+>
+> - the host/profile/module model;
+> - `profiles/workstation.nix`;
+> - Home Manager generally;
+> - Disko;
+> - Impermanence generally;
+> - the root-reset architecture;
+> - activation safety generally;
+> - reconstruction generally;
+> - the flake into a generic multi-host framework.
+>
+> The present repository already has sufficiently strong boundaries for a one-machine NixOS project. The current maintainability review correctly concluded that further general modularization would now tend to make the repository worse rather than better. The remaining maintainability problems are narrower: duplicated documentation, a few semantic ownership mismatches, historical compatibility names, and the need to make fewer places authoritative. :chatgpt-content-reference{index="0"}
+>
+> The readiness branch has also crossed a much more important threshold:
+>
+> > **Most infrastructure is proven. The remaining pre-baseline critical path is physical stability + representative workloads + evidence reconciliation + freeze.**
+>
+> Current status explicitly defers architecture cleanup, module-document generation, VM variants, distributed builders and optimization-v2 until after the baseline.
+>
+> Therefore:
+>
+> ```text
+> DO NOW
+>     finish stock readiness
+>
+> DO AT FREEZE
+>     produce canonical baseline identity
+>
+> DO AFTER TAG
+>     small repository cleanup
+>     useful NixOS-specific tooling
+>
+> ONLY THEN
+>     optimization-framework-v2
+> ```
+>
+> ---
+>
+> # 2. Source-of-truth model
+>
+> From this point forward, use this order:
+>
+> ```text
+> 1. physical state of the current workstation
+> 2. current feat/pre-optimization-readiness HEAD
+> 3. docs/status.md
+> 4. exact-source passing tests / CI / private receipts
+> 5. accepted physical evidence
+> 6. plan.md chronology
+> 7. older supplied reviews
+> 8. historical branches
+> ```
+>
+> `docs/status.md` is correctly defined as **current truth only**, while `plan.md` preserves the chronological ledger and superseded observations.
+>
+> Every claim should conceptually have one of these classifications:
+>
+> ```text
+> PROVEN
+> PARTIAL
+> OPEN
+> NOT APPLICABLE
+> DEFERRED
+> HISTORICAL / SUPERSEDED
+> ```
+>
+> Do not “clean up” history by changing old failed or pending observations into passes. Add newer evidence that supersedes them.
+>
+> ---
+>
+> # 3. Current live source state
+>
+> The reviewed branch HEAD is:
+>
+> ```text
+> db93568a2fc2a314ca97bee1ceb260b95736f414
+> docs: reconcile accepted backup and completed physical boot sequence
+> ```
+>
+>
+>
+> PR #7 remains:
+>
+> ```text
+> open
+> draft
+> mergeable
+> base: main
+> head: feat/pre-optimization-readiness
+> ```
+>
+>
+>
+> Exact-head CI run #141 passed after the final live check used for this guide.
+>
+> This means the present source is currently a valid development checkpoint.
+>
+> It is **not yet the pre-optimization baseline**, because physical/runtime gates remain open.
+>
+> ---
+>
+> # 4. Evidence ledger — work already completed
+>
+> This section is deliberately extensive.
+>
+> Anything marked **ACCEPTED** below should not be rerun simply for reassurance unless a later change invalidates the relevant evidence.
+>
+> ---
+>
+> ## 4.1 Repository architecture — ACCEPTED
+>
+> The repository has established a sensible one-host architecture:
+>
+> ```text
+> hosts/
+>     physical host facts and policy
+>
+> profiles/
+>     role composition
+>
+> modules/
+>     reusable NixOS functionality
+>
+> home/
+>     user/session policy
+>
+> packages/
+>     custom derivations
+>
+> images/
+>     standalone images
+>
+> tests/
+>     evaluation/integration validation
+>
+> docs/
+>     design, evidence and procedures
+>
+> optimization/
+>     reserved experiment area
+> ```
+>
+> The root flake remains explicit: one architecture, one username, stable/unstable package sets, dev shells, validation registry, desktop configuration and recovery image.
+>
+> Do not introduce:
+>
+> ```text
+> flake-parts
+> flake-utils
+> snowfall-lib
+> automatic module discovery
+> generic mkHost
+> generic mkSystem
+> dynamic host registries
+> ```
+>
+> for a one-host repository.
+>
+> That remains the correct maintainability decision. :chatgpt-content-reference{index="6"}
+>
+> ---
+>
+> # 4.2 Stock optimization control — ACCEPTED
+>
+> The productive system actively rejects experimental optimization namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> through `system.forbiddenDependenciesRegexes`.
+>
+> The negative contamination fixture passes by failing for the intended optimization diagnostic, and a live closure membership audit has passed.
+>
+> The stock-policy audit also confirms no declared global:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> LDFLAGS
+> NIX_CFLAGS_COMPILE
+> NIX_LDFLAGS
+> LD_LIBRARY_PATH
+> RADV_PERFTEST
+> MALLOC_CONF
+> ```
+>
+> and no permanent governor, CPU-isolation kernel tuning or mitigation-disable policy.
+>
+> Most importantly:
+>
+> ```nix
+> optimization/default.nix
+> ```
+>
+> is still intentionally empty.
+>
+> **Conclusion:** the stock system is still a legitimate experimental control.
+>
+> Do not contaminate it before the tag.
+>
+> ---
+>
+> # 4.3 Stable NixOS refresh — ACCEPTED
+>
+> Accepted stable Nixpkgs revision:
+>
+> ```text
+> 0d9e9b832d03ac387417e16ce1febf73b2e631e1
+> ```
+>
+> Accepted system generation is NixOS:
+>
+> ```text
+> 26.05.20261004.0d9e9b8
+> kernel 6.18.55
+> ```
+>
+> The stable refresh preserved tested Home Manager/Disko/Impermanence/unstable/Liquidctl relationships while updating the selected stable input. Six heavy VMs passed during its preparation.
+>
+> No reason remains to revisit the refresh merely because optimization work is approaching.
+>
+> ---
+>
+> # 4.4 Generation-37 physical root policy — ACCEPTED
+>
+> Installed generation:
+>
+> ```text
+> generation 37
+> ```
+>
+> Normal closure:
+>
+> ```text
+> /nix/store/0p67xd3scigqmmn65a0x5skdcsf6025b-...
+> ```
+>
+> Persistent-root closure:
+>
+> ```text
+> /nix/store/ph12l3y4k9jjmp5vhxwlkc11x4js2gjx-...
+> ```
+>
+> Both have independent GC protection, and their ESP kernel/initrd copies match their store artifacts.
+>
+> The complete physical sequence is accepted:
+>
+> ```text
+> normal
+>     root 300
+>     reset count 6
+>
+>         ↓
+>
+> persistent-root
+>     same root 300
+>     same UUID
+>     count still 6
+>     root-local sentinel retained
+>     persistent sentinel retained
+>
+>         ↓
+>
+> normal
+>     new root 302
+>     reset count 7
+>     root-local sentinel removed
+>     persistent sentinel retained
+> ```
+>
+> Machine identity, credentials, persistent mounts, journals, services, networking and Wayland login all passed. Commander Core stayed active with zero restarts.
+>
+> Private accepted receipts include the final persistent and return-normal observations under `/persist/nixos-readiness-20261005`.
+>
+> **Do not repeat the historical three-reset trial program.**
+>
+> A later exact-source final root chain may still be desirable at freeze, but that is source-binding acceptance, not because the current design lacks proof.
+>
+> ---
+>
+> # 4.5 Persistence contract — ACCEPTED
+>
+> Current intended model:
+>
+> ```text
+> @root
+>     disposable under normal boot
+>
+> persistent-root specialisation
+>     reset disabled
+>
+> @home
+>     persistent
+>
+> @var
+>     persistent
+>
+> @nix
+>     persistent
+>
+> @persist
+>     persistent
+>
+> @optimization
+>     persistent, experiments inactive
+>
+> /etc/machine-id
+>     persisted
+>
+> password hash
+>     /persist/secrets/p2949-password-hash
+> ```
+>
+>
+>
+> Selective home/var Impermanence remains deliberately deferred.
+>
+> Do not broaden Impermanence before the baseline.
+>
+> ---
+>
+> # 4.6 Root/reset VM test matrix — ACCEPTED
+>
+> The project already has explicit tests for:
+>
+> ```text
+> reset control
+> reset safety
+> interrupted recovery
+> persistent identity
+> persistent fallback
+> workstation smoke
+> ```
+>
+> plus configuration rejection tests and the blank-disk reconstruction test.
+>
+> The full current offline suite includes:
+>
+> - five root VM scenarios;
+> - workstation smoke;
+> - native activation action tests;
+> - 45 activation guard fixtures;
+> - formatting;
+> - Statix;
+> - Deadnix;
+> - Commander Core validation;
+> - baseline collector validation.
+>
+>
+>
+> Do not invent another generic integration-test framework.
+>
+> ---
+>
+> # 4.7 Activation safety — ACCEPTED
+>
+> The workstation has named `system.preSwitchChecks` covering:
+>
+> ```text
+> persistence
+> credentials
+> ESP free-space reserve
+> Btrfs topology
+> ```
+>
+> They do not depend on irrelevant peripheral availability.
+>
+> Important properties:
+>
+> - 256 MiB ESP reserve;
+> - topology mounted through Btrfs subvolume ID 5 read-only;
+> - refuses incorrect root/persist mounts;
+> - refuses unknown descendants;
+> - refuses unsafe staging state;
+> - password checks inspect metadata, not secret content;
+> - checks never delete/rename Btrfs state;
+> - failure is intended to block activation rather than be bypassed.
+>
+> This is enough activation guarding.
+>
+> Do not add checks for:
+>
+> ```text
+> internet
+> monitor
+> soundbar
+> Bluetooth device
+> Commander USB presence
+> Steam
+> graphical login
+> ```
+>
+> because those are runtime conditions rather than activation invariants.
+>
+> ---
+>
+> # 4.8 Blank-disk reconstruction — ACCEPTED
+>
+> The heavy reconstruction test has passed.
+>
+> It proves:
+>
+> ```text
+> fresh 96 GiB virtual disk
+>     ↓
+> production Disko layout
+>     ↓
+> GPT
+> ESP
+> swap
+> Btrfs persistence topology
+>     ↓
+> test-only password secret via production path contract
+>     ↓
+> real desktop composition installed
+>     ↓
+> installed UEFI boot
+>     ↓
+> VM boots from its own disk
+>     ↓
+> no host Nix store / kernel / initrd dependency
+>     ↓
+> normal reset
+> persistent state
+> persistent-root boot
+> return to normal
+> seven production subvolumes inspected read-only
+> ```
+>
+>
+>
+> The attempted evaluated-Disko abstraction failed because its computed device values retained the production device path after rebinding.
+>
+> It was correctly rejected.
+>
+> The proven direct production layout import remains the accepted reconstruction mechanism.
+>
+> **Do not touch reconstruction again without a concrete defect.**
+>
+> ---
+>
+> # 4.9 Nix-store integrity — ACCEPTED
+>
+> Full Nix store content verification passed.
+>
+> No present evidence requires repair.
+>
+> Store optimisation remains optional maintenance and should never run during authoritative benchmarks.
+>
+> ---
+>
+> # 4.10 Btrfs and NVMe health — ACCEPTED
+>
+> Accepted physical evidence:
+>
+> ```text
+> Btrfs scrub:
+>     147.36 GiB
+>     54 seconds
+>     no errors
+>
+> Btrfs device counters:
+>     all five zero
+>
+> NVMe:
+>     SMART pass
+>     zero media errors
+>     zero critical warning
+> ```
+>
+> The cumulative NVMe admin-error count moved:
+>
+> ```text
+> 12143 → 12145
+> ```
+>
+> with latest documented entry:
+>
+> ```text
+> InvalidFieldInCommand
+> ```
+>
+> Historical entries are not all classified, so future **meaningful growth** should be watched rather than pretending the lifetime log is completely understood.
+>
+> This gate is complete.
+>
+> ---
+>
+> # 4.11 Maintenance architecture — ACCEPTED
+>
+> Current declared policy includes:
+>
+> ```text
+> weekly Nix GC:
+>     Saturday 04:00
+>     --delete-older-than 30d
+>
+> monthly Btrfs scrub:
+>     day 1 02:00
+>
+> coordination:
+>     GC and scrub never overlap
+>     GC requires clean completed scrub
+> ```
+>
+> Journal and coredump retention are bounded.
+>
+> Preparation GC roots deliberately preserve accepted/recovery artifacts.
+>
+> Do not remove those roots until after the final baseline tag and rollback review.
+>
+> During authoritative benchmark windows:
+>
+> ```bash
+> sudo systemctl stop nix-gc.timer btrfs-scrub--.timer fstrim.timer
+> ```
+>
+> and verify no maintenance job is active.
+>
+> Restart them afterwards.
+>
+> ---
+>
+> # 4.12 Backup — ACCEPTED, freshness still required at freeze
+>
+> Independent Ventoy backup is accepted.
+>
+> Main archive:
+>
+> ```text
+> 27,844,003,241 bytes
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> It passed:
+>
+> - zstd integrity;
+> - representative restoration;
+> - source/restored hash comparison;
+> - terminal completion receipt;
+> - clean USB unmount.
+>
+> A 47-file engine supplement was independently restored/hash-verified.
+>
+> Two Blender files and one actual Unreal project descriptor were restored independently and matched source hashes.
+>
+> The backup snapshot was point-in-time evidence on 2026-10-05.
+>
+> Therefore the remaining backup action is **not “redo the backup project.”**
+>
+> It is:
+>
+> > At freeze, identify meaningful new work created after the snapshot and incrementally protect it.
+>
+> ---
+>
+> # 4.13 Secrets recovery — ACCEPTED
+>
+> `/persist/secrets` remains outside Git.
+>
+> The user has confirmed the encrypted secrets material was backed up separately and restored during recovery from an actual system failure. The repository correctly treats that as completed user-reported recovery evidence.
+>
+> Do not add `sops-nix`/agenix purely to satisfy readiness.
+>
+> The external bootstrap-secret model is already valid if maintained.
+>
+> ---
+>
+> # 4.14 Recovery ISO artifact — BUILD/COPY ACCEPTED; physical provenance PARTIAL
+>
+> Current retained recovery image:
+>
+> ```text
+> store identity:
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+>
+> filename:
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+>
+> SHA-256:
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Copy, flush, read-only remount checksum and exFAT check passed.
+>
+> The remaining issue is narrower:
+>
+> > The repository has a reported earlier read-only recovery drill, but exact ISO/date/receipt provenance is not yet reconciled.
+>
+>
+>
+> Do not automatically schedule another recovery boot.
+>
+> First reconcile the existing evidence.
+>
+> Only perform another physical read-only drill if the existing receipt cannot establish the required artifact identity.
+>
+> ---
+>
+> # 4.15 Firmware baseline — ACCEPTED as captured state
+>
+> Retained firmware baseline:
+>
+> ```text
+> ASUS Z490-E
+> BIOS 3201
+>
+> ME:
+> 14.1.53.1649
+> 14.1.53.1649
+> 14.0.51.1528
+>
+> CPU:
+> AI Optimized 50/49
+> cache max 48
+> AVX offset current 0
+> core/cache voltage Auto
+> MCE Remove All Limits
+>
+> memory:
+> XMP I
+> DDR4-3200
+> 1.35 V
+> BCLK 100 MHz
+>
+> virtualization:
+> VMX enabled
+> VT-d enabled
+>
+> PCIe:
+> Above 4G enabled
+> ReBAR Auto
+> Linux GPU BAR = 16 GiB
+> ```
+>
+>
+>
+> Unknown firmware fields are explicitly treated as unknown rather than invented.
+>
+> No more firmware capture is required merely for completeness.
+>
+> Any future firmware change would, however, create a new performance baseline.
+>
+> ---
+>
+> # 4.16 KVM/VMX — ACCEPTED
+>
+> Physical `/dev/kvm` exists and is usable.
+>
+> QEMU 10.2.4 successfully initialized with:
+>
+> ```text
+> -accel kvm
+> -cpu host
+> ```
+>
+> and reported KVM enabled/present.
+>
+> The KVM readiness gate is closed.
+>
+> ---
+>
+> # 4.17 Android/Gradle/AVD — NOT APPLICABLE
+>
+> As of 2026-10-06, Android work is explicitly outside this workstation's intended workload.
+>
+> Therefore the following are no longer baseline gates:
+>
+> ```text
+> Android Studio
+> SDK provisioning
+> Gradle Android project
+> AVD boot
+> accelerated Android emulator
+> ```
+>
+>
+>
+> Do not spend further readiness work on Android.
+>
+> ---
+>
+> # 4.18 GameMode — ACCEPTED
+>
+> Physical GameMode authorization and governor/helper tests passed.
+>
+> The user is now in the required group.
+>
+> The test verified actual governor switching and restoration afterwards.
+>
+> After the test:
+>
+> ```text
+> all 12 policies returned to powersave
+> EPP returned to balance_performance
+> split_lock_mitigate remained 1
+> GameMode inactive
+> ```
+>
+>
+>
+> The remaining gaming gate is representative gameplay, not GameMode plumbing.
+>
+> ---
+>
+> # 4.19 Gamescope/MangoHud synthetic stack — ACCEPTED AS SMOKE
+>
+> Gamescope 3.16.23 completed 600-frame Vulkan cube runs with:
+>
+> ```text
+> native Wayland child
+> XCB/XWayland child
+> ```
+>
+> MangoHud 0.8.3 initialized, including the XCB overlay/shim path.
+>
+> This proves the stack.
+>
+> It does not prove representative game behavior, HDR, controller or long-session stability.
+>
+> ---
+>
+> # 4.20 Blender — BASIC FINAL-CANDIDATE RENDER ACCEPTED; broader workflow PARTIAL
+>
+> Actual local Blender project:
+>
+> ```text
+> 33 objects
+> Cycles
+> 1920x1080
+> 64 samples
+> RX 9070 XT HIP only
+> CPU disabled
+> ```
+>
+> Final-candidate render:
+>
+> ```text
+> 12.6673 seconds
+> exit 0
+> source unchanged
+> no new targeted GPU faults
+> Commander active
+> ```
+>
+>
+>
+> Remaining:
+>
+> ```text
+> interactive work
+> longer representative render
+> sustained session
+> ```
+>
+> Do not rerun basic scene discovery.
+>
+> ---
+>
+> # 4.21 Unreal — BUILD ACCEPTED; final runtime workflow PARTIAL
+>
+> Final candidate incremental editor target build passed with Epic's intended toolchain.
+>
+> Recorded:
+>
+> ```text
+> Epic bundled Clang
+> Rocky Linux sysroot
+> bundled libc++
+> incremental editor target
+> project remained Git-clean
+> ```
+>
+>
+>
+> Earlier-generation native Wayland/Vulkan lifecycle evidence also established:
+>
+> ```text
+> SDL3 Wayland
+> xwayland=false
+> RADV GFX1201
+> configured map loaded
+> 28 actors
+> ~10 seconds editor ticking
+> clean corrected deferred shutdown
+> ```
+>
+> The prior ICU/Slate crash was caused by an invalid immediate automation shutdown sequence, and the corrected deferred lifecycle passed.
+>
+> However, the final-candidate editor/map run hit:
+>
+> ```text
+> 84 °C after ~6 seconds
+> ```
+>
+> and was stopped by the retained 80 °C guard.
+>
+> Therefore final acceptance still requires:
+>
+> ```text
+> editor
+> PIE/play
+> representative session
+> appropriately broad build
+> clean ordinary shutdown
+> ```
+>
+> after CPU/power/cooling policy is settled.
+>
+> ---
+>
+> # 4.22 Creative Stage Pro — TRANSPORT ACCEPTED; intended route PARTIAL
+>
+> Proven:
+>
+> ```text
+> USB enumeration
+> ALSA transport
+> direct ALSA silent PCM
+> current PipeWire default transport
+> ```
+>
+> Current Stage Pro PipeWire profile is:
+>
+> ```text
+> Off
+> ```
+>
+> and current/default active output is HDMI 3.
+>
+> Remaining:
+>
+> ```text
+> enable intended profile
+> create/use actual Stage Pro sink
+> audible playback
+> replug/reconnect
+> reboot behavior
+> default-route policy
+> ```
+>
+> ---
+>
+> # 4.23 Cooling policy source — IMPLEMENTED; sustained validation OPEN
+>
+> Current declarative Commander Core policy is:
+>
+> ```text
+> baseFanDuty = 60
+> highFanDuty = 100
+> pumpDuty = 100
+>
+> highTemp = 50
+> highDelay = 0
+>
+> lowTemp = 45
+> lowDelay = 30
+>
+> tempInterval = 0.5
+> ```
+>
+>
+>
+> This was introduced specifically to start mechanical fan ramp earlier.
+>
+> The tuned normal candidate is currently test-active:
+>
+> ```text
+> lgkijm9r3377z50lqbk7cf6h1zfjl4x9
+> ```
+>
+> Persistent candidate:
+>
+> ```text
+> 017hw90zb373629alxdgh4pnx0gwlkx8
+> ```
+>
+> and both are retained appropriately.
+>
+> User physical observations establish:
+>
+> - H150i Elite Capellix pump works;
+> - fans work;
+> - radiator airflow exists;
+> - dust is minimal;
+> - idle ~30–35 °C;
+> - mechanical fan ramp delay exists.
+>
+> These are useful observations, but not sustained-load acceptance.
+>
+> ---
+>
+> # 4.24 Sustained CPU validation — OPEN
+>
+> The latest guarded 30-minute, 12-worker CPU test ran:
+>
+> ```text
+> 457.98 seconds
+> ```
+>
+> before reaching:
+>
+> ```text
+> 80 °C
+> ```
+>
+> and stopping.
+>
+> Positive evidence:
+>
+> ```text
+> worker verification errors = 0
+> throttle counters unchanged
+> no targeted hardware/thermal kernel errors
+> cooling recovered
+> Commander remained active
+> ```
+>
+> But:
+>
+> ```text
+> 30-minute duration was not completed
+> ```
+>
+> so the gate remains OPEN.
+>
+> Runtime package long/short power limits were observed at approximately:
+>
+> ```text
+> 4095.875 W
+> ```
+>
+> meaning the present firmware/runtime configuration is effectively unconstrained by a useful stock package-power cap.
+>
+> The recorded user preference for an actual **125 W baseline** remains unresolved.
+>
+> Do not weaken the 80 °C guard simply to manufacture a pass.
+>
+> ---
+>
+> # 4.25 RAM validation — OPEN
+>
+> Two substantial attempts were made.
+>
+> ### 24 GiB attempt
+>
+> Stopped after:
+>
+> ```text
+> 496.96 seconds
+> ```
+>
+> because desktop headroom fell below the retained 3 GiB guard.
+>
+> Peak CPU temperature:
+>
+> ```text
+> 79 °C
+> ```
+>
+> ### 22 GiB attempt
+>
+> Stopped after:
+>
+> ```text
+> 718.36 seconds
+> ```
+>
+> because swap growth exceeded the retained 256 MiB guard.
+>
+> Peak CPU temperature:
+>
+> ```text
+> 79 °C
+> ```
+>
+> Both tests allocated and locked their requested memory, but neither completed the intended full pattern pass.
+>
+> Therefore:
+>
+> ```text
+> SUBSTANTIAL RAM STABILITY = OPEN
+> ```
+>
+> The failed acceptance is due to controlled safety/headroom conditions, not observed memory errors.
+>
+> ---
+>
+> # 4.26 README truth drift — OPEN, fix before freeze
+>
+> The README currently documents cooling thresholds as:
+>
+> ```text
+> 65 °C high
+> 60 °C low
+> ```
+>
+>
+>
+> while the actual host declares:
+>
+> ```text
+> 50 °C high
+> 45 °C low
+> ```
+>
+>
+>
+> Its detailed source-tree inventory is also already incomplete.
+>
+> This is evidence that README is carrying too much mutable detail.
+>
+> The maintainability review correctly recommends making it an architectural entry point rather than a hand-maintained snapshot. :chatgpt-content-reference{index="46"}
+>
+> This is the only repository cleanup I would perform **before** the tag.
+>
+> ---
+>
+> # 5. Current critical path
+>
+> The actual current critical path is now:
+>
+> ```text
+> README truth cleanup
+>         ↓
+> settle CPU package-power / cooling policy
+>         ↓
+> complete sustained CPU validation
+>         ↓
+> complete substantial RAM validation
+>         ↓
+> activate/boot the final intended candidate
+>         ↓
+> final representative workstation workloads
+>         ↓
+> reconcile recovery-drill provenance
+>         ↓
+> backup freshness update
+>         ↓
+> multi-day stock soak
+>         ↓
+> canonical baseline manifest
+>         ↓
+> exact-source tests + CI
+>         ↓
+> final physical source-binding acceptance if required
+>         ↓
+> PR ready
+>         ↓
+> merge protected main
+>         ↓
+> annotated baseline tag
+>         ↓
+> post-baseline cleanup
+>         ↓
+> optimization-framework-v2
+> ```
+>
+> Everything else is secondary.
+>
+> ---
+>
+> # 6. PHASE 1 — Fix README truth ownership now
+>
+> This is documentation-only and should happen before the final tag.
+>
+> ## 6.1 Remove mutable values
+>
+> README should not manually state:
+>
+> ```text
+> current fan threshold
+> current temperature threshold
+> every current desktop file
+> temporary candidate identities
+> current test counts
+> ```
+>
+> Instead:
+>
+> ```text
+> Commander Core policy:
+>     hosts/desktop/default.nix
+>
+> current operational state:
+>     docs/status.md
+>
+> historical evidence:
+>     plan.md
+> ```
+>
+> Use a coarse structure description:
+>
+> ```text
+> hosts/          host facts/policy
+> profiles/       machine roles
+> modules/        reusable features
+> home/           user policy
+> packages/       custom derivations
+> images/         standalone images
+> tests/          validation
+> docs/           documentation/evidence
+> optimization/   post-baseline experiments
+> ```
+>
+> The README should answer:
+>
+> ```text
+> What is this repository?
+> How is it organized?
+> How do I build/check it?
+> Where is current status?
+> Where is historical evidence?
+> ```
+>
+> It should not try to be `ls -R`.
+>
+> ## 6.2 Gate
+>
+> After the README-only change:
+>
+> ```text
+> nix fmt
+> git diff --check
+> nix flake check
+> CI green
+> ```
+>
+> No reboot.
+>
+> No physical revalidation.
+>
+> ---
+>
+> # 7. PHASE 2 — Freeze stock CPU/power/cooling policy
+>
+> This is the highest-priority runtime task.
+>
+> Current CPU policy combines:
+>
+> ```text
+> AI Optimized 50/49
+> Auto voltage
+> MCE Remove All Limits
+> no useful package power cap
+> ```
+>
+> with a cooling system that reaches the 80 °C acceptance guard before 30 minutes.
+>
+> ## 7.1 Decide package-power baseline
+>
+> Resolve the pending stock-policy decision:
+>
+> ```text
+> Should this workstation's stock baseline use ~125 W sustained CPU package power?
+> ```
+>
+> The present project evidence says the user prefers an actual 125 W baseline.
+>
+> If that remains the desired policy:
+>
+> 1. implement the power limit in exactly one authoritative place;
+> 2. record whether that place is firmware or declarative runtime configuration;
+> 3. measure the actually applied PL1/PL2/Tau rather than merely the requested value;
+> 4. do not simultaneously change CPU ratios, voltage and cooling unless necessary;
+> 5. preserve evidence that distinguishes the effect of each change.
+>
+> The objective is not:
+>
+> ```text
+> lower temperature at all costs
+> ```
+>
+> It is:
+>
+> ```text
+> stable productive stock policy
+> +
+> predictable sustained CPU behavior
+> +
+> no arbitrary power-unlimited firmware state
+> ```
+>
+> ## 7.2 Preserve thermal safety
+>
+> Do **not** raise the 80 °C test cutoff to claim success.
+>
+> If 125 W still reaches the guard, investigate:
+>
+> ```text
+> actual load voltage
+> package power
+> clock
+> AIO pump/fan behavior
+> block contact
+> coolant response where observable
+> BIOS auto-voltage behavior
+> ```
+>
+> before reducing safety.
+>
+> ## 7.3 Sustained test
+>
+> Once policy is settled, run the same guarded class of sustained validation to completion.
+>
+> Required target:
+>
+> ```text
+> 30 minutes
+> 12-worker CPU/all-method or equivalent retained workload
+> 0 verification errors
+> 0 unexplained MCE/hardware errors
+> no throttle-counter growth
+> cooling service remains healthy
+> no failed units
+> thermal guard never trips
+> ```
+>
+> Record:
+>
+> ```text
+> starting temperature
+> peak temperature
+> steady-state temperature
+> package power
+> effective clocks
+> Vcore if measurable
+> fan/pump observations
+> throttle counters before/after
+> journal delta
+> ```
+>
+> ## 7.4 Gate
+>
+> Only mark complete when:
+>
+> ```text
+> SUSTAINED CPU / STOCK OC / COOLING = PASS
+> ```
+>
+> for the actual stock policy intended for the tag.
+>
+> ---
+>
+> # 8. PHASE 3 — Complete substantial RAM stability
+>
+> Do this after CPU/power policy is stable.
+>
+> The earlier tests tell us the RAM test itself did not expose errors; resource pressure stopped the runs.
+>
+> ## 8.1 Dedicated test conditions
+>
+> Use a dedicated low-activity period.
+>
+> Before starting:
+>
+> ```text
+> close Unreal
+> close Blender
+> close games
+> avoid large Nix builds
+> avoid backup jobs
+> verify maintenance jobs inactive
+> record available RAM and swap
+> ```
+>
+> Do not change swap/zram policy merely to make the RAM test easier.
+>
+> ## 8.2 Allocation strategy
+>
+> The acceptance goal is:
+>
+> > a **complete substantial memory test**, not the largest number of GiB you can allocate before starving the running desktop.
+>
+> Select an allocation that leaves enough real headroom to avoid:
+>
+> ```text
+> 3 GiB headroom guard
+> swap-growth guard
+> desktop instability
+> ```
+>
+> A completed slightly smaller substantial test is more useful than repeatedly aborting larger ones.
+>
+> ## 8.3 Record
+>
+> Capture:
+>
+> ```text
+> allocated/locked RAM
+> test method
+> full pattern/pass completion
+> errors
+> peak CPU temperature
+> swap delta
+> OOM events
+> EDAC/MCE/kernel errors
+> systemd failed units
+> ```
+>
+> ## 8.4 Gate
+>
+> Require:
+>
+> ```text
+> full intended pass completed
+> zero memory errors
+> no OOM
+> no unexplained hardware errors
+> no guard termination
+> ```
+>
+> Then:
+>
+> ```text
+> SUBSTANTIAL RAM STABILITY = PASS
+> ```
+>
+> ---
+>
+> # 9. PHASE 4 — Create and boot the actual final candidate
+>
+> After CPU and RAM policy is settled:
+>
+> 1. commit the final stock policy;
+> 2. build normal closure;
+> 3. build persistent-root closure;
+> 4. retain both with GC roots;
+> 5. run closure diff against generation 37;
+> 6. explain every material difference;
+> 7. dry-activate;
+> 8. verify activation checks;
+> 9. boot the intended final normal candidate.
+>
+> Do **not** label the currently test-active tuned candidate the final stock baseline merely because it works better thermally.
+>
+> The final candidate must incorporate the complete chosen CPU/power/cooling policy.
+>
+> ---
+>
+> # 10. PHASE 5 — Representative final-candidate workload acceptance
+>
+> Run these on the exact candidate intended to become the baseline.
+>
+> Preparation results remain evidence; they do not substitute for exact-candidate runtime acceptance.
+>
+> ---
+>
+> ## 10.1 Desktop/session
+>
+> Require:
+>
+> ```text
+> Wayland login
+> Hyprland/UWSM/session
+> Home Manager
+> portals
+> Firefox
+> NetworkManager
+> expected persistence
+> zero failed units
+> ordinary terminal/launcher/file-manager workflow
+> ```
+>
+> Bluetooth only needs acceptance if it is actually part of normal use.
+>
+> ---
+>
+> # 10.2 C/C++ development
+>
+> Existing generic C++20/clangd smoke has passed.
+>
+> On final candidate confirm:
+>
+> ```text
+> nix develop
+> GCC works
+> Clang works
+> clangd trusted query-driver flow works
+> representative compile
+> no accidental global optimization flags
+> ```
+>
+> Do not spend days inventing synthetic development workloads.
+>
+> ---
+>
+> # 10.3 Unreal Engine
+>
+> Use the real project.
+>
+> Require:
+>
+> ```text
+> UE 5.8.2 installation
+> Epic's own Clang/sysroot/libc++
+> actual project
+> appropriately broad C++ build
+> native Wayland
+> RADV RX 9070 XT
+> configured map
+> interactive editor
+> PIE/play
+> representative editing session
+> clean ordinary shutdown
+> ```
+>
+> Do not substitute the Nix shell compiler for Epic's intended toolchain.
+>
+> Do not adopt `-ansimalloc` based on the historical bad test-harness shutdown.
+>
+> ---
+>
+> # 10.4 Blender
+>
+> Use the real project.
+>
+> Require:
+>
+> ```text
+> RX 9070 XT HIP
+> interactive editing
+> representative viewport behavior
+> longer render than basic smoke
+> no GPU reset/fault/timeout
+> no source modification caused by test harness
+> ```
+>
+> The already-passed 12.6673 s final-candidate render does not need to be repeated unless the graphics stack changes; the remaining objective is sustained/interactive behavior.
+>
+> ---
+>
+> # 10.5 Gaming
+>
+> An installed real Proton candidate already exists:
+>
+> ```text
+> Dark Souls Remastered
+> Steam app 570940
+> Proton Experimental
+> ```
+>
+> Use it.
+>
+> Require representative:
+>
+> ```text
+> launch
+> play
+> GameMode
+> MangoHud
+> Gamescope where normally used
+> audio
+> frametime sanity
+> clean exit
+> CPU policy restored afterwards
+> ```
+>
+> For a native game:
+>
+> - if an actual native title used by this workstation exists, test it;
+> - if none exists and native gaming is not part of the intended workflow, explicitly mark that sub-gate **NOT APPLICABLE** rather than installing arbitrary software solely to satisfy a checklist.
+>
+> ---
+>
+> # 10.6 Controller
+>
+> No controller was present during the latest kernel input inspection.
+>
+> If controller use is part of the workstation's intended gaming workflow:
+>
+> ```text
+> connect controller
+> verify enumeration
+> input
+> Steam/game recognition
+> disconnect/reconnect
+> ```
+>
+> Otherwise document it as non-blocking until hardware is available.
+>
+> ---
+>
+> # 10.7 HDR / VRR
+>
+> Only block the stock baseline on these if they are part of the intended normal workstation workflow.
+>
+> If yes:
+>
+> ```text
+> gamescope HDR path
+> actual display
+> actual game
+> correct return to desktop
+> VRR behavior
+> ```
+>
+> Do not use synthetic Vulkan cubes as final HDR proof.
+>
+> ---
+>
+> # 10.8 Creative Stage Pro
+>
+> Complete the remaining real route:
+>
+> ```text
+> enable intended PipeWire profile
+> obtain actual Stage Pro sink
+> select route
+> audible playback
+> replug
+> reconnect
+> reboot persistence
+> verify expected default route
+> ```
+>
+> Transport has already been proven.
+>
+> Do not retest ALSA enumeration unless this configuration changes.
+>
+> ---
+>
+> # 11. PHASE 6 — Reconcile recovery-drill provenance
+>
+> Before scheduling a new recovery boot:
+>
+> 1. inspect existing private receipts;
+> 2. identify ISO filename;
+> 3. identify SHA-256;
+> 4. identify media;
+> 5. identify date;
+> 6. identify disk/subvolumes inspected;
+> 7. verify that the drill was read-only.
+>
+> The artifact you want to bind is:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+>
+> SHA256:
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> If existing evidence proves that exact artifact:
+>
+> ```text
+> RECOVERY PHYSICAL DRILL = PASS
+> ```
+>
+> and stop.
+>
+> If it does not:
+>
+> perform **one** final read-only drill with the matching current ISO.
+>
+> Do not repartition, run Disko or write to the MP600 during this drill.
+>
+> ---
+>
+> # 12. PHASE 7 — Backup freshness at freeze
+>
+> The existing backup is already accepted.
+>
+> Before freeze:
+>
+> 1. compare current meaningful user work to the 2026-10-05 snapshot;
+> 2. identify new/uncommitted/untracked project work;
+> 3. identify new Blender files/assets/autosaves;
+> 4. identify meaningful configuration/application state changes;
+> 5. update the external backup incrementally;
+> 6. integrity-check the additions.
+>
+> Do not redo 27+ GB merely because time passed if an incremental update can accurately protect the delta.
+>
+> Record:
+>
+> ```text
+> freeze backup date
+> destination
+> new-data scope
+> integrity result
+> ```
+>
+> ---
+>
+> # 13. PHASE 8 — Multi-day representative soak
+>
+> Start only after:
+>
+> ```text
+> CPU PASS
+> RAM PASS
+> final candidate installed
+> main workload acceptance PASS
+> ```
+>
+> Do not keep changing system policy during the soak.
+>
+> Use the workstation normally for several days.
+>
+> Include the workloads that matter:
+>
+> ```text
+> multiple boots
+> Unreal
+> Blender
+> gaming
+> C/C++ work
+> large Nix build
+> browser
+> audio
+> network
+> Bluetooth if used
+> suspend/resume if used
+> ```
+>
+> Android is excluded.
+>
+> Watch for:
+>
+> ```text
+> freeze
+> GPU reset
+> MCE/hardware error
+> filesystem error
+> failed units
+> Commander Core restart/failure
+> thermal abort
+> login/persistence failure
+> root-reset anomaly
+> unexpected swap/pressure pathology
+> unexpected NVMe error-log growth
+> uncontrolled store/disk growth
+> ```
+>
+> A discovered defect should be:
+>
+> ```text
+> recorded
+> understood
+> fixed declaratively
+> revalidated at the relevant layer
+> ```
+>
+> Do not silently work around it and continue the soak.
+>
+> ---
+>
+> # 14. PHASE 9 — Produce canonical baseline identity
+>
+> Before final merge, create a machine-readable baseline.
+>
+> This is where the maintainability recommendation to make fewer places authoritative becomes important. :chatgpt-content-reference{index="48"}
+>
+> Use three classes of data.
+>
+> ---
+>
+> ## 14.1 Declarative evaluated policy
+>
+> Create an output such as:
+>
+> ```text
+> .#desktop-policy
+> ```
+>
+> generated from:
+>
+> ```nix
+> inputs.self.nixosConfigurations.desktop.config
+> ```
+>
+> Do not manually duplicate policy into JSON.
+>
+> Include stable facts such as:
+>
+> ```text
+> Commander Core parameters
+> activation-safety reserve
+> Btrfs maintenance schedule
+> root reset enablement
+> mount policy
+> kernel package
+> GameMode policy
+> selected package sources where useful
+> ```
+>
+> ---
+>
+> # 14.2 Physical/runtime manifest
+>
+> Record:
+>
+> ```text
+> Git commit
+> flake.lock hash
+> Nixpkgs revision
+> NixOS version
+> Nix version
+>
+> normal closure
+> persistent-root closure
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME
+> CPU ratios
+> cache ratio
+> actual package-power policy
+> actual CPU voltage observation where available
+> RAM/XMP configuration
+>
+> GPU
+> BAR sizes
+> NVMe model/firmware
+> Btrfs mount options
+> scrub result
+>
+> CPU governor
+> EPP
+> THP
+> swap
+> zram
+> scheduler
+> irqbalance
+>
+> maintenance timers
+> Commander Core service/policy
+> machine-id hash/identity reference
+> failed units
+> ```
+>
+> Never commit secret contents.
+>
+> ---
+>
+> # 14.3 Validation manifest
+>
+> Record status of:
+>
+> ```text
+> offline checks
+> heavy VMs
+> blank-disk reconstruction
+> store verify
+> normal/persistent/normal
+> KVM
+> GameMode
+> Btrfs/NVMe
+> backup
+> recovery drill
+> CPU
+> RAM
+> Unreal
+> Blender
+> gaming
+> controller
+> audio
+> desktop/session
+> soak
+> ```
+>
+> Each item should identify:
+>
+> ```text
+> PASS / N/A
+> source commit
+> relevant closure
+> receipt or documentation reference
+> ```
+>
+> ---
+>
+> # 15. PHASE 10 — Final source validation
+>
+> Freeze changes.
+>
+> Then run the complete source validation.
+>
+> ## 15.1 Repository checks
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> ---
+>
+> # 15.2 Heavy validation
+>
+> Run:
+>
+> ```text
+> blank-disk-reconstruction
+> activation-safety-actions
+> stock-contamination-negative
+> workstation-smoke
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> The existing legacy aliases may remain until after the tag.
+>
+> ---
+>
+> # 15.3 Build exact closures
+>
+> Record exact:
+>
+> ```text
+> normal
+> persistent-root
+> recovery ISO
+> ```
+>
+> Do not rely on previously built paths if source changed.
+>
+> ---
+>
+> # 15.4 Closure review
+>
+> Use `nix store diff-closures`.
+>
+> Explain every material difference from generation 37 / the last physically accepted candidate.
+>
+> Closure review is already the established repository procedure.
+>
+> ---
+>
+> # 15.5 Stock contamination audit
+>
+> Prove again that:
+>
+> ```text
+> CPU optimization namespace absent
+> LTO namespace absent
+> PGO namespace absent
+> BOLT namespace absent
+> ```
+>
+> and that no global build/environment optimization escaped into stock.
+>
+> ---
+>
+> # 15.6 Exact-head CI
+>
+> Push the exact final source.
+>
+> Require GitHub Nix checks to pass on that exact commit.
+>
+> Earlier green CI is historical evidence only after the head changes.
+>
+> ---
+>
+> # 16. PHASE 11 — Final physical source-binding acceptance
+>
+> Because the generation-37 root chain already passed, do **not** repeat arbitrary destructive sequences during ordinary development.
+>
+> At final freeze, decide whether an exact-source normal→persistent-root→normal sequence is required based on what changed after generation 37.
+>
+> My recommendation remains:
+>
+> > Perform one final exact-source sequence before the tag if the final source includes runtime/activation/root/initrd behavior or if the tag is intended to certify the entire source tree as physically accepted.
+>
+> Recommended:
+>
+> ```text
+> final normal
+>     ↓
+> final persistent-root
+>     ↓
+> final normal
+> ```
+>
+> Check:
+>
+> ```text
+> exact closure
+> root UUID/ID
+> reset count
+> root-local sentinel
+> persistent sentinel
+> machine ID
+> credentials
+> persistent mounts
+> journal continuity
+> network
+> Wayland login
+> Commander Core
+> failed units
+> ```
+>
+> This is enough.
+>
+> Do not repeat the old three-trial program.
+>
+> ---
+>
+> # 17. PHASE 12 — Final documentation state
+>
+> Before PR readiness:
+>
+> ## README
+>
+> Must be timeless.
+>
+> ## `docs/status.md`
+>
+> Must contain only current truth.
+>
+> ## `plan.md`
+>
+> Remains the historical ledger until after tag.
+>
+> ## recovery docs
+>
+> Must identify exact accepted artifact and drill status.
+>
+> ## backup docs
+>
+> Must identify freeze freshness.
+>
+> ## baseline docs
+>
+> Must identify exact source and closures.
+>
+> ## firmware docs
+>
+> Must describe retained policy without claiming unknown values.
+>
+> ---
+>
+> # 18. PHASE 13 — Merge and tag
+>
+> Only when every remaining hard gate is either:
+>
+> ```text
+> PASS
+> or explicitly NOT APPLICABLE
+> ```
+>
+> mark PR #7 ready.
+>
+> Require exact-head CI green.
+>
+> Merge into protected `main`.
+>
+> If GitHub merge mechanics produce a different tree/commit:
+>
+> - verify the merged tree;
+> - rebuild/confirm that the baseline identity remains the intended one.
+>
+> Then create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The tag must identify:
+>
+> ```text
+> commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> manifest
+> ```
+>
+> That tag is the immutable A-side of the optimization project.
+>
+> ---
+>
+> # 19. PHASE 14 — Deliberate post-tag cleanup
+>
+> Create a separate branch:
+>
+> ```text
+> chore/post-baseline-repository-cleanup
+> ```
+>
+> This cleanup must **not mutate the meaning of the tagged baseline**.
+>
+> ---
+>
+> ## 19.1 Archive `plan.md`
+>
+> Move intact:
+>
+> ```text
+> plan.md
+>     ↓
+> docs/history/pre-optimization-readiness-<completion-date>.md
+> ```
+>
+> Do not rewrite it into prettier fake history.
+>
+> Keep:
+>
+> ```text
+> docs/status.md
+> ```
+>
+> as the current entry point.
+>
+> This was already the direction of the live documentation model. :chatgpt-content-reference{index="50"}
+>
+> ---
+>
+> # 19.2 Reorganize docs by purpose
+>
+> Recommended:
+>
+> ```text
+> docs/
+> ├── README.md
+> ├── status.md
+> ├── design/
+> ├── runbooks/
+> ├── validation/
+> ├── baselines/
+> └── history/
+> ```
+>
+> Classification:
+>
+> ```text
+> design/
+>     why/how architecture works
+>
+> runbooks/
+>     operator procedures
+>
+> validation/
+>     proof/evidence
+>
+> baselines/
+>     immutable experiment identity
+>
+> history/
+>     completed ledgers
+> ```
+>
+> :chatgpt-content-reference{index="51"}
+>
+> ---
+>
+> # 19.3 Move stock control semantically
+>
+> Current:
+>
+> ```text
+> modules/core/stock-control.nix
+> ```
+>
+> Post-tag:
+>
+> ```text
+> modules/workstation/stock-control.nix
+> ```
+>
+> because it is productive-workstation experiment isolation policy, not generic OS core functionality. :chatgpt-content-reference{index="52"}
+>
+> Do not create `modules/workstation/default.nix` merely to import two modules.
+>
+> ---
+>
+> # 19.4 Move VS Code ownership
+>
+> Move VS Code from desktop-oriented user packages to development ownership.
+>
+> Desired conceptual split:
+>
+> ```text
+> desktop/
+>     session/UI tools
+>
+> development/
+>     VS Code
+>     clang-tools
+>     nixfmt
+>     Blender
+>     Unreal
+> ```
+>
+> :chatgpt-content-reference{index="53"}
+>
+> No new abstraction required.
+>
+> ---
+>
+> # 19.5 Clean public test API
+>
+> Remove historical aliases:
+>
+> ```text
+> impermanence-root-test-a
+> impermanence-root-test-b
+> impermanence-root-recovery
+> impermanence-root-fallback
+> ```
+>
+> after `plan.md` no longer depends on them.
+>
+> Expose semantic names only:
+>
+> ```text
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> plus the top-level workstation/reconstruction tests. :chatgpt-content-reference{index="54"}
+>
+> ---
+>
+> # 19.6 Generate module API docs
+>
+> Add:
+>
+> ```text
+> nix build .#module-docs
+> ```
+>
+> using `nixosOptionsDoc` for custom APIs such as:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> hardware.commanderCore.*
+> workstation.activationSafety.*
+> ```
+>
+> Handwritten docs should explain:
+>
+> ```text
+> why
+> architecture
+> failure modes
+> operation
+> recovery
+> ```
+>
+> while Nix owns:
+>
+> ```text
+> option name
+> type
+> default
+> description
+> ```
+>
+> :chatgpt-content-reference{index="55"}
+>
+> ---
+>
+> # 19.7 Add Markdown link integrity check
+>
+> After moving docs, add a cheap CI/flake check for broken Markdown links. :chatgpt-content-reference{index="56"}
+>
+> ---
+>
+> # 20. PHASE 15 — Add useful post-baseline NixOS infrastructure
+>
+> These are not readiness prerequisites.
+>
+> ---
+>
+> # 20.1 `vmVariantWithBootLoader` — first post-tag feature
+>
+> This is the highest-value immediate post-baseline addition.
+>
+> The current test hierarchy is:
+>
+> ```text
+> evaluation
+>     ↓
+> runNixOSTest
+>     ↓
+> blank-disk reconstruction
+>     ↓
+> physical machine
+> ```
+>
+> `virtualisation.vmVariantWithBootLoader` fills the useful gap by providing an interactive virtual form of the actual desktop configuration while preserving virtual-hardware overrides. :chatgpt-content-reference{index="57"}
+>
+> Use it as the main development surface for optimization-framework-v2.
+>
+> Do **not** replace blank-disk reconstruction with it.
+>
+> ---
+>
+> # 20.2 Authenticated initrd rescue
+>
+> After VM proof, add an `initrd-rescue` specialisation.
+>
+> Concept:
+>
+> ```text
+> normal
+>     root reset enabled
+>
+> persistent-root
+>     reset disabled
+>
+> initrd-rescue
+>     reset disabled
+>     authenticated stage-1 emergency shell
+>     Btrfs/util-linux tools available
+> ```
+>
+> This fits the project's systemd-initrd/root-reset architecture unusually well. :chatgpt-content-reference{index="58"}
+>
+> Prove in VM first.
+>
+> ---
+>
+> # 20.3 Optional initrd SSH
+>
+> Only after local initrd rescue works.
+>
+> Use a **dedicated initrd-only host key**.
+>
+> Never reuse the normal machine SSH private key. :chatgpt-content-reference{index="59"}
+>
+> ---
+>
+> # 20.4 Optional research features
+>
+> These are curiosity/research work, not infrastructure dependencies:
+>
+> ```text
+> immutable /etc + Userborn/perlless VM
+> Facter comparison
+> binfmt aarch64/riscv64
+> kexec/netboot diagnostic systems
+> system.includeBuildDependencies recovery experiment
+> ```
+>
+> Do not let these delay optimization work.
+>
+> The supplied feature review ranks VM variants, specialisations and initrd rescue far above these secondary experiments. :chatgpt-content-reference{index="60"}
+>
+> ---
+>
+> # 21. PHASE 16 — Create optimization-framework-v2
+>
+> Create from the immutable tag:
+>
+> ```text
+> git switch -c feat/optimization-framework-v2 \
+>     nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not continue optimization on the readiness branch.
+>
+> Do not rebase the historical optimization branch into the new system.
+>
+> The old branch remains at:
+>
+> ```text
+> 397a8c71cd7acb0bc016983f28866df16c95d7d8
+> ```
+>
+>
+>
+> At the current reviewed readiness head, the histories have diverged dramatically:
+>
+> ```text
+> readiness side:
+>     139 commits ahead
+>
+> historical optimization branch:
+>     10 commits on its divergent side
+> ```
+>
+> Treat it exclusively as **donor/reference code**.
+>
+> This matches the supplied recommendation not to revive the stale branch wholesale. :chatgpt-content-reference{index="62"}
+>
+> ---
+>
+> # 22. Optimization-v2 architecture
+>
+> Build the project around explicit experiment identity.
+>
+> Conceptually:
+>
+> ```text
+> stock
+> │
+> ├── cpu
+> │
+> ├── cpu-lto
+> │
+> ├── cpu-pgo
+> │
+> ├── cpu-pgo-bolt
+> │
+> └── experimental
+> ```
+>
+> Use:
+>
+> ```text
+> ordinary derivations
+> ```
+>
+> for package microexperiments.
+>
+> Use:
+>
+> ```text
+> NixOS specialisations
+> ```
+>
+> for meaningful system states.
+>
+> Do not create a boot-menu entry for every compiler flag.
+>
+> The specialisation model is one of the strongest NixOS-native advantages for this work. :chatgpt-content-reference{index="63"}
+>
+> ---
+>
+> # 23. Stage-aware contamination contracts
+>
+> Evolve the current stock check into a stage-aware model.
+>
+> ```text
+> stock
+>     allow none
+>     forbid CPU/LTO/PGO/BOLT
+>
+> cpu
+>     allow CPU
+>     forbid LTO/PGO/BOLT
+>
+> lto
+>     allow CPU/LTO
+>     forbid PGO/BOLT
+>
+> pgo
+>     allow CPU/LTO/PGO
+>     forbid BOLT
+>
+> pgo-bolt
+>     allow exact intended chain
+> ```
+>
+> This creates proof that a benchmarked stage is not silently contaminated by a later stage.
+>
+> Keep the project-owned namespaces.
+>
+> ---
+>
+> # 24. Experiment metadata/provenance
+>
+> Every serious experiment should be representable by a record containing:
+>
+> ```text
+> experiment ID
+> baseline tag
+> Git commit
+> flake lock
+> package
+> source identity
+> toolchain
+> compiler version
+> linker
+> CPU target
+> flags
+> LTO policy
+> profile identity/hash
+> BOLT profile identity/hash
+> output derivation
+> system closure if relevant
+> benchmark workload version
+> benchmark command
+> hardware/firmware baseline
+> results
+> regressions
+> accept/reject decision
+> ```
+>
+> The purpose is to make:
+>
+> ```text
+> “PGO Firefox was faster”
+> ```
+>
+> insufficient.
+>
+> Instead you want:
+>
+> ```text
+> exact source
+> +
+> exact toolchain
+> +
+> exact profile
+> +
+> exact derivation
+> +
+> exact workload
+> =
+> repeatable experiment
+> ```
+>
+> ---
+>
+> # 25. Benchmarking discipline
+>
+> Authoritative performance results must run on the physical control workstation.
+>
+> Rule:
+>
+> ```text
+> compile anywhere compatible
+> benchmark on the physical control machine
+> ```
+>
+> The post-baseline feature review explicitly recommends this distinction for future distributed builders. :chatgpt-content-reference{index="64"}
+>
+> Before benchmark windows:
+>
+> ```text
+> stop maintenance timers
+> ensure no GC/scrub
+> fixed firmware baseline
+> fixed thermal/power policy
+> record ambient/start state where useful
+> same workload inputs
+> multiple runs
+> retain raw data
+> ```
+>
+> Do not use a kexec-booted system for authoritative final numbers because firmware/device initialization differs from a normal boot. :chatgpt-content-reference{index="65"}
+>
+> ---
+>
+> # 26. Optimization implementation order
+>
+> Use this order.
+>
+> ---
+>
+> ## 26.1 Build benchmark/workload corpus first
+>
+> Define representative workloads before optimizing.
+>
+> Categories:
+>
+> ```text
+> CPU
+>     compression
+>     builds
+>     compiler workloads
+>
+> development
+>     Unreal build
+>     clang/clangd
+>
+> desktop
+>     browser workload
+>
+> graphics
+>     CPU-limited game
+>     GPU-limited game
+>     Gamescope
+>
+> content creation
+>     Blender CPU-side/render workflow
+>
+> system
+>     boot/service/shader compilation where useful
+> ```
+>
+> Record raw baselines from the stock tag.
+>
+> ---
+>
+> # 26.2 CPU-specific codegen A/B
+>
+> First actual compiler experiment:
+>
+> ```text
+> generic x86_64
+> vs
+> declared Skylake-class target suitable for Comet Lake
+> ```
+>
+> Do not make `-march=native` the final declarative policy.
+>
+> Create a reproducible architecture target.
+>
+> Measure:
+>
+> ```text
+> package build effect
+> runtime effect
+> closure rebuild cost
+> regressions
+> ```
+>
+> Only propagate where worthwhile.
+>
+> ---
+>
+> # 26.3 Graphics-stack A/B
+>
+> Maintain a controlled:
+>
+> ```text
+> accepted stable Mesa/RADV
+> vs
+> selected newer candidate
+> ```
+>
+> for real RX 9070 XT workloads.
+>
+> Do not update graphics merely because a version is newer.
+>
+> Accept a candidate only if it:
+>
+> ```text
+> performs better
+> fixes a relevant defect
+> or offers a justified capability gain
+> ```
+>
+> without regression.
+>
+> ---
+>
+> # 26.4 Profile the system
+>
+> Before deeper compiler work, answer:
+>
+> ```text
+> Where is CPU time actually going?
+> ```
+>
+> Use:
+>
+> ```text
+> perf
+> hyperfine
+> turbostat
+> time
+> MangoHud frametime data
+> ```
+>
+> Rank candidates using something like:
+>
+> ```text
+> CPU cost
+> ×
+> frequency of use
+> ×
+> optimization opportunity
+> ```
+>
+> That ranked list decides what receives LTO/PGO/BOLT.
+>
+> ---
+>
+> # 26.5 ThinLTO
+>
+> Start selectively.
+>
+> Do not globally ThinLTO the closure on day one.
+>
+> For each candidate:
+>
+> ```text
+> stock
+> cpu
+> cpu + ThinLTO
+> ```
+>
+> Require:
+>
+> ```text
+> build success
+> tests
+> runtime correctness
+> measurable performance result
+> size/build-time effect
+> ```
+>
+> Create package exceptions rather than forcing one policy on everything.
+>
+> ---
+>
+> # 26.6 PGO
+>
+> Implement explicit profile lifecycle:
+>
+> ```text
+> instrumented derivation
+>         ↓
+> representative training
+>         ↓
+> raw profile
+>         ↓
+> merged profile
+>         ↓
+> hash/pin profile
+>         ↓
+> optimized derivation
+> ```
+>
+> The profile-generation workload can be empirical.
+>
+> The resulting profile must become an identified immutable input to the optimized build.
+>
+> Start with only the highest-value measured packages.
+>
+> Do not “PGO the system” simply because the machinery exists.
+>
+> ---
+>
+> # 26.7 BOLT
+>
+> Only for eligible binaries and after ordinary codegen/LTO/PGO are understood.
+>
+> Pipeline:
+>
+> ```text
+> source
+>  ↓
+> CPU-targeted build
+>  ↓
+> LTO where appropriate
+>  ↓
+> PGO where appropriate
+>  ↓
+> BOLT-capable binary
+>  ↓
+> runtime profile
+>  ↓
+> BOLT transform
+>  ↓
+> new immutable derivation
+> ```
+>
+> Never mutate `/nix/store`.
+>
+> Represent every BOLT output as a new derivation.
+>
+> ---
+>
+> # 26.8 Kernel experiments
+>
+> Only after userspace results are meaningful.
+>
+> Experiment matrix may include:
+>
+> ```text
+> stock kernel
+> current/newer kernel
+> GCC kernel
+> Clang kernel
+> Clang ThinLTO
+> profile-guided kernel
+> BOLT kernel
+> ```
+>
+> Use specialisations for meaningful kernel states.
+>
+> Do not assume:
+>
+> ```text
+> newer kernel = faster
+> ```
+>
+> or:
+>
+> ```text
+> Cachy/Zen = automatically better
+> ```
+>
+> Benchmark.
+>
+> ---
+>
+> # 26.9 Toolchain universes
+>
+> Later compare scoped:
+>
+> ```text
+> GCC
+> Clang
+> Clang + lld
+> ```
+>
+> Avoid immediately replacing global `stdenv`.
+>
+> First build package-family variants.
+>
+> Only generalize a toolchain choice after actual evidence.
+>
+> ---
+>
+> # 26.10 Package-specific ceiling work
+>
+> Eventually optimization becomes application-specific:
+>
+> ```text
+> browser wants one policy
+> LLVM wants another
+> Mesa wants another
+> kernel wants another
+> glibc may want stock
+> ```
+>
+> This phase includes:
+>
+> ```text
+> allocators
+> linker choices
+> upstream performance patches
+> per-package flags
+> profile corpora
+> shader/compiler settings
+> source-level changes
+> ```
+>
+> This is where effort per additional percent rises sharply.
+>
+> ---
+>
+> # 27. Distributed builders and binary cache
+>
+> Add these when rebuild cost becomes a real bottleneck.
+>
+> Builder classes might include:
+>
+> ```text
+> general
+>     x86_64-linux
+>     big-parallel
+>     kvm
+>
+> target-capable
+>     x86_64-linux
+>     skylake
+>     big-parallel
+> ```
+>
+> A derivation that genuinely requires target-compatible execution must fail closed on an unsuitable machine.
+>
+> Use a private cache for accepted expensive artifacts.
+>
+> Concept:
+>
+> ```text
+> experiment
+>     ↓
+> build
+>     ↓
+> tests/benchmarks
+>     ↓
+> accepted artifact
+>     ↓
+> signed/private cache
+>     ↓
+> reuse / rollback / future build
+> ```
+>
+> Do not build this before it saves meaningful time.
+>
+> ---
+>
+> # 28. `system.replaceDependencies` — research only
+>
+> This is a valuable experimental instrument.
+>
+> Use it to compare:
+>
+> ```text
+> normal dependency override + downstream rebuild
+> ```
+>
+> against:
+>
+> ```text
+> completed stock closure
+> +
+> runtime dependency replacement
+> ```
+>
+> to distinguish optimization effect from downstream rebuild propagation.
+>
+> Do **not** make it the normal optimized-system architecture. :chatgpt-content-reference{index="66"}
+>
+> Hide any such experiment behind an explicitly research-only state.
+>
+> ---
+>
+> # 29. Low-priority tuning
+>
+> Only after profiling shows a bottleneck should the project investigate:
+>
+> ```text
+> THP alternatives
+> IRQ affinity
+> irqbalance
+> VM dirty-page knobs
+> I/O scheduler changes
+> NUMA pinning
+> isolcpus
+> nohz_full
+> rcu_nocbs
+> permanent performance governor
+> ```
+>
+> Do not add performance folklore.
+>
+> The stock baseline intentionally does not contain these experiments.
+>
+> ---
+>
+> # 30. Things explicitly not to do
+>
+> Do not:
+>
+> ```text
+> globally use -march=native as final policy
+> globally force -O3/-Ofast
+> disable mitigations as ordinary stock policy
+> disable split-lock mitigation globally
+> force performance governor permanently
+> add random sysctls
+> replace Btrfs for benchmark scores
+> adopt a custom kernel without evidence
+> move entire system to unstable
+> globally replace stdenv immediately
+> rebase old optimization-framework wholesale
+> modify /nix/store outputs
+> treat build success as performance proof
+> treat one benchmark as system-wide proof
+> ```
+>
+> ---
+>
+> # 31. Updated hard GO checklist for finishing `plan.md`
+>
+> This replaces obsolete open items from the older checklist.
+>
+> ## Already complete
+>
+> - [x] root-reset safety matrix
+> - [x] interrupted recovery
+> - [x] machine-ID persistence
+> - [x] persistent-root fallback
+> - [x] repeated physical root reset viability
+> - [x] generation-37 normal→persistent-root→normal chain
+> - [x] activation-safety system
+> - [x] stock contamination negative test
+> - [x] live stock closure audit
+> - [x] blank-disk reconstruction
+> - [x] full Nix store verification
+> - [x] KVM/VMX
+> - [x] GameMode physical helper/governor
+> - [x] Btrfs scrub
+> - [x] Btrfs device stats
+> - [x] NVMe SMART/media-error check
+> - [x] independent home backup
+> - [x] representative backup restore
+> - [x] engine 47-file supplement
+> - [x] separate secrets recovery evidence
+> - [x] recovery ISO build/hash/copy
+> - [x] Blender real-project basic final-candidate HIP render
+> - [x] Unreal final-candidate incremental build
+> - [x] Gamescope/MangoHud synthetic smoke
+> - [x] generic C++20/clangd smoke
+> - [x] exact-head CI at `db93568...`
+> - [x] optimization module remains inert
+> - [x] Android/Gradle/AVD formally NOT APPLICABLE
+>
+> ## Still required
+>
+> - [ ] simplify README and remove mutable duplicated policy
+> - [ ] decide/freeze stock CPU package-power policy
+> - [ ] sustained CPU/cooling pass
+> - [ ] substantial RAM full-pass acceptance
+> - [ ] build/boot final intended candidate
+> - [ ] Unreal final interactive/PIE session
+> - [ ] appropriately broad Unreal build
+> - [ ] sustained/interactive Blender workflow
+> - [ ] representative Proton gaming
+> - [ ] native gaming if actually part of intended workflow, otherwise N/A
+> - [ ] controller if intended/available
+> - [ ] Stage Pro intended PipeWire/audible/reconnect flow
+> - [ ] desktop/network/Bluetooth representative flow
+> - [ ] HDR/VRR if part of intended normal workflow
+> - [ ] reconcile exact recovery-drill provenance or perform one matching read-only drill
+> - [ ] backup delta/freshness at freeze
+> - [ ] multi-day representative soak
+> - [ ] evaluated policy output
+> - [ ] final physical/runtime/validation manifest
+> - [ ] final full offline test suite
+> - [ ] final heavy VMs
+> - [ ] final exact normal/persistent closure recording
+> - [ ] final closure audit
+> - [ ] final stock-contamination audit
+> - [ ] exact-final-head CI green
+> - [ ] final exact-source physical root sequence where required
+> - [ ] PR #7 ready
+> - [ ] merge to protected `main`
+> - [ ] annotated `nixos-26.05-pre-optimization-baseline` tag
+>
+> Only then:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> ---
+>
+> # 32. Immediate execution order
+>
+> If another engineer/LLM takes over today, execute in exactly this order:
+>
+> ```text
+> 1. Simplify README.
+> 2. Keep docs/status.md synchronized.
+> 3. Freeze the stock CPU package-power decision.
+> 4. Re-run sustained CPU/cooling acceptance.
+> 5. Complete a substantial RAM pass.
+> 6. Build the resulting exact final candidate.
+> 7. Closure-review it.
+> 8. Boot it.
+> 9. Complete Unreal acceptance.
+> 10. Complete Blender sustained/interactive acceptance.
+> 11. Complete real Proton gaming.
+> 12. Complete controller/HDR/VRR only where actually applicable.
+> 13. Complete Stage Pro intended audio route.
+> 14. Verify ordinary desktop/network/Bluetooth workflow.
+> 15. Reconcile the recovery-drill receipt.
+> 16. If necessary, perform one exact matching read-only recovery drill.
+> 17. Incrementally refresh backup for work created since 2026-10-05.
+> 18. Start multi-day normal-use soak.
+> 19. Fix and revalidate anything found during soak.
+> 20. Freeze source.
+> 21. Generate evaluated-policy data.
+> 22. Generate final runtime/validation manifest.
+> 23. Run full flake checks.
+> 24. Run all heavy VM/reconstruction tests.
+> 25. Build and record exact normal/persistent/ISO artifacts.
+> 26. Run closure diff and stock-contamination audit.
+> 27. Push exact source and require exact-head CI.
+> 28. Perform final physical source-binding sequence if applicable.
+> 29. Make docs/status.md show no unresolved hard gate.
+> 30. Mark PR #7 ready.
+> 31. Merge to protected main.
+> 32. Verify merged tree if merge mechanics alter commit identity.
+> 33. Annotate `nixos-26.05-pre-optimization-baseline`.
+> 34. Preserve the baseline artifacts.
+> 35. Create post-baseline cleanup branch.
+> 36. Archive plan.md after cleanup.
+> 37. Add VM variant / initrd rescue infrastructure.
+> 38. Create feat/optimization-framework-v2 from the baseline tag.
+> 39. Import only useful donor concepts from the old optimization branch.
+> 40. Capture benchmark corpus.
+> 41. CPU-target codegen A/B.
+> 42. Graphics-stack A/B.
+> 43. Profile workloads.
+> 44. ThinLTO selected targets.
+> 45. PGO selected targets.
+> 46. BOLT selected targets.
+> 47. Kernel experiments.
+> 48. Toolchain experiments.
+> 49. Package-specific ceiling work.
+> 50. Only then investigate low-level scheduler/VM/IRQ tuning.
+> ```
+>
+> ---
+>
+> # 33. Final project rule
+>
+> The core principle from here should be:
+>
+> ```text
+> Nix declarations
+>     own declarative facts
+>
+> docs/status.md
+>     owns current operational truth
+>
+> baseline manifest
+>     owns experimental identity
+>
+> plan/history
+>     owns chronology
+>
+> optimization/
+>     owns experiments
+> ```
+>
+> Do not manually synchronize the same mutable fact across four Markdown files.
+>
+> And do not confuse the optimization project with the readiness project.
+>
+> The readiness project's success condition is:
+>
+> > **a boring, stable, reproducible, physically accepted stock workstation.**
+>
+> The optimization project's success condition is:
+>
+> > **a controlled system for changing exactly one performance dimension at a time, measuring it, retaining provenance, rejecting regressions and rolling back cleanly.**
+>
+> The repository is now close to completing the first objective. The remaining work is much narrower than the size of `plan.md` makes it appear.
+>
+> This is the version I would insert near the top of `plan.md` as the new **current continuation directive**, while leaving the existing 20k-line history intact until the baseline tag is created. The most important correction versus the older plan is that many formerly open gates are now proven, so the implementation should stop re-solving infrastructure and concentrate on CPU/power/cooling, RAM, exact-candidate workloads, soak, and freeze.
+
+## Historical plan and chronological evidence
+
+**Project:** `P2949/NixosConf`
+**Purpose:** take the current NixOS workstation from its present state to a **final, stable, reproducible, optimization-ready baseline** before any system-wide `-march=native`, LTO, PGO, BOLT, or combined binary-optimization work begins.
+**Plan date:** 2026-10-05
 **Scope boundary:** this document ends at the point where the final pre-experiment baseline is frozen and a fresh experiment branch can be created. It intentionally does **not** specify how to implement the later compiler/binary-optimization experiment.
 
 ---
@@ -38,7 +7187,9 @@ Notes:
 
 Do not mark a task complete merely because the Nix expression evaluates. A task is complete only when its **validation gate** has passed.
 
-### Source-of-truth rule
+### Historical source-of-truth rule
+
+The newer current continuation directive below supersedes this original order.
 
 When old handoffs, chat notes, and current code disagree, use this order:
 
@@ -58,6 +7209,3319 @@ Classify new notes as one of:
 - **HISTORICAL / SUPERSEDED**
 
 This prevents an old recovery workaround from silently becoming present-day policy.
+
+---
+
+## Current continuation directive — unified readiness guide
+
+**Imported:** 2026-10-05. **Source:** user-supplied attachment
+`5df71026-9a8b-4bc3-9b91-5ebc0b6b0c4f/Pasted text.txt` (3,104 logical lines).
+**Scope of this update:** organize and incorporate the entire guide into this
+plan. Its commands, suggested commits and implementation steps are planned work;
+importing them does not mean they were executed or authorize unrelated actions
+as part of this documentation-only request.
+
+The complete guide follows, with its section structure nested into this plan.
+All source text, examples, paths, hashes, checklists, caveats and final commentary
+are retained; heading depth and trailing whitespace are normalized. `:chatgpt-content-reference{...}` markers belong to the supplied
+review and are preserved for provenance; their referenced attachments are not
+embedded here and these markers are not independently verified citations.
+
+**Precedence and evidence reconciliation:** this newer guide supersedes older
+continuation orders and branch references below. Current local worktree/index
+still takes precedence over a guide snapshot. The older authoritative-state
+section remains a dated local observation, rather than the latest execution
+order. In particular:
+
+- The guide supplies previously missing validation for `96c6a3d` and `c15a175`,
+  including unchanged accepted desktop closure, byte-identical reset script and
+  successful checks/VMs. Retain these as **GUIDE-REPORTED EVIDENCE**, not tests
+  newly rerun during this import. The broken local username attempt is separate
+  from the validity of those committed refactors.
+- The guide reports the recovery filesystem drill as completed read-only;
+  preserve its checked status below as **GUIDE-REPORTED EVIDENCE**. Earlier
+  missing-receipt observations remain historical. The supplied guide does not
+  add an exact drill date/receipt path or resolve every ISO-boot identity detail;
+  attach exact-source evidence when reconciling recovery documentation.
+- Independent home backup, current encrypted secrets backup and representative
+  independent restore remain open. Do not infer them from physical acceptance.
+- Facter comparison/adoption is explicitly optional in this newer guide and
+  cannot block readiness unless it exposes a real configuration problem.
+- No repeat of the historical three-trial program is required for unrelated
+  cleanup. Batch necessary final exact-source physical acceptance; preserve the
+  user's preference to minimize reboots and graphical-session interruptions.
+
+**Navigation — complete imported guide:**
+
+- [NixOS Pre-Optimization Readiness — Unified Continuation Guide](#nixos-pre-optimization-readiness--unified-continuation-guide)
+- [1. Governing conclusion](#1-governing-conclusion)
+- [2. Source-of-truth rules from this point forward](#2-source-of-truth-rules-from-this-point-forward)
+- [3. Current Git state](#3-current-git-state)
+- [4. Proven stable baseline evidence](#4-proven-stable-baseline-evidence)
+- [5. Impermanence/root-reset evidence already proven](#5-impermanenceroot-reset-evidence-already-proven)
+- [6. Readiness commits completed after physical acceptance](#6-readiness-commits-completed-after-physical-acceptance)
+- [7. Other validation infrastructure already completed](#7-other-validation-infrastructure-already-completed)
+- [8. Development/workload evidence already collected](#8-developmentworkload-evidence-already-collected)
+- [9. Backup/recovery evidence](#9-backuprecovery-evidence)
+- [10. Firmware/hardware state](#10-firmwarehardware-state)
+- [11. Maintenance/storage evidence](#11-maintenancestorage-evidence)
+- [12. Documentation truth drift](#12-documentation-truth-drift)
+- [13. CI state](#13-ci-state)
+- [14. Unified implementation sequence](#14-unified-implementation-sequence)
+- [PHASE A — Restore a valid development head](#phase-a--restore-a-valid-development-head)
+- [PHASE B — Establish working CI before more readiness commits](#phase-b--establish-working-ci-before-more-readiness-commits)
+- [PHASE C — Fix current-state documentation immediately](#phase-c--fix-current-state-documentation-immediately)
+- [PHASE D — Finish storage packaging](#phase-d--finish-storage-packaging)
+- [PHASE E — Correct Btrfs maintenance policy ownership](#phase-e--correct-btrfs-maintenance-policy-ownership)
+- [PHASE F — Replace the reset-script text-template boundary](#phase-f--replace-the-reset-script-text-template-boundary)
+- [PHASE G — Turn `tests/` into a subsystem](#phase-g--turn-tests-into-a-subsystem)
+- [PHASE H — Move recovery configuration into `images/`](#phase-h--move-recovery-configuration-into-images)
+- [PHASE I — Remove Commander Core policy duplication](#phase-i--remove-commander-core-policy-duplication)
+- [PHASE J — Add NixOS-native safety gates](#phase-j--add-nixos-native-safety-gates)
+- [PHASE K — Add narrow `system.preSwitchChecks`](#phase-k--add-narrow-systempreswitchchecks)
+- [PHASE L — Define stock closure contamination contracts](#phase-l--define-stock-closure-contamination-contracts)
+- [PHASE M — Build the blank-disk reconstruction VM](#phase-m--build-the-blank-disk-reconstruction-vm)
+- [PHASE N — Complete the independent backup/restore gate](#phase-n--complete-the-independent-backuprestore-gate)
+- [PHASE O — Optional isolated NixOS Facter experiment](#phase-o--optional-isolated-nixos-facter-experiment)
+- [PHASE P — Physical firmware maintenance window](#phase-p--physical-firmware-maintenance-window)
+- [PHASE Q — Hardware and storage stability](#phase-q--hardware-and-storage-stability)
+- [PHASE R — Freeze ordinary stock performance policy](#phase-r--freeze-ordinary-stock-performance-policy)
+- [PHASE S — Final candidate workload acceptance](#phase-s--final-candidate-workload-acceptance)
+- [PHASE T — Clean experimental-control audit](#phase-t--clean-experimental-control-audit)
+- [PHASE U — Multi-day stock-system soak](#phase-u--multi-day-stock-system-soak)
+- [PHASE V — Final baseline freeze](#phase-v--final-baseline-freeze)
+- [PHASE W — Retire temporary preparation state deliberately](#phase-w--retire-temporary-preparation-state-deliberately)
+- [PHASE X — Archive `plan.md`](#phase-x--archive-planmd)
+- [PHASE Y — Start optimization as a new project](#phase-y--start-optimization-as-a-new-project)
+- [15. Features explicitly deferred from the stock baseline](#15-features-explicitly-deferred-from-the-stock-baseline)
+- [16. Target repository structure at baseline](#16-target-repository-structure-at-baseline)
+- [17. Validation rule for every remaining source change](#17-validation-rule-for-every-remaining-source-change)
+- [18. New effective critical path](#18-new-effective-critical-path)
+- [19. Hard GO checklist](#19-hard-go-checklist)
+- [20. Immediate next action](#20-immediate-next-action)
+
+---
+
+I reviewed all four attached files, the current `feat/pre-optimization-readiness` branch, the live `plan.md`, current source layout, validation/docs, recent commits, and the local terminal evidence. The key result is that the project has crossed from “finish Impermanence/stable-refresh” into **final pre-optimization readiness engineering**. The original plan remains useful for its end-state gates, but its execution order and several status statements are now stale.
+
+The guide below is the consolidated version I would use from here.
+
+### NixOS Pre-Optimization Readiness — Unified Continuation Guide
+
+**Repository:** `P2949/NixosConf`
+**Active branch:** `feat/pre-optimization-readiness`
+**Authoritative committed head:** `c15a1756fe97ac89d7872326df70b0c758a0bfe0`
+**Base:** `main` at `f89205c07e4d3a77900b046a5bf937944488647b`
+**Date:** 2026-10-05
+**Purpose:** continue and finish `plan.md` from the actual current state, freeze a trustworthy stock NixOS baseline, and only then begin the separate system-optimization project.
+
+---
+
+### 1. Governing conclusion
+
+The workstation architecture itself is now sufficiently organized.
+
+Do **not** restart a broad restructuring of:
+
+- `modules/core`;
+- `modules/desktop`;
+- `modules/gaming`;
+- `profiles/workstation.nix`;
+- Home Manager;
+- Disko;
+- the basic host/profile/module division.
+
+The remaining structural work is concentrated in:
+
+1. the currently incomplete local username cleanup;
+2. CI policy;
+3. storage feature packaging and the Nix/Bash interface;
+4. the test subsystem and flake validation registry;
+5. documentation ownership/current-state truth;
+6. recovery-image categorization;
+7. a few remaining duplicated sources of truth;
+8. NixOS-native build/activation safeguards;
+9. reconstruction/backup proof;
+10. firmware/hardware stability;
+11. final workload acceptance;
+12. soak and baseline freeze.
+
+This matches the architectural review: host/profile/module boundaries, core, desktop, Home Manager and Disko are already considered good; remaining architecture work belongs primarily to CI, storage, tests, docs and duplicated policy. :chatgpt-content-reference{index="0"}
+
+---
+
+### 2. Source-of-truth rules from this point forward
+
+`plan.md` still contains an early source-of-truth rule referring to `feat/impermanence` as the live implementation line. That is now historical.
+
+Use this order now:
+
+```text
+1. Current local worktree/index
+2. Current remote feat/pre-optimization-readiness
+3. Passing validation from the exact source revision under consideration
+4. Physically accepted stable-refresh evidence
+5. Current main
+6. Historical feat/impermanence evidence
+7. Historical architecture/workstation/stable-refresh branches
+8. feat/optimization-framework only as a prototype/reference
+```
+
+Every future claim should be marked mentally or explicitly as:
+
+```text
+PROVEN
+CURRENT DESIGN
+PLANNED
+HYPOTHESIS
+HISTORICAL / SUPERSEDED
+```
+
+Do not rewrite historical logs to make them appear current. Add newer evidence that supersedes them.
+
+---
+
+### 3. Current Git state
+
+#### 3.1 Remote committed state
+
+Remote readiness HEAD is:
+
+```text
+c15a1756fe97ac89d7872326df70b0c758a0bfe0
+Extract ephemeral root reset script
+```
+
+The readiness branch is exactly three commits ahead of `main` and zero behind:
+
+```text
+main
+f89205c
+
+  ↓ +3
+
+7295363  Record completed stable-refresh physical acceptance
+96c6a3d  Move Btrfs maintenance coordination into storage
+c15a175  Extract ephemeral root reset script
+```
+
+GitHub's comparison confirms the branch is three commits ahead of `main`, with the readiness work limited to `plan.md`, maintenance ownership, reset extraction, README and corresponding tests.
+
+`main` itself is protected and requires the `Flake checks` status.
+
+#### 3.2 Current local state is ahead of that remote only as an incomplete experiment
+
+The attached terminal evidence shows that after `c15a175`:
+
+1. the existing `workstation-smoke` baseline was successfully captured as:
+
+```text
+/nix/store/1anhzd1q0pby5zy8qzyr6lf9spr5a0sb-vm-test-run-workstation-smoke
+```
+
+:chatgpt-content-reference{index="3"}
+
+2. the attempted transformation of `tests/workstation-smoke.nix` aborted because it expected a standalone:
+
+```python
+machine.wait_for_unit("home-manager-p2949.service")
+```
+
+but the actual source contains the service in a Python list. The transformation therefore wrote **nothing** to that test file. :chatgpt-content-reference{index="4"}
+
+3. `flake.nix` **was** changed and staged to pass `username` to `workstation-smoke`. :chatgpt-content-reference{index="5"}
+
+4. because the test file was still unchanged, the local build now fails with:
+
+```text
+function 'anonymous lambda' called with unexpected argument 'username'
+```
+
+:chatgpt-content-reference{index="6"}
+
+5. `nix flake check` fails for the same reason. :chatgpt-content-reference{index="7"}
+
+6. importantly, the actual desktop derivation still reproduced the exact accepted closure despite this flake-output-only failure:
+
+```text
+/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8
+```
+
+:chatgpt-content-reference{index="8"}
+
+##### Immediate interpretation
+
+The remote branch is good.
+
+The local worktree is **not currently a valid checkpoint**.
+
+Do not begin another unrelated refactor until this partial username change is either:
+
+- completed correctly and committed; or
+- completely restored to `c15a175`.
+
+The preferred path is to **finish it**, because removing this duplicate is still the correct design.
+
+---
+
+### 4. Proven stable baseline evidence
+
+This evidence must remain the anchor for all source-only refactors.
+
+#### 4.1 Accepted stable-refresh source
+
+Frozen accepted source:
+
+```text
+c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+```
+
+Stable Nixpkgs:
+
+```text
+0d9e9b832d03ac387417e16ce1febf73b2e631e1
+```
+
+The accepted stable refresh moved from the older `774debe...` pin to `0d9e9b8...`; Home Manager remained on release-26.05 and Disko, Impermanence, unstable and Liquidctl pins stayed fixed.
+
+#### 4.2 Accepted normal system
+
+```text
+/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8
+```
+
+Kernel:
+
+```text
+6.18.55
+```
+
+#### 4.3 Accepted persistent-root specialisation
+
+```text
+/nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8
+```
+
+#### 4.4 Matching recovery ISO
+
+```text
+/nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso/iso/nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso
+```
+
+Size:
+
+```text
+1496678400 bytes
+```
+
+SHA-256:
+
+```text
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+```
+
+
+
+#### 4.5 Physical acceptance
+
+The final accepted physical sequence was:
+
+```text
+normal
+  ↓
+persistent-root
+  ↓
+normal
+```
+
+The repository's final plan evidence records:
+
+```text
+first normal:
+    reset root → subvolume 295
+
+persistent-root:
+    root remains 295
+    no reset-log increment
+    root-local probe survives
+    persistent probe survives
+
+second normal:
+    root 295 replaced by 297
+    root-local probe disappears
+    persistent probe survives
+
+machine-id:
+    stable
+
+services:
+    expected services active
+    zero failed units
+```
+
+The plan explicitly concludes:
+
+```text
+physical acceptance gate PASSED
+stable-refresh integration gate PASSED
+pre-optimization readiness engineering may now begin
+```
+
+
+
+The more detailed physical records also established separate boot IDs for the two normal boots and the persistent-root boot, while machine identity remained stable. The read-only recovery drill could identify the MP600, mount Btrfs top-level subvolume ID 5 and see the expected root/persistence/forensic subvolumes without modifying the filesystem.
+
+##### Consequence
+
+The old rule:
+
+> do not refactor before stable-refresh physical acceptance
+
+is now superseded.
+
+Refactoring is allowed.
+
+But any **runtime semantic change** must eventually be accepted again before the final baseline tag.
+
+---
+
+### 5. Impermanence/root-reset evidence already proven
+
+Do not rerun this entire historical program after every unrelated source cleanup.
+
+The current root feature already has strong validation.
+
+#### Physical initial viability
+
+Three physical reset trials passed:
+
+| Trial | Boot ID | Fresh root |
+|---|---|---:|
+| 1 | `032de3f5-2df0-47d6-b26e-980dbacfdeeb` | 288 |
+| 2 | `2b719311-60d5-4afd-a9eb-34f96bd198ed` | 290 |
+| 3 | `da4649c0-8121-44ea-afcd-a2d0d4748681` | 292 |
+
+They preserved required mounts/state, credentials and machine identity, removed disposable state, kept networking/cooling/Home Manager/D-Bus/logind healthy, and had no failed units.
+
+#### Safety behaviour
+
+The safety suite evolved from 26 refusal cases to **33 refusal cases**, covering:
+
+- unknown children;
+- unknown grandchildren;
+- malformed/stale staging;
+- missing root/staging;
+- invalid root paths;
+- mounted `/sysroot`;
+- missing/invalid persistence;
+- log symlinks;
+- broken symlinks;
+- hard links;
+- FIFO/directory log leaves;
+- symlink/non-directory log parents;
+- names containing misleading ` path ` fragments;
+- mutation preservation after refusal.
+
+The config suite expanded to **43 rejected configurations and four accepted controls**.
+
+#### Recovery behaviour
+
+The VM suite proves:
+
+- missing root + valid staging recovery;
+- subsequent reset behaviour;
+- stable identity;
+- persistent journal continuity;
+- three reset boots followed by a `persistent-root` boot;
+- unchanged root ID/UUID during persistent-root fallback;
+- no extra reset-log increment;
+- retained credentials/services.
+
+
+
+#### Final policy
+
+The accepted model is:
+
+```text
+normal/default:
+    ephemeral @root reset
+
+persistent-root specialisation:
+    reset disabled
+
+/home:
+    persistent
+
+/var:
+    persistent
+
+/nix:
+    persistent
+
+/persist:
+    persistent
+
+/var/lib/nixos-optimization:
+    persistent
+
+/etc/machine-id:
+    persisted in both variants
+```
+
+Selective `/home` and `/var` Impermanence remain explicitly deferred.
+
+---
+
+### 6. Readiness commits completed after physical acceptance
+
+#### 6.1 `7295363` — physical acceptance evidence
+
+This records the final accepted closures, recovery artifact and physical sequence into `plan.md`.
+
+No runtime change.
+
+#### 6.2 `96c6a3d` — Btrfs maintenance ownership
+
+Commit:
+
+```text
+Move Btrfs maintenance coordination into storage
+```
+
+The guard was moved byte-for-byte from:
+
+```text
+modules/core/maintenance-guard.sh
+```
+
+to:
+
+```text
+modules/storage/maintenance-guard.sh
+```
+
+The Btrfs scrub + GC coordination was moved into a storage module, while generic:
+
+- GC retention;
+- journald retention;
+- coredump retention
+
+remained in `modules/core/maintenance.nix`.
+
+Validation performed before commit included:
+
+- guard remained byte-identical;
+- behavioral guard test passed;
+- evaluated Btrfs scrub policy matched;
+- scrub timer remained `AccuracySec=1min`;
+- GC ordering remained after `btrfs-scrub--.service`;
+- GC/scrub ExecConditions remained equivalent;
+- full `nix flake check` passed;
+- rebuilt desktop reproduced **exactly** the physically accepted `czk5a2...` closure.
+
+Therefore this was a true structural refactor with no system derivation change.
+
+#### 6.3 `c15a175` — reset-script extraction
+
+The approximately 263-line Bash body was extracted from the Nix module into:
+
+```text
+modules/storage/ephemeral-root-reset.sh
+```
+
+The service now consumes a rendered script from the separate source. GitHub confirms this exact extraction.
+
+Validation proved:
+
+```text
+before rendered script:
+    263 lines
+    5712 bytes
+    SHA256 6c1320260732390e2dba967450d70fdb3a47c19bd298c69312a48fbf224a0a71
+
+after extraction:
+    263 lines
+    5712 bytes
+    same SHA256
+
+cmp:
+    identical
+```
+
+The desktop again reproduced the exact physically accepted `czk5a2...` closure.
+
+Then:
+
+```text
+ephemeral-root-config        PASS
+nix flake check              PASS
+impermanence-root-safety     PASS
+impermanence-root-recovery   PASS
+impermanence-root-test-a     PASS
+impermanence-root-test-b     PASS
+impermanence-root-fallback   PASS
+```
+
+The final invariant check confirmed:
+
+- exactly one renderer;
+- service consumes the rendered external script;
+- old inline script gone;
+- seven template tokens map 1:1;
+- six generated assignments correct;
+- template parses as Bash;
+- exactly three intended files staged.
+
+The commit was then pushed successfully. :chatgpt-content-reference{index="17"}
+
+---
+
+### 7. Other validation infrastructure already completed
+
+The repository already includes:
+
+- Flakes;
+- Home Manager as a NixOS module;
+- Disko;
+- Impermanence;
+- specialisations;
+- systemd-initrd customization;
+- typed custom modules;
+- negative evaluation tests;
+- multi-boot NixOS VM tests;
+- recovery ISO;
+- stable + unstable package sets;
+- diagnostic dev shell;
+- custom Commander Core hardware management;
+- baseline collector;
+- closure-review procedure.
+
+:chatgpt-content-reference{index="18"}
+
+`flake.nix` currently exposes lightweight checks for:
+
+```text
+maintenance-guard
+commander-core-config
+commander-core-python
+baseline-collector
+desktop-evaluation
+ephemeral-root-config
+formatting
+statix
+deadnix
+```
+
+and explicit heavier package tests for:
+
+```text
+workstation-smoke
+impermanence-root-test-a
+impermanence-root-safety
+impermanence-root-recovery
+impermanence-root-test-b
+impermanence-root-fallback
+recovery-iso
+```
+
+The root flake is now the validation registry, which is why `tests/default.nix` is the next logical structural improvement.
+
+---
+
+### 8. Development/workload evidence already collected
+
+These results are useful preparation evidence but **do not replace final-candidate acceptance**.
+
+#### C/C++
+
+The pinned development shell:
+
+- compiled and ran C++20;
+- clangd AST/index passed with zero errors when using an exact `--query-driver` matching the trusted Nix compiler wrapper.
+
+
+
+#### Unreal Engine
+
+Proven preparation evidence includes:
+
+- actual `AI_Gavin_ProjectEditor` incremental target build;
+- Epic Clang 20.1.8;
+- Rocky Linux 8 sysroot;
+- bundled libc++;
+- Steam FHS environment;
+- native Wayland SDL3;
+- compositor reported `xwayland=false`;
+- Vulkan selected RX 9070 XT / RADV GFX1201;
+- actual configured startup map loaded;
+- 28 actors observed;
+- map held approximately ten seconds;
+- corrected native shutdown lifecycle exited cleanly under default Mimalloc.
+
+An earlier synchronous automation shutdown produced an ICU/Slate allocator crash, but that was traced to the test harness violating Unreal's deferred shutdown lifecycle. The corrected post-tick/deferred-close probe passed, so no allocator workaround was adopted.
+
+Still open:
+
+- interactive play;
+- broad/full rebuild;
+- longer session;
+- final-candidate acceptance.
+
+#### Blender
+
+Preparation evidence:
+
+- Blender 5.2.2 LTS;
+- RX 9070 XT HIP detected;
+- factory smoke rendered successfully;
+- actual local 33-object Cycles scene loaded;
+- actual camera rendered at 1920×1080;
+- 64 samples;
+- GPU-only HIP;
+- CPU disabled;
+- approximately 11.83 seconds;
+- source remained unchanged;
+- no new targeted GPU reset/fault/timeout kernel messages.
+
+
+
+Still open:
+
+- sustained render;
+- interactive acceptance;
+- final-candidate acceptance.
+
+#### GameMode
+
+Preparation evidence:
+
+- registration/reaper behavior works;
+- physical governor helper currently lacked authorization because user was not in `gamemode`;
+- candidate policy adds conditional group membership;
+- real-profile VM proves intended user allowed;
+- unrelated `nobody` user denied;
+- split-lock mitigation remains enabled.
+
+
+
+Final physical governor test remains required.
+
+#### Gamescope/MangoHud
+
+Preparation evidence:
+
+- Gamescope 3.16.23;
+- 600-frame Vulkan cube tests;
+- native Wayland child passed;
+- XCB/XWayland child passed;
+- MangoHud 0.8.3 initialized;
+- XCB run mapped overlay + shim.
+
+Still open:
+
+- representative game;
+- HDR;
+- controller;
+- final-candidate acceptance.
+
+
+
+#### Creative Stage Pro
+
+Proven:
+
+- USB/ALSA device exists;
+- direct ALSA transport works;
+- current PipeWire default transport works.
+
+Not proven:
+
+- Stage Pro PipeWire profile is currently Off;
+- intended Stage Pro sink/routing;
+- audible playback through that route;
+- reconnect behavior.
+
+
+
+#### CPU thermal test
+
+The planned 30-minute sustained test **did not pass**.
+
+The conservative wrapper stopped after roughly five seconds when sampled CPU temperature reached 80 °C.
+
+Positive observations:
+
+- no throttle-counter increase;
+- no matching kernel hardware/thermal error;
+- Commander Core remained alive;
+- fan policy commanded 100%;
+- machine cooled back down.
+
+But this remains:
+
+```text
+SUSTAINED CPU / OC STABILITY = OPEN
+```
+
+Do not increase the temperature boundary merely to manufacture a pass.
+
+#### Android/KVM
+
+User belongs to `kvm`, but:
+
+```text
+/dev/kvm absent
+VMX outside TXT disabled by BIOS
+```
+
+Physical accelerated Android emulator acceptance is blocked on firmware virtualization.
+
+---
+
+### 9. Backup/recovery evidence
+
+#### Verified remote project recovery
+
+`AI_Gavin_Project`:
+
+```text
+commit:
+376e151fca709b084e182da4c76ccb21a228f86d
+```
+
+Proven:
+
+- remote main matches;
+- fresh empty LFS store downloaded all **415** tracked LFS objects;
+- sizes/hashes matched;
+- fresh remote clone restored representative project data correctly.
+
+
+
+#### Home inventory
+
+Evidence exists for:
+
+- full top-level home scan;
+- approximately 118 GB allocated under Development;
+- large Unreal engine install dominates that;
+- `.config` ~1.8 GB;
+- `.local/share` ~14 GB;
+- source/project scan;
+- loose Blender files identified.
+
+But an independent broad home backup has **not** been proven.
+
+#### Secrets
+
+Current user authentication deliberately depends on:
+
+```nix
+hashedPasswordFile =
+  "/persist/secrets/${username}-password-hash";
+```
+
+and `/persist/secrets` is therefore part of the reconstruction contract but not Git.
+
+The final baseline still needs either:
+
+```text
+external encrypted bootstrap backup
+```
+
+or a deliberately adopted encrypted declarative solution.
+
+A secrets framework is **not required** for this baseline if the external model is documented and restore-tested.
+
+---
+
+### 10. Firmware/hardware state
+
+Current known motherboard firmware:
+
+```text
+ASUS ROG STRIX Z490-E GAMING
+BIOS 3201
+embedded date 2024-11-20
+```
+
+Observed ME:
+
+```text
+14.1.53.1649
+14.1.53.1649
+14.0.51.1528
+```
+
+ASUS currently lists:
+
+```text
+BIOS 3402
+2026-08-05
+```
+
+with ME prerequisite:
+
+```text
+14.1.79.2540
+```
+
+and an ME update tool published 2026-09-01.
+
+Recorded hashes:
+
+```text
+BIOS:
+9928bf5a987ff0a44f2efa7bd131186d68a7d1eaeb5198f43ad8333897bc5cf9
+
+ME:
+75c5efe983cfb0c4c9e75830b3e1d1287e0e6adcf93d97194acbaaac15746bfe
+```
+
+No update decision or flash has been completed.
+
+Virtualization is currently disabled in firmware.
+
+---
+
+### 11. Maintenance/storage evidence
+
+Current intended maintenance policy:
+
+```text
+Nix GC:
+    Saturday 04:00
+    --delete-older-than 30d
+    no catch-up at boot
+
+Btrfs scrub:
+    day 1, 02:00
+    AccuracySec=1min
+
+coordination:
+    GC and scrub may not overlap
+    GC requires most recent scrub to be finished and clean
+
+journal:
+    2 GiB active persistent limit
+    4 GiB keep-free
+    90-day horizon
+
+coredump:
+    32 GiB processing ceiling
+    8 GiB external file ceiling
+    4 GiB total-use target
+    4 GiB keep-free
+```
+
+
+
+The documentation still claims this policy is awaiting physical installation, but that sentence predates the later accepted stable-refresh closure. The later physical acceptance and exact-closure-preserving `96c6a3d` refactor supersede that status wording.
+
+Still required before final tag:
+
+- current Btrfs scrub status;
+- Btrfs device stats;
+- NVMe SMART;
+- one idle-period store integrity verification;
+- optional one-time store optimization if desired;
+- deliberate retirement of preparation GC roots only after final milestone.
+
+---
+
+### 12. Documentation truth drift
+
+This is now a genuine project bug.
+
+Current `README.md` still says:
+
+- `feat/impermanence` declares the current root policy;
+- final default/recovery hardware acceptance remains pending;
+- stable-refresh physical acceptance remains pending.
+
+
+
+`docs/stable-refresh.md` still:
+
+- describes the older `bv3...` desktop candidate;
+- says physical acceptance remains open.
+
+
+
+`docs/impermanence.md` still says exact final physical default/recovery acceptance remains pending.
+
+`docs/maintenance-policy.md` says source policy is pending physical acceptance.
+
+But `plan.md` now records the accepted `czk5...`/`9ppc...` normal → persistent-root → normal sequence as passed.
+
+This must be corrected before more evidence accumulates.
+
+---
+
+### 13. CI state
+
+Current workflow:
+
+```yaml
+push:
+  branches:
+    - main
+    - feat/impermanence
+
+pull_request:
+```
+
+
+
+`feat/impermanence` is merged.
+
+There is currently **no open PR** for `feat/pre-optimization-readiness`.
+
+There is consequently no GitHub workflow/status attached to `c15a175`.
+
+`main`, however, is already protected and requires `Flake checks`.
+
+The appropriate workflow is therefore:
+
+```text
+feature branch
+   ↓
+draft PR
+   ↓
+PR CI on every update
+   ↓
+protected main
+```
+
+rather than hard-coding each temporary feature branch into `check.yml`.
+
+---
+
+### 14. Unified implementation sequence
+
+The following supersedes older “next action” sections while retaining the original plan's hard final gates.
+
+---
+
+### PHASE A — Restore a valid development head
+
+#### A1. Finish the current username parameterization
+
+Do this **before anything else**.
+
+Current desired source of truth:
+
+```nix
+flake.nix:
+
+username = "p2949";
+```
+
+The real desktop and Home Manager already consume that value.
+
+`tests/workstation-smoke.nix` must accept the same `username` as an argument rather than redefining:
+
+```nix
+let
+  username = "p2949";
+```
+
+Current test literals that should become derived from `username` include:
+
+```text
+home-manager-p2949
+id -u p2949
+runuser -u p2949
+```
+
+The repository path:
+
+```text
+../home/p2949
+```
+
+should remain literal for now because it is a source-tree path, not runtime identity policy.
+
+##### Required implementation
+
+Change the test function interface to:
+
+```nix
+{
+  inputs,
+  pkgs,
+  pkgsUnstable,
+  username,
+}:
+```
+
+Remove its local username definition.
+
+Derive the Home Manager service:
+
+```nix
+homeManagerService = "home-manager-${username}";
+```
+
+or directly interpolate the same value in the test script.
+
+Parameterize the runtime command strings.
+
+##### Completion gate
+
+Must pass:
+
+```text
+tests/workstation-smoke.nix accepts username
+flake passes username
+no runtime hard-coded p2949 remains
+only source path ../home/p2949 remains
+```
+
+Then:
+
+```bash
+nix build .#workstation-smoke --no-link --print-out-paths
+```
+
+Compare against baseline:
+
+```text
+/nix/store/1anhzd1q0pby5zy8qzyr6lf9spr5a0sb-vm-test-run-workstation-smoke
+```
+
+If identical:
+
+```text
+excellent mechanical-equivalence evidence
+```
+
+If different:
+
+```text
+inspect why;
+do not assume failure merely from changed path
+```
+
+Then:
+
+```bash
+nix flake check --print-build-logs
+```
+
+and desktop build must remain:
+
+```text
+czk5a2wn8di3pgv8a6w0b8aj3286g3h3
+```
+
+Commit separately.
+
+Suggested commit:
+
+```text
+Parameterize workstation smoke username
+```
+
+No activation.
+
+---
+
+### PHASE B — Establish working CI before more readiness commits
+
+#### B1. Open a draft readiness PR
+
+After Phase A is clean and pushed:
+
+```text
+feat/pre-optimization-readiness
+        →
+main
+```
+
+Keep it draft until the full readiness project is complete.
+
+The existing `pull_request:` trigger already gives the branch a CI path.
+
+#### B2. Fix stale push branch policy
+
+Change:
+
+```yaml
+push:
+  branches:
+    - main
+    - feat/impermanence
+```
+
+to:
+
+```yaml
+push:
+  branches:
+    - main
+
+pull_request:
+```
+
+Do not add `feat/pre-optimization-readiness` specifically.
+
+The PR becomes the branch-independent CI mechanism.
+
+##### Gate
+
+- PR workflow runs.
+- `Flake checks` passes.
+- subsequent pushes update PR CI.
+- main remains protected.
+
+Suggested commit:
+
+```text
+Use pull requests for feature-branch CI
+```
+
+---
+
+### PHASE C — Fix current-state documentation immediately
+
+Do a **status correction**, not a giant historical rewrite.
+
+#### C1. Establish one current status source
+
+Add:
+
+```text
+docs/status.md
+```
+
+or:
+
+```text
+ROADMAP.md
+```
+
+I prefer `docs/status.md` while `plan.md` remains active.
+
+It should contain:
+
+```text
+current branch
+current HEAD
+accepted normal closure
+accepted persistent-root closure
+accepted kernel
+accepted recovery ISO/hash
+last physically accepted source
+current readiness tasks
+open hard gates
+```
+
+#### C2. Make README timeless
+
+README should describe:
+
+- what the repo is;
+- architecture;
+- build/check commands;
+- where status/evidence live.
+
+Remove fast-changing statements such as:
+
+```text
+feat/impermanence currently...
+physical acceptance pending...
+```
+
+#### C3. Correct stable-refresh evidence
+
+`docs/stable-refresh.md` should preserve the old offline `bv3...` record as historical if useful, but add the actual final accepted result:
+
+```text
+source:
+c5e036b...
+
+normal:
+czk5...
+
+persistent:
+9ppc...
+
+kernel:
+6.18.55
+
+ISO:
+d55...
+SHA256:
+52e349...
+
+physical:
+normal → persistent-root → normal
+PASS
+```
+
+#### C4. Correct Impermanence status
+
+Preserve the three original opt-in trial records.
+
+Add that the later exact final normal/persistent/normal stable-refresh acceptance has also passed.
+
+#### C5. Correct maintenance-policy status
+
+Remove the claim that its source policy has never been physically accepted.
+
+##### Do not yet archive `plan.md`
+
+It remains the forensic execution ledger until final readiness completion.
+
+---
+
+### PHASE D — Finish storage packaging
+
+Current layout:
+
+```text
+modules/storage/
+├── btrfs-maintenance.nix
+├── maintenance-guard.sh
+├── ephemeral-btrfs-root.nix
+└── ephemeral-root-reset.sh
+```
+
+There are now two obvious implementation pairs.
+
+Target:
+
+```text
+modules/storage/
+├── btrfs-maintenance/
+│   ├── default.nix
+│   └── guard.sh
+│
+└── ephemeral-btrfs-root/
+    ├── default.nix
+    └── reset.sh
+```
+
+This mirrors the successful Commander Core pattern. :chatgpt-content-reference{index="40"}
+
+Do **not** create a `modules/storage/default.nix` which silently imports everything.
+
+The desktop should explicitly choose storage features.
+
+#### D1. Mechanical directory moves first
+
+Commit only path changes and reference updates.
+
+Required gate:
+
+```text
+nix fmt
+git diff --check
+nix flake check
+desktop exact closure == czk5...
+```
+
+For this commit the exact closure should remain identical.
+
+Suggested commit:
+
+```text
+Group storage modules with their helpers
+```
+
+---
+
+### PHASE E — Correct Btrfs maintenance policy ownership
+
+The new storage module correctly owns coordination, but it currently also owns:
+
+```nix
+services.btrfs.autoScrub = {
+  enable = true;
+  interval = "*-*-01 02:00:00";
+  fileSystems = [ "/" ];
+};
+```
+
+
+
+That is partly physical-host policy.
+
+The better split is:
+
+```text
+hosts/desktop/default.nix:
+    enable scrub
+    scrub filesystem
+    schedule
+
+modules/storage/btrfs-maintenance:
+    GC/scrub exclusion
+    ordering
+    guard
+    timer coordination mechanism
+```
+
+Moving a few policy lines back to the host is not architectural regression.
+
+#### E1. Add assumptions/assertions
+
+The coordination module should fail evaluation if its required counterpart services are not configured.
+
+For example, it should not silently expect:
+
+```text
+nix-gc.service
+btrfs-scrub--.service
+```
+
+to exist through unrelated imports.
+
+##### Gate
+
+The evaluated system must remain exactly equivalent:
+
+```text
+scrub enabled
+interval unchanged
+filesystem /
+AccuracySec unchanged
+GC ordering unchanged
+GC guard unchanged
+scrub guard unchanged
+desktop closure ideally exact czk5...
+```
+
+Suggested commit:
+
+```text
+Separate Btrfs maintenance mechanism from host schedule
+```
+
+---
+
+### PHASE F — Replace the reset-script text-template boundary
+
+Current reset module performs seven textual substitutions:
+
+```text
+@NIX_TOP@
+@NIX_ROOT_DEVICE@
+@NIX_ROOT_NAME@
+@NIX_NEXT_NAME@
+@NIX_PERSIST_NAME@
+@NIX_LOG_RELATIVE@
+@NIX_ALLOWED_DESCENDANT_CHECK@
+```
+
+and the final one injects generated Bash code.
+
+This worked and was proven byte-equivalent to the old inline implementation, but it is not the best long-term boundary.
+
+#### F1. Make `reset.sh` ordinary Bash
+
+Nix should provide **data**.
+
+Bash should own **procedural logic**.
+
+Conceptual Nix prefix:
+
+```nix
+script = ''
+  top=${lib.escapeShellArg topLevelMount}
+  root_device=${lib.escapeShellArg rootDevice}
+  root_name=${lib.escapeShellArg cfg.rootSubvolume}
+  next_name=${lib.escapeShellArg cfg.stagingSubvolume}
+  persist_name=${lib.escapeShellArg cfg.persistenceSubvolume}
+  log_relative=${lib.escapeShellArg cfg.logFile}
+
+  allowed_descendants=(
+    ...
+  )
+
+  ${builtins.readFile ./reset.sh}
+'';
+```
+
+Bash then owns:
+
+```bash
+is_allowed_descendant() {
+    local candidate=$1
+    local allowed
+
+    for allowed in "${allowed_descendants[@]}"; do
+        [[ "$candidate" == "$allowed" ]] && return 0
+    done
+
+    return 1
+}
+```
+
+This removes the home-grown template/code-injection mechanism described in the architectural review. :chatgpt-content-reference{index="43"}
+
+#### F2. Independently lint the shell implementation
+
+Add a fast source check:
+
+```bash
+bash -n reset.sh
+shellcheck -s bash reset.sh
+```
+
+Optionally adopt `shfmt --check` later, but don't add a formatter purely for novelty.
+
+#### F3. Validation gate is stronger because generated initrd content changes
+
+Run:
+
+```text
+ephemeral-root-config
+maintenance checks
+full nix flake check
+impermanence-root-safety
+impermanence-root-recovery
+impermanence-root-test-a / renamed equivalent
+impermanence-root-test-b / renamed equivalent
+impermanence-root-fallback
+desktop build
+persistent-root build
+closure diff
+```
+
+This is no longer merely a path move, so do not demand the exact same store path.
+
+Demand the same **observable reset contract**.
+
+Do not immediately reboot the workstation. Batch its final physical acceptance with the later final-candidate hardware window.
+
+Suggested commit:
+
+```text
+Use explicit data interface for ephemeral root reset
+```
+
+---
+
+### PHASE G — Turn `tests/` into a subsystem
+
+Current `tests/` is flat and now contains several independent domains.
+
+Target:
+
+```text
+tests/
+├── default.nix
+│
+├── workstation/
+│   ├── evaluation.nix
+│   └── smoke.nix
+│
+├── hardware/
+│   └── commander-core/
+│       ├── config.nix
+│       ├── python.nix
+│       └── test_keeper.py
+│
+└── storage/
+    ├── btrfs-maintenance/
+    │   └── guard.nix
+    │
+    └── ephemeral-root/
+        ├── harness.nix
+        ├── config.nix
+        ├── safety.nix
+        ├── reset-control.nix
+        ├── persistent-identity.nix
+        ├── interrupted-recovery.nix
+        └── persistent-fallback.nix
+```
+
+The current `impermanence-root-a.nix` is effectively a configurable factory, not meaningfully “Test A” anymore. :chatgpt-content-reference{index="44"}
+
+#### G1. Rename scenarios semantically
+
+Prefer:
+
+```text
+reset-control
+persistent-identity
+interrupted-recovery
+persistent-fallback
+```
+
+over:
+
+```text
+A
+B
+```
+
+You may retain temporary flake aliases for the old names if scripts/docs depend on them.
+
+#### G2. Add `tests/default.nix`
+
+It should return:
+
+```nix
+{
+  checks = { ... };
+  packages = { ... };
+}
+```
+
+Inputs should be explicit:
+
+```text
+inputs
+pkgs
+pkgsUnstable
+username
+desktopConfig where genuinely needed
+```
+
+#### G3. Thin `flake.nix`
+
+Keep visible:
+
+```text
+inputs
+system
+username
+stable + unstable package sets
+formatter
+dev shells
+NixOS configurations
+major top-level artifacts
+```
+
+Move detailed validation registration out.
+
+Do **not** adopt `flake-parts`.
+
+#### G4. Validation
+
+Because this should be source organization:
+
+```text
+all existing check names remain available
+all heavy package tests remain available
+workstation-smoke equivalent
+flake check passes
+desktop closure unchanged unless another semantic change is intentionally included
+```
+
+Do this as one focused subsystem refactor, not mixed with runtime policy.
+
+---
+
+### PHASE H — Move recovery configuration into `images/`
+
+Current:
+
+```text
+hosts/
+├── desktop/
+└── recovery/
+```
+
+But recovery is not a physical host.
+
+Target:
+
+```text
+images/
+└── recovery.nix
+```
+
+Keep:
+
+```nix
+nixosConfigurations.recovery
+```
+
+if useful for evaluation.
+
+The recovery configuration itself is already well isolated: it imports the minimal installer and deliberately excludes workstation disks, persistence, passwords, cooling and reset behavior.
+
+##### Gate
+
+The resulting ISO should ideally retain the same derivation/output if the content is unchanged.
+
+At minimum:
+
+```text
+same packages
+same NixOS pin
+same stateVersion
+no workstation secrets/imports
+ISO builds
+```
+
+Suggested commit:
+
+```text
+Move recovery image out of hosts
+```
+
+---
+
+### PHASE I — Remove Commander Core policy duplication
+
+The Nix module already passes every physical/cooling parameter explicitly.
+
+But `keeper.py` independently defaults:
+
+```text
+base fan duty
+high fan duty
+pump duty
+high/low temperatures
+delays
+intervals
+USB VID:PID
+physical serial
+```
+
+including the actual physical serial number.
+
+That means host policy exists twice.
+
+#### I1. Make the Python daemon mechanism-only
+
+For Nix-managed operation, arguments should be required.
+
+Example:
+
+```python
+parser.add_argument("--base-fan-duty", type=int, required=True)
+parser.add_argument("--usb-id", required=True)
+parser.add_argument("--usb-serial", required=True)
+```
+
+Keep validation inside Python too; duplicate **validation** is useful defensive programming.
+
+Remove duplicate **policy defaults**.
+
+#### I2. Centralize watchdog duration
+
+Current module uses:
+
+```text
+assert interval margin < 35
+WatchdogSec = "35s"
+```
+
+from two literals.
+
+Define once:
+
+```nix
+watchdogSeconds = 35;
+```
+
+derive both.
+
+#### I3. Add formatter check
+
+Existing Python validation already includes syntax, Ruff and hardware-free tests.
+
+Add:
+
+```bash
+ruff format --check
+```
+
+#### I4. Do not generalize `coretemp`
+
+There is one real consumer.
+
+Leave it concrete.
+
+##### Gate
+
+```text
+commander-core-config PASS
+commander-core-python PASS
+hardware-free tests PASS
+workstation-smoke PASS
+desktop builds
+```
+
+The service must later receive final physical cooling acceptance because the keeper source itself changes the system closure.
+
+---
+
+### PHASE J — Add NixOS-native safety gates
+
+This is one of the most valuable remaining readiness tasks.
+
+The repository already has:
+
+```text
+source/repository checks
+heavy VM correctness tests
+physical validation
+```
+
+Add two intermediate layers.
+
+#### J1. `system.checks`
+
+Use these for cheap checks that should be dependencies of building the NixOS system itself.
+
+Good candidates:
+
+```text
+reset.sh bash syntax
+reset.sh ShellCheck
+maintenance guard syntax/ShellCheck
+critical custom-module pure/unit checks
+possibly Commander Core pure Python checks
+```
+
+Do **not** include:
+
+```text
+formatting
+Statix
+Deadnix
+multi-reboot VMs
+full workstation VM
+```
+
+Conceptual architecture:
+
+```text
+nix flake check
+    repository/source health
+
+system.checks
+    critical configuration cannot build unless invariant checks pass
+
+system.preSwitchChecks
+    built system cannot activate unless current physical machine state is safe
+```
+
+The value of this layering is explicitly identified in the NixOS-feature review. :chatgpt-content-reference{index="48"}
+
+---
+
+### PHASE K — Add narrow `system.preSwitchChecks`
+
+Only check conditions where activation itself could make the machine unusable.
+
+Good candidates:
+
+```text
+/persist is mounted correctly
+password hash source exists and is readable by root
+/boot exists and has a measured minimum free-space reserve
+physical Btrfs root device/topology matches expectations
+no unsafe @root-next transitional state exists
+```
+
+Do **not** gate activation on:
+
+```text
+Commander Core USB currently attached
+monitor present
+Creative Stage Pro present
+internet connectivity
+Bluetooth peripheral connected
+Steam available
+user graphical session
+```
+
+Those are runtime/peripheral conditions, not activation invariants.
+
+##### Test requirements
+
+For every pre-switch check, create:
+
+```text
+positive test
+negative test
+clear failure message
+```
+
+Test `switch`, `boot` and other action semantics where relevant.
+
+Never introduce a gate you cannot recover from using the persistent-root/recovery paths.
+
+---
+
+### PHASE L — Define stock closure contamination contracts
+
+Before optimization begins, add a convention and enforcement mechanism for experimental outputs.
+
+Use deliberately recognizable output naming, for example:
+
+```text
+nixos-opt-cpu-
+nixos-opt-lto-
+nixos-opt-pgo-
+nixos-opt-bolt-
+```
+
+Then use:
+
+```nix
+system.forbiddenDependenciesRegexes
+```
+
+on the stock/control system.
+
+The goal is:
+
+```text
+stock system
+    must contain no optimization outputs
+
+CPU-codegen stage
+    may contain CPU outputs
+    must not contain PGO/BOLT
+
+PGO stage
+    may contain PGO
+    must not silently contain BOLT
+
+etc.
+```
+
+This transforms closure purity into an experimental invariant rather than a documentation promise. It is one of the strongest NixOS-specific mechanisms identified for this project. :chatgpt-content-reference{index="49"}
+
+##### Important
+
+Do not use vague patterns such as:
+
+```text
+experimental
+```
+
+which may match unrelated packages.
+
+Use a project-owned naming namespace.
+
+Add a negative test proving a deliberately injected forbidden derivation makes the system build fail.
+
+---
+
+### PHASE M — Build the blank-disk reconstruction VM
+
+This is a hard pre-optimization reproducibility gate.
+
+The intended test is:
+
+```text
+empty virtual disk
+    ↓
+boot recovery/installer environment
+    ↓
+Disko
+    ↓
+GPT
+ESP
+swap
+Btrfs
+subvolumes
+    ↓
+inject test-only bootstrap secret
+    ↓
+install pinned workstation configuration
+    ↓
+install systemd-boot
+    ↓
+power off
+    ↓
+boot from installed virtual disk
+    ↓
+normal ephemeral-root reset occurs
+    ↓
+persistent state survives
+    ↓
+workstation services reach expected state
+    ↓
+reboot persistent-root variant
+    ↓
+root retained / no reset
+```
+
+This should prove:
+
+```text
+repository
++
+required external bootstrap state contract
+=
+reconstructable workstation
+```
+
+The feature review ranks this as one of the highest-value remaining gates. :chatgpt-content-reference{index="50"}
+
+#### M1. Never use the real password secret
+
+Supply a test-only secret through the **same path contract**:
+
+```text
+/persist/secrets/<username>-password-hash
+```
+
+#### M2. Prove both variants
+
+After the default boot:
+
+- root reset;
+- persistent mounts;
+- machine ID;
+- credential;
+- services.
+
+After persistent-root boot:
+
+- root identity unchanged;
+- reset count unchanged;
+- persistent root-local sentinel survives.
+
+#### M3. Treat this as a heavy explicit package/test
+
+Do not put it into ordinary PR `nix flake check`.
+
+---
+
+### PHASE N — Complete the independent backup/restore gate
+
+This must happen before firmware flashing and before final baseline freeze.
+
+Current remote/LFS project restore proof is good but insufficient.
+
+Required:
+
+1. independent storage outside the MP600;
+2. selected critical home data;
+3. loose Blender projects;
+4. Unreal ignored/autosave state judged deliberately;
+5. local repositories/untracked work;
+6. `/persist/secrets` encrypted backup;
+7. backup date and destination;
+8. integrity verification;
+9. representative restore to a **separate** directory;
+10. hash/content comparison.
+
+The existing Ventoy recovery USB is not the broad backup target.
+
+Do not destroy or repurpose it.
+
+#### Secret model decision
+
+Choose one:
+
+##### Model A — external bootstrap secret
+
+```text
+repo
++
+external encrypted secret backup
+```
+
+Document restoration.
+
+##### Model B — encrypted declarative secret
+
+sops-nix/agenix style.
+
+This is optional for the pre-optimization baseline.
+
+Model A is sufficient if actually tested.
+
+---
+
+### PHASE O — Optional isolated NixOS Facter experiment
+
+Do this only after the source organization is stable.
+
+Generate a Facter report and compare with the existing explicit hardware configuration.
+
+Goal:
+
+```text
+current generated/explicit hardware config
+            vs
+Facter-derived hardware config
+```
+
+Use comparison tooling.
+
+Do **not** adopt Facter merely because it is newer.
+
+Adopt it only if it:
+
+- preserves required configuration;
+- makes hardware provenance clearer;
+- does not hide important host-specific details.
+
+Otherwise keep `hardware-configuration.nix`.
+
+This is optional and cannot block the baseline unless it exposes a real configuration problem.
+
+---
+
+### PHASE P — Physical firmware maintenance window
+
+Batch reboot-dependent work.
+
+#### P1. Capture current firmware/OC settings first
+
+Record:
+
+```text
+BIOS
+ME
+CPU ratio
+cache ratio
+core voltage
+LLC
+AVX offset
+power limits
+memory frequency
+memory timings
+ReBAR
+Above 4G
+VT-x/VMX
+Speed Shift/HWP
+```
+
+Photographs/screenshots are acceptable for firmware settings.
+
+#### P2. Decide BIOS/ME update
+
+Either:
+
+```text
+A. retain 3201 deliberately
+```
+
+or:
+
+```text
+B. update ME 14.1.79.2540
+   then BIOS 3402
+```
+
+Do not update simply because a newer version exists.
+
+If updating, verify package hashes against the already recorded values.
+
+#### P3. Enable virtualization
+
+Physical Android/KVM gate requires:
+
+```text
+VMX enabled
+/dev/kvm exists
+user kvm membership works
+```
+
+#### P4. Freeze firmware
+
+Once selected:
+
+```text
+no firmware changes during optimization campaign
+```
+
+Any later firmware/microcode change creates a new performance baseline.
+
+---
+
+### PHASE Q — Hardware and storage stability
+
+Run after the final firmware decision.
+
+#### Q1. NVMe
+
+Record:
+
+```bash
+nvme smart-log
+```
+
+Require:
+
+```text
+no critical warning
+no unexplained media/data errors
+reasonable percentage used
+temperatures acceptable
+error log understood
+```
+
+#### Q2. Btrfs
+
+Require:
+
+```text
+scrub finished
+Error summary: no errors found
+device stats zero/understood
+filesystem usage recorded
+```
+
+#### Q3. Nix store
+
+During idle period:
+
+```bash
+sudo nix-store --verify --check-contents
+```
+
+Repair/rebuild any corrupt paths.
+
+Optional one-time:
+
+```bash
+sudo nix-store --optimise
+```
+
+Do not run this during performance measurements.
+
+#### Q4. Cooling
+
+Test:
+
+```text
+cold boot
+warm reboot
+service restart
+USB reset/recovery
+sustained CPU load
+watchdog behavior
+```
+
+#### Q5. CPU OC
+
+The existing five-second 80 °C stop is **not** an OC pass.
+
+Resolve:
+
+```text
+voltage
+power
+cooling
+or clock
+```
+
+rather than weakening the safety boundary.
+
+Then run:
+
+- sustained all-core;
+- mixed FP/integer;
+- large Nix/compiler builds;
+- hardware error inspection.
+
+#### Q6. RAM
+
+Run a dedicated broad memory validation.
+
+Require zero errors.
+
+Any BIOS update requires CPU/RAM revalidation.
+
+---
+
+### PHASE R — Freeze ordinary stock performance policy
+
+Do not add speculative tuning.
+
+#### Keep/reconfirm
+
+```text
+security mitigations enabled
+SMT enabled
+normal C-states
+normal scheduler
+sandboxed Nix
+Btrfs zstd:1
+noatime
+discard=async
+kernel-selected NVMe scheduler
+THP default/madvise policy
+```
+
+#### Measure/decide
+
+##### CPU frequency policy
+
+Current observed baseline:
+
+```text
+intel_pstate
+powersave
+balance_performance EPP
+```
+
+Compare only if evidence suggests a problem.
+
+##### ZRAM
+
+Current:
+
+```text
+32 GiB RAM
+32 GiB disk swap
+zram off
+```
+
+Existing post-build snapshot showed zero swap pressure.
+
+Do not add zram without workload evidence.
+
+##### irqbalance
+
+Measure real interrupt distribution.
+
+Do not enable or disable based on folklore.
+
+##### THP
+
+Current recorded state:
+
+```text
+madvise
+```
+
+Leave it unless a real workload demonstrates a defect.
+
+##### GPU
+
+Keep stock stable RADV/Mesa.
+
+No:
+
+```text
+global RADV_PERFTEST
+global power-profile forcing
+global clocks
+```
+
+---
+
+### PHASE S — Final candidate workload acceptance
+
+Run these on the **exact final candidate that is intended to become the baseline**.
+
+Earlier preparation results remain evidence, but are not substitutes.
+
+#### S1. Desktop/session
+
+- graphical login;
+- Hyprland/UWSM;
+- portals;
+- Firefox;
+- persistence across reboot;
+- zero failed units.
+
+#### S2. C/C++
+
+- development shell;
+- GCC;
+- Clang;
+- clangd;
+- representative build;
+- no global flags contamination.
+
+#### S3. Unreal
+
+Require:
+
+```text
+official 5.8.2 path
+actual project
+broad/full C++ build
+native Wayland
+RADV RX 9070 XT
+configured startup map
+interactive editor
+PIE/play
+clean ordinary shutdown
+longer working session
+```
+
+Do not add `-ansimalloc` unless a genuine ordinary workload defect later requires it.
+
+#### S4. Blender
+
+Require:
+
+```text
+actual project
+HIP RX 9070 XT
+interactive use
+longer representative render
+no GPU reset/fault
+```
+
+#### S5. Android Studio
+
+After VMX enablement:
+
+```text
+/dev/kvm
+Java project
+AVD boot
+normal emulator interaction
+persistent AVD state
+```
+
+#### S6. Gaming
+
+Require representative:
+
+```text
+native Vulkan game
+Proton game
+GameMode helper actually changes requested policy
+MangoHud
+Gamescope
+controller
+audio
+HDR if part of normal workflow
+```
+
+Confirm GameMode returns CPU policy after exit and retains split-lock mitigation.
+
+#### S7. Audio
+
+Specifically complete the currently missing Stage Pro gate:
+
+```text
+PipeWire profile enabled intentionally
+Stage Pro sink selected
+audible playback
+reconnect after reboot/replug
+normal default-route policy
+```
+
+#### S8. Networking/Bluetooth
+
+- expected Ethernet/Wi-Fi;
+- NetworkManager profiles;
+- Bluetooth if used;
+- reconnect after reboot.
+
+---
+
+### PHASE T — Clean experimental-control audit
+
+Immediately before soak/freeze:
+
+#### Environment
+
+No global:
+
+```text
+CFLAGS
+CXXFLAGS
+CPPFLAGS
+LDFLAGS
+RUSTFLAGS
+NIX_CFLAGS_COMPILE
+NIX_LDFLAGS
+LD_LIBRARY_PATH
+MALLOC_CONF
+```
+
+unless explicitly justified for the stock system.
+
+#### Repository
+
+Search outside `optimization/` for:
+
+```text
+-march=
+-mtune=
+-flto
+-fprofile
+llvm-bolt
+BOLT
+PGO
+```
+
+Any hit must be explained.
+
+#### Optimization module
+
+Must remain inert.
+
+The old optimization branch:
+
+```text
+397a8c71cd7acb0bc016983f28866df16c95d7d8
+```
+
+remains a reference only.
+
+Never merge it wholesale.
+
+---
+
+### PHASE U — Multi-day stock-system soak
+
+After the final candidate is installed and all one-time maintenance/hardware work is complete:
+
+Use the workstation normally for several days.
+
+Include:
+
+```text
+multiple cold boots
+multiple warm reboots
+Unreal work
+Blender render
+gaming
+large C/C++ build
+large Nix build
+Android emulator
+normal browser/audio/network
+suspend/resume if used
+```
+
+Require:
+
+```text
+no unexplained freeze
+no GPU reset
+no filesystem errors
+no recurring failed unit
+no cooling failure
+no persistence/login issue
+no root-reset anomaly
+no uncontrolled disk/store growth
+```
+
+Do not silently work around failures.
+
+Record and fix them declaratively, then restart the relevant portion of acceptance.
+
+---
+
+### PHASE V — Final baseline freeze
+
+Only after the soak passes.
+
+#### V1. Repository clean
+
+```text
+main candidate source committed
+no unstaged files
+no staged leftovers
+no untracked configuration hotfixes
+```
+
+#### V2. Fast checks
+
+```bash
+nix flake check --print-build-logs
+```
+
+#### V3. Heavy checks
+
+Run all explicit storage/workstation/reconstruction tests.
+
+By then the descriptive names should replace A/B terminology.
+
+At minimum:
+
+```text
+ephemeral config/safety
+reset control
+persistent identity
+interrupted recovery
+persistent fallback
+workstation smoke
+blank-disk reconstruction
+```
+
+#### V4. Build exact normal and persistent closures
+
+Record both.
+
+#### V5. Closure review
+
+Compare with last accepted baseline and explain every material change.
+
+#### V6. Activation preview
+
+```bash
+nixos-rebuild dry-activate
+```
+
+Then use the appropriate `test`/`boot` flow.
+
+Because initrd/root-reset/safety checks will have changed during this readiness work, perform one final physical acceptance sequence on the exact final source.
+
+Recommended:
+
+```text
+normal
+→
+persistent-root
+→
+normal
+```
+
+This does not need the historical three-trial repetition unless the reset semantics materially changed in a way not covered by the VM matrix.
+
+#### V7. Final runtime manifest
+
+Record:
+
+```text
+Git commit
+flake.lock hash
+Nixpkgs revision
+NixOS version
+Nix version
+normal closure
+persistent closure
+kernel
+Mesa
+microcode
+BIOS
+ME
+CPU ratio/cache/voltage/power
+RAM config
+GPU
+NVMe + firmware
+Btrfs mount options
+scrub status
+CPU governor/EPP
+THP
+swap/zram
+scheduler
+irqbalance
+maintenance timers
+Commander Core policy
+machine-id
+failed units
+```
+
+#### V8. Documentation
+
+Before merge:
+
+```text
+README timeless/current
+docs/status.md says all hard gates
+validation evidence tied to exact commit/closure
+recovery instructions current
+backup contract current
+firmware/hardware manifest current
+```
+
+#### V9. Merge readiness PR
+
+Move the tested readiness HEAD into protected `main`.
+
+Require green `Flake checks`.
+
+Build/confirm the merged commit if merge mechanics changed tree identity.
+
+#### V10. Tag
+
+Create:
+
+```text
+nixos-26.05-pre-optimization-baseline
+```
+
+as an annotated tag.
+
+Record tag + closures under:
+
+```text
+docs/baselines/
+```
+
+---
+
+### PHASE W — Retire temporary preparation state deliberately
+
+Only after the baseline tag exists and recovery is proven.
+
+Review:
+
+- temporary GC roots;
+- old stable-refresh candidate roots;
+- old recovery ISO roots;
+- forensic Btrfs roots;
+- pretrial snapshots;
+- obsolete generations.
+
+Do not bulk-delete merely because the project is “finished.”
+
+For every retained artifact decide:
+
+```text
+required rollback
+forensic evidence
+historical curiosity
+safe to remove
+```
+
+Run a fresh GC preview before destructive cleanup.
+
+---
+
+### PHASE X — Archive `plan.md`
+
+Only now should the giant execution ledger leave the repository root.
+
+Move it to something like:
+
+```text
+docs/history/pre-optimization-readiness-2026-10-05.md
+```
+
+The exact filename date can reflect the actual completion date instead.
+
+Keep a short root/current document:
+
+```text
+ROADMAP.md
+```
+
+or:
+
+```text
+docs/status.md
+```
+
+The final root should answer:
+
+```text
+What is this repo?
+How do I build/check it?
+What is the accepted stock baseline?
+What is currently being researched?
+```
+
+not require reading thousands of lines of migration history.
+
+---
+
+### PHASE Y — Start optimization as a new project
+
+From:
+
+```text
+tag:
+nixos-26.05-pre-optimization-baseline
+```
+
+create:
+
+```text
+feat/optimization-framework-v2
+```
+
+Do not continue the readiness branch for optimization work.
+
+The historical branch:
+
+```text
+feat/optimization-framework
+397a8c7...
+```
+
+is donor/reference code only.
+
+The new project can then introduce staged experimental identities:
+
+```text
+stock
+  ↓
+CPU-specific codegen
+  ↓
+conservative compiler tuning
+  ↓
+LTO
+  ↓
+PGO
+  ↓
+BOLT
+  ↓
+validated combinations
+```
+
+The contamination rules created before the baseline then become part of the experimental framework.
+
+---
+
+### 15. Features explicitly deferred from the stock baseline
+
+These are interesting but should not block readiness.
+
+#### `system.replaceDependencies`
+
+Very useful later as an **experimental research path** to compare dependency grafting with conventional downstream rebuild propagation.
+
+Do not make it the default PGO/BOLT architecture. :chatgpt-content-reference{index="52"}
+
+#### Distributed builds
+
+Useful once large LTO/PGO rebuilds dominate build time.
+
+Not a pre-baseline requirement. :chatgpt-content-reference{index="53"}
+
+#### `system.includeBuildDependencies`
+
+Interesting recovery/reproducibility experiment.
+
+Far too large for normal workstation policy.
+
+Defer. :chatgpt-content-reference{index="54"}
+
+#### Generated module documentation
+
+`nixosOptionsDoc` would be useful later for:
+
+```text
+boot.ephemeralBtrfsRoot.*
+hardware.commanderCore.*
+```
+
+but it is documentation polish rather than a baseline hard gate. :chatgpt-content-reference{index="55"}
+
+#### Selective home/var Impermanence
+
+Explicitly deferred.
+
+#### flake-parts / flake-utils / host framework / giant lib
+
+Do not add.
+
+#### Additional performance knobs
+
+Do not introduce:
+
+```text
+mitigations=off
+isolcpus
+nohz_full
+rcu_nocbs
+forced THP
+random VM sysctls
+global LD_LIBRARY_PATH
+global compiler flags
+Cachy/Zen kernel merely for benchmark gains
+fixed clocks as ordinary desktop policy
+global AMDGPU/RADV hacks
+```
+
+Those belong either nowhere or in explicit later experiments.
+
+---
+
+### 16. Target repository structure at baseline
+
+A sensible final form is:
+
+```text
+NixosConf/
+├── flake.nix
+├── flake.lock
+├── README.md
+├── ROADMAP.md / docs/status.md
+│
+├── hosts/
+│   └── desktop/
+│       ├── default.nix
+│       ├── hardware-configuration.nix
+│       ├── disko.nix
+│       ├── persistence.nix
+│       └── ephemeral-root.nix
+│
+├── images/
+│   └── recovery.nix
+│
+├── profiles/
+│   └── workstation.nix
+│
+├── modules/
+│   ├── core/
+│   ├── desktop/
+│   ├── gaming/
+│   ├── compatibility/
+│   ├── hardware/
+│   │   └── commander-core/
+│   │       ├── default.nix
+│   │       └── keeper.py
+│   └── storage/
+│       ├── btrfs-maintenance/
+│       │   ├── default.nix
+│       │   └── guard.sh
+│       └── ephemeral-btrfs-root/
+│           ├── default.nix
+│           └── reset.sh
+│
+├── home/
+│   └── p2949/
+│
+├── packages/
+│   └── liquidctl-pr886.nix
+│
+├── tests/
+│   ├── default.nix
+│   ├── workstation/
+│   ├── hardware/
+│   │   └── commander-core/
+│   └── storage/
+│       ├── btrfs-maintenance/
+│       └── ephemeral-root/
+│
+├── scripts/
+│   └── nixos-baseline-info.sh
+│
+├── docs/
+│   ├── status.md
+│   ├── design/
+│   ├── runbooks/
+│   ├── validation/
+│   ├── baselines/
+│   └── history/
+│
+└── optimization/
+    └── default.nix
+```
+
+Going materially further than this for a one-host repository is likely to reduce maintainability.
+
+---
+
+### 17. Validation rule for every remaining source change
+
+Use the smallest gate appropriate to the risk.
+
+#### Pure path/organization refactor
+
+Examples:
+
+```text
+move module directory
+move test file
+move recovery image file
+tests/default.nix registry
+```
+
+Require:
+
+```text
+nix fmt
+git diff --check
+nix flake check
+relevant unit/check
+desktop closure comparison
+```
+
+Exact closure identity is highly desirable.
+
+#### Workstation/profile policy refactor
+
+Examples:
+
+```text
+username plumbing
+Commander Core argument ownership
+```
+
+Require:
+
+```text
+flake check
+workstation-smoke
+desktop build
+relevant module/unit tests
+closure diff
+```
+
+No physical activation simply for organization.
+
+#### Root/initrd/destructive-storage semantics
+
+Examples:
+
+```text
+reset shell logic
+preSwitch topology checks
+root module assertions
+```
+
+Require:
+
+```text
+config negative/positive matrix
+safety VM
+recovery VM
+reset-control VM
+identity VM
+persistent-fallback VM
+desktop + persistent builds
+closure review
+```
+
+Batch physical acceptance for the final candidate.
+
+#### Firmware/runtime policy
+
+Require actual physical testing.
+
+VMs cannot prove:
+
+```text
+OC stability
+thermals
+KVM firmware
+GPU stability
+audio routing
+real gameplay
+USB cooling hardware
+```
+
+---
+
+### 18. New effective critical path
+
+From the actual current state:
+
+```text
+LOCAL BROKEN USERNAME ATTEMPT
+        │
+        ▼
+finish workstation-smoke parameterization
+        │
+        ▼
+open draft PR + repair CI policy
+        │
+        ▼
+correct current-status documentation
+        │
+        ▼
+finish storage packaging
+        │
+        ├── host vs mechanism split
+        └── explicit Nix → Bash data interface
+        │
+        ▼
+tests/default.nix + semantic test layout
+        │
+        ▼
+recovery → images/
+        │
+        ▼
+Commander Core source-of-truth cleanup
+        │
+        ▼
+system.checks
+        │
+        ▼
+system.preSwitchChecks
+        │
+        ▼
+stock forbidden-dependency contracts
+        │
+        ▼
+blank-disk reconstruction VM
+        │
+        ▼
+independent backup + restore proof
+        │
+        ▼
+firmware/VMX decision
+        │
+        ▼
+OC / RAM / cooling / NVMe / Btrfs / store validation
+        │
+        ▼
+freeze normal CPU/memory/I/O policy
+        │
+        ▼
+final exact-candidate workload acceptance
+        │
+        ▼
+multi-day soak
+        │
+        ▼
+full final validation + normal/persistent/normal physical acceptance
+        │
+        ▼
+merge to protected main
+        │
+        ▼
+nixos-26.05-pre-optimization-baseline
+        │
+        ▼
+archive plan.md
+        │
+        ▼
+fresh optimization-framework-v2
+```
+
+---
+
+### 19. Hard GO checklist
+
+Optimization remains forbidden until all of these are true.
+
+#### Repository
+
+- [ ] current local username work repaired/committed
+- [ ] readiness PR open and CI green
+- [ ] source tree final
+- [ ] tests organized
+- [ ] docs have one current source of truth
+- [ ] main receives final readiness merge
+- [ ] `flake.lock` frozen
+- [ ] final annotated tag exists
+
+#### Storage / Impermanence
+
+- [x] root reset safety matrix proven
+- [x] interrupted recovery proven
+- [x] machine-ID persistence proven
+- [x] persistent-root fallback proven
+- [x] physical ephemeral-root repeatability proven
+- [x] stable-refresh normal/persistent/normal acceptance proven
+- [ ] post-refactor final reset VM suite green
+- [ ] final exact-source physical normal/persistent/normal acceptance green
+- [ ] blank-disk reconstruction passes
+
+#### Recovery / backup
+
+- [x] recovery ISO reproducibly built
+- [x] matching artifact hash known
+- [x] recovery filesystem drill performed read-only
+- [x] important project remote/LFS restore proven
+- [ ] independent home-data backup current
+- [ ] encrypted secret backup current
+- [ ] representative independent restore proven
+- [ ] recovery documentation corrected/current
+
+#### Hardware
+
+- [ ] BIOS/ME decision frozen
+- [ ] VMX enabled and KVM physically accepted
+- [ ] OC sustained stable
+- [ ] RAM error-free
+- [ ] Commander Core sustained-load behavior accepted
+- [ ] NVMe SMART accepted
+- [ ] Btrfs scrub/device health accepted
+- [ ] Nix store verified
+
+#### Stock policy
+
+- [ ] CPU governor/EPP frozen
+- [ ] zram decision frozen
+- [ ] IRQ policy frozen
+- [ ] THP documented/frozen
+- [ ] NVMe scheduler recorded
+- [ ] maintenance timers recorded
+- [ ] no accidental performance flags/hacks
+
+#### Workloads
+
+- [ ] C/C++ final candidate accepted
+- [ ] Unreal full workflow accepted
+- [ ] Blender sustained final candidate accepted
+- [ ] Android/KVM accepted
+- [ ] Steam/Proton accepted
+- [ ] Gamescope/MangoHud/GameMode accepted
+- [ ] controller accepted
+- [ ] HDR accepted if part of normal workflow
+- [ ] Creative Stage Pro PipeWire route/reconnect accepted
+- [ ] network/Bluetooth/session accepted
+
+#### Stability
+
+- [ ] multi-day normal-use soak complete
+- [ ] no recurring failed units
+- [ ] no GPU resets
+- [ ] no filesystem errors
+- [ ] no thermal/cooling faults
+- [ ] no root/persistence regressions
+
+#### Experimental integrity
+
+- [ ] stock closure contamination policy exists
+- [ ] optimization module remains inert
+- [ ] no global compiler/linker tuning
+- [ ] final manifest committed
+- [ ] normal + persistent closure paths recorded
+
+Only then:
+
+```text
+GO FOR OPTIMIZATION
+```
+
+---
+
+### 20. Immediate next action
+
+Do **not** start the test-registry or storage-directory work from the current local state.
+
+First fix the half-completed username change.
+
+The exact starting condition is:
+
+```text
+remote:
+    c15a175
+    valid
+
+local:
+    flake.nix staged with username argument
+    workstation-smoke still old
+    workstation-smoke build fails
+    nix flake check fails
+    desktop closure remains accepted
+```
+
+Finish that one atomic change and return to:
+
+```text
+clean worktree
+flake check PASS
+workstation-smoke PASS
+desktop == accepted closure
+```
+
+Then push it, open the draft readiness PR, and use that PR as the live implementation surface for everything above.
+
+That is the correct continuation point for `plan.md`.
+
+The most important change in this unified version is that it separates three things that had become mixed together: **historical proof**, **current source cleanup**, and **future hard gates**. The Impermanence/stable-refresh work is no longer the blocker; the current critical path starts with repairing the half-finished username refactor, establishing working PR CI, then completing one final source-organization/safety pass before the physical hardware/workload phase.
+
+I would use this guide as a new “current continuation directive” near the top of `plan.md`, while leaving the existing historical execution ledger intact until the final baseline is tagged.
+
+---
+
+## Current authoritative state — reconciled 2026-10-05
+
+This section supersedes conflicting present-tense statements below. Historical
+records remain intact. The final pre-optimization baseline is **IN PROGRESS**.
+
+### Live workstation — verified during this update
+
+- [x] Running closure, booted closure and system profile all resolve to
+  `/nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Profile: `system-35-link`; kernel: `6.18.55`.
+- [x] Boot ID: `1299a2b6-c50b-4e83-8437-aa7e705914d6`.
+  Root subvolume **297**, UUID `f10d446f-0ed8-4a4d-bfc0-cb1c0932fa56`,
+  created 2026-10-05 13:49:16 Europe/Dublin. Persistent reset log records
+  `RESET complete` for that creation at 12:49:16 UTC.
+- [x] Normal root is ephemeral; matching persistent-root recovery closure:
+  `/nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+  Home/var remain persistent; selective home/var Impermanence is **DEFERRED**.
+- [x] Zero failed systemd units. NetworkManager, D-Bus, systemd-logind,
+  commander-core and home-manager-p2949 active. Session 1 active, Wayland.
+  `sudo -n true` succeeds. No secret contents were printed or changed.
+- MP600 persistent mounts, ESP and swap remain present; Ventoy USB is attached
+  and unmounted. No independent backup disk is currently attached.
+- No reboot, activation, graphical/cooling restart, GC, scrub or firmware change
+  was performed for this documentation update.
+
+### Physical acceptance and actual integration history
+
+- [x] Commit `7295363` records physical acceptance of
+  `c5e036b6e87d9aa77700909b508ccc0c3978d5b2`:
+  **normal → persistent-root → normal**, root 295 → retained 295 → fresh 297.
+  Recovery produced no reset-log increment; root-local probe survived recovery
+  and disappeared on normal reset; persistent probe survived both. Machine ID
+  stable, expected services active, zero failed units. Current root/closure
+  corroborate the final normal boot. This update did not repeat those trials.
+  The three earlier opt-in physical reset trials remain historical evidence.
+- [x] Live GitHub main: `f89205c07e4d3a77900b046a5bf937944488647b`.
+  PRs [#3](https://github.com/P2949/NixosConf/pull/3),
+  [#4](https://github.com/P2949/NixosConf/pull/4), then
+  [#6](https://github.com/P2949/NixosConf/pull/6) merged on 2026-10-05.
+  This differs from the guide's proposed single stable-refresh-to-main PR.
+  Record actual history; do not repeat or undo integration to mimic the proposal.
+- [~] Physical acceptance is recorded as passed, but no newer independent
+  home-backup/restore or matching-ISO physical read-only drill receipt was found.
+  Earlier receipts mark them pending. Desktop acceptance alone does not prove
+  these prerequisite checks. Reconcile missing evidence explicitly.
+- Earlier claims of root 292, October 2 live closure, uninstalled candidate,
+  no main integration and an active prerequisite hold are now historical.
+
+### Readiness branch and changes requiring validation
+
+- Branch: `feat/pre-optimization-readiness`; HEAD:
+  `c15a1756fe97ac89d7872326df70b0c758a0bfe0`, descended from integrated main.
+  Commits above main: `7295363`, `96c6a3d`, `c15a175`.
+- [x] `96c6a3d` moved Btrfs scrub and GC/scrub coordination into
+  `modules/storage/btrfs-maintenance.nix`; guard moved to
+  `modules/storage/maintenance-guard.sh`. Desktop import, test and README updated.
+  Generic GC/journal/coredump policy stays in core. Actual layout uses files,
+  rather than the guide's proposed directory structure.
+- [x] `c15a175` extracted `modules/storage/ephemeral-root-reset.sh`;
+  Nix substitutes escaped configuration placeholders with `builtins.replaceStrings`.
+  Implementation is committed; the running closure predates these refactors.
+- [~] Existing staged `flake.nix` change passes `username` into workstation-smoke.
+  The test still defines local `username = "p2949"` instead of accepting that
+  argument. This change is incomplete/unvalidated and has been preserved.
+- [ ] Live Actions query returned no readiness-branch runs. Frozen-candidate
+  passes do not validate later refactors or the staged change. Required checks,
+  closure comparison and subsequent physical acceptance remain outstanding.
+- Other worktrees now point to stable-refresh `67b0c41` and workstation
+  `ad89962`; do not call them frozen c5e checkouts. Accepted c5e and archived
+  receipts remain the original acceptance reference.
+- Lock SHA-256 unchanged:
+  `7efb19569e8a022768cd570498ff8b93cb98b108358149b668a658e2d9f406a2`.
+  No compiler optimization or final baseline tag is claimed.
+
+### Preserved evidence and remaining gates
+
+- [x] Exact c5e batch finished exit 0: fast 76.21s, safety 160.54s,
+  recovery 382.18s, A 310.53s, B 365.86s, fallback 482.58s,
+  workstation-smoke 10.04s, desktop/ISO 25.44s. Workstation-smoke reused a
+  successful derivation; no fresh VM execution. No batch remains running.
+  Private receipts/logs/guide/preflight:
+  `/persist/nixos-logguard-refresh-20261005/`. bv3→czk closure delta was only
+  system/initrd; no other package/kernel movement. This excludes later refactors.
+- Matching recovery ISO: `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`,
+  1,496,678,400 bytes; SHA-256
+  `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
+  Prior Ventoy copy/remount hash and clean filesystem checks passed;
+  exact physical ISO drill remains unproven in available receipts.
+- Retain eleven preparation GC roots, known-good generations, forensic roots
+  and home staging until the relevant retention milestone.
+  `/persist/nixos-preparation-gcroots.json` records protected identities.
+- [ ] Independent home backup/external restore. Read-only snapshot
+  `/persist/backup-staging/home-20261005` and its two-file restore are same-disk.
+  User reports older separate secrets backup; fresh secrets restore is unproven.
+  Git/LFS restore covers tracked project data only, not ignored work, autosaves,
+  loose Blender files or application state. Existing inventories remain relevant.
+- [ ] Finish module/test/flake/recovery ownership cleanup; critical
+  `system.checks`, guarded `system.preSwitchChecks` with negative tests, ESP
+  reserve evidence, blank-disk reconstruction VM, explicit secret contract and
+  Facter comparison. Facter adoption remains optional if unjustified.
+- [ ] Firmware decision/settings and VMX enablement remain unresolved in earlier
+  evidence. CPU sustained stability unproven: intended 30-minute test stopped
+  after about 5 seconds at 80°C. Cooling response is not capacity proof;
+  do not raise the cutoff merely to pass.
+- [ ] Final-candidate real workloads/hardware: sustained Blender/Unreal,
+  gaming/controller/HDR where required, Creative Stage audio,
+  Android/virtualization and multi-day soak. Existing Vulkan/Gamescope, HIP,
+  Unreal compile/map smoke results retain their limited scope.
+- [ ] Complete validation and readiness→main integration, compare actual-main
+  closure, then annotate `nixos-26.05-pre-optimization-baseline`.
+  Only afterward create `feat/optimization-framework-v2` and stop at the boundary.
+- Continue offline work without unnecessary reboots; batch justified physical
+  checks into a planned window and preserve the graphical session.
 
 ---
 
@@ -2786,11 +13250,11 @@ Copy this under any complicated task.
 ```markdown
 ### Task: <name>
 
-**Status:** TODO / IN PROGRESS / BLOCKED / DONE / REJECTED  
-**Reason:**  
-**Current state:**  
-**Desired state:**  
-**Dependencies:**  
+**Status:** TODO / IN PROGRESS / BLOCKED / DONE / REJECTED
+**Reason:**
+**Current state:**
+**Desired state:**
+**Dependencies:**
 
 #### Implementation
 
@@ -2812,12 +13276,12 @@ paste non-secret output here
 
 #### Result
 
-**Commit:**  
-**Generation:**  
-**System closure:**  
-**Decision:**  
-**Rollback:**  
-**Follow-up:**  
+**Commit:**
+**Generation:**
+**System closure:**
+**Decision:**
+**Rollback:**
+**Follow-up:**
 ```
 
 ---
@@ -4666,3 +15130,22152 @@ started. Current turn is a prerequisite hold, not new implementation completion.
 Next external input: connect/identify independent backup destination; then execute
 backup and representative restore before the planned physical maintenance window.
 Goal remains active; first consecutive impasse audit, not marked blocked.
+
+
+Physical acceptance completed — 2026-10-05
+
+Accepted source:
+c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+
+Normal closure:
+czk5a2wn8di3pgv8a6w0b8aj3286g3h3
+nixos-system-desktop-26.05.20261004.0d9e9b8
+
+Persistent-root closure:
+9ppcqjkfnid501na0wc8jjysynp0kp1p
+nixos-system-desktop-26.05.20261004.0d9e9b8
+
+Kernel:
+6.18.55
+
+Recovery ISO:
+d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+SHA-256:
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+
+Physical sequence:
+normal -> persistent-root -> normal
+
+Results:
+- first normal boot reset root to subvolume 295
+- persistent-root retained subvolume 295
+- persistent-root produced no reset-log increment
+- root-local and persistent probes both survived persistent-root
+- second normal boot replaced root 295 with 297
+- root-local probe disappeared
+- persistent probe survived
+- machine-id remained stable
+- all expected core services active
+- zero failed systemd units
+
+Decision:
+physical acceptance gate PASSED.
+stable-refresh integration gate PASSED.
+pre-optimization readiness engineering may now begin.
+
+
+## Readiness execution — username and CI repaired, 2026-10-05
+
+Latest attachment 36a1ce44 is byte-identical to the already integrated guide
+(SHA-256 85e1f947e5c9a77d0d1d311478be4989021caafbfe56b263a034d29a355cff20).
+Guide import committed as 40a9a1b. Username repair committed/pushed as 2334858;
+full flake check exit 0, workstation-smoke output exactly 1anhzd1q0pby5zy8qzyr6lf9spr5a0sb,
+desktop exactly accepted czk5a2wn8di3pgv8a6w0b8aj3286g3h3. Successful VM output
+was reused, not re-executed. Logs: /tmp/readiness-username-{fast,smoke,desktop}.log.
+2976771 switches feature CI to PRs with main-only push, retaining concurrency.
+Current-status documentation corrected without rewriting historical evidence.
+Backup destination requested; code preparation continues independently. No
+physical reboot, live activation or graphical/cooling restart performed.
+
+## Readiness execution — storage packaging and data interface, 2026-10-05
+
+PR #7 is draft and Flake checks passed at 4c81db7 (run37334007796).
+05d7119 groups both storage features with helpers; source scripts byte-identical.
+Initial guard basename changed the system closure; builtins.path preserves the
+accepted maintenance-guard.sh store identity. Final fast checks pass and desktop
+exactly czk5a2wn8di3pgv8a6w0b8aj3286g3h3. da2f1c7 moves scrub host schedule back
+to desktop and adds counterpart assertions; fast checks pass and exact desktop
+closure remains unchanged. Logs /tmp/readiness-storage-*-final.log and
+/tmp/readiness-maintenance-{fast,desktop}.log.
+
+Reset data interface replaces textual/code substitutions with escaped scalar
+assignments and allowed_descendants array; Bash owns exact descendant matching.
+Source ShellCheck passes. Fast session78939 and sequential heavy session43910
+are pending, not acceptance. Heavy uses max-jobs1/cores2; original unbounded
+invocation cancelled before completion and restarted with bounded concurrency.
+CPU briefly sampled81C while the user's game and evaluation were active;
+background Nix clients lowered to nice19, later sampled69C, cooling active.
+No user game/session or cooling process was stopped.
+
+User explicitly selected existing Ventoy USB for backup. Verified UUID1BF6-1635,
+40,245,919,744 bytes initially free. Additive home snapshot home-ventoy-20261005
+created. Backup under NixosConf-backups/2026-10-05 includes all home plus engine
+source/assets; excludes installed engine ZIP and engine Binaries/Intermediate/
+DerivedDataCache directories (1481 excluded paths recorded privately). Included
+logical size50,244,561,937 bytes/348166 files, compressed with one zstd thread.
+4GiB free-space reserve enforced; archive integrity/hash and representative
+restore still pending in session50539. No secrets outside home included; user's
+existing separately held secret backup is not a newly tested encrypted restore.
+Private inventory/exclusions/runner receipts: /persist/nixos-ventoy-backup-20261005.
+Ventoy boot files/partitioning left intact; no format, delete or physical reboot.
+
+## Readiness execution — test subsystem, 2026-10-05
+
+Reset-interface fast checks completed exit0; root VM matrix remains running.
+Built reset-interface desktop grii8zp9miayx0747i1lvr6r91jzmyr6. Version-level
+closure diff vs accepted czk is empty; generated initrd/system identities change
+because the data interface changes rendered script. No physical acceptance claim.
+
+Tests now have explicit tests/default.nix registry, workstation/hardware/storage
+subdirectories, shared ephemeral-root harness and semantic scenario filenames.
+Semantic output names added; all historical checks/package aliases preserved.
+Root flake delegates detailed validation and remains the input/configuration
+entry point. Full fast checks exit0 including hardware-free Python7tests.
+Workstation-smoke reproduces1anhzd1q0pby5zy8qzyr6lf9spr5a0sb; built desktop
+remains grii8zp9miayx0747i1lvr6r91jzmyr6 for this source-only reorganization.
+Logs /tmp/readiness-test-registry-{fast,desktop-smoke,format}.log.
+
+## Readiness execution — native safeguards and backup scheduling, 2026-10-05
+
+Recovery image move aebae83 reproduces exact d55 ISO. Commander cleanup1613e19
+requires all policy arguments, passes watchdog seconds from one Nix constant,
+retains validation and adds Ruff format checking. Eight hardware-free tests,
+config check and unchanged workstation-smoke pass. Initial hysteresis fixture
+still relied on removed defaults; corrected to explicit test-only policy.
+01e019b adds shell syntax/ShellCheck checks as system.checks dependencies and
+reuses them in flake checks. Full current fast checks passed.
+
+Named activation guards now inspect /persist mount, root-owned0600/nonempty/
+non-aliased password source, ESP mount/free reserve and Btrfs topology. They
+never delete/reset subvolumes. ESP reserve256MiB based on largest installed
+initrd45,631,321bytes and3,948,449,792bytes free. Hardware-free fixture suite
+45cases passes. Generated preSwitchChecksScript executed directly read-only on
+this host with dry-activate arguments and exit0; no native host activation.
+Native action VM pending; its first failure was harness default disabling
+system.switch.enable, corrected explicitly, and stderr now captured for refusals.
+Built candidate normal l994fn5hpd2g2rijyffprl4368587m5w and persistent
+cxc50rmb8i6akb62fcvzz3xkszzqf895; these are NOT physically accepted.
+
+Stock control rejects four project-owned namespaces with native forbidden
+closure checks. Negative build now fails specifically for included
+8ii33j1vxfgl9z2gs954jbiwppsrhhlf-nixos-opt-pgo-fixture. Initial grouped regex
+exposed upstream unquoted shell interpolation; switched to four plain patterns.
+An empty probe dropped out of buildEnv closure; corrected to a retained bin file.
+Positive candidate normal/persistent builds succeed. No optimization introduced.
+
+USB writeback made host sgdisk's global sync wait (confirmed kernel stack), not
+an initrd/VM test failure. Compressor PID521504 temporarily SIGSTOP'd to drain
+about3GiB dirty pages; partial backup retained, not verified. Supervisor session12930
+resumes it automatically when root-matrix Nix PID527727 exits. Root matrix
+session43910 continues; backup session50539 remains unfinished. Do not forget
+resume/terminal verification or claim external restore before receipt exists.
+User graphical session, game and Commander Core remain running. No host reboot.
+
+## Readiness execution — activation accepted in VM, reconstruction prepared, 2026-10-05
+
+Native activation action VM now passes, output
+/nix/store/zwbjrn73wajchh8360m4lb7d5iz1lf62-vm-test-run-activation-safety-actions.
+It exercises test/boot/switch/dry-activate refusal and success using native
+switch-to-configuration; bootloader writer is intentionally test-only. No
+physical host action was invoked. Earlier harness-disabled switch binary and
+uncaptured stderr were corrected; rejected runs are not acceptance evidence.
+
+Blank-disk reconstruction is registered as an explicit heavy package. It
+reuses actual desktop Disko/workstation/Home Manager contracts with virtual
+disk/cooling/test-agent overrides, creates a96GiB sparse target, seeds a
+fixture-only secret at the production path and installs pinned closure/UEFI.
+Installed QEMU boots disk/UEFI only, with no host store/kernel/initrd. It tests
+two normal resets and persistent-root retention. Evaluation and full flake
+checks pass, but actual execution is still required. Do not mark this gate done.
+An initial duplicate Nix attribute in installer Disko setup was fixed before
+successful evaluation. docs/reconstruction.md describes precise scope.
+
+External bootstrap-secret Model A documented in docs/bootstrap-secrets.md;
+new encrypted framework is unnecessary for this baseline. User was asked for
+existing encrypted backup location/key method for a restore check, without
+requesting secrets/passwords in chat. Fresh encrypted restore remains open.
+User's explicit Ventoy backup choice supersedes the guide's older no-USB-target
+recommendation; no-format/no-erasure preservation remains mandatory.
+
+Btrfs coordination counterpart evaluation test added: one valid control and
+three disabled/missing counterpart refusals; execution pending at this record.
+
+## Readiness execution — exclusion audit and final preparation checks, 2026-10-05
+
+Latest full preparation flake check exits0, including new maintenance-config
+control/refusals. Reconstruction now also checks credential equality, persistent
+journal, return to normal after recovery and read-only installer inspection of
+all expected subvolumes. Its VM execution remains queued behind backup completion
+(session75533); implementation/evaluation is not reconstruction acceptance.
+
+Engine exclusion audit compared26000 binary files to retained distribution ZIP
+by size/CRC; all matched, with no read errors.47 additional/different binary-area
+files (1,508,851bytes total) were independently archived on Ventoy and all47
+restored/hash-compared successfully. Supplement569761bytes; root-private
+engine-exclusion-audit.json and supplement-receipt.json under backup receipt dir.
+CRC comparison establishes equality to local ZIP, not vendor authenticity.
+Generated intermediate/cache directories and installation ZIP remain excluded.
+Main home archive/representative restore still pending; supplement alone is not
+full home acceptance. Snapshot was taken without application quiescence.
+
+Two candidate GC roots added (readiness-guards-candidate and
+readiness-guards-persistent); all13 roots verified, no earlier root retired.
+Completed preparation logs preserved root-owned0600 under
+/persist/nixos-readiness-20261005. Root-matrix log/receipt must be preserved only
+with terminal status; currently final safety VM running. Backup resumes when
+that Nix process exits. No physical activation/reboot or final-baseline claim.
+
+## Readiness execution — user confirmations, 2026-10-05
+
+This record supersedes earlier open secrets-restore and firmware-choice gates.
+
+- [x] Separate `/persist/secrets` backup and restore: the user confirms this
+  was already performed during recovery from an actual system failure. Evidence
+  is user-reported successful recovery, not a fresh agent-run restore. Private
+  location/hash/key method were not collected. Do not repeat this completed gate.
+- [x] Firmware decision: retain BIOS 3201/current ME. No update is planned.
+  VMX enablement and stability validation remain open. No reboot is triggered.
+- [x] Five reset scenarios passed; session43910 exited0: safety
+  `22h49w4jvsvywvcj5bcybl0600ksr5qq`, interrupted recovery
+  `mbm4m0f5l1hffdifgg0ldwzb1f2bd28p`, reset control
+  `00viicfiafzw6ys40yqq1zlix2zmb38w`, persistent identity
+  `b0hr6yij7b07sap4jrflfbr7jvj6hh01`, fallback
+  `4wgixv6kb41hbxppkkigk4fz8n77vlrw`. Terminal log preserved under
+  `/persist/nixos-readiness-20261005`.
+- [~] Ventoy compressor resumed after reset tests. Main archive and restore
+  remain pending until the verification receipt exists.
+- [~] Reconstruction remains queued behind verified backup. Installer root
+  uses unique virtio-root identity to avoid the target's duplicate nixos label.
+
+No live activation, reboot or graphical-session interruption occurred.
+
+Reconstruction preflight corrected Disko invocation to its executable store
+path: pinned makeScriptWriter exposes a direct executable symlink, so appending
+/bin/disko was invalid. Runtime acceptance remains pending.
+
+Corrected reconstruction evaluates successfully to
+`8fqjrlw2v2q61579lr1y2lqlkgrry0lr-vm-test-run-blank-disk-reconstruction.drv`.
+Evaluation is not runtime acceptance.
+
+## Readiness execution — retained-firmware storage observation, 2026-10-05
+
+Read-only NVMe/Btrfs receipts were captured under root-private
+`/persist/nixos-readiness-20261005`. Critical warning0, media errors0,
+spare100%, wear18%, temperature315K (about42°C), warning/critical temperature
+time0. Cumulative error-log entries12143 versus earlier12137; retained newest
+entry is admin queue0, status0x2002, parameter offset40, LBA/namespace0.
+This does not explain every historical error; storage acceptance remains open.
+Unsafe shutdown count2214 is recorded, not dismissed. Btrfs device counters
+all0; last scrub finished2026-10-04 with no errors. No new scrub or Nix store
+content verification ran while backup/game were active. No current-boot kernel
+matches for the captured NVMe/Btrfs error patterns. Backup runner and exclusion
+audit scripts preserved root-private alongside receipts for reproducibility.
+
+Firmware and backup runbooks now explicitly reflect the user's retained
+BIOS3201/currentME choice and completed real secrets recovery; older conflicting
+recommendations in the historical ledger are superseded, not silently erased.
+
+## Readiness execution — loaded pressure interval, 2026-10-05
+
+Read-only55-second sample while user's existing Proton game and USB backup
+continued: MemAvailable26,371,032→26,488,752KiB; occupied disk swap about4.5GiB;
+pswpin+4904 pages, pswpout0, major faults+2159, OOM kills0. Memory PSI some/full
+avg10 ended0.01%, avg60 0.04/0.03%; GPU IRQ159 delivered42945 interrupts onCPU7.
+This is preparation after VM tests, not controlled idle or exact final-candidate
+acceptance. Timer/function-call distribution is not proof device IRQs are
+balanced. Retain current zram/irqbalance settings pending representative final
+workload evidence; no tuning occurred. Full private before/after receipt and
+collector script preserved under `/persist/nixos-readiness-20261005`.
+
+Optional isolated Facter adoption is consciously deferred for this baseline:
+existing explicit hardware configuration remains reviewed and tested; no
+identified hardware-provenance defect requires changing that framework. This
+optional experiment does not replace required physical hardware validation.
+
+PR CI37343573400 was cancelled by the newer push's configured concurrency;
+replacement37343814838 validates b4a1584 and is still running at this record.
+This is not a check failure or acceptance of an unfinished run.
+
+## Readiness execution — reconstruction driver preflight, 2026-10-05
+
+Custom installed-disk guest now starts with allow_reboot=True: pinned test
+machine driver otherwise adds -no-reboot, which would terminate QEMU at the
+first reboot and invalidate the normal/recovery/normal sequence. Final
+read-only layout inspection now covers all seven production subvolumes,
+including @snapshots. Disko's direct executable uses its noninteractive legacy
+destroy implementation and is restricted to the blank virtual target; no
+physical disk command is executed. Corrected test evaluates successfully to
+`1l6h8zxp25wmifd2bacl006p4lcwb491-vm-test-run-blank-disk-reconstruction.drv`.
+Runtime acceptance remains queued, not proven. Documentation reflects full
+credential/journal/return-normal/layout checks. No physical reboot occurred.
+
+## Readiness execution — candidate closure review, 2026-10-05
+
+Accepted normal closure `czk5a2wn8di3pgv8a6w0b8aj3286g3h3` was compared with
+uninstalled candidate `l994fn5hpd2g2rijyffprl4368587m5w`; both are
+`nixos-system-desktop-26.05.20261004.0d9e9b8`. Current source dc668d0 still
+evaluates to that exact candidate. Persistent counterpart is
+`cxc50rmb8i6akb62fcvzz3xkszzqf895`.
+
+Closure sizes: 16,985,654,488 → 16,985,659,544 bytes (+5,056). No package-version
+transitions are reported. Membership: 2,207 → 2,208 paths, with12 added/11
+removed. All changes are generated etc/system units, Commander keeper source
+and wrapper/unit, initrd, normal/persistent system outputs, pre-switch checks
+and the new workstation activation checker. Kernel store path is identical
+(`na8n3qdqf1fs7lwads81ra9nlh1hqc9w-linux-6.18.55`).
+
+Material explanations: explicit Bash reset data interface changes initrd;
+required Commander policy arguments and derived watchdog change keeper/unit;
+named read-only activation prerequisites change pre-switch checker and switch
+references. Top-level activate/prepare-root/boot metadata references follow the
+new system identities. No compiler optimization or dependency refresh occurred.
+The forbidden stock namespaces and build checks are build-time protections.
+
+Private closure membership and recursive system-output differences are retained
+under `/persist/nixos-readiness-20261005`. This is preparation review, not
+physical acceptance or the final freeze comparison. Both old and candidate
+closures remain GC-protected; no installation or profile replacement occurred.
+
+## Readiness execution — published preparation CI accepted, 2026-10-05
+
+GitHub run37344821840 completed successfully for exact source
+`4e9e6a312cd786a18a8be326928a9a956ae2b43b`. Flake checks include current
+reconstruction evaluation/preflight and source formatting checks; the heavy
+reconstruction package is not executed by CI. Earlier superseded runs cancelled
+by workflow concurrency are not failures or substitutes for this terminal result.
+
+Live backup processes521492/521503/521504 remain active; archive is about20GB
+and increasing, with no logged pipeline error. Queued reconstruction supervisor
+730405 remains live and requires the verified backup receipt before starting.
+No backup completion, restore acceptance, physical activation or reboot is
+claimed from this checkpoint. Worktree was clean before this ledger update.
+
+## Continuation reviews adopted — 2026-10-05
+
+User request: read, record both attached reviews, then follow their applicable
+instructions. The reviews describe snapshot75a649c; current live state takes
+precedence over stale status claims. Full source texts are retained below.
+Immediate tasks: exact-desktop reconstruction via extendModules; workstation
+activation-safety namespace/location plus deliberate prerequisite assertions;
+fixed Ubuntu/action SHA pins; README docs tree correction; execute reconstruction
+after verified Ventoy backup. No generic host framework or broad refactor.
+Facter comparison is isolated/non-blocking, superseding the earlier conscious
+deferral as an experiment to revisit after reconstruction. Generated option
+docs are low-priority optional work. Distributed builds, optimization matrices,
+dependency grafting, signed cache, offline full build closure and remote
+deployment are future experiments, not baseline requirements. Preserve inert
+optimization and persistent home/var. Defer docs moves, plan archival and
+compatibility/store-basename/VSCode cleanups until after the baseline tag.
+
+### Attached source: Architecture and maintainability review
+
+Source: `/home/p2949/.codex/attachments/142886c5-3b74-483a-8b84-721ae344eaf6/Pasted text.txt`
+SHA-256: `d261b8b667a2b5d00f11acbefe800caada6973db53ed4f2607564a43a8a9e05d`
+
+> I took another fresh pass over the **current** `feat/pre-optimization-readiness`, rather than using the previous `c15a175` review as the answer.
+>
+> The branch has moved substantially. It is now at **`75a649ca15fe876f4e6a62c9d933338454dd1546`**, with the latest commit recording successful preparation CI and a backup checkpoint.  PR #7 is open as a draft against `main`, with **23 commits and 54 changed files**.   I also checked the current PR-head workflow run: the Nix checks are succeeding.
+>
+> The biggest change in my assessment is this:
+>
+> > **Most of the architectural cleanup I previously recommended is now finished. I would stop looking for broad ways to make the repository “more modular.” There are only a few real structural improvements left; beyond them, further abstraction will make this one-host config harder to understand rather than easier.**
+>
+> ## Current state
+>
+> | Area | Fresh assessment |
+> |---|---|
+> | `flake.nix` | **Good now.** Thin enough; validation is delegated. |
+> | `tests/` | **Good.** Proper subsystem and semantic organization. |
+> | Storage modules | **Good.** Feature directories and implementation co-location are in place. |
+> | Ephemeral-root Nix/Bash boundary | **Good.** Nix now supplies data; Bash owns logic. |
+> | Btrfs maintenance ownership | **Good.** Host owns schedule; module owns mechanism. |
+> | CI branch policy | **Fixed.** Main push + PR is the right model. |
+> | Recovery ISO | **Fixed.** Correctly lives under `images/`. |
+> | Username source of truth | **Fixed.** Smoke test consumes the flake username. |
+> | Commander Core | **Fixed.** Python policy defaults removed; watchdog centralized. |
+> | Current-status docs | **Much better.** `docs/status.md` exists. |
+> | Stock contamination control | **Good.** Explicit project namespace + negative test. |
+> | Activation safety | **Implementation good; ownership/naming could improve.** |
+> | Blank-disk reconstruction | **Very good test, but duplicates production assembly. This is now the biggest maintainability issue.** |
+> | Documentation tree | **Starting to get crowded.** Final cleanup should happen after baseline freeze. |
+> | `plan.md` | **Huge but still operationally useful. Archive after readiness.** |
+>
+> The root flake is a particularly good improvement. It now essentially defines inputs, package sets, development shells, the validation registry and the two NixOS configurations; the old wall of test registrations is gone.  `tests/default.nix` has become the single validation registry, while the actual tests are organized by workstation/hardware/storage concern.  I would **not split that registry further yet**.
+>
+> ### The highest-value remaining refactor: stop reconstructing the desktop configuration twice
+>
+> This is the strongest fresh recommendation.
+>
+> Your production desktop is constructed in `flake.nix` with Disko, Home Manager, Impermanence, the desktop host, shared `specialArgs`, and the Home Manager user integration.
+>
+> But `tests/storage/ephemeral-root/reconstruction.nix` independently rebuilds nearly the same composition:
+>
+> ```nix
+> installed = inputs.nixpkgs.lib.nixosSystem {
+>   specialArgs = { ... };
+>
+>   modules = [
+>     inputs.disko.nixosModules.disko
+>     inputs.home-manager.nixosModules.home-manager
+>     inputs.impermanence.nixosModules.impermanence
+>
+>     ../../../hosts/desktop
+>
+>     # recreated Home Manager integration,
+>     # stateVersion, fixture overrides, ...
+>   ];
+> };
+> ```
+>
+>
+>
+> That creates a subtle but important drift risk:
+>
+> ```text
+> real desktop composition
+>         │
+>         ├── changes later
+>         │
+>         ▼
+> reconstruction fixture may silently remain on old composition
+> ```
+>
+> And this particular test is supposed to prove something stronger than almost every other test:
+>
+> > the actual workstation definition can reconstruct the machine from a blank disk.
+>
+> So it should consume the **actual desktop system definition**, not reconstruct a close approximation of it.
+>
+> I would first try using the existing NixOS configuration's `extendModules` support. Conceptually:
+>
+> ```nix
+> desktopSystem = inputs.self.nixosConfigurations.desktop;
+>
+> installed = desktopSystem.extendModules {
+>   modules = [
+>     ({ lib, modulesPath, ... }: {
+>       imports = [
+>         (modulesPath + "/testing/test-instrumentation.nix")
+>         (modulesPath + "/profiles/qemu-guest.nix")
+>       ];
+>
+>       disko.devices.disk.main.device = lib.mkForce diskDevice;
+>
+>       hardware.commanderCore.enable = lib.mkForce false;
+>
+>       # Other fixture-only overrides...
+>     })
+>   ];
+> };
+> ```
+>
+> Then `tests/default.nix` can receive `desktopSystem` rather than merely `desktopConfig`.
+>
+> If `extendModules` produces an undesirable recursion/evaluation issue in this flake, the fallback I'd use is a **desktop-specific constructor**, for example:
+>
+> ```text
+> hosts/desktop/system.nix
+> ```
+>
+> used by both the flake and reconstruction test.
+>
+> I still would **not** build a generic `mkHost`, `mkSystem`, host framework, or giant `lib/`. Two consumers now genuinely need the exact same desktop assembly, so factoring *that specific assembly* has become justified.
+>
+> The workstation smoke test should remain different. Its purpose is deliberately to test the reusable workstation profile/Home Manager without physical Disko, Commander Core or destructive root-reset behavior.
+>
+> ## `activation-safety` is now in the wrong architectural category
+>
+> The implementation itself looks good. You have four named pre-switch checks, and the shell implementation is read-only and defensive.
+>
+> But this:
+>
+> ```text
+> modules/storage/activation-safety/
+> ```
+>
+> is no longer an accurate description.
+>
+> The module validates:
+>
+> ```text
+> /persist mount
+> password credential backing file
+> ESP free space
+> Btrfs/root topology
+> ```
+>
+> Only about half of that is storage.
+>
+> Likewise:
+>
+> ```nix
+> boot.workstationActivationSafety
+> ```
+>
+> isn't really a boot option. It controls `system.preSwitchChecks`.
+>
+> I'd use something like:
+>
+> ```text
+> modules/
+> └── workstation/
+>     └── activation-safety/
+>         ├── default.nix
+>         └── check.sh
+>
+> tests/
+> └── workstation/
+>     └── activation-safety/
+>         ├── guard.nix
+>         ├── actions.nix
+>         └── test_guard.py
+> ```
+>
+> with an option namespace such as:
+>
+> ```nix
+> workstation.activationSafety = {
+>   enable = true;
+>   espReserveBytes = 256 * 1024 * 1024;
+> };
+> ```
+>
+> This isn't urgent for correctness, but it would make the taxonomy more truthful.
+>
+> While touching it, I'd also make its configuration prerequisites explicit. The module currently assumes the selected user has a `hashedPasswordFile`, `/boot` exists, and the ephemeral-Btrfs-root configuration exists.  Those assumptions are true for your desktop, but reusable modules are easier to maintain when an invalid composition generates a deliberate assertion like:
+>
+> ```text
+> workstation.activationSafety requires:
+> - ephemeral Btrfs root enabled
+> - concrete /boot filesystem
+> - configured hashedPasswordFile
+> ```
+>
+> rather than eventually producing an obscure missing-attribute evaluation failure.
+>
+> ## CI is structurally correct now; make it reproducible
+>
+> The stale feature-branch trigger from my previous review is gone. The workflow now correctly runs on pushes to `main` and on pull requests.  That's the model I would keep.
+>
+> There is one remaining improvement I'd make for a repository that is going to be used for controlled optimization experiments: reduce mutable CI infrastructure.
+>
+> Currently:
+>
+> ```yaml
+> runs-on: ubuntu-latest
+>
+> uses: actions/checkout@v7
+> uses: cachix/install-nix-action@v31
+> ```
+>
+>
+>
+> I would use a fixed runner generation such as `ubuntu-24.04` and pin the two actions to full commit SHAs, with comments indicating the corresponding release. A Dependabot config can update those pins later if you want automation.
+>
+> Nix makes your *build inputs* reproducible; pinning the GitHub Actions layer makes the machinery that launches those builds less mutable too.
+>
+> I wouldn't make CI substantially more complicated than that. In particular, I still wouldn't put the multi-reboot VM suite or blank-disk reconstruction into every PR run.
+>
+> ## The new storage architecture is essentially finished
+>
+> The previous home-grown token templating has been removed. `ephemeral-btrfs-root/default.nix` now injects escaped values and an array, then reads ordinary Bash.  `reset.sh` itself owns the descendant-membership logic and destructive procedure.
+>
+> That's the right boundary:
+>
+> ```text
+> Nix
+>   typed configuration
+>   escaping
+>   systemd wiring
+>        ↓
+> Bash
+>   procedural reset implementation
+> ```
+>
+> I would leave this architecture alone.
+>
+> The same applies to Btrfs maintenance. Its module now asserts that automatic GC and the `/` scrub exist, while owning only coordination/ordering and the guard.  The desktop owns the actual monthly scrub policy.
+>
+> That's exactly the host-policy/module-mechanism division I'd recommend.
+>
+> There is one deliberate bit of transitional baggage:
+>
+> ```nix
+> guardSource = builtins.path {
+>   path = ./guard.sh;
+>   name = "maintenance-guard.sh";
+> };
+> ```
+>
+> with the comment that this preserves the accepted store identity.
+>
+> I would **not change that before the baseline freeze**. After the baseline project is complete, you can decide whether preserving that historical store basename is still worth the oddity.
+>
+> ## Your experimental-control layer is in good shape
+>
+> `stock-control.nix` is deliberately tiny:
+>
+> ```nix
+> system.forbiddenDependenciesRegexes = [
+>   "-nixos-opt-cpu-"
+>   "-nixos-opt-lto-"
+>   "-nixos-opt-pgo-"
+>   "-nixos-opt-bolt-"
+> ];
+> ```
+>
+>
+>
+> And you've done the important part I cared about: there is an explicit negative system containing a named PGO fixture.  The documentation also correctly notes that a failure for an unrelated reason doesn't prove the contract and that `system.extraDependencies` is outside this check.
+>
+> I would leave `modules/core/stock-control.nix` where it is for now. Creating a `research/`, `experiments/`, or `controls/` hierarchy for one eleven-line module would be architecture theatre. Once the actual optimization framework contains several related control modules, *then* it may warrant its own namespace.
+>
+> And `optimization/default.nix` is still inert. Keep it that way until the stock baseline tag exists.
+>
+> ## Documentation has improved, but is now the next organizational pressure point
+>
+> `docs/status.md` fixes the most serious problem from the last review. It clearly separates the accepted physical system from the current implementation line and current open gates.
+>
+> That's good.
+>
+> But the actual `docs/` directory now contains a substantial set of documents—activation safety, backup/restore, baseline capture, bootstrap secrets, closure review, development validation, firmware preparation, Impermanence, maintenance, persistence, physical validation, reconstruction, stable refresh, status, stock control and more.
+>
+> Meanwhile the README's repository tree still effectively presents:
+>
+> ```text
+> docs/
+> └── baselines/pre-optimization/
+> ```
+>
+> which no longer describes the docs architecture very well.
+>
+> I would make the **README correction now**, but defer actually moving all those documents until the readiness project is finished. Cross-linking a dozen live documents while `plan.md` is actively recording evidence creates churn for little current benefit.
+>
+> After the baseline freeze, I'd move toward:
+>
+> ```text
+> docs/
+> ├── status.md
+> ├── design/
+> ├── runbooks/
+> ├── validation/
+> ├── baselines/
+> └── history/
+> ```
+>
+> At the same time, archive `plan.md`. It is now roughly **283 KB** at the repository root.  It has served its purpose well as a forensic execution ledger, but once the tag exists, it should become historical evidence rather than the main project-navigation document.
+>
+> ## A couple of deliberately small cleanups remain
+>
+> VS Code is still under `home/p2949/desktop/default.nix` as “Work”, while the development module owns clang tooling and Nix formatting.   Moving VS Code to development would be semantically cleaner, but it is very low priority.
+>
+> The old flake package aliases such as:
+>
+> ```nix
+> impermanence-root-test-a = reset-control;
+> impermanence-root-test-b = persistent-identity;
+> ```
+>
+> are also still present.  I think keeping them while `plan.md` and historical commands still refer to A/B is sensible. Once the plan is archived and the semantic names are the documented interface, remove the aliases and the `rec` package set can probably become an ordinary attrset.
+>
+> Your system package ownership has also reached a sensible state: system/recovery utilities remain system-wide, while interactive CLI tools have moved to Home Manager.   I would stop moving packages around unless actual usage exposes a bad owner.
+>
+> ## What I would implement from here
+>
+> 1. **Make blank-disk reconstruction derive from the exact real `desktop` NixOS configuration**, preferably with `extendModules`; this is the one architectural issue I consider genuinely important now. Then execute that reconstruction test, because `docs/status.md` still correctly lists it as an open gate.
+> 2. **Rehome and rename `activation-safety`** to a workstation/system-safety concern and add explicit module assertions for its prerequisites. Keep the current shell implementation together rather than splitting its four roles into four tiny scripts.
+> 3. **Make CI infrastructure slightly more deterministic**: fixed Ubuntu runner plus commit-pinned GitHub Actions. Keep the current simple main/PR trigger model.
+> 4. **Correct the README's repository/docs representation now**, but postpone the large `docs/` directory reorganization and `plan.md` archival until the pre-optimization baseline is actually complete.
+> 5. **After the final baseline tag**, remove transitional compatibility baggage: A/B flake aliases, any store-name-preservation hacks you no longer value, archive the execution ledger, and do tiny semantic cleanups such as moving VS Code. Then stop refactoring and create the fresh optimization branch.
+>
+> The target architecture is therefore no longer dramatically different from what you already have. The repository has reached the point where **stability of the architecture is itself a maintainability feature**. Your host/profile/core/desktop/Home Manager split, storage modules, test registry, recovery image, CI model, custom hardware module, and experimental contamination controls are all at a level where I would actively resist adding flake-parts, flake-utils, a generic host framework, overlays for their own sake, or another layer of module aggregation.
+>
+> At this point, the more important remaining work is the readiness work already recorded in `docs/status.md`: blank-disk reconstruction execution, the current backup/restore work, hardware/VMX and sustained stability gates, exact-candidate workload acceptance, and the soak.  Those will improve the quality of the eventual optimization baseline much more than another round of broad Nix refactoring.
+
+### Attached source: NixOS feature and readiness review
+
+Source: `/home/p2949/.codex/attachments/ec8e48c1-3c13-4d5c-a3ce-f07ed96fe37d/Pasted text.txt`
+SHA-256: `daac048824eaab83bc6bbc0985723670b9d3c52582b34f932049ac3b5c9af7cb`
+
+> I took another fresh look at the live branches. The answer has changed substantially again.
+>
+> `feat/pre-optimization-readiness` is now at `75a649ca15fe876f4e6a62c9d933338454dd1546`, and PR #7 is an open draft with 23 commits and 54 changed files. The old `feat/optimization-framework` is still untouched at `397a8c7`, so I would continue treating it as historical prototype code rather than the base for new work.
+>
+> The biggest conclusion is: **you have now implemented nearly all of the high-value NixOS-native features I previously suggested.** The genuinely interesting “what should I try next?” list is getting much shorter.
+>
+> ## What you have already implemented
+>
+> These are no longer recommendations:
+>
+> | Feature | Current state |
+> |---|---|
+> | Flakes | extensively used |
+> | Home Manager as NixOS module | used |
+> | Disko | used |
+> | Impermanence | extensively tested |
+> | Ephemeral Btrfs root | custom implementation + VM/physical testing |
+> | Specialisations | `persistent-root` |
+> | NixOS integration tests | extensive |
+> | Multi-boot tests | extensive |
+> | Recovery ISO | declarative and moved to `images/` |
+> | Custom typed NixOS modules | extensive |
+> | `system.checks` | **implemented** |
+> | `system.preSwitchChecks` | **implemented** |
+> | `system.forbiddenDependenciesRegexes` | **implemented** |
+> | Negative closure-contamination test | **implemented** |
+> | Blank-disk reconstruction test | **implemented, execution still pending** |
+> | Test registry outside `flake.nix` | **implemented** |
+> | CI via feature PR | **implemented** |
+>
+> Your `flake.nix` has become pleasantly small again: validation is delegated to `tests/default.nix`, while the flake mostly contains actual top-level outputs.  The test registry now separates cheap checks from explicit heavier artifacts such as reconstruction, activation testing and multi-boot Impermanence scenarios.
+>
+> You also genuinely implemented `system.checks`, rather than merely having equivalent flake checks. Both the ephemeral-root module and Btrfs-maintenance module make their source checks dependencies of the NixOS system build.
+>
+> And your activation guard is now a proper NixOS mechanism:
+>
+> ```text
+> system.preSwitchChecks
+> ├── persistence
+> ├── credentials
+> ├── esp
+> └── topology
+> ```
+>
+>
+>
+> The stock-control idea is implemented too:
+>
+> ```nix
+> system.forbiddenDependenciesRegexes = [
+>   "-nixos-opt-cpu-"
+>   "-nixos-opt-lto-"
+>   "-nixos-opt-pgo-"
+>   "-nixos-opt-bolt-"
+> ];
+> ```
+>
+> with a deliberately contaminated NixOS system that should fail construction.
+>
+> That's a particularly strong foundation for the optimization project.
+>
+> ---
+>
+> # Before adding anything else: actually run the reconstruction test
+>
+> This is now my **#1 recommendation**, but it's no longer an implementation task.
+>
+> Your blank-disk test is much better than the conceptual version I previously suggested. It actually:
+>
+> ```text
+> empty qcow2 disk
+>     ↓
+> real Disko layout
+>     ↓
+> test-only bootstrap secret
+>     ↓
+> nixos-install
+>     ↓
+> systemd-boot/UEFI
+>     ↓
+> installer shuts down
+>     ↓
+> new QEMU instance boots from installed disk
+>     ↓
+> NO host Nix store mount
+> NO supplied host kernel
+> NO supplied host initrd
+>     ↓
+> normal ephemeral-root boot
+>     ↓
+> reboot
+>     ↓
+> root reset verified
+>     ↓
+> persistent-root specialisation
+>     ↓
+> root retained
+>     ↓
+> normal boot again
+>     ↓
+> root resets
+>     ↓
+> offline read-only filesystem inspection
+> ```
+>
+>
+>
+> That's excellent.
+>
+> But your current status still says **executed blank-disk reconstruction remains open**.  PR #7 says the same thing.
+>
+> So I would not spend time inventing another major NixOS reliability feature before running:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --print-build-logs
+> ```
+>
+> That test is now one of the strongest pieces of NixOS-specific infrastructure in the repository. Proving it actually passes is worth far more than adding another module.
+>
+> ---
+>
+> # 1. NixOS Facter
+>
+> This remains the clearest **major NixOS 26.05 feature you genuinely haven't explored yet**.
+>
+> Facter generates a hardware report and allows NixOS to derive configuration for:
+>
+> - architecture;
+> - firmware;
+> - CPU microcode;
+> - initrd modules;
+> - graphics;
+> - networking;
+> - Bluetooth;
+> - virtualization;
+> - some other detected hardware.
+>
+>
+>
+> What makes it particularly suited to your repository is its built-in comparison tooling:
+>
+> ```text
+> hardware.facter.debug.nvd
+> hardware.facter.debug.nix-diff
+> ```
+>
+>
+>
+> I would not immediately adopt it. Do this as an isolated experiment:
+>
+> ```text
+> current hardware-configuration.nix
+>           │
+>           │ compare
+>           ▼
+>       facter.json
+>           │
+>           ▼
+> Facter-derived NixOS configuration
+> ```
+>
+> Generate the report:
+>
+> ```bash
+> sudo nix-shell -p nixos-facter \
+>   --run 'nixos-facter -o facter.json'
+> ```
+>
+> and evaluate a temporary configuration containing:
+>
+> ```nix
+> hardware.facter.reportPath = ./facter.json;
+> ```
+>
+> Then compare closures.
+>
+> Your existing `hardware-configuration.nix` is tiny enough that manual configuration may still win. That's fine—the interesting part is being able to determine that empirically.
+>
+> **Priority: 5/5 as the next genuinely new NixOS feature.**
+>
+> ---
+>
+> # 2. Distributed Nix builds
+>
+> This is probably the next feature that can graduate from “interesting” to **actually useful** once the optimization work begins.
+>
+> NixOS has first-class declarative support through `nix.buildMachines`; Nixpkgs's NixOS module generates the remote builder configuration from it.
+>
+> Eventually:
+>
+> ```text
+> workstation
+>     │
+>     │ derivation
+>     ▼
+> build machine
+>     │
+>     ├── LLVM rebuild
+>     ├── ThinLTO build
+>     ├── instrumented PGO build
+>     ├── optimized application
+>     └── NixOS integration test
+>     │
+>     ▼
+> store output returned
+>     │
+>     ▼
+> workstation performs physical benchmark
+> ```
+>
+> That distinction is especially valuable for you:
+>
+> > **build location should not determine benchmark location.**
+>
+> Keep performance measurement on the actual i5-10600K system, while expensive compilation can happen elsewhere.
+>
+> ### Test this the NixOS way first
+>
+> Don't even start with a physical second computer.
+>
+> Make a two-node NixOS test:
+>
+> ```text
+> ┌────────────┐       SSH/Nix       ┌────────────┐
+> │ client VM  │ ──────────────────→ │ builder VM │
+> └────────────┘                      └────────────┘
+>        │
+>        └── prove the derivation was really built remotely
+> ```
+>
+> You already have enough experience with `runNixOSTest` that this would be a very natural next experiment.
+>
+> Then later use builder features such as:
+>
+> ```text
+> big-parallel
+> kvm
+> nixos-test
+> ```
+>
+> and eventually custom capabilities for hardware-sensitive work.
+>
+> **Priority: 4.5/5.**
+>
+> ---
+>
+> # 3. `system.replaceDependencies`
+>
+> Now that your stock contamination contract exists, this becomes even more interesting.
+>
+> NixOS can replace an old dependency with another derivation throughout a system without doing the normal full downstream rebuild:
+>
+> ```nix
+> system.replaceDependencies.replacements = [
+>   {
+>     oldDependency = pkgs.foo;
+>     newDependency = optimizedFoo;
+>   }
+> ];
+> ```
+>
+> This is deliberately constrained: the replacements should have the same name length and very similar layouts, and the initrd is excluded by default because replacement there is fragile.
+>
+> I would use this **only as an optimization research experiment**, not as your main architecture.
+>
+> For example:
+>
+> ```text
+> EXPERIMENT A
+>
+> stock zstd
+>     ↓
+> normal override
+>     ↓
+> downstream rebuild propagation
+>
+>
+> EXPERIMENT B
+>
+> stock workstation closure
+>     ↓
+> replaceDependencies
+>     ↓
+> optimized zstd graft
+> ```
+>
+> Now you can ask:
+>
+> > Does this performance change come from the optimized library itself, or from the larger rebuild graph changing too?
+>
+> And because you now have:
+>
+> ```text
+> system.forbiddenDependenciesRegexes
+> closure review
+> stock negative tests
+> specialisations
+> ```
+>
+> you have much better protection against contaminating the control system than when I first suggested this.
+>
+> I'd eventually create something like:
+>
+> ```text
+> specialisation.zstd-graft
+> ```
+>
+> and never allow it into the stock system.
+>
+> **Priority: 5/5 during optimization, 1/5 before the baseline.**
+>
+> ---
+>
+> # 4. Use specialisations much more aggressively for experiment matrices
+>
+> You technically already tested specialisations, so this isn't a *new* feature.
+>
+> But you've barely touched their interesting performance-testing potential.
+>
+> Today:
+>
+> ```text
+> normal
+> persistent-root
+> ```
+>
+> Later I'd aim for:
+>
+> ```text
+> NixOS generation
+> │
+> ├── stock
+> │
+> ├── cpu-codegen
+> │
+> ├── thinlto
+> │
+> ├── pgo
+> │
+> ├── bolt
+> │
+> ├── pgo-bolt
+> │
+> └── kernel-experiment
+> ```
+>
+> with the important property:
+>
+> ```text
+> same flake.lock
+> same source revision
+> same userspace policy
+> same machine
+> same persisted data
+>
+> only intended experiment differs
+> ```
+>
+> Then your stock contamination module can become stage-sensitive:
+>
+> ```text
+> stock:
+>     forbid CPU/LTO/PGO/BOLT
+>
+> cpu-codegen:
+>     permit CPU
+>     forbid LTO/PGO/BOLT
+>
+> PGO:
+>     permit selected PGO outputs
+>     forbid BOLT
+> ```
+>
+> Your current stock-control implementation is already the seed of exactly this architecture.
+>
+> This is probably how I would express **whole-system experimental variants** once the new optimization framework starts.
+>
+> ---
+>
+> # 5. NixOS test containers / native NixOS containers
+>
+> You're now using QEMU heavily.
+>
+> That's correct for:
+>
+> ```text
+> UEFI
+> bootloader
+> kernel
+> initrd
+> Btrfs
+> ephemeral root
+> specialisations
+> blank-disk installation
+> ```
+>
+> But NixOS's test framework can also use containers. Nixpkgs explicitly distinguishes:
+>
+> ```text
+> nodes.<name>      → QEMU machine
+> containers.<name> → systemd-nspawn machine
+> ```
+>
+>
+>
+> That gives you a much faster testing tier for things that don't require their own kernel.
+>
+> Potential candidates from your repository:
+>
+> ```text
+> Commander Core pure systemd integration
+> activation helper logic
+> service dependency tests
+> user/service policy
+> network client/server experiments
+> future optimization metadata services
+> ```
+>
+> Not:
+>
+> ```text
+> ephemeral root
+> Disko
+> systemd-boot
+> initrd
+> kernel experiments
+> ```
+>
+> I'd think of it as:
+>
+> ```text
+> unit/pure tests
+>      ↓
+> nspawn NixOS tests
+>      ↓
+> QEMU NixOS tests
+>      ↓
+> physical host
+> ```
+>
+> You don't necessarily *need* it, but it's one of the remaining uniquely NixOS testing capabilities you haven't really exploited.
+>
+> **Priority: 3.5/5.**
+>
+> ---
+>
+> # 6. Generate your own NixOS option manual
+>
+> Your custom configuration has stopped being “some Nix files.”
+>
+> You now have real APIs such as:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> boot.workstationActivationSafety.*
+> hardware.commanderCore.*
+> ```
+>
+> For example, activation-safety exposes an actual typed module interface rather than hardcoded scripting.
+>
+> This is now a good candidate for `nixosOptionsDoc`.
+>
+> Expose something like:
+>
+> ```bash
+> nix build .#module-docs
+> ```
+>
+> and generate reference documentation directly from the module declarations:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.enable
+> boot.ephemeralBtrfsRoot.rootSubvolume
+> boot.ephemeralBtrfsRoot.stagingSubvolume
+> boot.ephemeralBtrfsRoot.persistenceSubvolume
+> boot.ephemeralBtrfsRoot.allowedDescendants
+> boot.ephemeralBtrfsRoot.logFile
+>
+> boot.workstationActivationSafety.enable
+> boot.workstationActivationSafety.espReserveBytes
+>
+> hardware.commanderCore....
+> ```
+>
+> The nice property is:
+>
+> ```text
+> code changes
+>     ↓
+> module option definitions change
+>     ↓
+> documentation changes automatically
+> ```
+>
+> instead of maintaining another hand-written truth source.
+>
+> It's not operationally important, but it's extremely NixOS-native.
+>
+> **Priority: 3/5.**
+>
+> ---
+>
+> # 7. Try a fully self-contained offline recovery build
+>
+> This is where `system.includeBuildDependencies` becomes interesting.
+>
+> Normally a NixOS closure contains what is required to **run** the machine.
+>
+> NixOS can also construct one containing what is required to **rebuild** it:
+>
+> ```nix
+> system.includeBuildDependencies = true;
+> ```
+>
+> That drags in sources, intermediate build dependencies, compilers and even compiler bootstrap dependencies. It is intentionally enormous, so I would never put this on the workstation normally.
+>
+> But as an experiment:
+>
+> ```text
+> normal recovery ISO
+>         vs
+> offline-rebuild recovery ISO
+> ```
+>
+> Then disconnect networking and ask:
+>
+> > Can this environment rebuild the complete target system without downloading anything?
+>
+> That's a very strong demonstration of Nix's reproducibility model.
+>
+> You could eventually create:
+>
+> ```text
+> recovery-iso
+> recovery-iso-full-build-closure
+> ```
+>
+> and compare sizes.
+>
+> I would probably delete the latter after the experiment because it will be huge.
+>
+> **Priority: 2.5/5, mostly educational.**
+>
+> ---
+>
+> # 8. Build a real signed binary cache
+>
+> This one moves slightly outside pure NixOS into Nix itself, but becomes very relevant to PGO/LTO/BOLT.
+>
+> Once an optimized package costs 30 minutes or several hours to produce, you don't want:
+>
+> ```text
+> successful expensive derivation
+>        ↓
+> GC
+>        ↓
+> rebuild it from scratch
+> ```
+>
+> A proper binary cache gives you:
+>
+> ```text
+> builder
+>    ↓
+> optimized store output
+>    ↓
+> signed binary cache
+>    ↓
+> workstation / CI / recovery machine
+> ```
+>
+> The interesting part isn't merely caching—it is **cryptographic trust**.
+>
+> Then your experiment can record:
+>
+> ```text
+> source commit
+> derivation
+> profile identity
+> binary hash
+> cache signature
+> benchmark result
+> ```
+>
+> This would pair extremely well with your existing fail-closed provenance philosophy.
+>
+> I'd do this once optimization builds actually become expensive rather than now.
+>
+> **Priority: 4/5 later.**
+>
+> ---
+>
+> # 9. Remote deployment with `nixos-rebuild --target-host`
+>
+> If you eventually put NixOS on another test machine/builder, don't manage it manually.
+>
+> NixOS can separate:
+>
+> ```text
+> machine evaluating/building configuration
+>               │
+>               ▼
+>         target machine
+> ```
+>
+> so you can build/deploy remotely.
+>
+> Combined with remote builders:
+>
+> ```text
+> control machine
+>       │
+>       ├── build host
+>       │
+>       └── target host
+> ```
+>
+> becomes possible.
+>
+> For your eventual optimization lab, that could become:
+>
+> ```text
+> main workstation
+>     = benchmark target
+>
+> secondary machine
+>     = build server
+>
+> laptop
+>     = orchestration/control
+> ```
+>
+> without copying `/etc` trees around.
+>
+> Not useful enough yet for your one-host baseline, but worth trying when a second NixOS machine becomes part of the project.
+>
+> ---
+>
+> # What I would *not* add now
+>
+> A fresh look actually makes me more conservative here.
+>
+> I would **not** currently add:
+>
+> - more Impermanence, especially ephemeral `/home`;
+> - flake-parts;
+> - flake-utils;
+> - a generic host framework;
+> - another custom abstraction layer;
+> - NixOS containers just for the sake of containerization;
+> - automatic NixOS upgrades;
+> - secrets tooling merely because it exists;
+> - unusual kernels;
+> - more performance knobs before the stock baseline;
+> - another major recovery mechanism.
+>
+> Your status document shows that the remaining blockers are now mostly **execution and physical validation**, not missing architecture: reconstruction execution, backup completion, VMX, hardware stability, workload acceptance and soak testing.
+>
+> ## My updated ranking
+>
+> If I separate “do now” from “interesting later,” I get:
+>
+> | Rank | Feature / experiment | Timing |
+> |---|---|---|
+> | **1** | **Execute your existing blank-disk reconstruction** | now |
+> | **2** | **NixOS Facter comparison** | now, isolated/non-blocking |
+> | **3** | **Distributed-build two-node NixOS test** | after baseline / early optimization |
+> | **4** | **Specialisation-based optimization matrix** | optimization v2 |
+> | **5** | **`system.replaceDependencies` experiment** | optimization v2 |
+> | **6** | **NixOS nspawn/container tests** | whenever a suitable service test appears |
+> | **7** | **Generated option documentation** | low-risk anytime |
+> | **8** | **Signed binary cache** | when optimization builds become expensive |
+> | **9** | **Offline closure with `includeBuildDependencies`** | curiosity/recovery experiment |
+> | **10** | **Remote deployment** | once you have another NixOS machine |
+>
+> The important change is that I would **stop looking for additional reliability features right now**. You already built them. The more valuable next step is to prove the reconstruction test, finish the remaining physical readiness gates, tag the stock baseline, and then start a fresh optimization branch.
+>
+> At that point, the genuinely exciting NixOS experiments become **distributed builds + specialisations + `replaceDependencies` + your closure-contamination contracts**. Together, those can make NixOS not merely the OS hosting the PGO/BOLT project, but the actual experimental framework controlling it.
+
+
+## Attached-review implementation checkpoint — 2026-10-05
+
+Both attached reviews are preserved above in full with source hashes; quote
+prefixes and trailing whitespace normalization are presentation changes only.
+Reconstruction now consumes actual desktopSystem.extendModules rather than
+reassembling Disko/HM/Impermanence/user policy. Evaluation reproduces exact
+1l6h8zxp25wmifd2bacl006p4lcwb491 derivation before subsequent safety changes.
+An initial attempt to obtain installer inputs from _module.args failed because
+specialArgs are not stored there; explicit inputs parameter retained solely
+for installer Disko import. No generic constructor was added.
+
+Activation safety moved to modules/workstation and tests/workstation, namespace
+workstation.activationSafety. Shell mechanism is unchanged. Assertions now
+require declared ephemeral-root contract/concrete Btrfs root, concrete vfat ESP,
+and selected user hashedPasswordFile. They allow persistent-root's deliberate
+reset disablement. Full checks are running; negative composition coverage and
+updated candidate build/runtime validation remain required.
+
+CI uses ubuntu-24.04 and GitHub-API-resolved action commit pins: checkout v7
+3d3c42e5aac5ba805825da76410c181273ba90b1; install-nix-action v31
+13d8dd58da0234aa297dedd986986ccb8e7f3e24 (annotated tag dereferenced).
+Main-push/PR triggers and cheap/heavy split remain unchanged. README now lists
+current docs and workstation safety ownership. No docs-directory reshuffle,
+plan archival, optimization activation, physical reboot or live switch occurred.
+
+Backup archive writing finished at27,844,003,241bytes; runner521492 is still
+live, waiting for writeback before integrity/restore. No verified backup receipt
+exists yet and reconstruction supervisor remains queued. Do not claim completion.
+
+First attached-review fast run passed evaluation/formatting but failed Statix's
+assignment-versus-inherit rule for desktopSystem.config; changed to
+inherit (desktopSystem) config. Full retry session12766 is running, log
+/tmp/readiness-attached-review-fast-final.log. Initial failure is not acceptance.
+
+## Readiness execution — activation prerequisites validated, 2026-10-05
+
+Full attached-review refactor fast retry exited0 (session12766). New explicit
+activation-safety-config check then passed normal/recovery controls, presence
+of four named checks and five targeted prerequisite refusals; output
+/nix/store/igfjz1lvkl6lv8y45mabiazxjpy5nfw2-check-workstation-activation-config.
+It verifies assertion messages, not unrelated evaluation failure. Initial test
+fixtures forced an upstream lazy diagnostic prematurely, assumed exactly four
+checks despite built-in switchInhibitors, and used an empty device string
+rejected by the upstream type. Fixed assertion short-circuit order, required
+check membership and null device fixture respectively. These failed fixture
+runs are not acceptance. Runtime guard tests remain distinct from composition.
+
+Backup runner521492 is still draining USB writeback; dirty pages decreasing.
+Main archive/restore receipt remains pending. No live service restart/reboot.
+
+Full flake check including activation composition tests completed successfully
+for source9ec351d, session44699 exit0. Terminal log retained root-private as
+/persist/nixos-readiness-20261005/activation-composition-full.log. Exact desktop
+output comparison is being evaluated before any activation; namespace ownership
+alone is not claimed to preserve the closure without this check. USB writeback
+continues to drain; archive verification receipt remains absent.
+
+## Readiness execution — source identity and backup integrity phase, 2026-10-05
+
+Current desktop evaluation after the safety ownership/assertion refactor still
+returns exact l994fn5hpd2g2rijyffprl4368587m5w normal candidate. This verifies
+closure identity rather than assuming the namespace move is operationally inert.
+GitHub CI37349870726 passed for77527f8; local full checks for9ec351d also passed.
+Physical acceptance remains separate.
+
+Archive writeback finished: backup runner521492 has launched zstd integrity
+verification (observed child1138116). Dirty pages drained to about3MiB with no
+writeback pending. Tar reported only an ignored transient IPC socket; no saved
+socket payload is required for reconstruction. Main archive27,844,003,241bytes;
+SHA/representative restore and final receipt remain pending, so reconstruction
+supervisor730405 still waits. No physical activation or reboot occurred.
+
+## Unified current continuation adopted — 2026-10-05
+
+User explicitly requested reading, recording and following this guide. It
+supersedes older next-step ordering; historical records remain intact. The
+reviewed77527f8 snapshot is superseded by current clean local/remote source
+2ef85856f5b1438518c779b5ae757abb9d487083; main remainsf89205c. Normal candidate
+identity was already verified unchanged after the safety refactor. Archive
+writeback and zstd integrity have now passed; hashing/representative restore,
+terminal receipt and clean unmount remain open. Reconstruction is queued.
+
+Current execution order: exact normal/persistent build and closure receipt;
+finish existing backup and clean unmount; execute reconstruction without
+weakening its independence; complete offline suite and recovery-evidence/PR
+reconciliation; only then batched VMX/boot installation and final physical
+normal→persistent→normal acceptance; sustained hardware/storage, stock policy,
+real workloads, multi-day soak, freeze/merge/tag; post-baseline historical cleanup
+and fresh optimization branch. No further broad architecture work. Optional
+Facter/option documentation and future experiments must not delay readiness.
+
+The full45-section source follows. Quote prefixes and trailing whitespace
+normalization change presentation only. Imported checkboxes remain source
+snapshot claims, not newly verified acceptance; newer execution receipts govern.
+
+Source: `/home/p2949/.codex/attachments/f92f3a86-b0f1-459d-a2c3-b96845975ff1/Pasted text.txt`
+
+SHA-256: `140ad04f87747588c44ef612ea02c9185d20a27873b0b018195383c7ce756e7f`
+
+> I re-ran the review against the **live GitHub branch**, the two new attached reviews, the earlier unified guide, the current source tree, `docs/status.md`, the current reconstruction and activation-safety implementations, PR #7, and the newest `plan.md` evidence.
+>
+> The most important correction to the previous guide is that the branch has moved well past `c15a175` and even past the attachments’ `75a649c`. The authoritative head at the end of this review is **`77527f8f712611ca244a2946c97c4f5c94d63ba4`**, 26 commits ahead of `main`, and PR #7 remains a mergeable draft. Its current GitHub Actions run #98 completed successfully.
+>
+> That changes the continuation substantially: **almost all of the architectural/readiness engineering from the previous guide is now complete**. The remaining critical path is primarily backup completion, actual reconstruction execution, physical/hardware acceptance, final workloads, soak, and baseline freeze. This agrees with both of the freshly attached reviews, which concluded that the project had reached the point where further broad abstraction would do more harm than good. Pasted text (2) Pasted text
+>
+> # NixOS Pre-Optimization Readiness — Unified Current Continuation Guide
+>
+> **Repository:** `P2949/NixosConf`
+> **Active implementation branch:** `feat/pre-optimization-readiness`
+> **Authoritative reviewed head:** `77527f8f712611ca244a2946c97c4f5c94d63ba4`
+> **Base:** `main` at `f89205c07e4d3a77900b046a5bf937944488647b`
+> **Pull request:** #7 — `Complete stock workstation pre-optimization readiness`
+> **PR state:** open, draft, mergeable
+> **Distance from main:** 26 commits ahead, 0 behind
+> **Latest reviewed PR CI:** run #98, `Nix checks`, PASS
+> **Date:** 2026-10-05
+>
+> ---
+>
+> # 1. Purpose of this document
+>
+> This is the current execution directive for completing `plan.md`.
+>
+> It supersedes older **next-step ordering**, including the earlier continuation guide written when the readiness branch was only at `c15a175`, while preserving the evidence recorded by those earlier stages.
+>
+> Do not delete or rewrite the historical sections of `plan.md`. They remain useful forensic evidence.
+>
+> This guide separates the project into:
+>
+> ```text
+> PROVEN / COMPLETE
+>     work which should not be repeated merely for reassurance
+>
+> IMPLEMENTED, EXECUTION GATE OPEN
+>     code exists and is tested structurally, but a required heavy/physical
+>     execution has not yet completed
+>
+> IN PROGRESS
+>     a real operation is already running or has produced only partial evidence
+>
+> REQUIRED BEFORE BASELINE TAG
+>     hard readiness gates
+>
+> DEFERRED UNTIL OPTIMIZATION
+>     interesting work which must not expand the stock-baseline project
+> ```
+>
+> The objective is no longer to discover more NixOS architecture.
+>
+> The objective is:
+>
+> ```text
+> finish outstanding evidence
+>         ↓
+> prove full reconstruction
+>         ↓
+> freeze firmware/hardware state
+>         ↓
+> physically accept exact final candidate
+>         ↓
+> accept real workloads
+>         ↓
+> multi-day soak
+>         ↓
+> merge/tag stock baseline
+>         ↓
+> begin optimization-framework-v2
+> ```
+>
+> ---
+>
+> # 2. Governing decision: stop broad refactoring
+>
+> The repository architecture has reached a sufficiently mature state.
+>
+> Do **not** restart broad restructuring of:
+>
+> - `flake.nix`;
+> - `hosts/`;
+> - `profiles/`;
+> - `modules/core`;
+> - `modules/desktop`;
+> - `modules/gaming`;
+> - Home Manager;
+> - Disko;
+> - storage modules;
+> - the test registry;
+> - the recovery image;
+> - Commander Core;
+> - the general host/profile/module split.
+>
+> The two newest architectural reviews independently reached this conclusion. By the `75a649c` snapshot, the flake, tests, storage modules, Nix/Bash reset boundary, Btrfs ownership, CI model, recovery-image location, username source of truth, Commander Core policy and stock contamination controls were already considered good. :chatgpt-content-reference{index="4"}
+>
+> Since then, even the two largest remaining architectural recommendations have been implemented:
+>
+> 1. blank-disk reconstruction now derives from the **actual desktop NixOS system** using `extendModules`;
+> 2. activation safety now lives under `modules/workstation/activation-safety`, uses `workstation.activationSafety`, and explicitly asserts its composition prerequisites.
+>
+> The architecture is now itself part of the baseline. Stability of that architecture is valuable.
+>
+> ---
+>
+> # 3. Source-of-truth hierarchy
+>
+> From this point forward, use:
+>
+> ```text
+> 1. Current local worktree, if clean and intentionally ahead
+> 2. Current remote feat/pre-optimization-readiness
+> 3. Successful validation tied to the exact source revision
+> 4. docs/status.md
+> 5. Exact physically accepted stable-refresh evidence
+> 6. plan.md historical execution ledger
+> 7. current main
+> 8. old feature branches
+> 9. feat/optimization-framework only as historical prototype code
+> ```
+>
+> Never assume that a claim from an older section of `plan.md` is still current merely because it remains in the file.
+>
+> Prefer newer explicit statements such as:
+>
+> ```text
+> supersedes...
+> accepted result...
+> current status...
+> final result...
+> ```
+>
+> while retaining the original record.
+>
+> ---
+>
+> # 4. Current Git/CI state
+>
+> ## Current readiness head
+>
+> ```text
+> 77527f8f712611ca244a2946c97c4f5c94d63ba4
+> Record full validation of workstation safety refactor
+> ```
+>
+> Its parent is:
+>
+> ```text
+> 9ec351df03139b097f43125282d552cdd099d7db
+> Test activation safety composition and recovery prerequisites
+> ```
+>
+> which follows:
+>
+> ```text
+> 329bce51e19c0ca3b857ab0c44ea0caaf494e47b
+> Adopt fresh reviews and derive reconstruction from real desktop
+> ```
+>
+> and then:
+>
+> ```text
+> 75a649ca15fe876f4e6a62c9d933338454dd1546
+> Record successful preparation CI and live backup checkpoint
+> ```
+>
+> The latest commit records that the full flake check including activation composition passed for source `9ec351d`; the remaining exact desktop-output comparison was being evaluated, while the USB backup writeback was still draining.
+>
+> ## Pull request
+>
+> PR #7:
+>
+> ```text
+> Complete stock workstation pre-optimization readiness
+> ```
+>
+> is still intentionally draft.
+>
+> Do not mark it ready or merge it merely because CI is green.
+>
+> Its role is to carry the **complete final readiness project**, including its evidence, until the stock-baseline hard gates pass.
+>
+> ## CI
+>
+> Current workflow policy is now correct:
+>
+> ```yaml
+> push:
+>   branches:
+>     - main
+>
+> pull_request:
+> ```
+>
+> with:
+>
+> ```text
+> ubuntu-24.04
+> actions/checkout pinned to full SHA
+> cachix/install-nix-action pinned to full SHA
+> ```
+>
+>
+>
+> Latest reviewed run:
+>
+> ```text
+> run:       98
+> head:      77527f8f...
+> workflow:  Nix checks
+> event:     pull_request
+> result:    success
+> ```
+>
+>
+>
+> `main` remains protected and requires `Flake checks`.
+>
+> ---
+>
+> # 5. Physically accepted reference baseline
+>
+> Everything still being prepared must be compared against this accepted system.
+>
+> ## Accepted source
+>
+> ```text
+> c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+> ```
+>
+> ## Stable Nixpkgs
+>
+> ```text
+> 0d9e9b832d03ac387417e16ce1febf73b2e631e1
+> ```
+>
+> ## Normal closure
+>
+> ```text
+> /nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> ## Persistent-root closure
+>
+> ```text
+> /nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> ## Kernel
+>
+> ```text
+> 6.18.55
+> ```
+>
+> ## Recovery ISO
+>
+> ```text
+> /nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso/iso/nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> Size:
+>
+> ```text
+> 1496678400
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> The repository now correctly documents this as the accepted result rather than the older `bv3...` offline candidate.
+>
+> ---
+>
+> # 6. Physical root/reset evidence already complete
+>
+> Do not repeat this whole investigation unless later code actually invalidates the result.
+>
+> ## Original physical reset trials
+>
+> Three controlled physical reset boots passed:
+>
+> ```text
+> trial 1 → root 288
+> trial 2 → root 290
+> trial 3 → root 292
+> ```
+>
+> They established basic physical viability of the reset mechanism.
+>
+> ## Final stable-refresh policy acceptance
+>
+> The final accepted sequence was:
+>
+> ```text
+> normal
+>   ↓
+> persistent-root
+>   ↓
+> normal
+> ```
+>
+> Result:
+>
+> ```text
+> first normal:
+>     @root replaced
+>     new root subvolume 295
+>
+> persistent-root:
+>     root 295 retained
+>     no additional reset-log completion
+>     root-local probe survived
+>     persistent probe survived
+>
+> final normal:
+>     root 295 replaced by root 297
+>     root-local probe disappeared
+>     persistent probe survived
+>
+> machine-id:
+>     stable across all variants
+>
+> services:
+>     required core services active
+>     zero failed units
+> ```
+>
+> The current stable-refresh document records this acceptance directly.
+>
+> ### Interpretation
+>
+> The ephemeral-root architecture is no longer experimental in the sense of “has it ever worked physically?”
+>
+> That question is answered.
+>
+> The remaining physical root test is:
+>
+> > does the **final readiness candidate**, after the code changes made on this branch, retain the same accepted behavior?
+>
+> That is one final exact-candidate acceptance gate, not a restart of the entire Impermanence project.
+>
+> ---
+>
+> # 7. Ephemeral-root safety evidence already complete
+>
+> The reset feature has extensive automated coverage.
+>
+> Evidence accumulated across the project includes:
+>
+> - valid normal configuration;
+> - valid leading-slash root selector;
+> - persistent-root reset disablement;
+> - invalid filesystem/device selectors;
+> - unsafe subvolume names;
+> - conflicting names;
+> - unknown descendants;
+> - nested descendants;
+> - stale/malformed staging;
+> - missing root/staging cases;
+> - invalid persistence;
+> - mounted `/sysroot`;
+> - diagnostic-path symlinks;
+> - broken symlinks;
+> - hard links;
+> - FIFOs/directories;
+> - unsafe log parents;
+> - misleading ` path ` substrings;
+> - preservation of filesystem identity/content when reset is refused;
+> - interrupted reset recovery;
+> - machine-ID persistence;
+> - journal persistence;
+> - transition to persistent-root;
+> - return to normal reset behavior.
+>
+> The historical safety suite reached 33 destructive-refusal cases and the configuration matrix reached 43 rejected configurations plus accepted controls before later source reorganization.
+>
+> The current implementation now has a cleaner Nix/Bash boundary:
+>
+> ```text
+> Nix:
+>     typed configuration
+>     escaping
+>     allowed-descendant data
+>     systemd wiring
+>
+> Bash:
+>     procedural reset implementation
+>     descendant matching
+>     validation
+>     destructive reset/recovery
+> ```
+>
+> The Nix module now injects only escaped values and an array before reading ordinary `reset.sh`; the old token/code templating is gone.
+>
+> The module also attaches its shell validation through real `system.checks`.
+>
+> Leave this architecture alone unless a test exposes a real defect.
+>
+> ---
+>
+> # 8. Btrfs maintenance work is complete
+>
+> Current division is now correct:
+>
+> ```text
+> hosts/desktop:
+>     whether scrub runs
+>     filesystem /
+>     schedule
+>
+> modules/storage/btrfs-maintenance:
+>     GC/scrub ordering
+>     overlap prevention
+>     clean-scrub requirement
+>     guard implementation
+>     source check
+>     composition assertions
+> ```
+>
+> The module explicitly requires:
+>
+> ```text
+> automatic Nix GC
+> Btrfs autoScrub enabled
+> / included in scrub filesystems
+> ```
+>
+> and exposes its source validation through `system.checks`.
+>
+> Current policy remains:
+>
+> ```text
+> Btrfs scrub:
+>     first day of month
+>     02:00
+>     AccuracySec 1 min
+>
+> Nix GC:
+>     Saturday 04:00
+>     delete older than 30 days
+>
+> coordination:
+>     no GC/scrub overlap
+>     GC requires last scrub = finished + clean
+> ```
+>
+> The same physically accepted maintenance policy remains documented, with one-time store verification/optimization still open as separate work.
+>
+> ### Transitional item
+>
+> The module deliberately uses:
+>
+> ```nix
+> guardSource = builtins.path {
+>   path = ./guard.sh;
+>   name = "maintenance-guard.sh";
+> };
+> ```
+>
+> to preserve the previously accepted store identity.
+>
+> Do not clean this up before the stock baseline tag.
+>
+> It is harmless historical compatibility baggage.
+>
+> ---
+>
+> # 9. Repository organization work is complete
+>
+> The current structure now has:
+>
+> ```text
+> hosts/
+>     desktop/
+>
+> images/
+>     recovery.nix
+>
+> profiles/
+>     workstation.nix
+>
+> modules/
+>     core/
+>     desktop/
+>     gaming/
+>     compatibility/
+>     storage/
+>         btrfs-maintenance/
+>         ephemeral-btrfs-root/
+>     workstation/
+>         activation-safety/
+>     hardware/
+>         commander-core/
+>
+> tests/
+>     default.nix
+>     workstation/
+>     hardware/commander-core/
+>     storage/
+>
+> optimization/
+>     default.nix
+> ```
+>
+> The current README now actually reflects that structure.
+>
+> Do not introduce:
+>
+> ```text
+> flake-parts
+> flake-utils
+> generic mkHost
+> generic mkSystem
+> giant lib/
+> automatic module registries
+> one-file-per-option abstractions
+> ```
+>
+> for this one-host repository.
+>
+> ---
+>
+> # 10. Test subsystem work is complete
+>
+> `flake.nix` is now appropriately thin.
+>
+> It contains:
+>
+> - inputs;
+> - stable/unstable package sets;
+> - username source of truth;
+> - development shells;
+> - validation registry import;
+> - desktop NixOS system;
+> - recovery NixOS system;
+> - major top-level outputs.
+>
+> Validation details live in:
+>
+> ```text
+> tests/default.nix
+> ```
+>
+>
+>
+> The registry separates:
+>
+> ## Cheap checks
+>
+> Examples:
+>
+> ```text
+> activation-safety-config
+> activation-safety
+> btrfs-maintenance-config
+> btrfs-maintenance-shell
+> ephemeral-root-shell
+> maintenance-guard
+> commander-core-config
+> commander-core-python
+> baseline-collector
+> desktop-evaluation
+> ephemeral-root-config
+> formatting
+> statix
+> deadnix
+> ```
+>
+> ## Explicit heavier packages/tests
+>
+> ```text
+> blank-disk-reconstruction
+> activation-safety-actions
+> stock-contamination-negative
+> workstation-smoke
+> reset-control
+> impermanence-root-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Compatibility aliases for historical names remain:
+>
+> ```text
+> impermanence-root-test-a
+> impermanence-root-test-b
+> impermanence-root-recovery
+> impermanence-root-fallback
+> ```
+>
+>
+>
+> Keep the aliases until `plan.md` is archived.
+>
+> They make historical commands reproducible.
+>
+> ---
+>
+> # 11. Username source of truth is fixed
+>
+> The earlier half-completed username refactor described in the old guide has been repaired.
+>
+> The source of truth remains:
+>
+> ```nix
+> username = "p2949";
+> ```
+>
+> at the flake boundary.
+>
+> The workstation smoke test now receives it as an argument rather than independently declaring the runtime username.
+>
+> That previous blocker is closed.
+>
+> Do not reopen it.
+>
+> ---
+>
+> # 12. Recovery-image categorization is fixed
+>
+> Recovery is now:
+>
+> ```text
+> images/recovery.nix
+> ```
+>
+> rather than pretending to be a physical host under:
+>
+> ```text
+> hosts/recovery/
+> ```
+>
+> The flake still exposes:
+>
+> ```text
+> nixosConfigurations.recovery
+> packages.recovery-iso
+> ```
+>
+> The contents remain intentionally secret-free and independent from the workstation's:
+>
+> - physical disk layout;
+> - persistence imports;
+> - password data;
+> - Commander Core;
+> - destructive reset behavior.
+>
+> No more restructuring is needed here.
+>
+> ---
+>
+> # 13. Commander Core source-of-truth cleanup is complete
+>
+> Host policy lives in Nix.
+>
+> Current host values include:
+>
+> ```text
+> USB ID            1b1c:0c1c
+> serial            declared in host
+> base fan          60%
+> high fan          100%
+> pump              100%
+> high temp         65 C
+> low temp          60 C
+> high delay        1 s
+> low delay         10 s
+> temp interval     1 s
+> wake interval     10 s
+> reset delay       3 s
+> ```
+>
+> The Python keeper no longer owns independent policy defaults for these settings.
+>
+> The module now centralizes:
+>
+> ```text
+> watchdogSeconds = 35
+> ```
+>
+> and derives both:
+>
+> ```text
+> watchdog margin assertion
+> systemd WatchdogSec
+> keeper --watchdog-seconds
+> ```
+>
+> from that value.
+>
+> Existing checks cover:
+>
+> - Nix option constraints;
+> - Python syntax;
+> - Ruff;
+> - argument validation;
+> - hardware-free behavioral code.
+>
+> Do not generalize the CPU sensor system merely for style.
+>
+> ---
+>
+> # 14. Native `system.checks` are complete
+>
+> This was previously a recommendation.
+>
+> It is now implemented.
+>
+> Examples:
+>
+> ```text
+> ephemeral-btrfs-root:
+>     reset source check becomes system build dependency
+>
+> btrfs-maintenance:
+>     guard source check becomes system build dependency
+> ```
+>
+>
+>
+> The distinction is now:
+>
+> ```text
+> nix flake check
+>     repository/source health
+>
+> system.checks
+>     critical implementation health required by NixOS build
+>
+> system.preSwitchChecks
+>     physical current-machine prerequisites required for activation
+>
+> heavy QEMU tests
+>     behavioral/system correctness
+>
+> physical validation
+>     real hardware correctness
+> ```
+>
+> Do not move all heavy tests into `system.checks`.
+>
+> ---
+>
+> # 15. Activation safety is complete architecturally
+>
+> This was the largest remaining concern in the second attached review.
+>
+> It has now been fixed.
+>
+> Current ownership:
+>
+> ```text
+> modules/workstation/activation-safety/
+>     default.nix
+>     check.sh
+>
+> tests/workstation/activation-safety/
+>     config.nix
+>     guard.nix
+>     actions.nix
+>     test_guard.py
+> ```
+>
+> Current option namespace:
+>
+> ```nix
+> workstation.activationSafety
+> ```
+>
+> rather than the misleading old:
+>
+> ```text
+> boot.workstationActivationSafety
+> ```
+>
+> The module declares four `system.preSwitchChecks`:
+>
+> ```text
+> persistence
+> credentials
+> esp
+> topology
+> ```
+>
+>
+>
+> They are deliberately read-only.
+>
+> They do **not** require:
+>
+> - monitor;
+> - audio;
+> - internet;
+> - Bluetooth device;
+> - Commander Core USB presence;
+> - graphical session.
+>
+> The ESP reserve is:
+>
+> ```text
+> 256 MiB
+> ```
+>
+> and was chosen with much larger observed free space than the installed initrd requirement.
+>
+> ## Composition assertions
+>
+> The module now deliberately refuses invalid composition when:
+>
+> ```text
+> ephemeral-root contract absent
+> / not concrete Btrfs
+> /boot not concrete vfat
+> selected user lacks hashedPasswordFile
+> ```
+>
+> Recovery is explicitly allowed to retain the contract while disabling the destructive reset.
+>
+> ## Tests
+>
+> The dedicated composition test proves:
+>
+> ```text
+> normal composition accepted
+> persistent-root/recovery composition accepted
+> all four named preSwitch checks present
+> missing ephemeral-root contract refused
+> non-Btrfs root refused
+> missing ESP device refused
+> non-vfat ESP refused
+> missing hashedPasswordFile refused
+> ```
+>
+>
+>
+> The full flake check containing these tests passed locally for source `9ec351d`, and the descendant head `77527f8f` has now passed PR CI.
+>
+> There is no remaining architectural activation-safety task.
+>
+> ---
+>
+> # 16. Stock/control contamination protection is complete
+>
+> The stock system now rejects project-owned optimization output namespaces:
+>
+> ```text
+> nixos-opt-cpu-*
+> nixos-opt-lto-*
+> nixos-opt-pgo-*
+> nixos-opt-bolt-*
+> ```
+>
+> using:
+>
+> ```nix
+> system.forbiddenDependenciesRegexes
+> ```
+>
+> A deliberately contaminated system using:
+>
+> ```text
+> nixos-opt-pgo-fixture
+> ```
+>
+> provides the negative test.
+>
+> The normal desktop is the positive control.
+>
+> The documentation correctly notes the limitation that `system.extraDependencies` is exempt and that output-name contracts cannot detect arbitrary unnamed package modifications.
+>
+> This is sufficient for the stock baseline.
+>
+> Do not create a new `research/controls/` hierarchy for this one small module.
+>
+> ---
+>
+> # 17. Blank-disk reconstruction implementation is now architecturally correct
+>
+> This is a major update over the attached review.
+>
+> The old concern was:
+>
+> ```text
+> production desktop assembled once
+> reconstruction independently reassembled similar modules
+> → possible drift
+> ```
+>
+> That concern is now resolved.
+>
+> The current test accepts:
+>
+> ```nix
+> desktopSystem
+> ```
+>
+> and constructs the installed target with:
+>
+> ```nix
+> installed = desktopSystem.extendModules {
+>     ...
+> };
+> ```
+>
+>
+>
+> Therefore it inherits the real production:
+>
+> ```text
+> Disko
+> Home Manager
+> Impermanence
+> host configuration
+> specialArgs
+> username
+> unstable package set
+> Home Manager user integration
+> stock controls
+> activation safety
+> storage modules
+> ```
+>
+> while adding only test/virtual-hardware overrides.
+>
+> This was exactly the highest-value structural recommendation from the freshest architecture review, and it is now implemented. :chatgpt-content-reference{index="30"}
+>
+> ## What the test actually proves when executed
+>
+> It creates a new 96 GiB virtual disk and then exercises:
+>
+> ```text
+> blank disk
+>     ↓
+> verify no existing signatures
+>     ↓
+> real production Disko layout
+>     ↓
+> GPT
+>     ├── 4 GiB ESP
+>     ├── 32 GiB swap
+>     └── Btrfs
+>          ├── @root
+>          ├── @home
+>          ├── @var
+>          ├── @nix
+>          ├── @persist
+>          ├── @optimization
+>          └── @snapshots
+>     ↓
+> install test-only password hash using production path contract
+>     ↓
+> install persistent machine-id fixture
+>     ↓
+> nixos-install exact extended desktop
+>     ↓
+> verify fallback EFI loader
+>     ↓
+> shutdown installer
+>     ↓
+> start new QEMU instance from installed disk only
+> ```
+>
+> Critically the installed machine receives:
+>
+> ```text
+> NO host /nix/store mount
+> NO 9p host mount
+> NO QEMU-supplied host kernel
+> NO QEMU-supplied host initrd
+> ```
+>
+> Then it proves:
+>
+> ```text
+> first normal boot
+>     exact installed closure
+>     machine ID
+>     credentials
+>     persistent mounts
+>     Home Manager
+>     root/persistent probes
+>
+> reboot normal
+>     root-local probe disappears
+>     persistent probe survives
+>     journal survives
+>     reset count increments
+>
+> persistent-root one-shot boot
+>     root-local recovery probe survives
+>     root ID unchanged
+>     reset count unchanged
+>     machine ID unchanged
+>     zero failed units
+>
+> return normal
+>     root-local recovery probe disappears
+>     persistent probe survives
+>     reset count increments
+>
+> shutdown
+>
+> offline inspection
+>     mount Btrfs top-level read-only
+>     verify all seven production subvolumes
+>     verify persistent machine ID
+> ```
+>
+>
+>
+> The repository documentation explicitly says that merely implementing/evaluating this test does **not** close the gate; a successful execution receipt is required.
+>
+> That is now the single most important unexecuted software/reconstruction gate.
+>
+> ---
+>
+> # 18. Stable-refresh/recovery evidence
+>
+> The pinned recovery ISO has already passed:
+>
+> ```text
+> build
+> copy to Ventoy
+> explicit flush
+> SHA-256 verification
+> read-only remount verification
+> exFAT read-only check
+> ```
+>
+> The accepted stable-refresh documentation also records the physical root-policy sequence.
+>
+> There is, however, one documentation/evidence reconciliation item remaining:
+>
+> ```text
+> the continuation evidence reports a completed read-only recovery filesystem drill,
+> while docs/stable-refresh.md still asks that exact physical-media receipt details
+> be reconciled in the recovery runbook
+> ```
+>
+>
+>
+> Do **not** automatically repeat the recovery drill.
+>
+> First reconcile the existing private/public evidence.
+>
+> Repeat it only if the existing receipt cannot establish what was actually booted/mounted.
+>
+> ---
+>
+> # 19. Backup evidence
+>
+> This gate has advanced significantly.
+>
+> ## Secrets/bootstrap credential
+>
+> The separate `/persist/secrets` backup is now considered **complete on user-reported evidence** because it was actually restored during recovery from a real system failure.
+>
+> No additional secrets framework is required for this baseline.
+>
+> Do not add sops-nix/agenix merely for architectural neatness.
+>
+> The production contract remains:
+>
+> ```text
+> /persist/secrets/<username>-password-hash
+> ```
+>
+> The reconstruction test uses the same path with a disposable fixture hash.
+>
+>
+>
+> ## Git/LFS project recovery
+>
+> `AI_Gavin_Project` remote recovery was already proven:
+>
+> ```text
+> commit:
+> 376e151fca709b084e182da4c76ccb21a228f86d
+>
+> 415 LFS objects
+> fresh empty LFS object store
+> exact sizes/hashes matched
+> fresh clone restored project descriptor
+> ```
+>
+>
+>
+> ## Home inventory
+>
+> Evidence already includes:
+>
+> ```text
+> full top-level home scan
+> 31 entries scanned
+> Development ~118 GB allocated
+> engine tree ~117.5 GB
+> .config ~1.8 GB
+> .local/share ~14 GB
+> other non-Development data ~18.4 GB
+> source/project extension audit
+> loose Blender files identified
+> ```
+>
+> ## Current Ventoy archive
+>
+> The user deliberately selected a dedicated folder on the existing Ventoy USB.
+>
+> That decision supersedes the older recommendation not to use it for the home archive.
+>
+> The operation is additive:
+>
+> ```text
+> no formatting
+> no existing Ventoy images erased
+> 4 GiB free-space reserve enforced
+> fresh read-only home snapshot used as source
+> ```
+>
+> The exclusion audit established:
+>
+> ```text
+> 26,000 compared engine binaries:
+>     size/CRC equal to retained engine ZIP
+>
+> 47 extra/different files:
+>     backed up separately
+>     all 47 restored and hash-verified
+> ```
+>
+> The main compressed archive includes home/projects/engine source/assets with only explicitly audited capacity exclusions.
+>
+> Latest `plan.md` evidence says archive writing completed at:
+>
+> ```text
+> 27,844,003,241 bytes
+> ```
+>
+> but USB writeback was still draining and no terminal verified archive/restore receipt existed yet.
+>
+> Therefore:
+>
+> ```text
+> MAIN HOME BACKUP = IN PROGRESS / NOT ACCEPTED YET
+> ```
+>
+> Do not count file creation alone as the backup gate.
+>
+> ---
+>
+> # 20. Development/workload evidence already collected
+>
+> These results are valuable, but remain **preparation evidence**, not final-candidate acceptance.
+>
+> ## C/C++
+>
+> Passed:
+>
+> ```text
+> pinned dev shell
+> C++20 compilation/execution
+> clangd AST/index
+> exact trusted query-driver
+> zero clangd errors
+> ```
+>
+>
+>
+> ## Unreal Engine
+>
+> Passed preparation evidence:
+>
+> ```text
+> real AI_Gavin_Project
+> incremental editor target build
+> Epic Clang 20.1.8
+> Rocky Linux 8 sysroot
+> bundled libc++
+> Steam FHS
+> native Wayland SDL3
+> compositor xwayland=false
+> Vulkan RADV RX 9070 XT / GFX1201
+> configured startup map
+> 28 actors
+> 10-second map hold
+> correct deferred editor close
+> default Mimalloc
+> exit 0
+> ```
+>
+> An earlier synchronous `SystemLibrary.quit_editor()` test crashed through ICU/Slate cleanup, but investigation demonstrated that the automation violated Unreal's intended deferred shutdown lifecycle. The corrected lifecycle passed, and no `-ansimalloc` workaround was adopted.
+>
+> Still required:
+>
+> ```text
+> broad/full rebuild
+> interactive editor use
+> PIE/play
+> longer working session
+> exact final candidate
+> ```
+>
+> ## Blender
+>
+> Passed preparation evidence:
+>
+> ```text
+> Blender 5.2.2
+> RX 9070 XT HIP
+> factory GPU render
+> actual local project loaded
+> 33-object Cycles scene
+> 1920x1080
+> 64 samples
+> GPU-only
+> 11.83 s
+> source unchanged
+> no targeted GPU reset/fault
+> ```
+>
+>
+>
+> Still required:
+>
+> ```text
+> interactive use
+> sustained representative render
+> exact final candidate
+> ```
+>
+> ## Gamescope / MangoHud
+>
+> Passed:
+>
+> ```text
+> Gamescope 3.16.23
+> 600-frame Vulkan cube
+> native Wayland client
+> XCB/XWayland client
+> MangoHud 0.8.3 initialized
+> overlay/shim mapped
+> ```
+>
+> Still required:
+>
+> ```text
+> real native game
+> real Proton game
+> HDR
+> controller
+> final candidate
+> ```
+>
+> ## GameMode
+>
+> VM authorization evidence exists and intended user policy is fixed.
+>
+> Still required physically:
+>
+> ```text
+> actual governor helper succeeds
+> requested policy changes
+> policy restored after game exits
+> split-lock mitigation remains enabled
+> ```
+>
+> ## Creative Stage Pro
+>
+> Proven:
+>
+> ```text
+> USB enumeration
+> ALSA device
+> direct ALSA silent transport
+> current PipeWire default transport
+> ```
+>
+> Not yet proven:
+>
+> ```text
+> Stage Pro PipeWire profile
+> Stage Pro as intended sink
+> audible playback
+> replug/reboot reconnect
+> ```
+>
+> ## Android/KVM
+>
+> Current physical blocker:
+>
+> ```text
+> user is in kvm group
+> /dev/kvm absent
+> VMX disabled in BIOS
+> ```
+>
+>
+>
+> ## CPU sustained test
+>
+> The requested 30-minute test has **not passed**.
+>
+> Existing attempt:
+>
+> ```text
+> 12 stress-ng workers
+> nice 19
+> 5-second sensor monitoring
+> automatic 80 C stop
+> ```
+>
+> stopped at approximately five seconds when CPU package temperature reached 80 C.
+>
+> Positive observations:
+>
+> ```text
+> no throttle-counter increase
+> no matching MCE/hardware/thermal error
+> Commander Core active
+> fan command changed to 100%
+> temperature returned to ~30 C
+> ```
+>
+> but this remains:
+>
+> ```text
+> CPU/OC SUSTAINED STABILITY = OPEN
+> ```
+>
+>
+>
+> Do not raise the thermal cutoff merely to manufacture a pass.
+>
+> ---
+>
+> # 21. Firmware decision
+>
+> The firmware-update question itself is now settled.
+>
+> Current retained baseline:
+>
+> ```text
+> ASUS ROG STRIX Z490-E
+> BIOS 3201
+> current ME 14.1.53.1649 / 14.0.51.1528 components
+> ```
+>
+> The user explicitly chose to retain the current BIOS/ME.
+>
+> No flash is planned.
+>
+> The newer BIOS/ME packages remain historical reference only.
+>
+> The only required firmware action remaining is:
+>
+> ```text
+> enable VMX / Intel virtualization
+> ```
+>
+> during the batched maintenance window.
+>
+> This should be treated as a baseline-setting change and recorded.
+>
+> ---
+>
+> # 22. Maintenance/storage evidence
+>
+> Current maintenance policy is already part of the physically accepted system.
+>
+> Journal:
+>
+> ```text
+> SystemMaxUse      2 GiB
+> SystemKeepFree    4 GiB
+> MaxRetentionSec   90 days
+> ```
+>
+> Coredump:
+>
+> ```text
+> ProcessSizeMax    32 GiB
+> ExternalSizeMax   8 GiB
+> MaxUse            4 GiB
+> KeepFree          4 GiB
+> ```
+>
+> GC:
+>
+> ```text
+> Saturday 04:00
+> delete older than 30d
+> ```
+>
+> Scrub:
+>
+> ```text
+> monthly day 1 at 02:00
+> ```
+>
+>
+>
+> Before controlled performance measurements later:
+>
+> ```bash
+> sudo systemctl stop nix-gc.timer btrfs-scrub--.timer fstrim.timer
+> systemctl list-jobs
+> systemctl list-timers --all
+> ```
+>
+> Restart them after the measurement window.
+>
+> Do not interrupt active GC/scrub merely to benchmark.
+>
+> ---
+>
+> # 23. Current readiness candidate closure evidence
+>
+> The previously reviewed readiness candidate was:
+>
+> ```text
+> normal:
+> l994fn5hpd2g2rijyffprl4368587m5w
+>
+> persistent:
+> cxc50rmb8i6akb62fcvzz3xkszzqf895
+> ```
+>
+> versus physically accepted:
+>
+> ```text
+> czk5a2wn8di3pgv8a6w0b8aj3286g3h3
+> ```
+>
+> That earlier comparison reported:
+>
+> ```text
+> closure size:
+> 16,985,654,488
+> →
+> 16,985,659,544
+> (+5,056 bytes)
+>
+> membership:
+> 2207
+> →
+> 2208
+>
+> package version transitions:
+> none
+>
+> kernel store path:
+> unchanged
+> ```
+>
+> Material changes were explained by:
+>
+> ```text
+> explicit reset data interface
+> Commander Core keeper/wrapper source
+> activation pre-switch guards
+> initrd/system metadata
+> generated units
+> ```
+>
+> No compiler optimization or dependency refresh occurred.
+>
+> However, the later activation-safety namespace/composition work can affect generated system identity.
+>
+> Therefore **do not treat `l994...` as automatically the final `77527...` candidate closure**.
+>
+> The latest ledger explicitly says exact output comparison after the workstation-safety refactor was being evaluated.
+>
+> Closing that evidence gap is the first immediate task.
+>
+> ---
+>
+> # 24. Previous Phase A–L status crosswalk
+>
+> The previous unified guide can now be collapsed as follows.
+>
+> | Previous phase | Current result |
+> |---|---|
+> | A — username parameterization | **COMPLETE** |
+> | B — PR/CI policy | **COMPLETE** |
+> | C — current-status documentation | **COMPLETE** |
+> | D — storage feature directories | **COMPLETE** |
+> | E — Btrfs host/mechanism ownership | **COMPLETE** |
+> | F — Nix/Bash reset data boundary | **COMPLETE** |
+> | G — test subsystem + registry | **COMPLETE** |
+> | H — recovery under `images/` | **COMPLETE** |
+> | I — Commander policy duplication | **COMPLETE** |
+> | J — `system.checks` | **COMPLETE** |
+> | K — `system.preSwitchChecks` | **COMPLETE** |
+> | L — stock closure contamination contract | **COMPLETE** |
+> | M — reconstruction implementation | **COMPLETE** |
+> | M — reconstruction execution | **OPEN** |
+> | N — bootstrap secret restore | **COMPLETE, user-reported actual recovery** |
+> | N — broad home backup/restore | **IN PROGRESS** |
+> | O — Facter experiment | **OPTIONAL / NOT STARTED** |
+> | P — BIOS/ME choice | **COMPLETE: retain existing** |
+> | P — VMX enable | **OPEN** |
+> | Q onward — hardware/workloads/soak | **OPEN** |
+>
+> That is the central update to the project.
+>
+> Do not continue executing old Phase A–L instructions.
+>
+> ---
+>
+> # 25. Current critical path
+>
+> The effective critical path is now:
+>
+> ```text
+> 77527f8f source + CI PASS
+>         │
+>         ▼
+> [1] close current closure-identity evidence
+>         │
+>         ▼
+> [2] finish Ventoy archive flush / integrity / restore
+>         │
+>         ▼
+> [3] execute blank-disk reconstruction
+>         │
+>         ▼
+> [4] final offline readiness sweep
+>         │
+>         ▼
+> [5] batched physical maintenance window
+>         ├── enable VMX
+>         └── install exact readiness candidate for next boot
+>         │
+>         ▼
+> [6] physical normal → persistent-root → normal acceptance
+>         │
+>         ▼
+> [7] sustained hardware/storage validation
+>         │
+>         ▼
+> [8] exact-candidate application/workload acceptance
+>         │
+>         ▼
+> [9] multi-day real-use soak
+>         │
+>         ▼
+> [10] final closure/evidence freeze
+>         │
+>         ▼
+> [11] merge PR #7
+>         │
+>         ▼
+> nixos-26.05-pre-optimization-baseline
+>         │
+>         ▼
+> post-baseline historical cleanup
+>         │
+>         ▼
+> feat/optimization-framework-v2
+> ```
+>
+> Everything else is secondary.
+>
+> ---
+>
+> # 26. PHASE 1 — Close current in-flight evidence
+>
+> Do this before creating more code.
+>
+> ## 26.1 Freeze source identity
+>
+> Record:
+>
+> ```bash
+> git status --short
+> git rev-parse HEAD
+> git rev-parse origin/feat/pre-optimization-readiness
+> git rev-parse origin/main
+> ```
+>
+> Expected reviewed state:
+>
+> ```text
+> HEAD:
+> 77527f8f712611ca244a2946c97c4f5c94d63ba4
+>
+> main:
+> f89205c07e4d3a77900b046a5bf937944488647b
+> ```
+>
+> If the branch has moved, use the new exact head and explicitly note that this guide's `77527...` snapshot was superseded.
+>
+> ## 26.2 Build current exact normal closure
+>
+> ```bash
+> normal="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+>
+> printf '%s\n' "$normal"
+> ```
+>
+> ## 26.3 Build current persistent-root closure
+>
+> ```bash
+> persistent="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+>
+> printf '%s\n' "$persistent"
+> ```
+>
+> ## 26.4 Compare against accepted baseline
+>
+> ```bash
+> nix store diff-closures \
+>   /nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8 \
+>   "$normal"
+> ```
+>
+> Also compare the new candidate against the last readiness candidate if its old paths remain present.
+>
+> Required conclusion:
+>
+> ```text
+> all changes explained
+> no unplanned package version transition
+> no unexpected kernel transition
+> no unexpected Mesa transition
+> no accidental optimization dependency
+> no input refresh
+> ```
+>
+> If current normal/persistent outputs changed after the activation-safety refactor:
+>
+> - record their exact paths;
+> - update private receipts;
+> - protect them with explicit temporary GC roots if necessary;
+> - update `docs/closure-review.md`;
+> - update `docs/status.md`.
+>
+> Do not activate yet.
+>
+> ---
+>
+> # 27. PHASE 2 — Finish the home backup gate
+>
+> Do not start a second archive.
+>
+> Continue the existing operation/evidence chain.
+>
+> Current state:
+>
+> ```text
+> main compressed archive written:
+> 27,844,003,241 bytes
+>
+> USB writeback:
+> was still draining in latest ledger
+>
+> archive integrity receipt:
+> not yet terminal
+>
+> representative restore:
+> not yet complete
+> ```
+>
+> ## Required completion evidence
+>
+> The gate closes only when all of the following are true:
+>
+> ```text
+> [ ] dirty/writeback has drained
+> [ ] archive is readable from the USB filesystem
+> [ ] compressed stream/archive integrity passes
+> [ ] final archive size recorded
+> [ ] archive checksum recorded
+> [ ] selected restore is made to a separate destination
+> [ ] restored files compared against source snapshot
+> [ ] representative contents/hash comparison passes
+> [ ] supplemental 47-file backup remains verified
+> [ ] free-space reserve remains acceptable
+> [ ] filesystem is cleanly flushed/unmounted
+> [ ] terminal receipt exists
+> ```
+>
+> Do not substitute:
+>
+> ```text
+> file exists
+> ```
+>
+> for:
+>
+> ```text
+> backup verified
+> ```
+>
+> ## Preserve important distinctions
+>
+> ### Secrets
+>
+> Already complete separately through actual past recovery.
+>
+> Do not repeat solely to satisfy the home archive.
+>
+> ### Git remote
+>
+> Already proven.
+>
+> ### Main home archive
+>
+> Still needs its own integrity + restore gate.
+>
+> ### Recovery media
+>
+> The same physical USB now serves more than one purpose.
+>
+> Do not erase existing ISO content during archive cleanup.
+>
+> ---
+>
+> # 28. PHASE 3 — Execute blank-disk reconstruction
+>
+> Once the backup receipt is safely complete, run the already-implemented test.
+>
+> Primary command:
+>
+> ```bash
+> nix build \
+>   .#blank-disk-reconstruction \
+>   --no-link \
+>   --print-build-logs
+> ```
+>
+> The attached feature review correctly identified this as the highest-value next NixOS action: the infrastructure already exists, so proving it passes is now more useful than inventing another reliability module. :chatgpt-content-reference{index="47"}
+>
+> ## Acceptance
+>
+> Require terminal success for the entire scenario.
+>
+> Do not accept merely:
+>
+> ```text
+> derivation evaluates
+> installer starts
+> Disko runs
+> first boot works
+> ```
+>
+> The entire chain must pass:
+>
+> ```text
+> blank disk
+> Disko
+> nixos-install
+> UEFI boot
+> normal boot
+> normal reboot/reset
+> persistent-root boot
+> return to normal
+> offline Btrfs inspection
+> zero failed-unit requirement
+> ```
+>
+> ## If reconstruction fails
+>
+> Classify the failure first:
+>
+> ```text
+> test harness defect
+> production config defect
+> bootloader issue
+> Disko issue
+> activation guard issue
+> credential contract issue
+> root reset issue
+> QEMU fixture issue
+> resource/time issue
+> ```
+>
+> Then make the narrowest correct fix.
+>
+> Never weaken:
+>
+> ```text
+> no host store
+> no host kernel
+> no host initrd
+> real desktop composition
+> real Disko layout
+> credential path contract
+> root-reset semantics
+> ```
+>
+> merely to make the test green.
+>
+> After a code fix:
+>
+> ```text
+> nix flake check --print-build-logs
+> relevant focused test
+> blank-disk reconstruction again
+> ```
+>
+> Record final derivation/output/log receipt in `plan.md` and `docs/status.md`.
+>
+> ---
+>
+> # 29. PHASE 4 — Final offline readiness sweep
+>
+> Once backup + reconstruction pass, perform one complete pre-physical sweep.
+>
+> ## Fast suite
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> ## Explicit heavy tests
+>
+> Run at minimum:
+>
+> ```bash
+> nix build .#workstation-smoke --no-link -L
+> nix build .#reset-control --no-link -L
+> nix build .#impermanence-root-safety --no-link -L
+> nix build .#interrupted-recovery --no-link -L
+> nix build .#persistent-identity --no-link -L
+> nix build .#persistent-fallback --no-link -L
+> nix build .#activation-safety-actions --no-link -L
+> nix build .#blank-disk-reconstruction --no-link -L
+> ```
+>
+> Run the stock contamination negative test deliberately and confirm it fails **for the expected forbidden-dependency reason**.
+>
+> Do not interpret an unrelated build failure as success.
+>
+> ## Recovery artifact
+>
+> Build:
+>
+> ```bash
+> nix build .#recovery-iso --no-link
+> ```
+>
+> If the resulting ISO is still exactly:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> the existing verified Ventoy copy remains the exact artifact.
+>
+> If it changes, do not silently call the older ISO the matching recovery image.
+>
+> ## PR description cleanup
+>
+> PR #7's description has lagged slightly behind the current ledger.
+>
+> Before final physical work, update it to reflect:
+>
+> ```text
+> bootstrap secret restore = complete
+> reconstruction derives exact desktop via extendModules
+> activation-safety relocation/assertions = complete
+> current head CI = green
+> main home archive = current actual status
+> blank reconstruction = actual result
+> ```
+>
+> Keep the PR draft.
+>
+> ---
+>
+> # 30. PHASE 5 — Optional isolated Facter experiment
+>
+> This is the only major NixOS 26.05 feature from the attached review that is still genuinely new and potentially useful before optimization. :chatgpt-content-reference{index="48"}
+>
+> It is **not a hard gate**.
+>
+> Only do it if it does not delay reconstruction/physical readiness.
+>
+> Generate:
+>
+> ```bash
+> sudo nix-shell -p nixos-facter \
+>   --run 'nixos-facter -o facter.json'
+> ```
+>
+> Compare:
+>
+> ```text
+> existing hardware-configuration.nix
+>             vs
+> Facter report
+>             vs
+> Facter-derived evaluation
+> ```
+>
+> Use:
+>
+> ```text
+> hardware.facter.debug.nvd
+> hardware.facter.debug.nix-diff
+> ```
+>
+> where useful.
+>
+> Decision rule:
+>
+> ```text
+> if Facter materially improves hardware provenance without obscuring
+> important explicit configuration:
+>     consider adoption
+>
+> otherwise:
+>     record comparison
+>     keep existing hardware-configuration.nix
+> ```
+>
+> Do not make Facter adoption a new prerequisite simply because the experiment exists.
+>
+> ---
+>
+> # 31. PHASE 6 — Batched physical maintenance window
+>
+> Prerequisites:
+>
+> ```text
+> backup PASS
+> reconstruction PASS
+> offline test suite PASS
+> current candidate closures recorded
+> recovery path known
+> ```
+>
+> ## 31.1 Capture retained firmware state
+>
+> Before firmware-setting changes, record:
+>
+> ```text
+> BIOS 3201
+> ME versions
+> CPU ratio
+> cache ratio
+> core voltage
+> LLC
+> AVX offset
+> power limits
+> RAM frequency/timings
+> ReBAR
+> Above 4G decoding
+> VMX state
+> Speed Shift/HWP
+> ```
+>
+> No BIOS/ME flash is planned.
+>
+> ## 31.2 Enable VMX
+>
+> Change only the required virtualization setting unless another deliberately recorded hardware correction is needed.
+>
+> After boot:
+>
+> ```bash
+> grep -m1 -o 'vmx' /proc/cpuinfo
+> test -c /dev/kvm
+> ls -l /dev/kvm
+> groups
+> ```
+>
+> Required:
+>
+> ```text
+> vmx CPU capability visible
+> /dev/kvm exists
+> expected kvm group ownership
+> p2949 has access
+> ```
+>
+> ## 31.3 Install exact readiness candidate for boot
+>
+> Given that the candidate changes:
+>
+> ```text
+> initrd
+> root-reset source
+> Commander Core service source/wrapper
+> preSwitch activation checks
+> system metadata
+> ```
+>
+> prefer a **boot installation**, not a casual live switch.
+>
+> Use the exact source already validated.
+>
+> For example:
+>
+> ```bash
+> sudo nixos-rebuild boot --flake '.#desktop'
+> ```
+>
+> The activation prerequisites should run as designed.
+>
+> Do not bypass a failed preSwitch check.
+>
+> A refusal is evidence that the host prerequisite must be corrected.
+>
+> ---
+>
+> # 32. PHASE 7 — Exact final physical root/candidate acceptance
+>
+> Perform the same high-value pattern already proven:
+>
+> ```text
+> normal candidate
+>     ↓
+> persistent-root candidate
+>     ↓
+> normal candidate
+> ```
+>
+> ## First normal
+>
+> Verify:
+>
+> ```text
+> exact candidate closure
+> kernel 6.18.55 unless intentionally changed
+> fresh @root
+> reset count +1
+> machine ID stable
+> /persist stable
+> /home stable
+> /var stable
+> /nix stable
+> /var/lib/nixos-optimization stable
+> credentials correct
+> Home Manager active
+> NetworkManager active
+> D-Bus/logind active
+> Commander Core active
+> Wayland session works
+> zero failed units
+> ```
+>
+> Create:
+>
+> ```text
+> root-local probe
+> persistent probe
+> ```
+>
+> ## Persistent-root
+>
+> Verify:
+>
+> ```text
+> persistent-root closure exact
+> root ID/UUID unchanged
+> reset count unchanged
+> root-local probe survives
+> persistent probe survives
+> machine ID unchanged
+> credentials unchanged
+> services healthy
+> ```
+>
+> ## Final normal
+>
+> Verify:
+>
+> ```text
+> normal closure exact
+> fresh root ID/UUID
+> reset count +1 exactly
+> root-local probe gone
+> persistent probe survives
+> machine ID unchanged
+> services healthy
+> zero failed units
+> ```
+>
+> This is the final physical validation of the readiness code.
+>
+> There is no need for another arbitrary three-reset sequence unless the actual reset semantics have changed after the existing VM suite.
+>
+> ---
+>
+> # 33. PHASE 8 — Hardware/storage stability
+>
+> Run on the final physically accepted candidate and retained firmware state.
+>
+> ## 33.1 NVMe
+>
+> Capture SMART:
+>
+> ```bash
+> sudo nvme smart-log /dev/nvme0
+> ```
+>
+> and relevant error information.
+>
+> Require:
+>
+> ```text
+> critical warning = understood/clear
+> media/data errors = none or explicitly understood
+> temperature normal
+> spare healthy
+> percentage used reasonable
+> error-log anomalies understood
+> ```
+>
+> ## 33.2 Btrfs
+>
+> Check:
+>
+> ```bash
+> sudo btrfs scrub status /
+> sudo btrfs device stats /
+> sudo btrfs filesystem usage /
+> ```
+>
+> Require:
+>
+> ```text
+> scrub finished
+> no errors found
+> device errors zero or explicitly explained
+> filesystem usage healthy
+> ```
+>
+> Do not launch a redundant scrub while another is active.
+>
+> ## 33.3 Nix store
+>
+> During an idle period:
+>
+> ```bash
+> sudo nix-store --verify --check-contents
+> ```
+>
+> Any corruption must be repaired/rebuilt before the baseline freeze.
+>
+> Optional one-time:
+>
+> ```bash
+> sudo nix-store --optimise
+> ```
+>
+> but do not run store optimization during benchmark measurements.
+>
+> ## 33.4 RAM
+>
+> Run a real memory-stability test suitable for the installed 32 GiB configuration.
+>
+> Require:
+>
+> ```text
+> zero memory errors
+> ```
+>
+> If CPU/RAM firmware settings change, repeat the relevant stability tests.
+>
+> ## 33.5 CPU/OC/cooling
+>
+> The previous 5-second test is not sufficient.
+>
+> Target the originally intended sustained interval rather than lowering the standard.
+>
+> Maintain the conservative thermal safety stop.
+>
+> If the current 5.0 GHz configuration reaches the stop too quickly:
+>
+> ```text
+> reduce voltage if overvolted
+> adjust power limits
+> improve cooling/contact
+> or reduce clock
+> ```
+>
+> Do not simply raise the temperature limit to call the overclock stable.
+>
+> Monitor:
+>
+> ```text
+> CPU package temperature
+> frequency
+> throttle indicators
+> MCE/hardware errors
+> Commander Core service
+> fan policy transitions
+> watchdog/restarts
+> ```
+>
+> A valid result requires a genuinely sustained stable run.
+>
+> ---
+>
+> # 34. PHASE 9 — Freeze stock CPU/memory/I/O policy
+>
+> Once hardware is stable, document and stop changing ordinary machine policy.
+>
+> Current intended stock posture remains conservative:
+>
+> ```text
+> security mitigations enabled
+> SMT enabled
+> ordinary C-states
+> intel_pstate
+> powersave governor
+> balance_performance EPP
+> THP madvise
+> 32 GiB disk swap
+> zram off
+> kernel-selected NVMe scheduler
+> no global compiler flags
+> no global RADV hacks
+> no global LD_LIBRARY_PATH
+> no fixed performance clocks as normal desktop policy
+> ```
+>
+> Do not introduce new performance tweaks during this phase.
+>
+> Measure first if you genuinely suspect:
+>
+> ```text
+> zram
+> irqbalance
+> THP
+> scheduler
+> governor/EPP
+> ```
+>
+> needs changing.
+>
+> Any policy change this late requires repeating relevant workload comparisons.
+>
+> ---
+>
+> # 35. PHASE 10 — Final exact-candidate workload acceptance
+>
+> Earlier preparation results establish that the workflows can work.
+>
+> Now prove them on the actual baseline candidate.
+>
+> ## Desktop/session
+>
+> Require:
+>
+> ```text
+> normal graphical login
+> Hyprland/UWSM
+> portals
+> Firefox
+> Waybar/notifications
+> persistence
+> reboot
+> zero failed units
+> ```
+>
+> ## C/C++
+>
+> Require:
+>
+> ```text
+> nix develop
+> GCC build
+> Clang build
+> clangd indexing
+> representative project build
+> no ambient optimization flags
+> ```
+>
+> ## Unreal Engine
+>
+> Run actual `AI_Gavin_Project`.
+>
+> Require:
+>
+> ```text
+> Epic intended toolchain
+> broad/full C++ build
+> native Wayland
+> RX 9070 XT RADV
+> actual startup map
+> interactive editing
+> PIE/play
+> normal ordinary shutdown
+> longer representative session
+> tracked project remains clean
+> no GPU reset
+> ```
+>
+> Retain the corrected deferred shutdown lifecycle for automation.
+>
+> Do not introduce `-ansimalloc` based on the invalid old synchronous-quit test.
+>
+> ## Blender
+>
+> Require:
+>
+> ```text
+> actual project
+> HIP RX 9070 XT
+> interactive use
+> representative sustained render
+> source file unchanged
+> no GPU timeout/reset/fault
+> ```
+>
+> ## Android Studio
+>
+> Now that VMX is enabled:
+>
+> ```text
+> /dev/kvm functional
+> Java project
+> AVD starts with hardware acceleration
+> normal emulator interaction
+> AVD persists across restart
+> ```
+>
+> ## Gaming
+>
+> Use at least:
+>
+> ```text
+> one native Vulkan title
+> one Proton title
+> ```
+>
+> Exercise:
+>
+> ```text
+> GameMode
+> Gamescope
+> MangoHud
+> controller
+> audio
+> VRR/HDR where part of real workflow
+> ```
+>
+> Verify GameMode:
+>
+> ```text
+> authorized helper actually succeeds
+> performance policy applied during session
+> policy restored on exit
+> split-lock mitigation remains enabled
+> ```
+>
+> ## Creative Stage Pro
+>
+> Close the outstanding audio gate:
+>
+> ```text
+> appropriate PipeWire profile enabled
+> Stage Pro sink exists
+> Stage Pro selected intentionally
+> audible playback
+> replug recovery
+> reboot recovery
+> default route behaves as intended
+> ```
+>
+> ## Networking/Bluetooth
+>
+> Verify normal persisted:
+>
+> ```text
+> NetworkManager connection profiles
+> Ethernet/Wi-Fi
+> Bluetooth where used
+> post-reboot reconnection
+> ```
+>
+> ---
+>
+> # 36. PHASE 11 — Experimental-control audit
+>
+> Before the soak, ensure this is still a genuinely stock baseline.
+>
+> ## Environment
+>
+> Check for accidental global:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> CPPFLAGS
+> LDFLAGS
+> RUSTFLAGS
+> NIX_CFLAGS_COMPILE
+> NIX_LDFLAGS
+> LD_LIBRARY_PATH
+> MALLOC_CONF
+> RADV_PERFTEST
+> ```
+>
+> Every non-empty global value needs an explanation.
+>
+> ## Source
+>
+> Search outside `optimization/` for:
+>
+> ```text
+> -march=
+> -mtune=
+> -flto
+> -fprofile
+> llvm-bolt
+> PGO
+> BOLT
+> nixos-opt-
+> ```
+>
+> Expected `nixos-opt-*` occurrences should be limited to the contamination-control infrastructure/tests.
+>
+> ## Optimization module
+>
+> Must remain inert.
+>
+> The old branch:
+>
+> ```text
+> feat/optimization-framework
+> 397a8c71cd7acb0bc016983f28866df16c95d7d8
+> ```
+>
+> remains donor/prototype code only.
+>
+> Do not merge it.
+>
+> ---
+>
+> # 37. PHASE 12 — Multi-day stock-system soak
+>
+> Once:
+>
+> ```text
+> candidate physically accepted
+> hardware stable
+> workloads individually accepted
+> ```
+>
+> use the machine normally.
+>
+> The soak should include representative combinations rather than isolated smokes:
+>
+> ```text
+> multiple cold boots
+> multiple warm reboots
+> Unreal development
+> Blender rendering
+> large C/C++ build
+> large Nix build
+> Android emulator
+> gaming
+> controller
+> audio
+> browser/network
+> normal desktop work
+> suspend/resume if actually used
+> ```
+>
+> Track:
+>
+> ```text
+> failed systemd units
+> kernel GPU faults/resets
+> MCE/hardware errors
+> filesystem errors
+> root-reset anomalies
+> persistence failures
+> cooling service failures/restarts
+> unexpected OOM/swap behavior
+> disk/store growth
+> application crashes
+> ```
+>
+> A failure should be:
+>
+> ```text
+> recorded
+> classified
+> fixed declaratively where appropriate
+> retested
+> ```
+>
+> not silently worked around.
+>
+> ---
+>
+> # 38. PHASE 13 — Final baseline freeze
+>
+> Only after soak acceptance.
+>
+> ## Repository
+>
+> Require:
+>
+> ```text
+> clean worktree
+> all intended source committed
+> flake.lock frozen
+> optimization inert
+> PR #7 reflects true current status
+> ```
+>
+> ## Fast checks
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> ## Heavy checks
+>
+> Re-run the exact final-source set:
+>
+> ```text
+> workstation-smoke
+> reset-control
+> safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> activation-safety-actions
+> stock-contamination-negative expected refusal
+> blank-disk-reconstruction
+> recovery ISO
+> ```
+>
+> Do not rely solely on an old derivation if later source changes affect the tested subsystem.
+>
+> ## Build exact closures
+>
+> Record:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> ## Closure review
+>
+> Compare against:
+>
+> ```text
+> accepted c5e stable-refresh
+> last readiness candidate
+> final candidate
+> ```
+>
+> Explain every material difference.
+>
+> Require:
+>
+> ```text
+> no unexplained package change
+> no accidental optimization dependency
+> no unexpected input change
+> ```
+>
+> ## Runtime manifest
+>
+> Record at minimum:
+>
+> ```text
+> Git commit
+> flake.lock SHA-256
+> Nixpkgs revision
+> unstable revision
+> Home Manager revision
+> Disko revision
+> Impermanence revision
+> Nix version
+> NixOS version
+> normal closure
+> persistent closure
+> recovery ISO + SHA-256
+> kernel
+> Mesa
+> microcode
+> BIOS
+> ME
+> CPU ratios
+> cache ratio
+> voltage/power settings
+> RAM frequency/timings
+> GPU
+> NVMe model/firmware
+> Btrfs mount options
+> scrub result
+> CPU governor
+> EPP
+> THP
+> swap
+> zram
+> NVMe scheduler
+> irqbalance state
+> maintenance timers
+> Commander Core policy
+> machine ID
+> failed-unit state
+> ```
+>
+> ---
+>
+> # 39. PHASE 14 — Merge and tag
+>
+> PR #7 should remain draft until all hard gates are green.
+>
+> Then:
+>
+> ```text
+> mark ready
+> ensure required Flake checks green
+> review final diff
+> merge to protected main
+> ```
+>
+> Verify merged `main` still corresponds to the tested tree.
+>
+> Then create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Record the tag and exact closure identities under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> This tag becomes the immutable control point for the optimization campaign.
+>
+> ---
+>
+> # 40. PHASE 15 — Post-baseline cleanup
+>
+> Only after the tag exists.
+>
+> Review temporary:
+>
+> ```text
+> preparation GC roots
+> old stable-refresh candidate roots
+> old readiness candidate roots
+> old recovery ISO roots
+> forensic root snapshots
+> obsolete generations
+> ```
+>
+> Do not delete them as one batch.
+>
+> Classify each as:
+>
+> ```text
+> rollback needed
+> forensic evidence
+> historical only
+> safe to remove
+> ```
+>
+> Run a fresh GC preview before collection.
+>
+> ## Historical compatibility cleanup
+>
+> Only now consider removing:
+>
+> ```text
+> impermanence-root-test-a alias
+> impermanence-root-test-b alias
+> other old A/B aliases
+> maintenance guard basename-preservation hack
+> ```
+>
+> if they no longer provide useful historical reproducibility.
+>
+> ## Documentation
+>
+> After baseline completion, reorganize:
+>
+> ```text
+> docs/
+> ├── status.md
+> ├── design/
+> ├── runbooks/
+> ├── validation/
+> ├── baselines/
+> └── history/
+> ```
+>
+> Do not do the large docs move beforehand.
+>
+> Archive `plan.md` under history once it stops being the live execution ledger.
+>
+> The fresh architecture review correctly identifies the current docs tree and `plan.md` as the next organizational pressure point, but recommends deferring that churn until readiness is finished. :chatgpt-content-reference{index="49"}
+>
+> ---
+>
+> # 41. PHASE 16 — Start optimization cleanly
+>
+> Create a new branch from the accepted baseline:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> Do not continue optimization work on:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> and do not revive the old optimization branch as the active implementation.
+>
+> The experiment sequence remains:
+>
+> ```text
+> stock
+>   ↓
+> CPU-specific code generation
+>   ↓
+> conservative compiler tuning
+>   ↓
+> LTO
+>   ↓
+> PGO
+>   ↓
+> BOLT
+>   ↓
+> validated combinations
+> ```
+>
+> The stock contamination contract is already the seed for stage-sensitive controls.
+>
+> Later:
+>
+> ```text
+> stock:
+>     forbid CPU/LTO/PGO/BOLT
+>
+> cpu-codegen:
+>     permit CPU
+>     forbid LTO/PGO/BOLT
+>
+> LTO:
+>     permit CPU/LTO as designed
+>     forbid PGO/BOLT
+>
+> PGO:
+>     permit intended PGO
+>     forbid BOLT
+>
+> BOLT:
+>     permit intended stage
+> ```
+>
+> ---
+>
+> # 42. Explicitly deferred ideas
+>
+> These are **not** readiness blockers.
+>
+> ## Distributed builds
+>
+> Excellent once LLVM/LTO/PGO builds become expensive.
+>
+> Eventually:
+>
+> ```text
+> workstation = benchmark target
+> remote machine = build target
+> ```
+>
+> The attached NixOS-feature review ranks this highly for the optimization phase, not for the current baseline. :chatgpt-content-reference{index="50"}
+>
+> ## `system.replaceDependencies`
+>
+> Useful experimental comparison:
+>
+> ```text
+> normal downstream rebuild
+> vs
+> dependency graft
+> ```
+>
+> Do not use as the primary PGO/BOLT architecture.
+>
+> ## Optimization specialisation matrix
+>
+> Later:
+>
+> ```text
+> stock
+> cpu-codegen
+> thinlto
+> pgo
+> bolt
+> pgo-bolt
+> kernel-experiment
+> ```
+>
+> This is a strong eventual use of the existing specialisation model.
+>
+> ## NixOS nspawn tests
+>
+> Use only where a service test genuinely benefits from a faster no-kernel tier.
+>
+> Do not migrate Btrfs/initrd/bootloader tests away from QEMU.
+>
+> ## Generated option docs
+>
+> `nixosOptionsDoc` could eventually document:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> workstation.activationSafety.*
+> hardware.commanderCore.*
+> ```
+>
+> Useful polish, not a stock-baseline gate.
+>
+> ## Signed binary cache
+>
+> Highly valuable once optimized builds cost tens of minutes/hours.
+>
+> Defer until there are expensive outputs worth preserving/distributing.
+>
+> ## `system.includeBuildDependencies`
+>
+> Interesting offline-reproducibility experiment.
+>
+> Do not enable on the normal workstation.
+>
+> ## Remote deployment
+>
+> Useful once another NixOS machine becomes part of the lab.
+>
+> Not needed now.
+>
+> ---
+>
+> # 43. Things explicitly not to add
+>
+> Do not add before baseline freeze:
+>
+> ```text
+> ephemeral /home
+> ephemeral /var
+> flake-parts
+> flake-utils
+> generic host framework
+> automatic system upgrades
+> a secrets framework solely for novelty
+> Cachy/Zen/custom kernel solely for performance
+> mitigations=off
+> isolcpus
+> nohz_full
+> rcu_nocbs
+> global -march/-mtune
+> global LTO
+> global PGO flags
+> global LD_LIBRARY_PATH
+> global RADV performance hacks
+> fixed clocks as ordinary workstation policy
+> another recovery architecture
+> another generic module abstraction layer
+> ```
+>
+> The current open gates are evidence/physical gates, not architecture gaps.
+>
+> ---
+>
+> # 44. Hard GO checklist
+>
+> Optimization work must not begin until this is green.
+>
+> ## Repository / CI
+>
+> - [x] username source of truth fixed
+> - [x] storage feature organization complete
+> - [x] reset Nix/Bash boundary complete
+> - [x] Btrfs host/mechanism split complete
+> - [x] test registry complete
+> - [x] recovery moved to `images/`
+> - [x] Commander policy duplication removed
+> - [x] `system.checks` implemented
+> - [x] `system.preSwitchChecks` implemented
+> - [x] stock forbidden dependencies implemented
+> - [x] reconstruction derives from exact real desktop
+> - [x] activation safety rehomed/renamed
+> - [x] activation composition assertions tested
+> - [x] CI runner/action pins fixed
+> - [x] PR #7 current head CI green
+> - [ ] exact latest candidate closure identities recorded
+> - [ ] final readiness source merged to main
+> - [ ] annotated baseline tag exists
+>
+> ## Root / reconstruction
+>
+> - [x] physical initial root trials
+> - [x] root safety matrix
+> - [x] interrupted reset recovery
+> - [x] machine-ID persistence
+> - [x] persistent-root VM fallback
+> - [x] physically accepted normal → persistent → normal stable-refresh
+> - [x] blank-disk test implemented
+> - [x] blank-disk test uses actual desktop system
+> - [ ] blank-disk test executed successfully
+> - [ ] final readiness source physical normal → persistent → normal accepted
+>
+> ## Recovery / backup
+>
+> - [x] pinned recovery ISO built
+> - [x] ISO copied and hash verified
+> - [x] exFAT read-only check
+> - [x] project remote/LFS restore
+> - [x] separate bootstrap-secret restore proven by actual user recovery
+> - [x] home inventory
+> - [x] engine exclusion audit
+> - [x] supplemental 47-file restore/hash verification
+> - [ ] main archive integrity verification
+> - [ ] representative main archive restore
+> - [ ] terminal backup receipt
+> - [ ] exact recovery-drill public/private evidence reconciled
+>
+> ## Firmware
+>
+> - [x] firmware versions documented
+> - [x] BIOS/ME update decision made
+> - [x] retain BIOS 3201/current ME
+> - [ ] VMX enabled
+> - [ ] `/dev/kvm` physically accepted
+> - [ ] final firmware/OC settings frozen
+>
+> ## Storage / hardware
+>
+> - [ ] NVMe SMART accepted
+> - [ ] Btrfs current scrub/device stats accepted
+> - [ ] Nix store content verification
+> - [ ] RAM stability accepted
+> - [ ] sustained CPU/OC stability accepted
+> - [ ] sustained Commander Core/cooling behavior accepted
+>
+> ## Workloads
+>
+> - [x] C++20 preparation smoke
+> - [x] clangd preparation
+> - [x] Unreal incremental build preparation
+> - [x] Unreal native Wayland/map lifecycle preparation
+> - [x] Blender actual-project HIP preparation render
+> - [x] Gamescope/MangoHud synthetic preparation
+> - [x] Stage Pro ALSA transport
+> - [ ] final C/C++ candidate
+> - [ ] Unreal full workflow
+> - [ ] Blender sustained workflow
+> - [ ] Android/KVM
+> - [ ] native game
+> - [ ] Proton game
+> - [ ] physical GameMode governor helper
+> - [ ] controller
+> - [ ] HDR if baseline workflow uses it
+> - [ ] Stage Pro PipeWire audible/reconnect
+> - [ ] network/Bluetooth final acceptance
+>
+> ## Stock policy
+>
+> - [ ] CPU governor/EPP frozen
+> - [ ] THP frozen
+> - [ ] zram decision frozen
+> - [ ] IRQ policy frozen
+> - [ ] scheduler recorded
+> - [ ] no unintended global optimization environment
+> - [ ] stock closure audit clean
+>
+> ## Stability
+>
+> - [ ] multi-day soak complete
+> - [ ] no recurring failed units
+> - [ ] no GPU reset
+> - [ ] no unexplained hardware error
+> - [ ] no filesystem error
+> - [ ] no cooling failure
+> - [ ] no root-reset/persistence failure
+> - [ ] no unresolved serious workload regression
+>
+> Only then:
+>
+> ```text
+> GO FOR OPTIMIZATION
+> ```
+>
+> ---
+>
+> # 45. Immediate next action
+>
+> The correct next action is **not another source refactor**.
+>
+> At the current reviewed head, do these in order:
+>
+> ```text
+> 1. Finish and record the exact post-activation-safety candidate closure comparison.
+>
+> 2. Let the existing Ventoy backup operation reach a terminal state:
+>       flush
+>       integrity
+>       representative restore
+>       receipt
+>       clean unmount
+>
+> 3. Execute:
+>       nix build .#blank-disk-reconstruction --no-link --print-build-logs
+>
+> 4. If reconstruction passes:
+>       run final offline heavy readiness suite.
+>
+> 5. Then schedule the single physical maintenance window:
+>       enable VMX
+>       install exact candidate for boot
+>       normal → persistent-root → normal
+>       KVM verification
+>
+> 6. Continue directly into:
+>       hardware stability
+>       final workloads
+>       soak
+>       freeze/merge/tag.
+> ```
+>
+> Unless one of those steps exposes a real defect, **do not expand the architecture any further before the stock baseline is frozen.**
+>
+> This version deliberately removes all of the old “next architectural refactor” work that the branch has already completed. The current source itself confirms that reconstruction now consumes the real desktop, activation-safety has the right ownership and assertions, the flake/test architecture is settled, and CI is reproducible and green.
+>
+> The main project-management shift is therefore: **stop implementing readiness mechanisms and start closing readiness evidence.** The live status document says the same thing: the remaining blockers are reconstruction execution, the main home archive/restore, VMX, sustained hardware stability, final exact-candidate workloads, and the soak.
+
+## Current continuation Phase1 accepted — 2026-10-05
+
+Current normal and persistent builds both exited0 (session23324) and reproduce:
+normal /nix/store/l994fn5hpd2g2rijyffprl4368587m5w-nixos-system-desktop-26.05.20261004.0d9e9b8
+persistent /nix/store/cxc50rmb8i6akb62fcvzz3xkszzqf895-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Source2ef8585 plus guide-only ledger import; no runtime configuration difference.
+Existing membership/size/kernel comparison remains exact because outputs are
+identical, not merely similarly named. Existing candidate GC roots remain the
+correct targets; no replacement/removal necessary. Physical acceptance remains
+open. Terminal build log preserved root-private. This closes the imported
+guide's latest-candidate identity gap without repeating accepted physical boots.
+
+Backup zstd integrity passed; runner is hashing the same existing archive.
+Representative restore/final receipt/clean unmount still open. No second archive,
+firmware change, live switch or reboot. Next required step remains completion of
+backup followed by queued independent reconstruction.
+
+## Backup/reconstruction sequencing corrected — 2026-10-05
+
+Newest guide requires clean USB unmount before reconstruction. Replaced only
+our waiting supervisor730405 (explicitly cancelled before build) with session11114:
+wait for existing runner521492; require verified receipt; cleanly unmount
+/mnt/nixos-backup-ventoy; write private clean-unmount timestamp; only then build
+blank-disk reconstruction with bounded jobs/cores and full build logs. A missing
+receipt or failed unmount holds execution. No backup process was restarted or
+interrupted. Hashing remains live/progressing; no representative restore claim.
+
+## Independent Ventoy home backup accepted — 2026-10-05
+
+- [x] Main archive: 27,844,003,241 bytes.
+- [x] Zstd integrity passed; SHA-256
+  `9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212`.
+- [x] Two Blender files and one actual Unreal project descriptor restored to
+  a separate root-private directory; all three source/restored hashes match.
+- [x] Earlier47-file engine supplement remains separately verified.
+- [x] Backup runner session50539 exited0, terminal receipt completed
+  2026-10-05T17:58:06Z. Ventoy cleanly unmounted17:58:09Z; findmnt confirms absent.
+
+USB folder: NixosConf-backups/2026-10-05; media UUID1BF6-1635. No formatting,
+partition change or existing ISO deletion. About12GiB free before unmount,
+above enforced4GiB reserve. Source is read-only home-ventoy-20261005 snapshot;
+application quiescence was not claimed. Engine ZIP and audited binaries/cache
+exclusions remain documented, with unique binary additions supplemented.
+Secrets backup is separate and user-confirmed from actual recovery.
+Private receipts, restored samples, scripts and logs are retained under
+/persist/nixos-ventoy-backup-20261005. This is point-in-time backup evidence;
+new work after snapshot creation requires a later backup before final freeze.
+
+Queued reconstruction session11114 started only after verified receipt and
+clean unmount, source736b0fb. Nix PID1186208 is actively building. This closes
+home archive/integrity/representative restore/unmount gates; it does not close
+reconstruction, physical hardware/workload acceptance or multi-day soak.
+
+## Reconstruction execution and PR reconciliation — 2026-10-05
+
+Live reconstruction PID1186208 has completed Disko and is copying the actual
+extended desktop closure with nixos-install. Entire installed-disk UEFI/reboot/
+recovery chain remains unaccepted until terminal success. No host store/kernel/
+initrd independence requirement was weakened. Host CPU readings65–66°C in
+observed interval; no physical session/service interruption.
+
+Draft PR7 description updated through gh body-file: exact-desktop extension,
+workstation safety assertions, pinned CI, verified main home/supplement backup,
+user-confirmed real secrets recovery and retained BIOS/ME are current. Removed
+obsolete encrypted-restore/home-backup blockers; reconstruction accurately
+listed executing, physical hardware/workloads/soak open. Latest head CI was
+still running at update; no claim it had passed. docs/status open-gate text now
+reflects accepted home backup, not the older in-progress checkpoint.
+
+
+## Current continuation directive — 58-section guide, 2026-10-05
+
+User request: read and record the attached information, then progress following
+it. The following document is imported guidance, not evidence that its suggested
+actions have already run. Its ordering supersedes earlier guides; live source
+and terminal receipts take precedence over its reviewed snapshot.
+
+Source: `9b742f1a-5c60-4159-b432-fd18a57565fa/Pasted text.txt`.
+SHA-256: `e9f4c9ba1d3741ec8bd3d0fce36fe2c64f02f87cb10ae680dc24f28977875af1`. Logical lines: 3489.
+
+### Current execution reconciliation
+
+- [x] Entire guide preserved below, including examples and deferred proposals.
+- [x] Independent Ventoy backup accepted; separate secrets recovery accepted on
+  the user's report of an actual successful system recovery. Retain BIOS 3201/ME.
+- [~] Reconstruction source736b0fb, drv1l6h8zxp25wmifd2bacl006p4lcwb491,
+  session11114 exited1. Disko, installation, independent installed-disk UEFI boot,
+  Home Manager, credentials/identity, persistent journal, normal root reset,
+  persistent-root recovery and return-to-normal checks all reached success.
+  Final offline mount failed: Btrfs rejected standalone `nologreplay`.
+  These intermediate passes do not constitute terminal reconstruction acceptance.
+- [~] Narrow correction uses `ro,rescue=nologreplay,subvolid=5` to retain read-only
+  inspection without log replay. No production disk or host mount is changed.
+- [ ] After terminal PASS, consider evaluated `desktopSystem.config.disko.devices`
+  with the virtual-device override; defer if it introduces recursion/complexity.
+  Then validate the final harness and run the final offline suite.
+- [ ] Reconcile guide-reported physical recovery ISO drill against exact ISO/date/
+  receipt before deciding whether another physical drill is necessary. Current
+  ISO hash/copy checks alone do not prove physical boot and read-only inspection.
+- [ ] VMX maintenance, retained firmware CPU/RAM settings, final installed candidate
+  physical boot chain, hardware/workload checks and multi-day soak remain open.
+  Avoid workstation reboots until those prerequisites justify one maintenance window.
+- [ ] At final freeze, create `docs/baselines/pre-optimization/manifest.json` with
+  exact Git/lock/input identities, normal/persistent/ISO artifacts, policy and
+  receipt references. Do not invent an accepted baseline manifest now.
+- [-] Broad architecture work frozen. Post-tag cleanup and optional initrd SSH,
+  vmVariant, Userborn/perlless/Facter/build infrastructure proposals remain deferred.
+  Ephemeral home/var and compiler optimization remain outside the baseline.
+- Current live source advanced beyond the guide's6de26a0 snapshot: user commits
+  c3476c1 (fuzzel) and6893511 (Alacritty), plus a local comment change in
+  home/p2949/desktop/default.nix. Preserve these; previous exact-source closure
+  equality and checks do not certify the new desktop changes.
+- Host graphical session, running system and physical boot state were preserved.
+  PR7 stays draft; no merge, tag or firmware change is authorized by this import.
+
+### Complete attached guide (verbatim content, quoted; trailing whitespace normalized)
+
+> I reviewed both newly attached assessments, the prior unified continuation guide, the current GitHub branch/PR, current source files, current `docs/status.md`, the reconstruction implementation, backup records, firmware/workload evidence, recent commits, and current CI.
+>
+> The live repository confirms the new authoritative snapshot is **`6de26a0ce64f1de76afc1b909944bc9a150b461d`**. PR #7 is still open, mergeable, and deliberately draft; the branch is **31 commits ahead of `main`**, and GitHub Actions run **#103 passed** for this exact head.
+>
+> The biggest update from the last guide is that the **independent home backup is now fully accepted**, while the blank-disk reconstruction is the active software gate. The current ledger records that reconstruction had already completed Disko and was copying the extended production desktop closure with `nixos-install`; the full installed-disk UEFI/reboot/recovery chain had not yet reached terminal acceptance at the last committed checkpoint.
+>
+> Both new reviews converge on the same broader conclusion: **the architecture is finished enough that more broad modularization is now more likely to hurt the project than help it.** One narrow reconstruction source-of-truth improvement remains worth considering after the current reconstruction run finishes. Pasted text Pasted text (2)
+>
+> Here is the new unified continuation guide.
+>
+> # NixOS Pre-Optimization Readiness — Unified Continuation and Evidence Guide
+>
+> **Repository:** `P2949/NixosConf`
+> **Current branch:** `feat/pre-optimization-readiness`
+> **Authoritative reviewed head:** `6de26a0ce64f1de76afc1b909944bc9a150b461d`
+> **Base:** `main` at `f89205c07e4d3a77900b046a5bf937944488647b`
+> **PR:** #7 — `Complete stock workstation pre-optimization readiness`
+> **PR state:** open / draft / mergeable
+> **Branch distance:** 31 commits ahead, 0 behind
+> **Current changed-file count vs main:** 55
+> **Latest exact-head CI:** GitHub Actions `Nix checks` run #103 — PASS
+> **Date:** 2026-10-05
+>
+> ---
+>
+> # 1. Purpose and authority
+>
+> This document is the current continuation directive for finishing `plan.md`.
+>
+> It supersedes the **ordering** in all older continuation guides while preserving their historical evidence.
+>
+> Do not rewrite old `plan.md` entries to make history look cleaner. Their value is precisely that they record:
+>
+> - what was believed at the time;
+> - what failed;
+> - what was superseded;
+> - why later decisions were made;
+> - which artifact/source revision a particular result actually belongs to.
+>
+> Use this hierarchy when evidence conflicts:
+>
+> ```text
+> 1. current live branch / current clean local source
+> 2. terminal evidence tied to an exact source revision
+> 3. docs/status.md
+> 4. subsystem-specific current docs
+> 5. newest explicit plan.md acceptance/supersession record
+> 6. physically accepted stable-refresh evidence
+> 7. earlier plan.md history
+> 8. old feature branches
+> ```
+>
+> The old optimization branch is **not** an active continuation branch. It remains frozen at:
+>
+> ```text
+> 397a8c71cd7acb0bc016983f28866df16c95d7d8
+> ```
+>
+> and is donor/reference material only.
+>
+> ---
+>
+> # 2. Overall conclusion
+>
+> The readiness project no longer has a broad architecture problem.
+>
+> The project now has an **evidence-completion problem**:
+>
+> ```text
+> source architecture
+>         DONE
+>         ↓
+> backup/recovery
+>         DONE except evidence reconciliation / final freshness
+>         ↓
+> blank-disk reconstruction
+>         CURRENT ACTIVE SOFTWARE GATE
+>         ↓
+> small reconstruction source-of-truth cleanup
+>         CONDITIONAL / NARROW
+>         ↓
+> final offline validation
+>         ↓
+> physical candidate installation + VMX
+>         ↓
+> hardware stability
+>         ↓
+> exact-candidate workloads
+>         ↓
+> multi-day soak
+>         ↓
+> freeze evidence
+>         ↓
+> merge + tag stock baseline
+>         ↓
+> post-baseline cleanup
+>         ↓
+> optimization-framework-v2
+> ```
+>
+> This distinction matters.
+>
+> Do **not** restart broad refactoring of:
+>
+> ```text
+> flake.nix
+> hosts/
+> profiles/
+> modules/core generally
+> modules/storage generally
+> modules/hardware generally
+> Home Manager
+> recovery image architecture
+> test registry
+> ephemeral-root design
+> activation-safety mechanism
+> Commander Core design
+> username architecture
+> ```
+>
+> unless a failing test exposes an actual defect.
+>
+> The two fresh external reviews explicitly reach the same conclusion: the broad architecture is finished, and unnecessary abstraction is now the greater maintainability risk. :chatgpt-content-reference{index="7"}
+>
+> ---
+>
+> # 3. Current Git / PR / CI state
+>
+> ## Branch
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current head:
+>
+> ```text
+> 6de26a0ce64f1de76afc1b909944bc9a150b461d
+> Reconcile draft PR and current backup acceptance status
+> ```
+>
+> The branch is:
+>
+> ```text
+> 31 commits ahead of main
+> 0 behind
+> 55 changed files
+> ```
+>
+> Current `main` remains:
+>
+> ```text
+> f89205c07e4d3a77900b046a5bf937944488647b
+> ```
+>
+> ## Pull request
+>
+> PR #7:
+>
+> ```text
+> Complete stock workstation pre-optimization readiness
+> ```
+>
+> remains:
+>
+> ```text
+> open
+> draft
+> mergeable
+> ```
+>
+> Its description is now materially current. It records:
+>
+> - stock optimization-output rejection;
+> - activation prerequisite guards;
+> - exact-desktop reconstruction via `extendModules`;
+> - centralized username and cooling policy;
+> - successful full flake checks;
+> - root/reset VM validation;
+> - activation safety validation;
+> - negative stock-contamination build;
+> - exact current candidate closures;
+> - accepted Ventoy backup;
+> - separately proven bootstrap-secret recovery;
+> - reconstruction still executing;
+> - VMX/hardware/workload/soak gates still open.
+>
+> Do not mark this PR ready merely because CI is green.
+>
+> It becomes ready only when the **hard baseline gates** are complete.
+>
+> ## CI
+>
+> Current exact head passed:
+>
+> ```text
+> workflow:   Nix checks
+> run:        #103
+> head:       6de26a0...
+> event:      pull_request
+> result:     success
+> ```
+>
+> The CI design is now acceptable:
+>
+> ```text
+> fixed ubuntu-24.04 runner
+> checkout action pinned by full commit SHA
+> install-nix action pinned by full commit SHA
+> push validation on main
+> feature validation through PRs
+> ```
+>
+> No further CI architecture work is required before the baseline.
+>
+> ---
+>
+> # 4. Physically accepted reference system
+>
+> The readiness candidate is still compared against the already physically accepted stable-refresh system.
+>
+> ## Accepted source
+>
+> ```text
+> c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+> ```
+>
+> ## Stable Nixpkgs
+>
+> ```text
+> 0d9e9b832d03ac387417e16ce1febf73b2e631e1
+> ```
+>
+> ## Accepted normal closure
+>
+> ```text
+> /nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> ## Accepted persistent-root closure
+>
+> ```text
+> /nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> ## Kernel
+>
+> ```text
+> 6.18.55
+> ```
+>
+> ## Recovery ISO
+>
+> ```text
+> /nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso/iso/nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> Size:
+>
+> ```text
+> 1496678400 bytes
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Ventoy filename:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> The recovery media copy passed:
+>
+> ```text
+> copy
+> flush
+> SHA-256 verification
+> read-only remount verification
+> read-only exFAT check
+> ```
+>
+> The accepted stable-refresh record remains the control point.
+>
+> ---
+>
+> # 5. Physical root/reset evidence — COMPLETE
+>
+> The ephemeral-root mechanism has already passed physical acceptance.
+>
+> The important final stable-refresh sequence was:
+>
+> ```text
+> normal
+>     ↓
+> persistent-root
+>     ↓
+> normal
+> ```
+>
+> Observed root sequence:
+>
+> ```text
+> first normal:
+>     new root = subvolume 295
+>
+> persistent-root:
+>     root 295 retained
+>     no reset occurred
+>
+> final normal:
+>     root 295 replaced
+>     final root = subvolume 297
+> ```
+>
+> Evidence:
+>
+> ```text
+> machine-id survived
+> persistent probe survived
+> root-local probe survived persistent-root
+> root-local probe disappeared on final normal reset
+> required services healthy
+> zero failed units
+> ```
+>
+> This proves the design works physically.
+>
+> The final readiness branch still requires one physical exact-candidate repetition because the initrd/reset implementation and generated system identity have changed since the accepted `c5e` system.
+>
+> Do not confuse:
+>
+> ```text
+> mechanism proven physically
+> ```
+>
+> with:
+>
+> ```text
+> current exact readiness candidate physically accepted
+> ```
+>
+> The former is complete.
+>
+> The latter remains open.
+>
+> ---
+>
+> # 6. Reset safety / Impermanence validation — COMPLETE
+>
+> The project accumulated unusually deep coverage for the destructive root-reset path.
+>
+> Covered classes include:
+>
+> ```text
+> valid normal configuration
+> leading-slash subvol selector
+> persistent-root reset disabled
+> wrong filesystem type
+> missing/concrete-device failures
+> unsafe subvolume names
+> duplicate/conflicting names
+> unknown descendants
+> nested descendants
+> stale staging
+> nonempty staging
+> malformed staging
+> missing root
+> missing persistence
+> mounted sysroot
+> symlinked diagnostics
+> broken links
+> hardlinks
+> FIFO / directory replacements
+> unsafe log parents
+> misleading textual path matches
+> interrupted reset recovery
+> machine identity persistence
+> journal persistence
+> normal → persistent-root transition
+> persistent-root → normal transition
+> filesystem identity preserved on refusal
+> ```
+>
+> The implementation has also been structurally improved.
+>
+> Current split:
+>
+> ```text
+> Nix:
+>     typed configuration
+>     escaping
+>     systemd wiring
+>     data passed into implementation
+>
+> reset.sh:
+>     operational logic
+>     validation
+>     topology inspection
+>     delete/replace/recovery procedure
+> ```
+>
+> This removed the earlier fragile Nix-generated shell logic.
+>
+> Critical reset source is now attached to the actual system through `system.checks`.
+>
+> Do not broaden this subsystem further without a concrete failure.
+>
+> ---
+>
+> # 7. Btrfs maintenance architecture — COMPLETE
+>
+> Current ownership:
+>
+> ```text
+> hosts/desktop:
+>     scrub enabled
+>     schedule
+>     filesystem /
+>
+> modules/storage/btrfs-maintenance:
+>     guard implementation
+>     scrub ↔ GC exclusion
+>     GC scrub-health prerequisite
+>     unit ordering
+>     assertions
+>     source checks
+> ```
+>
+> Current schedule:
+>
+> ```text
+> Btrfs scrub:
+>     day 1 monthly
+>     02:00
+>     AccuracySec = 1 min
+>
+> Nix GC:
+>     Saturday
+>     04:00
+>     --delete-older-than 30d
+> ```
+>
+> Coordination:
+>
+> ```text
+> scrub running → GC skipped
+> GC running → scrub skipped
+> GC requires most recent scrub:
+>     Status: finished
+>     Error summary: no errors found
+> ```
+>
+> The maintenance module deliberately retains the historical store basename:
+>
+> ```nix
+> builtins.path {
+>   path = ./guard.sh;
+>   name = "maintenance-guard.sh";
+> }
+> ```
+>
+> to preserve accepted closure identity.
+>
+> Leave that compatibility wart until after the baseline tag.
+>
+> ---
+>
+> # 8. Repository organization — COMPLETE
+>
+> Current major architecture:
+>
+> ```text
+> hosts/
+>     desktop/
+>
+> images/
+>     recovery.nix
+>
+> profiles/
+>     workstation.nix
+>
+> modules/
+>     core/
+>     desktop/
+>     gaming/
+>     compatibility/
+>     storage/
+>         btrfs-maintenance/
+>         ephemeral-btrfs-root/
+>     workstation/
+>         activation-safety/
+>     hardware/
+>         commander-core/
+>
+> tests/
+>     default.nix
+>     workstation/
+>     hardware/
+>     storage/
+>
+> optimization/
+>     default.nix
+> ```
+>
+> This is a good fit for a one-host expert configuration.
+>
+> Do not add:
+>
+> ```text
+> flake-parts
+> flake-utils
+> generic mkHost
+> generic mkSystem
+> automatic module discovery
+> giant custom lib hierarchy
+> one-file-per-setting host fragmentation
+> ```
+>
+> The root flake now does the correct limited amount of composition: inputs, package sets, the authoritative username, dev shells, validation registry, desktop and recovery configurations.
+>
+> ---
+>
+> # 9. Test architecture — COMPLETE
+>
+> `tests/default.nix` is now the central registry.
+>
+> Cheap checks currently include:
+>
+> ```text
+> activation-safety-config
+> activation-safety
+> btrfs-maintenance-config
+> btrfs-maintenance-shell
+> ephemeral-root-shell
+> maintenance-guard
+> commander-core-config
+> commander-core-python
+> baseline-collector
+> desktop-evaluation
+> ephemeral-root-config
+> formatting
+> statix
+> deadnix
+> ```
+>
+> Explicit heavy packages/tests include:
+>
+> ```text
+> blank-disk-reconstruction
+> activation-safety-actions
+> stock-contamination-negative
+> workstation-smoke
+> reset-control
+> impermanence-root-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Historical aliases remain deliberately:
+>
+> ```text
+> impermanence-root-test-a
+> impermanence-root-test-b
+> impermanence-root-recovery
+> impermanence-root-fallback
+> ```
+>
+> They exist so old `plan.md` commands remain meaningful.
+>
+> Keep them until the readiness ledger is archived.
+>
+> ---
+>
+> # 10. Username architecture — COMPLETE
+>
+> Runtime username source of truth is:
+>
+> ```nix
+> username = "p2949";
+> ```
+>
+> in `flake.nix`.
+>
+> It is passed to:
+>
+> ```text
+> NixOS
+> Home Manager
+> tests
+> credential path construction
+> ```
+>
+> The fact that the source directory is:
+>
+> ```text
+> home/p2949/
+> ```
+>
+> is not a second runtime identity source.
+>
+> Do not make the source import dynamic merely to remove that textual duplication.
+>
+> The new maintainability review explicitly recommends leaving this design alone. :chatgpt-content-reference{index="11"}
+>
+> ---
+>
+> # 11. Recovery image organization — COMPLETE
+>
+> Recovery now correctly lives under:
+>
+> ```text
+> images/recovery.nix
+> ```
+>
+> rather than:
+>
+> ```text
+> hosts/recovery/
+> ```
+>
+> It remains intentionally independent of the physical desktop's dangerous state:
+>
+> ```text
+> no production secrets
+> no Commander Core dependency
+> no root reset
+> no workstation physical storage assumptions
+> ```
+>
+> The flake exposes it as both a NixOS configuration and an ISO package.
+>
+> No further recovery-image restructuring is required.
+>
+> ---
+>
+> # 12. Commander Core architecture — COMPLETE
+>
+> The cooling policy is Nix-owned.
+>
+> Current physical values include:
+>
+> ```text
+> USB ID:             1b1c:0c1c
+> base fan duty:      60%
+> high fan duty:      100%
+> pump duty:          100%
+> high temperature:   65 C
+> low temperature:    60 C
+> high delay:         1 s
+> low delay:          10 s
+> temperature poll:   1 s
+> wake poll:          10 s
+> reset delay:        3 s
+> watchdog:           35 s
+> ```
+>
+> The Python keeper receives policy from the module instead of silently owning duplicate defaults.
+>
+> Assertions verify:
+>
+> ```text
+> USB ID syntax
+> serial validity
+> base <= high duty
+> temperature hysteresis
+> positive intervals
+> nonnegative delays
+> watchdog margin
+> ```
+>
+> The service owns the watchdog constant coherently.
+>
+> Do not generalize this further for aesthetic reasons.
+>
+> ---
+>
+> # 13. `system.checks` — COMPLETE
+>
+> Critical low-level implementation checks are now dependencies of system construction.
+>
+> Conceptually:
+>
+> ```text
+> flake checks
+>     repo-wide health
+>
+> system.checks
+>     correctness required by the actual system derivation
+>
+> preSwitchChecks
+>     current physical-host activation prerequisites
+>
+> QEMU tests
+>     behavioral correctness
+>
+> physical testing
+>     hardware reality
+> ```
+>
+> That separation is good.
+>
+> Do not put multi-minute destructive QEMU suites into every NixOS system build.
+>
+> ---
+>
+> # 14. Activation safety — COMPLETE
+>
+> Current path:
+>
+> ```text
+> modules/workstation/activation-safety/
+> ```
+>
+> Current namespace:
+>
+> ```nix
+> workstation.activationSafety
+> ```
+>
+> The module verifies composition requirements:
+>
+> ```text
+> ephemeral-root contract exists
+> / is concrete Btrfs
+> /boot is concrete vfat
+> selected user has hashedPasswordFile
+> ```
+>
+> and creates:
+>
+> ```text
+> system.preSwitchChecks.persistence
+> system.preSwitchChecks.credentials
+> system.preSwitchChecks.esp
+> system.preSwitchChecks.topology
+> ```
+>
+> The checks are read-only.
+>
+> The checker validates:
+>
+> ```text
+> expected persistence mounts
+> credential file metadata
+> ESP free-space reserve
+> Btrfs root/persist topology
+> empty/valid staging
+> absence of unknown root descendants
+> ```
+>
+> ESP reserve:
+>
+> ```text
+> 256 MiB
+> ```
+>
+> The current module source explicitly encodes all four pre-switch roles and the three composition assertions.
+>
+> Testing has included:
+>
+> ```text
+> 45 hardware-free checker cases
+> normal config
+> persistent-root/recovery config
+> five deliberate composition refusal cases
+> read-only live positive check
+> native test action
+> boot action
+> switch action
+> dry-activate success/refusal VMs
+> ```
+>
+> No remaining architecture work exists here.
+>
+> ---
+>
+> # 15. Stock contamination control — COMPLETE
+>
+> The stock workstation rejects experiment-owned output namespaces:
+>
+> ```text
+> nixos-opt-cpu-*
+> nixos-opt-lto-*
+> nixos-opt-pgo-*
+> nixos-opt-bolt-*
+> ```
+>
+> A negative fixture deliberately injects:
+>
+> ```text
+> nixos-opt-pgo-fixture
+> ```
+>
+> and must fail for the expected forbidden-dependency reason.
+>
+> This does not implement optimization.
+>
+> It prevents future experiments from silently contaminating the control closure.
+>
+> Important known limitations remain:
+>
+> ```text
+> system.extraDependencies is exempt
+> unnamed modified packages cannot be identified solely by output prefix
+> ```
+>
+> Therefore later optimization work still needs:
+>
+> ```text
+> source identity
+> stage identity
+> closure audit
+> environment audit
+> benchmark provenance
+> ```
+>
+> ---
+>
+> # 16. Exact readiness candidate identity — CLOSED
+>
+> This was open in the previous guide.
+>
+> It is now resolved.
+>
+> Current normal candidate:
+>
+> ```text
+> /nix/store/l994fn5hpd2g2rijyffprl4368587m5w-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> Current persistent-root candidate:
+>
+> ```text
+> /nix/store/cxc50rmb8i6akb62fcvzz3xkszzqf895-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> The source refactors after activation-safety relocation still reproduced those exact outputs.
+>
+> The current status records both identities as uninstalled, GC-protected candidates.
+>
+> Commit `ea1a2a7` specifically closed this gap and recorded that the rebuilt normal/persistent outputs reproduce those identities.
+>
+> The prior comparison against accepted `czk5...` showed no unexpected package-version transition, no kernel transition and only explained generated-system/initrd/service differences.
+>
+> Do not repeat this identity investigation unless source affecting the real desktop changes again.
+>
+> ---
+>
+> # 17. Independent backup — COMPLETE
+>
+> This is a major change from the previous guide.
+>
+> ## Main archive
+>
+> Accepted archive size:
+>
+> ```text
+> 27,844,003,241 bytes
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> Validation:
+>
+> ```text
+> zstd integrity PASS
+> SHA-256 recorded
+> ```
+>
+> ## Representative restore
+>
+> Three actual files were restored to an independent root-private directory:
+>
+> ```text
+> two Blender files
+> one real Unreal project descriptor
+> ```
+>
+> For all three:
+>
+> ```text
+> source hash == restored hash
+> ```
+>
+> ## Engine exclusion validation
+>
+> Earlier audit:
+>
+> ```text
+> 26,000 engine binaries
+> ```
+>
+> matched retained engine-ZIP content by size/CRC.
+>
+> Additional/different files:
+>
+> ```text
+> 47
+> ```
+>
+> were separately backed up and all 47 were restored/hash-verified.
+>
+> ## Media handling
+>
+> Backup folder:
+>
+> ```text
+> NixosConf-backups/2026-10-05
+> ```
+>
+> Media UUID:
+>
+> ```text
+> 1BF6-1635
+> ```
+>
+> The operation did not:
+>
+> ```text
+> format Ventoy
+> change its partition layout
+> delete recovery ISOs
+> ```
+>
+> Approximately:
+>
+> ```text
+> 12 GiB
+> ```
+>
+> remained free before unmount, above the enforced:
+>
+> ```text
+> 4 GiB reserve
+> ```
+>
+> Runner:
+>
+> ```text
+> session 50539
+> exit 0
+> ```
+>
+> Terminal receipt:
+>
+> ```text
+> 2026-10-05T17:58:06Z
+> ```
+>
+> Clean unmount:
+>
+> ```text
+> 2026-10-05T17:58:09Z
+> ```
+>
+> with `findmnt` confirming the mount absent.
+>
+> Private receipts:
+>
+> ```text
+> /persist/nixos-ventoy-backup-20261005
+> ```
+>
+> Current docs explicitly classify the independent home backup as accepted.
+>
+> ## Important freshness rule
+>
+> This is a **point-in-time** backup.
+>
+> If substantial new university/project work is created between this snapshot and final baseline freeze, perform an incremental/fresh backup of that new work before declaring final freeze.
+>
+> Do not unnecessarily recreate the entire accepted archive immediately.
+>
+> ---
+>
+> # 18. Bootstrap secrets — COMPLETE
+>
+> Production credential contract:
+>
+> ```text
+> /persist/secrets/<username>-password-hash
+> ```
+>
+> The separate secrets backup is accepted on the user's report that it was restored during an actual prior system failure.
+>
+> That is stronger practical evidence than simply verifying an archive exists.
+>
+> No new secret-management framework is required for this baseline.
+>
+> Do not add:
+>
+> ```text
+> sops-nix
+> agenix
+> another secret framework
+> ```
+>
+> merely because they exist.
+>
+> The recovery image remains secret-free.
+>
+> ---
+>
+> # 19. Git/LFS project recovery — COMPLETE
+>
+> `AI_Gavin_Project` remote state was verified at:
+>
+> ```text
+> 376e151fca709b084e182da4c76ccb21a228f86d
+> ```
+>
+> Evidence included:
+>
+> ```text
+> clean project repository
+> 415 tracked Git LFS objects
+> fresh empty LFS storage
+> all expected objects fetched
+> size/hash checks
+> fresh remote clone
+> project descriptor hash matched source
+> ```
+>
+> This proves tracked remote recoverability.
+>
+> It does not mean ignored/autosave/application state can always be discarded.
+>
+> That is why the separate home backup was still necessary.
+>
+> ---
+>
+> # 20. Blank-disk reconstruction — CURRENT ACTIVE GATE
+>
+> This is now the most important software gate.
+>
+> The test is deliberately heavy and not executed by ordinary `nix flake check`.
+>
+> Current output:
+>
+> ```text
+> .#blank-disk-reconstruction
+> ```
+>
+> The installed target is derived from:
+>
+> ```nix
+> desktopSystem.extendModules
+> ```
+>
+> rather than rebuilding an approximate workstation from scratch.
+>
+> That means the target inherits the real:
+>
+> ```text
+> desktop host
+> Disko
+> Home Manager
+> Impermanence
+> specialArgs
+> username
+> unstable package set
+> stock contamination control
+> activation safety
+> root reset
+> workstation policy
+> ```
+>
+> while applying only test-specific virtual-hardware overrides.
+>
+> ## Disk
+>
+> A new:
+>
+> ```text
+> 96 GiB sparse virtual disk
+> ```
+>
+> is used.
+>
+> Production Disko layout yields:
+>
+> ```text
+> GPT
+>
+> 4 GiB ESP
+> 32 GiB swap
+>
+> Btrfs:
+>     @root
+>     @home
+>     @var
+>     @nix
+>     @persist
+>     @optimization
+>     @snapshots
+> ```
+>
+> ## Installation
+>
+> The fixture:
+>
+> ```text
+> verifies disk is blank
+> runs Disko
+> installs fixture password hash to real production credential path
+> installs persistent machine-id fixture
+> runs nixos-install
+> verifies EFI fallback loader
+> flushes target store
+> shuts installer down
+> ```
+>
+> ## Runtime independence
+>
+> The reconstructed machine then starts with:
+>
+> ```text
+> installed disk
+> OVMF firmware
+> ```
+>
+> and deliberately receives:
+>
+> ```text
+> NO host Nix store
+> NO 9p host mount
+> NO host-supplied kernel
+> NO host-supplied initrd
+> ```
+>
+> This is a crucial property.
+>
+> Do not weaken it to make the test easier.
+>
+> ## Boot lifecycle
+>
+> The full required sequence verifies:
+>
+> ```text
+> first normal boot
+>     installed closure
+>     Home Manager
+>     machine-id
+>     credentials
+>     persistent mounts
+>     persistent + root-local probes
+>
+> normal reboot
+>     ephemeral root reset
+>     root-local probe gone
+>     persistent probe survives
+>     journal probe survives
+>
+> persistent-root boot
+>     reset disabled
+>     root ID unchanged
+>     reset count unchanged
+>     recovery-root probe survives
+>     machine-id unchanged
+>     zero failed units
+>
+> normal boot again
+>     recovery root-local probe gone
+>     persistent probe survives
+>     reset count increments
+>
+> offline inspection
+>     all seven production subvolumes
+>     persistent machine-id
+> ```
+>
+> The public reconstruction documentation explicitly states that evaluation alone does not satisfy this gate; a successful execution receipt is mandatory.
+>
+> ---
+>
+> # 21. Current reconstruction execution state
+>
+> At current committed head, the latest recorded execution is:
+>
+> ```text
+> supervisor/session: 11114
+> Nix PID:            1186208
+> source that launched it: 736b0fb...
+> ```
+>
+> The sequence was deliberately ordered:
+>
+> ```text
+> backup finishes
+>     ↓
+> verified receipt required
+>     ↓
+> Ventoy cleanly unmounted
+>     ↓
+> unmount timestamp written
+>     ↓
+> reconstruction allowed to begin
+> ```
+>
+> If backup receipt/unmount had failed, reconstruction would have remained held.
+>
+> By commit `6de26a0`, the reconstruction had:
+>
+> ```text
+> completed Disko
+> entered nixos-install
+> been copying the actual extended desktop closure
+> ```
+>
+> Host CPU in the observed interval:
+>
+> ```text
+> 65–66 C
+> ```
+>
+> No physical session or service interruption was recorded.
+>
+> But the following had **not yet been accepted**:
+>
+> ```text
+> installed-disk UEFI boot
+> normal reboot/reset
+> persistent-root boot
+> return-to-normal reset
+> offline final inspection
+> terminal test result
+> ```
+>
+>
+>
+> ## Rule
+>
+> **Do not modify reconstruction source while this exact run is still active.**
+>
+> The current run is valuable evidence tied to a known source.
+>
+> First obtain its terminal outcome.
+>
+> ---
+>
+> # 22. Narrow remaining reconstruction source issue
+>
+> The second attached review found one legitimate remaining drift path.
+>
+> The installed system correctly derives from:
+>
+> ```nix
+> desktopSystem.extendModules
+> ```
+>
+> but the installer node still gets Disko configuration using:
+>
+> ```nix
+> (import ../../../hosts/desktop/disko.nix).disko.devices
+> ```
+>
+> The current source confirms exactly that.
+>
+> This means:
+>
+> ```text
+> installed target:
+>     evaluated production desktop
+>         ↓
+>     desktopSystem.config
+>
+> installer Disko:
+>     direct source-file import
+> ```
+>
+> These are currently equivalent, but theoretically a future module could override:
+>
+> ```text
+> disko.devices
+> ```
+>
+> after `hosts/desktop/disko.nix` is imported.
+>
+> The real desktop would see the evaluated override.
+>
+> The reconstruction installer would not.
+>
+> ## Preferred solution
+>
+> After the current reconstruction run reaches terminal status, test whether the layout can cleanly come from:
+>
+> ```nix
+> productionDisko = desktopSystem.config.disko.devices;
+> ```
+>
+> with only the virtual disk device overridden.
+>
+> Conceptually:
+>
+> ```nix
+> let
+>   productionDisko = desktopSystem.config.disko.devices;
+> in
+> ...
+> {
+>   disko.devices = productionDisko;
+>   disko.devices.disk.main.device = lib.mkForce diskDevice;
+> }
+> ```
+>
+> This produces the stronger invariant:
+>
+> ```text
+> production desktop
+>         │
+>         ├── evaluated system
+>         │
+>         └── evaluated Disko layout
+>                  │
+>                  ▼
+>           reconstruction
+> ```
+>
+> The attached maintainability review identifies this as the last meaningful production/test drift path. :chatgpt-content-reference{index="22"}
+>
+> ## Important decision rule
+>
+> This is **not** permission for another refactor wave.
+>
+> Do it only if the evaluated Disko object can be reused cleanly.
+>
+> If trying this causes:
+>
+> ```text
+> module recursion
+> Disko type conflicts
+> large fixture restructuring
+> opaque normalization
+> significant test complexity
+> ```
+>
+> then stop.
+>
+> Document the direct-import limitation and defer it.
+>
+> The current version already shares the actual production Disko source file and is not known to be wrong.
+>
+> ---
+>
+> # 23. Exact next action: let reconstruction finish
+>
+> Do not start by editing anything.
+>
+> First determine the terminal result of the currently running reconstruction.
+>
+> If it is still active:
+>
+> ```text
+> observe only
+> do not kill it
+> do not restart it
+> do not start a competing reconstruction
+> do not edit its source underneath the evidence trail
+> ```
+>
+> ## PASS branch
+>
+> If the whole scenario exits successfully:
+>
+> 1. retain the full log;
+> 2. record exact source;
+> 3. record derivation/output identity;
+> 4. record start/end time;
+> 5. record terminal exit status;
+> 6. add concise acceptance to `plan.md`;
+> 7. update `docs/status.md`;
+> 8. then consider the Disko source-of-truth cleanup above.
+>
+> ## FAIL branch
+>
+> If it fails:
+>
+> Classify the first real failure as one of:
+>
+> ```text
+> build failure
+> Disko failure
+> nixos-install failure
+> EFI/bootloader failure
+> QEMU/OVMF harness failure
+> credential failure
+> activation-safety failure
+> root-reset failure
+> persistent-root failure
+> Home Manager failure
+> offline-inspection failure
+> resource/timeout failure
+> ```
+>
+> Fix the narrow cause.
+>
+> Do **not** weaken:
+>
+> ```text
+> real desktop composition
+> real storage layout
+> no host store
+> no supplied host kernel/initrd
+> credential contract
+> root-reset semantics
+> persistent-root semantics
+> offline subvolume check
+> ```
+>
+> to obtain a green test.
+>
+> ---
+>
+> # 24. After first reconstruction PASS: close Disko drift mechanically
+>
+> If the current run passes, preserve that result first.
+>
+> Then create exactly one narrow change:
+>
+> ```text
+> installer Disko source:
+> direct hosts/desktop/disko.nix import
+>         ↓
+> evaluated desktopSystem.config.disko.devices
+> ```
+>
+> No other cleanup.
+>
+> Validate at minimum:
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> then rerun the complete:
+>
+> ```bash
+> nix build \
+>   .#blank-disk-reconstruction \
+>   --no-link \
+>   --print-build-logs
+> ```
+>
+> Final acceptance should be tied to the final harness source.
+>
+> If the refactor cannot be done cleanly, revert/abandon it and use the already passing reconstruction.
+>
+> Do not hold the baseline hostage to a stylistic cleanup.
+>
+> ---
+>
+> # 25. Final offline software validation
+>
+> Once the final reconstruction harness passes, run one complete final offline batch.
+>
+> ## Flake checks
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> ## Heavy scenarios
+>
+> Run final-source versions of:
+>
+> ```bash
+> nix build .#workstation-smoke --no-link -L
+> nix build .#reset-control --no-link -L
+> nix build .#impermanence-root-safety --no-link -L
+> nix build .#interrupted-recovery --no-link -L
+> nix build .#persistent-identity --no-link -L
+> nix build .#persistent-fallback --no-link -L
+> nix build .#activation-safety-actions --no-link -L
+> nix build .#blank-disk-reconstruction --no-link -L
+> ```
+>
+> ## Stock negative test
+>
+> Run:
+>
+> ```text
+> stock-contamination-negative
+> ```
+>
+> and require it to fail for the intended:
+>
+> ```text
+> forbidden nixos-opt-pgo-fixture dependency
+> ```
+>
+> An unrelated build failure does not count.
+>
+> ## Recovery ISO
+>
+> Build:
+>
+> ```bash
+> nix build .#recovery-iso --no-link
+> ```
+>
+> If output remains:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> the existing Ventoy ISO remains the matching artifact.
+>
+> If the ISO identity changes, create and verify the new matching media artifact before freeze.
+>
+> ---
+>
+> # 26. Recovery drill evidence reconciliation
+>
+> This is primarily an evidence/documentation task, not necessarily another physical recovery test.
+>
+> `docs/stable-refresh.md` still says the exact physical-media boot receipt needs reconciliation, while continuation evidence reports a completed read-only recovery filesystem drill.
+>
+> Resolve:
+>
+> ```text
+> what exact ISO was booted?
+> from what physical media?
+> what filesystems were mounted?
+> what was verified?
+> was the drill read-only?
+> what receipt/log exists?
+> ```
+>
+> If the existing private receipt proves the operation, update the public runbook/status.
+>
+> Only repeat the drill if the evidence cannot establish what actually happened.
+>
+> Do not manufacture redundant risk solely to make documentation wording nicer.
+>
+> ---
+>
+> # 27. Firmware state — DECISION COMPLETE, VMX OPEN
+>
+> Current motherboard:
+>
+> ```text
+> ASUS ROG STRIX Z490-E GAMING
+> ```
+>
+> Current BIOS:
+>
+> ```text
+> 3201
+> embedded date 2024-11-20
+> ```
+>
+> Observed ME blocks:
+>
+> ```text
+> 0:14.1.53.1649
+> 0:14.1.53.1649
+> 0:14.0.51.1528
+> ```
+>
+> The newer vendor BIOS/ME path was investigated.
+>
+> User decision:
+>
+> ```text
+> retain BIOS 3201
+> retain current ME
+> do not flash
+> ```
+>
+> That decision is complete.
+>
+> The remaining firmware gate is:
+>
+> ```text
+> enable Intel VMX
+> ```
+>
+> Current physical state:
+>
+> ```text
+> user ∈ kvm group
+> /dev/kvm absent
+> kernel says VMX disabled by BIOS
+> ```
+>
+> Do this during the single batched physical maintenance window.
+>
+> ---
+>
+> # 28. Before physical maintenance: capture firmware/OC baseline
+>
+> Record at least:
+>
+> ```text
+> BIOS version
+> ME blocks
+> CPU multiplier
+> cache multiplier
+> core voltage mode/value
+> LLC
+> AVX offset
+> PL1
+> PL2
+> Tau
+> RAM frequency
+> RAM primary timings
+> RAM voltage
+> XMP/manual policy
+> VMX
+> Speed Shift/HWP
+> C-states policy
+> ReBAR
+> Above 4G decoding
+> ```
+>
+> This matters because performance work later needs a stable physical control.
+>
+> A benchmark result is not meaningful if firmware/OC policy silently changes between control and experimental runs.
+>
+> ---
+>
+> # 29. Physical maintenance window
+>
+> Prerequisites:
+>
+> ```text
+> backup accepted                YES
+> reconstruction accepted        REQUIRED FIRST
+> final offline validation       REQUIRED FIRST
+> candidate closures known       YES
+> recovery artifact available    YES
+> ```
+>
+> Then:
+>
+> 1. enter firmware setup;
+> 2. enable VMX;
+> 3. leave BIOS/ME otherwise unchanged unless correcting a known hardware stability issue;
+> 4. boot the currently accepted system;
+> 5. confirm virtualization;
+> 6. install the exact readiness candidate for next boot.
+>
+> Check:
+>
+> ```bash
+> grep -m1 -o vmx /proc/cpuinfo
+> test -c /dev/kvm
+> ls -l /dev/kvm
+> groups
+> ```
+>
+> Require:
+>
+> ```text
+> vmx visible
+> /dev/kvm exists
+> device group correct
+> p2949 has access
+> ```
+>
+> ---
+>
+> # 30. Install candidate for boot, not casual live mutation
+>
+> Current readiness candidate changes sensitive early-boot/system pieces, including:
+>
+> ```text
+> initrd contents
+> root-reset source representation
+> Commander Core service/wrapper
+> preSwitch checks
+> generated system metadata
+> ```
+>
+> Prefer:
+>
+> ```bash
+> sudo nixos-rebuild boot --flake '.#desktop'
+> ```
+>
+> from the exact tested source.
+>
+> Do not bypass a failing `system.preSwitchChecks`.
+>
+> A refusal means:
+>
+> ```text
+> the physical prerequisite is not satisfied
+> ```
+>
+> not:
+>
+> ```text
+> the check is inconvenient
+> ```
+>
+> Keep the already accepted generation and recovery ISO available.
+>
+> ---
+>
+> # 31. Final physical candidate acceptance
+>
+> Use:
+>
+> ```text
+> normal
+>     ↓
+> persistent-root
+>     ↓
+> normal
+> ```
+>
+> ## First normal candidate boot
+>
+> Verify:
+>
+> ```text
+> /run/current-system == exact normal candidate
+> kernel expected
+> root was reset
+> reset count incremented exactly once
+> machine-id stable
+> /persist mounted correctly
+> /home mounted correctly
+> /var mounted correctly
+> /nix mounted correctly
+> optimization persistence mounted correctly
+> password works
+> Home Manager active
+> NetworkManager healthy
+> D-Bus healthy
+> logind healthy
+> Commander Core healthy
+> graphical session works
+> zero failed units
+> ```
+>
+> Create:
+>
+> ```text
+> one disposable root-local probe
+> one persistent probe
+> ```
+>
+> Record root subvolume ID/UUID and reset count.
+>
+> ## Persistent-root
+>
+> Boot the exact recovery specialisation.
+>
+> Require:
+>
+> ```text
+> persistent candidate exact
+> same root ID
+> reset count unchanged
+> root-local probe survives
+> persistent probe survives
+> machine-id unchanged
+> credential path works
+> zero failed units
+> ```
+>
+> ## Final normal
+>
+> Require:
+>
+> ```text
+> normal candidate exact
+> new root ID
+> reset count +1
+> root-local probe gone
+> persistent probe remains
+> machine-id remains
+> zero failed units
+> ```
+>
+> This is the final physical validation of the readiness candidate itself.
+>
+> ---
+>
+> # 32. Hardware/storage health
+>
+> After candidate boot acceptance, move directly into physical stability.
+>
+> ## NVMe
+>
+> Run:
+>
+> ```bash
+> sudo nvme smart-log /dev/nvme0
+> ```
+>
+> Record:
+>
+> ```text
+> critical warning
+> temperature
+> available spare
+> percentage used
+> media/data integrity errors
+> error-log count
+> unsafe shutdown count
+> ```
+>
+> Investigate anything abnormal before baseline freeze.
+>
+> ## Btrfs
+>
+> Run:
+>
+> ```bash
+> sudo btrfs scrub status /
+> sudo btrfs device stats /
+> sudo btrfs filesystem usage /
+> ```
+>
+> Require:
+>
+> ```text
+> finished clean scrub
+> no unexplained device errors
+> healthy allocation/free space
+> ```
+>
+> Do not start a second scrub if a valid current clean result already exists unless the evidence is stale enough to justify it.
+>
+> ## Nix store
+>
+> During an idle period:
+>
+> ```bash
+> sudo nix-store --verify --check-contents
+> ```
+>
+> Any content corruption must be understood and repaired before tagging.
+>
+> Optional later:
+>
+> ```bash
+> sudo nix-store --optimise
+> ```
+>
+> but never perform store optimization inside a controlled benchmark window.
+>
+> ---
+>
+> # 33. RAM stability
+>
+> Run a meaningful memory stability test for the installed:
+>
+> ```text
+> 32 GiB DDR4-3200
+> ```
+>
+> configuration.
+>
+> Acceptance:
+>
+> ```text
+> zero memory errors
+> ```
+>
+> If RAM frequency/timings/voltage change after testing, the previous acceptance no longer fully represents the baseline.
+>
+> ---
+>
+> # 34. CPU / OC / cooling stability remains OPEN
+>
+> CPU baseline:
+>
+> ```text
+> Intel Core i5-10600K
+> 5.0 GHz all-core
+> cache ratio 48
+> ```
+>
+> The attempted 30-minute CPU verification did **not** pass.
+>
+> Observed attempt:
+>
+> ```text
+> stress-ng
+> 12 workers
+> nice 19
+> 5-second temperature polling
+> automatic stop at 80 C
+> ```
+>
+> It stopped after roughly five seconds at:
+>
+> ```text
+> 80 C
+> ```
+>
+> Positive evidence:
+>
+> ```text
+> no throttle-counter increase
+> no matching hardware/MCE/thermal kernel fault
+> Commander Core stayed alive
+> fan command changed to 100%
+> temperature recovered to ~30 C
+> ```
+>
+> Journal timing showed the cooling keeper reacted during the load.
+>
+> This proves:
+>
+> ```text
+> control loop response works
+> ```
+>
+> but does **not** prove:
+>
+> ```text
+> 30-minute CPU stability
+> 5 GHz thermal sustainability
+> cooling capacity
+> ```
+>
+>
+>
+> ## Required next CPU action
+>
+> Review:
+>
+> ```text
+> Vcore
+> LLC
+> power limits
+> AIO physical condition/contact
+> pump behavior
+> fan response
+> ambient assumptions
+> ```
+>
+> Then repeat a sustained test.
+>
+> Do not raise the 80 C safety boundary merely to create a passing receipt.
+>
+> If 5 GHz cannot remain within the chosen baseline limits, reduce:
+>
+> ```text
+> voltage if unnecessarily high
+> power target
+> clock
+> ```
+>
+> as necessary.
+>
+> The baseline should be stable, not impressive on paper.
+>
+> ---
+>
+> # 35. Development/tooling preparation evidence already complete
+>
+> The preparation environment has already passed:
+>
+> ```text
+> C++20 compile/run
+> clangd AST/index
+> trusted exact compiler-wrapper query
+> zero clangd errors
+> ```
+>
+> General dev shell ownership is established.
+>
+> This does not need to be redesigned.
+>
+> Final exact-candidate smoke still belongs in workload acceptance.
+>
+> ---
+>
+> # 36. Unreal preparation evidence
+>
+> Real project:
+>
+> ```text
+> AI_Gavin_Project
+> ```
+>
+> Already passed preparation evidence includes:
+>
+> ```text
+> actual editor target incremental build
+> Epic Clang 20.1.8
+> Rocky Linux 8 sysroot
+> bundled libc++
+> Steam FHS environment
+>
+> SDL3 native Wayland
+> compositor xwayland=false
+> RX 9070 XT
+> RADV GFX1201
+> Mesa 26.1.8
+> startup map loaded
+> 28 actors
+> 10 seconds editor ticks
+> clean deferred shutdown
+> default Mimalloc
+> process exit 0
+> project remained Git-clean
+> ```
+>
+> The initial scripted synchronous:
+>
+> ```text
+> SystemLibrary.quit_editor()
+> ```
+>
+> caused an ICU/Slate cleanup crash.
+>
+> The corrected harness used the intended deferred Python lifecycle and passed.
+>
+> Do not adopt `-ansimalloc` as a workaround for a harness bug.
+>
+> Final candidate still needs:
+>
+> ```text
+> broad/full build
+> interactive editor work
+> PIE/play
+> representative longer session
+> normal user shutdown
+> no GPU reset
+> ```
+>
+> ---
+>
+> # 37. Blender preparation evidence
+>
+> Already passed:
+>
+> ```text
+> Blender 5.2.2 LTS
+> RX 9070 XT HIP detected
+> factory GPU-only Cycles render
+> ```
+>
+> More importantly, both actual local Blender files were opened without source modification.
+>
+> The newer real scene:
+>
+> ```text
+> 33 objects
+> Cycles
+> camera present
+> 1920x1080
+> 64 samples
+> GPU-only RX 9070 XT HIP
+> CPU device disabled
+> 11.83-second render
+> PNG produced
+> source SHA unchanged
+> no new targeted GPU reset/fault/timeout
+> ```
+>
+> This proves meaningful HIP functionality.
+>
+> Final candidate still needs:
+>
+> ```text
+> interactive workflow
+> representative sustained render
+> ```
+>
+> not merely another tiny factory render.
+>
+> ---
+>
+> # 38. Gamescope / MangoHud preparation
+>
+> Already proven physically:
+>
+> ```text
+> Gamescope 3.16.23
+> 600-frame Vulkan cube
+> native Wayland child
+> XCB/XWayland child
+> MangoHud 0.8.3 initialization
+> overlay + shim mapped
+> ```
+>
+> Outer display selected:
+>
+> ```text
+> 155 Hz
+> ```
+>
+> HDR was not enabled in this synthetic test.
+>
+> Final acceptance must use real games.
+>
+> ---
+>
+> # 39. GameMode preparation
+>
+> The currently running accepted generation previously lacked intended helper authorization because the user was not yet in:
+>
+> ```text
+> gamemode
+> ```
+>
+> The readiness candidate fixes this.
+>
+> VM validation checks the intended user is allowed and an unrelated user is denied.
+>
+> Final physical candidate still needs proof that:
+>
+> ```text
+> GameMode starts
+> governor helper succeeds
+> requested performance policy is actually applied
+> policy is restored afterward
+> general.disable_splitlock remains 0
+> ```
+>
+> No permanent performance governor is being adopted as stock policy.
+>
+> ---
+>
+> # 40. Creative Stage Pro evidence
+>
+> Already proven:
+>
+> ```text
+> USB enumeration
+> ALSA device
+> direct ALSA playback path
+> current PipeWire default playback path
+> ```
+>
+> Current issue/evidence:
+>
+> ```text
+> Stage Pro PipeWire profile = Off
+> default active output = HDMI 3
+> ```
+>
+> No defaults were changed during preparation.
+>
+> Final baseline should prove the intended real use:
+>
+> ```text
+> correct PipeWire profile
+> sink present
+> selected output
+> audible playback
+> replug recovery
+> reboot recovery
+> expected default-route behavior
+> ```
+>
+> ---
+>
+> # 41. Android/KVM
+>
+> Current blocker is firmware VMX only.
+>
+> After enabling VMX:
+>
+> Require:
+>
+> ```text
+> /dev/kvm exists
+> permissions correct
+> Android Studio Java project
+> AVD boots with hardware acceleration
+> ordinary interaction works
+> AVD persists/restarts successfully
+> ```
+>
+> Do not accept a software-rendered/TCG emulator as proof of physical KVM readiness.
+>
+> ---
+>
+> # 42. Final workload acceptance
+>
+> Run on the exact physically accepted readiness candidate.
+>
+> ## Desktop
+>
+> ```text
+> graphical login
+> Hyprland/UWSM
+> portals
+> Waybar
+> notifications
+> Firefox
+> persistent state
+> reboot
+> zero failed units
+> ```
+>
+> ## C/C++
+>
+> ```text
+> nix develop
+> GCC
+> Clang
+> clangd
+> representative project
+> no accidental global compiler optimization flags
+> ```
+>
+> ## Unreal
+>
+> ```text
+> full/broad build
+> real editor
+> native Wayland
+> Vulkan
+> real map
+> PIE/play
+> longer editing session
+> normal exit
+> project clean
+> no GPU reset
+> ```
+>
+> ## Blender
+>
+> ```text
+> actual project
+> HIP
+> interactive use
+> sustained render
+> no source mutation
+> no GPU fault
+> ```
+>
+> ## Android
+>
+> ```text
+> KVM
+> Java project
+> AVD
+> hardware acceleration
+> ```
+>
+> ## Gaming
+>
+> At minimum:
+>
+> ```text
+> one native Vulkan game
+> one Proton game
+> ```
+>
+> Exercise:
+>
+> ```text
+> Gamescope
+> MangoHud
+> GameMode
+> controller
+> audio
+> VRR
+> HDR where actually part of baseline workflow
+> ```
+>
+> ## Audio
+>
+> ```text
+> Stage Pro
+> audible PipeWire path
+> replug
+> reboot
+> ```
+>
+> ## Networking/Bluetooth
+>
+> ```text
+> persisted NetworkManager profiles
+> Ethernet/Wi-Fi as used
+> Bluetooth as used
+> post-reboot reconnection
+> ```
+>
+> ---
+>
+> # 43. Freeze stock runtime policy
+>
+> Before performance experiments, document the ordinary control policy.
+>
+> Expected conservative baseline currently includes:
+>
+> ```text
+> security mitigations enabled
+> SMT enabled
+> normal C-states
+> intel_pstate
+> powersave governor
+> balance_performance EPP
+> THP = madvise
+> 32 GiB disk swap
+> zram disabled
+> kernel-selected NVMe scheduler
+> no permanent performance clocks
+> no global -march
+> no global -mtune
+> no global LTO
+> no global PGO
+> no BOLT
+> no global RADV tuning
+> no global LD_LIBRARY_PATH
+> ```
+>
+> If you decide to alter:
+>
+> ```text
+> zram
+> THP
+> irqbalance
+> scheduler
+> governor/EPP
+> ```
+>
+> do it because measured evidence supports the change, not because it sounds faster.
+>
+> Late baseline policy changes require relevant revalidation.
+>
+> ---
+>
+> # 44. Stock contamination audit
+>
+> Before soak/freeze, inspect environment for:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> CPPFLAGS
+> LDFLAGS
+> RUSTFLAGS
+> NIX_CFLAGS_COMPILE
+> NIX_LDFLAGS
+> LD_LIBRARY_PATH
+> MALLOC_CONF
+> RADV_PERFTEST
+> ```
+>
+> Search source outside the inert optimization area for:
+>
+> ```text
+> -march=
+> -mtune=
+> -flto
+> -fprofile
+> llvm-bolt
+> PGO
+> BOLT
+> nixos-opt-
+> ```
+>
+> Expected `nixos-opt-*` hits should be the control infrastructure itself.
+>
+> Anything else needs explanation.
+>
+> The stock system must remain a genuine control.
+>
+> ---
+>
+> # 45. Multi-day soak
+>
+> Once individual hardware/workload gates pass, stop running synthetic micro-checks and use the workstation normally.
+>
+> Include combinations such as:
+>
+> ```text
+> cold boots
+> warm reboots
+> Unreal build + editor
+> Blender render
+> large Nix build
+> large C/C++ build
+> Android emulator
+> native gaming
+> Proton gaming
+> controller
+> audio
+> browser/network
+> normal university/work use
+> suspend/resume if normally used
+> ```
+>
+> Track:
+>
+> ```text
+> systemd failed units
+> amdgpu faults/resets/timeouts
+> MCE/hardware errors
+> filesystem errors
+> Nix store issues
+> root reset anomalies
+> persistence failures
+> Commander Core restarts/watchdog
+> OOM/swap events
+> application crashes
+> unexpected disk/store growth
+> ```
+>
+> Do not silently normalize recurring warnings.
+>
+> Classify them.
+>
+> ---
+>
+> # 46. Recovery / diagnostic evidence to retain through soak
+>
+> Keep:
+>
+> ```text
+> accepted old generation
+> persistent-root specialisation
+> verified recovery ISO
+> backup receipts
+> backup media
+> candidate GC roots
+> stable-refresh GC roots
+> private test logs
+> baseline receipts
+> ```
+>
+> Do not run aggressive GC cleanup before the milestone.
+>
+> A Git tag does not keep Nix store paths alive.
+>
+> ---
+>
+> # 47. Baseline manifest — ADD AT FREEZE
+>
+> The second new review makes a strong maintainability recommendation that should be adopted at the final freeze.
+>
+> Important immutable identities are currently repeated across:
+>
+> ```text
+> docs/status.md
+> docs/stable-refresh.md
+> docs/closure-review.md
+> docs/physical-root-validation.md
+> docs/baselines/
+> plan.md
+> PR text
+> ```
+>
+> Historical duplication is useful, but the frozen baseline should gain one canonical machine-readable identity.
+>
+> Recommended:
+>
+> ```text
+> docs/baselines/pre-optimization/manifest.json
+> ```
+>
+> At minimum:
+>
+> ```json
+> {
+>   "baseline": "nixos-26.05-pre-optimization-baseline",
+>   "gitCommit": "...",
+>   "flakeLockSha256": "...",
+>
+>   "inputs": {
+>     "nixpkgs": "...",
+>     "nixpkgsUnstable": "...",
+>     "homeManager": "...",
+>     "disko": "...",
+>     "impermanence": "...",
+>     "liquidctl": "..."
+>   },
+>
+>   "outputs": {
+>     "normalSystem": "/nix/store/...",
+>     "persistentRootSystem": "/nix/store/...",
+>     "recoveryIso": "/nix/store/...",
+>     "recoveryIsoSha256": "..."
+>   },
+>
+>   "software": {
+>     "nixos": "...",
+>     "kernel": "...",
+>     "mesa": "...",
+>     "nix": "..."
+>   },
+>
+>   "hardware": {
+>     "motherboard": "...",
+>     "bios": "3201",
+>     "me": ["..."],
+>     "cpu": "...",
+>     "cpuPolicy": "...",
+>     "memoryPolicy": "...",
+>     "gpu": "...",
+>     "storage": "...",
+>     "storageFirmware": "..."
+>   }
+> }
+> ```
+>
+> The existing baseline collector should generate as much of this as practical.
+>
+> Ownership becomes:
+>
+> ```text
+> manifest.json
+>     immutable machine-readable baseline identity
+>
+> docs/status.md
+>     human-readable current state
+>
+> plan.md
+>     chronological evidence ledger
+>
+> README.md
+>     architecture/orientation
+> ```
+>
+> This should be implemented **at freeze**, when the values stop moving. :chatgpt-content-reference{index="25"}
+>
+> ---
+>
+> # 48. Final baseline capture
+>
+> Before merging:
+>
+> Record:
+>
+> ```text
+> Git commit
+> flake.lock SHA-256
+> all input revisions
+> Nix version
+> NixOS version
+>
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ISO SHA-256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME
+>
+> CPU ratio
+> cache ratio
+> Vcore
+> LLC
+> power limits
+> RAM timings/frequency/voltage
+>
+> GPU
+> NVMe model/firmware
+>
+> Btrfs mount options
+> latest scrub
+> device stats
+>
+> CPU governor
+> EPP
+> THP
+> swap
+> zram
+> scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+> machine-id
+> failed-unit state
+> ```
+>
+> Capture exact results of:
+>
+> ```text
+> backup acceptance
+> reconstruction
+> KVM
+> CPU stability
+> RAM stability
+> storage health
+> workload acceptance
+> soak
+> ```
+>
+> ---
+>
+> # 49. Final test batch
+>
+> On the exact final source:
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> and all relevant heavy tests.
+>
+> Build exact final:
+>
+> ```text
+> normal system
+> persistent-root system
+> recovery ISO
+> ```
+>
+> Compare final normal closure against:
+>
+> ```text
+> physically accepted c5e system
+> readiness l994 candidate
+> ```
+>
+> Require:
+>
+> ```text
+> every material difference explained
+> no unexpected package version transition
+> no accidental optimization dependency
+> no input drift
+> ```
+>
+> If the Disko reconstruction-only cleanup does not alter production system output, that should also be recorded explicitly.
+>
+> ---
+>
+> # 50. Merge and tag
+>
+> Only after all hard gates pass:
+>
+> ```text
+> PR #7
+>     draft → ready
+> ```
+>
+> Wait for required CI on the final head.
+>
+> Review final diff.
+>
+> Merge into protected `main`.
+>
+> Then verify merged `main` corresponds to the tested source tree.
+>
+> Create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> This is the immutable stock control for optimization work.
+>
+> ---
+>
+> # 51. Post-baseline cleanup
+>
+> Do this **after** the tag exists.
+>
+> ## 51.1 `stock-control.nix` taxonomy
+>
+> Current:
+>
+> ```text
+> modules/core/stock-control.nix
+> ```
+>
+> is conceptually workstation policy and is not part of the generic `modules/core/default.nix` aggregation.
+>
+> After freeze, move it to:
+>
+> ```text
+> modules/workstation/stock-control.nix
+> ```
+>
+> alongside:
+>
+> ```text
+> modules/workstation/activation-safety/
+> ```
+>
+> Do not create a workstation aggregator just for these two files.
+>
+> This is post-baseline source cleanup, not a readiness gate. :chatgpt-content-reference{index="26"}
+>
+> ## 51.2 Archive `plan.md`
+>
+> Once readiness is finished:
+>
+> ```text
+> plan.md
+> ```
+>
+> should stop being the active operational interface.
+>
+> Move/archive the historical ledger under an appropriate history location while preserving it intact.
+>
+> ## 51.3 Documentation organization
+>
+> Later structure can become something like:
+>
+> ```text
+> docs/
+> ├── status.md
+> ├── design/
+> ├── runbooks/
+> ├── validation/
+> ├── baselines/
+> └── history/
+> ```
+>
+> Do not perform that migration before freeze.
+>
+> ## 51.4 Simplify README
+>
+> The README should describe architecture, not duplicate `tree(1)`.
+>
+> Simplify detailed directory expansion to category-level structure.
+>
+> This reduces documentation drift.
+>
+> ## 51.5 Remove historical test aliases
+>
+> Once old commands live only in archived history, remove:
+>
+> ```text
+> impermanence-root-test-a
+> impermanence-root-test-b
+> impermanence-root-recovery
+> impermanence-root-fallback
+> ```
+>
+> Consider renaming:
+>
+> ```text
+> impermanence-root-safety
+> ```
+>
+> to:
+>
+> ```text
+> reset-safety
+> ```
+>
+> Then `packages = rec` may no longer be necessary.
+>
+> ## 51.6 Generated module docs
+>
+> Later add a generated documentation output using `nixosOptionsDoc` for:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> workstation.activationSafety.*
+> hardware.commanderCore.*
+> ```
+>
+> This is one of the few remaining additions that genuinely reduces long-term maintenance. :chatgpt-content-reference{index="27"}
+>
+> ---
+>
+> # 52. Do NOT split the desktop host
+>
+> Current `hosts/desktop/default.nix` owns coherent host facts:
+>
+> ```text
+> imports
+> hostname
+> activation-safety policy
+> Btrfs scrub schedule
+> bootloader
+> firmware/microcode
+> Commander Core physical identity/policy
+> stateVersion
+> ```
+>
+> Do not split this into:
+>
+> ```text
+> boot.nix
+> cooling.nix
+> maintenance.nix
+> identity.nix
+> ```
+>
+> unless those components become reusable.
+>
+> Current host size does not justify the navigation cost.
+>
+> The same applies to the small workstation profile. :chatgpt-content-reference{index="28"}
+>
+> ---
+>
+> # 53. Optional NixOS experiments — NOT BASELINE GATES
+>
+> The new feature review identified several genuinely interesting things you have **not** explored.
+>
+> They belong after, or strictly outside, the baseline critical path. :chatgpt-content-reference{index="29"}
+>
+> ## 53.1 `virtualisation.vmVariant*`
+>
+> Highest-priority optional NixOS experiment.
+>
+> Possible layers:
+>
+> ```text
+> runNixOSTest
+>     automated behavioral testing
+>
+> desktop vmVariant
+>     interactive actual-desktop derivative
+>
+> physical desktop
+>     real hardware acceptance
+> ```
+>
+> Useful commands:
+>
+> ```bash
+> nixos-rebuild build-vm --flake .#desktop
+> ```
+>
+> or:
+>
+> ```bash
+> nixos-rebuild build-vm-with-bootloader --flake .#desktop
+> ```
+>
+> A VM variant could disable only:
+>
+> ```text
+> Commander Core
+> physical disk identities
+> other genuine physical hardware
+> ```
+>
+> while keeping the real workstation composition.
+>
+> Do not replace blank-disk reconstruction with it.
+>
+> Reconstruction proves installation from zero.
+>
+> A VM variant gives a much cheaper interactive approximation of the real desktop. :chatgpt-content-reference{index="30"}
+>
+> Timing:
+>
+> ```text
+> after reconstruction/freeze
+> or isolated before freeze only if it cannot disturb the critical path
+> ```
+>
+> ## 53.2 initrd SSH rescue specialisation
+>
+> Potential future boot menu:
+>
+> ```text
+> normal
+>     root reset enabled
+>
+> persistent-root
+>     root reset disabled
+>
+> initrd-rescue
+>     root reset disabled
+>     stage-1 networking
+>     initrd SSH
+> ```
+>
+> This is unusually relevant because the riskiest custom logic lives before `sysroot.mount`.
+>
+> It could allow remote inspection of:
+>
+> ```text
+> @root
+> @root-next
+> @persist
+> Btrfs topology
+> initrd systemd
+> reset logs
+> /sysroot state
+> ```
+>
+> Important:
+>
+> **never reuse the normal machine SSH private host key.**
+>
+> Use a dedicated initrd-only identity and VM-test it first.
+>
+> Implement after baseline. :chatgpt-content-reference{index="31"}
+>
+> ## 53.3 Immutable `/etc` / Userborn / perlless
+>
+> Interesting VM experiment:
+>
+> ```nix
+> system.etc.overlay.enable = true;
+> system.etc.overlay.mutable = false;
+> ```
+>
+> possibly with:
+>
+> ```text
+> Userborn
+> perlless profile
+> ```
+>
+> This fits the ephemeral-root design conceptually.
+>
+> Do not change the real stock workstation to this before baseline.
+>
+> Test it inside a `vmVariant` first.
+>
+> ## 53.4 Facter
+>
+> Still worth one controlled comparison.
+>
+> Compare:
+>
+> ```text
+> traditional hardware-configuration.nix
+> vs
+> Facter-derived desktop
+> ```
+>
+> Use it to ask:
+>
+> ```text
+> does Facter improve provenance enough to justify extra abstraction?
+> ```
+>
+> not:
+>
+> ```text
+> is Facter newer, therefore automatically better?
+> ```
+>
+> Current hardware configuration is small and transparent.
+>
+> Adoption is optional.
+>
+> ## 53.5 `boot.binfmt.emulatedSystems`
+>
+> Interesting and low-risk later:
+>
+> ```nix
+> boot.binfmt.emulatedSystems = [
+>   "aarch64-linux"
+>   "riscv64-linux"
+> ];
+> ```
+>
+> Could be useful for ARM build/test compatibility.
+>
+> Not performance testing.
+>
+> ## 53.6 Distributed builders
+>
+> High priority in optimization phase.
+>
+> Possible future architecture:
+>
+> ```text
+> benchmark workstation
+>         │
+>         ├── build machine: big-parallel
+>         └── CPU-specific builder: skylake
+> ```
+>
+> Use Nix builder feature requirements so CPU-sensitive derivations cannot accidentally execute on the wrong builder.
+>
+> First prove with a two-node NixOS VM test.
+>
+> Benchmark on the physical target machine.
+>
+> ## 53.7 `system.replaceDependencies`
+>
+> Interesting optimization research tool.
+>
+> Compare:
+>
+> ```text
+> normal rebuild propagation
+> vs
+> stock closure with grafted optimized dependency
+> ```
+>
+> Useful for isolating whether a performance difference comes from:
+>
+> ```text
+> one optimized component
+> ```
+>
+> or:
+>
+> ```text
+> its reverse-dependency rebuild consequences
+> ```
+>
+> Keep entirely out of the stock baseline.
+>
+> ## 53.8 `system.includeBuildDependencies`
+>
+> Interesting offline-recovery/reproducibility experiment.
+>
+> Not for the normal desktop because closure size will be enormous.
+>
+> ## 53.9 Signed binary cache
+>
+> Very useful once optimized builds become expensive.
+>
+> Later provenance chain:
+>
+> ```text
+> source
+> derivation
+> optimization stage
+> binary output
+> signature
+> benchmark result
+> ```
+>
+> ## 53.10 Remote deployment
+>
+> Useful once another NixOS machine actually becomes part of the project.
+>
+> Not needed for the current one-host baseline.
+>
+> ---
+>
+> # 54. Things explicitly not to add before freeze
+>
+> Do not add:
+>
+> ```text
+> ephemeral /home
+> ephemeral /var
+> flake-parts
+> flake-utils
+> generic host framework
+> automatic NixOS upgrades
+> new secrets framework just for novelty
+> new kernel family just for performance
+> mitigations=off
+> isolcpus
+> nohz_full
+> rcu_nocbs
+> global -march
+> global -mtune
+> global LTO
+> global PGO
+> global BOLT
+> global RADV hacks
+> fixed performance clocks as ordinary desktop policy
+> another recovery architecture
+> more generic abstraction layers
+> ```
+>
+> You already have enough architecture.
+>
+> Finish proving it.
+>
+> ---
+>
+> # 55. Updated hard-gate status
+>
+> ## Repository / architecture
+>
+> ```text
+> [x] stable NixOS branch selected
+> [x] flake inputs pinned
+> [x] username centralized
+> [x] Home Manager integrated
+> [x] tests registry centralized
+> [x] storage modules organized
+> [x] recovery image under images/
+> [x] Commander Core policy centralized
+> [x] activation safety in workstation namespace
+> [x] system.checks implemented
+> [x] system.preSwitchChecks implemented
+> [x] stock contamination controls implemented
+> [x] CI branch policy fixed
+> [x] action versions commit-pinned
+> [x] current head CI green
+> [x] exact candidate closure identity closed
+> [ ] final source merged
+> [ ] final baseline tag
+> ```
+>
+> ## Root/reset
+>
+> ```text
+> [x] initial physical resets
+> [x] destructive refusal matrix
+> [x] interrupted reset recovery
+> [x] persistent machine-id
+> [x] persistent journal
+> [x] persistent-root VM
+> [x] physical normal→persistent→normal stable-refresh
+> [x] reconstruction implemented
+> [x] target derives actual desktop via extendModules
+> [~] reconstruction executing
+> [ ] terminal reconstruction PASS
+> [ ] optional evaluated-Disko cleanup
+> [ ] final reconstruction PASS after any cleanup
+> [ ] final readiness physical normal→persistent→normal
+> ```
+>
+> ## Recovery / backup
+>
+> ```text
+> [x] recovery ISO built
+> [x] recovery ISO SHA recorded
+> [x] Ventoy copy verification
+> [x] exFAT read-only verification
+> [x] Git/LFS recovery
+> [x] separate secret recovery
+> [x] home inventory
+> [x] engine exclusion audit
+> [x] 47-file supplemental restore
+> [x] main archive complete
+> [x] zstd integrity
+> [x] SHA-256
+> [x] representative restore
+> [x] clean USB unmount
+> [x] terminal backup receipt
+> [ ] reconcile exact physical recovery-drill receipt
+> [ ] refresh backup if substantial new work exists at freeze
+> ```
+>
+> ## Firmware
+>
+> ```text
+> [x] current BIOS recorded
+> [x] ME blocks recorded
+> [x] newer firmware researched
+> [x] decision: retain BIOS 3201/current ME
+> [ ] capture final OC/RAM/power settings
+> [ ] enable VMX
+> [ ] physical /dev/kvm acceptance
+> ```
+>
+> ## Hardware
+>
+> ```text
+> [ ] NVMe SMART acceptance
+> [ ] Btrfs final health acceptance
+> [ ] Nix store verify
+> [ ] RAM sustained stability
+> [ ] CPU sustained stability
+> [ ] cooling sustained stability
+> ```
+>
+> ## Workloads
+>
+> ```text
+> [x] C++20 preparation
+> [x] clangd preparation
+> [x] Unreal incremental build
+> [x] Unreal native Wayland/map lifecycle
+> [x] real Blender project HIP render
+> [x] Gamescope synthetic Vulkan
+> [x] MangoHud load
+> [x] Stage Pro ALSA transport
+>
+> [ ] exact-candidate C/C++
+> [ ] full/broad Unreal build
+> [ ] Unreal interactive/PIE
+> [ ] Blender interactive/sustained
+> [ ] Android KVM
+> [ ] native game
+> [ ] Proton game
+> [ ] physical GameMode policy
+> [ ] controller
+> [ ] HDR/VRR if baseline workflow uses them
+> [ ] Stage Pro PipeWire/audible/replug/reboot
+> [ ] final network/Bluetooth behavior
+> ```
+>
+> ## Control policy
+>
+> ```text
+> [ ] CPU policy frozen
+> [ ] memory policy frozen
+> [ ] I/O policy frozen
+> [ ] global optimization environment audit
+> [ ] final closure contamination audit
+> ```
+>
+> ## Stability
+>
+> ```text
+> [ ] multi-day soak
+> [ ] no recurring failed units
+> [ ] no unexplained GPU reset
+> [ ] no unexplained MCE/hardware errors
+> [ ] no filesystem errors
+> [ ] no cooling failures
+> [ ] no root/persistence anomalies
+> [ ] no unresolved important workload regression
+> ```
+>
+> ---
+>
+> # 56. Immediate execution order
+>
+> From current `6de26a0...`, follow this exact order.
+>
+> ## Step 1 — Do not touch source until current reconstruction terminates
+>
+> Preserve:
+>
+> ```text
+> current PID / session
+> current log
+> current exact source
+> ```
+>
+> Obtain PASS/FAIL.
+>
+> ## Step 2 — If reconstruction fails
+>
+> Fix only the first real defect.
+>
+> Rerun relevant focused check plus full reconstruction.
+>
+> Do not weaken independence.
+>
+> ## Step 3 — If reconstruction passes
+>
+> Record terminal receipt.
+>
+> Then test the one narrow evaluated-Disko source-of-truth refactor.
+>
+> If clean:
+>
+> ```text
+> implement
+> flake check
+> rerun reconstruction
+> ```
+>
+> If not clean:
+>
+> ```text
+> document deferral
+> leave current design
+> ```
+>
+> ## Step 4 — Final offline suite
+>
+> Run:
+>
+> ```text
+> flake checks
+> heavy root VMs
+> activation actions
+> negative stock fixture
+> final reconstruction
+> recovery build
+> ```
+>
+> Re-record exact closure identities if production source changed.
+>
+> ## Step 5 — Recovery receipt reconciliation
+>
+> Use existing evidence first.
+>
+> Repeat physical recovery work only if evidence is genuinely insufficient.
+>
+> ## Step 6 — Physical maintenance window
+>
+> ```text
+> capture firmware/OC
+> enable VMX
+> verify /dev/kvm
+> install exact candidate for boot
+> ```
+>
+> ## Step 7 — Physical candidate acceptance
+>
+> ```text
+> normal
+> persistent-root
+> normal
+> ```
+>
+> ## Step 8 — Hardware stability
+>
+> ```text
+> NVMe
+> Btrfs
+> Nix store
+> RAM
+> CPU
+> cooling
+> ```
+>
+> ## Step 9 — Final workloads
+>
+> ```text
+> desktop
+> C/C++
+> Unreal
+> Blender
+> Android
+> native game
+> Proton
+> GameMode
+> Gamescope/MangoHud
+> controller
+> audio
+> network/Bluetooth
+> HDR/VRR where applicable
+> ```
+>
+> ## Step 10 — Stock policy audit
+>
+> Freeze:
+>
+> ```text
+> CPU
+> RAM
+> I/O
+> environment
+> closure
+> ```
+>
+> ## Step 11 — Multi-day soak
+>
+> Use the machine normally.
+>
+> ## Step 12 — Final freeze
+>
+> Create:
+>
+> ```text
+> baseline manifest
+> final closure comparison
+> final evidence summary
+> ```
+>
+> ## Step 13 — Merge/tag
+>
+> ```text
+> PR #7 → ready
+> required CI
+> merge
+> verify main
+> tag nixos-26.05-pre-optimization-baseline
+> ```
+>
+> ## Step 14 — Post-baseline cleanup
+>
+> Only now:
+>
+> ```text
+> move stock-control to workstation
+> archive plan.md
+> restructure docs
+> simplify README
+> remove test aliases
+> normalize test names
+> generated option docs
+> GC-root review
+> ```
+>
+> ## Step 15 — Optimization
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from the tagged baseline.
+>
+> Use old:
+>
+> ```text
+> feat/optimization-framework
+> 397a8c71...
+> ```
+>
+> as reference only.
+>
+> ---
+>
+> # 57. Final optimization progression
+>
+> The first optimization campaign should remain staged:
+>
+> ```text
+> stock
+>     ↓
+> CPU-specific codegen
+>     ↓
+> conservative compiler tuning
+>     ↓
+> LTO
+>     ↓
+> PGO
+>     ↓
+> BOLT
+>     ↓
+> PGO + BOLT / other validated combinations
+> ```
+>
+> Never mutate the stock baseline in place.
+>
+> The future NixOS architecture can make stages explicit through:
+>
+> ```text
+> specialisations
+> named nixos-opt-* outputs
+> stage-specific forbidden/allowed closure contracts
+> benchmark manifests
+> remote builders
+> signed binary cache
+> ```
+>
+> For example:
+>
+> ```text
+> stock:
+>     forbid cpu/lto/pgo/bolt
+>
+> cpu:
+>     allow cpu
+>     forbid lto/pgo/bolt
+>
+> lto:
+>     allow intended cpu+lto
+>     forbid pgo/bolt
+>
+> pgo:
+>     allow intended pgo chain
+>     forbid bolt
+>
+> bolt:
+>     permit only intended final-stage outputs
+> ```
+>
+> This is where additional modularity will become justified again.
+>
+> ---
+>
+> # 58. Bottom-line directive
+>
+> The project should now behave as though the architecture is frozen.
+>
+> The only source change I would actively seek before the stock baseline is the **small reconstruction Disko source-of-truth cleanup**, and even that must wait until the current reconstruction finishes and should be abandoned if it requires disproportionate complexity.
+>
+> Everything else on the critical path is proof:
+>
+> ```text
+> finish reconstruction
+>         ↓
+> final offline suite
+>         ↓
+> enable VMX
+>         ↓
+> physically accept candidate
+>         ↓
+> prove hardware stability
+>         ↓
+> prove actual workloads
+>         ↓
+> soak
+>         ↓
+> manifest + freeze
+>         ↓
+> merge/tag
+> ```
+>
+> After that, stop polishing the stock workstation.
+>
+> The next major engineering project should be the optimization framework itself.
+>
+> The main practical corrections versus the previous guide are therefore: **candidate closure identity is already closed; the home backup is fully accepted; reconstruction is already underway; and there is one narrow installer-side Disko source-of-truth improvement worth considering only after that run terminates.** The live status now explicitly lists reconstruction, VMX, sustained hardware/storage/cooling, final exact-candidate workloads and soak as the remaining readiness gates.
+>
+> The two new attached reviews also add a useful post-baseline direction: `vmVariant` is probably the best next NixOS-specific experiment; initrd SSH rescue is particularly fitting for this machine; immutable `/etc` + Userborn/perlless is interesting in a VM; and the optimization phase should prioritize distributed builders, specialisations and `system.replaceDependencies`, rather than adding more stock-system abstractions. Pasted text Pasted text Pasted text
+
+## Duplicate continuation attachment and reconstruction retry — 2026-10-05
+
+The user subsequently supplied4783a921-3dda-4313-97bc-3b12f7566f77/Pasted text.txt
+with the same request to record and follow it. Exact SHA-256 is
+`e9f4c9ba1d3741ec8bd3d0fce36fe2c64f02f87cb10ae680dc24f28977875af1`,
+identical to the58-section guide fully imported immediately above. All information
+is therefore already retained; this entry records the second attachment's provenance.
+
+Reconstruction mount-option fix passes nixfmt and git diff --check. The retry
+uses the current working tree, including the user's fuzzel/Alacritty changes and
+local comment edit; no earlier exact-source result is relabelled as this revision.
+Bounded nice19/max-jobs1/cores1 execution; no physical reboot or system activation.
+Terminal reconstruction acceptance, subsequent evaluated-Disko decision and final
+offline validation remain pending.
+
+Retry launch correction: the first command mistakenly requested reconstruction
+under flake checks, where it is deliberately not registered. It exited before
+building. Correct package target `nix build .#blank-disk-reconstruction` is now
+running in session89323, source9731b6d plus the preserved local comment edit.
+Log: /tmp/readiness-reconstruction-rescue.log. No duplicate VM was started.
+Mount-option reference: https://btrfs.readthedocs.io/en/stable/Administration.html
+(rescue=nologreplay skips log replay; read-only remains explicit).
+
+## Recovery evidence reconciliation and live retry — 2026-10-05
+
+Previous goal turn: progress (complete guide import, narrow harness correction,
+retry launch, commits9731b6d/eda67df pushed). Current retry session89323 and
+NixPID1794351 verified live; installer VM started. Do not restart this job
+because the installed-desktop copy is slow under TCG.
+
+Read-only receipt inspection: /persist/nixos-stable-refresh-iso-receipt-20261005.json
+contains only path, bytes and SHA-256 for the current stable ISO;
+nixos-stable-refresh-desktop-iso-build-20261005.json contains derivation/output
+identities. Neither is a physical ISO boot/subvolume inspection receipt.
+The guide-reported read-only drill remains guide-reported, exact artifact/date
+unverified. No new physical drill was scheduled. docs/physical-root-validation.md
+now distinguishes the already accepted c5e036b physical boot chain from the
+uninstalled readiness candidate and labels older774debe ISO staging historical.
+This prevents a stale runbook from demanding repeated accepted boots or selecting
+an older ISO unnecessarily. Current stable ISO52e3496c... remains authoritative.
+
+## Live activation drift observed — 2026-10-05
+
+Current /run/current-system and system profile now resolve to
+`/nix/store/0p67xd3scigqmmn65a0x5skdcsf6025b-nixos-system-desktop-26.05.20261004.0d9e9b8`.
+Profile symlink timestamp20:46:57 Europe/Dublin. This agent did not initiate
+switch/test/boot activation; actor and exact source have not been established.
+BootID remains1299a2b6-c50b-4e83-8437-aa7e705914d6, graphical user session1
+exists, Commander Core and Home Manager services active. This observation
+supersedes older claims about the currently running czk5a2... closure, but does
+not invalidate that artifact's historical physical acceptance or establish
+physical acceptance of0p67xd... . Do not claim the old candidate remains the
+running system. Reconstruction retryPID1794351 remains live and reached Disko;
+source9731b6d plus the preserved desktop comment edit remains its launch identity.
+
+## Live activation provenance and read-only checks — 2026-10-05
+
+Journal establishes p2949 invoked sudo nixos-rebuild switch --flake .#desktop
+at20:46:34+01:00, with0p67xd... activation finishing20:46:59. Exact build source
+is not established solely by that command. User subsequently committed the
+remaining comment capitalization as2fe2c27; worktree is clean. This agent did
+not initiate activation. /run/booted-system remains accepted czk5a2... .
+
+All four generated current-system checker roles (persistence, credentials, esp,
+topology) were rerun read-only and individually returned0. No failed system
+units. Kernel still na8n3qdqf1fs7lwads81ra9nlh1hqc9w-linux-6.18.55. Running
+persistent-root artifact ph12l3y4k9jjmp5vhxwlkc11x4js2gjx remains without new
+physical acceptance. Diff-closures from booted to live reports added Alacritty
+theme/config, fuzzel config and workstation-activation output, no reported package
+version transition. Full generated-output differences are not expanded by that
+summary, so it is not a full membership/activation audit.
+
+Private timestamped receipt and diff retained:
+/persist/nixos-readiness-20261005/live-activation-observation.json and
+live-activation-closure-diff.txt (0600). No secrets content collected. Host
+bootID/session unchanged. RetryPID1794351 verified live copying declared closure
+into target; no reconstruction restart, hardware tuning, reboot or live activation.
+
+## Full live closure membership review — 2026-10-05
+
+Previous goal turn: progress (journal provenance, four guard passes, private
+receipt and pushed7c657c2). RetryPID1794351/session89323 verified live copying
+the installed target; no duplicate job or source change. PR7 remains open,
+draft and mergeable. CI37366526909 for7c657c2 was queued when observed; the
+previous runs were cancelled, not passed.
+
+Read-only full closure membership comparison booted czk5a2... → live0p67xd... :
+2,207 →2,211 paths;21 added,17 removed;16,985,654,488 →16,985,809,648 NARbytes
+(+155,160). Added paths are generated normal/persistent systems, etc/units/initrd,
+Commander wrapper/source, pre-switch/activation checker, Home Manager generations/
+files/environment/fontconfig and Alacritty theme/config/fuzzel config. No project
+CPU/LTO/PGO/BOLT namespace artifact was found in the entire live runtime closure.
+This does not detect unnamed modifications or prove physical acceptance.
+Full path lists retained in root-private
+/persist/nixos-readiness-20261005/live-activation-closure-membership.json.
+The new full membership review supplements the previous concise diff-closures
+summary; no Nix store integrity scan or host write/activation was performed.
+
+## Current-source desktop identity and reconstruction wait — 2026-10-05
+
+Previous goal turn: progress (full live closure audit) plus verified process wait.
+Current7c657c2 source with only this documentation edit evaluates desktop
+toplevel to exactly the live0p67xd3scigqmmn65a0x5skdcsf6025b artifact.
+Evaluation session55246 exited0. This establishes current source reproduces
+the running artifact identity; it does not retrospectively establish the exact
+source used by the user's20:46 build or physical boot acceptance.
+
+RetryPID1794351/session89323 remained live after bounded55-second observation,
+copying further target paths at elapsed6m34s. No restart/duplicate execution.
+Observed host memory available15GiB, memory PSI some/full avg10/60/300 all0.00;
+these are transient headroom observations, not final workload/soak acceptance.
+CI37366526909 still queued; no PASS claim. Preserve tested reconstruction
+source while it runs. The next source-dependent steps remain terminal receipt,
+evaluated-Disko decision, then final offline suite per the newest guide.
+
+## Hosted CI acquisition failure — 2026-10-05
+
+CI37366526909 for7c657c2 ended failure; its Flake checks job111952951006
+ended cancelled with no steps and no assigned runner. Authoritative check-run
+annotation: "The job was not acquired by Runner of type hosted even after
+multiple attempts". This is runner acquisition failure, not evidence of a
+Nix/formatting/test defect or a passing source. No source fix or validation
+weakening is warranted. Commit/push the pending documentation observations
+to start one fresh normal PR CI run, then inspect its terminal result.
+ReconstructionPID1794351 verified live at elapsed20m27s copying target paths.
+Earlier consecutive monitoring turns were verified waits, not blockers: the
+same process remained live and advanced through the actual desktop closure.
+No production/harness source edits, host activation or physical reboot.
+
+## Reconstruction installed-disk phase — 2026-10-05
+
+RetryPID1794351/session89323 remained live, completed actual desktop closure
+installation and independently booted its target disk. Desktop multi-user and
+Home Manager startup, exact installed closure, machine identity, persistent
+mounts, no9p/overlay and disposable credential comparison passed. First normal
+reboot passed root-local sentinel removal, persistent sentinel retention and
+journal probe persistence. The driver selected the persistent-root one-shot
+entry and is proceeding to that boot at elapsed27m36s. Remaining recovery,
+return-to-normal and final read-only inspection gates remain unaccepted until
+terminal success. Physical workstation was not rebooted/activated by this work.
+Replacement CI37368387623 for14727d5 remains awaiting terminal evidence.
+
+## Reconstruction retry terminal PASS — 2026-10-05
+
+Session89323 exited0. Derivation sjanby8f9cpwq6zk23n6pg77s0rf1f9g; test
+script1831.68seconds. Launch9731b6d plus preserved comment subsequently2fe2c27.
+Harness SHA2564e06f8d91ddbb82f4a15a67622c88a460ce3f8b9409306300307c470eab93e08;
+lock unchanged7efb19569e8a022768cd570498ff8b93cb98b108358149b668a658e2d9f406a2.
+All required checks passed: blank-disk Disko, installed desktop/HM/credentials,
+independent installed-disk UEFI runtime without host store/kernel/initrd, normal
+reset and persistent journal/identity, persistent-root recovery, return normal
+reset, all7subvolumes and identity inspected with ro,rescue=nologreplay, clean
+unmount. Previous standalone-nologreplay failure remains historical.
+Private terminal receipt/log: /persist/nixos-readiness-20261005/
+reconstruction-rescue-pass.json and reconstruction-rescue-pass.log.
+No host reboot/activation. Next: evaluated desktop Disko source decision, then
+focused/fullchecks and final reconstruction/offline suite. Physical hardware,
+workloads/soak/freeze still open; do not mark the entire objective complete.
+
+## Evaluated Disko source-of-truth change — 2026-10-05
+
+After terminal reconstruction PASS, installer Disko input now uses
+`desktopSystem.config.disko.devices`, with the existing mkForce virtual-device
+override. One-expression change only; no new module/framework or weakening of
+actual-desktop/runtime independence. Full reconstruction derivation evaluation
+session41850 exited0, producing4x7n27m1k6422dg0z8fcgcb9a41982dr. No recursion
+or type-complexity failure. nixfmt and git diff --check passed.
+Next: full flake checks, then final reconstruction and offline heavy suite;
+this evaluated harness has not yet passed execution. Host session preserved.
+
+## Final harness checks and reconstruction launch — 2026-10-05
+
+Full nix flake check source9ac1372, session99159, exited0: all checks passed.
+Formatting processed62Nix files with0changes; all registered checks passed.
+Log /tmp/readiness-final-flake-check.log. Final evaluated-Disko reconstruction
+started in session16726, nice19/max-jobs1/cores1, source9ac1372.
+Log /tmp/readiness-final-reconstruction.log; terminal acceptance still pending.
+No host activation/reboot. Remaining root/workstation/activation VM batch,
+intended stock-negative failure and recovery build follow this final harness.
+
+## Evaluated Disko execution failure and explicit deferral — 2026-10-05
+
+Session16726 exited1 at real Disko partitioning, before desktop installation.
+Derived Disko script retained production MP600 path despite mkForce fixture
+device: realpath/sgdisk targeted an absent /dev/disk/by-id/nvme-Force_MP600_...
+inside the VM. Host disk was not exposed to the VM; no host partitioning occurred.
+Evaluation and full checks had passed, showing why execution was required.
+
+Per newest guide's explicit complexity deferral, revert evaluated-device import
+to the proven raw host layout import. Evaluated Disko devices include computed
+script values tied to their earlier device context; rebinding their public device
+option alone is insufficient. Do not add a sanitizing framework to force this
+optional refactor. Actual installed desktop still derives from desktopSystem.
+The ro,rescue=nologreplay fix and all independence requirements remain intact.
+Preserve failed log /tmp/readiness-final-reconstruction.log and prior terminal
+PASS receipt. Confirm final harness derivation equals proven sjanby8... before
+reusing its complete terminal evidence; then finish the remaining offline suite.
+
+## Final restored harness identity and offline suite launch — 2026-10-05
+
+Final source18046fa reconstruction drvPath evaluation session28334 exited0,
+exactly sjanby8f9cpwq6zk23n6pg77s0rf1f9g, matching the terminal PASS receipt.
+Thus optional-refactor reversion restores the entire proven derivation, not
+merely similar source. No need to spend another30minutes rerunning identical
+successful artifact; final build still requires its existing successful output.
+
+Final offline suite session2288 launched: first full flake checks, then bounded
+build of proven reconstruction, workstation-smoke, safety/reset/identity/
+interrupted-recovery/persistent-fallback, native activation actions and recovery
+ISO. Logs /tmp/readiness-final-offline-checks.log and
+/tmp/readiness-final-offline-builds.log; output JSON
+/tmp/readiness-final-offline-builds.json. Terminal acceptance pending.
+Expected stock-contamination-negative diagnostic remains a separate next check.
+Host not activated/rebooted; graphical session retained.
+
+## Final restored-source fast checks PASS — 2026-10-05
+
+Offline suite session2288 completed its full flake-check stage: all checks
+passed; formatting62files0changes. Source18046fa launched with later
+documentation-only a40caba; final reconstruction resolves exact proven
+sjanby8f9cpwq6zk23n6pg77s0rf1f9g. The sequential heavy build stage is now
+active (disk-image build visible); no aggregate JSON/terminal result yet.
+Do not mark remaining VM/ISO stages complete based on the fast-check result.
+Logs remain /tmp/readiness-final-offline-checks.log and
+/tmp/readiness-final-offline-builds.log. Stock-negative diagnostic follows.
+No host reboot, activation or graphical-session interruption.
+
+## Final offline VM phase and deferred-refactor receipts — 2026-10-05
+
+Suite session2288/NixPID1983450 verified live: disk-image preparation progressed
+to reset-control/impermanence-root-a VM execution (drv6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv).
+Aggregate terminal result remains pending. Current exact-head CI37370176006
+(a40caba) pending, no PASS claim. Preserved evaluated-Disko failure/decision
+under /persist/nixos-readiness-20261005/evaluated-disko-failure.log and
+evaluated-disko-deferral.json (0600), including the failed and restored drv
+identities and explicit scope. No physical reboot/activation.
+
+## Final reset-control VM terminal PASS — 2026-10-05
+
+Final suite session2288/NixPID1983450 remains live. Reset-control VM
+impermanence-root-a (6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv) completed
+test script successfully in322.85seconds and batch proceeded to persistent
+identity/impermanence-root-b. Console boot-menu escape sequences were normal
+transient output, not a failure. Aggregate result and remaining VM/ISO/negative
+gates still pending; no physical workstation reboot or activation.
+
+## Final stock negative fixture PASS (expected failure) — 2026-10-05
+
+Independent bounded stock-contamination-negative execution session85359
+exited1 for the intended diagnostic: system closure contains disallowed
+/nix/store/8ii33j1vxfgl9z2gs954jbiwppsrhhlf-nixos-opt-pgo-fixture.
+Derivation mwkr72incnicd88m7fj7rd7m2d3dsryp. This is the required expected
+negative acceptance, not an unrelated build failure. Sourcea40caba plus
+plan-only observations. Root-private final-stock-negative.log and
+final-stock-negative-receipt.json retained under
+/persist/nixos-readiness-20261005. Positive desktop artifact and runtime
+namespace audit are separate evidence. Heavy suitePID1983450 remains live
+at elapsed15m04s; no aggregate terminal PASS claim.
+
+## Final persistent-identity PASS and repeated hosted-CI issue — 2026-10-05
+
+Persistent-identity/impermanence-root-b completed321.11seconds successfully;
+final suite session2288/PID1983450 progressed to persistent-fallback and remains
+live. The final batch aggregate, otherVMs and recovery build remain pending.
+
+CI37370176006/a40caba failed before steps: job111965091040 cancelled, no
+runner assigned, annotation "The job was not acquired by Runner of type hosted
+even after multiple attempts". Same infrastructure condition as previous
+37366526909, not a source-test result. Keep required checks/runner policy intact;
+local final-source full flake checks passed independently. No automatic repeated
+reruns during this local suite; retry exact final head after evidence checkpoint.
+No physical reboot/activation.
+
+## Final persistent-fallback VM terminal PASS — 2026-10-05
+
+Final persistent-fallback completed its test script successfully in417.04s.
+Suite session2288/PID1983450 progressed to interrupted-recovery VM and remains
+live at elapsed22m45s. Previous waits verified the same live advancing process;
+no stalled-job restart. Remaining aggregate/VM/ISO acceptance still pending.
+No physical reboot, system activation or graphical-session interruption.
+
+## Final interrupted-recovery VM terminal PASS — 2026-10-05
+
+Interrupted-recovery completed successfully in309.81seconds. Suite session2288/
+PID1983450 proceeded to safety VM fixtures and remains live at29m49s.
+Reset, identity, fallback and interrupted recovery final executions are now
+proven individually; aggregate heavy batch, safety/activation/workstation
+results and recovery artifact receipt remain pending. No host reboot/activation.
+
+## Final offline suite terminal PASS — 2026-10-05
+
+Session2288 exited0 after full flake checks and all9requested heavy outputs.
+Source18046fa at launch, same production/harness as a40caba; intervening
+observations only edit plan.md. All5rootVMs and workstation-smoke actually
+executed in this batch: reset322.85s,identity321.11s,fallback417.04s,
+interrupted-recovery309.81s,safety146.15s,workstation60.81s. Reconstruction
+and activation-actions were reused exact previously successful derivations;
+recoveryISO exact prior artifact reused. Do not describe reused outputs as
+new physical validation or reexecuted VM tests. Stock negative separately
+passed intended diagnostic (session85359).
+
+Private final-offline-suite-receipt.json, checks/build logs and output JSON
+retained under /persist/nixos-readiness-20261005 (0600). ISO hash recomputed
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061,
+1496678400bytes, unchanged staged stable ISO.
+
+Exact successful outputs:
+
+- `/nix/store/sjanby8f9cpwq6zk23n6pg77s0rf1f9g-vm-test-run-blank-disk-reconstruction.drv` → `/nix/store/mjf1yikn6id526yp0kr7c6vhspz10z43-vm-test-run-blank-disk-reconstruction`
+- `/nix/store/3vn9i1j8llylf3ipkbs3s8dhbvhkwds4-vm-test-run-workstation-smoke.drv` → `/nix/store/h8hm26pad7c30sxz3pd3z0ijrm4w085x-vm-test-run-workstation-smoke`
+- `/nix/store/n1bgqjs1814cafj3hx9k8wy9iwz8wz1w-vm-test-run-impermanence-root-safety.drv` → `/nix/store/v7czkdxaa29w7m2rfjr4k2yc988fg4fg-vm-test-run-impermanence-root-safety`
+- `/nix/store/6qvwbyr2za6pq6kk6xv2q8gapvk5c2dv-vm-test-run-impermanence-root-a.drv` → `/nix/store/5bdqai2262264ja9b193wj0dk48c10cw-vm-test-run-impermanence-root-a`
+- `/nix/store/r513cgfhqzcwgvn7gwciszdgyqfdmm41-vm-test-run-impermanence-root-b.drv` → `/nix/store/bf8js1lwp8l5idj5y2jvcsj51wypvrpf-vm-test-run-impermanence-root-b`
+- `/nix/store/mz7fyxfag10m9gs3xrw2i4dvk2ds034d-vm-test-run-impermanence-root-recovery.drv` → `/nix/store/j7wv2qi05q7jgk89jfij0zkd5qsizm9y-vm-test-run-impermanence-root-recovery`
+- `/nix/store/w8wcilkwk2p5y001mbyvr0412s3ywa3k-vm-test-run-impermanence-root-fallback.drv` → `/nix/store/dfkyis3rgpv8v09as7rzrip818ck3sgk-vm-test-run-impermanence-root-fallback`
+- `/nix/store/bj264kfcgxs0yqv864pk1b5lc1h14fb4-vm-test-run-activation-safety-actions.drv` → `/nix/store/zwbjrn73wajchh8360m4lb7d5iz1lf62-vm-test-run-activation-safety-actions`
+- `/nix/store/6w0ihzdsp3i6f6i08m7siz9sccxamh3f-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso.drv` → `/nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso`
+
+Host running0p67xd...,bootID1299a2b6-c50b-4e83-8437-aa7e705914d6 unchanged.
+Remaining: hosted CI runner recovery, exact physical recovery-drill evidence,
+firmware OC/RAM capture+VMX maintenance, final-candidate physical boot chain,
+hardware stability, representative workloads and multi-day soak, backup refresh
+if substantial new work, then final manifest/tag. No premature freeze/merge.
+
+## Post-offline storage preparation and full store verification — 2026-10-05
+
+Current runtime remains0p67xd... . Btrfs all5device counters0; completed
+Oct4scrub clean147.24GiB/15seconds as currently reported. Btrfs895.51GiB,
+178.06GiB allocated,717.45GiB unallocated,147.23GiB used, estimated737.74GiB
+free, missing0, metadataDUP, no mixedprofiles, globalreserveused0. No redundant
+scrub launched. NVMecriticalwarning0,temp312K,spare100%,wear18%,mediaerrors0,
+unsafeShutdown2214,errorlog12143,warning/criticaltemperaturetime0. Latest
+entry remains adminqueue0,status8194(0x2002),parameterlocation40,LBA/ns0; no
+new increase from prior observation. No new targeted GPU/hardware/NVMe/Btrfs
+kernel error match since20:46 in the inspected interval.
+
+With no active game/render/build workload observed, required full store
+verification launched: sudo ionice-c3 nice-n19 nix-store --verify --check-contents.
+Session63787,NixPID2154541,log /tmp/readiness-nix-store-verify.log; live reading
+store/path/link hashes, terminal result pending. No --repair/optimization/GC.
+This is preparation; final accepted hardware/workload policy must still be
+validated after firmware/candidate physical acceptance.
+
+BIOS3201 and allMEblocks reconfirmed14.1.53.1649,14.1.53.1649,14.0.51.1528.
+docs/firmware-preparation.md now enumerates every requested OC/RAM/power/
+virtualization/ReBAR setting. Runtime frequency does not prove BIOS settings;
+unreadable values remain unknown for the coordinated firmware capture.
+No firmware change or host reboot/activation.
+
+## Current normal/persistent artifacts rebuilt and protected — 2026-10-05
+
+Source78f0773 plus pending documentation-only changes built exact normal
+0p67xd3scigqmmn65a0x5skdcsf6025b (drv7627m57ckrvdc97y0ca4x53ijaknkz19) and
+persistent-root ph12l3y4k9jjmp5vhxwlkc11x4js2gjx (drvg83qzkchik618bsfcd343phrlxplhrvw).
+Correct build session1982 exited0. Initial54531 used a nonexistent
+system.build.specialisation attribute and exited before building; corrected to
+config.specialisation.persistent-root.configuration.system.build.toplevel.
+Normal output matches currently running system; no installation/activation.
+
+Added independent GC roots final-readiness-normal and final-readiness-persistent
+under /nix/var/nix/gcroots/workstation-preparation, preserving every historical
+root. Updated root-private /persist/nixos-preparation-gcroots.json; exact build
+JSON retained /persist/nixos-readiness-20261005/final-candidates.json.
+Neither artifact has new physical boot acceptance merely from rebuild/roots.
+Full store verification session63787/PID2154541 still live hashing contents;
+no errors reported so far, terminal acceptance pending.
+
+## Full Nix-store integrity terminal PASS — 2026-10-05
+
+Session63787 exited0; full nix-store --verify --check-contents completed path
+existence, link hashes and store content hashes with no reported corruption.
+No repair, store optimization or GC requested. Private terminal receipt/log
+/persist/nixos-readiness-20261005/nix-store-verify-receipt.json and
+nix-store-verify.log (0600). This closes the full-store preparation check;
+final hardware/workload policy and subsequent-store health remain subject to
+physical acceptance and soak. Normal/persistent candidates GC-protected.
+No physical reboot or live activation; graphical session retained.
+
+## Physical maintenance preflight and unavoidable firmware access — 2026-10-05
+
+Read-only boot-entry preflight confirms generation37 normal entry
+nixos-generation-37.conf targets0p67xd... and is current default; its
+persistent-root entry targetsph12l3... . cmp verified both normal/persistent
+ESP kernel and initrd byte-identical to the corresponding store artifacts.
+Accepted generation35 normal/persistent entries remain present. Receipt:
+/persist/nixos-readiness-20261005/final-boot-entry-preflight.json (0600).
+The user's earlier live switch already installed generation37; another boot
+installation is unnecessary. No entry, default or one-shot selection modified.
+
+/dev/kvm still absent, current kernel confirms VMX disabled by BIOS;
+/sys/class/firmware-attributes absent. No available read-only/runtime interface
+provides firmware OC/RAM policy or enables VMX. Offline/backup/store/candidate/
+boot-file prerequisites complete; physical firmware capture/change now requires
+someone at the machine. Asked when user is available for one coordinated
+window, retaining BIOS3201/currentME. This is a physical-interface limitation,
+not a skill-imposed approval rule. Keep graphical session alive while waiting;
+elapsed time is not readiness/approval and will not trigger a reboot.
+After settings capture and VMX, exact candidate physical chain then hardware,
+workloads/soak remain required. Prior accepted3trials/older chain are retained
+and not repeated for their own sake. No premature tag/manifest/merge.
+
+## Draft PR final-evidence reconciliation — 2026-10-05
+
+PR7 body updated with complete final offline acceptance, actual restored
+reconstruction design/optional evaluated-Disko deferral, current0p67xd/ph12l3
+artifacts, full closure audit, full store verification, accepted independent
+backup/user-reported real secrets restore and installed generation37 preflight.
+Removed obsolete reconstruction-executing/candidate-l994fn claims. Explicitly
+recorded the user's external switch rather than claiming old closure is live.
+Verified PR remains OPEN/DRAFT. Latest exact-head CI37374353043/3c8b06c queued;
+no terminal CI claim. Previous turn: progress (boot-file preflight and concrete
+physical-window preparation). Current turn: progress (PR authoritative state
+reconciled). Firmware-window availability question remains pending; no answer
+is inferred from automatic continuation or elapsed time. No reboot/activation.
+
+## Fresh pre-firmware runtime snapshot — 2026-10-05
+
+Pinned validation-shell collector session5499 exited0; every recorded capture
+command returned0. Source3c8b06c plus only the pending plan observation.
+Private /persist/nixos-readiness-20261005/pre-firmware-snapshot.md and
+pre-firmware-snapshot-receipt.json (0600) retain exact SHA/command count.
+Snapshot includes current live closure, Git/lock, firmware ME blocks, runtime
+CPU/memory/pressure/IRQ policy, graphics, storage, services/timers and
+persistence metadata. It excludes secret/reset-log contents. The validation
+shell obtained cached perf/turbostat tools; this does not add them to the
+stock runtime closure or imply compiler optimization.
+This is fresh comparison evidence for later firmware/candidate acceptance,
+not an accepted freeze manifest or sustained hardware/workload/soak result.
+Firmware OC/RAM values without trustworthy runtime access remain unknown.
+Window availability question still pending; no reboot/activation.
+
+## Physical-access blocking audit — 2026-10-05
+
+Same dependency persisted across three consecutive continuation turns:
+1. generation37/ESP preflight completed; firmware window availability requested;
+2. draft PR reconciled while window question remained unanswered;
+3. fresh57-command pre-firmware snapshot completed and pushed7207436.
+
+Final revalidation: /dev/kvm absent; firmware-attributes API absent; same live
+0p67xd... closure and bootID1299a2b6-c50b-4e83-8437-aa7e705914d6; clean worktree.
+No further required baseline implementation is safely executable before
+physical firmware capture/VMX and candidate boot acceptance. Remaining
+hardware/workload/soak/freeze evidence cannot be substituted by more offline
+checks, documentation or earlier-generation acceptance. Latest hosted CI still
+needing external runner availability also does not remove this dependency.
+
+Goal marked blocked on physical firmware access/window response after this
+audit; objective remains incomplete, not paused/completed. Resume when user
+can coordinate the retained BIOS3201/currentME window. No reboot scheduled,
+boot selection changed, live activation performed or graphical session ended.
+
+## Firmware photos and post-VMX boot — 2026-10-05
+
+Supersedes the preceding physical-access blocking audit: the user performed
+firmware work and rebooted. The agent did not reboot, activate a system,
+change firmware, alter boot selection or interrupt the graphical session.
+Both attached assessments are identical; their entire content is preserved
+once below as supplied analysis, not independently verified instructions.
+Sources: attachment IDs d4bac096-1807-4142-8e0f-b30106ad3d86 and
+b051f755-bda5-42ff-90fb-eda7dee7ea44, each `Pasted text.txt`.
+SHA-256: `954a2446f7b703aa8ae347fbb301035a7429d374744b8c0d6a8fddb8a43f2833`.
+The image set contains overlapping screens and a repeated Ai Tweaker image.
+Displayed firmware clock 21:37–21:40 is not assumed to use OS timezone.
+
+### Reconciled authority and remaining uncertainty
+
+Photos establish AI Optimized core ratios 50/49, Auto core/cache voltage,
+MCE Enabled–Remove All Limits, max cache48, AVX offset Auto/current0,
+XMP I DDR4-3200 at configured1.35V, BCLK100MHz. These supersede any earlier
+fixed5GHz/manual-voltage description; they do not prove sustained clocks.
+Profile16-18-18-36 is visible, but applied detailed timings/command rate
+are not captured. Prediction values (including @L4) are not measured load
+voltages, selected LLC or a stability result. Load voltage remains unmeasured.
+
+VMX/VT-d, SR-IOV, Above4G, both prefetchers and HT enabled; all cores active.
+ReBAR detailed setting Auto takes precedence over ON highlighted in an open
+quick-control menu. IOMMU preboot option only reads “Enable IOMMU during boot
+with...” and its suffix remains unknown. Primary display PCIE and concurrent
+iGPU Multi-Monitor Disabled; no Intel VGA device currently enumerates in Linux.
+AMI2.20.1276 is an interface footer; live ASUS release remains3201, ME blocks
+14.1.53.1649,14.1.53.1649,14.0.51.1528. Retain this selected firmware baseline.
+No assertion that VMX was the only changed setting: complete before/after
+firmware captures are unavailable.
+
+Linux resolves the guide's GPU BAR uncertainty: AMD03:00.0 (1002:7550)
+BAR0 current16GiB, BAR2 current256MiB; amdgpu reports VRAM16304MiB and
+BAR16384MiB. DMAR and x2apic interrupt remapping are present, with default
+Translated IOMMU domain; this does not prove isolation for every device.
+SR-IOV firmware permission does not prove any device exposes VFs.
+
+Numerical PL1/PL2/Tau/current limits, actual LLC, VRM policy, detailed RAM
+settings, firmware Speed Shift/C-states, CSM/SecureBoot/PTT, PEG generation/
+ASPM, SATA and fan/pump/Q-Fan policies remain uncaptured. Additional photos
+are optional future evidence, not a reason to demand another reboot now.
+The earlier thermal-aborted CPU test remains incomplete; these photos do not
+convert it into a pass or authorize weaker thermal thresholds/new OC policy.
+
+### New physical observation and KVM acceptance scope
+
+BootID `d7c64889-aac3-4d09-8d14-5add9050cea3`; current normal candidate
+`0p67xd3scigqmmn65a0x5skdcsf6025b`, generation37. RootID300 (previous297),
+UUID `a3046ca3-1791-b646-a0d2-4bf142a152d3`, created22:40:53+01:00.
+Current boot has a matching RESET complete record; accumulated count6.
+Machine identity and p2949 credential equal their persisted sources, checked
+as booleans without recording secrets. Failed system units empty; Commander
+active/success, NRestarts0. The user's graphical session remains active.
+
+/dev/kvm exists and is accessible to p2949. QEMU10.2.4 initialized using
+`-accel kvm -cpu host`, guest paused, no disks/network/display; QMP query-kvm
+returned enabled=true/present=true and process exited0. This closes the
+firmware-disabled VMX/KVM initialization gate, not an actual Android emulator
+workload or guest execution gate. Private receipt0600:
+`/persist/nixos-readiness-20261005/post-vmx-normal-boot-observation.json`.
+
+This is current final-candidate normal reset/identity/service evidence.
+Persistent-root then return-to-normal physical legs, complete hardware and
+real workload acceptance, multi-day soak, current-head CI and final freeze
+remain open. Do not repeat older accepted trials solely for their own sake.
+Coordinate remaining physical boots to preserve the user's session; no new
+reboot is scheduled. No tag, merge, final manifest or optimization enabled.
+
+### Complete supplied assessment (quoted reference)
+
+> I went through all ten BIOS photos and reconciled the overlapping screens. The most useful way to preserve this is as a firmware/overclock baseline report, with uncertain or incomplete items explicitly marked rather than guessed.
+>
+> # UEFI / BIOS Configuration Baseline
+>
+> **Capture date:** 5 October 2026
+> **Capture time:** approximately 21:37–21:40
+> **Firmware interface:** ASUS ROG UEFI BIOS Utility — Advanced Mode
+> **AMI interface/version string shown:** `Version 2.20.1276`, copyright 2024 American Megatrends
+>
+> > Important: `2.20.1276` appears to be the AMI/UEFI interface version displayed in the footer. These photographs do **not** show the motherboard's actual ASUS BIOS release number.
+>
+> ---
+>
+> # 1. Executive summary
+>
+> The photographs show a fairly performance-oriented firmware configuration with the following major characteristics:
+>
+> | Area | Observed state |
+> |---|---|
+> | CPU platform | Intel Comet Lake |
+> | Physical CPU cores visible | 6 |
+> | Hyper-Threading | Enabled |
+> | Active processor cores | All |
+> | CPU ratio policy | ASUS `AI Optimized` |
+> | Target CPU turbo | 5000 MHz |
+> | Target AVX frequency | 5000 MHz |
+> | Light/heavy ratio | `50 / 49` |
+> | Target cache/ring | 4800 MHz |
+> | Max cache ratio | 48× |
+> | AVX negative offset | 0 currently |
+> | ASUS MultiCore Enhancement | Enabled — Remove All Limits |
+> | CPU voltage | Auto |
+> | XMP | XMP I |
+> | Memory | 32 GiB DDR4-3200 |
+> | DRAM voltage | 1.35 V configured |
+> | VT-x / VMX | Enabled |
+> | VT-d / IOMMU | Enabled |
+> | SR-IOV | Enabled |
+> | Above 4G Decoding | Enabled |
+> | Re-Size BAR Support | Auto |
+> | Primary graphics | PCIe |
+> | iGPU Multi-Monitor | Disabled |
+> | Hardware prefetcher | Enabled |
+> | Adjacent cache-line prefetch | Enabled |
+> | SGX | Disabled |
+>
+> The biggest point worth calling out is that this is **not a simple fixed 5.0 GHz all-core/manual-voltage configuration**. The BIOS is presently using ASUS's **AI Optimized CPU ratio mode**, and explicitly reports:
+>
+> ```text
+> Light Load / Heavy Load: 50 / 49
+> ```
+>
+> So its intended behavior is approximately 5.0 GHz under the lighter condition and 4.9 GHz under the BIOS-defined heavier condition, rather than an unconditional fixed 50× ratio.
+>
+> At the same time, the top-level target display still reports:
+>
+> ```text
+> Target CPU Turbo-Mode Frequency: 5000 MHz
+> Target CPU @ AVX Frequency:      5000 MHz
+> Target Cache Frequency:          4800 MHz
+> ```
+>
+> ---
+>
+> # 2. CPU identification and topology
+>
+> The CPU configuration screen exposes:
+>
+> | Item | Value |
+> |---|---:|
+> | L2 cache | `256 KB × 6` |
+> | L3 cache | `12 MB` |
+> | L4 cache | N/A |
+> | Intel VT-x Technology | Supported |
+> | Intel SMX Technology | Supported |
+> | Active Processor Cores | All |
+> | Hyper-Threading | Enabled |
+>
+> The `256 KB × 6` L2 presentation tells us that all six physical cores are represented. With Hyper-Threading enabled, the operating system should therefore receive the full SMT topology rather than having threads disabled in firmware.
+>
+> The System Agent screen also identifies the platform as:
+>
+> ```text
+> CometLake
+> ```
+>
+> and displays the associated string:
+>
+> ```text
+> 9.1.10.40
+> ```
+>
+> The photographs additionally show VT-d as both supported and enabled.
+>
+> ---
+>
+> # 3. CPU frequency and overclock configuration
+>
+> ## ASUS AI overclock policy
+>
+> The primary Ai Tweaker screen shows:
+>
+> | Setting | Value |
+> |---|---|
+> | CPU Core Ratio | `AI Optimized` |
+> | Optimized AVX Frequency | `Normal Use` |
+> | Light Load / Heavy Load | `50 / 49` |
+> | AVX Instruction Core Ratio Negative Offset | Auto |
+> | Current AVX negative offset | `0` |
+> | ASUS MultiCore Enhancement | `Enabled - Remove All Limits` |
+> | Current ASUS MCE Status | Enabled |
+> | CPU SVID Support | Auto |
+> | SVID Behavior | Auto |
+>
+> The effective target values shown at the top of the BIOS are:
+>
+> ```text
+> CPU Turbo:     5000 MHz
+> CPU AVX:       5000 MHz
+> DRAM:          3200 MHz
+> Cache/Ring:    4800 MHz
+> ```
+>
+> ### Interpretation
+>
+> This is a hybrid ASUS-controlled overclock rather than a manually fixed ratio/voltage setup.
+>
+> Three things contribute:
+>
+> 1. **AI Optimized CPU ratio** lets ASUS determine the operative ratios.
+> 2. **50/49 light/heavy behavior** means the BIOS distinguishes lighter and heavier CPU loading.
+> 3. **MultiCore Enhancement — Remove All Limits** removes the ordinary power-limit constraint which could otherwise reduce sustained turbo behavior.
+>
+> The photographs therefore describe a system intended to sustain relatively aggressive turbo behavior, subject primarily to the AI OC frequency/voltage model and thermal/current constraints.
+>
+> ---
+>
+> # 4. Cache / ring configuration
+>
+> Visible settings are:
+>
+> | Setting | Value |
+> |---|---|
+> | Ring Down Bin | Auto |
+> | Minimum CPU Cache Ratio | Auto |
+> | Maximum CPU Cache Ratio | `48` |
+> | Reported target cache frequency | `4800 MHz` |
+>
+> This is therefore targeting a maximum 48× cache/ring ratio.
+>
+> The ASUS prediction panel agrees with this target and displays an estimated cache voltage requirement for 4.8 GHz.
+>
+> ---
+>
+> # 5. CPU and platform voltages
+>
+> The relevant Ai Tweaker screen shows:
+>
+> | Rail / setting | Configured mode/value | Live value shown |
+> |---|---:|---:|
+> | CPU Core/Cache Voltage | Auto | `1.021 V` at the photographed idle state |
+> | DRAM Voltage | `1.35000 V` | `1.343 V` |
+> | CPU VCCIO Voltage | Auto | approximately `1.168 V` |
+> | CPU System Agent Voltage | Auto | `1.152 V` |
+> | PLL Termination Voltage | Auto | — |
+> | PCH Core Voltage | Auto | `1.048 V` |
+> | BCLK Aware Adaptive Voltage | Enabled | — |
+> | Extreme Over-voltage | Disabled | — |
+>
+> There is therefore **no manually entered fixed Vcore visible** in these photographs.
+>
+> The CPU core/cache voltage is managed automatically, with BCLK-aware adaptive-voltage functionality enabled.
+>
+> ### Important consequence
+>
+> The photographed `1.021 V` should not be interpreted as the CPU's load voltage. The BIOS hardware monitor was showing the processor at only 4.1 GHz and roughly idle conditions when the picture was taken.
+>
+> Load voltage will be substantially different.
+>
+> ---
+>
+> # 6. ASUS AI OC prediction information
+>
+> The right-side prediction panel contains useful baseline information:
+>
+> | ASUS prediction | Value |
+> |---|---:|
+> | SP score | `72` |
+> | Cooler score | `155 pts` |
+> | Non-AVX voltage requirement for 5000 MHz | `1.412 V @ L4` |
+> | AVX voltage requirement for 5000 MHz | `1.462 V @ L4` |
+> | Cache voltage requirement for 4800 MHz | `1.332 V @ L4` |
+> | Heavy Non-AVX prediction | `4931 MHz` |
+> | Heavy AVX prediction | `4708 MHz` |
+> | Heavy Cache prediction | `4884 MHz` |
+>
+> These are **ASUS prediction values**, not actual measured workload voltages/frequencies.
+>
+> That distinction matters particularly for the AVX entry: the BIOS target line says 5.0 GHz AVX with a current AVX offset of zero, but ASUS's own AI prediction estimates approximately **4.708 GHz under its defined heavy AVX workload**.
+>
+> So there is no contradiction:
+>
+> ```text
+> Configured ratio target
+>         ≠
+> frequency ASUS predicts under its heavy workload
+> ```
+>
+> The latter includes the platform's electrical/thermal model.
+>
+> ---
+>
+> # 7. Live BIOS hardware-monitor snapshot
+>
+> During the photographs, the right-hand hardware monitor showed:
+>
+> | Measurement | Value |
+> |---|---:|
+> | CPU frequency | `4100 MHz` |
+> | CPU ratio | `41×` |
+> | BCLK | `100.00 MHz` |
+> | CPU temperature | `30 °C` |
+> | Core voltage | `1.021 V` |
+> | DRAM frequency | `3200 MHz` |
+> | DRAM voltage | `1.343 V` |
+> | Installed memory | `32768 MB` |
+>
+> This is an excellent idle/BIOS reference snapshot.
+>
+> Nothing here suggests the processor was under significant load during the photographs.
+>
+> ---
+>
+> # 8. Base clock configuration
+>
+> Visible values are:
+>
+> ```text
+> BCLK Frequency: 100.0000 MHz
+> BCLK Spread Spectrum: Auto
+> ```
+>
+> The live hardware monitor simultaneously reads:
+>
+> ```text
+> BCLK: 100.00 MHz
+> ```
+>
+> So the CPU/memory overclock is **not being generated through a substantial BCLK overclock**.
+>
+> The performance configuration is ratio-based.
+>
+> ---
+>
+> # 9. Memory configuration
+>
+> The system has:
+>
+> ```text
+> 32768 MB
+> DDR4-3200
+> ```
+>
+> The BIOS is configured for:
+>
+> | Setting | Value |
+> |---|---|
+> | Ai Overclock Tuner | `XMP I` |
+> | DRAM Frequency | `DDR4-3200MHz` |
+> | BCLK : DRAM Frequency Ratio | Auto |
+> | DRAM Odd Ratio Mode | Enabled |
+> | DRAM Voltage | `1.35000 V` |
+> | Actual DRAM voltage shown | `1.343 V` |
+>
+> The visible XMP profile string begins:
+>
+> ```text
+> XMP DDR4-3200 16-18-18-36-1...
+> ```
+>
+> The photograph cuts off the end of that profile string, so I would **not infer the remaining timing fields from the image**.
+>
+> At minimum, the primary visible timings are therefore:
+>
+> ```text
+> DDR4-3200
+> CL16
+> tRCD 18
+> tRP 18
+> tRAS 36
+> ```
+>
+> with the profile running at the expected 1.35 V setting.
+>
+> The detailed `DRAM Timing Control` submenu was not opened, so secondary/tertiary timings cannot be recovered from these photographs.
+>
+> ---
+>
+> # 10. CPU prefetch and execution-related settings
+>
+> The processor configuration shows:
+>
+> | Setting | State |
+> |---|---|
+> | Hardware Prefetcher | Enabled |
+> | Adjacent Cache Line Prefetch | Enabled |
+> | Tcc Offset Time Window | Auto |
+> | Software Guard Extensions / SGX | Disabled |
+> | Active Processor Cores | All |
+> | Hyper-Threading | Enabled |
+>
+> For a performance baseline, it is useful that both hardware-prefetch facilities are explicitly documented as enabled.
+>
+> There is no photograph showing other lower-level CPU power-management items such as SpeedStep, Speed Shift, package C-states, or individual C-state limits.
+>
+> ---
+>
+> # 11. CPU virtualization
+>
+> CPU virtualization is explicitly enabled:
+>
+> ```text
+> Intel (VMX) Virtualization Technology: Enabled
+> ```
+>
+> The screen also reports Intel VT-x as supported.
+>
+> So hardware virtualization is enabled at the processor level.
+>
+> ---
+>
+> # 12. VT-d / IOMMU configuration
+>
+> The System Agent configuration shows:
+>
+> ```text
+> VT-d: supported
+> VT-d: enabled
+> ```
+>
+> and `Control Iommu Pre-boot Behavior` is configured to an option beginning:
+>
+> ```text
+> Enable IOMMU during boot with ...
+> ```
+>
+> The remainder of that option is cut off by the width of the BIOS field.
+>
+> Taken together, these photographs show a firmware configuration intentionally prepared to expose Intel's IOMMU functionality rather than leaving VT-d disabled.
+>
+> This is especially useful to preserve as a baseline for:
+>
+> - Linux IOMMU use;
+> - device isolation;
+> - virtualization;
+> - VFIO;
+> - DMA remapping;
+> - other PCIe virtualization experiments.
+>
+> ---
+>
+> # 13. SR-IOV
+>
+> Under:
+>
+> ```text
+> Advanced
+> → PCI Subsystem Settings
+> ```
+>
+> the following is visible:
+>
+> ```text
+> SR-IOV Support: Enabled
+> ```
+>
+> So firmware support for PCIe Single Root I/O Virtualization is enabled.
+>
+> Actual SR-IOV functionality will still depend on the individual PCIe device supporting virtual functions; the BIOS setting alone does not establish that a particular GPU/NIC exposes them.
+>
+> ---
+>
+> # 14. Above-4G decoding and Resizable BAR
+>
+> The PCI subsystem page shows:
+>
+> | Setting | Value |
+> |---|---|
+> | Above 4G Decoding | **Enabled** |
+> | Re-Size BAR Support | **Auto** |
+> | SR-IOV Support | **Enabled** |
+>
+> A separate photograph of ASUS's quick ReSize BAR control shows its dropdown open with:
+>
+> ```text
+> OFF
+> ON
+> ```
+>
+> and `ON` highlighted.
+>
+> The detailed page is the more precise configuration capture, and reports:
+>
+> ```text
+> Above 4G Decoding = Enabled
+> Re-Size BAR Support = Auto
+> ```
+>
+> The BIOS's own explanatory text also states that enabling Re-Size BAR requires:
+>
+> ```text
+> CSM (Compatibility Support Module) disabled
+> ```
+>
+> ### What the pictures prove
+>
+> They prove that the firmware is **configured to permit/use ReBAR automatically** and that the required Above-4G decoding feature is enabled.
+>
+> ### What they do not prove
+>
+> There is no Boot/CSM photograph.
+>
+> Therefore these images alone do **not conclusively prove that ReBAR is actually active for the installed GPU**.
+>
+> That should ultimately be verified from the operating system or from a Boot/CSM capture.
+>
+> ---
+>
+> # 15. Graphics configuration
+>
+> Under:
+>
+> ```text
+> Advanced
+> → System Agent Configuration
+> → Graphics Configuration
+> ```
+>
+> the firmware is set to:
+>
+> | Setting | Value |
+> |---|---|
+> | Primary Display | `PCIE` |
+> | iGPU Multi-Monitor | `Disabled` |
+>
+> That means the discrete PCIe graphics device is explicitly preferred for primary display output.
+>
+> The significant item here is:
+>
+> ```text
+> iGPU Multi-Monitor = Disabled
+> ```
+>
+> If the intention is to keep the Intel integrated GPU active alongside a discrete GPU, this is the one photograph I would flag for closer inspection. On ASUS Intel platforms, this option is normally the setting associated with keeping integrated graphics available when a discrete PCIe GPU is installed.
+>
+> So the captured firmware policy is clearly:
+>
+> ```text
+> primary graphics → PCIe GPU
+> concurrent iGPU → not explicitly enabled
+> ```
+>
+> Whether Linux nevertheless sees the iGPU should be checked separately rather than inferred from this BIOS photograph.
+>
+> ---
+>
+> # 16. Security-related CPU features
+>
+> Visible states include:
+>
+> ```text
+> Intel SMX Technology: Supported
+> Software Guard Extensions (SGX): Disabled
+> ```
+>
+> No Secure Boot, TPM/PTT, Platform Key, or CSM screen was photographed, so their states are **unknown from this image set**.
+>
+> ---
+>
+> # 17. Overall overclock character
+>
+> A concise description of the photographed CPU configuration would be:
+>
+> ```text
+> 100 MHz BCLK
+>         │
+>         ├── XMP I → DDR4-3200 CL16-class memory
+>         │
+>         └── ASUS AI CPU overclock
+>                 │
+>                 ├── 50× light load
+>                 ├── 49× heavy load
+>                 ├── AVX offset currently 0
+>                 ├── 48× maximum cache
+>                 ├── adaptive/automatic core voltage
+>                 └── MCE removes normal power limits
+> ```
+>
+> That is quite different from:
+>
+> ```text
+> fixed 50× all-core
+> fixed 48× cache
+> fixed manual Vcore
+> ```
+>
+> The photographs show the first model, not the second.
+>
+> ---
+>
+> # 18. Reproducibility implications for performance testing
+>
+> For a performance-testing machine, these photographs preserve several variables that could otherwise contaminate comparisons.
+>
+> The particularly important ones are:
+>
+> ```text
+> BCLK                       100 MHz
+> CPU ratio mode             AI Optimized
+> Light/heavy ratios         50 / 49
+> AVX offset                 0
+> Cache max                  48
+> MCE                         Remove All Limits
+> Vcore                       Auto/adaptive
+> XMP                         XMP I
+> Memory                      DDR4-3200
+> Primary memory timings      16-18-18-36...
+> VT-x                        Enabled
+> VT-d                        Enabled
+> SR-IOV                      Enabled
+> Above 4G                    Enabled
+> ReBAR                       Auto
+> Prefetchers                 Enabled
+> HT                          Enabled
+> All CPU cores               Enabled
+> ```
+>
+> The most important variable for benchmark reproducibility is probably **AI Optimized CPU frequency/voltage management**.
+>
+> It is not necessarily a bad configuration. But unlike a manually fixed multiplier/voltage configuration, it means the firmware itself participates in determining the final workload operating point.
+>
+> For a future stock-vs-optimized software comparison, I would therefore preserve this exact firmware state—or document any later change—rather than silently changing CPU overclock policy midway through the experiments.
+>
+> ---
+>
+> # 19. Items that are not visible and therefore remain unknown
+>
+> These photographs do **not** establish the following:
+>
+> - exact ASUS motherboard BIOS release/build;
+> - CSM state;
+> - Secure Boot state;
+> - Intel PTT/TPM state;
+> - boot mode details;
+> - individual CPU C-state configuration;
+> - Intel SpeedStep / Speed Shift configuration;
+> - PL1 / PL2 / Tau numerical values;
+> - load-line calibration level;
+> - VRM switching frequency/current capability;
+> - CPU current limits;
+> - detailed DRAM secondary/tertiary timings;
+> - command rate;
+> - PCIe link-generation settings;
+> - ASPM settings;
+> - PEG slot configuration;
+> - SATA mode;
+> - fan/pump curves;
+> - Q-Fan configuration;
+> - actual OS-visible ReBAR status;
+> - actual OS-visible IOMMU groups;
+> - actual GPU PCIe BAR size;
+> - whether the integrated GPU currently enumerates in Linux.
+>
+> The `DIGI+ VRM`, `DRAM Timing Control`, `Auto Voltage Caps`, and `DRAM REF Voltage Control` sections are visible only as collapsed menus, so their internal values cannot be extracted.
+>
+> ---
+>
+> # 20. Concise baseline record
+>
+> For a short-form baseline, I would preserve the configuration as:
+>
+> ```text
+> ASUS ROG UEFI — 2026-10-05
+>
+> CPU:
+>   Platform: Comet Lake
+>   Cores: all 6 enabled
+>   Hyper-Threading: enabled
+>   Core ratio: AI Optimized
+>   Light/heavy: 50x / 49x
+>   Target turbo: 5.0 GHz
+>   AVX target: 5.0 GHz
+>   AVX offset: 0
+>   Cache target/max: 4.8 GHz / 48x
+>   MCE: Enabled — Remove All Limits
+>   Core/cache voltage: Auto
+>   BCLK-aware adaptive voltage: Enabled
+>   Extreme over-voltage: Disabled
+>   BCLK: 100.00 MHz
+>
+> Memory:
+>   Capacity: 32 GiB
+>   XMP: XMP I
+>   Frequency: DDR4-3200
+>   Visible primary timings: 16-18-18-36...
+>   DRAM voltage: 1.35 V
+>   VCCIO: Auto (~1.168 V observed)
+>   SA voltage: Auto (~1.152 V observed)
+>
+> CPU features:
+>   Hardware prefetcher: Enabled
+>   Adjacent cache-line prefetch: Enabled
+>   SGX: Disabled
+>   VMX/VT-x: Enabled
+>
+> PCI/IOMMU:
+>   VT-d: Enabled
+>   IOMMU pre-boot behavior: Enabled
+>   Above 4G Decoding: Enabled
+>   ReBAR: Auto
+>   SR-IOV: Enabled
+>
+> Graphics:
+>   Primary display: PCIe
+>   iGPU Multi-Monitor: Disabled
+>
+> Idle BIOS snapshot:
+>   CPU: 4.1 GHz
+>   Ratio: 41x
+>   Temperature: 30 C
+>   Vcore: 1.021 V
+>   DRAM: 3200 MHz / 1.343 V
+>
+> ASUS AI prediction:
+>   SP: 72
+>   Cooler: 155 pts
+>   5 GHz non-AVX Vreq: 1.412 V @ L4
+>   5 GHz AVX Vreq: 1.462 V @ L4
+>   4.8 GHz cache Vreq: 1.332 V @ L4
+>   Heavy non-AVX: 4931 MHz
+>   Heavy AVX: 4708 MHz
+>   Heavy cache: 4884 MHz
+> ```
+>
+> # 21. Overall assessment
+>
+> The photographs capture a coherent performance-oriented setup:
+>
+> - all CPU cores and Hyper-Threading available;
+> - both CPU prefetch mechanisms enabled;
+> - XMP DDR4-3200 active;
+> - CPU and cache overclocking active;
+> - Intel power limits removed through MCE;
+> - virtualization and IOMMU functionality enabled;
+> - Above-4G, ReBAR support and SR-IOV prepared;
+> - discrete PCIe graphics explicitly prioritized.
+>
+> The two items I would particularly preserve as explicit baseline facts are **AI Optimized 50/49 CPU behavior** and **iGPU Multi-Monitor being disabled**. Those are easy details to forget later and materially change how the machine behaves.
+>
+> Nothing visible in the photographs looks like an accidental partially-disabled CPU configuration: all cores, SMT, prefetchers, VMX, VT-d, Above-4G and the performance memory profile are active. The configuration is clearly intentionally performance-oriented rather than close to motherboard defaults.
+>
+> This should work well as the BIOS-state section of your NixOS/pre-optimization baseline. If you take photos of the **Boot, CPU power-management, DIGI+ VRM, DRAM timings and Q-Fan pages**, I can extend this into a nearly complete firmware configuration record rather than just the portions captured here.
+
+## Final-candidate GameMode and hosted CI acceptance — 2026-10-05
+
+Previous goal turn classified progress: complete attached firmware assessments
+recorded, live normal reset and KVM initialization evidence obtained, pushed3abef3d.
+Current physical boot/source revalidated before these next safe checks.
+
+`gamemoded -t` exited0, all tests passed including CPU governor switching,
+client/reaper/supervisor and ioprio tests. p2949 is a member of gamemode.
+All twelve governor/EPP policies match before/after: powersave and
+balance_performance; split_lock_mitigate remains1, GameMode inactive afterward.
+No permanent governor, split-lock, GPU or cooling changes. This closes the
+previous physical helper authorization/governor gate, not actual gameplay.
+Root-private0600 receipt: /persist/nixos-readiness-20261005/post-vmx-gamemode.json.
+
+GitHub run37379408763 on3abef3de6f17d8a93dac48de182a9d387a29b273 is
+terminal success: Flake checks job setup, checkout, Nix install and flake
+check steps all success. Run37374964780/3445ff3 also succeeded. Earlier
+runner-acquisition failures are historical, not a current CI blocker.
+
+Inspected ~/Android, ~/.android and ~/Development for emulator/adb/AVD
+artifacts; no SDK/AVD found there. Do not claim global absence or substitute
+QEMU initialization for real Android project acceptance. Dedicated RAM test
+requires most32GiB outside normal desktop usage per plan; available25GiB
+while session active is not authority to exhaust desktop memory. Soak starts
+after individual hardware/workload gates per section45; no premature soak
+pass from idle uptime. docs/status.md now provides current authoritative
+observations above its retained historical sections, and development-validation
+reflects closed GameMode/VMX gates. No host reboot or activation performed.
+
+## Final-candidate actual Blender project render — 2026-10-05
+
+Previous goal turn was progress: physical GameMode acceptance and authoritative
+CI evidence recorded/pushedf327106. Revalidated clean source and boot before
+workload execution; no reboot or activation.
+
+Loaded ~/Development/Blender/mirror_techproof_v006_persistent_wipe.blend
+in background Blender, rendered its actual33-object camera scene at
+1920x1080/100%,64samples with only RX9070XT HIP enabled; CPU render disabled.
+Exit0, PNG produced,12.6673s rendering. Running finalnormal0p67xd... closure,
+bootd7c64889-aac3-4d09-8d14-5add9050cea3. Source SHA256
+`bc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe`
+unchanged. This Development copy differs from the earlier Downloads copy
+(bf37fe...); do not conflate their identities or infer a user modification.
+Sample/device/output choices were in-memory; no project/preferences saved.
+No targeted new kernel amdgpu fault/reset/timeout or hardware/OOM matches
+since22:03:57UTC. Commander actualunitcommander-core.service active/success,
+NRestarts0; graphical session preserved. A preliminary query of nonexistent
+commander-core-keeper.service returned inactive and was corrected by enumerating
+the loaded unit; it is not cooling failure evidence.
+
+Private0600 receipt/render metadata/log:
+/persist/nixos-readiness-20261005/final-blender/. PNG remains private /tmp.
+This closes actual-project load/basic render on the final candidate, not
+sustained GPU rendering or interactive Blender acceptance. CPU/RAM sustained
+stability, other actual workloads, physical remaining chain and soak still open.
+Additional scoped Android discovery in ~/.local/share, ~/Downloads and /opt
+found no emulator/adb/AVD paths; do not claim global absence.
+CI37379900573/f327106 remained in progress when checked; no restart issued.
+
+## Final-candidate Unreal build and thermal-stopped editor — 2026-10-05
+
+Previous goal turn progress: actual Blender final-candidate render evidence
+recorded/pushed732d208. Revalidated project/repository clean before execution.
+Actual AI_Gavin_ProjectEditor incremental build through Steam FHS passed exit0,
+2.55s UBT/4.00s wrapper, one shared-library link action. Epic Clang20.1.8,
+RockyLinux8 SDK and bundled libc++ retained; MaxParallelActions2,nice19.
+CPU sensor polling1s, peak60C, no thermal stop. Project Git remains clean.
+This closes final-candidate incremental build, not full recompilation.
+
+A separate actual editor/map acceptance trial used Vulkan, temporary SDL
+Wayland, unchanged default allocator and the previously corrected deferred
+script shutdown probe. It was stopped at6.01s: CPU sample84C exceeded the
+retained80C high boundary. SIGTERM process-group shutdown, exit-15; map report
+not created. This is THERMAL ABORT, not editor/map acceptance or CPU stability.
+No threshold relaxed, allocator workaround or firmware change applied.
+Commander remained active/success,NRestarts0. It logged fans100% at23:07:29
+Dublin then60% at23:07:40 when CPU40C. This proves commanded response, not
+actual fan/pump RPM or capacity. No targeted new kernel hardware/thermal/GPU
+fault/reset/timeout matches; post-test CPU returned40–45C.
+The earlier fixed5GHz characterization is already corrected to AI Optimized
+50/49+MCE RemoveAllLimits. The new workload abort strengthens the open
+CPU/power/cooling gate; do not repeat CPU-heavy acceptance hoping for a pass
+without addressing/reviewing its operating conditions. Do not replace the
+required unrestricted workload acceptance with a CPU-capped easier workload.
+
+Root-private0600 build/editor receipts/logs:
+/persist/nixos-readiness-20261005/final-unreal/. Running normal0p67xd... and
+bootd7c64889-aac3-4d09-8d14-5add9050cea3 unchanged; graphical session survives.
+CI37379900573/f327106 cancelled after newer push; run37380170986/732d208
+is in progress, not terminal PASS and not restarted.
+No host activation/reboot, project commit, full-build or soak pass claimed.
+
+## Post-workload storage integrity and cooling evidence — 2026-10-05
+
+Previous goal turn progress: final Unreal incremental build passed; actual
+editor thermal abort established a concrete open operating-condition gate.
+Current controller state statusactive,pid913,pump duty100%,basefans60%;
+serviceactive,NRestarts0. These are commanded duties/heartbeat, not measured
+pump/fan RPM or airflow. Avoid concurrent liquidctl ownership/USB reset while
+the keeper controls cooling. Requested user cooler model and physical
+pump/fan/radiator-airflow confirmation while remaining booted because software
+telemetry cannot establish these facts. No response inferred from elapsed time.
+No heavy CPU/editor retry, thermal boundary relaxation or firmware change.
+
+Read-only Btrfs scrub `sudo ionice -c3 nice -n19 btrfs scrub start -B -r /`
+finished exit0 at23:10:48Dublin:147.36GiB,54seconds,2.73GiB/s,no errors.
+All five Btrfs device error counters remain0. This is final-candidate online
+filesystem integrity evidence, not a destructive surface test or general
+sustained CPU/RAM acceptance. No repair, GC or optimization performed.
+
+smartctl7.5 -x -j: SMARTpassed,critical_warning0,44C,spare100%,wear18%,
+media_errors0,warning/critical-temperature-time0,unsafe_shutdowns2214.
+Cumulative error-log count12145 (earlier12143); latest admin queue0 entry
+decodes InvalidFieldInCommand, status0x2002,parameter40,LBA0,namespace0.
+Do not classify every historical entry as benign or claim the counter is
+unchanged. No media-error increase observed; causation of the extra admin
+entries unproven (SMART collection itself queried device capabilities).
+Root-private0600 full SMART JSON/scrub status/device stats retained in
+/persist/nixos-readiness-20261005/readiness-final-{nvme.json,scrub.txt,btrfs-stats.txt}.
+CPU51C during scrub,controller active; graphical session remains alive.
+CI37380561557/95c8aa9 observed in progress; no terminal claim/restart.
+Remaining thermal/cooling, memory, workloads, physical-chain/soak/freeze
+gates unchanged; storage integrity result does not waive them.
+
+## Session-preserving normal-boot checks and remaining-chain staging — 2026-10-05
+
+Previous turn progress: final read-only147.36GiB scrub accepted and physical
+cooling evidence limitation isolated. User cooler/airflow question remains
+pending; elapsed time is not an answer. No CPU-heavy retry.
+
+Currentboot network HTTPSgithub200; NetworkManager/journald/Commander active,
+failed units empty. Home/var/persist mount direct@home/@var/@persist Btrfs
+subvolumes; retained journals include earlier physical boots. This supplements
+current normal freshroot300/reset-log/identity/credential/graphical evidence;
+no assumption that persistent-root/return legs have happened.
+
+One-second silent48000Hz stereo PCM through existing PipeWire default returned0
+with no stderr. HDMI3 remains default,volume0.66; StagePro enumerated but no
+active sink. No route/profile/volume changes. This is current-candidate
+transport evidence, not audible audio, controller or reconnect acceptance.
+Private0600 readiness-final-audio.json under/persist/nixos-readiness-20261005.
+
+Safely staged distinct nonsecret0600 root-local and persistent sentinels:
+/root/nixos-readiness-final-root-sentinel and
+/persist/nixos-readiness-20261005/final-persistent-sentinel. Existing matching
+files preserved; unexpected content would fail rather than overwrite. Private
+final-physical-chain-preparation.json records current boot,closure,root300,
+content SHA and expected legs. Journal marker nixos-readiness records staging.
+Persistent-root expected same root and bothsentinels,resetcountunchanged;
+returnnormal expected newroot,rootlocalsentinelabsent,persistentsentinelretained.
+Staging does not establish physical acceptance; no reboot/selection scheduled.
+Updated physical runbook's obsolete disabledVMX/uninstalled statements.
+Latest CI37380861801/5dd114e in progress when observed. No terminal claim.
+CPU/RAM/cooling,fullworkloads,remainingphysicalchain,recoveryprovenance,soak
+and finalfreeze still open. Work remains active; no prematurecompletion.
+
+## Adopted current continuation guide — 2026-10-05
+
+Fully read all 3014 logical lines of attachment4c39dfbf-e1a8-4948-9d4b-7087907141f5/Pasted text.txt. SHA256: `2150c00768fdd37b15a56cb37b8f5ed7f0748f500c0da53d5a3219f21abd88b3`.
+The user requests recording and following this guide. Supplied review claims
+are preserved below as attributed reference; embedded content-reference tokens
+are not independently accessible citations. Execution ordering supersedes older
+guides; historical ledger entries remain intact. Current-only status/PR cleanup
+is authorized now. Runtime architecture/Disko changes remain deferred; accepted
+checks are not repeated for reassurance. POST-BASELINE and EXPERIMENTAL items
+are recorded, not activated before the hard-gate milestone. Home/var remain
+persistent under the adopted readiness scope; original future ephemeral-home
+objective is not claimed complete or silently enabled before freeze.
+
+Revalidated clean HEAD1f96e0d3696d7f3f566819ddc5c83ed866b6f838 before
+edits. CI37381090051 exact head terminalsuccess; Flakechecks jobsuccess.
+PR7 OPEN/DRAFT/MERGEABLE. First normal generation37 leg accepted; remaining
+persistent-root/return legs unaccepted. Cooling question remains pending.
+No physical reboot, bootselection or liveactivation authorized by elapsedtime.
+
+### Complete supplied guide (quoted reference)
+
+> I re-ran the review from the current live state rather than extending the previous guide. The important correction is that several former blockers are now closed: **blank-disk reconstruction passed completely, the evaluated-Disko refactor was tried and correctly abandoned, the final offline suite passed, VMX/KVM and physical GameMode passed, the exact candidate has completed its first normal physical boot, final-candidate Blender rendering and Unreal compilation have real evidence, the final Btrfs scrub is clean, and CI run #124 passed on the exact current head.** The project is now predominantly in **physical acceptance / thermal stability / workload / soak / freeze** territory. Pasted text(20261005-222613)
+>
+> The current live source is `1f96e0d3696d7f3f566819ddc5c83ed866b6f838`; PR #7 remains open, draft, and mergeable, with 57 commits and 61 changed files.
+>
+> # NixOS Pre-Optimization Readiness — Unified Current Continuation and Evidence Guide
+>
+> **Repository:** `P2949/NixosConf`
+> **Branch:** `feat/pre-optimization-readiness`
+> **Current reviewed HEAD:** `1f96e0d3696d7f3f566819ddc5c83ed866b6f838`
+> **Current HEAD message:** `docs: stage remaining physical chain and record live transport checks`
+> **Base:** `main` at `f89205c07e4d3a77900b046a5bf937944488647b`
+> **PR:** #7 — `Complete stock workstation pre-optimization readiness`
+> **PR state:** open / draft / mergeable
+> **Distance from main:** 57 ahead / 0 behind
+> **Changed files:** 61
+> **Latest exact-head CI:** GitHub Actions `Nix checks` run #124 — PASS
+> **Date:** 2026-10-05
+>
+> The branch identity, PR state and exact-head CI above are independently confirmed by the live repository.
+>
+> ---
+>
+> # 1. Purpose
+>
+> This document is the new continuation directive for completing `plan.md`.
+>
+> It supersedes the **execution ordering** in earlier continuation guides while preserving their evidence.
+>
+> `plan.md` should remain the append-only forensic ledger until the pre-optimization baseline is frozen. Do not rewrite earlier entries simply because later evidence superseded them.
+>
+> From this point forward, classify work into five states:
+>
+> ```text
+> ACCEPTED
+>     Terminal evidence exists and should not be repeated for reassurance.
+>
+> PARTIAL
+>     A meaningful portion passed, but the actual final gate has not.
+>
+> OPEN
+>     Required before the baseline tag.
+>
+> POST-BASELINE
+>     Useful cleanup, but changing it now would perturb a tested candidate.
+>
+> EXPERIMENTAL
+>     Interesting future NixOS/performance work, not a readiness gate.
+> ```
+>
+> The central conclusion of both fresh reviews is now stronger than before:
+>
+> > For this single-host repository, the NixOS architecture is essentially finished.
+>
+> The remaining work is overwhelmingly evidence, physical validation and baseline freezing—not another Nix/module redesign. :chatgpt-content-reference{index="8"}
+>
+> ---
+>
+> # 2. Source-of-truth hierarchy
+>
+> When historical records disagree, use this order:
+>
+> ```text
+> 1. Current live branch / intentional clean local source
+> 2. Terminal evidence tied to an exact source/artifact
+> 3. Current authoritative section of docs/status.md
+> 4. Current subsystem documentation
+> 5. Latest explicit acceptance/supersession entries in plan.md
+> 6. Physically accepted historical stable-refresh baseline
+> 7. Earlier plan.md history
+> 8. Older continuation guides
+> 9. feat/optimization-framework only as historical donor code
+> ```
+>
+> This is particularly important because `docs/status.md` and the PR description have accumulated historical snapshots alongside current truth. The attached maintainability review correctly identifies this as the largest remaining documentation problem. :chatgpt-content-reference{index="9"}
+>
+> ---
+>
+> # 3. Governing rule from now until the baseline tag
+>
+> ## No more runtime architecture work unless an actual defect requires it
+>
+> Do not broadly refactor:
+>
+> ```text
+> flake.nix
+> hosts/
+> profiles/
+> modules/core/
+> modules/storage/
+> modules/workstation/
+> modules/hardware/
+> Home Manager architecture
+> ephemeral-root architecture
+> activation-safety architecture
+> test registry
+> recovery-image architecture
+> Commander Core architecture
+> username architecture
+> CI architecture
+> ```
+>
+> The current root flake is already appropriately small: inputs, package sets, authoritative username, dev shells, validation registry and the two top-level NixOS configurations.
+>
+> The desktop host contains genuine host policy rather than generic machinery: host/storage imports, workstation policy, stock contamination protection, activation safety, scrub schedule, bootloader, firmware/microcode and Commander Core physical policy.
+>
+> That is the correct shape.
+>
+> Do not split the host into `boot.nix`, `cooling.nix`, `identity.nix`, etc. simply because that is possible. The attached source review explicitly recommends leaving this organization alone. :chatgpt-content-reference{index="12"}
+>
+> ---
+>
+> # 4. Major correction from the previous guide: reconstruction is DONE
+>
+> The previous guide still treated blank-disk reconstruction as the major active software gate and suggested trying one final evaluated-Disko cleanup.
+>
+> That recommendation is now superseded.
+>
+> The evaluated-Disko approach **was actually attempted**. It failed because Disko's computed script values retained the production device path during device rebinding. The direct import of the production Disko source file was restored, and the restored implementation subsequently passed the complete reconstruction test. :chatgpt-content-reference{index="13"}
+>
+> Current installer layout source remains intentionally simple:
+>
+> ```nix
+> imports = [
+>   inputs.disko.nixosModules.disko
+>   {
+>     disko.devices =
+>       (import ../../../hosts/desktop/disko.nix).disko.devices;
+>   }
+> ];
+> ```
+>
+> The installed workstation itself still derives from the real desktop using:
+>
+> ```nix
+> desktopSystem.extendModules
+> ```
+>
+> so production host/profile/Home Manager/persistence/activation composition is inherited.
+>
+> ## Reconstruction acceptance
+>
+> The final test now proves:
+>
+> ```text
+> blank 96 GiB virtual disk
+>     ↓
+> production GPT/Disko layout
+>     ↓
+> 4 GiB ESP
+> 32 GiB swap
+> Btrfs production subvolumes
+>     ↓
+> production credential-path contract
+> persistent machine-id contract
+>     ↓
+> nixos-install of extended real desktop
+>     ↓
+> EFI fallback loader
+>     ↓
+> installer shuts down
+>     ↓
+> independent UEFI boot from installed disk only
+>     ↓
+> NO host Nix store
+> NO 9p runtime mount
+> NO host-supplied kernel
+> NO host-supplied initrd
+>     ↓
+> normal ephemeral-root reset
+>     ↓
+> persistent data + journal + credentials survive
+>     ↓
+> persistent-root one-shot boot
+>     ↓
+> same root identity
+> no reset increment
+>     ↓
+> return to normal
+>     ↓
+> new ephemeral root
+> persistent state retained
+>     ↓
+> offline read-only Btrfs inspection
+>     ↓
+> all seven production subvolumes verified
+> ```
+>
+> The final read-only inspection uses:
+>
+> ```text
+> ro,rescue=nologreplay,subvolid=5
+> ```
+>
+> after an earlier `nologreplay` syntax attempt exposed the final test-harness failure. The corrected version passed terminally.
+>
+> ## Final decision
+>
+> **Do not revisit evaluated Disko.**
+>
+> Document the small source-level duplication and keep the implementation that is simple, explicit and proven.
+>
+> The fresh review explicitly withdraws the earlier recommendation to replace it. :chatgpt-content-reference{index="17"}
+>
+> ---
+>
+> # 5. Final offline software validation — ACCEPTED
+>
+> The repository records the final offline validation as accepted.
+>
+> It includes:
+>
+> ```text
+> full flake checks
+> five root VM scenarios
+> workstation-smoke
+> native activation-actions
+> successful blank-disk reconstruction
+> matching recovery ISO build
+> stock-contamination negative fixture
+> full Nix-store content verification
+> ```
+>
+> The reconstruction and activation-action derivations reproduced their already successful results, while the root scenarios and workstation smoke were executed again. The stock-negative fixture failed for the intended optimization-contamination diagnostic rather than for an unrelated error.
+>
+> Current central validation registry remains sensibly split between cheap checks and explicit heavyweight tests.
+>
+> ### Cheap checks
+>
+> ```text
+> activation-safety-config
+> activation-safety
+> btrfs-maintenance-config
+> btrfs-maintenance-shell
+> ephemeral-root-shell
+> maintenance-guard
+> commander-core-config
+> commander-core-python
+> baseline-collector
+> desktop-evaluation
+> ephemeral-root-config
+> formatting
+> statix
+> deadnix
+> ```
+>
+> ### Explicit heavyweight outputs
+>
+> ```text
+> blank-disk-reconstruction
+> activation-safety-actions
+> stock-contamination-negative
+> workstation-smoke
+> reset-control
+> impermanence-root-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> Historical `impermanence-root-test-*` aliases remain intentionally because `plan.md` still refers to them.
+>
+> Leave those aliases until the ledger is archived.
+>
+> ---
+>
+> # 6. Exact-head CI — ACCEPTED
+>
+> Current branch:
+>
+> ```text
+> 1f96e0d3696d7f3f566819ddc5c83ed866b6f838
+> ```
+>
+> GitHub Actions run:
+>
+> ```text
+> #124
+> Nix checks
+> pull_request
+> completed
+> success
+> ```
+>
+> is tied to that exact head.
+>
+> The run's Flake checks job completed setup, checkout, Nix installation and the actual flake-check step successfully.
+>
+> Earlier GitHub runner-acquisition failures are now historical noise rather than a current blocker.
+>
+> ---
+>
+> # 7. Current candidate and physical generation
+>
+> The readiness candidate is now installed as **generation 37**.
+>
+> Current normal candidate store identity:
+>
+> ```text
+> 0p67xd3scigqmmn65a0x5skdcsf6025b
+> ```
+>
+> Current persistent-root candidate:
+>
+> ```text
+> ph12l3y4k9jjmp5vhxwlkc11x4js2gjx
+> ```
+>
+> Generation 37 has entries for both.
+>
+> The accepted generation-35 normal/persistent-root fallback remains available. ESP kernel/initrd copies for the generation-37 entries were checked against their store artifacts, and both candidate closures have independent GC roots.
+>
+> Do not install the candidate again unless its runtime-affecting source changes.
+>
+> ---
+>
+> # 8. Historical accepted fallback baseline — RETAIN
+>
+> The previous fully physically accepted stable-refresh control remains important recovery evidence.
+>
+> Accepted historical source:
+>
+> ```text
+> c5e036b6e87d9aa77700909b508ccc0c3978d5b2
+> ```
+>
+> Stable Nixpkgs:
+>
+> ```text
+> 0d9e9b832d03ac387417e16ce1febf73b2e631e1
+> ```
+>
+> Accepted normal closure:
+>
+> ```text
+> /nix/store/czk5a2wn8di3pgv8a6w0b8aj3286g3h3-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> Accepted persistent-root closure:
+>
+> ```text
+> /nix/store/9ppcqjkfnid501na0wc8jjysynp0kp1p-nixos-system-desktop-26.05.20261004.0d9e9b8
+> ```
+>
+> Kernel:
+>
+> ```text
+> 6.18.55
+> ```
+>
+> Stable physical chain:
+>
+> ```text
+> normal
+>   root 295
+>     ↓
+> persistent-root
+>   root 295 retained
+>     ↓
+> normal
+>   root 297
+> ```
+>
+> Machine identity and persistent state survived; root-local probe disappeared on the final normal reset.
+>
+> Do not prune this fallback before the new baseline is completely accepted and tagged.
+>
+> ---
+>
+> # 9. Recovery ISO — BUILD/COPY ACCEPTED, PHYSICAL-DRILL PROVENANCE OPEN
+>
+> Current stable recovery artifact remains:
+>
+> ```text
+> /nix/store/d55ny1z4d53slhz3ilvyy2mg6d8khrqn-nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso/iso/nixos-minimal-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Ventoy filename:
+>
+> ```text
+> nixos-workstation-recovery-26.05.20261004.0d9e9b8-x86_64-linux.iso
+> ```
+>
+> The artifact's build, copy, flush, post-copy checksum and filesystem checks have evidence.
+>
+> What remains open is **not** another ISO build.
+>
+> The open item is the exact physical recovery-drill provenance:
+>
+> ```text
+> Which exact ISO was booted?
+> Which Ventoy entry?
+> When?
+> What disk identity was observed?
+> Which subvolumes were mounted?
+> Were they mounted read-only?
+> What exact checks were performed?
+> What terminal/private receipt corresponds to that event?
+> ```
+>
+> `docs/physical-root-validation.md` explicitly says the reported earlier read-only drill still needs reconciliation before another drill is scheduled.
+>
+> ## Decision rule
+>
+> First reconcile existing private evidence.
+>
+> Only schedule another physical recovery boot if the existing evidence cannot prove the required event.
+>
+> Do not reboot merely to make documentation prettier.
+>
+> ---
+>
+> # 10. Independent backup and restore — ACCEPTED
+>
+> The home backup gate is complete.
+>
+> Main archive:
+>
+> ```text
+> 27,844,003,241 bytes
+> ```
+>
+> SHA-256:
+>
+> ```text
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> Evidence:
+>
+> ```text
+> zstd integrity PASS
+> SHA-256 recorded
+> two Blender files restored
+> one actual Unreal project descriptor restored
+> all three source/restored hashes match
+> 47-file engine supplement separately restored/hash-verified
+> clean terminal runner exit
+> clean Ventoy unmount
+> ```
+>
+> Ventoy folder:
+>
+> ```text
+> NixosConf-backups/2026-10-05
+> ```
+>
+> Media UUID:
+>
+> ```text
+> 1BF6-1635
+> ```
+>
+> The operation did not repartition or format Ventoy and did not remove existing recovery images. Approximately 12 GiB remained before unmount, above the runner's 4 GiB reserve.
+>
+> Private receipts remain under:
+>
+> ```text
+> /persist/nixos-ventoy-backup-20261005
+> ```
+>
+> ## Backup freshness
+>
+> This backup is a point-in-time snapshot.
+>
+> At final freeze:
+>
+> ```text
+> if meaningful new university/project work exists since snapshot:
+>     perform a small incremental/fresh backup of that new work
+> else:
+>     retain the accepted archive
+> ```
+>
+> Do not automatically repeat the 27.8 GB archive.
+>
+> ---
+>
+> # 11. Secret recovery — ACCEPTED
+>
+> Production credential contract remains:
+>
+> ```text
+> /persist/secrets/<username>-password-hash
+> ```
+>
+> The separate secrets backup was actually used during a previous real recovery according to the user's report.
+>
+> That gate is complete.
+>
+> Do not introduce `sops-nix`, `agenix`, or another secret system merely to replace a contract that is already working and proven for this single-user workstation.
+>
+> ---
+>
+> # 12. Activation safety — ACCEPTED
+>
+> Current namespace:
+>
+> ```text
+> workstation.activationSafety
+> ```
+>
+> Current physical host enables it with:
+>
+> ```text
+> ESP reserve = 256 MiB
+> ```
+>
+> It asserts:
+>
+> ```text
+> ephemeral-root contract exists
+> / is a concrete Btrfs filesystem
+> /boot is a concrete vfat filesystem
+> the selected user has hashedPasswordFile configured
+> ```
+>
+> and exposes four pre-switch roles:
+>
+> ```text
+> persistence
+> credentials
+> esp
+> topology
+> ```
+>
+>
+>
+> These checks are intended to reject dangerous activation conditions.
+>
+> Do not bypass them.
+>
+> Testing already covers hardware-free fixtures, composition assertions, native activation actions and live read-only prerequisites.
+>
+> No more architecture work is justified here.
+>
+> ---
+>
+> # 13. Stock optimization contamination control — ACCEPTED
+>
+> Stock system forbids experiment-owned output namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+>
+>
+> The negative fixture has already demonstrated intended rejection.
+>
+> This is the stock control boundary for optimization v2.
+>
+> Keep it inert until after the baseline tag.
+>
+> ---
+>
+> # 14. Btrfs/reset architecture — ACCEPTED
+>
+> The reset feature has already accumulated extensive destructive-case testing and successful physical history.
+>
+> The code now has the correct conceptual split:
+>
+> ```text
+> Nix module
+>     typed config
+>     validation
+>     systemd wiring
+>     escaped data
+>
+> reset.sh
+>     operational state machine
+>     Btrfs topology checks
+>     staging validation
+>     root replacement
+>     interrupted recovery
+> ```
+>
+> The blank reconstruction now additionally proves the entire reset/recovery chain on a fresh installation.
+>
+> Do not re-architect this subsystem without an actual defect.
+>
+> ---
+>
+> # 15. Current firmware baseline — CAPTURED
+>
+> The BIOS photo set corrected an important earlier assumption.
+>
+> This is **not** a simple fixed 5.0 GHz all-core / manual-voltage setup.
+>
+> Captured firmware policy is:
+>
+> ```text
+> CPU platform:          Comet Lake
+> all 6 cores:           enabled
+> Hyper-Threading:       enabled
+>
+> CPU ratio mode:        AI Optimized
+> light/heavy ratios:    50 / 49
+> target turbo:          5000 MHz
+> target AVX:            5000 MHz
+> AVX offset current:    0
+>
+> max cache:             48x
+> target cache:          4800 MHz
+>
+> MCE:                   Enabled — Remove All Limits
+> core/cache voltage:    Auto
+> BCLK-aware adaptive:   Enabled
+> BCLK:                  100 MHz
+>
+> XMP:                   XMP I
+> RAM:                   DDR4-3200
+> visible primaries:     16-18-18-36...
+> DRAM voltage:          1.35 V
+>
+> VMX/VT-x:              Enabled
+> VT-d:                  Enabled
+> SR-IOV:                Enabled
+> Above 4G:              Enabled
+> ReBAR:                 Auto
+>
+> Hardware prefetcher:   Enabled
+> Adjacent prefetch:     Enabled
+>
+> Primary display:       PCIe
+> iGPU Multi-Monitor:    Disabled
+> ```
+>
+> :chatgpt-content-reference{index="27"} :chatgpt-content-reference{index="28"}
+>
+> The repo has incorporated this evidence into the firmware baseline.
+>
+> ### ASUS prediction values
+>
+> The BIOS also displayed:
+>
+> ```text
+> SP score:                72
+> cooler score:            155
+> 5.0 GHz non-AVX Vreq:    1.412 V @ L4
+> 5.0 GHz AVX Vreq:        1.462 V @ L4
+> 4.8 GHz cache Vreq:      1.332 V @ L4
+>
+> heavy non-AVX prediction: 4931 MHz
+> heavy AVX prediction:     4708 MHz
+> heavy cache prediction:   4884 MHz
+> ```
+>
+> Those are ASUS prediction values, **not measured load voltages or measured sustained clocks**. :chatgpt-content-reference{index="30"}
+>
+> ## Firmware unknowns
+>
+> The photo set does not establish:
+>
+> ```text
+> PL1
+> PL2
+> Tau
+> actual LLC
+> current limits
+> VRM switching/current policy
+> detailed secondary/tertiary RAM timings
+> command rate
+> Speed Shift configuration
+> individual C-state policy
+> CSM state
+> Secure Boot
+> PTT/TPM
+> PCIe generation settings
+> ASPM
+> SATA policy
+> Q-Fan/fan curves
+> ```
+>
+> :chatgpt-content-reference{index="31"}
+>
+> These are legitimate unknowns, but **they do not justify another firmware reboot solely for evidence collection**.
+>
+> Record more if conveniently available later.
+>
+> ---
+>
+> # 16. VMX/KVM — ACCEPTED
+>
+> VMX is no longer open.
+>
+> Post-firmware boot shows:
+>
+> ```text
+> /dev/kvm exists
+> p2949 can access it
+> ```
+>
+> QEMU 10.2.4 successfully initialized with:
+>
+> ```text
+> -accel kvm -cpu host
+> ```
+>
+> and QMP reported:
+>
+> ```text
+> enabled = true
+> present = true
+> ```
+>
+> The process exited successfully.
+>
+> This closes the physical KVM initialization gate.
+>
+> It does **not** close Android Studio emulator acceptance.
+>
+> ---
+>
+> # 17. Current first physical candidate boot — ACCEPTED
+>
+> The user rebooted normal generation 37 after enabling VMX.
+>
+> Boot:
+>
+> ```text
+> d7c64889-aac3-4d09-8d14-5add9050cea3
+> ```
+>
+> Current normal closure:
+>
+> ```text
+> 0p67xd3scigqmmn65a0x5skdcsf6025b
+> ```
+>
+> Root:
+>
+> ```text
+> subvolume ID 300
+> UUID a3046ca3-1791-b646-a0d2-4bf142a152d3
+> ```
+>
+> The current boot has a matching reset-complete record, with accumulated reset count 6.
+>
+> Verified:
+>
+> ```text
+> fresh root
+> persisted machine identity matches
+> credential source matches
+> no failed system units
+> Commander Core active/success
+> Commander Core restart count 0
+> graphical session alive
+> network working
+> /home mounted from @home
+> /var mounted from @var
+> /persist mounted from @persist
+> retained journal history visible
+> ```
+>
+>
+>
+> This closes the **first normal leg** of the final candidate chain.
+>
+> It does not yet close the physical chain.
+>
+> ---
+>
+> # 18. Exact next physical gate: finish the candidate boot chain
+>
+> The remaining chain has already been safely staged.
+>
+> Sentinels:
+>
+> ```text
+> /root/nixos-readiness-final-root-sentinel
+>
+> /persist/nixos-readiness-20261005/final-persistent-sentinel
+> ```
+>
+> A private preparation receipt records:
+>
+> ```text
+> current boot
+> current closure
+> root 300 identity
+> sentinel hashes
+> expected behavior
+> ```
+>
+>
+>
+> ## Leg 2 — persistent-root
+>
+> Boot the **generation-37 persistent-root specialisation**.
+>
+> Require:
+>
+> ```text
+> /run/current-system = exact persistent-root candidate
+>
+> root subvolume = 300
+> root UUID unchanged
+>
+> reset-completion count unchanged
+>
+> /root/nixos-readiness-final-root-sentinel EXISTS
+> /persist/.../final-persistent-sentinel EXISTS
+>
+> machine-id matches persisted source
+> credential source matches
+> persistent journals available
+>
+> /home
+> /var
+> /persist
+> /nix
+> optimization persistence
+> all correct
+>
+> NetworkManager active
+> dbus active
+> systemd-logind active
+> Commander Core active
+> Home Manager active
+>
+> zero failed units
+> ```
+>
+> Persistent-root is deliberately expected to **retain** the root-local sentinel.
+>
+> A new reset during this leg is a failure.
+>
+> ## Leg 3 — return to normal
+>
+> Boot generation-37 normal again.
+>
+> Require:
+>
+> ```text
+> /run/current-system = exact normal candidate
+>
+> root subvolume != 300
+> reset count = previous + 1
+>
+> /root/nixos-readiness-final-root-sentinel ABSENT
+> /persist/.../final-persistent-sentinel PRESENT
+>
+> machine-id unchanged
+> credentials correct
+> persistent journals available
+>
+> persistent mounts healthy
+> networking healthy
+> cooling healthy
+> graphical login healthy
+> zero failed units
+> ```
+>
+> This closes the final exact-candidate normal → persistent-root → normal acceptance.
+>
+> The current runbook explicitly says these two remaining legs are still unaccepted.
+>
+> ### Priority
+>
+> This should be the next physical action once the user is willing to interrupt the current session.
+>
+> No new source modification is required beforehand.
+>
+> ---
+>
+> # 19. GameMode physical policy — ACCEPTED
+>
+> On the final candidate:
+>
+> ```text
+> p2949 ∈ gamemode
+> gamemoded -t exit 0
+> ```
+>
+> The test passed:
+>
+> ```text
+> registration
+> client lifecycle
+> reaper
+> supervisor
+> ioprio
+> actual CPU governor switching
+> ```
+>
+> All 12 logical CPU policies returned afterward to:
+>
+> ```text
+> governor = powersave
+> EPP      = balance_performance
+> ```
+>
+> and:
+>
+> ```text
+> split_lock_mitigate = 1
+> GameMode inactive afterward
+> ```
+>
+> No permanent performance governor was introduced.
+>
+> This closes the GameMode helper/governor gate.
+>
+> Actual gameplay remains separate.
+>
+> ---
+>
+> # 20. Blender final-candidate evidence — PARTIAL BUT STRONG
+>
+> On the post-VMX final normal candidate, the actual Development Blender project:
+>
+> ```text
+> mirror_techproof_v006_persistent_wipe.blend
+> ```
+>
+> was rendered using:
+>
+> ```text
+> 33-object actual scene
+> actual camera
+> 1920x1080
+> 100% scale
+> 64 samples
+> RX 9070 XT HIP only
+> CPU rendering disabled
+> ```
+>
+> Result:
+>
+> ```text
+> exit 0
+> render time 12.6673 s
+> PNG produced
+> source SHA-256 unchanged
+> no project save
+> no preference save
+> no new targeted amdgpu fault/reset/timeout
+> Commander Core active
+> Commander Core restarts = 0
+> ```
+>
+>
+>
+> This is meaningful final-candidate GPU compute/render evidence.
+>
+> Still open:
+>
+> ```text
+> interactive Blender workflow
+> longer sustained render
+> combined thermal stability under extended use
+> ```
+>
+> Do not repeat the same 12-second basic render just to collect another pass.
+>
+> The next Blender test should add coverage.
+>
+> ---
+>
+> # 21. Unreal final-candidate evidence — BUILD PASS, EDITOR BLOCKED BY THERMALS
+>
+> Final-candidate incremental build passed:
+>
+> ```text
+> AI_Gavin_ProjectEditor
+> Steam FHS
+> Epic Clang 20.1.8
+> Rocky Linux 8 SDK/sysroot
+> bundled libc++
+> one shared-library link action
+> UBT 2.55 s
+> wrapper 4.00 s
+> MaxParallelActions = 2
+> peak CPU sample = 60 C
+> project Git-clean
+> ```
+>
+>
+>
+> This closes:
+>
+> ```text
+> final-candidate Unreal incremental build
+> ```
+>
+> It does **not** close a full rebuild.
+>
+> ## Editor/map attempt
+>
+> A separate final-candidate Wayland/Vulkan editor/map trial used the previously corrected deferred shutdown probe.
+>
+> It reached:
+>
+> ```text
+> 84 C
+> ```
+>
+> after approximately:
+>
+> ```text
+> 6 seconds
+> ```
+>
+> and the retained 80 C safety guard terminated it.
+>
+> Result:
+>
+> ```text
+> THERMAL ABORT
+> not a successful editor/map test
+> not a CPU-stability pass
+> ```
+>
+> No threshold was weakened.
+>
+> No allocator workaround was adopted.
+>
+> No firmware policy was changed.
+>
+> Commander Core commanded 100% fan duty, stayed active with zero restarts, and later returned to 60% after the CPU cooled. No targeted new GPU reset/hardware/thermal kernel errors were recorded.
+>
+> This is now one of the most important open gates.
+>
+> ---
+>
+> # 22. CPU / cooling gate — OPEN AND CURRENTLY THE MAIN TECHNICAL BLOCKER
+>
+> There are now **two independent thermal-stop observations**.
+>
+> ## Earlier stress-ng test
+>
+> A planned 30-minute stress test:
+>
+> ```text
+> 12 workers
+> nice 19
+> 5-second sensor polling
+> 80 C guard
+> ```
+>
+> was stopped after only several seconds when the CPU reached the boundary.
+>
+> It established:
+>
+> ```text
+> no observed throttle-counter increase
+> no matching hardware/MCE fault
+> Commander Core remained active
+> fan command responded
+> CPU cooled afterward
+> ```
+>
+> but did not establish sustained stability.
+>
+> ## Final-candidate Unreal editor
+>
+> The real editor trial later hit:
+>
+> ```text
+> 84 C
+> ```
+>
+> within about six seconds and was stopped.
+>
+> That makes the CPU/power/cooling question more important, not less.
+>
+> ## Current Commander Core evidence
+>
+> Current controller policy:
+>
+> ```text
+> pump command        100%
+> base fan command     60%
+> high fan command    100%
+> high threshold       65 C
+> low threshold        60 C
+> ```
+>
+> The controller service is active and has zero restarts.
+>
+> However:
+>
+> ```text
+> commanded duty
+>     ≠
+> measured pump RPM
+>     ≠
+> measured fan RPM
+>     ≠
+> known radiator airflow
+>     ≠
+> proven cooling capacity
+> ```
+>
+> The latest ledger explicitly isolates this limitation.
+>
+> ## Next thermal/cooling action
+>
+> Before running another CPU-heavy editor/stress test, establish as much as practical about:
+>
+> ```text
+> AIO pump physically operating
+> radiator fans physically spinning
+> radiator airflow direction
+> radiator obstruction/dust state
+> cooler mounting/contact
+> coolant/pump behavior
+> actual CPU load voltage
+> motherboard power behavior
+> ambient conditions
+> ```
+>
+> Also retain the firmware reality:
+>
+> ```text
+> AI Optimized 50/49
+> Auto/adaptive voltage
+> MCE Remove All Limits
+> ```
+>
+> rather than reasoning from the older "fixed 5 GHz" model.
+>
+> Do **not** raise the 80 C acceptance threshold just to get a green result.
+>
+> Do **not** artificially CPU-cap Unreal and call it equivalent to unrestricted final acceptance.
+>
+> If the existing firmware policy cannot sustain intended workloads within the chosen operating envelope, changing that policy may be necessary—but any such change creates a **new baseline** and requires relevant retesting.
+>
+> ---
+>
+> # 23. RAM stability — OPEN
+>
+> The machine has:
+>
+> ```text
+> 32 GiB DDR4-3200
+> XMP I
+> visible 16-18-18-36 primary timing profile
+> 1.35 V configured
+> ```
+>
+> :chatgpt-content-reference{index="43"}
+>
+> No final sustained memory-stability gate has yet been recorded.
+>
+> Because the graphical session had only about 25 GiB available during previous inspection, do not exhaust nearly all RAM merely because a memory test exists.
+>
+> Run the real memory-stability gate during a dedicated period.
+>
+> Acceptance:
+>
+> ```text
+> meaningful duration / coverage
+> zero memory errors
+> no MCE/hardware error
+> no unexplained OOM
+> system remains healthy afterward
+> ```
+>
+> Any firmware RAM-frequency/timing/voltage change invalidates the previous memory result.
+>
+> ---
+>
+> # 24. Storage integrity — ACCEPTED WITH A DOCUMENTED NVMe LOG CAVEAT
+>
+> Final candidate received a read-only Btrfs scrub:
+>
+> ```text
+> 147.36 GiB
+> 54 s
+> 2.73 GiB/s
+> exit 0
+> no scrub errors
+> all five Btrfs device error counters = 0
+> ```
+>
+>
+>
+> NVMe SMART:
+>
+> ```text
+> SMART overall          PASS
+> critical_warning       0
+> temperature            44 C
+> available spare        100%
+> wear                    18%
+> media errors            0
+> warning temp time       0
+> critical temp time      0
+> ```
+>
+> The important caveat is:
+>
+> ```text
+> error-log count 12143 → 12145
+> ```
+>
+> and the latest entry decoded as:
+>
+> ```text
+> InvalidFieldInCommand
+> admin queue
+> namespace 0
+> LBA 0
+> ```
+>
+> The project correctly does **not** claim every historical entry is benign, and does not pretend that counter was unchanged.
+>
+> No media-error increase was observed.
+>
+> Because the SMART command itself queried capabilities, causation of those two new admin-log entries remains unproven.
+>
+> ## Classification
+>
+> ```text
+> Btrfs integrity:       PASS
+> media-health indicators: PASS
+> NVMe admin error-log:  documented caveat; watch for meaningful continued growth
+> ```
+>
+> Do not rerun a destructive storage test without a reason.
+>
+> ---
+>
+> # 25. Nix store integrity — ACCEPTED
+>
+> The full Nix store content verification passed.
+>
+> This is explicitly listed in the current PR validation evidence.
+>
+> Do not repeat it routinely before every remaining workload.
+>
+> Repeat only if:
+>
+> ```text
+> store corruption is suspected
+> unexpected disk errors appear
+> baseline source/output materially changes
+> ```
+>
+> ---
+>
+> # 26. Audio — TRANSPORT PASS, REAL STAGE PRO ACCEPTANCE OPEN
+>
+> Current final-candidate evidence:
+>
+> ```text
+> Creative Stage Pro USB enumerates
+> ALSA path previously proven
+> current PipeWire default transport passed silent PCM
+> ```
+>
+> Latest live test:
+>
+> ```text
+> 1 s
+> 48 kHz
+> stereo
+> PipeWire default
+> exit 0
+> no stderr
+> ```
+>
+> Current default:
+>
+> ```text
+> HDMI 3
+> volume ~0.66
+> ```
+>
+> Stage Pro:
+>
+> ```text
+> enumerated
+> no active PipeWire sink
+> profile still not accepted as real-use path
+> ```
+>
+>
+>
+> Final audio acceptance should prove:
+>
+> ```text
+> Stage Pro active PipeWire profile
+> sink appears
+> audible output
+> intended route
+> replug recovery
+> reboot recovery
+> ```
+>
+> If HDMI is actually the intended baseline default instead, document that and test Stage Pro only to the degree required by its intended use.
+>
+> ---
+>
+> # 27. Android — KVM PASS, APPLICATION WORKLOAD OPEN
+>
+> Physical virtualization infrastructure is now proven.
+>
+> Actual Android acceptance is not.
+>
+> Repository inspection found no SDK/AVD in the scoped locations checked, including standard home/development paths. This must not be generalized into "Android SDK does not exist anywhere."
+>
+> Final requirement:
+>
+> ```text
+> Android Studio starts
+> Java project opens/builds
+> AVD exists or is created
+> AVD uses KVM acceleration
+> guest boots
+> basic interaction works
+> shutdown/restart works
+> ```
+>
+> Do not treat the successful headless QEMU KVM initialization as equivalent to Android emulator acceptance.
+>
+> ---
+>
+> # 28. Gaming — SYNTHETIC STACK PROVEN, REPRESENTATIVE GAMES OPEN
+>
+> Earlier evidence already proved:
+>
+> ```text
+> Gamescope 3.16.23
+> native Wayland child
+> XCB/XWayland child
+> 600-frame Vulkan cube
+> MangoHud 0.8.3 initialization
+> overlay + shim mapping
+> 155 Hz outer display
+> ```
+>
+> GameMode helper/governor switching is now also physically accepted on the final candidate.
+>
+> Still required:
+>
+> ```text
+> one representative native Vulkan game
+> one representative Proton game
+> Gamescope where normally used
+> MangoHud
+> GameMode
+> controller
+> audio
+> VRR where normally used
+> HDR where normally used
+> normal launch/exit
+> no GPU reset
+> ```
+>
+> Synthetic cube testing should not be repeated instead of real gameplay.
+>
+> ---
+>
+> # 29. Desktop/session basic final-candidate evidence — PARTIALLY ACCEPTED
+>
+> Current normal boot already establishes:
+>
+> ```text
+> graphical login/session
+> network connectivity
+> persistent mounts
+> NetworkManager active
+> journald active
+> Commander Core active
+> zero failed units
+> ```
+>
+>
+>
+> During final workload acceptance, still use the workstation normally enough to cover:
+>
+> ```text
+> Hyprland/UWSM
+> Waybar
+> Fuzzel
+> Alacritty
+> portals
+> notifications
+> Firefox
+> clipboard/file manager
+> persistent user state
+> reboot recovery
+> ```
+>
+> The new Alacritty/Fuzzel modules fit naturally into the existing Home Manager architecture and are not evidence that another directory/framework layer is needed. :chatgpt-content-reference{index="50"}
+>
+> ---
+>
+> # 30. Current Home Manager organization — GOOD
+>
+> Current desktop module owns:
+>
+> ```text
+> appearance
+> Hyprland
+> Waybar
+> notifications
+> Fuzzel
+> Alacritty
+> desktop utilities
+> VS Code
+> ```
+>
+>
+>
+> Development currently owns:
+>
+> ```text
+> Blender
+> Unreal
+> clang-tools
+> nixfmt
+> ```
+>
+>
+>
+> The only clear semantic mismatch is VS Code living under desktop.
+>
+> **Do not move it before the baseline tag.**
+>
+> Post-baseline:
+>
+> ```text
+> home/p2949/desktop/default.nix
+>     remove vscode
+>
+> home/p2949/development/default.nix
+>     add vscode
+> ```
+>
+> This is cleanup, not readiness work. :chatgpt-content-reference{index="53"}
+>
+> ---
+>
+> # 31. Immediate documentation cleanup — DO NOW
+>
+> This is the one source-level task worth doing before the baseline because it is documentation-only and cannot change the NixOS closure.
+>
+> ## `docs/status.md`
+>
+> The current file begins with a correct authoritative section, but later retains historical statements such as:
+>
+> ```text
+> Still open: VMX enablement
+> candidate remains uninstalled
+> reconstruction running
+> ```
+>
+> before still later sections record the opposite.
+>
+> The file explicitly labels those as superseded, so the project is not lying—but it is becoming difficult to scan.
+>
+> Rewrite `docs/status.md` to contain only:
+>
+> ```text
+> # Current readiness status
+>
+> Current source / PR / CI
+>
+> Current normal/persistent candidate identities
+>
+> Current physical generation and boot state
+>
+> Completed gates
+>
+> Partially completed gates
+>
+> Open hard gates
+>
+> Recovery / backup state
+>
+> Current firmware baseline
+>
+> Pointers to detailed evidence
+> ```
+>
+> No historical snapshots.
+>
+> Historical state belongs in `plan.md`.
+>
+> ## PR #7 description
+>
+> The PR body has the same problem.
+>
+> Near its beginning it still says hosted CI did not certify the final head and says VMX was disabled, while its later appended physical section says VMX was enabled. The live repository now proves CI #124 passed the current head.
+>
+> Rewrite—not append—the PR body to current truth.
+>
+> ### Documentation ownership rule
+>
+> Adopt:
+>
+> ```text
+> README.md
+>     timeless repository orientation
+>
+> docs/status.md
+>     current truth only
+>
+> PR #7 description
+>     current high-level readiness state only
+>
+> plan.md
+>     append-only chronological forensic ledger
+>
+> subsystem docs
+>     design + operation + accepted subsystem evidence
+> ```
+>
+> This recommendation from the fresh review is correct and should be implemented now. :chatgpt-content-reference{index="57"}
+>
+> ---
+>
+> # 32. Exact next-step execution order
+>
+> The project should now continue in this order.
+>
+> ## Phase 1 — Documentation truth cleanup
+>
+> Without modifying runtime source:
+>
+> ```text
+> rewrite docs/status.md to current-only truth
+> rewrite PR #7 body to current-only truth
+> record CI #124 exact-head PASS
+> preserve plan.md unchanged except append-only evidence
+> ```
+>
+> Run normal documentation/flake validation afterward.
+>
+> No physical reboot required.
+>
+> ---
+>
+> ## Phase 2 — Complete final physical root chain
+>
+> Current first normal leg is already accepted.
+>
+> Next:
+>
+> ```text
+> persistent-root generation37
+>     ↓
+> verify same root300 + both sentinels + no reset
+>     ↓
+> return to generation37 normal
+>     ↓
+> verify new root + root-local sentinel gone + persistent sentinel survives
+> ```
+>
+> Record:
+>
+> ```text
+> boot IDs
+> closures
+> root IDs/UUID
+> reset count
+> sentinel hashes/state
+> machine-id comparison
+> credential comparison
+> mounts
+> service state
+> failed units
+> ```
+>
+> This is the next mandatory physical gate.
+>
+> ---
+>
+> ## Phase 3 — Resolve cooling / CPU operating condition
+>
+> Before another heavy test:
+>
+> ```text
+> confirm physical AIO/pump/fan/radiator condition
+> review actual thermal behavior
+> preserve AI Optimized 50/49 firmware facts
+> do not assume fixed 5 GHz
+> do not weaken 80 C guard
+> ```
+>
+> If hardware is physically functioning as expected, run a new sustained CPU test.
+>
+> If it still rapidly exceeds the accepted thermal envelope, decide whether the **firmware performance policy itself** must change.
+>
+> Any firmware CPU-policy change must be documented and followed by relevant final-candidate revalidation.
+>
+> ---
+>
+> ## Phase 4 — RAM stability
+>
+> During a dedicated maintenance/testing period:
+>
+> ```text
+> test substantial RAM capacity
+> meaningful duration
+> zero errors required
+> ```
+>
+> Avoid starving the active desktop merely to satisfy a synthetic test.
+>
+> ---
+>
+> ## Phase 5 — Complete real workloads
+>
+> ### Unreal
+>
+> Required:
+>
+> ```text
+> full or appropriately broad build
+> editor startup
+> native Wayland/Vulkan
+> real project
+> startup map
+> interactive editing
+> PIE/play
+> representative duration
+> normal shutdown
+> project remains clean
+> no thermal abort
+> no GPU reset
+> ```
+>
+> The current incremental build already passes.
+>
+> Do not rerun it as a substitute for the remaining editor gate.
+>
+> ### Blender
+>
+> Required:
+>
+> ```text
+> real project
+> interactive work
+> longer sustained GPU render
+> no source mutation
+> no GPU reset
+> thermal behavior acceptable
+> ```
+>
+> Basic real-scene HIP rendering already passes.
+>
+> ### Android
+>
+> Required:
+>
+> ```text
+> real Java Android project
+> KVM accelerated AVD
+> guest boot
+> interaction
+> restart
+> ```
+>
+> ### Gaming
+>
+> Required:
+>
+> ```text
+> native Vulkan title
+> Proton title
+> GameMode
+> Gamescope
+> MangoHud
+> controller
+> VRR/HDR as actually used
+> audio
+> normal exit
+> ```
+>
+> ### Audio
+>
+> Required according to intended use:
+>
+> ```text
+> Stage Pro PipeWire sink/profile
+> audible output
+> replug
+> reboot
+> ```
+>
+> ### General desktop
+>
+> Use normal university/work workflows and confirm no new regression.
+>
+> ---
+>
+> ## Phase 6 — Recovery-media provenance
+>
+> Before scheduling any new recovery boot:
+>
+> ```text
+> inspect existing private recovery-drill evidence
+> reconcile exact ISO/media/date/read-only checks
+> ```
+>
+> If sufficient:
+>
+> ```text
+> document and close
+> ```
+>
+> If insufficient:
+>
+> ```text
+> schedule one final read-only Ventoy recovery drill
+> ```
+>
+> No Disko.
+>
+> No format.
+>
+> No repair.
+>
+> No writes to the MP600.
+>
+> ---
+>
+> ## Phase 7 — Backup freshness check
+>
+> Immediately before final freeze:
+>
+> ```text
+> compare current important work against 2026-10-05 backup snapshot
+> ```
+>
+> If meaningful new work exists:
+>
+> ```text
+> incrementally back it up
+> verify representative restore/hash
+> ```
+>
+> Do not regenerate the full accepted archive unless necessary.
+>
+> ---
+>
+> ## Phase 8 — Multi-day soak
+>
+> Start only once the individual CPU/RAM/workload gates are credible.
+>
+> Use the workstation normally across multiple days.
+>
+> Include:
+>
+> ```text
+> cold boot
+> warm reboot
+> Unreal build/editor
+> Blender
+> Android emulator
+> large Nix build
+> C/C++ work
+> native gaming
+> Proton gaming
+> controller
+> audio
+> browser/network
+> normal university work
+> suspend/resume if normally used
+> ```
+>
+> Track:
+>
+> ```text
+> systemd failed units
+> amdgpu reset/fault/timeout
+> MCE/hardware errors
+> thermal events
+> filesystem errors
+> Btrfs device counters
+> NVMe media errors
+> NVMe error-log trend
+> Commander Core restarts/watchdog
+> OOM/swap events
+> root-reset anomalies
+> persistence anomalies
+> application crashes
+> ```
+>
+> A few days of uptime without representative workloads is not the soak.
+>
+> ---
+>
+> # 33. Stock runtime-policy freeze
+>
+> Before optimization work begins, explicitly record the control policy.
+>
+> Expected current stock policy includes:
+>
+> ```text
+> security mitigations enabled
+> SMT enabled
+> hardware prefetchers enabled
+> Intel P-state normal policy
+> powersave governor outside GameMode
+> balance_performance EPP
+> split-lock mitigation retained
+> THP = madvise
+> 32 GiB disk swap
+> no global zram policy currently
+> no fixed permanent performance governor
+> no permanent GPU overclock
+> no global -march
+> no global -mtune
+> no global LTO
+> no global PGO
+> no BOLT
+> no global RADV performance flags
+> no global LD_LIBRARY_PATH tuning
+> ```
+>
+> The firmware portion of the control must include:
+>
+> ```text
+> AI Optimized CPU
+> 50/49 light/heavy
+> MCE Remove All Limits
+> Auto/adaptive voltage
+> 48x cache maximum
+> XMP I DDR4-3200
+> visible 16-18-18-36
+> 100 MHz BCLK
+> VMX enabled
+> VT-d enabled
+> Above 4G enabled
+> ReBAR Auto
+> ```
+>
+> The firmware review specifically notes that the AI-managed frequency/voltage behavior is important for benchmark reproducibility. :chatgpt-content-reference{index="58"}
+>
+> Do not silently change this midway through stock-vs-optimized benchmarking.
+>
+> ---
+>
+> # 34. Final stock contamination audit
+>
+> Before baseline freeze, inspect the live environment and source for accidental experiment state.
+>
+> Environment:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> CPPFLAGS
+> LDFLAGS
+> RUSTFLAGS
+> NIX_CFLAGS_COMPILE
+> NIX_LDFLAGS
+> LD_LIBRARY_PATH
+> MALLOC_CONF
+> RADV_PERFTEST
+> ```
+>
+> Source search outside inert optimization code:
+>
+> ```text
+> -march=
+> -mtune=
+> -flto
+> -fprofile
+> llvm-bolt
+> PGO
+> BOLT
+> nixos-opt-
+> ```
+>
+> Expected `nixos-opt-*` hits should correspond to control infrastructure rather than active optimization.
+>
+> This must remain a genuine stock baseline.
+>
+> ---
+>
+> # 35. Baseline manifest — CREATE AT FREEZE
+>
+> The fresh maintainability review correctly identifies fragmented baseline identity as the major provenance weakness.
+>
+> Current identities are distributed among:
+>
+> ```text
+> docs/status.md
+> docs/closure-review.md
+> docs/stable-refresh.md
+> docs/physical-root-validation.md
+> docs/baselines/
+> plan.md
+> PR #7
+> private receipts
+> ```
+>
+> At freeze create:
+>
+> ```text
+> docs/baselines/pre-optimization/manifest.json
+> ```
+>
+> with a schema version. :chatgpt-content-reference{index="59"}
+>
+> Recommended structure:
+>
+> ```json
+> {
+>   "schemaVersion": 1,
+>   "baseline": "nixos-26.05-pre-optimization-baseline",
+>
+>   "git": {
+>     "commit": "...",
+>     "flakeLockSha256": "..."
+>   },
+>
+>   "inputs": {
+>     "nixpkgs": "...",
+>     "nixpkgsUnstable": "...",
+>     "homeManager": "...",
+>     "disko": "...",
+>     "impermanence": "...",
+>     "liquidctl": "..."
+>   },
+>
+>   "outputs": {
+>     "normal": "/nix/store/...",
+>     "persistentRoot": "/nix/store/...",
+>     "recoveryIso": "/nix/store/...",
+>     "recoveryIsoSha256": "..."
+>   },
+>
+>   "software": {
+>     "nixos": "...",
+>     "nix": "...",
+>     "kernel": "...",
+>     "mesa": "..."
+>   },
+>
+>   "firmware": {
+>     "bios": "3201",
+>     "me": [
+>       "14.1.53.1649",
+>       "14.1.53.1649",
+>       "14.0.51.1528"
+>     ]
+>   },
+>
+>   "cpuPolicy": {
+>     "ratioMode": "AI Optimized",
+>     "lightRatio": 50,
+>     "heavyRatio": 49,
+>     "cacheMaxRatio": 48,
+>     "avxOffsetObserved": 0,
+>     "mce": "Enabled - Remove All Limits",
+>     "voltage": "Auto/adaptive"
+>   },
+>
+>   "memoryPolicy": {
+>     "capacityGiB": 32,
+>     "xmp": "XMP I",
+>     "dataRate": "DDR4-3200",
+>     "visiblePrimaryTimings": "16-18-18-36...",
+>     "dramVoltage": 1.35
+>   },
+>
+>   "validation": {
+>     "reconstruction": "pass",
+>     "offlineSuite": "pass",
+>     "kvm": "pass",
+>     "physicalRootChain": "...",
+>     "cpuStability": "...",
+>     "ramStability": "...",
+>     "workloads": "...",
+>     "soak": "..."
+>   }
+> }
+> ```
+>
+> Do not commit:
+>
+> ```text
+> machine-id
+> unnecessary hardware serials
+> private credentials
+> private receipt paths
+> ```
+>
+> The manifest should become the immutable machine-readable identity of the control system.
+>
+> Then future optimization evidence can say:
+>
+> ```text
+> baseline manifest hash
+>         +
+> experiment specification
+>         +
+> optimized derivation identity
+>         +
+> benchmark receipt
+> ```
+>
+> rather than reconstructing the control system from prose.
+>
+> ---
+>
+> # 36. Final baseline capture
+>
+> At final freeze record at minimum:
+>
+> ```text
+> Git commit
+> flake.lock hash
+> all input revisions
+>
+> Nix version
+> NixOS version
+> kernel
+> Mesa
+>
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ISO SHA-256
+>
+> BIOS
+> ME versions
+>
+> CPU ratio policy
+> cache policy
+> AVX policy
+> voltage policy
+> power-limit policy as known
+>
+> RAM configuration
+>
+> GPU identity
+> GPU BAR state
+>
+> NVMe model/firmware
+> NVMe SMART
+> Btrfs scrub/device stats
+>
+> governor/EPP
+> THP
+> swap/zram
+> scheduler
+>
+> Commander Core policy
+>
+> backup identity/date/hash
+> recovery drill evidence
+>
+> reconstruction receipt
+> offline-suite receipt
+> physical-root chain receipt
+> KVM receipt
+> CPU test receipt
+> RAM test receipt
+> workload receipts
+> soak result
+> ```
+>
+> ---
+>
+> # 37. Final pre-merge validation
+>
+> On the exact final source:
+>
+> ```bash
+> nix flake check --print-build-logs
+> ```
+>
+> Run any heavyweight test that changed since its last accepted derivation.
+>
+> If no runtime code changed after the currently accepted offline suite, do **not** mechanically rerun every two-hour test just because time passed.
+>
+> The important rule is:
+>
+> ```text
+> change invalidates relevant evidence
+> time alone does not automatically invalidate deterministic build evidence
+> ```
+>
+> Build final:
+>
+> ```text
+> normal system
+> persistent-root system
+> recovery ISO
+> ```
+>
+> Check the stock contamination contract again.
+>
+> Ensure exact current CI passes.
+>
+> ---
+>
+> # 38. PR completion and baseline tag
+>
+> Only after all hard physical gates pass:
+>
+> ```text
+> PR #7:
+>     draft
+>       ↓
+>     ready
+> ```
+>
+> Then:
+>
+> ```text
+> required CI on exact final head
+> final diff review
+> merge to protected main
+> verify main contains exact accepted tree
+> ```
+>
+> Create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> This tag becomes the stock control for all optimization work.
+>
+> Do not start optimization before this milestone.
+>
+> ---
+>
+> # 39. Post-baseline cleanup — ONLY AFTER TAG
+>
+> The fresh maintainability review identifies several good cleanups, but explicitly recommends waiting until after the baseline tag. :chatgpt-content-reference{index="60"}
+>
+> ## Move stock-control out of core
+>
+> Current:
+>
+> ```text
+> modules/core/stock-control.nix
+> ```
+>
+> is not actually core OS infrastructure; the physical workstation imports it directly.
+>
+> Post-tag move to:
+>
+> ```text
+> modules/workstation/stock-control.nix
+> ```
+>
+> Do not create a `modules/workstation/default.nix` just for two entries.
+>
+> :chatgpt-content-reference{index="63"}
+>
+> ## Move VS Code to development
+>
+> Current location:
+>
+> ```text
+> home/p2949/desktop/default.nix
+> ```
+>
+> Post-tag:
+>
+> ```text
+> home/p2949/development/default.nix
+> ```
+>
+>
+>
+> ## Remove historical test aliases
+>
+> After `plan.md` is archived, remove:
+>
+> ```text
+> impermanence-root-test-a
+> impermanence-root-test-b
+> impermanence-root-recovery
+> impermanence-root-fallback
+> ```
+>
+> Rename:
+>
+> ```text
+> impermanence-root-safety
+> ```
+>
+> to something like:
+>
+> ```text
+> reset-safety
+> ```
+>
+> Then the heavyweight validation API becomes clearer:
+>
+> ```text
+> blank-disk-reconstruction
+> workstation-smoke
+> activation-safety-actions
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> stock-contamination-negative
+> ```
+>
+> :chatgpt-content-reference{index="66"}
+>
+> ## Archive `plan.md`
+>
+> Move the completed ledger intact under something like:
+>
+> ```text
+> docs/history/pre-optimization-readiness-plan.md
+> ```
+>
+> Do not compress its evidence into a rewritten history.
+>
+> ## Reorganize docs
+>
+> Suggested post-tag structure:
+>
+> ```text
+> docs/
+> ├── status.md
+> ├── README.md
+> ├── design/
+> │   ├── impermanence.md
+> │   ├── persistence-contract.md
+> │   └── stock-control.md
+> ├── runbooks/
+> │   ├── backup-restore.md
+> │   ├── bootstrap-secrets.md
+> │   ├── maintenance.md
+> │   └── recovery.md
+> ├── validation/
+> │   ├── activation-safety.md
+> │   ├── reconstruction.md
+> │   ├── physical-root.md
+> │   ├── development.md
+> │   └── closure-review.md
+> ├── baselines/
+> │   └── pre-optimization/
+> │       ├── manifest.json
+> │       └── ...
+> └── history/
+>     └── pre-optimization-readiness-plan.md
+> ```
+>
+> :chatgpt-content-reference{index="67"}
+>
+> ## Simplify README
+>
+> README should explain:
+>
+> ```text
+> Where does a new concern belong?
+> ```
+>
+> not duplicate every filename in the repository.
+>
+> Use only a coarse architecture tree.
+>
+> :chatgpt-content-reference{index="68"}
+>
+> ## Generated module docs
+>
+> After freeze add `nixosOptionsDoc` coverage for:
+>
+> ```text
+> boot.ephemeralBtrfsRoot.*
+> workstation.activationSafety.*
+> hardware.commanderCore.*
+> ```
+>
+> A build such as:
+>
+> ```bash
+> nix build .#module-docs
+> ```
+>
+> should provide authoritative option names/types/defaults/descriptions.
+>
+> Hand-written docs then explain behavior and operation.
+>
+> :chatgpt-content-reference{index="69"}
+>
+> ## Documentation-link CI
+>
+> After docs are moved, add a cheap Markdown relative-link integrity check.
+>
+> This is more valuable than adding another Nix abstraction framework.
+>
+> :chatgpt-content-reference{index="70"}
+>
+> ---
+>
+> # 40. Old optimization branch — DO NOT REBASE FORWARD
+>
+> Historical branch:
+>
+> ```text
+> feat/optimization-framework
+> 397a8c71cd7acb0bc016983f28866df16c95d7d8
+> ```
+>
+> Current readiness branch has now diverged from it by:
+>
+> ```text
+> 122 commits ahead
+> 10 commits behind
+> ```
+>
+> The branches share older ancestry but have evolved too far for the old optimization branch to be a sensible active base.
+>
+> Create a fresh:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Use old `397a8c7` only as donor/reference material.
+>
+> This agrees with the current feature review. :chatgpt-content-reference{index="71"}
+>
+> ---
+>
+> # 41. Optimization-framework-v2 architecture
+>
+> Once the baseline is tagged, the next major engineering effort should be the optimization framework itself.
+>
+> The most promising NixOS-native design is:
+>
+> ```text
+> one baseline manifest
+> one source revision
+> one flake.lock
+> one physical machine
+> one persistent data state
+>         │
+>         ├── stock
+>         ├── cpu-codegen
+>         ├── lto
+>         ├── pgo
+>         ├── bolt
+>         └── pgo-bolt
+> ```
+>
+> The experiment stage—not accidental system drift—should be the intended variable.
+>
+> ---
+>
+> # 42. Specialisations should become the system-level experiment matrix
+>
+> This is probably the strongest NixOS-native idea for optimization v2.
+>
+> Potential matrix:
+>
+> ```text
+> stock
+> cpu-skylake
+> cpu-skylake-no-bmi2
+> thinlto
+> pgo
+> bolt
+> pgo-bolt
+> kernel-experiment
+> ```
+>
+> All can share:
+>
+> ```text
+> same source revision
+> same flake.lock
+> same hardware
+> same persistent data
+> same desktop policy
+> same kernel unless intentionally varied
+> ```
+>
+> :chatgpt-content-reference{index="72"}
+>
+> Then make stock-control stage-aware.
+>
+> Conceptually:
+>
+> ```text
+> stock:
+>     CPU  ✗
+>     LTO  ✗
+>     PGO  ✗
+>     BOLT ✗
+>
+> cpu:
+>     CPU  ✓
+>     LTO  ✗
+>     PGO  ✗
+>     BOLT ✗
+>
+> lto:
+>     CPU  ✓
+>     LTO  ✓
+>     PGO  ✗
+>     BOLT ✗
+>
+> pgo:
+>     intended CPU/LTO/PGO chain ✓
+>     BOLT ✗
+>
+> pgo-bolt:
+>     only explicitly intended final chain ✓
+> ```
+>
+> Do not use a specialisation for every microscopic package A/B.
+>
+> Use them for meaningful **system experimental states**.
+>
+> ---
+>
+> # 43. `virtualisation.vmVariant*` — FIRST POST-BASELINE EXPERIMENT
+>
+> The current reconstruction test is deliberately expensive and starts from a blank disk.
+>
+> A VM variant solves a different problem:
+>
+> ```text
+> static checks
+>     ↓
+> runNixOSTest
+>     ↓
+> interactive desktop vmVariant
+>     ↓
+> blank-disk reconstruction
+>     ↓
+> physical host
+> ```
+>
+> :chatgpt-content-reference{index="73"}
+>
+> Use:
+>
+> ```text
+> virtualisation.vmVariant
+> virtualisation.vmVariantWithBootLoader
+> ```
+>
+> to produce a cheap interactive derivative of the real workstation.
+>
+> Override only genuinely physical features such as:
+>
+> ```text
+> Commander Core
+> physical storage
+> perhaps physical GPU assumptions
+> VM RAM/CPU allocation
+> ```
+>
+> This should become a development environment for dangerous optimization-module changes.
+>
+> It should not replace reconstruction.
+>
+> ---
+>
+> # 44. Distributed builders — HIGH PRIORITY FOR OPTIMIZATION
+>
+> Once rebuilding LLVM, LTO dependency graphs and PGO variants becomes common, build cost becomes real.
+>
+> Use:
+>
+> ```text
+> nix.distributedBuilds
+> nix.buildMachines
+> supportedFeatures
+> mandatoryFeatures
+> ```
+>
+> :chatgpt-content-reference{index="74"}
+>
+> Eventually distinguish builders such as:
+>
+> ```text
+> builder-general
+>     x86_64-linux
+>     big-parallel
+>     kvm
+>
+> builder-skylake
+>     x86_64-linux
+>     big-parallel
+>     skylake
+>
+> builder-gfx1201
+>     x86_64-linux
+>     gfx1201
+> ```
+>
+> The key methodology is:
+>
+> ```text
+> build remotely where convenient
+> benchmark only on the physical control target
+> ```
+>
+> Build location and benchmark location should not be conflated.
+>
+> First prove distributed builds in a two-node NixOS VM test.
+>
+> ---
+>
+> # 45. `system.replaceDependencies` — RESEARCH INSTRUMENT
+>
+> Do not build the whole framework around it.
+>
+> Use it experimentally to distinguish:
+>
+> ```text
+> performance effect of optimized component
+> ```
+>
+> from:
+>
+> ```text
+> performance effect of rebuilding its reverse-dependency graph
+> ```
+>
+> Example:
+>
+> ```text
+> A:
+> zstd-pgo
+>   ↓
+> ordinary override
+>   ↓
+> reverse dependencies rebuild
+>   ↓
+> benchmark
+>
+> B:
+> stock system
+>   ↓
+> same zstd-pgo binary grafted
+>   ↓
+> replaceDependencies
+>   ↓
+> benchmark
+> ```
+>
+> :chatgpt-content-reference{index="75"}
+>
+> This is particularly interesting for a project whose purpose is understanding system-wide optimization rather than merely producing a fast binary.
+>
+> ---
+>
+> # 46. Initrd SSH rescue — POST-BASELINE
+>
+> Your root-reset logic executes in systemd initrd.
+>
+> A future specialisation could provide:
+>
+> ```text
+> normal
+>     reset enabled
+>
+> persistent-root
+>     reset disabled
+>
+> initrd-rescue
+>     reset disabled
+>     initrd networking
+>     initrd SSH
+> ```
+>
+> This gives access before stage 2 to:
+>
+> ```text
+> /sysroot
+> @root
+> @root-next
+> @persist
+> Btrfs topology
+> initrd services/logs
+> ```
+>
+> :chatgpt-content-reference{index="76"}
+>
+> Use a **dedicated initrd SSH host key**.
+>
+> Never reuse the normal host private key in the initrd.
+>
+> Prove it in a VM before physical deployment.
+>
+> ---
+>
+> # 47. Immutable `/etc` + Userborn/perlless — VM EXPERIMENT
+>
+> Interesting future combination:
+>
+> ```nix
+> system.etc.overlay.enable = true;
+> system.etc.overlay.mutable = false;
+> services.userborn.enable = true;
+> ```
+>
+> Conceptually:
+>
+> ```text
+> ephemeral /
+> +
+> immutable /etc
+> +
+> declarative users
+> +
+> Impermanence
+> ```
+>
+> :chatgpt-content-reference{index="77"}
+>
+> Do not change the stock baseline to this.
+>
+> Use a desktop `vmVariant` to investigate interactions with:
+>
+> ```text
+> machine-id
+> NetworkManager
+> credentials
+> Home Manager
+> activation-safety
+> nixos-rebuild switch
+> ```
+>
+> ---
+>
+> # 48. Facter — PROVENANCE EXPERIMENT, NOT REQUIRED MIGRATION
+>
+> Compare:
+>
+> ```text
+> hardware-configuration.nix
+>         vs
+> facter.json
+> ```
+>
+> and determine whether Facter materially improves baseline hardware provenance.
+>
+> :chatgpt-content-reference{index="78"}
+>
+> Your current explicit hardware configuration is small and understandable.
+>
+> Adoption is optional.
+>
+> Do not migrate just because Facter exists.
+>
+> ---
+>
+> # 49. ARM/binfmt experiment
+>
+> Post-freeze:
+>
+> ```nix
+> boot.binfmt.emulatedSystems = [
+>   "aarch64-linux"
+>   "riscv64-linux"
+> ];
+> ```
+>
+> can make this x86 workstation useful for:
+>
+> ```text
+> ARM compilation compatibility
+> unit tests
+> package portability
+> pre-hardware experiments
+> ```
+>
+> It is not valid ARM performance benchmarking. :chatgpt-content-reference{index="79"}
+>
+> ---
+>
+> # 50. Netboot / kexec — INTERESTING BUT NOT BENCHMARK AUTHORITY
+>
+> Future NixOS can generate:
+>
+> ```text
+> netboot ramdisk
+> iPXE script
+> kexec script
+> kexec tree
+> ```
+>
+> Potential use:
+>
+> ```text
+> normal workstation
+>     ↓ kexec
+> minimal diagnostic system
+> ```
+>
+> or rapid development transitions among experiment images.
+>
+> However:
+>
+> ```text
+> kexec
+>     suitable for development/smoke
+>
+> ordinary cold/reboot
+>     required for canonical benchmark evidence
+> ```
+>
+> because kexec bypasses normal firmware initialization. :chatgpt-content-reference{index="80"}
+>
+> ---
+>
+> # 51. `system.includeBuildDependencies` — ONE-OFF REPRODUCIBILITY DEMO
+>
+> Do not enable it on the normal desktop.
+>
+> Potential one-off artifact:
+>
+> ```text
+> recovery-iso-full-build-closure
+> ```
+>
+> containing enough closure to rebuild offline.
+>
+> This is interesting as a reproducibility demonstration, but closure growth can be enormous. :chatgpt-content-reference{index="81"}
+>
+> Delete the giant experiment afterward.
+>
+> ---
+>
+> # 52. Things NOT to add before the baseline tag
+>
+> Do not add:
+>
+> ```text
+> more Impermanence
+> ephemeral /home
+> ephemeral /var
+> flake-parts
+> flake-utils
+> generic mkHost
+> generic mkSystem
+> automatic module discovery
+> another secrets framework
+> another recovery architecture
+> automatic upgrades
+> custom kernel just for novelty
+> global optimization flags
+> global -march
+> global -mtune
+> global LTO
+> global PGO
+> global BOLT
+> global RADV hacks
+> fixed permanent performance governor
+> another layer of host/module abstraction
+> ```
+>
+> The fresh reviews are explicit that these would now be distractions. :chatgpt-content-reference{index="82"}
+>
+> ---
+>
+> # 53. Current hard-gate matrix
+>
+> ## Repository / software architecture
+>
+> ```text
+> [x] stable NixOS release/pins
+> [x] centralized username
+> [x] clean flake composition
+> [x] Home Manager integration
+> [x] storage ownership
+> [x] Btrfs maintenance coordination
+> [x] Nix/Bash reset split
+> [x] reset safety tests
+> [x] test registry
+> [x] recovery image organization
+> [x] Commander Core policy ownership
+> [x] activation safety
+> [x] preSwitch checks
+> [x] system checks
+> [x] stock contamination controls
+> [x] fixed CI runner
+> [x] action SHA pins
+> [x] current exact-head CI pass
+> [x] blank-disk reconstruction
+> [x] final offline suite
+> [x] Nix store verification
+>
+> [ ] final merge
+> [ ] final baseline tag
+> ```
+>
+> ## Physical root/recovery
+>
+> ```text
+> [x] historical normal→persistent→normal
+> [x] current generation37 first normal boot
+> [x] fresh root300
+> [x] persisted identity
+> [x] persisted credentials
+> [x] zero failed units
+> [x] sentinel staging
+>
+> [ ] generation37 persistent-root leg
+> [ ] generation37 return-normal leg
+> [ ] exact recovery-media drill provenance
+> ```
+>
+> ## Backup
+>
+> ```text
+> [x] secrets real-recovery evidence
+> [x] Git/LFS restore evidence
+> [x] home inventory
+> [x] source-work audit
+> [x] main Ventoy archive
+> [x] zstd integrity
+> [x] SHA-256
+> [x] representative restore
+> [x] 47-file supplement
+> [x] clean unmount
+>
+> [ ] final freshness check / incremental backup if needed
+> ```
+>
+> ## Firmware / virtualization
+>
+> ```text
+> [x] BIOS 3201 retained
+> [x] ME state retained
+> [x] AI Optimized 50/49 documented
+> [x] MCE documented
+> [x] XMP documented
+> [x] VMX enabled
+> [x] VT-d enabled
+> [x] /dev/kvm accessible
+> [x] real QEMU KVM initialization
+>
+> [ ] only optional uncaptured firmware fields
+> ```
+>
+> ## Storage
+>
+> ```text
+> [x] full Nix-store verify
+> [x] clean Btrfs scrub
+> [x] Btrfs device counters zero
+> [x] SMART overall pass
+> [x] NVMe media errors zero
+> [!] NVMe historical/admin error-log count caveat documented
+> ```
+>
+> ## Workloads
+>
+> ```text
+> [x] C++ preparation smoke
+> [x] clangd preparation
+> [x] final-candidate Unreal incremental build
+> [x] final-candidate basic real Blender HIP render
+> [x] physical GameMode governor/helper
+> [x] Gamescope synthetic Vulkan
+> [x] MangoHud load
+> [x] KVM infrastructure
+> [x] audio/default transport smoke
+>
+> [ ] sustained CPU/cooling
+> [ ] RAM stability
+> [ ] Unreal editor/map/PIE final acceptance
+> [ ] broad/full Unreal build if retained as requirement
+> [ ] interactive/sustained Blender
+> [ ] Android AVD
+> [ ] native real game
+> [ ] Proton real game
+> [ ] controller
+> [ ] intended Stage Pro PipeWire/audible/reconnect
+> [ ] HDR/VRR where relevant
+> ```
+>
+> ## Stability / freeze
+>
+> ```text
+> [ ] multi-day representative soak
+> [ ] final stock-policy audit
+> [ ] final optimization-environment audit
+> [ ] final backup freshness
+> [ ] baseline manifest
+> [ ] PR ready
+> [ ] merge
+> [ ] tag
+> ```
+>
+> ---
+>
+> # 54. The shortest correct continuation
+>
+> If all of the detail above is reduced to one execution chain, use this:
+>
+> ```text
+> 1. Clean docs/status.md + PR body only
+>                 ↓
+> 2. Boot generation37 persistent-root
+>    verify root300 retained / no reset / both sentinels
+>                 ↓
+> 3. Boot generation37 normal
+>    verify new root / +1 reset / root sentinel gone /
+>    persistent sentinel retained
+>                 ↓
+> 4. Resolve physical cooling / operating-condition uncertainty
+>                 ↓
+> 5. Sustained CPU test
+>                 ↓
+> 6. RAM stability
+>                 ↓
+> 7. Complete Unreal / Blender / Android / gaming / audio workloads
+>                 ↓
+> 8. Reconcile recovery-media physical-drill provenance
+>                 ↓
+> 9. Refresh backup only for work created since snapshot
+>                 ↓
+> 10. Multi-day representative soak
+>                 ↓
+> 11. Freeze stock runtime policy
+>                 ↓
+> 12. Create canonical baseline manifest
+>                 ↓
+> 13. Final exact-source validation + current-head CI
+>                 ↓
+> 14. Mark PR #7 ready
+>                 ↓
+> 15. Merge to main
+>                 ↓
+> 16. Tag nixos-26.05-pre-optimization-baseline
+>                 ↓
+> 17. Post-baseline repository cleanup
+>                 ↓
+> 18. Create feat/optimization-framework-v2
+> ```
+>
+> ---
+>
+> # 55. Bottom-line directive
+>
+> The project has crossed an important boundary.
+>
+> Earlier in `plan.md`, the hard problem was:
+>
+> ```text
+> Can this configuration be made safe,
+> recoverable,
+> declarative,
+> reconstructable,
+> and testable enough to become the control system?
+> ```
+>
+> The accumulated evidence now answers that mostly **yes**.
+>
+> Reconstruction is proven.
+>
+> The root-reset system is proven.
+>
+> Persistent-root is proven as a mechanism.
+>
+> Activation safety is proven.
+>
+> Backups are proven.
+>
+> KVM is proven.
+>
+> The stock contamination boundary is proven.
+>
+> The test architecture is mature.
+>
+> CI is green at the exact current head.
+>
+> The remaining question is no longer architectural.
+>
+> It is:
+>
+> ```text
+> Can this exact physical workstation,
+> with this exact firmware policy,
+> this cooling system,
+> this RAM,
+> this final generation,
+> and these real workloads,
+> operate stably enough for several days
+> to become a trustworthy performance-control baseline?
+> ```
+>
+> That is what the remainder of `plan.md` should answer.
+>
+> Do not let repository polishing displace that work.
+>
+> Finish the physical chain, solve the thermal/cooling gate, finish representative workloads, soak the system, freeze the manifest, merge/tag it—and then move the engineering effort to `optimization-framework-v2`.
+>
+> The single most important correction from the old continuation is therefore: **do not touch reconstruction/Disko again.** That recommendation was tested, failed for a concrete reason, reverted, and the simpler harness then passed the full independent install/UEFI/reset/recovery/offline-inspection sequence. Pasted text(20261005-222613)
+>
+> The next hard physical action is the already-staged **generation 37 persistent-root → generation 37 normal** sequence. After that, the dominant blocker is the **CPU/power/cooling state**, because the real final-candidate Unreal editor trial hit 84 °C in about six seconds despite the Commander controller responding as configured.
+
+## Current-only documentation directive implemented — 2026-10-05
+
+Latest guide Phase1 complete: docs/status.md rewritten to current-only source/
+CI,candidate/physical state,accepted/partial/open gates,backup/recovery,firmware
+and evidence pointers. Removed historical snapshots from this current entry
+point; all historical evidence remains intact earlier in this append-only ledger.
+PR7 description rewritten, not appended: current accepted software,KVM,GameMode,
+firstnormal,storage/basicworkloads and explicit thermal/remainingphysical gates.
+Revalidated PR remains OPEN/DRAFT. Document ownership adopted: READMEorientation,
+statuscurrenttruth,PRcurrenthighlevel,planforensichistory,subsystemdesign/runbooks.
+No module/test/flake/HomeManager/recovery/CI architecture or lock changes.
+All local status links resolve; gitdiffcheck passes.
+
+`nix flake check --print-build-logs --max-jobs1 --cores1` session42933 exited0;
+all checks passed; formatting62files,0changed. Existing expensive accepted
+reconstruction/activation derivations reproduced in evaluation, not rerun.
+Private0600 log: /persist/nixos-readiness-20261005/
+current-guide-documentation-flake-check.log. CI37381090051/1f96e0d terminal
+success independently verified before changes; successorCI remains separate.
+
+Next mandatory physical action remains generation37 persistent-root then
+normal, verifying staged root300/sentinels/reset-count expectations. User
+requested session preservation; no bootselection/reboot or reinstall performed.
+Cooling physical-confirmation question remains pending and is not answered
+by this guide; no heavy CPU/editor retry or lowered80C boundary. Optional
+uncaptured firmware fields do not require another BIOS visit.
+No early manifest/tag/merge, architecturepolish or optimizationexperiment.
+Guide's future experimental/postbaseline items are preserved in full above,
+not silently promoted to prebaseline readiness requirements.
+
+## Remaining physical-window preflight and verified CI wait — 2026-10-05
+
+Previous goal turn progress: full3014-line guide recorded, current-only status
+and PR rewritten, flake checks passed and8412272 pushed. Revalidated current
+normal0p67xd bootd7c64889..., root300/UUIDa3046ca3..., matching root-local and
+persistent sentinels, no failed units, activeCommanderpid913/pump100/fans60,
+CPU38C. No host state transition or test retry performed.
+
+Requested availability for the already-staged two-boot persistent-root→normal
+maintenance window. Required because the user explicitly prioritizes preserving
+the current graphical session; do not interpret automatic continuation as
+readiness to interrupt it. Cooler/airflow confirmation also remains unanswered.
+No new firmware visit requested for optional settings.
+
+Inspected stable ISO receipt: exact d55ny1z... artifact/hash/size accepted,
+not physical boot evidence. physical-root-trial-{1,2,3}.json/preflight keys
+prove installed-system root/identity/reset trial scope, not exact ISO/media/date/
+read-only recovery inspection. Scoped receipt discovery has not found that
+missing exact physical drill record; do not generalize into global nonexistence.
+Physical provenance remains OPEN; no new drill scheduled.
+
+GitHub run37383959167 exact8412272 is confirmed live/in_progress, Flakechecks
+job active. This is a verified wait, not a terminal failure or justification to
+restart. Keep this observation local while it runs rather than pushing another
+ledger-only commit that cancels the active PR CI. No completion/tag/merge claim.
+Next physical gate and heavy thermal gate still require their actual evidence.
+
+## User-ready physical transition — 2026-10-05
+
+User explicitly answered saved work/ready now for the two remaining boots.
+CI37383959167/8412272 terminalsuccess. Earlier in-progress observation above
+superseded. Current firstnormal root300/sentinels revalidated. Prepared private
+persistent-root capture script and temporary root-local systemd.control unit
+(no runtime Nix architecture change). Normal Nix-managed system unit directory
+is read-only; initial install there failed without modifying it. Installed in
+actual writable systemd control search path, verified unit and dependencies.
+Capture checks exactpersistentclosure/rootUUID/ID/resetcount6/bothsentinels/
+identity/credentials/mounts/services/journals/failedunits without copying secrets.
+Receipt final-persistent-boot.json0600. Graphical login checked separately.
+Remove temporary capture wiring before normal return; normal root reset also
+clears root-local wiring. Only reboot1 scheduled now; inspect its receipt before
+reboot2. No automatic second reboot on failed/unchecked evidence.
+
+## Final generation37 persistent-root leg ACCEPTED — 2026-10-05
+
+Authorized reboot completed into exactph12l3y4k9jjmp5vhxwlkc11x4js2gjx,
+bootc6316fb4-f649-44b0-a8f6-8c4ae75be117. RootID300/UUIDa3046ca3-1791-
+b646-a0d2-4bf142a152d3 retained, bothsentinelsmatch, resetcount6 unchanged.
+Persisted identity/credential comparisons true; all persistent mounts correct,
+NetworkManager/dbus/logind/Commander/HomeManager active, retained journals
+visible. Wayland sessionactive, networkHTTPS200, coolingactive/success0restarts.
+Private0600 final-persistent-boot.json records PASS. Initial capture failed
+because systemd's PATH lacked getent; corrected explicit PATH, reran without
+reboot, all assertions passed. Original failure and successful rerun preserved
+in final-persistent-capture-journal.txt. This was harness environment failure,
+not system persistence failure. Removed temporary root-local control unit and
+its wants link; daemonreload,failedunitsempty. Capture script/receipts retained.
+
+Two-boot authorization remains in effect; preparing only the remaining normal
+return, no further permission request. Expected newroot/resetcount7,rootlocal
+sentinelgone,persistentsentinelretained,stableidentity/credentials/mounts/
+services/journals/graphical/network. Do not claim wholechain until observed.
+
+## Final generation37 physical chain ACCEPTED — 2026-10-05
+
+Previous goal turn progress: actual persistent-root leg accepted and authorized
+returnnormal scheduled. Current returnnormal boot36b6a76b-44bb-44c7-894c-
+ea52a060e538 runs exact0p67xd3scigqmmn65a0x5skdcsf6025b. RootID302,
+UUID8ec15d12-a1c8-4e40-8539-d97bde501f76,created23:51:32Dublin.
+Resetcount7 = prior6+1; exactlyone currentbootBEGIN. Root-local sentinelabsent,
+persistent sentinelSHA matches preparation. MachineID/credentialbooleanmatches
+true; correct root/home/var/persist/nix/optimization mounts, retained journals
+from firstnormal and persistentboots, requiredservicesactive,failedunitsempty.
+Wayland sessionactive, networkgithubHTTPS200,Commanderactive/success0restarts.
+Temporary systemdcontrol captureunitabsent. Private0600 final-return-normal-
+boot.jsonPASS; prior final-persistent-boot.jsonPASS plus preparationreceipt
+prove exactcandidatechain: normal300/count6 → persistent300/count6 →
+normal302/count7. No further rootboots needed to repeat accepted evidence.
+
+This closes final exactcandidate physicalrootchain, not all hardware/workload
+readiness. Thermal operating-condition, substantialRAM,remainingrealworkloads,
+recoverymediaprovenance,backupfreshness,representativesoak,policyfreeze and
+manifest/merge/tag remainopen. Coolingphysicalconfirmation stillpending;
+no heavyCPUretry or lowered80Cguard. User's two-boot authorization fulfilled;
+no additional boot scheduled and current graphicalsessionpreserved.
+Updated currentstatus/physicalrunbook acceptance. No runtimeNix/lockchanges.
+
+## Pre-freeze stock environment observation — 2026-10-05
+
+Previous turn progress: final physical chain accepted and0c6a40b pushed.
+Current same returnnormalboot36b6a76b... closure0p67xd. Read-only closure
+membership2211paths has no projectCPU/LTO/PGO/BOLT namespaces. Scoped source
+search in hosts,core/storage/workstation/hardware,home,profiles found no
+-march/-mtune/-flto/-fprofile/llvm-bolt/RADV_PERFTEST/MALLOC_CONF matches.
+Usermanager has no audited compiler/linker/Rust/Nixflags/LD/MALLOC/RADV keys.
+Accessible start-hyprland and Waybar process environments likewise none;
+Firefox has LD_LIBRARY_PATH, agent has libdbusmenu-glib16.04.0 library path.
+Do not treat all LD paths as experiment contamination or automatically unset
+package wrapper paths. Actual Firefox value/classification and inaccessible
+Hyprland wrapper process environment still need scoped review at finalfreeze.
+No broad claim all application environments were inspectable/clean.
+THPmadvise,split_lock_mitigate1,32GiBdisk_swap/no current swapuse observed.
+Private0600 pre-freeze-stock-policy.json retains full scoped observation.
+This is pre-freeze evidence, not frozenpolicy/manifest or optimization enabled.
+
+CI37385402004 exact0c6a40b confirmedinprogress; no restart/newledgerpush while
+active. Coolingphysicalconfirmation remainspending; no heavyCPU/editorretry,
+newfirmwarepolicy or furtherreboot. Full objective incomplete. Keep observation
+local until activeCI terminates, avoiding needless cancellation by another push.
+
+## Application library-path caveat resolved and CI accepted — 2026-10-05
+
+Previous turn progress: scoped pre-freeze stock observation obtained and kept
+local while CI active. Root read-only process inspection now includes actual
+Hyprland wrapped process: no audited compiler/linker/Nix/Rust/LD/MALLOC/RADV
+keys in Hyprland/start-hyprland/Waybar. Firefox has only LD_LIBRARY_PATH among
+those keys; all36colon-separated components occur literally in the installed
+Firefox157 package wrapper. This classifies the observed Firefox path as
+package-wrapper library wiring, not unexplained global optimization tuning.
+Agent library path is separate libdbusmenu-glib wrapper environment; no
+projectoptimizationnamespaces. Do not unset necessary package library paths.
+Private0600 application-stock-environment.json retains scoped process metadata
+and the literal-wrapper membership comparison. This closes that observation's
+unresolved application-path caveat, not a universal environment audit or final
+freeze. No runtime policy/package/user environment changed.
+
+CI37385402004 on0c6a40b terminalsuccess. Publish the accumulated ledger only
+now; no active run cancelled for a status-only push. Hardwarethermal/RAM,
+remaining realworkloads,recoveryprovenance,backupfreshness,soak and freeze
+remainopen. Pendingphysicalcoolerconfirmation stillneeded before heavyretry.
+No additional reboot or graphicalsession interruption.
+
+## Verified exact-head CI wait / thermal dependency — 2026-10-05
+
+Previous goal turn progress: application-wrapper caveat resolved and accepted
+physical-chain CI recorded/pushed0bba60e. Current exactheadCI37385753196
+confirmedlive/inprogress with activeFlakechecks job, repolledsamehandle after
+20seconds; stillinprogress. This turn classified verifiedwait, not terminal
+failure/restart or broader acceptance. No active job cancelled by ledgerpush.
+Controlleractivepid903,0restarts,CPU41C,pumpcommand100%,fancommand60%;failed
+unitsempty. These idle readings do not resolve two prior thermalaborts or prove
+physicalpump/fanRPM/airflow. Physicalcoolerconfirmation remains unanswered.
+Heavytests remain stopped; no weaker workload or raisedthreshold substitute.
+Observation stayslocal pendingCIterminal. No reboot or runtimepolicychange.
+
+## Exact-head CI terminal acceptance / physical dependency audit — 2026-10-06
+
+Previous goal turn verifiedwait: exactCI37385753196 live. Repolledsamehandle,
+waited30s, terminalsuccess; setup/checkout/Nixinstallation/actualflakechecks/
+postcheckout/completion allsuccess on0bba60eba510a7a9b93fc2b3ea8c15fb79e5f350.
+No restart or competingpush. Current idleCPU35C,Commanderactivepid903,
+commandedpump100/fans60. Idletemperature is not sustainedacceptance.
+
+Repeated physicalcooling dependency persisted across applicationenvironment
+resolution, exactCIverifiedwait and this terminalCIaudit. Both thermalaborts
+remain unclosed; no cooler/airflow/model response. Software cannot infer actual
+pump/fan operation/contact/capacity from commanded duty. Latestguide makes
+this nextrequired gate; RAM requires dedicated capacity/testing period,
+remaininginteractive/game/audio work needs actual acceptance,soak starts only
+after individualgates. Rootchain/offline/store/storage/backups/basicworkloads
+are accepted; repeating them would not advance remainingrequirements.
+No safe next heavyweight acceptance without resolving that physical operating
+condition; no loweredguard/CPU-capped substitute/unapprovedfirmwarechange.
+Physical recoveryprovenance stillunverified; no unnecessarynewdrill scheduled.
+
+Ledger checkpoint stayslocal to preserve the terminal exacttestedGitHEAD and
+avoid an endless documentationpush→CI→documentationpush loop. Reconcile and
+publish these appended observations with the next substantive progress after
+userresponse. No reboot/sessioninterruption,manifest,merge/tag or completion.
+
+## Cooler confirmation and pre-ramp diagnostic PASS — 2026-10-06
+
+User resumed work: cooler Corsair iCUE H150i Elite Capellix; pump/fans operate,
+ramp when liquidctl requests but take time, radiator airflow present/minimaldirt,
+reported idle30–35C. Accepted as user-observed physical evidence; not measured
+RPM/contact/voltage or sustainedcapacity. Prior physicalconfirmation dependency
+answered; objective remains incomplete, resumed blocked-audit startsfresh.
+
+Read currentkeeper:1s sensorinterval,65C threshold plus1s hotdelay before100%
+fancommand. Mechanicalramp adds unmeasured delay. Diagnostic changed runtime
+basefan60→100 only, pump100 unchanged,20s preramp before actual unchanged
+Unreal Wayland/Vulkan project/map startup, normaluncappedworkload/nice19.
+Temporary /run dropin, originalkeeper ownsUSB; no concurrentliquidctl control.
+Five-minute systemdrollback timer plus supervisorfinally restoration ensured
+originalpolicy restored. Keeper restarted onlyatidle, graphicalsessionremained.
+No firmware/Nixruntime/source architecture or thermalguard change.
+
+Same deferredmap probe PASS:28actors,tensecondhold1192frames,exit0,32.547s
+wrapper,peakCPU67C,half-secondmonitoring,80Cguardnottriggered. No projectsave;
+projectGitclean. Source finalnormal0p67xd after acceptedrootchain. Contrast
+priorbase60 trial84C/6s abort. Consistent with ramp-up contribution, not proof
+solecause: cache/load/ambient/order differences not controlled. This is a
+DIAGNOSTICtemporary100%policy pass, not final acceptance of restored60%baseline,
+PIE/interactive/broadbuild,sustainedCPU/RAM or soak. Originalruntimeoverride
+removed,rollbacktimerstopped,keeperactive/success0restarts,newpid14214,
+fan60/pump100,CPU49C after restoration; intentionalrestartsnotautorestartfailure.
+No new targetedkernelGPU/hardware/OOMmatches in testinterval.
+Private0600 preramp-unreal/{receipt.json,editor.log} underreadinessdirectory.
+
+Next: review/tune response timing or explicitly chosen coolingbaseline, then
+revalidate realunrestrictedstartup and sustainedhardware/workloads under that
+actualpolicy. Do not transfer temporarydiagnostic pass to oldbaseline or assume
+100%permanentfanpolicy chosen by user. No new reboot needed for fanpolicy work.
+
+## Earlier adaptive fan response diagnostic and host-policy change — 2026-10-06
+
+Previous turn progress: physicalcoolerconfirmation recorded,100%pre-ramp
+diagnosticpassed with67Cpeak; originalpolicy restored. New runtime-only trial
+retainedbase60/pump100, changed high50C/delay0,low45C/delay30s,poll0.5s.
+Started at33C/base60 (no100%pre-ramp), actualuncappedUnrealWayland/Vulkan
+startup/map28actors/10secondhold1151frames passed exit0,28.0348s,peak72C.
+80Cguardunchanged,0.5smonitoring; runtimeoverridefinallyremoved/originalkeeper
+restored,independent5minute rollbacktimerstopped. Privateroot0600 receipt/log
+earlier-ramp-unreal underreadinessdirectory. Cache/order remainconfounders;
+no solecausation or sustainedCPU/RAM acceptance claimed.
+
+Adopted tested earlier-response values in hosts/desktop/default.nix only.
+Genericmodule/keeper state machine unchanged; this is hostpolicy addressing
+observed realworkloadthermalstartup failure, not architecturepolish. Idle60%,
+high100%,pump100% retained; quickerresponse and longerlowhold reduce late
+ramp/rapidfall-back. No firmware/clock/CPUcap/80Cthreshold changes.
+Sourcepolicy is PROVISIONAL pendingflakechecks/build/liveadoption/sustained
+validation. Currentlivebootclosure still0p67xd and originalgeneratedpolicy;
+physicalrootchain remains accepted for that artifact, not claimed for a future
+coolingcandidate. Scope relevantrevalidation to actualchangedcoolingpolicy,
+retainacceptedroot/activation/reconstruction evidence for unchangedlogic.
+No reboot/sessioninterruption.
+
+## Tuned cooling candidate test activation and sustained test executing — 2026-10-06
+
+Prior turn progress: flakesession45545 terminalexit0/allcheckspass, both cooling
+candidates built session91494 exit0. Dryactivation restarted onlyCommander,
+kernel/normalinitrd same as accepted0p67xd; GCrootsreadiness-cooling-normal/
+persistent retain lgkijm9r3377z50lqbk7cf6h1zfjl4x9 /017hw90zb373629alxdgh4pnx0gwlkx8.
+Initial testsession66858 handle disappeared after externalboot; inspectedlive
+instead of blindly restarting. Previousbootjournal proves testactivation
+finished00:20:04 into lgkijm9..., laternewboot33d53799-a016-48ce-8754-
+8da64a76f7f0 came upold generation37/0p67xd policy. No agent scheduled that
+additionalboot. /tmp artifacts disappeared; do not reconstruct lostlogs as
+retainedreceipts. Newexternalcommitfdf63d3 preserves intendedhostpolicychange;
+clean sourcebeforecurrentobservations.
+
+Revalidated dryactivation onlyCommander, then testactivated existinglgcandidate
+session28845 exit0. Live high50/delay0,low45/30s,poll0.5; bootIDsame and
+Waylandactive,failedunitsempty. Originalprofile/bootdefault not changed yet.
+Private0600 tuned-cooling-reactivation.log. Physicalrootchain remainsaccepted
+for old bootartifact; this onlycoolingchange does not replace rootlogic tests.
+
+Actual sustainedstress-ng0.21.01 --cpu12 --cpu-methodall --verify --timeout30m
+--metrics-brief atnice19 executing session47715. Unrestrictedworkers,notCPUcap;
+0.5sCPUsensorsampling,killprocessgroup at80C/inactivecooling/1830stimeout.
+Initial25.6s CPU69–70C,fan100/pump100,serviceactive. This is liveprogress,not
+terminalpass. Persistentuserprivate workinglogs/receipt destination:
+~/.cache/nixos-validation/tuned-cpu-20261006. Capture rootprivate terminal
+receipt/log/telemetry afterprocess finishes; re-pollsamehandle,neverrestart
+merely for timeout. No firmware/guardchange or reboot/sessionrestart.
+RemainingRAM/workloads/recoveryprovenance/backupfreshness/soak/freeze stillopen.
+
+## Sustained CPU verified wait and RAM tool preparation — 2026-10-06
+
+Previous turn progress: tuned candidate reactivated and actual sustainedCPU
+supervisor started, recorded/pushed59e508a. Revalidated live stressPID2992 and
+workerprocesses; same supervisor samples advance, no terminalreceipt exists.
+At253.6s CPU77C,Commanderactive/fullfan100/pump100. This is verifiedwait,
+not thermalstabilityPASS or justification to restart. Keep80Cguardunchanged.
+
+Prepared memtester4.7.1 from pinnedflake nixpkgs, derivationyxqd5fil...,
+outputbmjj5vj2lh6shj8a22d0xiz7vgh9wgwy. Build/fetchsession42776 exit0,
+12.8KiBcachedownload; no runtimepackage/input/lockchange. Private0600
+memtester-preparation.json preserves full derivation/output. No RAMload started
+concurrently: preserve CPUtest attribution and graphicalsessionheadroom.
+Current31GiBtotal/28GiBavailable/0swapuse. SubstantialRAMtesting stillneeds
+meaningfulduration/zeroerrors and headroom/pressure/thermal/OOM guards during
+its dedicatedperiod; preparingtool is not RAMacceptance. No reboot or policy
+change, no additional accepted-test repetition. Ledger observation local until
+terminalCPUresult/substantive nextdeployment, no prematurebaselinefreeze.
+
+## Tuned-policy CPU thermal abort / live RAPL observation / RAM executing — 2026-10-06
+
+Previous turn verifiedwait: sameCPUprocess/samplesadvanced; not restarted.
+TerminalCPUreceipt nowpresent:457.977s/7m38s,peak80C,thermal_80C stop,
+passfalse. stress-ngreturned0 after requestedtermination and reports12workers
+passed/0failed; guardstop overrides exit0 and is not30minuteacceptance.
+Allcore/packagethrottlecountersunchanged0; no targetedkernelhardware/MCE/
+thermal/OOMmatches. Commanderactive,postloadCPU30C. Private0600 tuned-cpu/
+receipt.json,stress.log,samples.jsonl copiedunderreadiness. Fasterfansaddressed
+startup but not sustainedthermalcapacity under currentunlimitedpowerpolicy.
+No unchangedheavyCPUretry or weakenedguard.
+
+Read-onlypowercap package-0 enabled1, long/shortlimits4095875000uW each
+(4095.875W), longwindow55967744us,short2440us,reportedlongmax125000000uW.
+These are runtimevalues, not a photograph of firmwarePLsettings. Optional
+core/DRAMmaxattributesreturnENODATA61; captured explicitly, not fabricated.
+FirstcollectorstoppedonENODATA; corrected optionalattributehandling without
+powerwrites. Private0600 rapl-observation.json. Kernelprimaryreference:
+https://docs.kernel.org/power/powercap/powercap.html describes constraints in
+microwatts/timewindows and writablepackagepower controls. No controls changed.
+Asked user whether actualbaseline should adopt conservative125Wpackagepolicy
+(reducedsustainedboost/newvalidation) or retainpresentpolicy/investigatecooling.
+Do not silently usea cappedworkload to passoldunlimitedbaseline. Pendinganswer
+is preference aboutactualbaseline, not newpermission for alreadyacceptedtests.
+
+IndependentRAMgate started onlyafterCPUterminal/cooldown. Memtester4.7.1
+24GiB/onefullpass undernice19, session51405, supervisorprivate
+run-memory-test.py. Allocation25769803776bytes/mlocklocked verified; initial
+MemAvailable30057328KiB, require≥28GiBbeforeallocation, stopifavailable<3GiB,
+swapgrowth>256MiB,CPU≥80C,coolinginactive or2hourtimeout. PreserveGUI with
+≥4GiBinitialheadroom; no concurrentstressCPUtest. At37.3s available4821708KiB,
+CPU68C; fullRAMresult remainsOPEN. Workingprivateparent700/logs600 inram-24g/
+underreadiness; terminalreceipt600. No reboot or profile/bootdefault changes.
+
+## RAM desktop-headroom stop and guarded substantial retry — 2026-10-06
+
+The original24GiB memtester process is authoritatively terminal, not restarted
+from an observation timeout. Private ram-24g/receipt.json records exit-15,
+496.964s, peak79C, minimumMemAvailable2939976KiB, stop_reason
+desktop_headroom_3GiB, mlock_success true, pass false. This incomplete run
+does not satisfy the RAM gate. Post-stop desktop remains active Wayland;
+no failed units, memory recovered, swap use approximately1.1MiB.
+
+A separate22GiB full-pattern one-pass run now executes under the same pinned
+memtester and unchanged80C/3GiB/swap256MiB/cooling/time guards, session73453.
+Require initial26GiB available; extra desktop reserve addresses the observed
+headroom failure without terminating user applications. This tests most of
+installed RAM, but provides no24GiB or exhaustive physical-memory claim.
+Private run-memory-test-22g.py and ram-22g/ artifacts retain distinct scope.
+Full terminal result and post-test health still required; RAM remainsOPEN.
+CPU baseline preference remains pending, no RAPL write, reboot, boot-default
+change or weakened guard.
+
+## Substantial RAM retry swap stop; PR current-state reconciliation — 2026-10-06
+
+The same22GiB memtester PID6953 advanced through pattern counters131→161
+until authoritatively terminal. Private ram-22g/receipt.json: startUTC
+2026-10-06T09:42:01.186067+00:00, exit-15, elapsed718.355675s, peak79C,
+minimumMemAvailable3300676KiB, stop_reason swap_growth_256MiB,
+mlock_success true, pass false. This is incomplete, not RAM acceptance.
+No failure markers had appeared in the completed portions, which cannot
+prove the unfinished full-pattern pass. Both24GiB and22GiB attempts retain
+their original private receipts/logs/samples. No immediate further allocation
+reduction or weakened guard; RAM validation requires a substantial completed
+pass with stable desktop headroom during a suitably quiet period.
+
+Post-stop free reports25GiB available,284MiB swap; memory PSI avg10/60/300
+all0; active Wayland session, Commander active, failed units empty; journal
+since test start has no targetedOOM/MCE/hardware/thermal entries. Private
+0600 ram-22g/post-health.json captures health. Read-only process observation
+shows browser/VSCode consumers; no user application was terminated.
+
+DraftPR7 description reconciled confirmedH150i physical observations,
+test-active tuned candidates versus accepted generation37 boot default,
+457.98s CPU80C guardstop and pending actual125Wbaseline preference, and
+separate incomplete RAM attempts. EarlierCI is not current-head acceptance.
+No reboot, power write, merge, tag, baseline manifest or completion claim.
+
+## Subsystem runbook reconciliation — 2026-10-06
+
+Read authoritative source policy and current development/firmware runbooks.
+Firmware preparation still contained obsolete present-tense VMX-disabled
+and future mandatory firmware-window instructions despite its current banner.
+Corrected those paragraphs to accepted VMX/KVM evidence and explicitly retain
+unknown photo-only settings without an extra capture reboot. Development
+validation now records confirmed cooler observations, earlier-response
+diagnostic scope, test-active versus boot-default candidates, incomplete
+CPU thermal and RAM headroom/swap trials, and retained guards. No validation
+claim expanded or new runtime behavior introduced. Prior turn made actual
+progress by preserving terminal RAM results; no RAM process is running now.
+
+## Current-system general C++ development smoke — 2026-10-06
+
+Scoped discovery found no generalC++ project in Development outsideUnreal;
+this is not global absence. On test-active lgkijm9r3377z50lqbk7cf6h1zfjl4x9,
+pinned offline default development shell compiled C++20 ranges/span/sort/
+accumulate with Clang, Wall/Wextra/Werror; executable asserted expected
+ordering/sum and returned0. Home-Manager clangd checked the exact compiler
+compilation database with scoped query-driver and reported all checks
+completed0errors. Unifiedsession57354 exit0. Private700 parent/600 source,
+script/log/database/receipt under ~/.cache/nixos-validation/cpp-20261006.
+No source/input/runtime configuration changed. Desktop/cooling stayedactive.
+This completes current-system general toolchain smoke only; representative
+actual projects/university workflow, CPU/RAM thermal/memory gates, Android
+and other explicit workload requirements remain open. No repeated heavy
+CPU/RAM test, no reboot, baseline power preference stillpending.
+
+## Android application gate scoped discovery — 2026-10-06
+
+Read current development contract: actual Java project, Studio startup,
+acceleratedAVD and interaction/restart required; physical QEMU KVM alone
+is insufficient. Fresh searches found no Android/JDK package declarations
+outside documentation, no Android Studio application launcher in inspected
+user/system application directories, no android-studio/java/adb/emulator/
+sdkmanager on currentPATH, and no Gradle build/settings or SDK/AVD target
+files in inspected Development/Downloads tree excludingUnreal. Documents
+directory does not exist and was explicitly not searched successfully.
+Do not generalize this scoped result to global absence. No tooling downloaded,
+license accepted, application launched or synthetic project substituted.
+Requested actualJavaAndroid project/tooling location; if noneexists, prepare
+a representative project with explicit scope. This missing workload input
+and pendingCPUbaseline preference do not erase remaining acceptance gates.
+Previous turn was progress: current-system C++/clangd evidence recorded.
+No reboot or heavy workload started; desktop preserved.
+
+## Real gaming workload discovery — 2026-10-06
+
+Read Steam manifests and library path without account/session data. One
+inspected Steam library at ~/.local/share/Steam contains actual
+DARK SOULS REMASTERED app570940 (StateFlags4), executablepresent,
+Proton Experimental app1493710, Steam Linux Runtime4 app4183110 and
+redistributables228980. No native game identified among these manifests.
+This provides an actual Proton workload candidate, not launch/play proof.
+No Steam process currentlyrunning. Kernelinput enumeration contains
+keyboard/mouse/audio/buttons but no observed gamepad; /dev/input/js*
+glob is empty. Absence of js nodes alone is not proof of no usable controller.
+Private600 gaming-inventory-20261006/receipt.json preserves limitedscope.
+No game launched, save modified, native game substituted, GPU workload
+added or user application closed. Actual gameplay/controller/audio/HDR/VRR
+requirements remain open, as does sustained CPU/RAM acceptance.
+
+## Authoritative scope correction: Android/Gradle NOT NECESSARY — 2026-10-06
+
+User explicitly states this machine will do no Android tooling or Gradle
+work and requests marking it unnecessary. This direct instruction overrides
+earlier attached-guide Android requirements and historical OPEN entries.
+Android Studio, SDK/Gradle provisioning, realJavaAndroid project and
+acceleratedAVD boot/interaction/restart are NOT APPLICABLE, not pending
+and not failed. Withdraw the project-location question; no response, tooling
+installation, license acceptance, project creation or emulator test needed.
+Physical VMX/KVM accepted evidence remains valid for general virtualization.
+Updated currentstatus and development/firmware runbooks accordingly; retain
+original quoted guides/history for provenance without treating theirAndroid
+requirements as currentgates. Other CPU/RAM, applicable realworkloads,
+recovery/soak/freeze/merge/tag gates remain unchanged and incomplete.
+
+## Recovery/backup runbook evidence reconciliation — 2026-10-06
+
+Fresh scoped receipt-name review under readiness and Ventoybackup roots
+found build/offline/backup receipts, not exactISO physicalboot/inspection
+proof. Prior guide-reported drill therefore remains provenanceOPEN; no
+reboot or ISO rebuild scheduled solely to fill documentation. Existing
+accepted backup and reconstruction results were contradicted by stale
+present-tense backup-runbook OPEN/activelybuilding paragraphs: corrected
+to terminal accepted evidence and point-in-time freshness atfreeze. Physical
+root runbook still described completed sentinels/sequence as staged and
+remaining: corrected to accepted root300/count6→root302/count7 receipts,
+explicitly no repeatgeneration37 bootsequence. Reusable procedure retained
+with completedstatus. No acceptance expanded or runtime behavior changed.
+
+## Current-source CI terminal success — 2026-10-06
+
+Prior turn verifiedwait on exactlive GitHubrun37447553370. Same run now
+authoritatively completed/success on
+db93568a2fc2a314ca97bee1ceb260b95736f414. Flakechecks ran after checkout
+and Nixinstallation. This validates that source, not unfinished physical
+CPU/RAM/workload/recovery/soak/freeze gates and not any later source change.
+Active Wayland and Commander rechecked; no local stress process restarted.
+Ledger kept local pending next substantive change to avoid recurring
+documentation pushes cancelling CI or requiring an endless receiptpushloop.
+PR remainsdraft; no merge/tag/manifest/completion claim.
+
+## User adopts125W baseline; guarded runtime validation — 2026-10-06
+
+Explicit user reply adopts and validates125W. This resolves the previous
+CPUbaseline preference blocker; no goalblocked transition was completed
+in the interrupted preceding turn. Apply actualpackage policy, not a capped
+substitute workload presented as acceptance of unrestrictedpolicy. Root
+package-0 powercap enabled1, nameslong_term/short_term verified. Bothlimits
+changed4095875000→125000000uW and readbackverified; originals retained
+private600 cpu-125w/power-policy.json. Timewindows unchanged55967744/2440us.
+Writes rollback to originals on apply/verifyerror; no firmware/voltage change.
+
+Same pinned12worker stress-ng all-methods/verify30minute workload now
+runs nice19 under rootprivate cpu-125w/validate.py, unifiedsession63539.
+Sample coretemp0.5s; stopat80C, coolinginactive, limitdeviation or1830s.
+Wholeprocessgroup termination plus10s killfallback. Logs/samples/receipt600.
+No RAMload/compilation concurrent. Acceptance requires full duration, clean
+verificationlog and posthealth, not exit0 afterguardstop. Runtime125W trial
+not yet declarativelydurable: after validation implement boot/resume policy,
+preview activation and test withoutreboot; final stockbaseline needs this
+new powerpolicy explicitlyrecorded. Desktop remainsactive; no reboot.
+
+## User duration correction:10–15minutes, existing trial retained — 2026-10-06
+
+User explicitly rejects30minutes as overkill and requests10–15minutes.
+This supersedes earlier guide/duration criterion for this CPUvalidation.
+Choose15minutes/900s and retain the same running12worker all-methods
+verification process,125W package policy and80C safety guard. Do not restart
+and discard alreadyelapsed work. Private stop-at-15-minutes.py captures
+PID129596 startticks to avoid signalling reusedPID, observes existing
+samples and gracefullyterminates whole stressgroup at900s; exits if original
+receipt/process alreadyterminal. Timerunifiedsession23855, no reboot.
+Original supervisor still records its original1795s PASSpredicate, so its
+boolean alone is not current user-duration acceptance. Preserve original
+receipt, and separately evaluate actual≥900s, expected durationstop, zero
+verification errors, no thermal/cooling/policy guardstop and posthealth.
+Do not call shorter run equivalent to30minute endurance proof; it satisfies
+the explicitly revised15minute criterion if evidence passes.
+
+## Unified2026-10-06 guide adopted; README truth ownership implemented
+
+Read all33sections/3052logical lines, retain fullguide near top with exact
+provenanceSHA and preserve originalhistory. Snapshot claims classified
+against currentstate, directuser125W/15minute/AndroidN-A instructions
+explicitlyoverride superseded snapshot. README replaced detailedinventory,
+mutablecooling/testcount/candidateclaims with coarseownership, build/check
+commands and authoritative source/status/runbook links. No broadmodule
+restructure, newdependency or posttagfeature prematurelyimplemented.
+Markdownlocaltargets16 verified, gitdiffcheckpassed after normalizing
+quoted trailing whitespace; nixfmtCI processed62files/0changes exit0.
+Fullflakechecks deferred until
+ongoingCPUtrialterminal to avoid concurrent compilation contaminating it.
+
+##125W trial thermal stop before revised15minute target — 2026-10-06
+
+Sameprocess129596 authoritativelyterminal; timerexited because process/
+receiptterminal, not an observationtimeout. cpu-125w/receipt.json records
+startUTC2026-10-06T10:14:47.167066+00:00, elapsed295.429672s, exit0,
+peak83C, stop_reasonthermal_80C, bothlimits125000000uW, passfalse.
+Halfsecond sampling caught83C, so80Cguard has overshoot; cutoffnotraised.
+Stresslog12workerspassed/0failed, metricsuntrustworthy0 does not override
+thermalstop or incomplete15minute duration. Originalstresslog30mintimeout
+is historical configuredtimeout; revised900s timer never firedbeforeguard.
+
+PoststopCommanderactive/pid2888/NRestarts0, fanhigh100%, pump100%
+commanded, CPU59C atfirstcheck; Waylandactive, failedunitsnone, journal
+since trialstart no targetedOOM/MCE/hardware/thermal entries. Allobserved
+24core/package throttlecounters0; this is posttestreading, not a newly
+captured pairedbefore/aftermeasurement. No simultaneous RAM/buildload.
+
+Private600 post-observation.json records powercaplimits/windows, hwmon
+sensor inventory and postload2s packageenergy delta≈50.91W with ongoing
+desktopactivity. This is cooldown/background observation, NOT actual
+stressload power/voltage or proof of effectivePLenforcementunderload.
+No Commander RPM/coolantmeasurement from these sysfsdevice names;
+physical pump/fanfunction userreported, heattransfer/blockcontact unknown.
+125Wremainsruntimeapplied perchosenpolicy, not durablydeployed/accepted.
+No sameconditionsstressrepeat or safetyweakening. Investigateactualvoltage/
+power/clocks/AIOtelemetry before furtherload; CPU/RAM gates remainOPEN.
+
+## Read-only hardware power-limit confirmation — 2026-10-06
+
+Pinnedvalidation shell resolved kernel6.18.55 turbostat. Help exit1 is
+helpbehavior, not failedmeasurement. Initial3x1s no-load-injected observation
+exit0 recorded backgroundBusy22–24%,busy4.80GHz,package61.57–62.96W;
+notidle or stressloadpower. OptionalGPU/PSYS perfattributesunavailable.
+No/dev/cpu/0/msr initially, so firsttool guessedTjMax and lackedMSRdecode.
+Loadedmsr diagnosticmodule only (noMSRwrites), then read-only2x1s turbostat
+exit0 with fullhardwaredecode savedprivate600 cpu-125w/turbostat-msr.txt.
+MSR_PKG_POWER_LIMIT0x4283e800df83e8 unlocked: limit1ENabled125W/56s/
+clampENabled; limit2ENabled125W/0.002441s/clampDISabled.
+MSR_PKG_POWER_INFO125WTDP. This confirms registerpolicy, not measured
+failedstresspower or motherboardvoltage. Noalteredratio/voltage/limit,
+no newstress workload, no reboot. Source125Wdurability and thermalcause
+stillunresolved; nextdiagnostics need realpower/clocks/AIOtelemetry with
+guards rather than another uninstrumented acceptance retry.
+
+## Instrumented125W60second diagnosis completed — 2026-10-06
+
+Distinct boundeddiagnostic, not repeated15minute acceptance attempt: same
+12workers/allmethods/verify workload,60s, simultaneousread-onlyturbostat
+1s intervals and supervisorpackageenergy0.5s deltas, retain80Cguard.
+StartCPU56C, no otherstress/RAMprocess, Commanderactive. Private700
+cpu-125w-diagnostic60/ with600 script/log/samples/receipt/turbostat/summary.
+Unifiedsession45311 terminalexit0, elapsed60.468s, peak78C, stopnone,
+both125Wlimitsretained. ScopepredicatePASS is diagnosticONLY;15minute
+CPUgate remainsOPEN following earlier295.43s thermalstop.
+
+5–59s energy-derivedpower mean120.526W,max121.330W;59turbostat intervals
+withBusy>90% mean120.493W, busyclockmean4764.441MHz, CoreThrmax0.
+Measuredloadpower approximately121W supports effectivepowerlimiting for
+this interval, not the unsampled earlierfailedrun or thermalsteadystate.
+NoVcore or actualpumpRPM/coolant/contactmeasurement obtained. Desktop
+remainedactive. No loweredlimit/ratio/voltage, no reboot; investigate AIO
+telemetry/heattransfer and avoid manufacturingacceptance fromshortduration.
+
+## Exclusive AIO telemetry measurement — 2026-10-06
+
+Read pinnedCommanderCore.get_status implementation beforeuse; it reads
+RPM/temperatures throughwakecontext. Avoided concurrentUSBowner: no load
+running, scheduled45s restartfailsafe, stoppedkeeper, one get_status with
+pinnedkeeperPythonenv/firmwaremajor2 under12stimeout, finally restarted
+keeper. No dutycommand fromdiagnostic, disconnectfinally. Unified42127
+exit0, telemetryexit0, restoreexit0; active/state reverified, failsafetimer
+stopped afterward. This was a controlleddiagnostic servicestop/restart,
+not a spontaneouscontrollerfailure; Waylandactive.
+
+Rootprivate600 cpu-125w/aio-telemetry.json: pump2687rpm, fanports4/5/6
+2359/2372/2329rpm, ports1/2/3 zero, watertemperature29.4C. Zeroports
+may be unpopulated; no wiringfault conclusion without connectionevidence.
+Singlepostloadsample afterdiagnosticcooldown does not establish coolant
+underfailedstressload, heattransfer/contact, sensoraccuracy or fullstability.
+This replaces unknownRPM with measuredobservation atthatinstant, while
+15minuteCPUgate remainsOPEN. No newstress/firmware/voltagechange/reboot.
+
+## Declarative125W boot/resume policy implemented and test-active — 2026-10-06
+
+Userselected125W policy now authoritative in hosts/desktop/default.nix.
+Oneshotcpu-package-power-limit.service wantedmulti-user, aftermoduleload,
+requires package-0/enabled1/long_term/short_term identities, writes125000000
+uW bothlimits and verifiesreadback. RemainAfterExit; resumeCommands
+restartsservice to reapply policy aftersleep. No ratio/voltage/timewindow
+change. Failurevisible asfailedservice; thermalvalidation stillOPEN.
+
+Nixfmt0changes, offlineevaluationserviceconfigPASS, normal/persistentbuild
+session60154 exit0. Normalpl4iy6fdvgjanswwwvvvja42p17p40zd, persistent
+4rkvhfwj2vvj932ck5hp2izvrs65dp2f independentlyGCrootedreadiness-power-
+normal/persistent. Closurecomparisonagainstlgkcandidate adds powerunit/
+script; resumehookchangesgeneratedsleepaction. Dryactivateexit0.
+Testactivation61731 exit0 starts powerunit and NetworkManagerdispatcher;
+powerunitactive/exited/resultsuccess, bothlimitsread125000000, service
+restart/readbackPASS. Waylandactive, failedunitsnone. Noactualsuspend/resume
+or bootproven yet; sourcehook alone is not physicalresumeacceptance.
+Boot/systemprofile remainsgeneration37; this is TESTactivation, not boot
+deployment or acceptedfinalbaseline. PreserveearlierGCroots/receipts.
+No reboot, no stressrepeat, no acceptanceexpansion.
+
+##125W policy source validation and generated resume-hook execution — 2026-10-06
+
+Offlinefullflakechecksession35966 terminalexit0, logallcheckspassed.
+Source643182766cfbf9956a618b70cbf1d7dc68edd906. ExactsourceGitHubrun
+37450780620 completed/success. Localformat62files0changes; evaluation/
+Statix/etc checks accepted for thissource, not physicalthermal/soakproof.
+Privateusercache power-policy-flake-check.log retains fulloutput.
+
+Inspected actualgeneratedsleep-actions ExecStop script: onlyresumecommand
+is restartcpu-package-power-limit, no sleep-triggeringoperation. Executed
+that exactscript directlyexit0, powerserviceactive/resultsuccess, both
+limits125000000. This proves generatedhook execution withoutsuspend;
+actualphysicalresume/boot stillunproven. Waylandactive, no reboot.
+Ledger keptlocalpendingnextsubstantivechange to avoidCIreceiptpushloop.
+Currentcommitted6431827 has greenexactsourceCI; futurechanges need
+relevantvalidation. CPUthermal/RAM/applicableworkloadgates remainOPEN.
+
+## Correction: real game overlapped CPU trials — 2026-10-06
+
+Fresh liveprocess audit found user-launched DarkSoulsRemasteredPID128769
+using112% lifetimeCPU, Steamhelpers and browseractivity. Rootprivate
+cpu-125w/game-context.json binds /proc startticks+uptime to
+2026-10-06T10:11:37.071758UTC, earlier than125Wtrialstart10:14:47UTC.
+Thus failed125Wtrial and later60sdiagnostic overlapped realgame; prior
+statements of nootherstress/RAMprocess were narrower and did NOT prove
+quietdedicatedCPUtestconditions. Agent failed to check gameactivity before
+loads. Preserve originalthermalstop receipts; they are real observed
+combinedload outcomes, not isolatedCPU/AIOcapacity proof. Measured125W
+limits and diagnostic121W remain valid for package undercombinedactivity.
+GPU/radiatorambient contribution unmeasured; no causation asserted.
+
+Gamecurrentlylive, Vulkan and MangoHud libraries mapped, GameModeactive.
+This is realgame launch evidence, not interactiveplay/audio/frametime/exit
+or restoredpolicy acceptance. No usergame killed/paused or sessionchanged.
+Defer newCPU/RAM/heavybuild untilactualgamefinished and dedicatedconditions
+verified. CPUVcore not exposed by inspectedhwmon: onlyAMDvddgfx621mV
+was found, not CPUvoltage. Failedunitsnone; physicalthermalgate remainsOPEN.
+
+## DraftPR currentstate reconciled; livegame preserved — 2026-10-06
+
+GamePID128769 confirmedlive30m35s; Commander and Waylandactive. No
+newload added. PR7 body now describes test-active declarative125Wclosures,
+acceptedservice/resume-hook/localchecks/CI6431827, pendingcurrentCI
+37451447583 onc11fb0a, user15minutecriterion and bothCPUtrialsoverlapping
+usergame. Includes limited60s measuredpower/clocks and momentaryAIO
+RPM/coolant evidence, incompleteRAMpasses and conditionalnativegaming/
+controller/HDR/VRR. Removed stalepending125Wchoice/unconstrainedruntime
+and oldtest-activeclosures. PRremainsdraft. Recordlocalwithoutcancelling
+liveCI; no reboot, no gameinterference, no acceptanceexpanded.
+
+## Current-source CI PASS; usergame remainslive — 2026-10-06
+
+VerifiedsameGitHubrun37451447583 transitionedin_progress→completed/
+success on exactcommittedc11fb0a86f2304e101efb8592bfb966f6dee43ba.
+No run restarted. SamegamePID128769 live33m20s, Commander/Waylandactive.
+No newCPU/RAM/heavyload, no reboot. CI closes current-source check only;
+quietCPU15minute and substantialRAM fullpass, boot/resume, applicable
+workloads/recovery/freshness/soak/freeze remainOPEN. Ledgerlocalpending
+nextsubstantivechange; noCIreceiptpushloop.
+
+## RealProton gameplay userconfirmed and postexit restoration — 2026-10-06
+
+Userreply everythingworkedperfectly to gameplay/controls/audio/freezes/
+stutterquestion accepted as user-observed functionalgameplay evidence.
+Beforepassivesnapshot, authoritative/proc128769 alreadygone; initial
+snapshotassert correctlyprevented attributingdeadprocessliveobservations.
+FollowupnoDarkSouls/Gamescopeprocess, GameModeinactive; all12policies
+powersave/EPPbalance_performance, failedunitsnone, no targetedGPUreset/
+fault/timeout/MCE/hardware/OOMjournalentries since gamestart. Rootprivate
+live-game/post-exit-observation.json recordsrestoration. Sourcepl4candidate
+current, but sessionbeganbefore its testactivation: functionalProtonplay/
+controls/audio and exitrestoration accepted, not an uninterrupted exactfinal
+candidate session or loggedcleanexitcode/frametimebenchmark. No usergame
+terminated. Sourcebinding/representativeness remain explicit atfinalacceptance.
+
+Postgameavailable24GiB,CPU52C backgrounddesktop; no newstressjobstarted
+before verifyingquietperiod. Keep125Wand80Cguard, isolated15minuteCPU
+trial next when gameabsent/maintenanceinactive conditionsverified.
+
+## Isolated125W15minute trial started aftergameexit — 2026-10-06
+
+Newconditions verified game/Unreal/Blender/build/RAMstressabsent, GC/scrub/
+fstrimservicesinactive, startingCPU50C. This supersedes attributiondefect
+in prior combinedgame+CPU trials; no userapplications closed. On current
+pl4iy6fdvgjanswwwvvvja42p17p40zd test-activecandidate, actualsame12worker
+all-methods/verify15m CPUload now runs undernice19, session91921.
+Private700 cpu-125w-isolated15/600 script/precondition/log/samples/receipt.
+Power125Wreadbackguard,80Cthermalguard, coolinghealth,930stimeout, plus
+conflictinggame/editor/render/build/memtest and maintenanceservice guards.
+Powerenergydeltas retained; desktopbackgroundpreserved, not claimed zero
+backgroundwork. NoRAMtest/heavybuildconcurrent, no changedvoltage/ratio,
+no reboot. Full900sduration/verification/posthealth needed beforeacceptance.
+Ledger/statuslocalpendingterminalresult to avoidrepeatedCIpushcancellation.
+
+## Isolated125W trial thermalstop; physicalcontact history requested — 2026-10-06
+
+SamePID140930 authoritativelyterminal, cpu-125w-isolated15/receipt.json:
+start10:49:43.645720UTC, elapsed207.563902s, peak80C, stopthermal_80C,
+exit0, passfalse, actualpl4candidate/both125Wlimits. No conflict/maintenance
+guardtrigger; gameabsent distinguishes earliercombinedload. Atstop energy
+derivedpackage119.343W. Stresslog12passed/0failed, metricsuntrustworthy0
+doesnot override incomplete900sduration. Thus gameoverlap is not sufficient
+to explainthermalfailure; do not claim precise cause from thesedata.
+
+PostloadAIOsample10:54:50.375098UTC, about99s afterstop: pump2681rpm,
+fanports4/5/6 2366/2369/2329rpm, water29.1C, otherports0. This is cooled
+postloadreading, NOT simultaneousCPU80C/coolant29C proof. Exclusiveowner
+with45s restorationtimer, boundedread, finallyrestart; exit0restore0,
+keeperactive, failsafetimerstopped, Waylandactive, failedunitsnone.
+No cutoff/ratio/voltage/powerchange orreboot, no unchangedstressretry.
+Asked user whenblock/pastelastmounted/changed and knowncontactissues
+after softwarepower/RPMdiagnostics; no shutdown/disassembly requested.
+Physicalcontact/actualCPUvoltage stillunmeasured; CPU/RAMgatesOPEN.
+
+## Exactcurrent-sourceCI terminalPASS — 2026-10-06
+
+SameconfirmedliveGitHubrun37453057354 nowcompleted/success on
+504eb2bca93cfdd0099ca4f953d9d86906f09e16. No rerun. SourceCIgate green,
+not physicalthermal/RAM/workload/finalfreeze acceptance. No CPU/RAM
+process restarted or thermalcutoff changed. Block/pastehistoryrequest
+pending; no disassembly/reboot requested or scheduled. Ledgerlocal until
+nextsubstantivechange to avoid endlessCIreceiptpushloop.
+
+## Blocked audit: unresolved physicalthermal condition — 2026-10-06
+
+Threeconsecutivepost-CI goalturns revalidated sameblocker without new
+evidence/statechange: isolated125W15minute trial stops80C at207.56s,
+noCPU/RAMtestlive, allCIterminalgreen. Existingsoftwarepower/RPM/
+clock/energy diagnostics do not establish blockcontact/CPUvoltage/loadtime
+heattransfer. Pendingblock/pastehistory is missingphysicalinput. Do not
+rerunsamefailedload, weaken80Cguard, lowerchosenbaselinewithoutdecision,
+claimshortdiagnosticasacceptance, or boot/disassemblewithoutcoordinating.
+CPUstable prerequisite holdsdependentRAM/heavyworkload/soak/freeze gates;
+no meaningfulsafeindependentrequiredaction identified atthispoint.
+Goalmarkedblocked, notcomplete/paused. Source125Wtestactive/keeper/
+Waylandpreserved; bootdefaultgeneration37 unchanged. Resumeonnewphysical
+information or conditionchange; no userreboot requested. Ledgerlocal.
+
+## User thermal-criterion correction implemented; validation resumed — 2026-10-06
+
+Directuser rejects magic80C boundary and explains coolantwarmup. Acknowledge
+prior error: plan/test80C was treatedas hardwarefailure, blocked oncontact
+without evidence. Historical receipts remainunchanged; classify as deliberate
+criterion-aborted/incomplete, not overheating/unstable/hardwarefault proof.
+Withdrawpastehistoryprerequisite and relatedblocked interpretation. User
+continuation resumesgoal; originalscope retained. Actualcoolantwarmup was
+not captured duringload, so explanation consistent but not quantitatively
+confirmed. No remount/BIOS/reboot request.
+
+PrimaryIntel SKU199311 specs Tjunction100C:
+https://www.intel.com/content/www/us/en/products/sku/199311/intel-core-i510600k-processor-12m-cache-up-to-4-80-ghz/specifications.html
+All7coretemp criticalattributes read100000mC. Newdistinctrootprivate
+cpu-125w-hardware-limits15/ supervisor requires that verifiedcriticalvalue,
+paired24throttlecounter baseline/after, stopsatcritical or countergrowth,
+keeps125Wreadback/cooling/workload/maintenance/time guards. Retains12worker
+all-methods/verify15m, nice19,0.5s temperature/packagepowertrends. Session
+82335live; no competinggame/render/build/RAMload, desktoppreserved.
+Acceptance dependsfull900s/verification/nohardwareerrors/throttling, not
+crossing80C. Precondition/script/log/samples/receipt remainprivate600;
+no packagepolicy/ratio/voltage/coolingthresholdchange. Ledger/statuslocal
+pendingterminaloutcome, no prematurePASS/freeze.
+
+## Next RAM validation prepared — 2026-10-06
+
+Prepared and syntax-checked, not started: root-private
+run-memory-test-20g-hardware-limits.py, memtester20GiB/one full loop.
+Tests about64% of installed RAM, with greater desktop headroom than
+prior incomplete22/24GiB attempts. Current MemAvailable about28GiB;
+recheck before launch. Preserve3GiB headroom/256MiB swap-growth guards,
+mlock requirement, cooling and bounded timeout. Replace old80C cutoff
+with verified100C critical boundary and paired thermal-throttle counters.
+Supervisor refuses concurrent stress-ng. CPU prerequisite still running;
+no RAM acceptance claimed, user apps preserved, no reboot.
+
+## Development-validation thermal provenance corrected — 2026-10-06
+
+Corrected false historical wording that attributed80C to coretemp.
+Added current125W/15minute/direct-user criterion override to that document,
+retaining original interrupted-run observations and linking current status.
+Prepared RAM supervisor now records initial/final memory, swap-free and
+pressure samples privately, with125W readback guard. Not launched while
+CPU PID144260 remains live. No matching recent kernel hardware/MCE/OOM/GPU
+fault events found in scoped15minute journal query.
+
+## PR and exact-head CI reconciled — 2026-10-06
+
+LiveGitHub CI37456067075 completed/success on
+c9bb1a9441545fc641804d1dff6bb8b09a18bc0b. Does not certify current
+local documentation deltas or incomplete physical gates. DraftPR7 body
+updated: user supersedes80C cutoff, hardware-evidence15minute test pending,
+paste/contact not prerequisite, DarkSouls functional useracceptance and
+observed post-exit governor restoration accepted with sourcebinding limit.
+CPU PID144260 stilllive at608s,78C,120.22W; checkedcpu0core/package
+throttle counters0, failedunitsnone. No parallel RAM/heavy workload.
+Keep trial running to original15minute duration; no earlyPASS.
+
+## CPU125W15minute acceptance PASS; RAM pass launched — 2026-10-06
+
+Authoritative cpu-125w-hardware-limits15/receipt.json and complete stress.log
+reviewed: start11:16:48.543842UTC, elapsed900.380193542s, exit0, no stop,
+peak81C, bothlimits125000000uW, actualpl4test-active closure, unchangedboot
+33d53799-a016-48ce-8754-8da64a76f7f0. Stressor reports full900s,12CPU
+workers passed,0failed/skipped/untrustworthy. All24 before/after core/package
+thermal-throttle counters0. Kernel since start has no matching hardware/MCE/
+OOM/amdgpu fault/reset/timeout. Commander active; failedunitsnone; session1
+Wayland active. Accept exact user-selected15minute CPU validation scope.
+No claim exhaustiveOC stability, measured coolant causality, physicalresume
+or newboot deployment. Original80C cutoff histories remain incomplete only.
+
+Launched separate root-private20GiB/one-loop RAM supervisor, session61486,
+after CPU terminal. Available29495300KiB, swapfree33296524KiB before launch.
+Target is substantial full-pass RAM evidence with healthy desktop headroom,
+not whole-installed-RAM testing. No concurrentCPU test; GUI preserved.
+Inspect complete pattern log/mlock/exit/guards, memorypressure/swap and
+post-kernel evidence before acceptance. No reboot or userapp termination.
+
+## RAM early evidence and PR synchronization — 2026-10-06
+
+SameRAM PID152959 remains live;20GiB allocation/mlock confirmed. Early
+log reached SolidBits after comparison and SequentialIncrement patterns
+reportedok. This is progress, not fullpass. Roughly8GiB available; sampled
+memorypressure averages0. Commander/GUI retained. Root-private
+ram-20g-hardware-limits/early-system-observation.json captured11:34:36UTC,
+explicitly early-run NOTprelaunchbaseline: no exposedEDACcontroller
+counters, failedunitsempty, session1Waylandactive. Cannot claim EDACzero
+errors without exposedcounterevidence.
+
+DraftPR7 updated with completedCPU900.38s/12workers/peak81C/zero thermal
+throttle and activeRAM, removing outdatedCPU-pending interpretation.
+CI37457177789 confirmedin_progress on9688893e1eb7cc01a84539f8a21ed69f2b91ef49.
+Retain sameCIhandle; earliergreen not exactcurrenthead acceptance.
+Local ledger remains pending nextsubstantiveresult to avoid polling commits.
+
+## Real-project PIE lifecycle probe prepared — 2026-10-06
+
+Read installedUE5.8.2 LevelEditorSubsystem.h/.cpp declarations for
+EditorRequestBeginPlay/EndPlay and IsInPlayInEditor. Prepared and syntax
+checked ~/.cache/nixos-validation/final-candidate-pie-probe.py using actual
+AI_Gavin_Project configuredmap, map/world/actor assertions, asynchronous
+Slate callback, actualPIE observed-state120s hold, endrequest/statecheck,
+60s start/30s end bounds and private JSON report. No sourceasset saves.
+Not launched while RAM PID152959 remainslive. This prepares lifecycle
+evidence only; interactiveediting, broad build, ordinary editor exit and
+representativeworkflow stillrequired. Do not treat automatedPIE as human
+interaction or claim120s substitutes entire sustainedworkload scope.
+
+## PIE harness acceptance-state review; current CI PASS — 2026-10-06
+
+Before any execution, corrected preparedPIEprobe transient success state:
+mapload records map_loaded only; success staysfalse until120s actualPIE
+and endstate verified, terminal flag distinguishes pending/result. Error
+cleanup requests endplay. Installedengine implementation confirms beginplay
+uses active viewport and actualPlayInEditor worldtype; endplay requests
+normalendmap, observedpredicate is IsPlayingSessionInEditor. Probe still
+not launched; no interactiveworkflow claim. Syntaxchecked.
+
+CI37457177789 authoritativelycompleted/success on
+9688893e1eb7cc01a84539f8a21ed69f2b91ef49; pendinglocal ledger is not covered.
+RAM samePID152959 live beyond5minutes, SolidBits progressing, no terminal
+receipt yet. Preserve original test; do not restart due polling intervals.
+
+## Longer real-project Blender render prepared — 2026-10-06
+
+Read acceptedfinal-blender/render.json to reuse actual
+~/Development/Blender/mirror_techproof_v006_persistent_wipe.blend,33objects,
+1920x1080, RX9070XT HIP-only. Existing12.6673s/64sample smoke staysaccepted.
+Prepared syntax-checked ~/.cache/nixos-validation/sustained-blender-project.py:
+1024samples, adaptive sampling disabled, fullresolution, explicitHIP-only
+CPUoff, sourcehash before/after assertion, separatePNG and privateJSON.
+Settings changed only in memory; no save of blend/preferences. Actual
+duration/device/errors must be inspected after execution, not inferred
+from samplecount. This will cover longer render, not interactive editing
+or whole representativeworkflow. Not launched duringRAMtest.
+RAM samePID152959 live at436s, about8GiB available, pressure averages0.
+No competingheavyload, no reboot, no sourceasset modification.
+
+## RAM same-process verified wait — 2026-10-06
+
+AuthoritativePID152959 confirmedlive twice thisturn, at488s then571s.
+SolidBits setting/testing advanced97→133; logprogress demonstrates work
+rather than relyingon stale lock/state. At571s MemAvailable8501944KiB,
+SwapFree33295436KiB, pressure averages0, CPU57C, no terminalreceipt.
+Keep original20GiB fullpattern loop running; no parallelUE/Blender/build,
+no artificialduration cutoff, no RAMPASS untilterminal completeevidence.
+This is verifiedwait; physical/workload/freeze objective remainsactive.
+
+## RAM supervisor and process verified live — 2026-10-06
+
+Same unifiedexecsession61486 polled: stillrunning/nooutput; authoritative
+memtesterPID152959 live at621s and711s. SolidBits advanced155→194.
+At711s available8491212KiB, swapfree33295436KiB, pressure averages0,
+CPU58C. No terminalreceipt or replacementtest. Continue original fullloop,
+keeping heavyworkloads idle and GUI intact. Next action depends terminal
+pattern completion, not the observation timeout. Ledgerlocalpendingresult.
+
+## RAM pattern progress beyond prior partial attempts — 2026-10-06
+
+SamePID152959 authoritativelylive at921s; fullpatternlog inspected.
+StuckAddress, RandomValue, XOR/SUB/MUL/DIV/OR/AND comparisons,
+SequentialIncrement, SolidBits and BlockSequential all reportok.
+Checkerboard nowinprogress. Previous largeattempts had notcompleted
+SolidBits, so this is newpattern evidence, not a rerunclaim.
+Available8489708KiB, swapfree33295436KiB, pressure averages0, CPU66C.
+Remainingpatterns/fullterminal stillrequired; noRAMPASS yet. No heavy
+parallelwork or reboot. GUI remainsretained. Localledger pendingterminal.
+
+RAM continuation verified at1073s on originalPID152959: available8541932KiB,
+swapfree33295436KiB unchanged, pressure averages0, CPU64C. Checkerboard
+was stillinprogress in thisturn's pattern inspection; no terminalreceipt.
+Commander and session1 active. Keep samefullloop running, no reboot or
+heavyparallelwork. This is verifiedwait, not a new stabilityPASS.
+
+RAM continuation: Checkerboard reportedok, BitSpread inprogress at1127s;
+originalPID152959 confirmedlive again at1222s. Available8513176KiB,
+swapfree33295436KiB, pressure averages0, CPU62C. Remainingpatterns and
+terminal/post-system checks stillrequired. No testrestart or heavyoverlap.
+
+RAM verifiedwait: originalPID152959 live at1268s and1352s; pattern
+work advancing, no terminalreceipt. Available8531940KiB, swapfree
+33295436KiB unchanged, memorypressure averages0, CPU63C. Preserve
+samefullpass and noheavyoverlap; no stabilityPASS or reboot claimed.
+
+RAM pattern update: BitSpread passed; BitFlip inprogress at1406s.
+SamePID152959 confirmedlive again1492s, available8512956KiB, swapfree
+33295436KiB unchanged, pressure averages0, CPU67C. Failedunitsempty,
+session1Waylandactive. Fullterminal/remainingpatterns stillpending.
+Keep same20GiB loop running withno competingheavyworkload or reboot.
+
+RAM verifiedwait at1620s: samePID152959 live, BitFlip work advancing
+(last inspectedpattern109 at1539s), available8503068KiB, swapfree
+33295436KiB unchanged, pressure averages0, CPU61C. No terminalreceipt;
+no replacementtest, artificialstop, or heavyparallelwork. Fullpasspending.
+
+RAM same-process verifiedwait1751s: PID152959 live, BitFlip advanced
+through167 at1671s; available8494732KiB, swapfree33295436KiB unchanged,
+pressure averages0, CPU62C, no terminalreceipt. No restart/heavyoverlap.
+
+RAM verifiedwait1879s: originalPID152959 live, BitFlip advanced259;
+available8509968KiB, swapfree33295436KiB stable, pressure averages0,
+CPU67C, no terminalreceipt. Continue fullpattern pass, no heavyoverlap.
+
+RAM verifiedwait2095s: originalPID152959 live across three observations,
+BitFlip advanced280→354. Available8477448KiB, swapfree33295436KiB stable,
+pressure averages0, CPU64C. Commander/session1 active. Fullpass pending,
+no restart/parallelheavyload/reboot.
+
+RAM verifiedwait2219s: originalPID152959 live; BitFlip advanced373 at
+2139s. Available8501784KiB, swapfree33295436KiB stable, pressure averages0,
+CPU62C. No terminalreceipt; preserve original fullpass/noheavyoverlap.
+
+RAM newpattern evidence: BitFlip nowreportsok; WalkingOnes inprogress.
+OriginalPID152959 confirmedlive41m29s after repeatedsameprocess polling.
+Lastsample2439s available8535400KiB, swapfree33295436KiB stable, pressure
+averages0, CPU66C. Remainingpatterns/terminal/postsystem checks required.
+No reboot, replacementtest or competingheavyload.
+
+RAM verifiedwait2625s: originalPID152959 live, WalkingOnes work advancing
+(last observed36 at2537s), available8516864KiB, swapfree33295436KiB stable,
+pressure averages0, CPU64C. Remainingpatterns andterminal pending.
+No competingheavyload, restart or reboot.
+
+RAM newpattern evidence: WalkingOnes reportsok; WalkingZeroes running.
+OriginalPID152959 confirmedlive2772s; available8520504KiB, swapfree
+33295440KiB, pressure averages0, CPU64C. Remainingwritepatterns/full
+terminal andpostsystem stillrequired. Samepass retained, no reboot.
+
+RAM verifiedwait2937s: originalPID152959 live, WalkingZeroes advanced47
+at2854s; available8523692KiB, swapfree33295440KiB stable, pressure
+averages0, CPU59C. No terminalreceipt; fullpasspending, no restart or
+competingheavyload/reboot.
+
+## Substantial20GiB RAM full-pass acceptance PASS — 2026-10-06
+
+OriginalPID152959 terminal; root-private ram-20g-hardware-limits/receipt.json
+and completepatternlog inspected. Start11:32:32.501213UTC, elapsed
+3036.550295083s (50m36.55s), exit0, no stop,20GiB allocated/locked,
+one complete loop, actualpl4test-active closure, unchangedboot33d53799.
+All16 enabledpatterns ok: StuckAddress/RandomValue, CompareXOR/SUB/MUL/
+DIV/OR/AND, SequentialIncrement, SolidBits, BlockSequential, Checkerboard,
+BitSpread, BitFlip, WalkingOnes, WalkingZeroes. LogendsDone, nofailurelines.
+Optional8/16bit writepatterns not enabled in this pinnedbinary/run; do not
+claim those ran. Before/after24thermal counters all0. Peak79C; initial
+available29505132KiB, minimum8323716KiB, final29570220KiB. Initialswapfree
+33296524KiB→33295440KiB:1084KiB growth, below guard. No matching new
+MCE/hardware/OOM/amdgpu fault/reset/timeout in kernel journal since start.
+Commander active, failedunitsempty, session1Waylandactive. EDAC counters
+not exposed; don't claim EDAC zero from absence.
+
+Accept substantialtested20GiB completepattern scope, not allinstalledRAM
+or exhaustiveOC stability. Earlier24/22GiB receipts remain incomplete.
+CPU15minute and substantialRAM gates nowaccepted, advancing realUE/Blender
+workloadcriticalpath. No reboot, closinguserapps, or newboot deployment.
+
+## Longer actual Blender HIP render PASS — 2026-10-06
+
+After RAM terminal, launched preparedfactory-startup backgroundreal-project
+render alone. Supervisor session52681 terminalexit0: start12:26:39.660623UTC,
+elapsed107.247812148s, no guardstop, peakCPU71C, actualpl4closure, unchanged
+boot33d53799. Renderreport:105.212839011s,1920x1080/100%,1024samples,
+adaptiveoff, RX9070XT HIP enabled, CPUdisabled, outputPNGpresent.
+Before/afteractualprojectSHA bothbc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe.
+Logsavedoutput and ordinaryBlenderquit, exit0. CUDA CUEWwarning was
+nonfatal; actualHIPselection confirmedbyreport, not assumed. No matching
+newkernel GPUreset/fault/timeout/MCE/hardware/OOM since renderstart,
+failedunitsempty, Commander/session1active.
+
+Accept longeractualprojectrender scope; interactive viewport/editing and
+representativeworkflow remainopen, not replaced by this105s batchrender.
+Private artifacts ~/.cache/nixos-validation/sustained-blender-*; no user
+preferences/project saves or reboot. CI37463127370 observedrunning on
+15fe7705e5be20bc13b2c8609f4c73382ced0767; no prematurecurrentCIpass.
+
+## Actual Unreal configured-map PIE lifecycle PASS — 2026-10-06
+
+Preparedprobe executed alone afterBlenderterminal via existingunreal-engine
+SteamFHS wrapper, actualAI_Gavin_Project, temporarySDLwayland, Vulkan,
+unattended ExecutePythonScript; no ansimalloc/globalcompilerchange.
+Session19848 terminalexit0, originalPID161345 gone after ordinaryeditor
+scriptcompletion. Logconfirms SDLwayland/RADV, actualPIEworld creation
+and start, then normalLogExit/SDLTearDown. Reportterminalsuccess true:
+UE5.8.2-56702186, actualFirstPlayableRoom map,28actors, pie_started and
+pie_ended true,120.001425857s actualPIE,14389Slatecallbackframes, elapsed
+120.14467925s. Frames arecallbackcount, not frametimebenchmark/renderFPS.
+ProjectGit remainsclean, no assets saved. Scopedkernel since12:30:47UTC
+no matchingnew hardware/MCE/OOM/amdgpu fault/reset/timeout; Commander
+active, failedunitsempty, session1active. Actualruntimepl4candidate,
+no reboot. Privatefinal-candidate-pie-{probe.json,editor.log,launch.log}.
+
+Accept automatedrealprojectmap/PIE/endplay/editor lifecycle; interactive
+editing/representativesession and appropriatelybroadC++build remainopen.
+CI37463127370 confirmedcompleted/success on15fe7705e5be20bc13b2c8609f4c73382ced0767;
+currentlocaldocumentation delta not covered by thatexactheadreceipt.
+
+## Actual Unreal project editor-target rebuild PASS — 2026-10-06
+
+InstalledBuild.txt confirmed; existingSteamFHS Build.sh invoked actual
+AI_Gavin_ProjectEditor LinuxDevelopment -Rebuild, MaxParallelActions2,
+WaitMutex/NoHotReload, nice19. No engine/source/toolchain substitution.
+Supervisor session87245 terminalexit0: start12:36:18.133379UTC, elapsed
+40.240138887s, no guardstop, peakCPU65C, actualpl4closure/unchangedboot.
+LogResultSucceeded, UBT39.93s, UBA36.95s;4actions: sharedPCHcompile,
+Module.AI_Gavin_Project.cpp compile, editorlibrarylink, targetmetadata.
+Unitysource inspected:59includes covers all25actualproject.cpp files;
+missingprojecttranslationunits0. Rebuilt wholeproject module and generated
+code in installedengine context, NOT fullengine sourcebuild.
+EpicClang20.1.8/RockyLinux8sysroot/bundledlibc++ confirmedinlog.
+ProjectGitclean, no sourcechanges; no matchingnew hardware/MCE/OOM/GPU
+faults sincebuildstart, failedunitsempty. Accept broaderprojectbuild gate
+beyond priorone-link incremental. InteractiveUE/Blender sessions remainopen.
+Private unreal-project-rebuild-{receipt,coverage}.json andbuildlog.
+CI37464236863 confirmedsuccess on60d0cdb6482dbe6c2b10a784e868e8e6382f7d55;
+localnewledger not covered by currentexactheadCI. No reboot.
+
+## Actual Blender editing session opened — 2026-10-06
+
+With all heavytests terminal, opened actualproject Blender GUI with factory
+preferences; session50108, compositorPID162310 mapped/nativeWayland.
+Logconfirmsactualblend loaded. ExistingVSCodewindow remainsmapped.
+No automatedsourceedit/save or desktoprestart. Askeduser to useviewport/
+editing normally and report functionalexperience, then exitwithout saving
+if desired. No callablecomputer-use tool exposed for observing humaninput
+experience; priorbatchrender cannot establish thatscope. Asked actualdevice
+applicability StageUSB/controller/Bluetooth/HDRVRR/nativegames to avoid
+inventingunusedrequirements. These aremissing observations/preferences,
+not deploymentapproval. Independentdocumentation/reviewwork continues.
+
+## Completed workload evidence retained and PR synchronized — 2026-10-06
+
+DraftPR7 body updated from livepriorbody with fullRAM/longerBlender/PIE/
+broaderUEbuild acceptance and remaininginteractive/applicability/freeze
+gates. CurrentCI37465058365 observedrunning on2372e7e4854c27b4c9a31b1246f45280b3d99914,
+not prematurelyaccepted. BlenderPID162310 stilllive/nativeWayland with
+actualproject; userobservation and actualdeviceuse questions pending.
+
+Copied8 completedworkload receipt/report/log artifacts into rootprivate
+/persist/nixos-readiness-20261005/completed-workloads-20261006/, directory
+700/files600, preserving homeoriginals. Includes Blender render/outer
+receipt/log, PIEreport/editorlog, UErebuild outerreceipt/coverage/log.
+This is retainedvalidationevidence, not canonicalfreezemanifest or external
+backupfreshness acceptance. No source/configpolicy change or reboot.
+
+## Current closure identity and retained-artifact integrity verified — 2026-10-06
+
+All8 retained completedworkload artifacts SHA256-match home originals;
+privatecopy-integrity.json records individualmatches. Localpersist copies
+are not the independentVentoybackup. Currentoffline evaluation of dirty
+documentation-only worktree succeeds: normalpl4iy6fdvgjanswwwvvvja42p17p40zd
+and persistent4rkvhfwj2vvj932ck5hp2izvrs65dp2f unchanged. Thus recent
+documentation changes do not require differentruntime closures. No
+activation/bootdefaultchange or freeze certification implied.
+CI37465058365 nowterminalsuccess on2372e7e4854c27b4c9a31b1246f45280b3d99914.
+Currentlocalledger remainsoutside thatexactcommit. BlenderPID162310 still
+live about5minutes; editing/deviceapplicability replies pending. Before
+freeze stillrequired interactiveworkflows/recoveryprovenance/freshness/
+soak/fullfinalsourcebinding. No reboot proposed before independentworkdone.
+
+## Recovery provenance additional receipt reconciliation — 2026-10-06
+
+Inspected rootlevel namedISOreceipts outside earlierreadinessdirectory:
+/persist/nixos-stable-refresh-iso-receipt-20261005.json confirms d55nyISO,
+1496678400bytes, expected52e3496c...SHA; desktop-iso-build JSON confirms
+drv/output buildidentity only. Neither records physicalmedia boot/date/
+read-onlyMP600/subvolumeinspection. Ventoybackup artifactnames contain
+backup/copy/restore evidence, not identifiedphysicaldrillreceipt. Older
+unifiedguide references requiredread-onlydrill but supplies no matching
+terminalphysical receipt at inspectedlocations. Scope-specific conclusion,
+not proof noevent everoccurred. Exactphysicaldrill remainsunverified;
+retainedcurrentprocedure read-only/noDisko/noformatting. No newreboot
+scheduled while pendinginteractive andotherpre-reboot work.
+
+## Exact-head CI and interactive session verified wait — 2026-10-06
+
+SameGitHubrun37465911086 confirmedin_progress twice on
+294b895a8250e056ada4bdd9a8b4875978067a2d. BlenderPID162310 stilllive
+at10m08s, failedunitsempty. Currentworktree wasclean beforethisledger.
+No new userediting/deviceapplicability replies; elapsedapp uptime does
+not certify interactivefunctional use or start acceptedmultidaysoak.
+Keep sameCIhandle, preserve Blender andGUI, no repeatedheavytests or
+newreboot. Remainingfreeze/recovery/sourcebinding gates stayopen.
+
+## Current-head CI terminal PASS and remaining dependencies — 2026-10-06
+
+SameGitHubrun37465911086 completed/success on
+294b895a8250e056ada4bdd9a8b4875978067a2d. No rerun. Localpostcommitledger
+notcovered; avoid endlessCIreceiptcommits. BlenderPID162310 stilllive
+12m14s, session1active. No userediting/deviceapplicability answers yet.
+Immediateworkflow acceptance cannot be inferred from processuptime;
+completedautomatedCPU/RAM/render/PIE/build checks retained, not repeated.
+Recoveryphysicalbinding andfinalboot/resume remainunverified; no new
+maintenancewindow assumed from older completedreboot authorization.
+Soak/freshness/finalmanifest/tag remaindependent on remainingacceptance.
+Meaningfulnextprogress requires actualinteractive observations or intended
+workflow/device information; currently no suchanswer. Goalnotcomplete.
+
+## Remaining-input dependency revalidated — 2026-10-06
+
+CI37465911086 stillterminalgreen; no furtherCIwait. BlenderPID162310
+stilllive13m10s, no exit event/report, session1active. No newediting/device
+answers. Neither applicationuptime nor absenceoferrors proves interactive
+editing/audio/device applicability. Immediate requiredacceptance depends
+on thoseobservations; independentautomatedtests/evidence reconciliation
+completed. No appropriate repeatedtest/posttagarchitecture work identified
+that advances remaininggate without substitutes. Freeze/backup/soak/source
+binding retain original sequencing. Preserve application andGUI; do not
+mark goalcomplete. Sameinputdependency remains, no newapprovalquestion.
+
+## Blocked audit: interactive observations and applicability pending — 2026-10-06
+
+Sameinputdependency persisted across three consecutive continuationturns
+followingterminalCI: no response to actualBlender editing experience or
+which StageUSB/controller/Bluetooth/HDRVRR/nativegame workflows areused.
+BlenderPID162310 remainslive14m16s, session1active, failedunitsempty.
+No meaningfulremaining independentrequiredaction identified: completed
+CPU/RAM/render/PIE/projectbuild and evidence retained; freeze/soak/source
+binding/backupfreshness depend on unfinishedworkflow acceptance. Repeating
+automatedtests or treating uptime as editing would narrowrequiredscope.
+Goalmarkedblocked pendingtheseobservations, notcomplete/paused. No
+reboot, appclosure, extra approvalquestion or fabricatedPASS. Resume on
+actualanswers/newstate, preserving fulloriginalplan throughfreeze/posttag.
+
+## User workflow response implemented — 2026-10-07
+
+User confirms Blender viewport/editing and Layout/Modeling/UV/Shading/
+Animation allperfect/no freezes/crashes: interactive gate accepted.
+Controller unnecessary. Bluetooth explicitlydisabled; StageUSB/HDR/VRR/
+nativeLinuxgames applicable, examplesStardew/Terraria areusage not evidence
+these titlescurrentlyinstalled. Previousmissing-inputblock superseded.
+Workstation Bluetooth enable/powerOnBoot nowfalse; targetedNixevaluation
+enablefalse. Live rfkill Bluetoothsoftblocked and service stopped, GUIkept.
+FullBluetooth attr evaluation hit deprecatedremoved extraConfig option;
+this is introspectionofobsoleteoption, not evidence enablefalse invalid.
+Both sourceHyprland monitor andmiscVRR changed0→1. OfficialHyprland
+variables confirms1on vs2fullscreen. Legacykeyword rejected harmlessly;
+Luaeval accepted. Partialmonitor update temporarilyselected60Hz; immediately
+reapplied completeoriginal3440x1440@155/scale1/8bit/sRGB declaration with
+vrr1. Currentmonitor vrrtrue/155Hz; configerrorsempty. No restart/reboot.
+Runtime edits are not durableHomeManageractivation; sourcebuild pending.
+HDR remains to enable/validate with actualcontent, no all-dayHDR assumed.
+Currentwpctl StagePro device49exists but onlyHDMI3sink61/default/Firefox
+stream: useraudibleworking accepted, directStageUSBroute notproven.
+Preserve audiblecurrentroute while investigatingprofile/connection.
+
+Workflowpolicy committed/pushed e8775f7; offline normalconfigurationbuild
+started session3820, private workflow-policy-20261007-build.log. No durable
+activation or successfulbuild claim before terminal. Fullobjective resumed
+with actualuser observations, graphicalsession preserved.
+
+## Workflow-policy build/test activation and Stage USB playback accepted — 2026-10-07
+
+Offline normalbuild session3820 terminalexit0: candidate
+2jvq6m083wwg81m718ynwd3c712mw1g5. Dryactivate reviewed: stopBluetooth/
+Commander, reloadDBus, restartHomeManager/polkit/udev, startCommander; no
+compositorrestart. Actualtestactivation session24604 exit0, current-system
+now2j, HomeManager hyprland.lua now8dbph...declaresvrr1. BothRAPLlimits
+125000000uW, powerunit/Commander active, failedunitsempty, session1active,
+VRRtrue atoriginal155Hz. Bootprofile/default notchanged bytestactivation.
+Currentboot hadgeneration37 runtime beforetest: diffremovedBluetooth
+config/unit/obex andaddedchosen125W service/resume policy; priorPLcandidate
+acceptance stillhistoricalexactscope. No newCPU/RAMreruns justforBluetooth.
+
+Bluetooth daemon becameactive followingactivation despite sourceenablefalse;
+rfkill remainedblocked. Appliedruntime mask--now to preventD-Busreactivation
+incurrent session, verifiedmasked-runtime andsoftblocked. SourceBluetooth
+enable/powerOnBootfalse remainsdurable declaration; reboot behaviorpending.
+No permanentruntimefilehack or GUIrestart.
+
+Latestdirectuser says StageUSB alreadytested/used and audiblyplayingrightnow.
+Accept audiblefunctionalUSBplayback; do not request sameconfirmationagain.
+Currentwpctl independentlyconfirms CreativeStagePro analogstereo sink76
+default, Firefoxstream65 FL/FR linkedactive toStageplayback, device49
+USB041e:32b4. PrioronlyHDMI observation historical, not ongoingfailure.
+No forcedroute/profilechange byagent; preserveworkingroute. Reconnect and
+reboot persistence remainseparateunproven scopes ifrequiredbyfinalplan.
+HDR/VRR realcontent and nativeLinuxgames remain applicable/open.
+
+
+## HDR policy prepared; Stage Pro confirmation reaffirmed — 2026-10-07
+
+Latest user confirmation closes functional Stage Pro USB playback acceptance.
+Current inspection still shows Creative Stage Pro Analog Stereo as default sink
+76, with Firefox FL/FR connected to Stage playback. Stream state at inspection
+was init, so this snapshot alone is not a fresh continuous-playback measurement;
+audible acceptance rests on the explicit user report plus observed routing.
+Reconnect/reboot persistence is a separate scope, not an audible-playback blocker.
+
+Hyprland source now requests 10-bit output and render.cm_auto_hdr=1 for automatic
+fullscreen HDR switching while the desktop stays sRGB. Live complete Lua monitor
+and render declarations accepted without config errors: DP-3 remains
+3440x1440@155Hz, VRR true, XRGB2101010, sRGB; cm_auto_hdr reports 1.
+These observations prove the policy/output format, not actual HDR content or
+HDR-to-desktop restoration. No reboot or compositor restart was performed.
+Official configuration reference: https://wiki.hypr.land/Configuring/Basics/Variables/
+and https://wiki.hypr.land/configuring/core/monitors/colors/.
+
+Scoped Steam library inspection found Dark Souls, Proton and runtimes only.
+Native Linux games and HDR are applicable; no suitable installed content was
+identified in that scope. A question requesting native-game launcher/library
+and HDR content locations is pending. Do not interpret scoped absence as lack
+of all installed games, or synthetic output as real workload acceptance.
+Source build/activation for this new HDR change remains pending until terminal
+results are recorded; current test-active system is still 2jvq6m083wwg81m718ynwd3c712mw1g5.
+
+
+User supplied workload candidates — 2026-10-07: installing Stardew Valley
+for normal native Linux use and Sky: Children of the Light for HDR validation.
+User reports the recently formatted system has no other installed candidates.
+The content-location question is resolved; wait for installation completion
+and inspect actual native/Proton selection and HDR support/settings. Steam HDR
+listing is user-reported, not yet an observed successful HDR session. Neither
+installation nor acceptance is complete merely because a candidate is selected.
+Preserve the working Stage Pro route throughout these checks.
+
+HDR-policy offline build session49628 completed exit0. Built normal closure
+/nix/store/bjxxpsm7f42b909v9gpf48p7pinajc3x-nixos-system-desktop-26.05.20261004.0d9e9b8.
+Build log: ~/.cache/nixos-validation/hdr-policy-20261007-build.log.
+No system activation or boot-default change in this step; live Lua policy is
+already applied. Next review dry activation before making Home Manager source
+durable, then validate the selected games when installations finish.
+
+
+## Native Linux gameplay accepted — 2026-10-07
+
+Stardew Valley/app413150 functional native Linux gameplay PASS. User confirms
+currently playing and considers this check finished; attached screenshot shows
+actual in-game play. Read-only live inspection independently confirms running
+PID15872 resolves to Steam/steamapps/common/Stardew Valley/Stardew Valley,
+an x86-64 Linux ELF executable, launched through Steam Linux Runtime
+scout-on-soldier. This is the native Linux route, not a Proton inference.
+No interruption, forced exit or repeat gameplay request is needed.
+During inspection DP-3 remains155Hz, VRR true, XRGB2101010/sRGB; system failed
+units empty. This verifies enabled VRR policy while playing, not measured
+frame-by-frame adaptive refresh. Screenshot overlay is not a benchmark.
+HDR acceptance remains open for Sky: Children of the Light. Native game
+installation and functional gameplay are now complete; natural-exit policy
+restoration/final-source binding remain distinct checks where required.
+
+
+## HDR source activated and current-status reconciliation — 2026-10-07
+
+Root dry activation showed only Home Manager restart. Test activation session1832
+completed exit0; current-system bjxxpsm7f42b909v9gpf48p7pinajc3x. Home Manager
+installed10-bit/vrr1/cm_auto_hdr1 source; Hyprland config errors empty, DP-3
+155Hz/VRRtrue/XRGB2101010/sRGB. Stardew PID15872 continued running.
+Commander actual unit commander-core.service active; an earlier query using
+nonexistent corsair-commander-core returned inactive, not a cooling failure.
+Power unit active/both limits125W; no failed units. Bluetooth masked-runtime
+and soft-blocked. No reboot, compositor restart or boot-default change.
+Latest audio snapshot HDMI3 default with active Firefox and Stardew links;
+Stage sink remains available. No agent audio rerouting occurred. Accepted
+user USB playback remains valid historical functional evidence, not a claim
+that every later stream continues using USB. Preserve current user selection.
+
+Current-status partial-gates section contained superseded Blender/Unreal/audio
+claims; reconciled with accepted receipts and explicit user observations.
+Full offline flake check started for the HDR/Bluetooth/VRR source; terminal
+result pending. GitHub CI4c586ee/e8775f7 passed;4f0cb2f running at inspection,
+5955546 cancelled by successor. Do not label a pending check successful.
+
+Built HDR-policy persistent-root specialisation evaluated to
+/nix/store/8v183hn0p5yv7wf625yj38n6bhsjpxz6-nixos-system-desktop-26.05.20261004.0d9e9b8
+and exists in store. Added independent readiness-hdr-normal and
+readiness-hdr-persistent GC roots via nix-store --add-root --realise.
+Existing accepted/fallback roots retained. No physical boot claim for these
+new closures. The source checks remain running, not a reason to repeat
+accepted hardware stress tests.
+
+
+Local flake check session70259 completed exit0/all checks passed: flake outputs
+evaluated and4 changed check derivations built (desktop evaluation, formatting,
+statix, deadnix); unchanged checks reused. This is not a fresh run of all VM
+packages/reconstruction or hardware stress. CI37694567526 completed success
+on4f0cb2fbbebc8b6a335b3009c9e81e0b1ef70e76.
+
+Monitor capability read-only inspection: pinned edid-decode (v4l-utils1.32.0)
+reports MSI MAG401QR CTA HDR static metadata type1, SMPTE ST2084/PQ and
+BT2020RGB/YCbCr. Advertised maximum luminance417.710cd/m² and frame-average
+374.834cd/m² are EDID metadata, not measured panel brightness; advertised
+vertical range48–155Hz is not by itself measured active VRR. Full receipt
+~/.cache/nixos-validation/monitor-edid-20261007.txt. No output change.
+Initial offline tool-only build began an unnecessarily broad source dependency
+fetch; cancelled exact nix process22114 with SIGINT, terminalexit1. Retried
+same pinned tool with binary-cache access: session58598 exit0,2.3MiB fetched.
+No system package installation, lockfile change or active workload restart.
+
+Sky/app2325290 files were briefly visible in scoped enumeration, but its
+manifest was absent on subsequent read. Installation completion is unverified;
+no repeated launcher invocation or forced game start while Stardew runs.
+HDR requires an actual supported presentation path, not only the Steam label
+or10-bit output. Existing Proton Experimental script has no matched
+ENABLE_HDR_WSI/DXVK_HDR handling in the inspected launcher text; this does
+not establish lack of support throughout Proton. Research/inspect exact
+game presentation path before configuring per-title HDR launch behavior.
+
+
+## New final guide execution and actual HDR video evidence — 2026-10-07
+
+Full1352-line supplied final guide imported near top; only trailing whitespace
+normalized, attachment SHA retained. Its reviewed head4f0cb2f is historical.
+CI37695517220 subsequently passed on c8307a8869aba76ecb40fa89467e9681d69490fe.
+Current guide artifact build session79355 exit0 independently rebuilt/evaluated
+normal bjxxpsm7f42b909v9gpf48p7pinajc3x, persistent-root8v183hn0p5yv7wf625yj38n6bhsjpxz6
+and recovery d55ny1z4d53slhz3ilvyy2mg6d8khrqn from current tracked tree plus
+imported documentation. Recovery ISO content hash reverified
+52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061.
+This is preparation, not a frozen-source/final physical-boot acceptance claim.
+
+Generation37 closure diff only names removal of Bluetooth/obex configuration
+and units plus addition of125W unit/script and generated system size change.
+No unexplained kernel/Mesa/LLVM package change in that diff. Kernel/initrd
+resolve to identical artifacts, kernel parameters/init contents and fstab
+identical. prepare-root differs only in its own top-level systemConfig identity,
+verified by normalized comparison. Source storage/activation-safety/topology
+paths unchanged since reviewed1f96e0d. Initial comparison's directory-content
+false for kernel-modules means not a regular file, not unequal directory data;
+resolved directory path is identical. Remaining persistence-contract comparison
+should include persistent-root initrd/credential/identity contracts before
+recording definitive final root-chain decision. No automatic extra boot chain.
+
+User supersedes Sky HDR candidate: downloaded samples in ~/Downloads.
+landing_hdr.mkv: HEVC3840x1920/yuv420p10le/BT2020/PQ.
+waterfall.mkv: AV1 3840x2160/yuv420p10le/BT2020/PQ with mastering metadata
+and content-light levels. Both are real HDR-tagged video, not SDR inverse
+tone mapping. Fetched pinned mpv0.41.0/ffmpeg8.1.2 diagnostic tools into
+store, no permanent package/configuration or lockfile change.
+
+First waterfall playback with target-colorspace-hint=yes alone negotiated
+sRGB target and completed ordinary EOF/exit0: not accepted HDR output.
+Source metadata mode (--target-colorspace-hint-mode=source) negotiated
+PQ/BT2020 and reported417nit target using EDID, not measured brightness.
+Bounded10-loop fullscreen proof session5749 exited0 at EOF. During playback
+DRM DP-3 colorspace BT2020_RGB/max_requested_bpc10, mpv native Wayland
+fullscreen2 and PQ/BT2020. Afterwards DRM colorspace Default, Hyprland
+155Hz/VRRtrue/XRGB2101010/sRGB retained. No failed units. Runtime automatic
+HDR signalling and return demonstrated; perceptual image quality/monitor HDR
+indication still pending user observation. Do not overclaim based on configured
+Hyprland preset: it stays srgb during HDR and is not effective signal telemetry.
+Sample loop report showed4 dropped frames; no quantitative smoothness claim.
+
+A preceding loop was controlled by mpv length/loop interaction, later observed
+terminalexit0. Two attempts to use obsolete/nonmatching Hyprland closewindow
+dispatch syntax failed without closing unrelated windows; a targeted SIGTERM
+found its already-exited PID absent. Lua eval error was retained by configerrors
+until successful hyprctl reload; now configerrors empty, no compositor restart.
+Use supported Lua dispatcher APIs or player IPC for future controlled exits.
+Receipts/logs in ~/.cache/nixos-validation/hdr-*-20261007-*; DRM before/after
+proof files retained. Official mpv colorspace options:
+https://mpv.io/manual/master/#options-target-colorspace-hint-mode
+
+No reboot/suspend/boot-default change. Next actions: remaining exact root
+contract comparison and boot-only preparation; visual HDR feedback, interactive
+Unreal, final physical boot/resume/Proton/audio persistence, recovery provenance,
+soak/freeze/backup/canonical artifacts/merge/tag remain open in guide order.
+
+
+## Final root-chain decision and generation38 boot-only installation — 2026-10-07
+
+Compared accepted generation37 normal/persistent candidates with current
+normalbjxxpsm7f42b909v9gpf48p7pinajc3x/persistent8v183hn0p5yv7wf625yj38n6bhsjpxz6.
+Both variants retain byte-identical initrd/kernel/parameters/fstab and machine-ID
+persistence service, identical persistence script references and identical
+user-group generation JSON/helper references (compared paths only; no secrets
+read/printed). Source modules/storage, activation-safety, desktop persistence,
+Disko/hardware configuration unchanged since reviewed1f96e0d. prepare-root
+normal differs only top-level identity, verified normalized comparison.
+The compared etc/passwd/group files are absent from both static closures;
+the authoritative activation user-generation contracts matched instead.
+The guessed pre-switch-checks artifact does not exist in either closure;
+absence is not acceptance evidence. Existing switch-inhibitor artifact identical.
+
+Decision under newest guide PhaseG: retain accepted generation37 physical
+normal/persistent/normal chain; no extra persistent→normal boots required
+for these ordinary stage2 power/Bluetooth/HomeManager changes. Reassess
+only if subsequent root/initrd/persistence semantics change. Current final
+normal boot and power/resume/audio/display persistence remain OPEN.
+
+Boot-only nixos-rebuild boot --offline --flake .#desktop session78489 exit0
+from clean source6dc7b041a491f569b6eb8fe09965db2b0922bc9c. Installed generation38,
+system profile and default nixos-generation-38.conf point to bjxx candidate.
+Generation38 persistent-root entry points to8v183 candidate. Both kernel/initrd
+ESP copies byte-hash-match store, both init paths verified. Retained old entries.
+Current selected physical boot still generation37; live current-system bjxx
+comes from prior testactivation, not a physical generation38 boot.
+Hyprland responsive, Commander/HomeManager/NetworkManager active.
+No reboot or new live activation occurred. Non-root bootctl permission error
+was resolved using sudo; generic pgrep Hyprland did not match wrapped executable
+and was not evidence that the graphical session ended.
+
+Private ESP boolean receipt and preboot machine-ID comparison digest retained
+under /persist/nixos-readiness-20261005/final-policy-20261007/, directory700,
+files600. Bootloader inspection should filter machine-id fields from tool output
+and public evidence; private identity equality should be reported only as boolean.
+Build/install log ~/.cache/nixos-validation/final-policy-boot-install-20261007.log.
+Next physical window can be one normal boot, then coordinated suspend/resume
+when user available, with no ritual repeat of accepted CPU/RAM/root-chain tests.
+Visual HDR feedback and interactive Unreal remain pending independently.
+
+
+## Coordinated final normal boot authorized — 2026-10-07
+
+User explicitly answered ready now for one normal reboot followed by
+suspend/resume check. Generation38 default independently verified via
+filtered bootctl JSON (no machine-ID fields). Before reboot live/installed
+closure bjxx, both125W limits, Commander/HomeManager/NetworkManager active,
+Hyprland configerrors empty. Private preboot-state.json retained alongside
+ESP boolean checks and machine-ID digest; physical boot ID/root/mounts stored
+privately for comparison. This is preboot evidence, not acceptance.
+Linux supports freeze/mem/disk withdeep selected. Resume hook is implemented
+via sleep-actions.service ExecStop (NixOS resumeCommands), not a guessed
+/etc/systemd/system-sleep or post-resume.service file. Inspect actual generated
+ExecStop script and service timestamps around real suspend/resume after login.
+
+PR7 updated for generation38 installation, HDR MKV output/return evidence and
+conditional root-chain decision. CI6dc7b04 passed;6906fc2 stillrunning at inspection.
+Reboot is now authorized and will be scheduled after recording this handoff.
+On return verify generation38 selected/actualclosure, fresh normalroot/reset,
+private identity equality, persistentmounts, services/session, governor/EPP,
+125W bootreadback, Bluetoothoff,155Hz/10bit/VRR, intendedStageUSBroute.
+Then coordinate actual suspend/resume, observe powerunitrestart/readback and
+GUI/network/audio/Commander return. Do not reboot again to retestrootchain.
+VisualHDR feedback, interactiveUnreal, uninterruptedProton, recoveryprovenance,
+soak/freeze/backup/finalmanifest/exactsuite/merge/tag remain pending.
+
+
+## Generation38 physical boot and real suspend/resume accepted — 2026-10-07
+
+Scheduled authorized reboot completed. Actual selected boot entry
+nixos-generation-38.conf, current closure bjxxpsm7f42b909v9gpf48p7pinajc3x,
+boot1348b203-5917-42ba-8daf-89abaaaa2bad differs from preboot. Root changed
+by private btrfs comparison; machine-ID SHA equality true. Detailed root/reset
+log retained in generation38-postboot.json, not a new fullrootchain claim.
+Commander/power/NetworkManager/HomeManager active, Wayland session1active,
+failedunitsnone, power125000000uW both. Bluetooth inactive/softblocked after
+actual boot without prior runtime mask; display155Hz/VRRtrue/XRGB2101010/sRGB,
+configerrors empty. StagePro visible with restoredanalogstereo sink47; HDMI3
+remains user's saved default61. Do not claimStageUSB isdefaultwhenit isnot.
+
+Authorized suspend/resume performed using rtcwake -m no -s30 then
+systemctl suspend. Kernel/systemd slept23:43:12 and resumed23:43:45 local.
+sleep-actions ExecStop restarted cpu-package-power-limit.service, journal
+confirms stop/start, InvocationID changed, bothreadback125W, sameboot.
+Network connectivityfull, Waylandactive/Hyprlandresponsive, Commanderactive,
+failedunitsempty, display155Hz/VRRtrue/10bit, Bluetoothoff retained.
+StagePro restored USB041e:32b4/ALSAcard0/PipeWireanalogstereo sink47;
+PipeWire/WirePlumberactive. A shortened sed audio snapshot omittedStage
+row, initially suspecteddisappearance; fullsnapshot disprovedit, no defect
+claim or configurationfixneeded. Audiblepostresumeplayback notyetobserved.
+AMDGPU MODE1 reset messages occur inresume path; these alone do not mean
+an unsolicited runtimeGPUfault. No such fault claim based on grepwordreset.
+
+Private final-policy-20261007/generation38-postboot.json and
+generation38-resume.json retainexactevidence. Acceptance closes finalpolicy
+physicalboot,125Wboot/resume implementation, Bluetoothoffbootpersistence,
+155Hz/10bit/VRRbootpersistence andStageenumeration/sinkboot/resumereturn.
+Human audibleStagepostboot/resume, visualHDR, interactiveUnreal andProton
+finalcandidate remain distinctworkloadscopes. No additional reboot planned.
+CI6906fc2 run37697178033 andfa8b015 run37697507796 passed.
+
+
+## Final-candidate interactive Unreal staged and boot details reconciled — 2026-10-07
+
+Opened actual AI_Gavin_Project through existing unreal-engine/Steam FHS wrapper
+with temporary SDL nativeWayland variables, Vulkan andnormalGUI mode.
+Session24158 remains live at inspection; Hyprland maps UnrealEditor actual
+project window with xwaylandfalse. ProjectGitclean atlaunch andsubsequentcheck.
+Userquestion requests viewport/selection/reversiblepropertyedit/PlayStop/
+continuedediting/ordinaryexit. Noautomatedharness substitutedforinteraction.
+Log later shows playworld creation; this alone is not humanacceptance or
+terminalexit. Preserveeditor andwaitforusernormalexit. Private logs
+~/.cache/nixos-validation/generation38-unreal-interactive*.log.
+
+Savedphysicalrootcomparison refined: prebootroot306/UUID
+e3b06ca7-2170-a445-ab83-d8a199003111 → generation38root308/UUID
+e6995128-937f-ed4a-a532-6b766ec71c13. Resetlog finalcompletion
+2026-10-07T22:40:22+00:00;10 completed resetevents total. Prebootsnapshot
+didnotcapture completioncount, so do not inventbeforecount/delta measurement.
+Privateidentitybooleantrue. No need another reboot toobtainmissingcount.
+PR7 nowrecords actualgeneration38boot/resume andremaining scopes.
+Current190bb01 CI37698315374 running; awaitterminalresult, notpriorheadproof.
+HumanvisualHDR question remains outstanding; no repeatedfullscreenplayback
+whileuserinteractswithUnreal. AudibleStagepostboot/reconnect scope, final
+Protonsession, recoveryprovenance, thenrepresentativesoak/freeze stillopen.
+
+
+## Unreal human interactive acceptance confirmed — 2026-10-07
+
+Direct user says this test has already been performed, Unreal works perfectly,
+continued normal work has been ongoing with no issues. Accept real interactive
+Unreal editing/workflow PASS; do not ask for another equivalent exercise.
+Current generation38 editor remains live session24158 at inspection, actual
+configured-map PIE world visible in log, projectGitclean, no matching scoped
+new kernel amdgpu timeout/fault/hang, hardwareerror/OOM/segfault found.
+This live process is not an ordinary-exit receipt; accepted previous automated
+PIE/endplay/ordinaryexit remains historical evidence, and current naturalexit
+can be observed later without requiring another human test or forcingexit.
+Preserve user editorwork. InteractiveUnreal gate removed from criticalpath.
+VisualHDR response remains missing; no substitute from taggedmetadata alone.
+
+
+## New unified final guide reconciliation — 2026-10-07
+
+Read entire new attachment and imported full text near top with SHA and
+only trailing whitespace normalization. Snapshotfa8b015/prebootinstructions
+are superseded by actual generation38boot/resume and directUnrealacceptance.
+No repeat reboot/rootchain/CPU/RAM/Blender/nativegaming requested or run.
+Guide's consolidatedevidence/minimalchurn/stocktag boundary adopted; final
+exactheavy suite remains freeze-time work, not repeated reassurance now.
+
+Extended generation38 read-only acceptance: expected @root/@persist/@home/
+@var/@nix on MP600 andvfatESP verified; persistcredentialsource available,
+activecredentialmatches configuredsource booleantrue, persistentjournal
+directorypresent. All12 CPU policies powersave/EPPbalance_performance.
+Receipt private final-policy-20261007/generation38-extended-boot-check.json.
+Initial diagnostic guessed passwordfilename without -hash andreturnedfalse;
+correctconfiguredpath from modules/core/users.nix verifiedtrue. This was
+a diagnosticpathmistake, not missingcredentialfailure. No secretvalue printed.
+
+Formatting nix fmt -- --ci session25339 terminalexit0,62filesprocessed/0changed.
+Offline flakecheck session75175 running atrecording; recordterminalresultbefore
+callingpassed. Recent5e588b7 CIrunning,ce03b08cancelledbysuccessor,prior
+acceptedCI remains historicalexactscope. Currenteditor remains live; no forced
+exit or repeatedhumanexercise. OutstandingvisualHDR question keptpending.
+
+Unified-guide offline flakecheck session75175 completed exit0/allchecks passed.
+Formatting anddiffwhitespacepassed. LatestliveGit inspection found imported
+guide already committed as734168d; retainthatcommit andconsolidate extended
+physicalevidence here, noduplicateguideimport. These documentation successors
+do not constitutefrozenfinalsource orcompletedremaininghuman/soakgates.
+
+
+## Latest pre-soak guide adopted and scope consolidated — 2026-10-07
+
+Read complete newestattachment; fulltext/SHA imported at top. Guide accurately
+closes generation38boot/resume/Bluetoothoff/display andUnreal. Preserve those
+acceptances, addno newcategories. Guide reviewed5e588b7run169inprogress; live
+GitHub nowreports itcancelledbysuccessor,734168d alsocancelled; latestbf6de69
+run37699234253 stillinprogress. Cancellation isnot testfailure orCIpass.
+
+Priorlocalformat/offlineflakecheck passed during precedingguideintegration.
+Currentimport isdocumentation-only; defer additionalcheck/CIbookkeeping until
+coherent evidencebatch rather than repeatedlycancelrunningCI. Currentruntime
+configuration remains physicallyacceptedbjxx, not invalidatedbyimportedtext.
+PR updated toremove staleUnrealopen andreflect actualremainingpre-soakscopes.
+Outstanding visualHDRquestion retained, notduplicated. Asked only missing
+Stageaudiblecurrentboot/resume confirmation plus whetherphysicalreplug is
+normalusage; ifnot, replug N/A perguide. Do notforceUSBroute awayfromHDMI.
+No newreboot/suspend/stress/apprepeat. Currenteditor allowedtonaturalexit.
+Protonsession canbelaunchedwhen itdoesnotinterruptuserwork; preserveGUI.
+
+
+## Uninterrupted final-boot Proton and Unreal exit evidence — 2026-10-08
+
+Unreal session24158 terminalexit0; projectGitclean, userinteractiveacceptance
+retained. No forcededitorclose/repeatedtest. DarkSoulsinitialSteamlaunch from
+/etc/nixos failedbwrapchdir becauseFHSenvironmentdoesnotexposethatcwd;
+retriedfromhome usingexistingSteam/App570940/MangoHud/GameModeoptions.
+Launcher session55113, actualsteam_app_570940 window andGameModeactive
+observed. Userconfirms everything/gameplay/controls/audio workedcorrectly.
+No liveconfigurationactivation occurred duringthissession; closurebjxx and
+physicalboot1348b203-5917-42ba-8daf-89abaaaa2bad retained.
+
+Afteruserexit, gamewindow/processgone andGameModeinactive. Firstlate snapshot
+showedperformance whileexittransition wasstillinprogress. Subsequentall12
+policiesrestoredpowersave/EPPbalance_performance, no matchingnewkernel
+amdgpu timeout/hang/fault/reset/hardwareerror/OOM/segfault since launch.
+Accept finalcandidateProton gameplay/exitpolicybinding PASS, no artificial
+minimumduration/benchmark. Earlierreceipt namedproton-active.json wascaptured
+late duringexit andrecordsGameModeinactive/performance; preserveastransition
+snapshot, notactive-stateproof orpersistentrestorationfailure. CLIactive
+andmappedgamewindowwereobservedearlier. Privateproton-exit.json retained.
+GameModejournallogs unavailableScreenSaverinhibitor/RAPLcoreenergy andwrapper
+duplicate/iopriowarnings; no evidence theseblockedgameplay orrestoration.
+Do notcreate unrelatedtuning workfromnonfatalwarnings.
+
+Remainingpresoak: visualHDR/SDRreturn, audibleStagecurrentboot/resume and
+replugonlyifnormallyused, exactrecoveryprovenance. Questionsalreadyqueued;
+do notrepeatacceptedUnreal/native/CPU/RAM/boot/resumechecks. PreserveGUI.
+
+
+## Remaining pre-soak evidence reconciliation — 2026-10-08
+
+PR7 updated for accepted generation38Proton naturalexit/restoration and
+Unrealterminalexit0. CI3060ba1run37699390184 completedPASS;15ffef6run37699904803
+remainsinprogress atinspection. Noancestorpassclaimedforpendinghead.
+Scopedrecoveryaudit rechecked readinessreceipt filenames andretained top-level
+ISOreceipts: stable-refresh-iso receipt haspath/bytes/sha256 only, desktopISO
+buildreceipt hasbuildoutputs, neitherestablishes physicalreadonlydrill.
+Private recovery-receipt-scope-audit.json recordsfields only. This scopecannot
+prove nodrilleveroccurred, but no matchingISO-boundeventevidencefound.
+Knownimagecopy/hash/generalprioruserrecovery remainaccepted separateproofs.
+Exactphysicalrecoverydrill staysOPEN; anadditionalreadonlyISOwindow isneeded
+if no existingeventreceipt canbefound. Existing runbook alreadydefines
+readonlyMP600/subvolumeinspection andforbids Disko/format/delete. Do not
+scheduleanotherbootundercompletednormalbootpermission.
+
+VisualHDR andStagepostboot/replug questionsstillpending; preservedwithout
+repeat. Updatedledger locally aspartofnextcoherentevidencebatch rather than
+anothertinyCI-cancellingcommit. Runtime/GUIuntouched.
+
+
+## Recovery read-only procedure corrected — 2026-10-08
+
+Runbook review found newdrillparagraph onlyspecifiedreadonly. OfficialBtrfs
+mountoptionreference confirmsroalonecanreplaytreelog; nologreplaydisablesit.
+Corrected actualoffline recoveryprocedure to ro,nologreplay,subvolid5 and
+allsubvolumeinspectionmounts ro,nologreplay. Require noexistingproductionrw
+mount, capturefindmntoptions/exactISO/hash/media/time/target/topology and
+keepreceiptinRAM/exportexternalmedia, not productionMP600. This isconcrete
+read-onlydrillpreparation, notnewruntimepolicy orperformedphysicaldrill.
+No livefilesystemremount/blockdevchange orreboot performed. Historical
+preflightcommand elsewhere remains a liveinspectionexample, notoffline
+zero-writeproof; no historicalreceiptrewrittenaspassingnewprocedure.
+Reference: https://btrfs.readthedocs.io/en/latest/ch-mount-options.html
+RemaininghumanHDR/Stageanswerspending. Recoverywindowrequiresnewavailability;
+completednormalbootauthorizationdoesnotauthorizeanotherISOreboot.
+
+
+## Connected recovery media reverified for pending window — 2026-10-08
+
+Ventoy DataTraveler remainsconnected/unmounted. Mounted knownexternalUUID
+1BF6-1635 exfatread-only at/run/ventoy-readiness; exact currentrecoveryISO
+SHA52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+matched. findmntconfirmedro, verification session62464 exit0/cleanunmount.
+No formatting/backuprewrite/productionmountchange. This closescurrentmedia
+readiness, notphysicalISOdrillprovenance. Requesteduseravailability forone
+readonlyISOinspectionandreturngeneration38; preserveGUIuntilreply. Existing
+normalbootwindowcompleted, notreusedasnewauthorization. HDR/Stagequestions
+remainpending andnotrepeated. CI15ffef6run37699904803 PASS;80de732run37700267797
+inprogress. KeepthisledgerupdatefornextconsolidatedbatchratherthaninterruptCI.
+
+
+## Exact recovery drill window authorized and USB script staged — 2026-10-08
+
+UserexplicitlyreadyforoneISOreadonlyinspectionandreturngeneration38. Prepared
+smallbashscript onVentoy NixosConf-backups/readiness-recovery-drill-20261008/
+inspect.sh, syntaxchecked/copied/bytecompared/flushed/cleanunmounted. Script
+requires exact recoverycurrent-system22w62q0hmbppzrc24xv3jdbm5r3wv95f, verifies
+ISOhash, targetBtrfsUUID/MP600model, noexistingtargetmount/internalswap,
+mountsro,nologreplay,subvolid5, verifiessevenexpectedsubvolumes/repo/profiles/
+home/credentialfileexistencewithoutsecretreads. ReceiptonexternalUSB only;
+productionunmountedviatrap/normalexit. Accepts kerneloptionrenderingnologreplay
+orrescue=nologreplay. No script executionagainstlivedisk orphysicaldrillpass
+claimed. RecoveryISOhasnoCodexsession, so selectingVentoyISO andrunning
+preparedscript needuserconsole; do notpromise unattendedagentcontrol there.
+Normalbootdefault remainsgeneration38. Rebootwillbescheduledonlyafter
+thishandoffiscommitted. ReturnwithsavedUSBreceiptforagentverification.
+
+## Physical recovery attempt and USB script correction — 2026-10-08
+
+The user physically booted the exact recovery ISO. The external receipt
+`receipt-20261007T233423Z.txt` confirms the expected recovery closure matched,
+the ISO SHA256 matched, and the Force MP600 with the expected Btrfs partition
+was identified. Inspection did not pass: the mount was rejected with
+`Unknown parameter 'nologreplay'`. Preserve this failed attempt as evidence;
+it does not establish completed topology inspection or indicate filesystem
+corruption. A copy is retained under the private final-policy-20261007 evidence
+directory. The receipt clock is recorded as emitted, not treated as a verified
+wall-clock timestamp.
+
+Ventoy's raw `/dev/sda1` cannot be directly mounted while serving the running
+ISO; `/dev/mapper/sda1` worked in the recovery environment. On the normal
+installed system the UUID device remains usable. The user returned to generation
+38 and requested preparation of the correction before another ISO boot.
+
+Updated the external USB `NixosConf-backups/readiness-recovery-drill-20261008/inspect.sh`
+to use `ro,rescue=nologreplay,subvolid=5`. Retained the original as
+`inspect.sh.before-mount-fix`; syntax validation passed and the existing
+read-only/log-replay-disabled option check remains intact. Updated the offline
+recovery runbook to the same syntax. The script must run in recovery, not against
+the mounted production system. The next physical read-only inspection and
+subsequent normal return remain pending; no reboot was initiated here.
+
+## Second recovery attempt and corrected topology assertion — 2026-10-08
+
+The user must leave the ISO and return to the local generation 38 desktop to
+communicate with this agent; phone access is unavailable. Do not tell the user
+to apply interactive follow-up corrections while remaining in recovery.
+
+The second external receipt shows matching recovery closure and ISO hash,
+a successful MP600 mount with `ro,rescue=nologreplay,subvolid=5`, and the actual
+subvolume listing. It stopped after verifying @root because @root/tmp was
+incorrectly required to be a subvolume. The reset module's allowed descendants
+(tmp and srv) are permissions for disposal, not assertions that those children
+must exist as subvolumes. @root/srv appears in the recorded listing; @root/tmp
+does not. This failure was a test-script assumption, not a production defect.
+Both failed USB receipts have been copied into the private final-policy evidence
+directory. The user returned to the expected generation 38 normal closure.
+
+Corrected the USB script to require @root, @persist, @nix, @var and @home while
+still recording the full subvolume listing. Bash syntax validation passed.
+Independently checked all five corresponding mounted production subvolumes and
+all remaining repository/profile/home directory and credential-source existence
+checks, without reading credential contents or executing the recovery script
+against the live production disk. These checks passed. Physical terminal recovery
+inspection remains pending; do not claim these desktop checks replace it.
+
+## Exact physical recovery drill accepted — 2026-10-08
+
+- [x] Exact recovery ISO physically booted; expected recovery closure matched.
+- [x] ISO SHA256 matched `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`.
+- [x] Force MP600 production Btrfs identified and mounted read-only with
+  `rescue=nologreplay,subvolid=5`; full topology recorded.
+- [x] Required @root, @persist, @nix, @var and @home subvolumes verified;
+  repository, profiles, user home and credential-source existence verified
+  without reading secret contents. Production partition cleanly unmounted.
+- [x] User returned normally; live /run/current-system and system profile both
+  resolve to generation 38's expected `bjxxpsm7f42b909v9gpf48p7pinajc3x`
+  normal closure, root mounted from @root, no failed system units.
+
+Terminal receipt `receipt-20261008T000047Z.txt` was read directly from USB,
+copied to `/persist/nixos-readiness-20261005/final-policy-20261007/`, and compared
+byte-for-byte. Receipt SHA256:
+`61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6`.
+Receipt timestamp is retained as emitted. USB was safely unmounted afterwards.
+The prior two script failures remain recorded as historical failed attempts;
+this terminal PASS supersedes their pending recovery status. No further recovery
+reboot is needed for this gate. Remaining pre-soak human observations are visual
+HDR/SDR return and audible Stage postboot/resume, with replug only if used.
+
+## Current-status reconciliation after recovery acceptance — 2026-10-08
+
+Updated docs/status.md to remove superseded pending recovery and running-Unreal
+claims, replace old candidate identities with generation38 candidates, and
+record the verified current return boot. Exact-head CI run37706082277 for
+50e19fe was confirmed live/in progress; predecessor9cf9fe CI passed, while
+7eef022 was cancelled by its successor. No terminal successor result claimed.
+The previous goal turn made concrete progress by accepting and archiving the
+physical recovery receipt. Remaining human HDR/SDR and audible Stage observations
+were requested together; soak is not marked started before those gates close.
+No accepted workloads, stress tests or reboot chains are being repeated.
+
+## Final user observations accepted; representative soak started — 2026-10-08
+
+User directly confirms both remaining observation scopes work: the HDR sample
+triggered the monitor's HDR mode and returned normally to SDR; Stage Pro USB
+audio remains audible after reboot and suspend. These close visual HDR/SDR and
+audible Stage boot/resume persistence. No replug test is imposed without actual
+replug use. Together with accepted final-boot Proton/exit restoration and exact
+physical recovery, all pre-soak individual gates are closed.
+
+Representative multi-day normal-use soak begins on generation38, normal closure
+bjxxpsm7f42b909v9gpf48p7pinajc3x. Private start snapshot:
+`/persist/nixos-readiness-20261005/soak-20261008/start.txt`.
+Normal Unreal/Blender/coding/builds/browser/native and Proton games/audio/HDR/file
+work counts as representative activity; document actual use and relevant faults,
+not just process uptime. Natural suspend/reboots may be observed if used, but
+none are scheduled. Preserve the session, avoid tuning/source-policy changes and
+additional synthetic torture tests. Soak completion, freeze-time backup delta,
+canonical baseline, exact final validation, merge and baseline tag remain pending.
+
+
+## Post-recovery final continuation guide — adopted 2026-10-08
+
+Read the complete attachment and retain it below, with trailing whitespace normalized.
+Attachment SHA256: `b61a0ef85cf20b5ab575e3adf672f8de292a9427281031d9326bf00b424a9380`.
+The reviewed 50e19fe checkpoint is historical: its CI passed; f254124 CI also
+passed; 3ff3591 CI is currently running. User confirmation has since closed
+both HDR/SDR and audible Stage observations and the normal-use soak has begun.
+Do not repeat those observations, physical recovery or accepted workload tests.
+The guide governs remaining soak, backup delta, freeze, canonical evidence, exact
+final suite/CI, merge/tree comparison and baseline tag. Post-tag optimization is
+a separate subsequent phase; stop readiness at the tag. No runtime policy change
+is introduced by this import. Replug is not required unless part of normal use.
+
+> I re-ran the review against the **current live repository**, rather than carrying forward the previous checkpoint. The attached guide still had Proton, recovery provenance, HDR, and Stage Pro in the pre-soak checklist. Assess NixOS Performance Ceiling Since then, the branch has advanced eight evidence/documentation commits to **`50e19fe1c395412d62893a5ab9ea917dcedd2bc3`**, while the runtime configuration has not changed.
+>
+> Two major gates are now definitively closed. The uninterrupted Generation 38 Dark Souls session passed, including natural exit, GameMode deactivation, restoration of all 12 CPU policies, and no matching new GPU/kernel fault.  The exact physical recovery drill also passed: the intended ISO booted, its SHA-256 matched, the MP600 was mounted read-only with `rescue=nologreplay`, required subvolumes were inspected, the receipt was preserved, and the machine returned normally to the expected Generation 38 closure.  Current exact-head CI has now also finished: **Nix checks #177 passed on `50e19fe…`**.
+>
+> There is one documentation issue worth fixing during the next consolidated evidence commit: `docs/status.md` still describes recovery provenance as open, and the recovery runbook still contains the older statement that recovery-media boot is unproven, even though the new exact physical drill supersedes both statements.   I would **not** make a separate bookkeeping commit for that now; close HDR and Stage Pro first, then reconcile all of this in one pre-soak evidence commit.
+>
+> Here is the revised single continuation guide.
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## Purpose
+>
+> This document is the single forward-looking continuation directive for `plan.md`.
+>
+> Older plans, imported reviews and failed attempts remain useful chronology, but they must not be interpreted as fresh instructions when newer evidence supersedes them.
+>
+> The project has now reached:
+>
+> ```text
+> last two human observations
+> → consolidated evidence
+> → representative soak
+> → backup freshness
+> → source freeze
+> → canonical baseline
+> → exact frozen validation
+> → merge
+> → immutable baseline tag
+> → STOP readiness
+> ```
+>
+> Do not add new readiness categories unless a concrete defect exposes a genuine missing requirement.
+>
+> ---
+>
+> # 1. Current authoritative checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed HEAD:
+>
+> ```text
+> 50e19fe1c395412d62893a5ab9ea917dcedd2bc3
+> Accept exact physical recovery drill and generation 38 return
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> base = main
+> ```
+>
+> Exact-head CI:
+>
+> ```text
+> Nix checks #177
+> PASS
+> ```
+>
+> Current physical normal closure:
+>
+> ```text
+> bjxxpsm7f42b909v9gpf48p7pinajc3x
+> ```
+>
+> Persistent-root closure:
+>
+> ```text
+> 8v183hn0p5yv7wf625yj38n6bhsjpxz6
+> ```
+>
+> Generation 38 is the accepted physical candidate.
+>
+> No runtime configuration has changed during the eight commits between the previous guide's `5e588b7…` checkpoint and current `50e19fe…`; changes were confined to:
+>
+> ```text
+> plan.md
+> docs/status.md
+> docs/physical-root-validation.md
+> ```
+>
+> Therefore the existing physical Generation 38 evidence remains bound to the current runtime configuration.
+>
+> ---
+>
+> # 2. Current stock source policy
+>
+> The productive workstation source currently defines the intended baseline.
+>
+> ## CPU
+>
+> ```text
+> PL1 = 125 W
+> PL2 = 125 W
+> ```
+>
+> The host applies both limits at boot and restarts the power-limit service after resume.
+>
+> Real boot and real suspend/resume have already proven this mechanism.
+>
+> ## Cooling
+>
+> Current Commander Core host policy:
+>
+> ```text
+> fan idle/base = 60%
+> fan high = 100%
+> pump = 100%
+>
+> high threshold = 50 °C
+> high delay = 0 s
+>
+> low threshold = 45 °C
+> low delay = 30 s
+>
+> temperature poll = 0.5 s
+> ```
+>
+> This is accepted baseline policy.
+>
+> ## Display
+>
+> Current Hyprland policy:
+>
+> ```text
+> 3440×1440 @ 155 Hz
+> 10-bit output
+> sRGB desktop
+> VRR = always enabled
+> colour management enabled
+> automatic fullscreen HDR enabled
+> ```
+>
+> The technical HDR signalling path is already proven.
+>
+> ## Bluetooth
+>
+> ```text
+> hardware.bluetooth.enable = false
+> hardware.bluetooth.powerOnBoot = false
+> ```
+>
+> This is intentional policy.
+>
+> ## Stock/optimization boundary
+>
+> Stock-control rejects dependencies containing the experiment namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> and:
+>
+> ```text
+> optimization/default.nix
+> ```
+>
+> remains intentionally empty.
+>
+> Do not alter this boundary before the baseline tag.
+>
+> ---
+>
+> # 3. Gates that are closed
+>
+> Do not repeat these unless a later configuration change actually invalidates them.
+>
+> ```text
+> [x] repository architecture
+> [x] stable NixOS 26.05 refresh
+> [x] stable/unstable package boundary
+> [x] stock/optimization separation
+> [x] forbidden optimization namespaces
+> [x] activation safety
+> [x] 45 activation guard fixtures
+> [x] root-reset VM matrix
+> [x] interrupted reset recovery
+> [x] persistence identity
+> [x] Generation 37 normal→persistent-root→normal physical chain
+> [x] Generation 38 physical normal boot
+> [x] Generation 38 fresh ephemeral root
+> [x] Generation 38 persisted identity/mounts
+> [x] root/initrd/persistence semantic comparison
+> [x] no additional persistent-root physical boot required
+> [x] blank-disk reconstruction
+> [x] stock closure audit
+> [x] full Nix-store verification
+> [x] physical KVM
+> [x] GameMode helpers/governor
+> [x] Btrfs scrub/device counters
+> [x] NVMe SMART/media health
+> [x] independent backup
+> [x] representative restore
+> [x] engine supplement backup
+> [x] secrets recovery
+> [x] selected 125 W CPU policy
+> [x] 15-minute 125 W CPU validation
+> [x] 125 W physical boot application
+> [x] real suspend/resume
+> [x] 125 W resume reapplication
+> [x] 20 GiB complete memtester pass
+> [x] Blender long HIP render
+> [x] Blender human interactive workflow
+> [x] Unreal full project rebuild scope
+> [x] Unreal 120-second PIE lifecycle
+> [x] Unreal human interactive workflow
+> [x] Unreal natural later exit / project clean
+> [x] native Stardew Valley gameplay
+> [x] Dark Souls basic functionality
+> [x] uninterrupted Generation 38 Dark Souls session
+> [x] GameMode restoration after final Proton session
+> [x] no matching scoped final Proton GPU/kernel fault
+> [x] Stage Pro functional USB playback
+> [x] Stage Pro USB/ALSA/PipeWire enumeration after boot/resume
+> [x] Bluetooth-off boot/resume persistence
+> [x] 155 Hz persistence
+> [x] 10-bit persistence
+> [x] VRR persistence
+> [x] exact recovery ISO physical boot
+> [x] recovery ISO SHA verification
+> [x] MP600 exact read-only recovery inspection
+> [x] recovery receipt preservation
+> [x] clean return to Generation 38
+> [x] controller NOT APPLICABLE
+> [x] Android tooling NOT APPLICABLE
+> [x] current-head CI #177
+> ```
+>
+> In particular, do not rerun:
+>
+> ```text
+> CPU stress
+> RAM memtester
+> Blender
+> Unreal
+> Stardew Valley
+> Dark Souls readiness session
+> Generation 37 root chain
+> Generation 38 suspend/resume
+> recovery-media boot
+> KVM
+> blank-disk reconstruction merely for reassurance
+> ```
+>
+> The exact frozen VM/reconstruction suite later is a source-reproducibility step, not a reason to repeat these physical tests.
+>
+> ---
+>
+> # 4. Only two pre-soak observations remain
+>
+> The real pre-soak critical path is now:
+>
+> ```text
+> 1. visual HDR / visual SDR return
+> 2. audible Stage Pro persistence
+> ```
+>
+> Stage Pro physical replug is required only if physical reconnect is genuinely part of expected normal use.
+>
+> Everything else should move to soak/finalization.
+>
+> ---
+>
+> # 5. Immediate action A — close HDR visual acceptance
+>
+> Technical HDR operation has already established:
+>
+> ```text
+> HDR-tagged PQ/BT.2020 source recognized
+> native Wayland mpv negotiated HDR output
+> DRM output switched to BT2020_RGB during fullscreen
+> DRM returned to Default after exit
+> 10-bit output remained active
+> VRR remained active
+> ```
+>
+> Do not repeat the technical capability investigation unless the visual test exposes a problem.
+>
+> Use the existing known HDR MKV.
+>
+> ## Before playback
+>
+> Confirm:
+>
+> ```text
+> normal desktop visually looks correct
+> sRGB appearance is normal
+> no residual HDR/wide-gamut appearance
+> ```
+>
+> ## During fullscreen HDR
+>
+> Human acceptance should answer only:
+>
+> ```text
+> does HDR visibly engage?
+> does the image look correct?
+> are highlights/colour plausible?
+> is the image free of obvious washout/clipping?
+> is the display stable?
+> ```
+>
+> If the monitor exposes an HDR indicator, record it, but absence of a useful OSD indicator is not itself failure if the already-proven DRM/output signalling is correct.
+>
+> ## After ordinary exit
+>
+> Confirm:
+>
+> ```text
+> desktop returns visually to normal SDR/sRGB
+> colour is not stuck in HDR/wide-gamut mode
+> display remains usable
+> 155 Hz remains correct
+> VRR remains correct
+> ```
+>
+> If those observations pass:
+>
+> ```text
+> HDR VISUAL ACCEPTANCE = PASS
+> HDR → SDR VISUAL RETURN = PASS
+> ```
+>
+> Do not add HDR gaming as another gate.
+>
+> The readiness requirement is the display stack.
+>
+> ---
+>
+> # 6. Immediate action B — close Stage Pro audible persistence
+>
+> Already proven:
+>
+> ```text
+> Stage Pro USB playback worked before
+> USB device returned after Generation 38 boot
+> ALSA card returned
+> PipeWire sink returned
+> device survived suspend/resume enumeration
+> PipeWire/WirePlumber remained functional
+> ```
+>
+> Do not require Stage Pro to become the default sink.
+>
+> The user's saved HDMI routing is legitimate and must not be changed simply to satisfy validation.
+>
+> Now:
+>
+> ```text
+> select/route some ordinary audio to Stage Pro
+> play audio
+> confirm it is audible and normal
+> ```
+>
+> That is enough to establish current-boot/post-resume audible persistence.
+>
+> If successful:
+>
+> ```text
+> STAGE PRO AUDIBLE PERSISTENCE = PASS
+> ```
+>
+> ## Replug
+>
+> Only perform:
+>
+> ```text
+> unplug USB
+> replug USB
+> confirm device/sink returns
+> confirm audible playback
+> ```
+>
+> if physical replug is actually a normal expected workflow.
+>
+> Otherwise classify:
+>
+> ```text
+> STAGE PRO PHYSICAL REPLUG = NOT APPLICABLE
+> ```
+>
+> Do not invent a requirement merely because it is easy to test.
+>
+> ---
+>
+> # 7. Once those two observations pass, PRE-SOAK VALIDATION IS COMPLETE
+>
+> At that point do not introduce another application/peripheral test.
+>
+> The pre-soak acceptance set is sufficient.
+>
+> Immediately transition to:
+>
+> ```text
+> evidence reconciliation
+> → soak
+> ```
+>
+> ---
+>
+> # 8. Consolidate current documentation once
+>
+> There are known stale current-truth statements.
+>
+> `docs/status.md` still describes recovery provenance as open even though the exact physical recovery drill has now passed.
+>
+> `docs/physical-root-validation.md` still contains older wording saying recovery-media boot is unproven. That statement is now superseded.
+>
+> The PR body also contains older sections describing gates as pending before newer appended evidence closes them.
+>
+> Do not make a special standalone documentation commit before HDR/Stage.
+>
+> After HDR and Stage are resolved, make one coherent evidence/documentation update.
+>
+> Update:
+>
+> ```text
+> docs/status.md
+> docs/physical-root-validation.md
+> plan.md
+> PR #7 body
+> ```
+>
+> ## docs/status.md
+>
+> Make current truth explicitly say:
+>
+> ```text
+> Generation 38 boot/resume = accepted
+> Unreal interaction = accepted
+> final Generation 38 Proton = accepted
+> physical recovery drill = accepted
+> HDR = accepted              # once user confirms
+> Stage Pro audible = accepted # once user confirms
+> ```
+>
+> Then its remaining hard-gate section should begin with:
+>
+> ```text
+> representative soak
+> backup freshness
+> freeze
+> canonical baseline
+> exact final validation
+> merge/tag
+> ```
+>
+> ## docs/physical-root-validation.md
+>
+> Replace the stale combined statement:
+>
+> ```text
+> Recovery-media boot and bootloader repair remain unproven...
+> ```
+>
+> with two distinct facts:
+>
+> ```text
+> read-only physical recovery-media drill = ACCEPTED
+> bootloader-repair rehearsal = not demonstrated
+> ```
+>
+> Do not turn bootloader repair into a new pre-optimization gate unless the project's recovery requirements are explicitly expanded.
+>
+> The already-adopted readiness sequence required the safe recovery-media inspection, not a destructive/repair rehearsal.
+>
+> ## plan.md
+>
+> Preserve all chronology.
+>
+> Append evidence rather than rewriting history.
+>
+> Older failed recovery-script attempts remain historical failed attempts.
+>
+> The later exact physical PASS supersedes their pending status.
+>
+> ## PR #7
+>
+> Rewrite the summary sufficiently that a reviewer does not have to interpret contradictory chronological paragraphs to determine current truth.
+>
+> It may still mention meaningful historical caveats, but the main "remaining" section must reflect the actual remaining gates.
+>
+> ---
+>
+> # 9. Evidence commit and CI
+>
+> After the consolidated pre-soak evidence update:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Commit and push.
+>
+> Require CI to complete successfully on that evidence head.
+>
+> Because this update should be documentation/evidence-only, it does not invalidate the existing Generation 38 physical runtime evidence.
+>
+> The soak may begin while CI runs if the local checks passed and no runtime source changed.
+>
+> If CI fails:
+>
+> ```text
+> inspect actual failure
+> fix only that failure
+> do not reopen physical acceptance gates
+> ```
+>
+> ---
+>
+> # 10. Begin representative multi-day soak
+>
+> Once HDR and Stage Pro are closed, stop adding individual tests.
+>
+> Use the machine normally for several representative days.
+>
+> The soak is not another synthetic stress campaign.
+>
+> Representative activity can naturally include:
+>
+> ```text
+> Unreal development
+> Blender
+> Firefox/general desktop use
+> C/C++ development
+> Nix/package builds
+> native gaming
+> Proton gaming
+> Stage Pro
+> HDR playback
+> normal filesystem work
+> ordinary boots if naturally needed
+> suspend/resume if naturally used
+> ```
+>
+> There is no need to deliberately exercise every item every day.
+>
+> Watch for actual faults:
+>
+> ```text
+> system freeze
+> GPU timeout/hang/reset outside expected suspend behaviour
+> MCE/hardware error
+> filesystem/Btrfs error
+> unexpected failed service
+> Commander Core failure/restart
+> unexpected throttling
+> root-reset failure
+> identity/persistence regression
+> login/Wayland failure
+> audio disappearance
+> network regression
+> HDR stuck after exit
+> VRR regression
+> severe unexpected memory/swap behaviour
+> meaningful new NVMe error-log growth
+> ```
+>
+> Expected AMDGPU reset messages that occur specifically as part of suspend/resume are not, by themselves, evidence of a spontaneous GPU fault.
+>
+> If clean:
+>
+> ```text
+> REPRESENTATIVE MULTI-DAY SOAK = PASS
+> ```
+>
+> If a genuine defect appears:
+>
+> ```text
+> record exact failure
+> → diagnose
+> → fix declaratively
+> → determine what evidence the fix invalidates
+> → rerun only affected scope
+> → restart soak only if the fix materially changes system behaviour
+> ```
+>
+> Do not silently work around a failure.
+>
+> ---
+>
+> # 11. Backup freshness after the soak
+>
+> The main backup itself is already accepted.
+>
+> Existing archive:
+>
+> ```text
+> 27,844,003,241 bytes
+> SHA256:
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> plus the accepted 47-file engine supplement and separate secrets-recovery evidence.
+>
+> Do not rebuild the entire archive merely for ceremony.
+>
+> Review changes since the accepted backup:
+>
+> ```text
+> Git repositories
+> untracked/ignored valuable work
+> Unreal project changes
+> Blender files
+> documents
+> new project assets
+> other irreplaceable files
+> ```
+>
+> Protect the meaningful delta.
+>
+> Record:
+>
+> ```text
+> date
+> media/destination
+> scope
+> integrity/verification result
+> ```
+>
+> Then:
+>
+> ```text
+> BACKUP FRESHNESS = PASS
+> ```
+>
+> ---
+>
+> # 12. Freeze the stock candidate
+>
+> After soak and backup freshness:
+>
+> ```text
+> FREEZE ORDINARY READINESS SOURCE CHANGES.
+> ```
+>
+> Repository should be:
+>
+> ```text
+> clean
+> all intended work committed
+> no staged leftovers
+> no relevant untracked config
+> flake.lock fixed
+> optimization/default.nix still inert
+> ```
+>
+> From this point do not:
+>
+> ```text
+> upgrade kernel
+> upgrade Mesa
+> change cooling
+> change CPU policy
+> change display policy
+> reorganize modules
+> start architecture cleanup
+> add sysctl tuning
+> change toolchain
+> enable global compiler flags
+> begin LTO
+> begin PGO
+> begin BOLT
+> begin optimization-framework work
+> ```
+>
+> unless solving an actual discovered defect.
+>
+> ---
+>
+> # 13. Capture the canonical baseline
+>
+> Run the existing collector on the accepted final physical machine:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh > snapshot.md
+> ```
+>
+> Create the canonical baseline under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> It must bind together:
+>
+> ```text
+> exact Git source
+> flake.lock
+> nixpkgs revision
+> NixOS version
+> Nix version
+>
+> running normal closure
+> built normal closure
+> persistent-root closure
+> recovery ISO/store identity
+> recovery ISO SHA256
+>
+> kernel
+> Mesa
+> microcode
+>
+> BIOS
+> ME
+> CPU ratio/cache policy
+> 125 W package policy
+> RAM/XMP policy
+> GPU
+> BAR
+> NVMe identity/firmware
+> Btrfs mount policy
+>
+> governor
+> EPP
+> THP
+> swap/zram
+> scheduler
+> irqbalance
+>
+> Commander Core policy
+> maintenance timers
+>
+> CPU acceptance
+> RAM acceptance
+> Generation 37 root-chain evidence
+> Generation 38 normal boot evidence
+> Generation 38 suspend/resume evidence
+> Blender acceptance
+> Unreal acceptance
+> native-game acceptance
+> Proton acceptance
+> HDR acceptance
+> Stage Pro acceptance
+> physical recovery receipt identity
+> backup identity/freshness
+> soak result
+> ```
+>
+> For the physical recovery drill retain the exact receipt information, including:
+>
+> ```text
+> ISO SHA256:
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+>
+> receipt:
+> receipt-20261008T000047Z.txt
+>
+> receipt SHA256:
+> 61177a8ed57e0e67a7b1c87ded9bae0870c408832e61242147c33296403f45b6
+> ```
+>
+> Do not commit secrets or unnecessarily expose private hardware/user identifiers.
+>
+> ---
+>
+> # 14. Final stock-policy audit
+>
+> Before exact final validation, prove that the baseline is still genuinely stock.
+>
+> Confirm:
+>
+> ```text
+> optimization/default.nix is inert
+> stock forbidden-dependency rules remain active
+>
+> no system-wide PGO
+> no system-wide BOLT
+> no system-wide LTO
+> no optimization experiment output in closure
+>
+> no global CFLAGS/CXXFLAGS leakage
+> no global NIX_CFLAGS_COMPILE tuning
+> no unexpected LDFLAGS
+> no accidental -march=native baseline policy
+> no hidden allocator/performance preload
+> no permanent performance governor
+> no unrelated low-level performance hacks
+> ```
+>
+> Confirm intended policy remains:
+>
+> ```text
+> 125 W PL1/PL2
+> selected Commander Core cooling policy
+> Bluetooth disabled
+> 155 Hz
+> 10-bit
+> sRGB desktop
+> VRR enabled
+> automatic HDR
+> ordinary governor/EPP baseline
+> ```
+>
+> Unexpected drift is a blocker.
+>
+> ---
+>
+> # 15. Exact frozen validation
+>
+> On the frozen source run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then run the explicit heavy outputs that form the final exact-source reproducibility suite:
+>
+> ```text
+> blank-disk-reconstruction
+> workstation-smoke
+> activation-safety-actions
+> stock-contamination-negative
+>
+> reset-control
+> reset-safety
+> interrupted-recovery
+> persistent-identity
+> persistent-fallback
+> ```
+>
+> These are final exact-source automated checks.
+>
+> They do **not** imply another physical root-chain or recovery-media drill.
+>
+> Build and record exact final:
+>
+> ```text
+> normal closure
+> persistent-root closure
+> recovery ISO
+> ```
+>
+> Keep appropriate GC protection until baseline finalization is complete.
+>
+> ---
+>
+> # 16. Closure comparison
+>
+> Compare the final built normal candidate with the accepted physical running closure:
+>
+> ```bash
+> nix store diff-closures /run/current-system "$final_candidate"
+> ```
+>
+> Since the commits following the tested runtime have so far been documentation-only, the desired outcome is:
+>
+> ```text
+> runtime closure unchanged
+> ```
+>
+> If it differs unexpectedly, explain the difference before proceeding.
+>
+> Block on unexplained:
+>
+> ```text
+> kernel changes
+> Mesa changes
+> LLVM/toolchain changes
+> large dependency churn
+> new unstable-package spread
+> optimization derivations
+> service-policy changes
+> compiler flags
+> ```
+>
+> Do not rerun the physical readiness program if the closures are identical.
+>
+> ---
+>
+> # 17. Final contamination audit
+>
+> Run the final stock closure/forbidden-dependency audit.
+>
+> Require no:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> outputs in the stock closure.
+>
+> The baseline must remain a valid control for future optimization experiments.
+>
+> ---
+>
+> # 18. Exact-final-head CI
+>
+> After the canonical baseline/final evidence changes are committed:
+>
+> ```text
+> push exact final source
+> → require GitHub CI on that exact SHA
+> ```
+>
+> Current CI #177 is useful evidence for the current checkpoint, but it is not a substitute for CI on a later final manifest/freeze commit.
+>
+> Only after the final SHA is green should the repository claim:
+>
+> ```text
+> FINAL SOURCE = ACCEPTED
+> ```
+>
+> ---
+>
+> # 19. Final current-truth reconciliation
+>
+> Immediately before PR readiness:
+>
+> ## docs/status.md
+>
+> Must show:
+>
+> ```text
+> zero unresolved hard readiness gates
+> ```
+>
+> ## plan.md
+>
+> Must retain chronology and conclude with the final acceptance state.
+>
+> Do not erase:
+>
+> ```text
+> old failed tests
+> superseded thermal guards
+> incomplete RAM attempts
+> failed recovery scripts
+> intermediate CI
+> ```
+>
+> They remain legitimate history.
+>
+> ## PR #7
+>
+> Its main summary should state the final state without requiring reviewers to decode historical appendices.
+>
+> ## Canonical baseline
+>
+> Must point to exact:
+>
+> ```text
+> source SHA
+> normal closure
+> persistent-root closure
+> recovery artifact/hash
+> physical recovery receipt
+> accepted workload evidence
+> backup
+> soak
+> ```
+>
+> ---
+>
+> # 20. Mark PR #7 ready
+>
+> Only after the checklist closes:
+>
+> ```text
+> mark PR #7 ready for review
+> ```
+>
+> At that point "ready" means:
+>
+> ```text
+> no known unfinished pre-optimization readiness gate
+> ```
+>
+> PR #7 is already mergeable, but mergeability alone is not readiness.
+>
+> ---
+>
+> # 21. Merge to main
+>
+> Merge through the normal main-branch workflow.
+>
+> After merge, compare the resulting main tree against the exact tested feature-branch tree.
+>
+> If tree-identical:
+>
+> ```text
+> retain all accepted evidence
+> ```
+>
+> Do not perform another giant validation cycle.
+>
+> If merge conflict resolution/intervening source changes alter the tree:
+>
+> ```text
+> identify actual changed scope
+> rebuild
+> rerun affected checks
+> update artifact identities
+> ```
+>
+> Only revalidate what changed.
+>
+> ---
+>
+> # 22. Create the immutable stock baseline
+>
+> Create annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The tag/baseline record must identify:
+>
+> ```text
+> source commit
+> normal closure
+> persistent-root closure
+> recovery ISO
+> recovery ISO SHA256
+> canonical baseline record
+> accepted evidence set
+> ```
+>
+> Once the tag exists:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> At that point:
+>
+> ```text
+> STOP READINESS WORK.
+> ```
+>
+> Do not add another "just one more" validation gate.
+>
+> ---
+>
+> # 23. Post-tag cleanup
+>
+> Only after the tag should maintainability cleanup proceed.
+>
+> Potential cleanup remains:
+>
+> ```text
+> archive/organize plan history
+> reorganize docs into design/runbooks/validation/history
+> move stock-control ownership if desired
+> move VS Code ownership toward development if desired
+> remove obsolete historical aliases
+> add generated NixOS option documentation
+> add Markdown/link checking
+> other architecture cleanup
+> ```
+>
+> These are not baseline blockers.
+>
+> ---
+>
+> # 24. Optimization-v2 starts from the tag
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> Do not rebase the old optimization branch wholesale.
+>
+> Treat it as donor/reference material.
+>
+> Begin with experiment infrastructure:
+>
+> ```text
+> benchmark corpus
+> workload specifications
+> measurement methodology
+> experiment manifests
+> specialisation/A-B states
+> stage-aware contamination rules
+> artifact/provenance recording
+> ```
+>
+> Then progress through:
+>
+> ```text
+> CPU-specific codegen
+> graphics-stack A/B
+> profiling
+> ThinLTO
+> PGO
+> BOLT
+> kernel experiments
+> toolchain experiments
+> package-specific optimization
+> ```
+>
+> The stock tag remains the permanent experimental control.
+>
+> ---
+>
+> # 25. Exact execution order from current HEAD
+>
+> ```text
+> 1. Do not reboot or repeat any accepted physical gate.
+> 2. Visually validate HDR using the existing known HDR MKV.
+> 3. Confirm visual return to normal SDR/sRGB.
+> 4. Confirm audible Stage Pro playback on the current Generation 38 system.
+> 5. Test Stage Pro USB replug once only if that is normal expected use; otherwise mark it N/A.
+> 6. Declare individual pre-soak validation complete.
+> 7. Consolidate docs/status.md, physical-root-validation.md, plan.md and PR #7 current truth.
+> 8. Remove stale "recovery still open" wording.
+> 9. Record current-head CI #177 as passed.
+> 10. Run local format/diff/flake checks on the consolidated evidence update.
+> 11. Push; require its CI green.
+> 12. Begin multi-day representative normal-use soak.
+> 13. Do not add new readiness tests during soak.
+> 14. Diagnose only real defects.
+> 15. At clean soak completion, refresh the external backup delta.
+> 16. Freeze ordinary stock source changes.
+> 17. Capture the final baseline collector output.
+> 18. Write the canonical baseline record.
+> 19. Run the final stock-policy/environment audit.
+> 20. Run exact frozen flake checks.
+> 21. Run the heavy VM/reconstruction suite.
+> 22. Build exact normal, persistent-root and recovery artifacts.
+> 23. Compare the exact normal closure to the accepted physical running closure.
+> 24. Run the final stock contamination audit.
+> 25. Commit the final manifest/evidence state.
+> 26. Push the exact final SHA.
+> 27. Require exact-final-head CI green.
+> 28. Make docs/status.md show zero hard gates.
+> 29. Make PR #7 current and mark it ready.
+> 30. Merge to main.
+> 31. Compare merged tree against tested tree.
+> 32. Revalidate only if merge changed the tree.
+> 33. Create annotated `nixos-26.05-pre-optimization-baseline`.
+> 34. Stop readiness.
+> 35. Perform cleanup separately.
+> 36. Create optimization-framework-v2 from the baseline tag.
+> ```
+>
+> ---
+>
+> # 26. Remaining hard-GO checklist
+>
+> ## Before soak
+>
+> ```text
+> [ ] HDR visual quality accepted
+> [ ] HDR → SDR visual return accepted
+> [ ] Stage Pro audible current-boot/post-resume playback accepted
+> [ ] Stage Pro replug PASS or NOT APPLICABLE
+> [ ] current-truth docs reconciled
+> [ ] evidence-head CI green
+> ```
+>
+> Everything else in the physical/workload acceptance phase is closed.
+>
+> ## Finalization
+>
+> ```text
+> [ ] representative multi-day soak
+> [ ] backup freshness/delta
+> [ ] stock source frozen
+> [ ] canonical baseline collector capture
+> [ ] canonical baseline record
+> [ ] final stock-policy/environment audit
+> [ ] exact frozen flake checks
+> [ ] heavy VM/reconstruction suite
+> [ ] exact normal closure
+> [ ] exact persistent-root closure
+> [ ] exact recovery ISO/hash
+> [ ] final closure comparison
+> [ ] final contamination audit
+> [ ] exact-final-head CI
+> [ ] docs/status.md zero unresolved gates
+> [ ] PR #7 ready
+> [ ] merge to main
+> [ ] merged tree verified
+> [ ] annotated baseline tag
+> ```
+>
+> ---
+>
+> # 27. Explicitly removed from the critical path
+>
+> Do not reintroduce:
+>
+> ```text
+> CPU stress testing
+> RAM stress testing
+> cooler/paste investigation
+> Blender validation
+> Unreal validation
+> native-game validation
+> Proton validation
+> KVM validation
+> GameMode validation
+> Generation 37 root-chain
+> persistent-root reboot
+> Generation 38 suspend/resume
+> recovery-media drill
+> Bluetooth functionality
+> controller
+> Android tooling
+> another Nix-store verify without evidence of corruption
+> architecture redesign
+> README cleanup
+> optimization framework implementation
+> ```
+>
+> The project now has the opposite risk from where it started:
+>
+> ```text
+> not too little validation
+> but readiness scope expanding after sufficient evidence already exists
+> ```
+>
+> Avoid that.
+>
+> ---
+>
+> # 28. Final stop condition
+>
+> The readiness phase succeeds when the machine is:
+>
+> > physically proven on the selected stock configuration, accepted for its real workloads, stable through representative normal use, reproducibly reconstructable, recoverable from known media, backed up, tied to exact Nix source and closure identities, and frozen as an immutable experimental control.
+>
+> It does not need exhaustive proof of every conceivable hardware/software state.
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS.
+> START OPTIMIZATION.
+> ```
+>
+> No new readiness requirement should be introduced after that point unless an actual baseline defect is discovered.
+>
+> The live `plan.md` itself now agrees with this narrower direction: it explicitly says Generation 38 boot/resume, Bluetooth/display persistence, Stage enumeration, Unreal, final Proton, and exact recovery are closed, leaving **visual HDR/SDR and audible Stage Pro** before the soak.
+>
+> So the next action is genuinely small now: **close those two human observations, reconcile the stale status/runbook/PR wording in one commit, and start the soak.** There is no remaining justification for another reboot, recovery exercise, stress test, game test, or Unreal test before the soak.
+
+
+## Post-tag NixOS feature recommendations — recorded 2026-10-08
+
+Read the entire attachment 42d46ef1; attachment 3a56314e is byte-identical
+(cmp verified). Both SHA256:
+`ca1981ebc0a0812b1868d4e530d1496f8e05feaa71b50467429763bbcae43772`.
+Retain the complete text once below. Its f254124 reviewed state is historical;
+HDR/audio observations have since passed and the soak started. These are future
+recommendations, not additional baseline gates or permission to change the
+productive system during soak. Do not implement these before the baseline tag.
+
+The recommendations cover specialisation experiment states and stage-aware
+contamination contracts, interactive bootloader VM variants, distributed builders
+and system features, controlled dependency replacement, repart/dm-verity images,
+nspawn testing, kexec/netboot, Facter comparisons, cross-architecture binfmt,
+immutable /etc/Userborn/perlless VM trials, build-closure images, initrd rescue
+and generated option documentation. Preserve their ranking and proposed sequence
+as reference for a separately scoped post-tag optimization-v2 phase. Claims
+about current source need verification: specifically, the guide's systemd-initrd
+premise is incorrect for the current scripted initrd; do not migrate it as part
+of readiness. Its snippets are conceptual proposals, not verified configurations.
+
+> I took a genuinely fresh look at the live repository again. The situation has changed enough that I would adjust the recommendations.
+>
+> The current `feat/pre-optimization-readiness` head is now **`f254124d79c05ff2277ed57a35c8533685246df0`**, whose latest commit reconciles readiness after the physical recovery acceptance. Exact-head Nix checks **#178 passed** on that SHA. PR #7 is still open, draft and mergeable, now at 111 commits / 63 changed files.
+>
+> More importantly, the recovery picture is now basically closed: Generation 38 is physically running, the 125 W boot/resume policy is accepted, final Proton binding is accepted, and the **exact physical recovery drill passed** against the expected recovery closure/ISO with the production NVMe mounted read-only. Your remaining hard readiness work is now mainly visual HDR acceptance, applicable audio persistence, representative multi-day soak, backup freshness, and the final freeze/manifest/exact validation/merge/tag sequence.
+>
+> That changes what I would experiment with. I would stop looking for more recovery/safety architecture and start looking for NixOS features that will become useful **after the stock baseline tag**.
+>
+> ## Updated ranking
+>
+> | Rank | Feature | Value for your project | My recommendation |
+> |---:|---|---|---|
+> | **1** | Specialisations as optimization experiment states | Extremely high | Core optimization-v2 architecture |
+> | **2** | `virtualisation.vmVariantWithBootLoader` | Extremely high | First post-tag experiment |
+> | **3** | Distributed Nix builders + builder features | Very high | Add once mass rebuilds begin |
+> | **4** | `system.replaceDependencies` | Very high research value | Controlled A/B instrument only |
+> | **5** | `image.repart` + dm-verity Nix store images | High novelty / medium practical | Definitely test |
+> | **6** | NixOS systemd-nspawn test containers | High test-speed value | Add as middle test tier |
+> | **7** | `system.build.kexecTree` / netboot | Interesting and useful | Diagnostic/dev systems |
+> | **8** | NixOS Facter | Moderate | Provenance comparison, not migration |
+> | **9** | `boot.binfmt.emulatedSystems` | Moderate | ARM/RISC-V build/testing |
+> | **10** | Immutable `/etc` + Userborn + perlless profile | Mostly educational | VM experiment only |
+> | **11** | `system.includeBuildDependencies` | Niche but fascinating | Offline rebuild experiment |
+> | **12** | Initrd emergency shell / SSH | Now low priority | Fun, but recovery is already strong |
+> | **13** | Generated `nixosOptionsDoc` | Maintenance value | Post-tag cleanup |
+>
+> The biggest **new** recommendation compared with my previous passes is **`image.repart` + a dm-verity-protected Nix store**. That's a good example of a feature that is genuinely worth exploring now that your normal recovery path is already proven.
+>
+> ### 1. Make specialisations the backbone of optimization-v2
+>
+> You already proved specialisations in one of the hardest possible ways: `persistent-root` is a physically tested alternate boot state.
+>
+> Don't stop at using them for recovery.
+>
+> For optimization-v2, I would build something conceptually like:
+>
+> ```text
+> one source revision
+> one flake.lock
+> one persistent dataset
+> one hardware configuration
+>
+>         │
+>         ├── stock
+>         ├── cpu-skylake
+>         ├── cpu-skylake-no-bmi2
+>         ├── cpu-thinlto
+>         ├── cpu-pgo
+>         ├── cpu-pgo-bolt
+>         ├── mesa-experimental
+>         └── kernel-experimental
+> ```
+>
+> That gives you something particularly powerful:
+>
+> ```text
+> boot A
+> benchmark
+> reboot
+> boot B
+> benchmark
+> ```
+>
+> while almost everything except the experimental variable remains identical.
+>
+> Then evolve your existing stock contamination mechanism into **stage-aware closure contracts**:
+>
+> ```text
+> stock
+>     CPU  forbidden
+>     LTO  forbidden
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> cpu
+>     CPU  allowed
+>     LTO  forbidden
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> lto
+>     CPU  allowed
+>     LTO  allowed
+>     PGO  forbidden
+>     BOLT forbidden
+>
+> pgo
+>     CPU  allowed
+>     LTO  allowed
+>     PGO  allowed
+>     BOLT forbidden
+>
+> pgo-bolt
+>     exact intended final set allowed
+> ```
+>
+> Your present test suite already has a stock contamination negative fixture, while the productive optimization namespace is deliberately empty. That's a very good foundation for this model.
+>
+> I would make this one of the first things implemented in `optimization-framework-v2`.
+>
+> ### 2. `virtualisation.vmVariantWithBootLoader` should probably be the first feature you actually try
+>
+> Your present validation hierarchy is strong:
+>
+> ```text
+> evaluation/config checks
+>         ↓
+> NixOS integration VMs
+>         ↓
+> blank-disk reconstruction
+>         ↓
+> physical workstation
+> ```
+>
+> What you're missing is a convenient **interactive virtual version of the real workstation**.
+>
+> That's exactly what `virtualisation.vmVariant` and `vmVariantWithBootLoader` are good at.
+>
+> Conceptually:
+>
+> ```nix
+> virtualisation.vmVariantWithBootLoader = {
+>   hardware.commanderCore.enable = lib.mkForce false;
+>
+>   virtualisation = {
+>     memorySize = 8192;
+>     cores = 6;
+>   };
+> };
+> ```
+>
+> Then:
+>
+> ```bash
+> nixos-rebuild build-vm-with-bootloader --flake .#desktop
+> ```
+>
+> Now you have:
+>
+> ```text
+> real desktop configuration
+> real users
+> real Home Manager
+> real stock controls
+> real services
+> real packages
+> real system policy
+> real bootloader
+>
+> + VM-specific hardware substitutions
+> ```
+>
+> Your root flake is still pleasantly explicit and only exposes the desktop, recovery system, validation outputs and recovery ISO; there's no VM variant abstraction there yet.
+>
+> I'd use that VM as the **playground for developing optimization-v2 itself**.
+>
+> It does not replace your reconstruction test. Reconstruction proves a much stronger property.
+>
+> ### 3. Distributed builders become genuinely valuable once optimization starts
+>
+> Right now you don't need them badly.
+>
+> Once you're making:
+>
+> ```text
+> generic closure
+> Skylake closure
+> ThinLTO closure
+> PGO instrumentation closure
+> PGO closure
+> BOLT variants
+> LLVM variants
+> kernel variants
+> ```
+>
+> you absolutely will.
+>
+> NixOS provides `nix.distributedBuilds` and `nix.buildMachines`, so the workstation can farm derivations to remote machines.
+>
+> For your research I would go slightly further and use Nix's **system features** to encode eligibility:
+>
+> ```text
+> builder-general
+>     x86_64-linux
+>     big-parallel
+>
+> builder-skylake
+>     x86_64-linux
+>     big-parallel
+>     skylake
+>
+> benchmark workstation
+>     skylake
+>     benchmark-target
+> ```
+>
+> Then require something like:
+>
+> ```text
+> requiredSystemFeatures = [ "skylake" ];
+> ```
+>
+> for operations that actually require that ISA.
+>
+> Eventually you could distinguish:
+>
+> ```text
+> can compile here
+> can train profiles here
+> may collect authoritative benchmarks here
+> ```
+>
+> The most important rule would remain:
+>
+> > build anywhere that's valid; benchmark only on the designated physical target.
+>
+> I'd actually write a **two-machine NixOS VM test** for the builder setup before involving real machines.
+>
+> ### 4. `system.replaceDependencies` is almost tailor-made for research
+>
+> This one remains unusually interesting for your PGO/BOLT project.
+>
+> NixOS can rewrite dependencies in the assembled system closure:
+>
+> ```nix
+> system.replaceDependencies.replacements = [
+>   {
+>     oldDependency = pkgs.foo;
+>     newDependency = optimizedFoo;
+>   }
+> ];
+> ```
+>
+> The reason this interests me isn't deployment.
+>
+> It's experimental isolation.
+>
+> Suppose you optimize `zstd`.
+>
+> Normal approach:
+>
+> ```text
+> optimized zstd
+>        ↓
+> reverse-dependency propagation/rebuilds
+>        ↓
+> benchmark
+> ```
+>
+> Replacement experiment:
+>
+> ```text
+> mostly-stock system closure
+>        ↓
+> replace stock zstd with compatible optimized zstd
+>        ↓
+> benchmark
+> ```
+>
+> That can help answer:
+>
+> > Is the performance difference caused by the optimized library itself, or by the rebuild propagation around it?
+>
+> I would treat this as an **experimental instrument**, not the normal optimization architecture. Upstream itself treats dependency replacement cautiously; properly rebuilt derivations are the normal solution.
+>
+> That's exactly why it's interesting here.
+>
+> ### 5. New recommendation: build a `systemd-repart` image
+>
+> NixOS has a rather cool image-building subsystem around:
+>
+> ```nix
+> image.repart.enable = true;
+> ```
+>
+> that builds complete disk images using `systemd-repart`.
+>
+> Even more interestingly, NixOS has support for:
+>
+> ```nix
+> image.repart.verityStore.enable = true;
+> ```
+>
+> to build an image whose **Nix store is protected by dm-verity**.
+>
+> That's a genuinely fun NixOS feature to explore.
+>
+> For example, after the baseline:
+>
+> ```text
+> stock workstation flake
+>           │
+>           ├── normal installed workstation
+>           ├── recovery ISO
+>           └── immutable diagnostic appliance
+>                     │
+>                     ├── systemd-repart GPT image
+>                     ├── read-only/verity Nix store
+>                     ├── perf
+>                     ├── turbostat
+>                     ├── btrfs-progs
+>                     └── benchmark tooling
+> ```
+>
+> This would not replace your Disko-based workstation installation.
+>
+> Instead it could become a **reproducible immutable benchmark/recovery/diagnostic appliance**.
+>
+> Given how thoroughly you've already tested your ordinary recovery path, this is now much more interesting than building yet another recovery mechanism.
+>
+> ### 6. Add systemd-nspawn tests between pure tests and QEMU
+>
+> You've got a lot of QEMU-heavy testing now.
+>
+> Some future tests won't need their own kernel:
+>
+> ```text
+> optimization manifest generation
+> closure policy
+> systemd service behaviour
+> profile-processing services
+> cache server configuration
+> builder coordination
+> ```
+>
+> For those, the NixOS test framework can use systemd-nspawn containers rather than full QEMU nodes.
+>
+> I'd eventually aim for:
+>
+> ```text
+> pure Nix/shell tests
+>        ↓
+> nspawn NixOS tests
+>        ↓
+> QEMU NixOS tests
+>        ↓
+> physical machine
+> ```
+>
+> Keep QEMU for:
+>
+> ```text
+> bootloader
+> kernel
+> initrd
+> Disko
+> Btrfs root reset
+> actual VM hardware
+> ```
+>
+> Use nspawn for everything that really just needs an isolated NixOS userspace.
+>
+> That could substantially shorten your future optimization CI cycle.
+>
+> ### 7. `system.build.kexecTree` is worth playing with
+>
+> NixOS can build a tree containing:
+>
+> ```text
+> kernel
+> initrd
+> kexec boot script
+> ```
+>
+> through `system.build.kexecTree`. Nixpkgs' own netboot module exposes exactly that mechanism.
+>
+> So you could build:
+>
+> ```text
+> main workstation
+>       │
+>       │ kexec
+>       ▼
+> minimal NixOS benchmark/diagnostic environment
+>       ├── perf
+>       ├── turbostat
+>       ├── stress-ng
+>       ├── btrfs-progs
+>       └── network access
+> ```
+>
+> This is great for:
+>
+> ```text
+> quick kernel userspace experiments
+> diagnostics
+> recovery development
+> test environments
+> ```
+>
+> I would **not** use a kexec transition as authoritative performance evidence because the firmware/hardware initialization path is not equivalent to a true reboot.
+>
+> But for fast iteration, it's excellent.
+>
+> ### 8. Facter is now just an interesting comparison
+>
+> NixOS Facter lets a JSON hardware report drive hardware configuration:
+>
+> ```nix
+> hardware.facter.reportPath = ./facter.json;
+> ```
+>
+>
+>
+> I would not replace your current hardware configuration now.
+>
+> Instead:
+>
+> ```text
+> existing explicit hardware config
+>               vs
+> Facter-generated report
+> ```
+>
+> Compare:
+>
+> ```text
+> kernel modules
+> firmware
+> microcode
+> graphics
+> network devices
+> boot-related config
+> resulting closure
+> ```
+>
+> If it identifies useful facts you're currently missing, keep the report as provenance.
+>
+> If not, your small explicit configuration is easier to review.
+>
+> So this has dropped in priority now.
+>
+> ### 9. Cross-architecture execution through `boot.binfmt.emulatedSystems`
+>
+> This is easy and fun:
+>
+> ```nix
+> boot.binfmt.emulatedSystems = [
+>   "aarch64-linux"
+>   "riscv64-linux"
+> ];
+> ```
+>
+> NixOS automatically integrates these emulated systems into the Nix platform configuration; Nixpkgs itself documents this for AArch64/RISC-V testing.
+>
+> That lets the x86 workstation transparently:
+>
+> ```text
+> build AArch64 derivation
+>         ↓
+> execute AArch64 binary under QEMU user mode
+>         ↓
+> run tests
+> ```
+>
+> Given your interest in Linux ARM hardware, I'd definitely try it.
+>
+> Not for performance testing, obviously.
+>
+> ### 10. Try the perlless / immutable-`/etc` architecture in a VM
+>
+> NixOS has an unusually interesting minimal/immutable configuration style built around:
+>
+> ```text
+> systemd initrd
+> system.etc.overlay
+> Userborn
+> forbidden dependencies
+> ```
+>
+> The upstream `perlless` profile uses precisely that style.
+>
+> Your machine is particularly suited to experimenting with it because you're already running:
+>
+> ```text
+> ephemeral root
+> Impermanence
+> declarative users
+> systemd initrd
+> ```
+>
+> I'd make a VM variant with:
+>
+> ```text
+> ephemeral /
+> immutable /etc
+> Userborn
+> Impermanence
+> ```
+>
+> and see whether:
+>
+> ```text
+> Home Manager
+> NetworkManager
+> password-file login
+> machine-id persistence
+> nixos-rebuild switch
+> your activation checks
+> ```
+>
+> all behave correctly.
+>
+> I **wouldn't assume it's better** than your current system.
+>
+> This is mainly one of those:
+>
+> > “This is a very NixOS way of building a Linux system; I want to understand it.”
+>
+> experiments.
+>
+> ### 11. `system.includeBuildDependencies`
+>
+> Another delightfully extreme NixOS experiment:
+>
+> ```nix
+> system.includeBuildDependencies = true;
+> ```
+>
+> NixOS then attaches the build closure to the system rather than just its runtime closure. The option directly changes which toplevel is emitted.
+>
+> I'd build:
+>
+> ```text
+> normal recovery image
+>         vs
+> full-build-closure recovery image
+> ```
+>
+> Then disconnect the network.
+>
+> Ask:
+>
+> > How much of this exact system can I rebuild from nothing except this artifact?
+>
+> It's probably enormous.
+>
+> That's why I would never enable it on your workstation normally.
+>
+> But as a demonstration of the consequences of Nix's dependency graph, it's fantastic.
+>
+> ### 12. Initrd rescue has fallen way down the ranking
+>
+> Previously I ranked:
+>
+> ```text
+> boot.initrd.systemd.emergencyAccess
+> boot.initrd.network.ssh
+> ```
+>
+> fairly highly.
+>
+> I wouldn't anymore.
+>
+> You just completed an exact physical recovery drill using the real recovery artifact, with the internal disk mounted:
+>
+> ```text
+> ro,rescue=nologreplay,subvolid=5
+> ```
+>
+> and returned to Generation 38 successfully.
+>
+> So these are now mostly **fun additional rescue features**, not missing safety infrastructure.
+>
+> Still worth trying eventually, especially authenticated stage-1 emergency access.
+>
+> But they aren't solving an actual weakness anymore.
+>
+> ---
+>
+> ## What I would no longer spend time testing
+>
+> Your fresh state has made this much clearer.
+>
+> I would **not** add more:
+>
+> - Impermanence machinery;
+> - root-reset recovery paths;
+> - activation guards;
+> - reconstruction abstractions;
+> - ordinary workstation smoke tests;
+> - generic host abstractions;
+> - `flake-parts`;
+> - `flake-utils`;
+> - extra secret-management frameworks;
+> - generic module discovery;
+> - “one more fallback” mechanisms.
+>
+> Your configuration already has an unusually deep validation stack. `tests/default.nix` has configuration checks, shell checks, Commander Core tests, evaluation checks, stock contamination testing, reconstruction and the multi-boot root-reset suite.
+>
+> Adding more architecture here would mostly create things you'll have to maintain.
+>
+> ## What I would actually do from here
+>
+> Right now, **none of the features above should delay the baseline**.
+>
+> Your current hard path is already explicit:
+>
+> ```text
+> visual HDR acceptance
+>         ↓
+> applicable Stage Pro persistence
+>         ↓
+> multi-day representative soak
+>         ↓
+> backup freshness
+>         ↓
+> freeze source
+>         ↓
+> canonical baseline
+>         ↓
+> exact frozen validation + CI
+>         ↓
+> merge PR #7
+>         ↓
+> tag stock baseline
+> ```
+>
+> That is the right sequence.
+>
+> After the tag, I would create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from the immutable baseline—not from the old optimization branch. The old branch is still parked at `397a8c71…`, while its useful material is the experiment/manifest/runtime/stage architecture and the first CPU-codegen work.
+>
+> Then my exact first experiments would be:
+>
+> ```text
+> vmVariantWithBootLoader
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> CPU-target A/B
+>         ↓
+> distributed builder test
+>         ↓
+> system.replaceDependencies A/B experiment
+> ```
+>
+> And separately, for the **“I want to explore cool NixOS things”** side of the project, the three I'd most like to see you try are:
+>
+> **`image.repart` + dm-verity store**, **`system.build.kexecTree`**, and **cross-architecture `binfmt`**.
+>
+> Those three are different enough from what you've already built that you'll actually learn new parts of NixOS rather than just creating another variation of the reliability machinery you already mastered.
+
+
+## Consolidated pre-soak evidence checks — 2026-10-08
+
+Runbook now distinguishes accepted read-only physical recovery from unrehearsed
+bootloader repair, which is not an extra baseline gate. PR7 body was rewritten
+to current accepted evidence and remaining soak/finalization, removing
+contradictory chronological pending claims. docs/status.md records terminal
+3ff3591 CI run37706702892 PASS, plus predecessor50e19fe/f254124 PASS.
+
+Requested local checks passed: nix fmt -- --ci (62 files, no changes),
+git diff --check, and nix flake check --print-build-logs (all checks passed;
+three changed checks built, unchanged checks reused). Heavy package outputs
+were evaluated, not freshly executed by this flake check; their exact-source
+final suite remains scheduled after soak/freeze. No runtime configuration
+was changed. The consolidated documentation head requires its own CI result.
+
+## Initial soak observation and consolidated-head CI wait — 2026-10-08
+
+Previous goal turn made concrete progress: full guides imported, stale runbook
+and PR claims reconciled, local checks passed and consolidated evidence pushed.
+Current consolidated head41c12e CI run37707256546 is verified live: flake-check
+job113084661323 is running. Re-poll after45seconds still reports in progress;
+no restart or success claim. Predecessor a119fd4/ac3d800 runs were cancelled.
+
+Private initial observation `/persist/nixos-readiness-20261005/soak-20261008/initial-health.txt`
+records no failed system units, Commander Core active/NRestarts0 and no current
+boot kernel matches for the checked hardware/MCE/Btrfs/amdgpu timeout-hang-fault/
+OOM patterns. This narrow early snapshot is not completed multi-day soak,
+exhaustive fault coverage or proof of representative workloads. Continue normal
+use; freeze/final validation remain dependent on the multi-day evidence.
+Do not push a bookkeeping successor merely to cancel the still-running CI.
+
+
+## Narrow post-tag cleanup and CI evidence ownership — adopted 2026-10-08
+
+Read attachment55d546e0 in full; copies86b9dc48 and61acc5a1 are byte-identical
+(cmp verified). Preserve the full text once below. SHA256: `650773bf4612f1758121bc2fe47c3af6e5c2997111040b9a02c86fd942e16e2a`.
+Its reviewed41c12e snapshot is historical; subsequent7a8cc4c CI
+run37707709269 is terminal PASS. Runtime configuration remains unchanged.
+
+Adopt the CI ownership correction now as documentation-only reconciliation:
+current-head GitHub PR checks are authoritative, while final exact CI run evidence
+belongs in PR/tag metadata after completion. The canonical baseline binds source,
+lock and artifacts without attempting to certify its own future CI. This avoids
+an endless status-commit/CI-successor loop and does not advance the source freeze.
+
+Retain these post-tag proposals without implementing them during soak/readiness:
+RAPL mechanism extraction with host-owned125W policy; explicit enabled-host
+Commander policy and matching tests; host Bluetooth and development VS Code
+ownership; semantic test aliases; intact history archival; generated options and
+offline link checks after the docs move. Keep explicit flake/Hyprland structure;
+stock-control structure belongs to later stage-aware optimization design.
+A post-tag cleanup series must demonstrate closure preservation. It is separate
+from readiness completion and must not delay the immutable baseline.
+
+> I took another live pass over the repository rather than carrying the previous review forward. The snapshot I reviewed is **`41c12e082c8eb78bff201dc231eb51ac5ec2d646`**, and exact-head Nix checks **#182 passed**. PR #7 is still draft/mergeable and is now at **115 commits**.
+>
+> The key change in my assessment is that **the repository no longer needs another general modularization pass**. Your README cleanup is done and is much better: it now explains responsibilities without duplicating mutable configuration.  The flake is also still appropriately explicit for a one-host repository.  And all individual readiness gates are now accepted; you're in the normal-use soak/freeze phase.
+>
+> So I'd make **fewer, narrower changes** now:
+>
+> 1. **Do not refactor runtime source before the baseline tag.** This is the most important recommendation at this exact moment. Generation 38, the 125 W policy, boot/resume behavior, display policy, recovery, workloads, etc. are now physically accepted, and `optimization/default.nix` is still correctly inert.   Finish the soak, backup delta, frozen-source validation, merge and tag first. A “cleaner” source tree is not worth invalidating source-bound evidence now.
+>
+> 2. **At freeze, fix the CI/current-truth ownership model rather than continuing to update CI SHAs inside `docs/status.md`.** This is the biggest remaining documentation-design problem. The current status document says a prior run on `3ff3591…` passed, whereas current HEAD `41c12e…` has now passed #182.   This is inherently circular: if you commit “HEAD X passed CI,” that documentation commit creates HEAD Y, which then needs new CI. I would make `status.md` say simply that **GitHub PR checks on current HEAD are authoritative**. Record the exact final CI run in the PR body and/or annotated baseline tag, because those can be updated after CI without changing the source commit. Your canonical baseline under `docs/baselines/pre-optimization/` should bind source, lockfile, closures, recovery artifact and physical evidence, but it should not try to certify its own commit's future CI run.
+>
+> 3. **Immediately post-tag, extract the new Intel RAPL power-limit implementation from the host into a hardware module.** This is the strongest genuinely new source-architecture issue since the previous review. `hosts/desktop/default.nix` now contains the 125 W *policy* **and** the full mechanism: raw `/sys/class/powercap/intel-rapl:0` probing, writes, verification, systemd service and resume restart.  That crosses your otherwise good boundary of “host = facts/policy, module = mechanism.” I'd create:
+>
+> ```text
+> modules/hardware/intel-rapl-power-limit/
+>     default.nix
+>
+> tests/hardware/intel-rapl-power-limit/
+>     config.nix
+> ```
+>
+> and reduce the host to approximately:
+>
+> ```nix
+> hardware.intelRaplPowerLimit = {
+>   enable = true;
+>   longTermWatts = 125;
+>   shortTermWatts = 125;
+> };
+> ```
+>
+> The module should own micro-watt conversion, sysfs validation, the oneshot service and resume reapplication. The host owns **125 W**. This also gives optimization-v2 a much cleaner invariant to hold constant across experiments.
+>
+> 4. **Make Commander Core policy completely explicit at the host boundary.** The host now explicitly declares the real cooling policy—60/100% fans, 100% pump, 50/45 °C hysteresis and the timing values.  But `modules/hardware/commander-core/default.nix` still carries fallback policy defaults such as 60% base fan, 65/60 °C thresholds and timing defaults.  I would remove defaults from the actuating/cooling-policy options and require an enabled host to provide them explicitly. That makes the module purely a mechanism and makes accidental enablement fail closed rather than silently choosing a cooling policy. Your current config test explicitly checks that the defaults work, so it should instead construct one complete known-good policy and then test invalid variants against it.
+>
+> 5. **Fix two small ownership mismatches after the tag.** Bluetooth is currently disabled inside `profiles/workstation.nix`; that looks more like a fact/policy of this desktop than a defining property of every future “workstation” role.  I'd move the `hardware.bluetooth` block to `hosts/desktop/default.nix`. Similarly, VS Code is still under `home/p2949/desktop/default.nix` while you already have a dedicated `development/` hierarchy containing Clang tooling, Blender and Unreal.   Move `vscode` to `development/default.nix`. Both changes make the existing taxonomy more internally consistent without introducing new abstraction.
+>
+> 6. **Retire the historical flake-output aliases once the readiness plan is archived.** `tests/default.nix` still exposes `impermanence-root-test-a`, `impermanence-root-test-b`, `impermanence-root-recovery`, and `impermanence-root-fallback` as compatibility aliases, and still calls one test `impermanence-root-safety`.  After the historical plan no longer depends on those names, I'd expose only the semantic API: `reset-control`, `reset-safety`, `interrupted-recovery`, `persistent-identity`, `persistent-fallback`, etc. That will probably also let `packages = rec { ... };` become an ordinary attrset. I would **not** otherwise split `tests/default.nix`; it remains readable.
+>
+> 7. **After the tag, retire `plan.md` as a live root-level document.** This is now the largest organizational debt by far. It contains multiple complete imported continuation guides and an enormous chronological ledger; current `status.md` correctly treats it as history rather than present truth.  Move it intact to something like `docs/history/pre-optimization-readiness.md` rather than rewriting history. Then organize the rest of `docs/` into `design/`, `runbooks/`, `validation/`, `baselines/`, and `history/`, leaving `docs/status.md` at the top as the short live entry point. After the baseline exists, much of the immutable hardware/closure detail currently in `status.md` can move into the baseline record as well.
+>
+> 8. **Add generated option documentation and link validation only after that docs move.** You now have enough real custom API surface to justify `nixosOptionsDoc`: `boot.ephemeralBtrfsRoot.*`, `workstation.activationSafety.*`, `hardware.commanderCore.*`, and eventually the RAPL module. The modules already contain types, descriptions and assertions.   Generate those facts instead of manually copying them into prose. At the same time add a cheap offline Markdown-link check to `nix flake check`, particularly because moving the docs will otherwise make broken internal links easy to miss.
+>
+> There are also several things I would now **stop recommending**. I would leave `flake.nix` explicit—no `flake-parts`, `flake-utils`, auto-discovery, `mkHost`, or generic multi-host library. Your current flake is small enough that abstraction would obscure it.  I would also leave the 9 KB Hyprland Lua configuration as one file for now: it is already clearly sectioned into monitors, configuration, bindings, workspaces and rules, so splitting it merely because it is long would add navigation cost without removing duplication.
+>
+> I would also revise one piece of my **previous** advice: I would **not bother moving `modules/core/stock-control.nix` to `modules/workstation/` as an isolated cleanup anymore**. It is only a 298-byte set of forbidden optimization namespaces, and optimization-v2 is about to need a stage-aware evolution of exactly that mechanism.  Moving it once after the tag and then redesigning it again a few commits later is pointless churn. Let optimization-v2 decide its permanent structure—probably a stock/CPU/LTO/PGO/BOLT stage-control subsystem.
+>
+> So the practical sequence I would use is: **finish soak → freeze/tag the current stock system → make one closure-preserving cleanup series containing the RAPL module, Commander Core policy cleanup, Bluetooth/VS Code ownership fixes, test alias cleanup and documentation archival → prove that those source-only refactors did not change the stock closure → then begin optimization-v2.**
+>
+> That would leave you with a repository that is cleaner because its boundaries are sharper, not because it has more layers.
+
+
+## Integrated granular release continuation — adopted 2026-10-10
+
+Attachment fully read; SHA256 `fa78482e05bbaf84971f823322784313ac9e7f264ae8e40a15d367ae747b23f8`.
+Live verification confirms PR8 merged96678c3 into readiness atc981a6f; both
+trees equal d6a7144715cffa8b5673ce8eb8be2783a692f53c. Active local branch
+now follows feat/pre-optimization-readiness by fast-forward. Granular branch
+remains frozen historical evidence. Running closure is accepted generation46
+normal15f6c5dsjl047j7my4c7cpkdhk6ly2xp. No runtime activation/reboot performed.
+Integrated CI38003540343 remains in progress as checked; no new source is pushed
+while that run is live. PR7 remains open/draft. Its persistent-home/var and
+generation38-only main summary is stale and will be reconciled after terminal CI.
+
+User reports everything worked perfectly during normal use sinceOctober8.
+No particular workload list was supplied; do not invent workload durations.
+Read-only journal scan since the soak start finds no matches for selected
+hardware/MCE/Btrfs/amdgpu timeout-hang-fault/OOM patterns; no failed units.
+Granular migration/physical trials occurred within the interval, so this is
+not proof of several days on an unchanged generation46 closure. Preserve
+accepted storage/workload gates; assess normal productive use separately.
+Ventoy backup remains available, with12,399,542,272bytes free. It was mounted
+read-only for backup inventory and cleanly unmounted. Backup freshness is still
+open; original accepted archive/engine supplement remain untouched.
+
+> I re-checked the branch, PR #8, the linked CI job, the merged readiness branch, and PR #7. The project has moved another important step forward: **the granular-Impermanence work itself is now finished and integrated into the readiness branch.**
+>
+> ## Where things stand now
+>
+> The granular branch is still frozen at:
+>
+> ```text
+> 96678c3a974755ca285c734999c70acfc0bfd254
+> ```
+>
+> That is good. There has been no post-freeze source churn.
+>
+> PR **#8 — “Make home and var ephemeral with explicit retained state” — has already been merged** into `feat/pre-optimization-readiness`. It merged at `c981a6ffd9b484c53adf0a374f6915c772d12a83`. PR #8 explicitly binds its validation to `96678c3a…`, records all 17 flake checks passing, the normal/recovery outputs matching the accepted generation-46 closures, the full VM suite passing, and the marker/home-acceptance regressions passing.
+>
+> The CI link you supplied is also exactly the evidence we wanted. **Nix checks run `38002362044` completed successfully against exact head `96678c3a…`**, not some earlier commit.
+>
+> So the previous missing release gate:
+>
+> ```text
+> final granular head
+>         ↓
+> GitHub CI on that exact head
+> ```
+>
+> is now **closed**.
+>
+> Even better, the readiness merge is clean. `feat/pre-optimization-readiness` now points at merge commit `c981a6ff…`, whose tree is `d6a71447…`—the same tree as the frozen granular head. In other words, the merge introduced **no content drift** from the reviewed granular tree.
+>
+> ## Granular Impermanence is complete
+>
+> I would now consider the granular project itself **100% complete**, including release integration.
+>
+> The final implementation has all of the intended properties:
+>
+> | Area | Result |
+> |---|---|
+> | Resettable `@root` | **Accepted** |
+> | `/home` root-local / ephemeral-by-default | **Accepted** |
+> | ordinary `/var` root-local / ephemeral-by-default | **Accepted** |
+> | Explicit HM user persistence | **Accepted** |
+> | Explicit NixOS system persistence | **Accepted** |
+> | Mixed persistent-profile / disposable-cache model | **Accepted** |
+> | `persistent-root` recovery semantics | **Repeatedly physically proven** |
+> | Fuzzel correction | **Accepted** |
+> | Unity Preferences correction | **Accepted** |
+> | `/persist` pruning | **Complete + clean re-audit** |
+> | Post-pruning physical proof | **Accepted** |
+> | Legacy `@home` | **Retired** |
+> | Legacy `@var` + children | **Retired** |
+> | Migration snapshots 326–329 | **Retired deliberately** |
+> | Final documentation/contract | **Reconciled** |
+> | Application-scope checklist | **Reconciled** |
+> | Exact-head local validation | **Recorded PASS** |
+> | Exact-head GitHub CI | **PASS** |
+> | Granular → readiness integration | **Merged** |
+>
+> The plan's final checklist now reflects this cleanly: all application-scope, test, and persistent-storage-hygiene items are checked, including removal of unexplained migration copies and final documentation of the actual contract.
+>
+> The current status document likewise describes the migration as finished rather than continuing to carry migration-era instructions.
+>
+> So I would **not do any more work on `feat/granular-impermanence`**.
+>
+> Freeze it permanently as historical feature evidence.
+>
+> ---
+>
+> # The project continuation has moved to PR #7
+>
+> PR #7 has automatically advanced to the new readiness head:
+>
+> ```text
+> PR #7
+> base: main
+>
+> head:
+> feat/pre-optimization-readiness
+>
+> new head SHA:
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> It remains **open, draft, and mergeable**.
+>
+> This is exactly the layered workflow we had planned:
+>
+> ```text
+> feat/granular-impermanence
+>           │
+>           │ PR #8 ✓
+>           ▼
+> feat/pre-optimization-readiness
+>           │
+>           │ PR #7
+>           ▼
+>         main
+> ```
+>
+> And GitHub has already automatically started a **fresh PR #7 CI run on the new integrated head**.
+>
+> Current run:
+>
+> ```text
+> run:       38003540343
+> workflow:  Nix checks
+> head:      c981a6ffd9b484c53adf0a374f6915c772d12a83
+> PR:        #7
+> status:    in progress
+> ```
+>
+>
+>
+> I checked the job as well: setup, checkout and Nix installation have succeeded, and **`Run flake checks` is currently executing**.
+>
+> That means you don't need to manually trigger another integration CI job right now.
+>
+> # What should happen next
+>
+> The continuation should now be very conservative:
+>
+> 1. **Let the current PR #7 CI finish.** Do not push unrelated changes while run `38003540343` is evaluating `c981a6ff…`. If it succeeds, you have direct CI evidence for the complete integrated readiness+granular tree. If it fails, diagnose the actual failure before changing source; because PR #8's exact granular CI is already green, a failure here would be useful evidence about the integrated readiness context rather than evidence that the granular implementation was fundamentally bad.
+>
+> 2. **Do not repeat the Impermanence physical tests.** There is no reason to reboot through another normal/recovery matrix, recreate sentinels, inspect the deleted legacy subvolumes, or repeat pruning. The merge tree is content-identical to the physically accepted granular tree. Another migration campaign would add risk without useful evidence.
+>
+> 3. **Finish only PR #7's genuinely separate readiness gates.** Its body still correctly lists the multi-day representative-use soak, backup freshness/delta at freeze, canonical baseline/stock-policy capture, final evidence reconciliation, and final exact-head acceptance as remaining readiness work.  The granular work should not be used to mark those unrelated gates complete.
+>
+> 4. **Update PR #7's description once the current CI is terminal.** Its body is now stale in one important respect: it still talks about “Home and var remain persistent under the adopted baseline policy,” while the head now includes the finished granular model. It also cites an older CI head. Rewrite it to describe the final root-local home/var policy and cite PR #8 plus the new `c981a6ff…` CI run. This documentation change is PR metadata only, so it will not invalidate the source SHA or CI.
+>
+> 5. **Complete the backup freshness gate.** The older Ventoy archive/representative restore remains good recovery evidence, but the status document explicitly notes that it does not prove freshness of work created afterward.  Take whatever meaningful delta/final backup the readiness plan requires and record its identity without disturbing the accepted live storage policy.
+>
+> 6. **Close the normal-use soak honestly.** The existing readiness plan says the mixed-use soak began October 8. Don't invent another synthetic stress campaign: record the actual productive-use interval and whether any meaningful defect appeared. The already-accepted CPU, memory, GPU, Unreal, Blender, HDR, audio, gaming and recovery tests don't need gratuitous repetition absent a configuration-relevant defect.
+>
+> 7. **Capture the canonical pre-optimization baseline at the final readiness head.** Bind together the Git SHA, `flake.lock`, normal/persistent-root closures, final granular topology, physical receipts, recovery ISO/backup identities, stock policy, and CI identity. Keep optimization disabled while doing this.
+>
+> 8. **Run/reconfirm the exact-final readiness suite only if the source changes after `c981a6ff…`.** If you merely update the PR body or evidence outside Git, the current successful CI—assuming run `38003540343` finishes green—remains tied to the source. If you commit source/doc changes to the branch, that creates a new head and you should rerun exact-head CI.
+>
+> 9. **When the independent readiness gates and fresh CI are green, mark PR #7 ready and merge it to `main`.** After the merge, verify the resulting main-tree content matches the reviewed readiness tree before declaring the baseline final.
+>
+> 10. **Create the annotated `nixos-26.05-pre-optimization-baseline` tag only after the main merge.** The tag should point back to the final source/lock/closures, granular physical evidence, backup/recovery identity and final CI run. Only after that baseline exists should you move on to Prism, ordinary workstation additions, or the PGO/BOLT experiment.
+>
+> ## The important distinction now
+>
+> There are really two projects here:
+>
+> ```text
+> GRANULAR IMPERMANENCE
+> 100% COMPLETE
+> ✓ implementation
+> ✓ testing
+> ✓ physical acceptance
+> ✓ cleanup
+> ✓ retirement
+> ✓ exact-head CI
+> ✓ PR #8 merged
+>
+>
+> PRE-OPTIMIZATION READINESS
+> STILL FINALIZING
+> ✓ now contains granular Impermanence
+> → fresh integrated CI currently running
+> → soak closure
+> → backup freshness
+> → canonical baseline capture
+> → final evidence reconciliation
+> → PR #7 ready
+> → merge main
+> → baseline tag
+> ```
+>
+> That distinction is useful because it prevents unnecessary work.
+>
+> If the current PR #7 CI fails, **do not reopen the entire granular migration**. PR #8's exact frozen head has already independently passed its CI and was merged with an identical tree. The failure would need to be evaluated in the context of the integrated readiness head.
+>
+> ## One thing I would change immediately in the planning mindset
+>
+> At this point, stop using `feat/granular-impermanence` as the “active project branch.”
+>
+> It has served its purpose.
+>
+> The active line of development is now:
+>
+> ```text
+> feat/pre-optimization-readiness
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> and PR #7.
+>
+> The granular branch should now be treated as a frozen historical feature branch whose canonical integration is PR #8 / merge `c981a6ff…`.
+>
+> ### Updated critical path
+>
+> ```text
+> GRANULAR
+> ✓ final source 96678c3a
+> ✓ exact-head local suite
+> ✓ exact-head GitHub CI 38002362044
+> ✓ PR #8
+> ✓ merged into readiness
+> ✓ merge tree unchanged
+>
+> CURRENT
+> → PR #7 CI run 38003540343
+>    currently running flake checks
+>
+> THEN
+> → close normal-use soak
+> → refresh/finalize backup
+> → canonical baseline/stock-policy capture
+> → reconcile PR #7 evidence/body
+> → ensure exact current-head CI green
+> → mark PR #7 ready
+> → merge PR #7 → main
+> → verify main tree
+> → annotated nixos-26.05-pre-optimization-baseline tag
+>
+> AFTER BASELINE
+> → Prism / normal feature additions
+> → PGO/BOLT optimization work
+> ```
+>
+> So this is a cleaner situation than at the previous review: **there is no continuation left for the granular implementation itself.** The feature is built, physically proven, cleaned up, CI-proven, and merged. The continuation is now the final pre-optimization baseline release process.
+
+Integrated CI38003540343 is now terminal PASS on exactc981a6f. Updated PR7
+metadata to accepted granular root-local home/var, generation46 closures, PR8
+integration and that exact CI result. Updated current-status release wording.
+This attachment/evidence commit is documentation-only; its successor CI is
+required without repeating accepted physical or VM gates for reassurance.
+
+## Backup delta inventory — 2026-10-10
+
+Created read-only retained-state snapshot `/.snapshots/readiness-persist-20261010`
+(ro property verified), preserving the accepted live persistence policy. Private
+inventory under `/persist/nixos-readiness-20261005/backup-delta-20261010/inventory.json`
+compares current retained home with the accepted October5 source snapshot,
+reusing its explicit engine exclusions. Scan completed with zero traversal errors:
+204,781 metadata-change candidates, 26,819,299,127 logical bytes. This is candidate
+selection, not content-hash comparison or backup acceptance. The largest new
+category is Unity editor installations (18.3GB); other major groups are Steam
+(5.12GB), Unity project state (1.52GB) and VS Code extensions (0.96GB). Do not
+silently exclude possible local installation modifications or saves merely to
+fit the USB. Ventoy has12,399,542,272bytes free, with4GiB reserve retained.
+Meaningful delta selection and external terminal integrity/restore proof remain
+open; no existing archive or recovery artifact has been changed.
+
+Additive delta backup launched in session4796 to Ventoy
+`NixosConf-backups/2026-10-10-delta/retained-home-delta.tar.zst.partial`.
+It includes metadata candidates (including new Unity installations), reuses the
+accepted October5 exclusions, preserves filesystem metadata, and guards4GiB free
+space. Root-private runner/list/log persist beside the inventory. Terminal zstd
+integrity, SHA256 and representative extraction/hash comparison are required;
+no PASS claimed while running. Original archive remains required for unchanged
+files. Snapshot consistency does not imply quiesced application databases.
+
+
+## Final runtime/evidence-tool freeze directive — adopted 2026-10-10
+
+Attachment fully read; SHA256 `d7f957bcfa5f0f95761136d002de73e7ab08fb538048e33adc296fa0f7da0684`.
+Full text retained below with trailing whitespace normalized. It supersedes
+older next-action sequences. Leave backup session4796 alone and verify its
+terminal integrity/hash/representative restore before PASS. Final generation46
+normal-use soak is distinct from the broader clean interval sinceOctober8;
+approximately3days of actual final-runtime use is preferred, without forced
+workloads/reboots/stress. Do not reopen accepted granular/storage/app gates.
+
+Verified collector defects directly: scripts/nixos-baseline-info.sh still uses
+findmnt --mountpoint for /home and /var and labels practical32-bit Vulkan pending.
+Retained ELF32 Wayland RADV120-frame exit0 evidence was read; artifact SHA256
+`211859741db4be3c34a0dceedecf81f61edb274ab490a72e7e357a3a2ddf3a7a`.
+Correct collector with --target/FSROOT and a reference to that artifact after
+backup and soak PASS, as part of the narrow freeze/tooling commit F. No new
+Vulkan run or independent home/var mount is needed. Collector raw data remains
+private; public baseline is sanitized. Runtime freeze F and evidence/release
+commit E are distinct; final CI is bound through PR/tag metadata.
+
+Final outputs/checks may reuse identical successful store results. No physical
+retests unless exact runtime comparison identifies a relevant change. Defer
+Prism, greetd, cleanup and optimization until accepted main-tree baseline tag.
+Current reviewed bf2e596 CI38005124351 is still running as checked here and is
+a checkpoint, not the eventual final release-head certification.
+
+> I re-reviewed the attached evidence trail and the **live GitHub state**, rather than carrying the previous continuation plan forward unchanged. The attached material correctly established that granular Impermanence was finished, exact-head CI-proven, and merged through PR #8 into readiness. NixOS Ephemeral Directories Set… The live branch has since advanced to **`bf2e5962118c91214ea9caa521f883d4c03bbb15`**, but the three commits since the accepted `c981a6ff…` integration touch only `docs/status.md` and `plan.md`; they do not change the runtime configuration.
+>
+> PR #7 is still **open, draft, and mergeable** at that exact head. Its integrated `c981a6ff…` CI already passed, while the newer exact-head run **#194 / `38005124351` is currently still in progress**.   The immediate real work has moved to backup freshness: the delta inventory is complete and the additive Ventoy archive is currently being written, but the repository correctly does **not** claim PASS until the archive finishes and receives zstd integrity, SHA-256 and representative restore/hash verification.
+>
+> I also found one concrete finalization issue that the current plan has not yet fully accounted for: the baseline collector still treats `/home` and `/var` as expected mountpoints, even though the finished source intentionally puts both inside `@root`. It will therefore give misleading/missing evidence on the final topology. It also still says practical 32-bit Vulkan validation is “pending,” despite the retained ELF32 `vkcube` run exiting successfully.
+>
+> So I would now replace the previous continuation guide with this one:
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## 0. Purpose
+>
+> This document is the current forward-looking directive for completing `plan.md`.
+>
+> Historical entries remain evidence and chronology. They are not instructions to repeat already accepted work.
+>
+> The project is now in:
+>
+> ```text
+> final readiness release engineering
+> ```
+>
+> not:
+>
+> ```text
+> Impermanence development
+> storage migration
+> hardware qualification
+> application acceptance
+> recovery design
+> general workstation testing
+> ```
+>
+> The critical path is now:
+>
+> ```text
+> finish current backup delta
+>         ↓
+> finish honest final-runtime soak
+>         ↓
+> repair final baseline collector
+>         ↓
+> runtime/source freeze
+>         ↓
+> canonical baseline capture
+>         ↓
+> exact frozen automated/build validation
+>         ↓
+> final evidence commit
+>         ↓
+> exact-final-head CI
+>         ↓
+> PR #7 ready
+>         ↓
+> merge main
+>         ↓
+> verify merged tree
+>         ↓
+> annotated baseline tag
+>         ↓
+> STOP READINESS
+> ```
+>
+> ---
+>
+> # 1. Current authoritative checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Active branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current reviewed head:
+>
+> ```text
+> bf2e5962118c91214ea9caa521f883d4c03bbb15
+> ```
+>
+> Latest commit:
+>
+> ```text
+> feat: add additive delta backup details and metadata preservation for session 4796
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> open
+> draft
+> mergeable
+> base: main
+> ```
+>
+> Current exact-head CI:
+>
+> ```text
+> Nix checks #194
+> run 38005124351
+> head bf2e5962118c91214ea9caa521f883d4c03bbb15
+> IN PROGRESS at review time
+> ```
+>
+> Previously accepted integrated head:
+>
+> ```text
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> Its integrated PR #7 CI:
+>
+> ```text
+> 38003540343
+> PASS
+> ```
+>
+> Frozen granular source:
+>
+> ```text
+> 96678c3a974755ca285c734999c70acfc0bfd254
+> ```
+>
+> Granular exact-head CI:
+>
+> ```text
+> 38002362044
+> PASS
+> ```
+>
+> Granular PR:
+>
+> ```text
+> PR #8
+> MERGED
+> merge commit:
+> c981a6ffd9b484c53adf0a374f6915c772d12a83
+> ```
+>
+> The three commits after `c981a6ff…` affect only evidence/documentation.
+>
+> Therefore:
+>
+> ```text
+> NO PHYSICAL OR APPLICATION ACCEPTANCE IS INVALIDATED.
+> ```
+>
+> ---
+>
+> # 2. Current accepted runtime
+>
+> Current accepted normal closure:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Accepted persistent-root closure:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Supported recovery ISO:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> Recovery ISO SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> The finished filesystem model is:
+>
+> ```text
+> @root
+> ├── /
+> ├── /home
+> ├── /var
+> ├── /etc
+> ├── /root
+> ├── /srv
+> └── /tmp
+>
+> @nix
+> └── /nix
+>
+> @persist
+> └── explicit Impermanence backing
+>
+> @optimization
+> └── /var/lib/nixos-optimization
+>
+> @snapshots
+> └── /.snapshots
+> ```
+>
+> Legacy:
+>
+> ```text
+> @home   deleted
+> @var    deleted
+>
+> migration snapshots
+> 326
+> 327
+> 328
+> 329
+> all deleted
+> ```
+>
+> Home and ordinary `/var` are therefore:
+>
+> ```text
+> ephemeral by default
+> persistent only by explicit declaration
+> ```
+>
+> This is now the accepted architecture.
+>
+> ---
+>
+> # 3. Granular Impermanence is CLOSED
+>
+> Do not reopen any of the following:
+>
+> ```text
+> [x] root reset implementation
+> [x] granular home policy
+> [x] granular /var policy
+> [x] application-state classification
+> [x] application cache overlays
+> [x] Fuzzel persistence correction
+> [x] Unity Preferences correction
+> [x] physical home migration
+> [x] physical /var migration
+> [x] repeated normal/recovery chains
+> [x] post-pruning physical proof
+> [x] raw /persist audit
+> [x] raw /persist pruning
+> [x] clean raw re-audit
+> [x] legacy @home reconciliation
+> [x] 85,721 old-only paths classified
+> [x] browser/database-generation reconciliation
+> [x] legacy @home deletion
+> [x] legacy @var child deletion
+> [x] legacy @var deletion
+> [x] migration snapshot retirement
+> [x] final storage documentation
+> [x] granular exact-head local validation
+> [x] granular exact-head CI
+> [x] PR #8
+> [x] integration into readiness
+> ```
+>
+> Do not perform another:
+>
+> ```text
+> normal → recovery → recovery → normal
+> ```
+>
+> sequence.
+>
+> Do not recreate legacy subvolumes.
+>
+> Do not recreate migration snapshots.
+>
+> Do not repeat migration sentinels.
+>
+> Do not repeat `/persist` pruning.
+>
+> Those phases are finished.
+>
+> ---
+>
+> # 4. Previously accepted stock-readiness gates also remain closed
+>
+> Do not repeat:
+>
+> ```text
+> Generation 37 physical root chain
+> Generation 38 boot/resume qualification
+> 125 W CPU stress test
+> 20 GiB memtester
+> KVM validation
+> Btrfs scrub
+> NVMe health
+> Nix store verification
+> blank-disk physical reasoning
+> Blender HIP render
+> Blender interactive workflow
+> Unreal rebuild
+> Unreal PIE
+> Unreal interactive workflow
+> native Stardew
+> Generation 38 Proton gameplay
+> GameMode restoration
+> HDR signalling
+> HDR visual acceptance
+> HDR→SDR visual return
+> Stage Pro audio
+> physical recovery ISO drill
+> ```
+>
+> A new test is justified only by:
+>
+> ```text
+> an actual observed defect
+> or
+> a source change that affects that exact scope
+> ```
+>
+> ---
+>
+> # 5. Optimization remains CLOSED
+>
+> `optimization/default.nix` remains intentionally empty.
+>
+> Keep it that way through the baseline tag.
+>
+> Do not add:
+>
+> ```text
+> CPU-target experimentation
+> -march changes
+> LTO
+> ThinLTO
+> PGO
+> BOLT
+> Mesa experiments
+> kernel experiments
+> experimental toolchain policy
+> ```
+>
+> before the tag.
+>
+> The stock baseline must remain an uncontaminated control.
+>
+> ---
+>
+> # 6. Immediate action: leave the current backup operation alone
+>
+> A new retained-state inventory has already been produced from:
+>
+> ```text
+> /.snapshots/readiness-persist-20261010
+> ```
+>
+> The inventory reports:
+>
+> ```text
+> 204,781 metadata-change candidates
+> 26,819,299,127 logical bytes
+> zero traversal errors
+> ```
+>
+> Major categories include:
+>
+> ```text
+> Unity installations ~18.3 GB
+> Steam              ~5.12 GB
+> Unity project state ~1.52 GB
+> VS Code extensions  ~0.96 GB
+> ```
+>
+> The additive external backup is currently being written to:
+>
+> ```text
+> Ventoy
+> NixosConf-backups/2026-10-10-delta/
+> retained-home-delta.tar.zst.partial
+> ```
+>
+> The active backup process must be allowed to terminate normally.
+>
+> Do not:
+>
+> ```text
+> disconnect Ventoy
+> remount/repartition it
+> delete the October 5 archive
+> delete the recovery ISO
+> silently weaken the backup selection
+> start another competing backup writer
+> ```
+>
+> The currently running operation is not yet evidence of backup freshness.
+>
+> ---
+>
+> # 7. Backup PASS criteria
+>
+> When the backup process finishes, inspect its actual terminal result.
+>
+> Require:
+>
+> ```text
+> backup runner exit = 0
+> final archive exists
+> .partial state resolved appropriately
+> Ventoy ≥ required reserve
+> ```
+>
+> Then verify archive integrity.
+>
+> At minimum:
+>
+> ```bash
+> zstd -t <final-delta-archive>
+> sha256sum <final-delta-archive>
+> ```
+>
+> Record:
+>
+> ```text
+> archive filename
+> archive byte size
+> SHA-256
+> completion timestamp
+> source snapshot identity
+> destination/media identity
+> selection/exclusion policy
+> ```
+>
+> Then perform a representative restore into a separate temporary/private directory.
+>
+> Select representatives from more than one important category, such as:
+>
+> ```text
+> ordinary user/project data
+> Unity state
+> editor/application state
+> some newly changed retained data
+> ```
+>
+> Compare restored files against the source with hashes/metadata as applicable.
+>
+> Never restore over the live files.
+>
+> Acceptance requires:
+>
+> ```text
+> archive integrity PASS
+> +
+> representative extraction PASS
+> +
+> source/restored comparison PASS
+> ```
+>
+> Finally:
+>
+> ```bash
+> sync
+> ```
+>
+> and cleanly unmount Ventoy.
+>
+> Confirm it is actually unmounted.
+>
+> ---
+>
+> # 8. Understand the final backup as an additive set
+>
+> The October 10 delta does not replace the accepted October 5 backup.
+>
+> The baseline recovery set is conceptually:
+>
+> ```text
+> 2026-10-05 main home archive
+>         +
+> 47-file engine supplement
+>         +
+> 2026-10-10 additive retained-state delta
+>         +
+> separate secrets recovery
+>         +
+> Git remotes where applicable
+> ```
+>
+> The accepted October 5 archive remains:
+>
+> ```text
+> 27,844,003,241 bytes
+>
+> SHA256:
+> 9ec746a927b42c48484cb877d1d1916ca54f084f5ecdeffd3babc2f5ed1db212
+> ```
+>
+> Do not delete it after creating the delta.
+>
+> The delta only establishes freshness when interpreted together with the older accepted archive.
+>
+> ---
+>
+> # 9. If the delta backup fails
+>
+> Do not weaken the backup merely to make the gate green.
+>
+> If it fails because of:
+>
+> ```text
+> capacity
+> I/O error
+> integrity failure
+> runner failure
+> ```
+>
+> retain the failure evidence.
+>
+> For capacity specifically, remember that the inventory is currently a metadata-change candidate set rather than a content-hash delta.
+>
+> A safe response is:
+>
+> ```text
+> metadata candidate inventory
+>         ↓
+> content-hash / semantic comparison of large categories
+>         ↓
+> prove which data is actually unchanged/reconstructible
+>         ↓
+> reduce only proven duplicates/reconstructible material
+> ```
+>
+> Alternatively use a larger independent destination.
+>
+> Do not silently remove possibly unique:
+>
+> ```text
+> projects
+> saves
+> editor state
+> local installations with modifications
+> autosaves
+> credentials
+> ```
+>
+> to fit the current USB.
+>
+> ---
+>
+> # 10. Continue the representative soak while finalization runs
+>
+> The soak began on October 8.
+>
+> The user has reported that normal use has worked perfectly and the existing journal scan found:
+>
+> ```text
+> no selected hardware/MCE faults
+> no Btrfs faults
+> no amdgpu timeout/hang/fault patterns
+> no OOM patterns
+> no failed units
+> ```
+>
+> However, granular migration and physical trials changed the active candidate during part of that interval.
+>
+> Therefore distinguish:
+>
+> ```text
+> general stability evidence since October 8
+> ```
+>
+> from:
+>
+> ```text
+> unchanged final generation-46 runtime exposure
+> ```
+>
+> Do not throw away the former.
+>
+> But the latter is the stronger evidence for the final baseline.
+>
+> ---
+>
+> # 11. Soak completion rule
+>
+> Count ordinary-use time on the accepted generation-46 runtime.
+>
+> Documentation-only commits do not restart the soak.
+>
+> No runtime change has occurred from those commits.
+>
+> The preferred close criterion remains approximately:
+>
+> ```text
+> ~3 days of genuine representative normal use
+> on the final runtime policy
+> ```
+>
+> with actual use mattering more than idle wall-clock time.
+>
+> Representative use can naturally include:
+>
+> ```text
+> browser/general desktop
+> terminal/Git
+> C/C++ development
+> Nix work/builds
+> Unity/Unreal
+> Steam/native/Proton
+> audio
+> normal filesystem use
+> ordinary suspend if it happens naturally
+> ```
+>
+> Do not force every workload.
+>
+> Do not start synthetic stress.
+>
+> Do not deliberately reboot merely for the soak.
+>
+> ---
+>
+> # 12. Terminal soak health inspection
+>
+> When the user considers the soak complete, perform one consolidated health check.
+>
+> Reuse the project's existing health-scan criteria rather than inventing broader/noisier searches.
+>
+> At minimum capture:
+>
+> ```text
+> running closure
+> boot ID
+> systemctl --failed
+> Commander Core active/substate/NRestarts
+> relevant kernel fault scan
+> Btrfs error counters/state
+> NVMe critical/media-error state
+> normal session/network health
+> ```
+>
+> Record a short truthful workload summary.
+>
+> Do not invent durations that were not measured.
+>
+> If:
+>
+> ```text
+> representative use occurred
+> and
+> no unresolved meaningful system defect occurred
+> and
+> terminal health state is clean
+> ```
+>
+> declare:
+>
+> ```text
+> REPRESENTATIVE MULTI-DAY SOAK = PASS
+> ```
+>
+> Then close the soak permanently.
+>
+> ---
+>
+> # 13. Do not reopen the soak for harmless application incidents
+>
+> An isolated:
+>
+> ```text
+> game bug
+> Firefox tab crash
+> application-specific issue
+> Unity project issue
+> Steam server issue
+> ```
+>
+> is not automatically a NixOS baseline failure.
+>
+> A soak blocker should be something system/configuration relevant such as:
+>
+> ```text
+> system freeze
+> spontaneous reboot
+> GPU hang/reset during normal operation
+> filesystem error
+> lost persistent state
+> root-reset failure
+> meaningful service failure
+> Commander cooling failure
+> unexpected severe thermal throttling
+> persistent network/session failure
+> reproducible audio/display regression
+> system-level OOM problem
+> ```
+>
+> Diagnose the smallest relevant scope only.
+>
+> ---
+>
+> # 14. One REQUIRED baseline-tooling correction before freeze
+>
+> The current baseline collector is stale relative to the completed granular architecture.
+>
+> It currently expects:
+>
+> ```text
+> /home
+> /var
+> ```
+>
+> to be mountpoints.
+>
+> They deliberately are not.
+>
+> They are directories on:
+>
+> ```text
+> @root
+> ```
+>
+> Therefore a command such as:
+>
+> ```bash
+> findmnt --mountpoint /home
+> ```
+>
+> is the wrong final-baseline test.
+>
+> Correct the collector before canonical capture.
+>
+> ---
+>
+> # 15. Replace mountpoint assumptions with topology resolution
+>
+> The collector should resolve the filesystem containing each path.
+>
+> Conceptually use something like:
+>
+> ```bash
+> for p in \
+>   / \
+>   /home \
+>   /var \
+>   /nix \
+>   /persist \
+>   /.snapshots \
+>   /boot \
+>   /var/lib/nixos-optimization
+> do
+>   printf '\n%s\n' "$p"
+>
+>   findmnt \
+>     --target "$p" \
+>     --noheadings \
+>     -o TARGET,SOURCE,FSROOT,FSTYPE,OPTIONS \
+>     || exit
+> done
+> ```
+>
+> The important evidence is now:
+>
+> ```text
+> /home resolves through @root
+> /var resolves through @root
+>
+> /nix resolves to @nix
+> /persist resolves to @persist
+> /.snapshots resolves to @snapshots
+> /var/lib/nixos-optimization resolves to @optimization
+> ```
+>
+> Do not reintroduce `/home` or `/var` as independent mounts just to satisfy an old collector.
+>
+> The collector must adapt to the finished architecture.
+>
+> ---
+>
+> # 16. Correct the stale 32-bit Vulkan statement
+>
+> The collector currently says:
+>
+> ```text
+> 32-bit Vulkan practical validation: pending
+> ```
+>
+> That is no longer correct.
+>
+> The repository already contains:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> vulkan32-render-20261005.txt
+> ```
+>
+> showing:
+>
+> ```text
+> ELF32 vkcube
+> RADV GFX1201
+> Wayland
+> 120 frames
+> exit 0
+> ```
+>
+> Do not rerun the test.
+>
+> Change the collector to say something factual such as:
+>
+> ```text
+> The Vulkan summary above does not itself prove 32-bit rendering.
+> Accepted practical 32-bit Vulkan evidence is retained separately in
+> docs/baselines/pre-optimization/vulkan32-render-20261005.txt.
+> ```
+>
+> Optionally capture that artifact's SHA256.
+>
+> This is evidence correction, not hardware revalidation.
+>
+> ---
+>
+> # 17. Keep raw machine-specific collector data private
+>
+> The collector includes items such as machine identity/runtime data.
+>
+> Do not automatically commit the complete raw output publicly.
+>
+> Preferred model:
+>
+> ```text
+> raw collector snapshot
+>         ↓
+> private readiness evidence under /persist
+>
+> sanitized baseline summary
+>         ↓
+> docs/baselines/pre-optimization/
+> ```
+>
+> The public canonical baseline should contain enough information to reproduce and identify the system without needlessly publishing raw private identifiers.
+>
+> A hash/equality statement is generally enough where the raw identifier itself is unnecessary.
+>
+> ---
+>
+> # 18. Make one narrow pre-baseline tooling/evidence commit
+>
+> After:
+>
+> ```text
+> backup PASS
+> soak PASS
+> ```
+>
+> make the collector corrections and reconcile current status.
+>
+> This commit may include:
+>
+> ```text
+> scripts/nixos-baseline-info.sh
+> docs/status.md
+> docs/backup-restore.md
+> plan.md
+> ```
+>
+> but no productive runtime-policy change.
+>
+> Record:
+>
+> ```text
+> soak PASS
+> backup freshness PASS
+> final backup identities
+> collector topology correction
+> 32-bit Vulkan evidence correction
+> ```
+>
+> Do not add Prism.
+>
+> Do not add autologin/greetd.
+>
+> Do not clean architecture.
+>
+> Do not change persistence.
+>
+> Do not touch optimization.
+>
+> ---
+>
+> # 19. Validate that narrow commit
+>
+> Run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> The current flake check already includes the granular six-boot integration check plus formatting/static/config checks.
+>
+> If successful, commit/push.
+>
+> This becomes the:
+>
+> ```text
+> RUNTIME/EVIDENCE-TOOL FREEZE
+> ```
+>
+> commit.
+>
+> Call it **F** conceptually.
+>
+> From F onward:
+>
+> ```text
+> NO ordinary source changes.
+> ```
+>
+> ---
+>
+> # 20. Record freeze identities privately
+>
+> At F record:
+>
+> ```text
+> Git SHA F
+> tree SHA
+> flake.lock SHA256
+> nixpkgs revision
+> accepted normal closure
+> accepted persistent-root closure
+> recovery ISO identity/hash
+> Btrfs topology
+> persistence-policy fingerprints
+> backup identities
+> soak completion evidence
+> ```
+>
+> This avoids trying to make a document certify the commit containing itself.
+>
+> ---
+>
+> # 21. Run the final collector from F
+>
+> Run from the repository root:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh \
+>   > /persist/nixos-readiness-20261005/final-baseline-runtime.md
+> ```
+>
+> Use an appropriate private evidence path if the existing naming scheme differs.
+>
+> Review every:
+>
+> ```text
+> [exit=N]
+> ```
+>
+> result.
+>
+> Unexpected non-zero collector commands are missing evidence.
+>
+> Resolve the cause before baseline acceptance.
+>
+> Do not merely delete failed sections from the report.
+>
+> ---
+>
+> # 22. Build the exact final normal system
+>
+> At F:
+>
+> ```bash
+> normal="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Record:
+>
+> ```bash
+> printf '%s\n' "$normal"
+> ```
+>
+> Expected accepted normal identity:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Do not assume it matches.
+>
+> Verify it.
+>
+> ---
+>
+> # 23. Build the persistent-root system
+>
+> ```bash
+> persistent="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Expected accepted identity:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Again:
+>
+> ```text
+> verify
+> do not assume
+> ```
+>
+> ---
+>
+> # 24. Build the recovery artifact
+>
+> ```bash
+> recovery="$(
+>   nix build \
+>     '.#recovery-iso' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Compare with the accepted recovery artifact identity/hash.
+>
+> If identical:
+>
+> ```text
+> reuse physical recovery evidence
+> ```
+>
+> No recovery reboot.
+>
+> If unexpectedly different:
+>
+> ```text
+> inspect why
+> ```
+>
+> before deciding whether any recovery evidence is actually invalidated.
+>
+> Do not reflexively schedule another recovery drill.
+>
+> ---
+>
+> # 25. Compare exact final runtime against the physically accepted one
+>
+> Run:
+>
+> ```bash
+> nix store diff-closures \
+>   /run/current-system \
+>   "$normal"
+> ```
+>
+> Ideal:
+>
+> ```text
+> no difference
+> ```
+>
+> The current branch has only evidence/documentation changes after the accepted integration, so any significant runtime change requires explanation.
+>
+> Investigate unexpected:
+>
+> ```text
+> kernel
+> Mesa
+> system package
+> toolchain
+> Home Manager output
+> service
+> display policy
+> power policy
+> cooling policy
+> persistence policy
+> optimization namespace
+> ```
+>
+> differences.
+>
+> If the exact final normal closure equals the accepted generation-46 closure:
+>
+> ```text
+> ALL RELEVANT PHYSICAL EVIDENCE REMAINS BOUND.
+> ```
+>
+> No repeat physical campaign.
+>
+> ---
+>
+> # 26. Exact final stock audit
+>
+> Verify:
+>
+> ```text
+> optimization/default.nix empty
+> ```
+>
+> and no experimental dependency namespace enters the stock closure:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> Also verify absence of unintended global:
+>
+> ```text
+> CFLAGS optimization
+> CXXFLAGS optimization
+> LDFLAGS optimization
+> NIX_CFLAGS_COMPILE experiment
+> LD_LIBRARY_PATH experiment
+> allocator preload
+> -march=native policy
+> LTO
+> PGO
+> BOLT
+> ```
+>
+> The baseline is useful only if it remains a clean stock control.
+>
+> ---
+>
+> # 27. Final automated suite
+>
+> Run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Current `nix flake check` already includes:
+>
+> ```text
+> granular-impermanence
+> granular-home-acceptance
+> granular-physical-markers
+> activation-safety
+> Commander Core checks
+> desktop evaluation
+> ephemeral-root checks
+> formatting
+> statix
+> deadnix
+> baseline collector lint
+> ```
+>
+> Do not manually rerun an identical check simply because it has a different historical name.
+>
+> ---
+>
+> # 28. Build the remaining heavy outputs
+>
+> Build/evaluate the heavy package outputs from F:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --no-link
+> nix build .#activation-safety-actions --no-link
+> nix build .#stock-contamination-negative --no-link
+> nix build .#workstation-smoke --no-link
+>
+> nix build .#reset-control --no-link
+> nix build .#impermanence-root-safety --no-link
+> nix build .#interrupted-recovery --no-link
+> nix build .#persistent-identity --no-link
+> nix build .#persistent-fallback --no-link
+> ```
+>
+> The granular VM is already a flake check.
+>
+> It is acceptable for Nix to reuse identical successful store outputs.
+>
+> Do not force expensive rebuilds merely to make them execute again.
+>
+> The question is:
+>
+> ```text
+> does the exact frozen source resolve to accepted successful outputs?
+> ```
+>
+> not:
+>
+> ```text
+> can we wastefully recompute every bit?
+> ```
+>
+> ---
+>
+> # 29. Do NOT repeat physical tests during frozen validation
+>
+> No:
+>
+> ```text
+> CPU stress
+> RAM stress
+> Blender render
+> Unreal validation
+> Proton validation
+> HDR validation
+> audio validation
+> root-chain
+> granular migration
+> persistent-root chain
+> recovery ISO boot
+> ```
+>
+> unless the exact final build comparison identifies a relevant source/runtime change.
+>
+> ---
+>
+> # 30. Create the canonical baseline record
+>
+> After F passes, create a sanitized canonical record under:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> ```
+>
+> A name such as:
+>
+> ```text
+> baseline-final.md
+> ```
+>
+> is suitable.
+>
+> Record:
+>
+> ```text
+> runtime freeze SHA F
+> tree SHA
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery artifact/hash
+>
+> final Btrfs topology
+> persistence contract
+> kernel/NixOS/Nix identities
+> CPU/microcode/firmware baseline
+> 125 W power policy
+> Commander cooling policy
+> display policy
+> Bluetooth policy
+>
+> CPU/RAM acceptance
+> Blender acceptance
+> Unreal acceptance
+> native/Proton gaming acceptance
+> HDR/SDR acceptance
+> Stage Pro acceptance
+> recovery acceptance
+>
+> granular persistence acceptance
+> PR #8 identity
+> granular exact-head CI identity
+> legacy/snapshot retirement evidence
+>
+> multi-day soak evidence
+>
+> October 5 archive identity
+> engine supplement
+> October 10 delta identity
+> secrets recovery status
+> ```
+>
+> Do not copy private receipt contents unnecessarily.
+>
+> Refer to private receipts by:
+>
+> ```text
+> name
+> date
+> hash
+> scope
+> ```
+>
+> where appropriate.
+>
+> ---
+>
+> # 31. Baseline source vs release source
+>
+> The canonical baseline should explicitly distinguish:
+>
+> ```text
+> runtime freeze source = F
+> ```
+>
+> from:
+>
+> ```text
+> later evidence/release commit = E
+> ```
+>
+> because committing the baseline document necessarily creates a successor Git commit.
+>
+> Do not attempt self-reference.
+>
+> The repository document can bind the tested runtime freeze.
+>
+> The PR body and annotated tag will later bind the final release SHA and its CI result.
+>
+> ---
+>
+> # 32. Create one final evidence commit E
+>
+> After the canonical baseline exists, update only evidence/documentation.
+>
+> Expected changes:
+>
+> ```text
+> canonical baseline document
+> docs/status.md
+> docs/backup-restore.md if needed
+> plan.md final ledger
+> ```
+>
+> `docs/status.md` should now report:
+>
+> ```text
+> soak PASS
+> backup freshness PASS
+> baseline capture PASS
+> stock audit PASS
+> exact frozen validation PASS
+>
+> remaining:
+> exact-final CI
+> PR ready
+> merge
+> tree verification
+> tag
+> ```
+>
+> Do not embed the not-yet-existing CI result for E.
+>
+> Commit.
+>
+> That commit is **E**.
+>
+> ---
+>
+> # 33. Exact-final local check on E
+>
+> Because E is a new source head:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then verify the exact normal and persistent outputs still resolve to the F outputs.
+>
+> If they do:
+>
+> ```text
+> E is evidence-only relative to F's runtime.
+> ```
+>
+> There is no reason to repeat physical validation.
+>
+> ---
+>
+> # 34. Push E and require exact-final-head CI
+>
+> Push E.
+>
+> Require GitHub Actions to finish successfully on the exact E SHA.
+>
+> Do not create a successor commit merely to say:
+>
+> ```text
+> "E passed CI"
+> ```
+>
+> That recreates the self-reference loop.
+>
+> Instead put the terminal exact CI identity in:
+>
+> ```text
+> PR #7 metadata/body
+> annotated tag
+> ```
+>
+> ---
+>
+> # 35. Current #194 CI is a checkpoint, not necessarily the final CI
+>
+> Current run:
+>
+> ```text
+> 38005124351
+> ```
+>
+> on:
+>
+> ```text
+> bf2e5962118c91214ea9caa521f883d4c03bbb15
+> ```
+>
+> is useful evidence.
+>
+> Let it finish.
+>
+> But if F or E creates a later branch head—as this plan expects—#194 is not the final release CI.
+>
+> Do not confuse:
+>
+> ```text
+> current-head CI checkpoint
+> ```
+>
+> with:
+>
+> ```text
+> exact-final release-head CI
+> ```
+>
+> ---
+>
+> # 36. Final PR #7 metadata
+>
+> After E's CI is green, update PR #7's body without creating another source commit.
+>
+> It should record:
+>
+> ```text
+> final feature-branch SHA E
+> runtime freeze SHA F
+> final CI run ID/result
+>
+> normal closure
+> persistent-root closure
+> recovery artifact/hash
+>
+> granular PR #8 / CI
+> soak PASS
+> backup freshness PASS
+> backup archive/delta identities
+> canonical baseline path
+> stock audit PASS
+> ```
+>
+> PR metadata is the correct location for the exact final CI result.
+>
+> ---
+>
+> # 37. Mark PR #7 ready
+>
+> Only after:
+>
+> ```text
+> [x] soak
+> [x] backup freshness
+> [x] baseline capture
+> [x] stock audit
+> [x] exact frozen suite
+> [x] closure equality/review
+> [x] exact-final CI
+> [x] zero unresolved hard gates
+> ```
+>
+> change:
+>
+> ```text
+> PR #7
+> draft → ready
+> ```
+>
+> At this point readiness work on the feature branch is complete.
+>
+> ---
+>
+> # 38. Merge PR #7
+>
+> Merge through the intended repository workflow.
+>
+> Do not add cleanup commits at the last second.
+>
+> After merge, obtain:
+>
+> ```text
+> tested feature tree SHA
+> merged main tree SHA
+> ```
+>
+> Compare them.
+>
+> If identical:
+>
+> ```text
+> MERGED TREE = TESTED TREE
+> ```
+>
+> and all evidence transfers.
+>
+> If different:
+>
+> ```text
+> inspect exact diff
+> ```
+>
+> Revalidate only the changed scope.
+>
+> Do not automatically run the whole physical program.
+>
+> ---
+>
+> # 39. Create the immutable baseline tag
+>
+> After the main-tree comparison passes, create:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> as an annotated tag.
+>
+> The tag annotation should bind:
+>
+> ```text
+> merged main SHA
+> final PR #7 SHA
+> verified tree identity
+>
+> runtime freeze SHA F
+>
+> flake.lock identity
+> normal closure
+> persistent-root closure
+> recovery artifact/hash
+>
+> granular PR #8
+> granular CI
+> final PR #7 CI
+>
+> soak acceptance
+> backup identities
+> canonical baseline document
+> physical recovery receipt
+> ```
+>
+> Push the annotated tag.
+>
+> ---
+>
+> # 40. STOP CONDITION
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists on the accepted main tree:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Then:
+>
+> ```text
+> STOP READINESS WORK.
+> ```
+>
+> Do not add:
+>
+> ```text
+> one more stress test
+> one more recovery test
+> one more storage experiment
+> one more architecture cleanup
+> one more application test
+> ```
+>
+> to the readiness project.
+>
+> Any future defect becomes an ordinary bug against a known baseline.
+>
+> ---
+>
+> # 41. Things explicitly deferred until AFTER the tag
+>
+> Do not currently implement the attached plans for:
+>
+> ```text
+> Prism Launcher
+> greetd autologin
+> additional ordinary workstation features
+> RAPL module extraction
+> Commander Core option cleanup
+> Bluetooth ownership cleanup
+> VS Code ownership cleanup
+> historical test alias cleanup
+> docs-tree archival/reorganization
+> generated module docs
+> optimization-framework-v2
+> ```
+>
+> Prism would modify the persistence manifest.
+>
+> greetd would change session/login startup.
+>
+> Both therefore belong after the immutable stock baseline.
+>
+> ---
+>
+> # 42. Post-tag branch strategy
+>
+> After the baseline tag, stop working directly on the readiness branch.
+>
+> For closure-preserving structural cleanup, optionally create:
+>
+> ```text
+> feat/post-baseline-cleanup
+> ```
+>
+> Implement only the already identified narrow source-boundary improvements.
+>
+> Prove the productive stock closure remains equivalent.
+>
+> Then merge that cleanup separately.
+>
+> Ordinary workstation features such as:
+>
+> ```text
+> Prism Launcher
+> greetd autologin
+> ```
+>
+> should receive their own feature branches and their own acceptance scopes.
+>
+> Do not mix them into optimization-v2.
+>
+> ---
+>
+> # 43. Optimization-v2 starts from the immutable stock control
+>
+> Create:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> from an accepted baseline-descended state.
+>
+> Keep the tag itself immutable as the control.
+>
+> First optimization architecture should remain:
+>
+> ```text
+> VM variant
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> experiment/provenance manifests
+>         ↓
+> CPU-target A/B
+>         ↓
+> ThinLTO
+>         ↓
+> PGO
+>         ↓
+> BOLT
+> ```
+>
+> Do not revive the old optimization branch wholesale.
+>
+> Use it as donor/reference material only.
+>
+> ---
+>
+> # 44. Exact immediate execution order from current state
+>
+> ```text
+> 1. Make no runtime configuration changes.
+>
+> 2. Leave the currently running Ventoy delta backup alone.
+>
+> 3. Let current CI run 38005124351 finish.
+>    Treat it as a checkpoint, not necessarily final release CI.
+>
+> 4. Continue using generation 46 normally.
+>
+> 5. Do not repeat granular or physical readiness tests.
+>
+> 6. When the delta backup runner exits:
+>    inspect exit status.
+>
+> 7. Verify the final delta with zstd.
+>
+> 8. Calculate and record SHA-256 and byte size.
+>
+> 9. Perform representative restore/hash comparison.
+>
+> 10. Cleanly unmount Ventoy.
+>
+> 11. Mark backup freshness PASS only after those checks.
+>
+> 12. Continue final-runtime normal-use soak until representative
+>     generation-46 use is honestly sufficient.
+>
+> 13. Perform one terminal soak health review.
+>
+> 14. If clean, mark soak PASS.
+>
+> 15. Correct the baseline collector's /home and /var topology logic.
+>
+> 16. Correct the stale 32-bit Vulkan "pending" statement.
+>
+> 17. Do not make any unrelated source change.
+>
+> 18. Run fmt/diff/flake checks.
+>
+> 19. Commit the narrow freeze/evidence-tool reconciliation.
+>     This is runtime freeze F.
+>
+> 20. Record F's SHA/tree/lock/accepted artifacts privately.
+>
+> 21. Run the corrected baseline collector from F.
+>
+> 22. Build exact final normal system.
+>
+> 23. Build exact persistent-root system.
+>
+> 24. Build exact recovery ISO.
+>
+> 25. Compare normal output to accepted generation 46.
+>
+> 26. Compare persistent output to accepted generation 46.
+>
+> 27. Compare recovery artifact to accepted recovery artifact.
+>
+> 28. Run stock/contamination audit.
+>
+> 29. Run exact F flake checks.
+>
+> 30. Build remaining heavy package outputs.
+>
+> 31. Do not force rebuild identical cached VM results.
+>
+> 32. Do not rerun physical tests.
+>
+> 33. Write sanitized canonical baseline record.
+>
+> 34. Reconcile status/backup/plan evidence.
+>
+> 35. Commit those documents as final evidence commit E.
+>
+> 36. Run exact E fmt/diff/flake checks.
+>
+> 37. Verify E still yields F's accepted runtime outputs.
+>
+> 38. Push E.
+>
+> 39. Require exact-head CI green on E.
+>
+> 40. Update PR #7 metadata with final CI/artifact identities.
+>
+> 41. Ensure docs/status.md has no hard readiness gate remaining.
+>
+> 42. Mark PR #7 ready.
+>
+> 43. Merge PR #7 to main.
+>
+> 44. Compare merged main tree with tested E tree.
+>
+> 45. If identical, reuse evidence.
+>
+> 46. If different, inspect and revalidate only affected scope.
+>
+> 47. Create annotated nixos-26.05-pre-optimization-baseline tag.
+>
+> 48. Push tag.
+>
+> 49. STOP READINESS.
+>
+> 50. Only then begin ordinary feature work or optimization-v2.
+> ```
+>
+> ---
+>
+> # 45. Current remaining checklist
+>
+> ## Currently active
+>
+> ```text
+> [ ] current delta backup finishes
+> [ ] zstd integrity PASS
+> [ ] delta SHA256 recorded
+> [ ] representative delta restore/hash PASS
+> [ ] Ventoy cleanly unmounted
+>
+> [ ] final-runtime representative soak sufficient
+> [ ] terminal soak health PASS
+>
+> [ ] baseline collector topology fixed
+> [ ] stale Vulkan wording fixed
+> ```
+>
+> ## Freeze
+>
+> ```text
+> [ ] runtime freeze F established
+> [ ] raw private baseline snapshot captured
+> [ ] sanitized canonical baseline written
+>
+> [ ] exact normal closure built
+> [ ] exact persistent-root closure built
+> [ ] exact recovery artifact built
+>
+> [ ] closure comparison PASS
+> [ ] stock contamination audit PASS
+> [ ] exact frozen flake checks PASS
+> [ ] heavy outputs accepted
+> ```
+>
+> ## Release
+>
+> ```text
+> [ ] final evidence commit E
+> [ ] exact E local checks PASS
+> [ ] exact E CI PASS
+> [ ] status has zero unresolved readiness gates
+> [ ] PR #7 ready
+> [ ] PR #7 merged
+> [ ] main tree verified
+> [ ] annotated baseline tag pushed
+> ```
+>
+> Everything else is already accepted or explicitly post-baseline.
+>
+> ---
+>
+> # 46. Final principle
+>
+> The project has reached the point where additional testing is more likely to create noise than confidence.
+>
+> The remaining job is to prove:
+>
+> ```text
+> the accepted machine
+> +
+> the accepted storage contract
+> +
+> fresh independent backup
+> +
+> representative normal use
+> +
+> exact reproducible source/artifacts
+> +
+> clean stock policy
+> ```
+>
+> and bind them to one immutable tag.
+>
+> Once that exists:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> the purpose of `plan.md` has been fulfilled.
+>
+> Do not let readiness expand beyond that boundary.
+>
+> The largest practical change from the previous guide is therefore that **granular Impermanence has completely left the critical path**. The current source already enforces root-local `/home`/`/var` with explicit retained state, while the optimization namespace remains deliberately inert.
+>
+> The immediate next action is not another test or code change: **allow the current backup to finish and continue normal generation-46 use.** After that, the baseline collector correction is the only source/tooling fix I see that should be made before the final freeze.
+>
+>
+>
+## Continuation update — 2026-10-10: repeated guide, CI checkpoint and capacity failure
+
+The attachment `db455e4b-8ba8-4a9e-ab59-bd47506f96b9/Pasted text.txt` was read in full. Its SHA-256 is `d7f957bcfa5f0f95761136d002de73e7ab08fb538048e33adc296fa0f7da0684`, identical to the already imported `8f00d416-7bae-407a-9474-c66369a2aae2` guide. The full imported directive remains applicable; no duplicate quotation is needed.
+
+GitHub run `38005124351` completed successfully on exact head `bf2e5962118c91214ea9caa521f883d4c03bbb15`. This is a checkpoint, not the later final release-head CI.
+
+Backup session `4796` terminated with exit 1 because the 4 GiB free-space reserve was reached. The incomplete external `retained-home-delta.tar.zst.partial` is 8,113,283,072 bytes; observed free space was 4,286,054,400 bytes. No final archive or backup-freshness PASS exists. The accepted October 5 archive and recovery ISO were untouched. Failure evidence and the partial are retained.
+
+A private content-hash comparison of the metadata candidates against the retained October 5 source has started. It preserves all new or different files and records current metadata separately for proven identical file contents; it does not discard installations or project state merely to fit the drive. Comparison results must be inspected before selecting any revised archive operation. No competing backup writer was started.
+
+The final-runtime soak remains open. Collector corrections, freeze, release merge and tag remain dependent on backup and soak acceptance. No runtime policy changed and no reboot or repeated physical test was requested.
+
+Content comparison completed with zero errors: 519 candidate files (307,689,596 logical bytes) were proven identical to the retained October 5 source; 204,262 candidates (26,511,609,531 logical bytes) remain. This removes only about 308 MB and does not establish that the full delta can fit within the available USB budget. No revised backup was started. After the failed runner and comparison finished, USB sync and clean unmount were started in session 86826. Sync is still flushing buffered data; unmount is not yet confirmed. Do not disconnect the USB until that session completes and findmnt confirms it is unmounted. The partial and private comparison manifests remain retained. A larger independent backup destination is needed to continue without omitting potentially unique state.
+
+### Capacity recovery without weakening selection
+
+The larger-destination conclusion above is provisional: stronger compression may still fit the complete selection. Session `42043` now stages the original full 204,781-candidate tar selection on the MP600 using zstd level 10 with two workers, preserving sparse files, ACLs, xattrs and numeric ownership. No files were omitted using the comparison results. The private staging archive is not an independent backup; only a verified external copy can close that gate. The failed USB partial remains intact while session `86826` flushes and unmounts it. No new USB writer was started. Inspect terminal pipeline success, integrity and actual compressed size before deciding whether Ventoy has enough capacity with the required reserve.
+
+The post-pruning physical review was checked at `2026-10-09T22:31:31.439385+00:00` and binds the accepted generation-46 normal closure. The current closure still matches it. This recent final-topology receipt is not three days of unchanged representative use. The soak remains open. Current failed-unit listing is empty; the actual cooling unit is `commander-core.service`, active/running with `NRestarts=0` (the similarly named `corsair-commander-core.service` is not the configured unit).
+
+### Staging terminal result and USB unmount
+
+Session `42043` completed with exit 0. Full-selection staged archive `full-delta-level10.tar.zst` is 10,331,350,085 bytes, SHA-256 `c353f798c5a3a1a9232052cda62b431d8d485a9a657905a9bb979410f649a297`. Session `70633` completed zstd integrity and SHA-256 successfully. Session `3893` extracted representatives into a separate private directory from project and application categories; both restored hashes matched the snapshot sources. No live files were restored over. Private `level10-restore-proof.json` retains the exact paths and hashes.
+
+This complete archive still exceeds Ventoy's usable budget with the 4 GiB reserve. No USB retry or selection weakening occurred. The staged file is on the MP600 and is **not** independent backup acceptance. External transfer and verification require another suitable destination. The pending destination question remains relevant.
+
+Session `86826` finished sync and unmount. Its final exit 1 is the expected `findmnt --mountpoint` result for an absent mount; a separate query confirmed `/mnt/ventoy` is unmounted. USB buffered writeback finished. The failed partial, October 5 archive and recovery ISO remain retained. Backup freshness and final-runtime soak are still open; all accepted physical/application gates remain closed.
+
+### Continuation blocker audit — 2026-10-10
+
+Rechecked live state: only the MP600 and the same 57.7 GiB Ventoy USB are attached; Ventoy is unmounted. The verified 10,331,350,085-byte full staged archive remains available, and no additional independent destination has arrived. The same capacity blocker has persisted across three consecutive goal turns, including the full-selection compression recovery attempt. Final-runtime representative use also remains insufficient for the adopted soak criterion. No further prerequisite-independent implementation remains authorized before those gates: collector freeze, canonical release validation, PR readiness, merge and tag retain their prescribed dependencies. Goal execution is blocked awaiting suitable independent media and sufficient normal-use evidence; this does not reopen accepted tests or authorize runtime changes. The existing destination question remains pending.
+
+## User-directed minimal backup policy — 2026-10-10 (supersedes earlier backup gates)
+
+The user explicitly instructed that Unity, Unreal, Blender, Steam, Firefox and other installed/application state need not be backed up, projects are recoverable from GitHub, and Ventoy should retain the bare minimum. This direct instruction overrides the attached guide's large additive archive, freshness and preservation requirements. No larger backup drive is required. Separate secrets restore remains accepted from actual recovery; existing project Git/LFS recovery evidence remains accepted. No claim is made that arbitrary local uncommitted/untracked files exist on GitHub.
+
+Executed cleanup: removed October 5 home archive and engine supplement plus accompanying scope/checksum files; removed October 10 failed partial; removed two failed recovery receipts and obsolete inspection script copy. Removed the 10.33 GB private staged archive. Private historical receipts and comparison metadata remain for chronology. The successful recovery receipt/script, supported recovery ISO and restore instructions remain on Ventoy; unrelated existing OS ISOs were preserved. Approximately 38 GiB is now free. The whole-home/application backup gate is retired by user scope decision, not falsely marked as a successful delta operation.
+
+Collector correction and final freeze still follow the adopted final-runtime soak gate. No reboot, runtime policy change or new physical test occurred.
+
+Minimal recovery kit verified: backup-folder files total 5,704 bytes; supported ISO SHA-256 remains `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`. USB sync and unmount completed; findmnt confirms no mount at `/mnt/ventoy`. Capacity blocker is resolved by the explicit scope change. Final-runtime soak remains open, without repeating accepted workload tests.
+
+### PR reconciliation and final-runtime exposure — 2026-10-10
+
+PR #7 body was updated to the user-selected minimal recovery scope: earlier home/engine archives are historical and deliberately removed, GitHub project recovery plus separately tested secrets recovery are accepted, and neither a large delta nor another drive is a readiness requirement. PR remains open/draft. Runtime is unchanged.
+
+Direct receipt inspection found accepted normal closure `15f6c5dsjl047j7my4c7cpkdhk6ly2xp` in normal-cycle review at `2026-10-09T22:04:05.719250+00:00`, return-normal review at `2026-10-09T22:12:00.924657+00:00`, and post-pruning review at `2026-10-09T22:31:31.439385+00:00`. These are receipt times, not measured productive-use durations. They do not establish the preferred approximately three days of final-runtime normal use. Current closure matches; failed-unit listing is empty and `commander-core.service` is active/running with zero restarts. No repeated application or physical tests were performed. Collector correction/freeze remains dependent on honest soak acceptance.
+
+## Minimal recovery audit and immediate collector correction — adopted 2026-10-10
+
+Latest attachment fully read, SHA-256 `ae21ea6e78c6755c9511b6f50ec4d885f0789628ebb3583bd00591aa4245a00c`. Its reviewed head 42d002f is historical; current source is newer. Direct user cleanup authorization already superseded preservation ordering in this guide. This guide now authorizes correcting the read-only collector before soak completion, without restarting soak or changing runtime policy. Minimal category/exception audit and independent manifest verification remain to execute; no cloud coverage is assumed without evidence or user acceptance. Full guide retained below.
+
+> I re-checked the **current live branch**, not just the previous attached guide. The authoritative head is now **`42d002fcc15c78ffe1c1c82feee0404284c94740`**. PR #7 is still open, draft, and mergeable, and importantly the exact current head now has a **successful CI run #197 / `38007671104`**.
+>
+> Since the accepted granular merge `c981a6ff…`, all six commits modify only `plan.md`, `docs/status.md`, and `docs/backup-restore.md`; there has been **no productive runtime-source change**, so none of the accepted physical, application, storage, or migration evidence needs repeating.  The latest blocker audit says the project is stuck because the full October 10 selection compresses to 10.33 GB and needs another independent destination.
+>
+> I think your new backup requirement should **supersede that blocker**. The repository's own backup contract says the objective is independent protection of **non-reproducible** state, not an archive of everything persistent.  More importantly, the persistence audit itself classifies large retained categories such as Unity installations, Steam binaries/games, editor extensions, Unity Libraries, Steam shaders, and Unreal DDC/Zen as reconstructible `R` state retained mainly for convenience/performance.  Persistence and disaster backup are different problems.
+>
+> The previous attached guide's collector finding also remains correct: `/home` and `/var` are no longer independent mountpoints, while the collector still tests them as such and still incorrectly calls practical 32-bit Vulkan validation pending. Assess NixOS Performance Ceiling The live collector confirms both stale assumptions remain.
+>
+> So I would replace the previous unified plan with this version:
+>
+> # NixOS Pre-Optimization Readiness — Unified Continuation Plan
+>
+> ## 0. Governing objective
+>
+> Finish the stock NixOS baseline without turning readiness into a permanent certification exercise.
+>
+> The remaining path is:
+>
+> ```text
+> minimal recovery audit
+>         ↓
+> tiny exception backup, if any
+>         ↓
+> finish representative soak
+>         ↓
+> fix baseline collector
+>         ↓
+> freeze source
+>         ↓
+> canonical baseline capture
+>         ↓
+> exact automated/build validation
+>         ↓
+> exact-final CI
+>         ↓
+> PR #7 → main
+>         ↓
+> verify merged tree
+>         ↓
+> annotated baseline tag
+>         ↓
+> STOP READINESS
+> ```
+>
+> The project is no longer doing:
+>
+> ```text
+> granular Impermanence development
+> storage migration
+> hardware qualification
+> application qualification
+> recovery design
+> general stress testing
+> ```
+>
+> Those are closed.
+>
+> ---
+>
+> # 1. Current authoritative checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Active branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current head:
+>
+> ```text
+> 42d002fcc15c78ffe1c1c82feee0404284c94740
+> ```
+>
+> Current tree:
+>
+> ```text
+> f9a6e6ae635ace2844df230d449642823a8c0136
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> Complete stock workstation pre-optimization readiness
+>
+> base: main
+> head: feat/pre-optimization-readiness
+>
+> state: open
+> draft: yes
+> mergeable: yes
+> ```
+>
+> Current exact-head CI:
+>
+> ```text
+> Nix checks #197
+> run 38007671104
+> head 42d002fcc15c78ffe1c1c82feee0404284c94740
+>
+> PASS
+> ```
+>
+> Accepted generation-46 normal closure:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Accepted persistent-root closure:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Accepted recovery ISO:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> Recovery ISO SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Optimization remains intentionally empty.
+>
+> ---
+>
+> # 2. Evidence that must remain CLOSED
+>
+> Do not repeat any of the following without a new source/runtime change directly affecting that scope:
+>
+> ```text
+> [x] granular /home implementation
+> [x] granular /var implementation
+> [x] persistence classification
+> [x] raw /persist pruning
+> [x] clean raw re-audit
+> [x] legacy @home retirement
+> [x] legacy @var retirement
+> [x] migration snapshot retirement
+> [x] corrected generation-46 physical chains
+> [x] post-pruning physical normal boot
+> [x] Fuzzel acceptance
+> [x] Unity Preferences acceptance
+> [x] Firefox / VS Code / Codex application acceptance
+> [x] Steam state acceptance
+> [x] Unreal persistence acceptance
+>
+> [x] CPU 125 W test
+> [x] full 20 GiB memory test
+> [x] Blender HIP
+> [x] Unreal rebuild / PIE / interactive
+> [x] native gaming
+> [x] Proton gaming
+> [x] GameMode restoration
+> [x] HDR
+> [x] HDR → SDR
+> [x] Stage Pro
+> [x] suspend/resume
+> [x] recovery ISO physical drill
+> [x] Btrfs/NVMe checks
+> [x] store verification
+> [x] reconstruction
+> ```
+>
+> No more:
+>
+> ```text
+> normal → recovery → recovery → normal
+> ```
+>
+> No more migration sentinels.
+>
+> No more storage pruning.
+>
+> No new synthetic stress campaign.
+>
+> ---
+>
+> # 3. Supersede the current large-backup blocker
+>
+> The current end of `plan.md` says progression is blocked until the complete:
+>
+> ```text
+> 10,331,350,085-byte
+> full-delta-level10.tar.zst
+> ```
+>
+> can be copied to another independent destination.
+>
+> That requirement should now be superseded.
+>
+> The 10.33 GB archive demonstrated that the previous broad selection:
+>
+> ```text
+> can be archived
+> can pass zstd integrity
+> can be restored
+> ```
+>
+> but it does **not** demonstrate that every selected byte is worth disaster-backup space.
+>
+> The user's actual recovery policy is now:
+>
+> > Anything reproducible from Nix, retrievable from GitHub, recoverable through an accepted cloud service such as Steam Cloud, or straightforwardly re-downloadable/rebuildable does not need an independent local backup.
+>
+> Therefore:
+>
+> ```text
+> PERSISTENT
+> ≠
+> BACKUP-WORTHY
+> ```
+>
+> and:
+>
+> ```text
+> R state
+> ≠
+> required disaster recovery data
+> ```
+>
+> The backup gate should be changed from:
+>
+> ```text
+> archive current retained state
+> ```
+>
+> to:
+>
+> ```text
+> identify genuinely unique local-only state
+>         ↓
+> protect only that state
+> ```
+>
+> This eliminates the requirement for another large drive.
+>
+> ---
+>
+> # 4. Final minimal backup policy
+>
+> Use five recovery classes.
+>
+> ## A. Declaratively reproducible
+>
+> Examples:
+>
+> ```text
+> NixOS configuration
+> Home Manager configuration
+> packages
+> services
+> Hyprland configuration
+> development environment
+> system policies
+> boot configuration
+> persistence declarations
+> ```
+>
+> Recovery source:
+>
+> ```text
+> NixosConf Git repository + flake.lock
+> ```
+>
+> Independent binary/data backup:
+>
+> ```text
+> NONE
+> ```
+>
+> ## B. Git-backed authored work
+>
+> Examples:
+>
+> ```text
+> source code
+> tracked Unreal project files
+> tracked Unity project files
+> tracked documents/assets
+> ```
+>
+> Recovery source:
+>
+> ```text
+> GitHub
+> ```
+>
+> Required action:
+>
+> ```text
+> verify local repository has no important uncommitted/untracked/unpushed work
+> ```
+>
+> If clean and pushed:
+>
+> ```text
+> backup payload = NONE
+> ```
+>
+> Do not archive the whole repository merely because it exists locally.
+>
+> ## C. Cloud-backed user data
+>
+> Most importantly:
+>
+> ```text
+> Steam Cloud saves
+> ```
+>
+> and any other account/sync service the user explicitly accepts as authoritative recovery.
+>
+> If the user is happy relying on that service:
+>
+> ```text
+> backup payload = NONE
+> ```
+>
+> This is an explicit recovery-policy choice.
+>
+> Do not duplicate Steam libraries or every Proton prefix merely for readiness.
+>
+> ## D. Re-downloadable / reconstructible retained state
+>
+> Exclude completely.
+>
+> Examples already classified as reconstructible include:
+>
+> ```text
+> Unity editor installations
+>
+> Steam binaries
+> Steam games
+> Steam shader cache
+>
+> VS Code extensions
+>
+> Unity Library directories
+>
+> Unreal DDC
+> Unreal Zen cache
+> Unreal Intermediate/generated build state
+>
+> application caches
+> browser caches
+>
+> downloaded installers
+>
+> Nix store content
+> ```
+>
+> These may remain persistent on the workstation for convenience.
+>
+> They do not need off-machine backup.
+>
+> ## E. Unique local-only state
+>
+> This is the **only** data that belongs in the final backup payload.
+>
+> Examples might include:
+>
+> ```text
+> a document not committed anywhere
+>
+> a local source file not pushed to GitHub
+>
+> an untracked project asset that is genuinely authored work
+>
+> an autosave the user actually wants
+>
+> a non-cloud game save
+>
+> credentials not covered by the already accepted secrets backup
+>
+> a locally important application database with no sync/recovery source
+> ```
+>
+> Only class E is the final backup gate.
+>
+> ---
+>
+> # 5. Minimal-backup audit
+>
+> Do not perform another 200,000-file archive selection.
+>
+> Instead create a small private recovery-source manifest, for example:
+>
+> ```text
+> /persist/nixos-readiness-20261005/
+> minimal-backup-20261010/
+> recovery-sources.json
+> ```
+>
+> For each meaningful persistent category record one of:
+>
+> ```text
+> nix
+> git
+> cloud
+> separate-secret-backup
+> re-download
+> rebuild
+> local-only
+> deliberately-not-backed-up
+> ```
+>
+> The important principle is:
+>
+> ```text
+> every important state category has a recovery answer
+> ```
+>
+> not:
+>
+> ```text
+> every persistent file exists on two disks
+> ```
+>
+> ---
+>
+> # 6. Git-backed work audit
+>
+> Audit actual authoring/project directories for repositories.
+>
+> For every relevant repository establish:
+>
+> ```text
+> working tree clean?
+> untracked authored files?
+> local commits ahead of upstream?
+> upstream exists?
+> ```
+>
+> Typical commands:
+>
+> ```bash
+> git status --short --branch
+> git status --porcelain=v1
+> git rev-list --left-right --count '@{upstream}...HEAD'
+> git lfs status
+> ```
+>
+> Do not fresh-clone every repository again.
+>
+> The existing project already proved that process with the Unreal repository.
+>
+> The goal now is only:
+>
+> ```text
+> has anything important appeared locally since the accepted proof?
+> ```
+>
+> If a repository is clean and not ahead of its accepted remote:
+>
+> ```text
+> exclude it from backup
+> ```
+>
+> If it contains a few local changes:
+>
+> ```text
+> back up only those local exceptions
+> ```
+>
+> or push them to GitHub.
+>
+> ---
+>
+> # 7. Non-Git user data audit
+>
+> Check only potentially authored locations such as:
+>
+> ```text
+> Desktop
+> Documents
+> Downloads
+> Pictures
+> Music
+> Videos
+> Unity user templates
+> Unreal Projects
+> Development paths not covered by Git
+> ```
+>
+> Do not recursively back up them by default.
+>
+> Ask only:
+>
+> ```text
+> Does this contain anything I created
+> that I cannot get from Nix/GitHub/cloud/download again?
+> ```
+>
+> The previous inventory already identified two loose Blender files totaling only about 313 KB.
+>
+> Those are the kind of items that belong in a minimal exception backup.
+>
+> Not an entire 10–30 GB retained-state archive.
+>
+> ---
+>
+> # 8. Application state policy
+>
+> Persistent application profiles were chosen largely so everyday state survives reboot.
+>
+> That does not automatically make them disaster-recovery requirements.
+>
+> For example:
+>
+> ```text
+> Firefox profile
+> VS Code state
+> Codex state
+> Unity Hub state
+> Unreal editor preferences
+> dconf
+> Thunar preferences
+> WirePlumber state
+> Fuzzel history
+> shell history
+> ```
+>
+> may be:
+>
+> ```text
+> convenient to retain locally
+> ```
+>
+> without being:
+>
+> ```text
+> important enough to independently back up
+> ```
+>
+> For each one, use the user's actual recovery preference.
+>
+> If losing the state would merely mean:
+>
+> ```text
+> sign in again
+> reconfigure a small preference
+> re-download something
+> let sync restore it
+> ```
+>
+> exclude it.
+>
+> Do not preserve application state merely because the persistence audit labeled it `P`.
+>
+> `P` means:
+>
+> ```text
+> should survive reboot
+> ```
+>
+> not:
+>
+> ```text
+> must survive total disk loss
+> ```
+>
+> ---
+>
+> # 9. Secrets
+>
+> The existing separate secrets backup has already been:
+>
+> ```text
+> backed up
+> and
+> successfully restored during a real recovery
+> ```
+>
+> Do not create another giant home archive just to duplicate it.
+>
+> At final freeze ask only:
+>
+> ```text
+> have the important secrets changed since that accepted backup?
+> ```
+>
+> If no:
+>
+> ```text
+> no action
+> ```
+>
+> If yes:
+>
+> ```text
+> refresh only the encrypted secrets backup
+> ```
+>
+> ---
+>
+> # 10. Steam
+>
+> The user's selected recovery model is:
+>
+> ```text
+> games/binaries → Steam download
+> supported saves → Steam Cloud
+> ```
+>
+> Therefore do not independently archive:
+>
+> ```text
+> Steam client
+> game installations
+> shadercache
+> depotcache
+> compatibility binaries
+> download staging
+> ```
+>
+> For saves, use the user's explicit acceptance:
+>
+> ```text
+> Steam Cloud is sufficient where supported.
+> ```
+>
+> If a particular game is known not to use cloud saves and the save matters, include only that save.
+>
+> Do not back up all of `.local/share/Steam` defensively.
+>
+> ---
+>
+> # 11. What counts as BACKUP PASS
+>
+> There are now two legitimate outcomes.
+>
+> ## Outcome A — no unique local exceptions
+>
+> If the audit establishes:
+>
+> ```text
+> Nix covers declarative configuration
+> GitHub covers authored projects
+> Steam Cloud covers wanted game saves
+> separate secrets backup remains valid
+> remaining state is rebuildable/re-downloadable
+> ```
+>
+> then:
+>
+> ```text
+> local-only backup payload = empty
+> ```
+>
+> That is a valid PASS.
+>
+> Create only a small recovery-source manifest and copy that manifest to the independent Ventoy medium.
+>
+> Record:
+>
+> ```text
+> date
+> source Git SHA
+> audit result
+> accepted remote recovery sources
+> zero local-only exceptions
+> manifest SHA256
+> Ventoy destination
+> ```
+>
+> There is no reason to manufacture a large archive when there is nothing unique to archive.
+>
+> ## Outcome B — a small exception set exists
+>
+> Create something like:
+>
+> ```text
+> minimal-local-exceptions-20261010.tar.zst
+> ```
+>
+> containing only those items.
+>
+> Expected scale should be driven by actual unique data.
+>
+> It may be:
+>
+> ```text
+> kilobytes
+> megabytes
+> hundreds of megabytes
+> ```
+>
+> If it unexpectedly grows into many gigabytes, stop and identify which category caused that.
+>
+> Do not blindly accept the size.
+>
+> Verify:
+>
+> ```bash
+> zstd -t minimal-local-exceptions-20261010.tar.zst
+> sha256sum minimal-local-exceptions-20261010.tar.zst
+> ```
+>
+> Extract representative contents to a temporary directory and compare hashes.
+>
+> Then cleanly unmount Ventoy.
+>
+> That closes backup freshness.
+>
+> ---
+>
+> # 12. Existing giant backup artifacts
+>
+> The following artifacts should no longer be baseline requirements.
+>
+> ## Same-disk 10.33 GB staged archive
+>
+> ```text
+> full-delta-level10.tar.zst
+> SHA256:
+> c353f798c5a3a1a9232052cda62b431d8d485a9a657905a9bb979410f649a297
+> ```
+>
+> It has:
+>
+> ```text
+> integrity proof
+> representative restore proof
+> ```
+>
+> but:
+>
+> ```text
+> no independent recovery value
+> ```
+>
+> because it is on the MP600.
+>
+> After the new minimal policy and recovery manifest are established:
+>
+> ```text
+> retain receipt/hash
+> delete staged archive
+> ```
+>
+> There is little value in consuming 10.33 GB of the disk with it.
+>
+> ## Failed Ventoy partial
+>
+> The incomplete approximately:
+>
+> ```text
+> 8.11 GB
+> ```
+>
+> `.partial` archive has no accepted recovery value.
+>
+> After recording its historical failure:
+>
+> ```text
+> delete it
+> ```
+>
+> and reclaim the USB space.
+>
+> ## October 5 27.84 GB archive
+>
+> This was useful evidence and successfully proved the backup/restore process.
+>
+> Under the new recovery policy it does **not** need to be a permanent baseline requirement.
+>
+> Keep it until the new minimal backup gate passes.
+>
+> After that, if the goal is minimizing backup storage:
+>
+> ```text
+> retain:
+>     receipt
+>     SHA256
+>     historical evidence
+>
+> delete:
+>     27.84 GB archive
+> ```
+>
+> if desired.
+>
+> The same applies to the old engine supplement if its contents are accepted as re-downloadable/reconstructible.
+>
+> ## Recovery ISO
+>
+> Keep this.
+>
+> It provides a genuinely useful independent boot/recovery capability and is conceptually different from duplicating ordinary user/application data.
+>
+> ---
+>
+> # 13. Repository changes to make now
+>
+> The latest `plan.md` blocker audit currently says:
+>
+> ```text
+> goal execution is blocked awaiting suitable independent media
+> ```
+>
+> That statement was correct under the previous full-selection backup policy.
+>
+> It is superseded by the user's explicit minimal-recovery policy.
+>
+> Make a narrow readiness-finalization commit updating:
+>
+> ```text
+> docs/backup-restore.md
+> docs/status.md
+> plan.md
+> ```
+>
+> The documentation should explicitly distinguish:
+>
+> ```text
+> persistence scope
+> from
+> disaster-backup scope
+> ```
+>
+> and state:
+>
+> > Backup freshness requires protection only for important state with no accepted reproducible, remote, cloud, re-download, or separately backed recovery source.
+>
+> Preserve the October 5 and October 10 large-backup attempts as history.
+>
+> Do not rewrite the chronology.
+>
+> Add a newer directive that supersedes their acceptance policy.
+>
+> ---
+>
+> # 14. Fix the baseline collector now
+>
+> There is no reason to wait for the soak to finish to repair a read-only evidence tool.
+>
+> This source change does not alter the productive system closure and therefore does not restart the soak.
+>
+> The current collector incorrectly does:
+>
+> ```bash
+> findmnt ... --mountpoint /home
+> findmnt ... --mountpoint /var
+> ```
+>
+> but the final architecture intentionally has:
+>
+> ```text
+> /home inside @root
+> /var  inside @root
+> ```
+>
+> Change the topology collection to resolve the filesystem containing each path.
+>
+> Conceptually:
+>
+> ```bash
+> for p in \
+>   / \
+>   /home \
+>   /var \
+>   /nix \
+>   /persist \
+>   /.snapshots \
+>   /boot \
+>   /var/lib/nixos-optimization
+> do
+>   printf '\n%s\n' "$p"
+>
+>   findmnt \
+>     --target "$p" \
+>     --noheadings \
+>     -o TARGET,SOURCE,FSROOT,FSTYPE,OPTIONS \
+>     || exit
+> done
+> ```
+>
+> The final evidence should show:
+>
+> ```text
+> /home → filesystem rooted in @root
+> /var  → filesystem rooted in @root
+>
+> /nix     → @nix
+> /persist → @persist
+> /.snapshots → @snapshots
+> /var/lib/nixos-optimization → @optimization
+> ```
+>
+> ---
+>
+> # 15. Fix the stale Vulkan statement
+>
+> The collector still prints:
+>
+> ```text
+> 32-bit Vulkan practical validation: pending
+> ```
+>
+> That is factually stale.
+>
+> Practical ELF32 Vulkan rendering already passed.
+>
+> Do **not** rerun it.
+>
+> Replace the line with something like:
+>
+> ```text
+> The summary above does not itself prove 32-bit Vulkan.
+> Accepted practical ELF32 Vulkan rendering evidence is retained in
+> docs/baselines/pre-optimization/vulkan32-render-20261005.txt.
+> ```
+>
+> Optionally record the artifact's hash.
+>
+> ---
+>
+> # 16. Validate the finalization-tooling commit
+>
+> After the backup-policy and collector corrections:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Push it.
+>
+> Require CI green on the resulting head.
+>
+> Because these are:
+>
+> ```text
+> documentation
+> +
+> read-only evidence tooling
+> ```
+>
+> and not runtime policy, do not repeat physical acceptance.
+>
+> ---
+>
+> # 17. Continue the soak in parallel
+>
+> The final-runtime soak is still the one legitimate waiting gate.
+>
+> The repository's latest evidence explicitly says the current amount of unchanged final-generation-46 representative use is insufficient.
+>
+> Keep using the workstation normally.
+>
+> Relevant normal use naturally includes:
+>
+> ```text
+> Firefox
+> terminal/Git
+> Nix work
+> C/C++
+> VS Code
+> Unity
+> Unreal
+> Blender
+> Steam
+> native/Proton gaming
+> normal audio/display use
+> ordinary filesystem activity
+> natural suspend if it happens
+> ```
+>
+> Do not deliberately exercise every item.
+>
+> Do not run stress tests.
+>
+> Do not reboot for the sake of the soak.
+>
+> Documentation and collector commits do not restart the soak.
+>
+> Only a runtime configuration change would materially alter its candidate.
+>
+> ---
+>
+> # 18. Soak close criterion
+>
+> Use the previously adopted practical criterion:
+>
+> ```text
+> roughly three substantial days
+> of genuine normal use
+> on the final runtime policy
+> ```
+>
+> rather than idle wall-clock time.
+>
+> The final post-pruning generation-46 topology receipt is from late October 9.
+>
+> Therefore do not prematurely call the soak complete on the morning of October 10.
+>
+> When representative exposure is sufficient, perform one terminal health review:
+>
+> ```text
+> running closure
+> boot ID
+>
+> systemctl --failed
+>
+> commander-core.service:
+>     ActiveState
+>     SubState
+>     NRestarts
+>
+> kernel scan for:
+>     MCE/hardware faults
+>     amdgpu timeout/hang/fault
+>     Btrfs faults
+>     OOM
+>
+> Btrfs error counters
+> NVMe critical/media errors
+> network/session health
+> ```
+>
+> If:
+>
+> ```text
+> representative normal use occurred
+> +
+> no unresolved system-level defect appeared
+> +
+> terminal health review is clean
+> ```
+>
+> record:
+>
+> ```text
+> REPRESENTATIVE MULTI-DAY SOAK = PASS
+> ```
+>
+> Close it permanently.
+>
+> ---
+>
+> # 19. Do not treat normal app quirks as soak failures
+>
+> These do not automatically fail the baseline:
+>
+> ```text
+> a game bug
+> one Firefox tab crash
+> a Steam server problem
+> a Unity project-specific problem
+> an application-level issue
+> ```
+>
+> A real baseline failure would be something like:
+>
+> ```text
+> system freeze
+> unexpected reboot
+> GPU reset/hang
+> filesystem corruption/error
+> lost persisted state
+> root reset malfunction
+> cooling service failure
+> persistent system-level networking/audio/display regression
+> system-level OOM
+> ```
+>
+> If one occurs, investigate only that scope.
+>
+> Do not restart readiness from zero.
+>
+> ---
+>
+> # 20. Establish final source freeze F
+>
+> Once:
+>
+> ```text
+> minimal backup gate = PASS
+> soak = PASS
+> collector corrections = merged into branch
+> current checks = PASS
+> ```
+>
+> declare the then-current head:
+>
+> ```text
+> F = runtime/source freeze
+> ```
+>
+> From F onward:
+>
+> ```text
+> NO ordinary workstation changes.
+> ```
+>
+> No:
+>
+> ```text
+> Prism
+> greetd
+> package refresh
+> flake.lock refresh
+> kernel change
+> Mesa change
+> persistence change
+> module cleanup
+> optimization work
+> ```
+>
+> ---
+>
+> # 21. Capture private freeze identities
+>
+> Record privately:
+>
+> ```text
+> Git SHA F
+> tree SHA
+> flake.lock SHA256
+> nixpkgs revision
+>
+> running closure
+> accepted normal closure
+> accepted persistent-root closure
+>
+> recovery ISO output/hash
+>
+> final Btrfs topology
+> persistence-policy source hashes
+>
+> minimal-backup manifest/hash
+> any exception archive/hash
+> secrets recovery status
+>
+> soak receipt
+> ```
+>
+> Do not create a source self-reference problem by trying to make F contain its own SHA.
+>
+> ---
+>
+> # 22. Run the corrected baseline collector
+>
+> From F:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh \
+>   > /persist/nixos-readiness-20261005/final-baseline-runtime.md
+> ```
+>
+> Keep the raw report private.
+>
+> It contains machine-specific runtime information.
+>
+> Review every:
+>
+> ```text
+> [exit=N]
+> ```
+>
+> Unexpected non-zero commands mean missing evidence.
+>
+> Do not simply delete failing sections.
+>
+> ---
+>
+> # 23. Build exact final artifacts
+>
+> Normal:
+>
+> ```bash
+> normal="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Expected:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Persistent-root:
+>
+> ```bash
+> persistent="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Expected:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Recovery:
+>
+> ```bash
+> recovery="$(
+>   nix build \
+>     '.#recovery-iso' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> ```
+>
+> Compare its ISO hash with:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> Do not assume equality.
+>
+> Prove it.
+>
+> ---
+>
+> # 24. Closure comparison
+>
+> Run:
+>
+> ```bash
+> nix store diff-closures \
+>   /run/current-system \
+>   "$normal"
+> ```
+>
+> The desired result is no meaningful runtime difference.
+>
+> Because everything since the accepted granular tree has been documentation/evidence work, an unexpected runtime closure change must be investigated.
+>
+> If the normal and persistent-root outputs still equal generation 46:
+>
+> ```text
+> all relevant physical evidence remains valid
+> ```
+>
+> Do not repeat it.
+>
+> ---
+>
+> # 25. Stock contamination audit
+>
+> Verify:
+>
+> ```text
+> optimization/default.nix remains empty
+> ```
+>
+> and no dependency path contains:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> Also ensure no unintended global experiment environment such as:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> LDFLAGS
+> NIX_CFLAGS_COMPILE
+> LD_LIBRARY_PATH
+> allocator preload
+> -march=native
+> LTO
+> PGO
+> BOLT
+> ```
+>
+> has entered the stock control.
+>
+> ---
+>
+> # 26. Final automated suite
+>
+> Run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Current flake checks already cover:
+>
+> ```text
+> activation safety
+> Btrfs maintenance
+> Commander Core
+> baseline collector syntax/shellcheck
+> desktop evaluation
+>
+> granular six-boot test
+> granular home acceptance
+> granular physical-marker regression
+>
+> ephemeral-root configuration
+> formatting
+> Statix
+> Deadnix
+> ```
+>
+> Do not separately reproduce an identical check simply because historical documentation used another name.
+>
+> ---
+>
+> # 27. Heavy package outputs
+>
+> Resolve/build:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --no-link
+> nix build .#activation-safety-actions --no-link
+> nix build .#stock-contamination-negative --no-link
+> nix build .#workstation-smoke --no-link
+>
+> nix build .#reset-control --no-link
+> nix build .#impermanence-root-safety --no-link
+> nix build .#interrupted-recovery --no-link
+> nix build .#persistent-identity --no-link
+> nix build .#persistent-fallback --no-link
+> ```
+>
+> Nix may reuse already successful identical outputs.
+>
+> That is acceptable.
+>
+> Do not force rebuilds just for ceremony.
+>
+> The invariant is:
+>
+> ```text
+> exact frozen source
+> resolves to
+> accepted successful outputs
+> ```
+>
+> ---
+>
+> # 28. No final physical retest campaign
+>
+> Do not repeat:
+>
+> ```text
+> CPU stress
+> RAM test
+> Blender
+> Unreal
+> Proton
+> HDR
+> Stage Pro
+> suspend/resume
+> root-chain
+> persistent-root physical chain
+> recovery ISO boot
+> granular migration
+> ```
+>
+> unless final closure analysis reveals a relevant change.
+>
+> ---
+>
+> # 29. Canonical baseline document
+>
+> Create a sanitized repository document such as:
+>
+> ```text
+> docs/baselines/pre-optimization/baseline-final.md
+> ```
+>
+> Include:
+>
+> ```text
+> runtime freeze SHA F
+> tree SHA
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> Nix/NixOS/kernel identity
+> hardware/firmware baseline
+>
+> 125 W CPU policy
+> Commander Core policy
+> display policy
+> Bluetooth policy
+>
+> final storage topology
+> granular persistence contract
+>
+> CPU/RAM accepted evidence
+> Blender/Unreal evidence
+> native/Proton evidence
+> HDR/audio evidence
+> recovery evidence
+>
+> granular PR #8 and CI
+> legacy retirement evidence
+>
+> representative soak PASS
+>
+> recovery policy:
+>     Nix
+>     GitHub
+>     cloud
+>     separate secrets
+>     local-only exceptions
+>
+> minimal backup manifest
+> exception archive identity if non-empty
+> ```
+>
+> Do not publish private paths or secret contents.
+>
+> ---
+>
+> # 30. Final evidence commit E
+>
+> Creating the canonical baseline naturally creates a commit after F.
+>
+> Call this:
+>
+> ```text
+> E = final evidence/release head
+> ```
+>
+> Expected repository changes should be restricted to things like:
+>
+> ```text
+> baseline-final.md
+> docs/status.md
+> docs/backup-restore.md
+> plan.md
+> ```
+>
+> `docs/status.md` should then show:
+>
+> ```text
+> soak PASS
+> minimal backup/recovery audit PASS
+> canonical baseline PASS
+> stock audit PASS
+> exact frozen validation PASS
+>
+> remaining:
+>     exact-final CI
+>     PR ready
+>     merge
+>     tree comparison
+>     tag
+> ```
+>
+> Do not write a future CI result into E.
+>
+> ---
+>
+> # 31. Validate E
+>
+> Run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Rebuild/evaluate normal and persistent-root outputs sufficiently to establish:
+>
+> ```text
+> E runtime output = F runtime output
+> ```
+>
+> If equal:
+>
+> ```text
+> E is evidence-only
+> ```
+>
+> No physical retest.
+>
+> ---
+>
+> # 32. Exact-final GitHub CI
+>
+> Push E.
+>
+> Require GitHub CI to pass on the exact E SHA.
+>
+> This becomes the final CI identity.
+>
+> Do not create another source commit just to document:
+>
+> ```text
+> CI passed
+> ```
+>
+> Put the terminal CI identity in:
+>
+> ```text
+> PR #7 metadata
+> and
+> annotated tag
+> ```
+>
+> This avoids infinite self-reference.
+>
+> ---
+>
+> # 33. Final PR #7 state
+>
+> Update the PR body to record:
+>
+> ```text
+> final feature SHA E
+> runtime freeze SHA F
+> final CI run
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> PR #8 / granular CI identity
+>
+> soak PASS
+>
+> minimal backup policy
+> accepted recovery sources
+> exception archive/hash if any
+>
+> canonical baseline path
+> stock contamination PASS
+> ```
+>
+> Then mark PR #7 ready.
+>
+> ---
+>
+> # 34. Merge
+>
+> Merge PR #7 to `main`.
+>
+> Immediately compare:
+>
+> ```text
+> tested E tree
+> vs
+> merged main tree
+> ```
+>
+> If identical:
+>
+> ```text
+> all evidence transfers
+> ```
+>
+> If different:
+>
+> ```text
+> inspect exact difference
+> ```
+>
+> and validate only the affected scope.
+>
+> Do not reflexively repeat the whole readiness suite.
+>
+> ---
+>
+> # 35. Annotated baseline tag
+>
+> After merged-tree identity is accepted, create:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The annotation should bind:
+>
+> ```text
+> merged main SHA
+> final PR SHA
+> tree SHA
+>
+> runtime freeze F
+> final release E
+>
+> flake.lock identity
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> final PR #7 CI
+> granular PR #8 / CI
+>
+> soak receipt
+>
+> minimal recovery manifest
+> small backup exception archive if any
+> secrets recovery status
+>
+> canonical baseline document
+> physical recovery receipt
+> ```
+>
+> Push the tag.
+>
+> ---
+>
+> # 36. STOP READINESS
+>
+> When:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists on the verified main tree:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Stop.
+>
+> Do not add:
+>
+> ```text
+> one more backup
+> one more stress test
+> one more reboot
+> one more application test
+> one more recovery drill
+> one more documentation polishing cycle
+> ```
+>
+> Any future issue becomes a normal bug against the baseline.
+>
+> ---
+>
+> # 37. Post-tag cleanup only
+>
+> After the tag, create a separate cleanup branch if desired:
+>
+> ```text
+> feat/post-baseline-cleanup
+> ```
+>
+> Previously identified cleanup remains appropriate:
+>
+> ```text
+> extract Intel RAPL implementation into reusable module
+> make Commander Core actuating policy explicit/fail-closed
+> move Bluetooth host policy to the host
+> move VS Code desktop → development HM grouping
+> remove historical test aliases
+> archive plan.md intact into docs/history
+> reorganize docs
+> add generated option documentation/link checking
+> ```
+>
+> Prove the productive stock closure remains equivalent after structural cleanup.
+>
+> Do not mix these changes into the immutable readiness baseline.
+>
+> ---
+>
+> # 38. Optimization-v2
+>
+> Only after the baseline tag exists:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> Initial progression:
+>
+> ```text
+> vmVariantWithBootLoader
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> experiment/provenance manifests
+>         ↓
+> CPU-target A/B
+>         ↓
+> distributed builders where useful
+>         ↓
+> ThinLTO
+>         ↓
+> PGO
+>         ↓
+> BOLT
+> ```
+>
+> Do not resurrect the old optimization branch wholesale.
+>
+> Use it only as donor/reference material.
+>
+> ---
+>
+> # 39. Immediate execution order from the current head
+>
+> ```text
+> CURRENT: 42d002fcc15c78ffe1c1c82feee0404284c94740
+> CI #197: PASS
+>
+>
+> NOW
+> │
+> ├─ 1. Supersede the "10.33 GB independent archive required" policy.
+> │
+> ├─ 2. Define minimal recovery-source classifications:
+> │       Nix / Git / cloud / secret backup / rebuild / local-only.
+> │
+> ├─ 3. Audit only for genuinely local-only exceptions.
+> │
+> ├─ 4. If exceptions = none:
+> │       create tiny manifest-only external backup.
+> │
+> │     If exceptions exist:
+> │       create small exceptions-only archive.
+> │
+> ├─ 5. Verify manifest/archive on Ventoy.
+> │
+> ├─ 6. Mark BACKUP FRESHNESS = PASS.
+> │
+> ├─ 7. Remove failed 8.11 GB partial.
+> │
+> ├─ 8. Remove same-disk 10.33 GB staging archive after retaining receipt/hash.
+> │
+> ├─ 9. After minimal backup acceptance, optionally retire the old
+> │       27.84 GB archive as physical data while retaining its receipt.
+> │
+> ├─ 10. Update backup/status/plan documentation.
+> │
+> ├─ 11. Fix baseline collector:
+> │        /home + /var topology
+> │        stale Vulkan wording.
+> │
+> ├─ 12. Run fmt/diff/flake checks and push.
+> │
+> ├─ 13. Continue normal generation-46 use throughout.
+> │
+> └─ 14. Do NOT change runtime policy.
+>
+>
+> WHEN REPRESENTATIVE SOAK IS SUFFICIENT
+> │
+> ├─ 15. Run one terminal health review.
+> ├─ 16. Mark SOAK = PASS.
+> ├─ 17. Establish freeze F.
+> ├─ 18. Capture private runtime baseline.
+> ├─ 19. Build normal/persistent/recovery artifacts.
+> ├─ 20. Verify closure equality.
+> ├─ 21. Run stock contamination audit.
+> ├─ 22. Run exact frozen suite/heavy outputs.
+> ├─ 23. Write canonical sanitized baseline.
+> └─ 24. Commit evidence head E.
+>
+>
+> RELEASE
+> │
+> ├─ 25. Validate E locally.
+> ├─ 26. Push E.
+> ├─ 27. Require exact E CI PASS.
+> ├─ 28. Update PR #7 metadata.
+> ├─ 29. Mark PR #7 ready.
+> ├─ 30. Merge → main.
+> ├─ 31. Verify merged tree.
+> ├─ 32. Create annotated baseline tag.
+> └─ 33. STOP READINESS.
+>
+>
+> AFTERWARD
+> │
+> ├─ post-baseline cleanup
+> ├─ ordinary workstation features
+> └─ optimization-framework-v2
+> ```
+>
+> ---
+>
+> # 40. Remaining GO checklist
+>
+> ## Recovery / soak
+>
+> ```text
+> [ ] minimal recovery-source audit
+> [ ] local-only exception set identified
+>
+> [ ] either:
+>       zero-exception manifest accepted
+>     or
+>       small exceptions archive accepted
+>
+> [ ] independent copy verified
+> [ ] backup freshness PASS
+>
+> [ ] representative final-runtime soak sufficient
+> [ ] terminal soak health PASS
+> ```
+>
+> ## Tooling / freeze
+>
+> ```text
+> [ ] collector /home-/var logic fixed
+> [ ] stale Vulkan wording fixed
+>
+> [ ] source freeze F established
+> [ ] private runtime collector captured
+> [ ] exact normal closure confirmed
+> [ ] exact persistent-root closure confirmed
+> [ ] recovery artifact confirmed
+> [ ] closure comparison PASS
+> [ ] stock audit PASS
+> [ ] exact frozen checks PASS
+> [ ] heavy outputs accepted
+> ```
+>
+> ## Release
+>
+> ```text
+> [ ] canonical baseline document
+> [ ] final evidence head E
+>
+> [ ] exact E local validation PASS
+> [ ] exact E GitHub CI PASS
+>
+> [ ] docs/status.md zero hard gates
+>
+> [ ] PR #7 ready
+> [ ] PR #7 merged
+> [ ] merged tree verified
+>
+> [ ] annotated baseline tag pushed
+> ```
+>
+> Everything else is either already accepted or explicitly post-baseline.
+>
+> ---
+>
+> # 41. Final backup principle
+>
+> The final recovery policy should be:
+>
+> ```text
+> Nix rebuilds the machine.
+>
+> GitHub restores authored code/projects.
+>
+> Steam/vendor services restore downloadable software
+> and accepted cloud-backed data.
+>
+> The separate secrets recovery protects secrets.
+>
+> A tiny exception backup protects only things
+> that genuinely exist nowhere else.
+> ```
+>
+> That is a much better fit for this workstation than maintaining tens of gigabytes of duplicate archives.
+>
+> The correct question is not:
+>
+> ```text
+> "Have I copied all persistent data somewhere else?"
+> ```
+>
+> It is:
+>
+> ```text
+> "If the MP600 died right now,
+> what important information would exist nowhere else?"
+> ```
+>
+> Back up that answer.
+>
+> Nothing more.
+>
+> ---
+>
+> # 42. Final stop condition
+>
+> The readiness project is complete when the machine is:
+>
+> ```text
+> physically accepted
+> +
+> normally stable
+> +
+> declaratively reconstructable
+> +
+> recoverable according to the user's actual recovery policy
+> +
+> bound to exact stock closures/source
+> +
+> CI-green
+> +
+> merged
+> +
+> tagged
+> ```
+>
+> It does not require:
+>
+> ```text
+> a full-home backup
+> a full-/persist backup
+> a Steam library backup
+> Unity editor backups
+> cache backups
+> downloaded application backups
+> another physical qualification campaign
+> ```
+>
+> Once:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists:
+>
+> ```text
+> STOP READINESS.
+> START THE NEXT PROJECT PHASE.
+> ```
+>
+> The most important change here is that the **current media-capacity blocker disappears**. `docs/backup-restore.md` already frames the required object as *non-reproducible* state, while your persistence policy intentionally retains plenty of reconstructible data for convenience.
+>
+> I would not buy or attach another drive just to satisfy the existing 10.33 GB archive plan. The next implementation step should be to **replace that broad backup acceptance policy with the minimal recovery-source/exception model above**, then use the existing Ventoy USB for the resulting tiny manifest or exceptions-only archive.
+
+### Latest guide implementation — 2026-10-10
+
+Read-only collector corrected now, as explicitly authorized by the latest guide: containing-path resolution via findmnt --target with FSROOT covers /, /home, /var, /nix, /persist, /.snapshots, /boot and optimization storage. Live results resolve home/var through @root. Stale practical Vulkan pending text now references the accepted ELF32 artifact, without rerunning rendering. Runtime policy and flake.lock remain unchanged.
+
+Targeted authoring audit found three local exceptions totaling 314,333 source bytes: modified Blender file, untracked Blender recovery copy, modified Unity settings asset. No project repositories are ahead of upstream after fetching the three project remotes; each reports 0/0. Extra VR-AR-project-2 contains only Logs/Temp. Personal document/media directories were empty; downloaded installers/media and application state remain excluded by user policy. No Steam Cloud assertion was invented. Private recovery-sources.json records the categories and targeted audit scope.
+
+Independent exception archive on Ventoy: 260,598 bytes; SHA-256 `b4fea7ae78e2083198ce3847f8ab00a15567ad43a3a4304ada481d265a8232cf`. Recovery manifest SHA-256 `ebc0990e3ebe8052983bcd672c484b736e64a71929c49838612022f1b116144b`. Zstd integrity, extraction/hash comparison for all three exceptions, external archive and manifest copy/hash verification passed. Sync/unmount completed. This closes the minimal recovery/exception gate for this audited point in time; it does not claim a whole-home backup or generic cloud coverage.
+
+nix fmt -- --ci passed with zero changes; git diff --check passed after normalizing trailing spaces in the full quoted attachment; nix flake check --print-build-logs exited 0, reporting 16 running checks and all checks passed (identical cached outputs reused as appropriate). Initial diff-check whitespace failures were corrected. Final runtime soak remains open; source freeze F, canonical baseline, final release-head CI, merge and annotated tag are not claimed.
+
+## Additional final-runtime soak disregarded by human intervention — 2026-10-10
+
+The user explicitly waived the additional roughly-three-day final-runtime soak and instructed immediate continuation: the system is operational and working well. The requirement is **DISREGARDED BY HUMAN INTERVENTION**, not a completed measured soak or synthetic PASS. Earlier accepted normal-use reports, physical/runtime acceptance and clean health observations remain evidence. No waiting period or repeated physical campaign is required. This supersedes all older soak-dependent execution/blocker instructions.
+
+Exact tooling/minimal-backup head ea57eb9ff2f3309e35acd65721df1543017d4a08 passed GitHub CI run 38033970046. Next commit records this scope decision and establishes freeze F; canonical private collector, exact artifact/stock/automated validation, sanitized baseline evidence E, exact E CI, PR readiness, main-tree verification and annotated tag remain required. No ordinary runtime changes are authorized during freeze.
+
+## Final frozen release directive — adopted 2026-10-10
+
+Attachment read in full; SHA-256 `be3a97f3fb0ab02bfca2e76e009653a00d89addd5a75c67487faa86c73fccf71`. F remains 9df40f6a06229a4c5263f957787fe802ff5ce198; no new freeze or productive change. Minimal recovery closed and additional soak DISREGARDED BY HUMAN INTERVENTION. Exact F local collector and positive/heavy builds have completed; terminal F CI is still being polled. The contamination-negative output must fail specifically on its forbidden dependency, as docs/stock-control.md requires; its expected diagnostic was observed, so it is accepted rather than treated as a positive build. Full directive below (trailing spaces normalized).
+
+> I re-reviewed the attached continuation guide and the live repository. The previous guide correctly established the two important policy corrections: **minimal backup instead of large whole-home archives**, and fixing the stale baseline collector rather than changing the storage architecture. Assess NixOS Performance Ceiling Both of those are now actually implemented.
+>
+> The branch has moved substantially since that guide. The current head is **`9df40f6a06229a4c5263f957787fe802ff5ce198`**, whose explicit purpose is to waive the additional soak by user direction and establish the baseline freeze.  The minimal recovery gate is closed with a **260,598-byte three-file exception archive**, verified by zstd integrity, complete extraction/hash comparison, and external-copy verification; the large 27.8 GB/10.3 GB backup artifacts have been retired under the chosen recovery policy.  The collector now correctly uses containing-filesystem/`FSROOT` topology and references the accepted ELF32 Vulkan evidence.
+>
+> The extra soak is now explicitly **DISREGARDED BY HUMAN INTERVENTION**, not falsely recorded as a measured PASS. Freeze **F is therefore the current `9df40f6…` head**.  PR #7 remains open, draft, and mergeable.  The immediately preceding tooling/minimal-backup head `ea57eb9…` passed CI run `38033970046`; exact freeze-F CI **#202 / `38035009618` is currently still in progress**.
+>
+> So the previous plan can now be shortened significantly. The critical path is no longer backup → soak → collector → freeze. Those stages are done or explicitly disposed of. The project is now in **final frozen validation and release**.
+>
+> # NixOS Pre-Optimization Readiness — Unified Final Continuation Plan
+>
+> ## 0. Purpose and authority
+>
+> This document is the forward-only continuation directive for completing `plan.md`.
+>
+> Historical entries in `plan.md` remain useful evidence and chronology, but they must not be interpreted as instructions to repeat work that has since been accepted, superseded, waived, or deliberately retired.
+>
+> The project is now in:
+>
+> ```text
+> FROZEN BASELINE VALIDATION
+>         ↓
+> CANONICAL BASELINE EVIDENCE
+>         ↓
+> FINAL CI
+>         ↓
+> PR #7 RELEASE
+>         ↓
+> MERGE
+>         ↓
+> TREE IDENTITY
+>         ↓
+> ANNOTATED BASELINE TAG
+>         ↓
+> STOP READINESS
+> ```
+>
+> The project is no longer in:
+>
+> ```text
+> storage design
+> granular Impermanence development
+> backup design
+> hardware qualification
+> application qualification
+> recovery qualification
+> soak waiting
+> baseline-tool development
+> ```
+>
+> Those scopes are closed.
+>
+> ---
+>
+> # 1. Authoritative current checkpoint
+>
+> Repository:
+>
+> ```text
+> P2949/NixosConf
+> ```
+>
+> Branch:
+>
+> ```text
+> feat/pre-optimization-readiness
+> ```
+>
+> Current source freeze:
+>
+> ```text
+> F =
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> Tree:
+>
+> ```text
+> df1527cd14c6509515ba398bb8dba0c46673e534
+> ```
+>
+> Commit purpose:
+>
+> ```text
+> Waive additional soak by user direction
+> and establish baseline freeze
+> ```
+>
+> PR:
+>
+> ```text
+> #7
+> Complete stock workstation pre-optimization readiness
+>
+> state: open
+> draft: yes
+> mergeable: yes
+> base: main
+> ```
+>
+> Accepted normal system closure:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> Accepted persistent-root closure:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> Accepted recovery ISO identity:
+>
+> ```text
+> d55ny1z4d53slhz3ilvyy2mg6d8khrqn
+> ```
+>
+> Accepted recovery ISO SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> `optimization/default.nix` remains intentionally empty.
+>
+> That must remain true through the baseline tag.
+>
+> ---
+>
+> # 2. Freeze F is already established
+>
+> Do not create another "freeze" commit.
+>
+> Freeze F is:
+>
+> ```text
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> From this point onward, there must be no ordinary productive-source change before release evidence is complete.
+>
+> Forbidden before the baseline tag:
+>
+> ```text
+> package changes
+> flake.lock refresh
+> kernel changes
+> Mesa changes
+> persistence changes
+> Hyprland/session changes
+> greetd/autologin
+> Prism Launcher
+> module cleanup
+> file reorganization
+> RAPL refactoring
+> Commander Core refactoring
+> Bluetooth policy movement
+> new workstation features
+> optimization work
+> ```
+>
+> The only expected successor to F is an evidence/documentation commit E.
+>
+> If a productive source change becomes genuinely necessary, F is invalidated for that changed scope and a new freeze must be established.
+>
+> Do not do that casually.
+>
+> ---
+>
+> # 3. Granular Impermanence remains completely closed
+>
+> Do not reopen:
+>
+> ```text
+> [x] root reset architecture
+> [x] root-local /home
+> [x] root-local ordinary /var
+> [x] explicit retained user state
+> [x] explicit retained system state
+> [x] disposable cache overlays
+> [x] Fuzzel persistence
+> [x] Unity Preferences persistence
+> [x] physical home migration
+> [x] physical var migration
+> [x] corrected generation-46 physical trials
+> [x] post-pruning physical normal boot
+> [x] raw /persist pruning
+> [x] raw /persist clean re-audit
+> [x] legacy @home retirement
+> [x] legacy @var retirement
+> [x] migration snapshot retirement
+> [x] application persistence acceptance
+> [x] PR #8
+> [x] granular exact-head CI
+> [x] readiness integration
+> ```
+>
+> Never rerun another:
+>
+> ```text
+> normal
+> → recovery
+> → recovery
+> → normal
+> ```
+>
+> sequence for readiness.
+>
+> ---
+>
+> # 4. Existing physical/workload acceptance remains closed
+>
+> Do not repeat:
+>
+> ```text
+> CPU 125 W stress
+> 20 GiB memtester
+> KVM validation
+> Btrfs scrub
+> NVMe health
+> full Nix store verification
+>
+> Blender HIP render
+> Blender interactive workflow
+>
+> Unreal rebuild
+> Unreal PIE
+> Unreal interactive workflow
+>
+> native Stardew
+> Proton/Dark Souls
+> GameMode policy restoration
+>
+> HDR signalling
+> HDR visual confirmation
+> HDR → SDR return
+>
+> Stage Pro audio
+>
+> physical recovery ISO drill
+>
+> generation-37 root chain
+> generation-38 boot/resume
+> granular generation-46 chains
+> ```
+>
+> A new physical test requires either:
+>
+> ```text
+> an actual relevant defect
+> ```
+>
+> or:
+>
+> ```text
+> a productive source/runtime change
+> that affects that exact acceptance scope
+> ```
+>
+> Nothing else justifies reopening them.
+>
+> ---
+>
+> # 5. Minimal recovery/backup gate is CLOSED
+>
+> The old whole-home backup policy is superseded.
+>
+> The current recovery model is:
+>
+> ```text
+> Nix / GitHub / reinstall
+>         +
+> separately accepted secrets recovery
+>         +
+> small local-only exception archive
+> ```
+>
+> There is no requirement to back up:
+>
+> ```text
+> Steam library
+> Steam binaries
+> Unity installations
+> Unreal installation
+> browser/application profiles
+> large application state
+> Unity Library caches
+> Unreal DDC/Zen
+> shader caches
+> downloadable packages
+> Nix store
+> whole /home
+> whole /persist
+> ```
+>
+> The targeted audit identified three local authored exceptions.
+>
+> Source size:
+>
+> ```text
+> 314,333 bytes
+> ```
+>
+> Independent Ventoy archive:
+>
+> ```text
+> 260,598 bytes
+> ```
+>
+> Archive SHA-256:
+>
+> ```text
+> b4fea7ae78e2083198ce3847f8ab00a15567ad43a3a4304ada481d265a8232cf
+> ```
+>
+> Recovery manifest SHA-256:
+>
+> ```text
+> ebc0990e3ebe8052983bcd672c484b736e64a71929c49838612022f1b116144b
+> ```
+>
+> Accepted proof:
+>
+> ```text
+> [x] external copy
+> [x] zstd integrity
+> [x] extraction of all three exceptions
+> [x] restored/source hash comparison
+> [x] manifest external-copy hash
+> [x] archive external-copy hash
+> [x] sync
+> [x] clean unmount
+> ```
+>
+> Therefore:
+>
+> ```text
+> MINIMAL RECOVERY GATE = PASS
+> ```
+>
+> Do not perform another backup inventory before release unless genuinely new, unique local work is created after the audited point.
+>
+> Do not purchase or attach another disk for readiness.
+>
+> ---
+>
+> # 6. Old large backup artifacts are historical only
+>
+> The following no longer gate release:
+>
+> ```text
+> 27.84 GB October 5 home archive
+> 47-file engine supplement
+> 8.11 GB failed delta partial
+> 10.33 GB same-disk staged delta
+> ```
+>
+> Their history may remain in `plan.md` and `docs/backup-restore.md`.
+>
+> Their physical preservation is not required.
+>
+> The recovery ISO remains useful and should remain available.
+>
+> ---
+>
+> # 7. Additional final-runtime soak is CLOSED BY WAIVER
+>
+> Do not wait another three days.
+>
+> Do not describe the soak as:
+>
+> ```text
+> PASS
+> ```
+>
+> because the adopted roughly-three-day unchanged-final-runtime measurement was not completed.
+>
+> Record it accurately as:
+>
+> ```text
+> DISREGARDED BY HUMAN INTERVENTION
+> ```
+>
+> The evidence supporting that decision includes:
+>
+> ```text
+> earlier normal-use stability
+> accepted physical/runtime tests
+> clean health observations
+> user report that the operational system works well
+> ```
+>
+> The waiver supersedes every older instruction saying:
+>
+> ```text
+> wait for soak
+> soak blocks collector
+> soak blocks freeze
+> soak blocks release
+> ```
+>
+> There is no remaining soak gate.
+>
+> Do not start another observation timer.
+>
+> ---
+>
+> # 8. Baseline collector correction is CLOSED
+>
+> The collector has already been fixed.
+>
+> It now resolves:
+>
+> ```text
+> /
+>  /home
+>  /var
+>  /nix
+>  /persist
+>  /.snapshots
+>  /boot
+>  /var/lib/nixos-optimization
+> ```
+>
+> using containing-path resolution and `FSROOT`.
+>
+> This correctly proves:
+>
+> ```text
+> /home → @root
+> /var  → @root
+>
+> /nix     → @nix
+> /persist → @persist
+> /.snapshots → @snapshots
+>
+> /var/lib/nixos-optimization
+>     → @optimization
+> ```
+>
+> It no longer incorrectly requires `/home` or `/var` to be independent mounts.
+>
+> The stale:
+>
+> ```text
+> 32-bit Vulkan practical validation: pending
+> ```
+>
+> statement is also gone.
+>
+> The collector now references:
+>
+> ```text
+> docs/baselines/pre-optimization/
+> vulkan32-render-20261005.txt
+> ```
+>
+> Do not rerun Vulkan rendering.
+>
+> ---
+>
+> # 9. Current CI state
+>
+> The exact tooling/minimal-recovery head:
+>
+> ```text
+> ea57eb9ff2f3309e35acd65721df1543017d4a08
+> ```
+>
+> already passed:
+>
+> ```text
+> Nix checks #201
+> run 38033970046
+> PASS
+> ```
+>
+> Freeze F currently has:
+>
+> ```text
+> Nix checks #202
+> run 38035009618
+> head:
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+> ```
+>
+> At the latest review it is still:
+>
+> ```text
+> IN PROGRESS
+> ```
+>
+> This is useful exact-F evidence.
+>
+> Do not block local frozen validation on it; those tasks can proceed independently.
+>
+> When #202 terminates:
+>
+> - if PASS, record it as exact-F CI;
+> - if FAIL, inspect only the failing CI scope;
+> - do not reopen physical/runtime evidence merely because a documentation/static check failed.
+>
+> E will later require its own exact-head CI regardless of #202.
+>
+> ---
+>
+> # 10. Immediate next step: capture the canonical private runtime snapshot
+>
+> Work from exact F:
+>
+> ```bash
+> git status --short
+> git rev-parse HEAD
+> git rev-parse HEAD^{tree}
+> ```
+>
+> Required:
+>
+> ```text
+> HEAD =
+> 9df40f6a06229a4c5263f957787fe802ff5ce198
+>
+> working tree =
+> clean
+> ```
+>
+> Then run:
+>
+> ```bash
+> nix develop .#validation \
+>   --command bash scripts/nixos-baseline-info.sh \
+>   > /persist/nixos-readiness-20261005/final-baseline-runtime.md
+> ```
+>
+> Keep this raw collector output private.
+>
+> Review every collector:
+>
+> ```text
+> [exit=N]
+> ```
+>
+> Unexpected non-zero exits are missing evidence that must be understood.
+>
+> Do not simply strip failing sections from the report.
+>
+> ---
+>
+> # 11. Record freeze identities
+>
+> For F, privately record:
+>
+> ```text
+> Git SHA
+> tree SHA
+>
+> flake.lock SHA256
+> nixpkgs revision
+>
+> collector script SHA256
+>
+> running /run/current-system
+> running system derivation
+>
+> accepted normal closure
+> accepted persistent-root closure
+>
+> recovery ISO output/hash
+>
+> filesystem topology
+>
+> persistence-policy source hashes
+>
+> minimal-recovery manifest/hash
+> exception archive/hash
+>
+> physical recovery receipt/hash
+>
+> soak disposition:
+> DISREGARDED BY HUMAN INTERVENTION
+> ```
+>
+> Do not publish raw machine IDs or secret data unnecessarily.
+>
+> ---
+>
+> # 12. Build the exact frozen normal system
+>
+> From exact F:
+>
+> ```bash
+> normal="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$normal"
+> ```
+>
+> Expected identity:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> The preceding tooling head already resolved to the accepted generation-46 normal output.
+>
+> Still verify exact F.
+>
+> If it matches:
+>
+> ```text
+> F normal runtime = physically accepted generation 46
+> ```
+>
+> Therefore all corresponding physical evidence remains bound.
+>
+> If it does not match, stop release finalization and inspect the derivation/closure difference.
+>
+> Do not immediately retest hardware.
+>
+> ---
+>
+> # 13. Build the exact persistent-root specialization
+>
+> Run:
+>
+> ```bash
+> persistent="$(
+>   nix build \
+>     '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$persistent"
+> ```
+>
+> Expected:
+>
+> ```text
+> 7lkx40kh36s809bz1yr9bmfdddy1n80a
+> ```
+>
+> If identical, retain all accepted persistent-root evidence.
+>
+> If different, inspect the exact source/closure difference first.
+>
+> ---
+>
+> # 14. Build and verify the recovery ISO
+>
+> Run:
+>
+> ```bash
+> recovery="$(
+>   nix build \
+>     '.#recovery-iso' \
+>     --no-link \
+>     --print-out-paths
+> )"
+> printf '%s\n' "$recovery"
+> ```
+>
+> Identify the ISO produced under the output and calculate SHA-256.
+>
+> Expected accepted SHA-256:
+>
+> ```text
+> 52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061
+> ```
+>
+> If identical:
+>
+> ```text
+> reuse the accepted physical recovery drill
+> ```
+>
+> Do not boot it again.
+>
+> If unexpectedly different:
+>
+> ```text
+> investigate why
+> ```
+>
+> before deciding whether any recovery evidence is invalidated.
+>
+> ---
+>
+> # 15. Compare frozen runtime with the accepted running system
+>
+> Run:
+>
+> ```bash
+> nix store diff-closures \
+>   /run/current-system \
+>   "$normal"
+> ```
+>
+> Ideal result:
+>
+> ```text
+> no meaningful difference
+> ```
+>
+> Also record the exact current running closure:
+>
+> ```bash
+> readlink -f /run/current-system
+> ```
+>
+> If F's normal output equals:
+>
+> ```text
+> 15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+> ```
+>
+> then there is no reason to rerun physical readiness tests.
+>
+> ---
+>
+> # 16. Exact stock contamination audit
+>
+> First confirm:
+>
+> ```text
+> optimization/default.nix = intentionally empty
+> ```
+>
+> Then verify the stock closure contains none of the future experiment namespaces:
+>
+> ```text
+> -nixos-opt-cpu-
+> -nixos-opt-lto-
+> -nixos-opt-pgo-
+> -nixos-opt-bolt-
+> ```
+>
+> Also check that no unintended experiment policy has entered the stock configuration through:
+>
+> ```text
+> CFLAGS
+> CXXFLAGS
+> LDFLAGS
+> NIX_CFLAGS_COMPILE
+> LD_LIBRARY_PATH
+> allocator preloads
+> -march=native
+> LTO
+> ThinLTO
+> PGO
+> BOLT
+> ```
+>
+> Do not interpret ordinary package-local compiler flags as contamination.
+>
+> The gate concerns system-wide experimental policy entering the control build.
+>
+> Required result:
+>
+> ```text
+> STOCK CONTROL = CLEAN
+> ```
+>
+> ---
+>
+> # 17. Run exact-F repository validation
+>
+> Run on F:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> All must pass.
+>
+> Current `nix flake check` includes the relevant static/configuration/integration gates, including:
+>
+> ```text
+> activation safety
+> Btrfs maintenance
+> Commander Core config/python
+> baseline collector shell validation
+> desktop evaluation
+>
+> granular-impermanence
+> granular-home-acceptance
+> granular-physical-markers
+>
+> ephemeral-root config
+>
+> formatting
+> statix
+> deadnix
+> ```
+>
+> Do not manually duplicate tests already represented by these outputs.
+>
+> ---
+>
+> # 18. Resolve the remaining heavy validation outputs
+>
+> Build:
+>
+> ```bash
+> nix build .#blank-disk-reconstruction --no-link
+> nix build .#activation-safety-actions --no-link
+> nix build .#stock-contamination-negative --no-link
+> nix build .#workstation-smoke --no-link
+>
+> nix build .#reset-control --no-link
+> nix build .#impermanence-root-safety --no-link
+> nix build .#interrupted-recovery --no-link
+> nix build .#persistent-identity --no-link
+> nix build .#persistent-fallback --no-link
+> ```
+>
+> The current live output is:
+>
+> ```text
+> impermanence-root-safety
+> ```
+>
+> not an older historical `reset-safety` name.
+>
+> Nix cache reuse is valid evidence of source-output identity.
+>
+> Do not use:
+>
+> ```text
+> --rebuild
+> ```
+>
+> or otherwise force successful identical derivations to execute again merely for ceremony.
+>
+> ---
+>
+> # 19. Freeze-F acceptance condition
+>
+> F is accepted when all of these are true:
+>
+> ```text
+> [x] minimal recovery gate already closed
+> [x] additional soak explicitly waived
+> [x] collector corrected
+> [x] no ordinary runtime changes after freeze
+>
+> [ ] private final collector clean
+> [ ] normal closure exact
+> [ ] persistent-root closure exact
+> [ ] recovery artifact exact
+> [ ] closure comparison understood/accepted
+> [ ] stock contamination audit clean
+> [ ] exact-F fmt/diff/flake PASS
+> [ ] heavy outputs accepted
+> [ ] F CI terminal and understood
+> ```
+>
+> At that point F is the immutable tested runtime source.
+>
+> ---
+>
+> # 20. Create the canonical public baseline document
+>
+> There is not yet a final canonical `baseline-final.md`.
+>
+> Create:
+>
+> ```text
+> docs/baselines/pre-optimization/baseline-final.md
+> ```
+>
+> This document should summarize rather than copy every receipt.
+>
+> Record:
+>
+> ```text
+> runtime freeze F SHA
+> F tree SHA
+>
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery ISO identity/hash
+>
+> Nix version
+> NixOS version
+> kernel
+> BIOS / ME / microcode baseline
+>
+> CPU topology/policy
+> 125 W PL1/PL2 policy
+>
+> Commander Core policy
+>
+> display policy
+> audio policy
+> Bluetooth disabled policy
+>
+> final Btrfs topology
+> ephemeral-root contract
+> granular persistence contract
+>
+> PR #8 identity
+> granular exact-head CI identity
+>
+> accepted physical/workload evidence
+> accepted recovery drill
+>
+> minimal recovery policy
+> three-file exception archive hash
+> manifest hash
+> secrets recovery disposition
+>
+> additional final soak:
+> DISREGARDED BY HUMAN INTERVENTION
+>
+> exact-F automated validation
+> stock contamination audit
+> ```
+>
+> Do not publish:
+>
+> ```text
+> machine-id
+> secret contents
+> credentials
+> private paths unnecessarily
+> full raw receipts
+> ```
+>
+> Where private evidence matters, record only:
+>
+> ```text
+> receipt name
+> date
+> SHA-256
+> scope
+> result
+> ```
+>
+> ---
+>
+> # 21. Reconcile current documentation while creating E
+>
+> Some current text still reflects older intermediate states.
+>
+> In particular, PR #7 still contains wording describing the representative soak as a remaining item even though the latest source has explicitly waived it.
+>
+> The final evidence update must make the current state unambiguous.
+>
+> Update as necessary:
+>
+> ```text
+> docs/baselines/pre-optimization/baseline-final.md
+> docs/status.md
+> docs/backup-restore.md
+> plan.md
+> ```
+>
+> Rules:
+>
+> 1. Preserve historical chronology in `plan.md`.
+> 2. Do not delete the history of the earlier large backup attempts.
+> 3. Do not pretend the soak passed.
+> 4. State that the soak was waived/disregarded by user direction.
+> 5. State that minimal backup/recovery passed.
+> 6. State that F is the tested runtime freeze.
+> 7. Remove current-status wording that still presents closed gates as pending.
+> 8. Do not introduce new runtime policy.
+>
+> ---
+>
+> # 22. Create final evidence commit E
+>
+> Once the canonical baseline and status reconciliation are complete, commit them.
+>
+> Conceptually:
+>
+> ```text
+> F = frozen productive/runtime source
+>
+> E = F + final evidence/documentation
+> ```
+>
+> Expected E changes should be documentation only.
+>
+> No:
+>
+> ```text
+> Nix module changes
+> flake.lock changes
+> package changes
+> persistence changes
+> runtime scripts used by activation
+> workstation policy changes
+> optimization changes
+> ```
+>
+> The baseline document should reference F.
+>
+> It cannot sensibly certify the future CI result for E itself.
+>
+> ---
+>
+> # 23. Validate E locally
+>
+> On E run:
+>
+> ```bash
+> nix fmt -- --ci
+> git diff --check
+> nix flake check --print-build-logs
+> ```
+>
+> Then resolve at minimum:
+>
+> ```bash
+> nix build \
+>   '.#nixosConfigurations.desktop.config.system.build.toplevel' \
+>   --no-link \
+>   --print-out-paths
+>
+> nix build \
+>   '.#nixosConfigurations.desktop.config.specialisation.persistent-root.configuration.system.build.toplevel' \
+>   --no-link \
+>   --print-out-paths
+> ```
+>
+> Required:
+>
+> ```text
+> E normal output = F normal output
+>
+> E persistent-root output = F persistent-root output
+> ```
+>
+> If E is documentation-only and those identities remain equal:
+>
+> ```text
+> E has not changed the accepted runtime
+> ```
+>
+> No physical retest follows.
+>
+> ---
+>
+> # 24. Push E and require exact-E CI
+>
+> Push E.
+>
+> Require GitHub Actions to run on the exact E SHA.
+>
+> That CI, not #201 or #202, becomes the final release-head CI.
+>
+> Do not create another commit solely to write:
+>
+> ```text
+> E passed CI
+> ```
+>
+> That would create another head requiring CI and produce an unnecessary loop.
+>
+> Record exact-E CI externally in:
+>
+> ```text
+> PR #7 body
+> annotated baseline tag
+> ```
+>
+> ---
+>
+> # 25. Reconcile PR #7
+>
+> After exact-E CI succeeds, update PR #7's body.
+>
+> The current PR metadata still contains some pre-waiver wording.
+>
+> The final PR body should explicitly record:
+>
+> ```text
+> final branch head E
+> runtime freeze F
+>
+> E exact CI run/result
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> granular PR #8
+> granular exact-head CI
+>
+> minimal recovery policy
+> exception archive SHA-256
+> manifest SHA-256
+> secrets recovery disposition
+>
+> soak disposition:
+> DISREGARDED BY HUMAN INTERVENTION
+>
+> canonical baseline path
+>
+> stock contamination PASS
+> exact frozen validation PASS
+> ```
+>
+> Do not describe the waived soak as pending.
+>
+> Do not describe it as PASS.
+>
+> ---
+>
+> # 26. PR readiness gate
+>
+> Only after:
+>
+> ```text
+> [x] F validation complete
+> [x] canonical baseline written
+> [x] E local validation complete
+> [x] E runtime output = F runtime output
+> [x] E exact CI PASS
+> [x] PR metadata reconciled
+> [x] no unresolved hard readiness gate
+> ```
+>
+> change:
+>
+> ```text
+> PR #7
+> draft → ready
+> ```
+>
+> At that point the readiness feature branch is finished.
+>
+> ---
+>
+> # 27. Merge PR #7
+>
+> Merge through the normal repository workflow.
+>
+> Do not insert cleanup or convenience commits before merging.
+>
+> After merge, record:
+>
+> ```text
+> E commit SHA
+> E tree SHA
+>
+> merged main SHA
+> merged main tree SHA
+> ```
+>
+> Compare the trees.
+>
+> If:
+>
+> ```text
+> merged main tree
+> =
+> tested E tree
+> ```
+>
+> then:
+>
+> ```text
+> all E/F evidence transfers
+> ```
+>
+> No retesting.
+>
+> If trees differ:
+>
+> ```text
+> inspect the exact diff
+> ```
+>
+> and validate only the changed scope.
+>
+> ---
+>
+> # 28. Create the immutable baseline tag
+>
+> After main-tree identity is accepted, create the annotated tag:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> The annotation should bind:
+>
+> ```text
+> merged main SHA
+> merged main tree
+>
+> final feature head E
+> runtime freeze F
+>
+> flake.lock identity
+> nixpkgs revision
+>
+> normal closure
+> persistent-root closure
+> recovery ISO/hash
+>
+> PR #8
+> granular CI
+>
+> PR #7
+> final E CI
+>
+> minimal recovery archive/hash
+> minimal recovery manifest/hash
+>
+> soak waiver disposition
+>
+> canonical baseline document
+>
+> physical recovery receipt/hash
+> ```
+>
+> Push the annotated tag.
+>
+> ---
+>
+> # 29. Final STOP condition
+>
+> When:
+>
+> ```text
+> nixos-26.05-pre-optimization-baseline
+> ```
+>
+> exists on the verified main tree:
+>
+> ```text
+> PRE-OPTIMIZATION READINESS = COMPLETE
+> ```
+>
+> Stop.
+>
+> Do not add:
+>
+> ```text
+> one more stress test
+> one more recovery boot
+> one more backup
+> one more migration check
+> one more soak
+> one more storage audit
+> one more application test
+> one more cleanup commit
+> ```
+>
+> Any later issue is a normal bug against a known immutable control.
+>
+> ---
+>
+> # 30. Exact execution order from the current repository state
+>
+> ```text
+> CURRENT
+> F = 9df40f6a06229a4c5263f957787fe802ff5ce198
+>
+> 1. Do not change productive source.
+>
+> 2. Allow CI #202 / 38035009618 to reach a terminal result.
+>    Do not block local final validation on it.
+>
+> 3. Run the corrected private baseline collector from exact F.
+>
+> 4. Review all collector command exit statuses.
+>
+> 5. Record F/tree/lock/nixpkgs/evidence identities.
+>
+> 6. Build exact normal system.
+>    Require:
+>    15f6c5dsjl047j7my4c7cpkdhk6ly2xp
+>
+> 7. Build exact persistent-root system.
+>    Require:
+>    7lkx40kh36s809bz1yr9bmfdddy1n80a
+>
+> 8. Build exact recovery ISO.
+>    Verify accepted ISO hash.
+>
+> 9. Compare /run/current-system with F normal closure.
+>
+> 10. Run final stock-contamination audit.
+>
+> 11. Run exact-F:
+>     nix fmt -- --ci
+>     git diff --check
+>     nix flake check --print-build-logs
+>
+> 12. Resolve/build remaining heavy outputs.
+>
+> 13. If all frozen validation passes, declare F accepted.
+>
+> 14. Write:
+>     docs/baselines/pre-optimization/baseline-final.md
+>
+> 15. Reconcile current status/backup/plan text.
+>
+> 16. Commit those documentation changes as E.
+>
+> 17. Run exact-E local checks.
+>
+> 18. Verify E normal/persistent outputs equal F.
+>
+> 19. Push E.
+>
+> 20. Require exact-E GitHub CI PASS.
+>
+> 21. Update PR #7 body with final evidence and correct soak disposition.
+>
+> 22. Ensure docs/status.md has zero unresolved readiness gates.
+>
+> 23. Mark PR #7 ready.
+>
+> 24. Merge PR #7 to main.
+>
+> 25. Compare merged-main tree with tested E tree.
+>
+> 26. If identical, transfer all evidence.
+>
+> 27. If different, validate only the changed scope.
+>
+> 28. Create annotated:
+>     nixos-26.05-pre-optimization-baseline
+>
+> 29. Push tag.
+>
+> 30. STOP READINESS.
+> ```
+>
+> ---
+>
+> # 31. Remaining checklist
+>
+> ## Frozen validation
+>
+> ```text
+> [ ] private final collector captured
+> [ ] collector exits reviewed
+>
+> [ ] exact normal closure confirmed
+> [ ] exact persistent-root closure confirmed
+> [ ] exact recovery ISO/hash confirmed
+>
+> [ ] running/frozen closure comparison accepted
+>
+> [ ] stock contamination audit PASS
+>
+> [ ] exact-F fmt PASS
+> [ ] exact-F diff-check PASS
+> [ ] exact-F flake check PASS
+>
+> [ ] heavy outputs accepted
+>
+> [ ] F CI terminal result recorded
+> ```
+>
+> ## Final evidence
+>
+> ```text
+> [ ] baseline-final.md created
+>
+> [ ] docs/status.md reconciled
+> [ ] docs/backup-restore.md reconciled if required
+> [ ] plan.md final current-state ledger added
+>
+> [ ] evidence commit E created
+>
+> [ ] E local validation PASS
+> [ ] E runtime outputs equal F
+> [ ] exact-E GitHub CI PASS
+> ```
+>
+> ## Release
+>
+> ```text
+> [ ] PR #7 body reconciled
+> [ ] PR #7 ready
+> [ ] PR #7 merged
+>
+> [ ] merged-main tree equals tested E tree
+>
+> [ ] annotated baseline tag created
+> [ ] annotated baseline tag pushed
+> ```
+>
+> Everything else is closed or post-baseline.
+>
+> ---
+>
+> # 32. Explicitly deferred work
+>
+> After the tag, ordinary feature work may resume.
+>
+> Potential separate branches include:
+>
+> ```text
+> feat/post-baseline-cleanup
+> feat/prism-launcher
+> feat/greetd-autologin
+> feat/optimization-framework-v2
+> ```
+>
+> Post-baseline structural cleanup may include:
+>
+> ```text
+> Intel RAPL module extraction
+> Commander Core policy-boundary cleanup
+> Bluetooth host-policy ownership
+> VS Code HM organization
+> historical output aliases
+> plan.md archival
+> documentation reorganization
+> generated module documentation
+> ```
+>
+> These must not be slipped into the readiness release.
+>
+> ---
+>
+> # 33. Optimization-v2 starting point
+>
+> Only after the immutable tag exists:
+>
+> ```text
+> feat/optimization-framework-v2
+> ```
+>
+> Begin with:
+>
+> ```text
+> immutable stock control
+>         ↓
+> VM variant
+>         ↓
+> specialisation experiment matrix
+>         ↓
+> stage-aware contamination contracts
+>         ↓
+> benchmark/workload corpus
+>         ↓
+> experiment/provenance manifests
+>         ↓
+> CPU-target A/B
+>         ↓
+> ThinLTO
+>         ↓
+> PGO
+>         ↓
+> BOLT
+> ```
+>
+> The baseline tag remains untouched as the control.
+>
+> Do not rebase/resume the historical optimization branch wholesale.
+>
+> Use previous optimization work only as reference/donor material.
+>
+> ---
+>
+> # 34. Final governing principle
+>
+> The project no longer needs more breadth.
+>
+> It needs exact binding.
+>
+> The remaining proof is:
+>
+> ```text
+> accepted physical machine
+> +
+> accepted generation-46 runtime
+> +
+> accepted granular storage contract
+> +
+> minimal user-selected recovery coverage
+> +
+> explicit soak waiver
+> +
+> frozen reproducible source F
+> +
+> exact artifacts
+> +
+> clean stock policy
+> +
+> canonical evidence E
+> +
+> exact final CI
+> +
+> verified merged tree
+> +
+> immutable tag
+> ```
+>
+> Once that chain exists, `plan.md` has served its purpose.
+>
+> Do not expand readiness beyond it.
+>
+> One repository inconsistency is worth keeping in mind while executing this: the **latest source correctly waives the soak**, but PR #7's body still contains older wording listing the representative soak among the remaining items.  The freeze commit explicitly supersedes those older soak-dependent instructions, so the PR body should be reconciled during final release metadata rather than reopening the soak.
+>
+> The other important point is that no `baseline-final.md` exists yet in the current pre-optimization baseline directory, so **canonical baseline capture is now the first substantive missing artifact after frozen validation**.
+
+### Frozen validation complete; canonical evidence release — 2026-10-10
+
+Freeze F remains `9df40f6a06229a4c5263f957787fe802ff5ce198`, tree `df1527cd14c6509515ba398bb8dba0c46673e534`. Exact F CI run `38035009618` completed SUCCESS. Private collector captured 57 sections with every command exit 0; raw report and source/artifact/persistence hashes remain private. Formatting, diff check and flake checks passed on F. All eight heavy positive VM outputs resolved/built successfully; cache reuse was accepted. The stock-contamination-negative build exited 1 specifically on forbidden `nixos-opt-pgo-fixture`, the required negative result.
+
+Normal output exactly matches running/accepted generation46 `15f6c5dsjl047j7my4c7cpkdhk6ly2xp`; persistent-root matches `7lkx40kh36s809bz1yr9bmfdddy1n80a`. Recovery output matches `d55ny1z4d53slhz3ilvyy2mg6d8khrqn`; computed ISO SHA-256 remains `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`. Closure comparison is empty. Productive namespace/global-environment audit is clean; inherited session LD_LIBRARY_PATH points only to ordinary libdbusmenu, and package-local Unity library routing is not global optimization contamination. No productive source changed after F.
+
+Canonical sanitized baseline-final.md created, binding F, lock/nixpkgs/artifacts, storage/policy, accepted physical/workload evidence, minimal recovery and explicit human soak waiver. Current PR metadata was reconciled to remove obsolete soak waiting text. The documentation successor is evidence/release E; exact E local checks, output equality, exact E CI, PR readiness/merge, tested-main tree equality and annotated tag remain. No extra physical tests or backups were added.

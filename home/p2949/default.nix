@@ -5,7 +5,9 @@
     ./cli.nix
     ./desktop
     ./development
+    ./persistence.nix
     ./shell.nix
+    ./xdg.nix
   ];
 
   home = {
@@ -17,5 +19,4 @@
     stateVersion = "26.05";
   };
 
-  xdg.enable = true;
 }

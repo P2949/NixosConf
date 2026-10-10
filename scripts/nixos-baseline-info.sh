@@ -69,10 +69,10 @@ capture 'Transparent huge pages' cat /sys/kernel/mm/transparent_hugepage/enabled
 capture 'PCI devices and drivers' lspci -nnk
 capture 'Vulkan summary' vulkaninfo --summary
 capture 'OpenGL version (current display)' glxinfo -B
-printf '\n32-bit Vulkan practical validation: pending; the summary above does not prove it.\n'
+printf '\nThe summary above does not itself prove 32-bit Vulkan rendering.\nAccepted practical ELF32 rendering evidence is retained separately in\ndocs/baselines/pre-optimization/vulkan32-render-20261005.txt.\n'
 capture 'Block devices' lsblk -o NAME,TYPE,SIZE,FSTYPE,MOUNTPOINTS,MODEL,REV
 # shellcheck disable=SC2016
-capture 'Persistent mounts' bash -c 'for m in / /home /nix /var /persist /var/lib/nixos-optimization; do findmnt -rn -o TARGET,SOURCE,FSTYPE,OPTIONS --mountpoint "$m" || exit; done'
+capture 'Filesystem topology by containing path' bash -c 'for m in / /home /var /nix /persist /.snapshots /boot /var/lib/nixos-optimization; do printf "\n%s\n" "$m"; findmnt -rn -o TARGET,SOURCE,FSROOT,FSTYPE,OPTIONS --target "$m" || exit; done'
 capture_privileged 'Btrfs usage' btrfs filesystem usage /
 capture_privileged 'Btrfs devices' btrfs device usage /
 capture_privileged 'Btrfs scrub status' btrfs scrub status /

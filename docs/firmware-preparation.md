@@ -1,5 +1,12 @@
 # Firmware preparation
 
+> Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
+> /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
+> Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
+
+
 Observed motherboard: ASUS ROG STRIX Z490-E GAMING, revision 1.xx.
 BIOS reports 3201 with embedded date 2024-11-20. The vendor publication date
 can differ from this embedded date; do not treat them as interchangeable.
@@ -25,9 +32,31 @@ do not establish that prerequisite. ASUS lists MEUpdateTool
 - BIOS: `9928bf5a987ff0a44f2efa7bd131186d68a7d1eaeb5198f43ad8333897bc5cf9`
 - ME tool: `75c5efe983cfb0c4c9e75830b3e1d1287e0e6adcf93d97194acbaaac15746bfe`
 
-No packages have been flashed or upgrade decision finalized. Capture all
-OC/RAM/power/virtualization settings before any flash; use the board-specific
-vendor procedure and verify ME/BIOS afterwards. Firmware virtualization is
-currently disabled, preventing physical KVM acceptance. Resolve firmware and
-settings in the batched maintenance window before final stock acceptance and
-freeze; then repeat required hardware/workload stability tests.
+On 2026-10-05 the user selected retaining BIOS 3201/current ME. No firmware
+update is planned; the newer packages above remain historical reference only.
+Capture OC/RAM/power/virtualization settings for the retained baseline.
+VMX is now enabled and physical KVM initialization passed after the user
+maintenance boot. Hardware/workload stability validation remains open;
+Android validation is not applicable. Another firmware reboot is not required
+for capture.
+No firmware packages have been flashed.
+
+## Retained-baseline settings capture
+
+Before changing VMX, record these firmware values for the retained BIOS/ME:
+
+- CPU multiplier, cache multiplier, core voltage mode/value, LLC and AVX offset.
+- PL1, PL2 and Tau.
+- RAM frequency, primary timings, voltage and XMP/manual policy.
+- VMX, Speed Shift/HWP and C-states policy.
+- ReBAR and Above 4G decoding.
+
+Runtime frequency or a benchmark cannot establish every firmware setting.
+Captured values are recorded in the firmware observation linked above.
+Values unavailable through a reliable read-only interface remain unknown;
+do not invent them or schedule another firmware reboot only to obtain photos.
+Record before/after values and whether any setting other than VMX changed.
+Changes to CPU/RAM policy require stability validation of that final policy.
+No flash, automatic defaults reset, voltage change or tuning is part of this
+retained-firmware preparation. The coordinated VMX window is complete;
+/dev/kvm access and QEMU KVM initialization have been verified.

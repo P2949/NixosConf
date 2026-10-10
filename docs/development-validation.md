@@ -1,5 +1,20 @@
 # Development validation
 
+> Current correction, 2026-10-06: the user adopted 125W long/short package
+> limits and a 15-minute CPU verification scope. The previous 80°C test
+> cutoff was an agent-selected criterion, not a coretemp hardware limit or
+> proof of overheating. It is superseded by hardware/correctness evidence;
+> coretemp reports a 100°C critical limit. Historical attempts below retain
+> their original results. Current candidate and acceptance state belong in
+> [status](status.md); paste/contact history is not a prerequisite.
+
+> Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
+> /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
+> Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
+
+
 Enter the pinned development shell with `nix develop .#default`. GCC, Clang,
 debugger and build tools belong to this environment; clangd remains owned by
 Home Manager. Open project tooling from the intended environment and generate
@@ -23,13 +38,14 @@ The preparation C++20 smoke compiled and ran a standard-library program;
 clangd built its AST/index with zero errors using the exact wrapper query.
 Final validation of the activated system and actual projects remains pending.
 
-## Android virtualization gate
+## Android tooling — not applicable
 
-On the current physical boot, the user belongs to `kvm`, but `/dev/kvm` is
-absent and the kernel reports `VMX (outside TXT) disabled by BIOS`.
-Enable firmware virtualization during the batched firmware maintenance window
-before claiming accelerated Android emulator acceptance. A passing software
-VM test is not evidence that physical KVM works.
+On2026-10-06 the user explicitly confirmed this machine will not perform
+Android or Gradle work. Android Studio, SDK provisioning, Java Android
+projects and accelerated AVD/emulator validation are not required and do not
+block baseline acceptance. The earlier project-location request is withdrawn.
+Physical VMX/KVM initialization remains accepted independent evidence; no
+Android tooling was installed or configured for this validation.
 
 ## Physical workstation preparation evidence
 
@@ -88,12 +104,15 @@ workload review; the smoke result is not a claim of warning-free operation.
 
 ### GameMode authorization and stock mitigations
 
-The current physical generation passes GameMode registration/reaper tests but
-fails the governor feature test: helper authorization requires the `gamemode`
-group, while the installed user is not a member. The preparation branch adds
-that membership when GameMode is enabled. The real-profile VM checks the
-packaged polkit action for the intended user, with an unrelated-user deny
-control; physical governor switching still needs post-activation verification.
+The earlier generation failed governor authorization because the user lacked
+`gamemode` membership. On the final candidate after the firmware reboot, the
+user has that membership and `gamemoded -t` passes all tests, including actual
+CPU governor switching. All twelve policies return to powersave and
+balance_performance; split_lock_mitigate remains1 and GameMode is inactive
+afterwards. The receipt is `/persist/nixos-readiness-20261005/post-vmx-gamemode.json`
+(mode0600). This closes the physical GameMode helper/governor gate; representative
+gameplay remains separate. The real-profile VM also checks an unrelated-user
+authorization deny control.
 
 The candidate declares `general.disable_splitlock=0`. GameMode may temporarily
 request the performance governor for games; it should preserve split-lock
@@ -127,7 +146,7 @@ representative gameplay, HDR, controller or final-candidate acceptance.
 
 A planned 30-minute stress-ng CPU/all-method verification run on 2026-10-05
 used 12 workers at nice 19, with five-second sensor checks and an automatic
-stop at the conservative 80 C high-temperature boundary exposed by coretemp.
+stop at an agent-selected 80 C cutoff; coretemp did not define that cutoff.
 It stopped after about five seconds when sampled temperature reached 80 C.
 No throttle-counter increases or matching new kernel hardware/thermal errors
 were observed; cooling remained active and temperature returned to about 30 C.
@@ -165,3 +184,58 @@ Root-private receipts: /persist/nixos-blender-project-validation-20261005.
 Rendered output is private temporary data, not a public repository artifact.
 This extends the factory smoke to an actual local scene; longer rendering,
 interactive workflow and acceptance on the final candidate remain pending.
+
+### Actual Blender render on final candidate
+
+On the post-VMX normal boot, the Development copy of the actual33-object
+project rendered at1920x1080/100%,64samples using only RX9070XT HIP. Exit0,
+12.6673s; source SHA256bc6ed2b39e66c2bdb7f942065834112f614c7256dae301cac572aea0aead08fe
+unchanged. This differs from the earlier Downloads copy. No project or
+preferences saved, no new targeted GPU faults; Commander remained active
+with0restarts. Private receipts: /persist/nixos-readiness-20261005/final-blender.
+Actual-project basic render now passes on finalnormal0p67xd; sustained render
+and interactive workflow remain open.
+
+### Final-candidate Unreal acceptance
+
+Actual editor target incremental build passed on normal0p67xd with Epic's
+bundled toolchain: one link action, UBT2.55s, sensor peak60C, project Git-clean.
+A separate Wayland/Vulkan editor/map startup trial reached84C after6s and
+was terminated by the80C thermal guard before its map report. Editor/map
+acceptance remains open; do not transfer the earlier-generation lifecycle pass
+to this candidate. Commander commanded100% fans, remained active/zero restarts,
+and reduced duty after CPU returned40C. Actual RPM/cooling capacity unverified.
+Receipts: /persist/nixos-readiness-20261005/final-unreal (0600).
+Further CPU-heavy acceptance requires reviewing thermal/power/cooling conditions;
+no weaker threshold, capped substitute workload or new firmware policy adopted.
+
+### Cooling trial and substantial RAM validation status (2026-10-06)
+
+The user identifies a Corsair iCUE H150i Elite Capellix and confirms working
+pump/fans, radiator airflow, minimal dust, idle30–35C and mechanical ramp
+delay. These physical observations do not measure actual RPM or establish
+sustained cooling capacity. An earlier-response diagnostic completed actual
+Unreal editor/map startup at72C without100% pre-ramp; interactive PIE and
+sustained acceptance remain open.
+
+Host policy now requests60% idle fans,100% high fans and pump, high50C/delay0,
+low45C/delay30s and0.5s polling. Normal candidate
+lgkijm9r3377z50lqbk7cf6h1zfjl4x9 is test-active; persistent candidate
+017hw90zb373629alxdgh4pnx0gwlkx8 is built and GC-protected. Boot default
+remains the physically accepted generation37. Kernel/initrd are unchanged.
+
+The guarded30-minute12-worker CPU trial stopped at80C after457.98s.
+Zero worker verification errors and unchanged throttle counters do not
+satisfy its incomplete duration gate. Runtime package long/short limits are
+4095.875W each; preference for an actual conservative125W baseline remains
+pending. No power control has been changed or thermal guard weakened.
+
+Separate24GiB and22GiB memtester one-pass attempts allocated and locked
+their requested memory, but stopped after496.96s at the3GiB desktop-headroom
+guard and718.36s at the256MiB swap-growth guard respectively. Both peaked
+at79C; neither completed the full pattern pass. RAM stability remains open.
+The desktop and cooling service remain active, failed units empty and no
+targeted kernel OOM/hardware/thermal errors were observed after the retry.
+Receipts/logs/samples remain private under
+/persist/nixos-readiness-20261005/{tuned-cpu,ram-24g,ram-22g}.
+See [current status](status.md) for changing acceptance classifications.
