@@ -123,9 +123,9 @@ PGO/BOLT optimization, Prism and ordinary feature additions remain deferred.
 No extra reboot or synthetic stress is requested for retirement or final docs.
 Keep the active graphical session intact.
 
-The October 10 additive backup reached Ventoy's free-space reserve. A complete
-stronger-compression archive has since passed local integrity and representative
-restore checks, but its 10.33 GB size exceeds the USB's usable budget. A suitable
-independent destination is still needed; same-disk staging does not close backup
-freshness. Ventoy is cleanly unmounted. The final generation-46 soak remains open;
-no collector freeze, readiness release or baseline tag is claimed.
+The user narrowed backup scope on October 10 to GitHub project recovery,
+application reinstall and the separately tested secrets backup. Whole-home and
+application-state archives are not required; the oversized archives/partial were
+removed from Ventoy, leaving the minimal recovery kit. A larger backup drive is
+no longer a blocker. Final generation-46 soak, collector correction and baseline
+freeze/release remain pending.

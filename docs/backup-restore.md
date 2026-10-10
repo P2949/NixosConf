@@ -1,3 +1,32 @@
+# Minimal backup and recovery policy — current as of 2026-10-10
+
+The user explicitly narrowed the recovery scope: projects are restored from GitHub,
+applications are reinstalled, and Unity, Unreal, Blender, Steam, Firefox and other
+application/system state do not require local archives. This replaces the earlier
+whole-home and additive-delta backup requirements. A larger drive is **not required**.
+
+The separate secrets backup was already restored successfully during an actual
+system failure and remains accepted on user-reported evidence. Do not duplicate
+secrets onto Ventoy or publish their contents.
+
+Ventoy retains the verified NixOS recovery ISO, checksum, successful physical
+inspection receipt/script and a short restore guide. The October 5 home archive,
+engine supplement and October 10 failed partial were deliberately removed with
+user authorization, along with failed drill receipts and the obsolete script copy.
+The 10.33 GB local staged archive was also removed. Other existing OS ISOs were
+left intact. Approximately 38 GiB is now free on Ventoy.
+
+No independent home/application backup or freshness test is a release gate under
+this user-selected scope. This is a scope decision, not a claim that removed
+archives remain available or that local uncommitted files are remotely backed up.
+The earlier verified project clone/LFS restore and physical recovery evidence
+remain valid. Final runtime soak and baseline release gates remain separate.
+
+## Historical evidence — superseded backup scope
+
+The following describes earlier operations and is retained for chronology only.
+Its archive-preservation, whole-home and delta-freshness requirements no longer apply.
+
 # Independent backup and restore gates
 
 The final baseline requires an independent backup of non-reproducible home
