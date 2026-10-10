@@ -7,3 +7,7 @@ result-*
 *.swp
 *.swo
 *~
+
+# Python generated state
+__pycache__/
+*.py[cod]
