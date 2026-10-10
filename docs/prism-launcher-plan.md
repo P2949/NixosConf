@@ -61,6 +61,16 @@ Pasted citation placeholders are not usable source references.
   PipeWire, PipeWire Pulse and WirePlumber are active; GameMode is available
   and inactive outside a requested GameMode session. These host checks do not
   establish actual game rendering/audio. Post-boot documentation check passed.
+  User's first instance launch failed to enter a world. Supplied log identifies
+  Minecraft 26.3 with Fabric Loader 0.19.5, Java25 and a player-name placeholder
+  `No Minecraft profile` (20 characters). Login hello packet rejects it at
+  the 16-character limit; Realms also reports missing profile claims.
+  This proves a profile-resolution failure, not valid account acceptance.
+  Log shows native Wayland game window, RX9070XT through Zink/RADV and OpenAL
+  initialization, but world/input/audible-output acceptance remains pending.
+  Resolve Java profile in the user's Microsoft/Minecraft account and refresh
+  Prism authentication through its UI; do not edit credentials or trim the
+  placeholder. Repeat with a true vanilla instance (no Fabric) for baseline.
 - [ ] Phase 1 state survival proof and acceptance commit.
 - [ ] Evidence-backed cache/log exclusions, checks and boot-only installation.
 - [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;
