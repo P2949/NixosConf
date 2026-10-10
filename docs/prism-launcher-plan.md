@@ -71,6 +71,19 @@ Pasted citation placeholders are not usable source references.
   Resolve Java profile in the user's Microsoft/Minecraft account and refresh
   Prism authentication through its UI; do not edit credentials or trim the
   placeholder. Repeat with a true vanilla instance (no Fabric) for baseline.
+  The user resolved the new account's unset profile name. Subsequent supplied
+  log proves world join/save and exit0, Java25, native Wayland, RX9070XT
+  Zink/RADV and OpenAL startup. Realms/friends errors remain; these features
+  are not accepted. User confirms graphics/input/audible sound work.
+  User also reports vanilla acceptance and closure, but current structural
+  inspection finds only `26.3` with Fabric components and Prism PID5203 still
+  active. Requested the vanilla instance name/completion before accepting that
+  specific gate. No account file contents are inspected.
+  Observed tree is approximately 655MiB: assets472MiB and libraries124MiB
+  retained R; instances59MiB hold authoritative worlds/settings. Root logs200KiB
+  and cache336KiB (feed child) are disposable candidates. Meta880KiB,
+  translations372KiB, metacache and all other children remain retained pending
+  separate evidence. No Prism-managed Java directory observed.
 - [ ] Phase 1 state survival proof and acceptance commit.
 - [ ] Evidence-backed cache/log exclusions, checks and boot-only installation.
 - [ ] Normal reboot: parent sentinel survives, cache/log sentinels disappear;

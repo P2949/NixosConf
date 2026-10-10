@@ -121,7 +121,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | Paths | Class | Decision |
 | --- | --- | --- |
 | share/Steam | M | Library/manifests, client installation, configuration, userdata, saves and compatdata retained; disposable cache children below |
-| share/PrismLauncher | M | Phase 1 retains the complete private application root: account/settings, instances/worlds/mods and customization are authoritative; assets/libraries are deliberately retained expensive downloads. Cache/log/meta/java classification and runtime/reboot acceptance remain pending in the [Prism plan](prism-launcher-plan.md). No disposable children are excluded yet. |
+| share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E and have candidate reset-root exclusions; physical reboot proof is pending in the [Prism plan](prism-launcher-plan.md). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
 | share/keyrings | P | Future desktop credential stores, private mode; absent initially |
 | share/Trash | P | Potentially recoverable user files, retained conservatively |
 | share/applications, share/icons/hicolor | P | User/game launchers and icons |
@@ -177,6 +177,12 @@ copies below those mountpoints must be pruned after physical acceptance.
   caches, temporary downloads/install staging and message caches disappear.
   Never discard compatdata: Proton prefixes may contain saves and settings.
   Library manifests remain writable inside the retained library parent.
+- Prism Launcher: first real Fabric and separate vanilla26.3 worlds were joined
+  and saved. Root `cache/feed/feed.xml` and launcher logs are observed disposable
+  data, consistent with upstream [data locations](https://prismlauncher.org/wiki/getting-started/data-location/).
+  Only root `cache` and `logs` have candidate reset-root mounts. Instance worlds,
+  mods, settings, assets/libraries and all unclassified children remain retained.
+  Cache regeneration and two-sided normal reboot proof are still pending.
 
 Deliberate `R` exceptions: Steam's 218 MiB shadercache and Unreal's approximately
 831 MiB shared DDC/Zen cache plus the small per-version DDC are reconstructable

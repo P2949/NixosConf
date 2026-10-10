@@ -2,6 +2,13 @@
 # surrounding profile is persistent. Keep this metadata-only list audited.
 [
   {
+    parent = ".local/share/PrismLauncher";
+    children = [
+      "cache"
+      "logs"
+    ];
+  }
+  {
     parent = "Development";
     children = [
       "Unity/VR-AR-project/Logs"
