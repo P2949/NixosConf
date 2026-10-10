@@ -41,7 +41,7 @@
         '';
 
     desktop-evaluation = import ./workstation/evaluation.nix {
-      inherit pkgs;
+      inherit pkgs username;
       inherit (desktopSystem) config;
     };
 

@@ -28,4 +28,4 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run flake checks
-        run: nix flake check --print-build-logs
+        run: nix flake check --no-write-lock-file --print-build-logs

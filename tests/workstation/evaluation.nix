@@ -1,10 +1,11 @@
 {
   pkgs,
   config,
+  username,
 }:
 
 let
-  homePolicy = config.home-manager.users.p2949.home.persistence."/persist";
+  homePolicy = config.home-manager.users.${username}.home.persistence."/persist";
   systemPolicy = config.environment.persistence."/persist";
   homeDirectories = map (entry: entry.directory) homePolicy.directories;
   systemFiles = map (entry: entry.file) systemPolicy.files;
@@ -39,8 +40,8 @@ assert pkgs.lib.all (path: builtins.elem path homeDirectories) [
   ".local/state/fuzzel"
 ];
 assert
-  config.home-manager.users.p2949.programs.fuzzel.settings.main.cache
-  == "${config.home-manager.users.p2949.xdg.stateHome}/fuzzel/history";
+  config.home-manager.users.${username}.programs.fuzzel.settings.main.cache
+  == "${config.home-manager.users.${username}.xdg.stateHome}/fuzzel/history";
 assert builtins.elem "/var/lib/systemd/random-seed" systemFiles;
 assert config.services.journald.storage == "volatile";
 pkgs.runCommand "check-desktop-evaluation" { inherit evaluation; } ''
