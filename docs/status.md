@@ -122,3 +122,10 @@ separate gates; storage acceptance does not silently close them. Compiler/LTO/
 PGO/BOLT optimization, Prism and ordinary feature additions remain deferred.
 No extra reboot or synthetic stress is requested for retirement or final docs.
 Keep the active graphical session intact.
+
+The October 10 additive backup reached Ventoy's free-space reserve. A complete
+stronger-compression archive has since passed local integrity and representative
+restore checks, but its 10.33 GB size exceeds the USB's usable budget. A suitable
+independent destination is still needed; same-disk staging does not close backup
+freshness. Ventoy is cleanly unmounted. The final generation-46 soak remains open;
+no collector freeze, readiness release or baseline tag is claimed.

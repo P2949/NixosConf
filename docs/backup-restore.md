@@ -43,6 +43,26 @@ an additive compressed backup folder on Ventoy, with audited exclusions and a
 4 GiB free-space reserve enforced by the runner.
 Do not erase or repurpose the recovery medium to make room.
 
+### October 10 freshness attempt
+
+The full additive delta runner stopped at the required 4 GiB reserve, leaving
+an incomplete 8,113,283,072-byte USB archive. It did not replace the accepted
+October 5 archive or recovery ISO. Backup freshness remains **pending**.
+
+A content comparison against the retained October 5 source found 519 identical
+files (307,689,596 logical bytes), with zero errors. That reduction alone does
+not resolve capacity. The complete original selection was staged privately on
+the MP600 with zstd level 10, without omitting selected state. The result is
+10,331,350,085 bytes, exceeding Ventoy's approximately 8.1 GB usable budget
+after retaining the required reserve. It passed zstd integrity and separate
+representative project/application extraction and source-hash comparisons.
+Its SHA-256 is
+`c353f798c5a3a1a9232052cda62b431d8d485a9a657905a9bb979410f649a297`.
+Same-disk staging is not an independent backup: external transfer and
+verification remain pending. Ventoy was synced and cleanly unmounted; its
+failed partial and prior accepted recovery set remain intact. Private receipts
+and failure evidence are retained under the October 10 readiness directory.
+
 Before excluding large trees, distinguish downloadable installations and
 rebuildable caches from unique project assets, local changes and autosaves.
 Inventory paths and repository details remain in root-only receipts rather
