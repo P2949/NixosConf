@@ -33,24 +33,31 @@ in
     # Explicit experiment admission gate. Ordinary workstation applications
     # may change the desktop; measurements still require the frozen control.
     optimization-control-identity =
-      assert builtins.hashFile "sha256" (repository + "/flake.lock") == stock.lockSha256;
-      assert inputs.nixpkgs.rev == stock.nixpkgsRevision;
       pkgs.runCommand "check-optimization-control-identity"
         {
+          actualLockSha256 = builtins.hashFile "sha256" (repository + "/flake.lock");
+          expectedLockSha256 = stock.lockSha256;
+          actualNixpkgsRevision = inputs.nixpkgs.rev;
+          expectedNixpkgsRevision = stock.nixpkgsRevision;
           actualNormal = builtins.unsafeDiscardStringContext (
             toString systemConfig.config.system.build.toplevel
           );
+          expectedNormal = stock.normal;
           actualPersistentRoot = builtins.unsafeDiscardStringContext (
             toString systemConfig.config.specialisation.persistent-root.configuration.system.build.toplevel
           );
+          expectedPersistentRoot = stock.persistentRoot;
           actualRecoveryIso = builtins.unsafeDiscardStringContext (
             toString recoverySystem.config.system.build.isoImage
           );
+          expectedRecoveryIso = stock.recoveryIso;
         }
         ''
-          if [ "$actualNormal" != ${pkgs.lib.escapeShellArg stock.normal} ] ||
-             [ "$actualPersistentRoot" != ${pkgs.lib.escapeShellArg stock.persistentRoot} ] ||
-             [ "$actualRecoveryIso" != ${pkgs.lib.escapeShellArg stock.recoveryIso} ]; then
+          if [ "$actualLockSha256" != "$expectedLockSha256" ] ||
+             [ "$actualNixpkgsRevision" != "$expectedNixpkgsRevision" ] ||
+             [ "$actualNormal" != "$expectedNormal" ] ||
+             [ "$actualPersistentRoot" != "$expectedPersistentRoot" ] ||
+             [ "$actualRecoveryIso" != "$expectedRecoveryIso" ]; then
             echo "Evaluated system differs from frozen optimization control" >&2
             exit 1
           fi
@@ -79,7 +86,6 @@ in
   checks = {
     optimization-control-inputs =
       assert toString recoverySystem.config.system.build.isoImage == stock.recoveryIso;
-      assert builtins.hashFile "sha256" (repository + "/flake.lock") == stock.lockSha256;
       assert inputs.nixpkgs.rev == stock.nixpkgsRevision;
       assert pkgs.lib.hasInfix "-nixos-opt-cpu-" (toString candidate);
       pkgs.runCommand "check-optimization-control-inputs" { } ''touch "$out"'';
