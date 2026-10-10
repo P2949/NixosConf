@@ -33764,3 +33764,9 @@ Executed cleanup: removed October 5 home archive and engine supplement plus acco
 Collector correction and final freeze still follow the adopted final-runtime soak gate. No reboot, runtime policy change or new physical test occurred.
 
 Minimal recovery kit verified: backup-folder files total 5,704 bytes; supported ISO SHA-256 remains `52e3496c74f135641c8f39132b058c4e0971063ead8a143ec406b359647d8061`. USB sync and unmount completed; findmnt confirms no mount at `/mnt/ventoy`. Capacity blocker is resolved by the explicit scope change. Final-runtime soak remains open, without repeating accepted workload tests.
+
+### PR reconciliation and final-runtime exposure — 2026-10-10
+
+PR #7 body was updated to the user-selected minimal recovery scope: earlier home/engine archives are historical and deliberately removed, GitHub project recovery plus separately tested secrets recovery are accepted, and neither a large delta nor another drive is a readiness requirement. PR remains open/draft. Runtime is unchanged.
+
+Direct receipt inspection found accepted normal closure `15f6c5dsjl047j7my4c7cpkdhk6ly2xp` in normal-cycle review at `2026-10-09T22:04:05.719250+00:00`, return-normal review at `2026-10-09T22:12:00.924657+00:00`, and post-pruning review at `2026-10-09T22:31:31.439385+00:00`. These are receipt times, not measured productive-use durations. They do not establish the preferred approximately three days of final-runtime normal use. Current closure matches; failed-unit listing is empty and `commander-core.service` is active/running with zero restarts. No repeated application or physical tests were performed. Collector correction/freeze remains dependent on honest soak acceptance.
