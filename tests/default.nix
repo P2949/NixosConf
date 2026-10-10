@@ -23,6 +23,11 @@
         '';
     activation-safety-config = import ./workstation/activation-safety/config.nix { inherit pkgs; };
     btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
+
+    minecraft-server-config = import ./workstation/minecraft-server/config.nix {
+      inherit pkgs username;
+      inherit (desktopSystem) config;
+    };
     activation-safety = import ./workstation/activation-safety/guard.nix { inherit pkgs; };
     ephemeral-root-shell = import ../modules/storage/ephemeral-btrfs-root/check.nix { inherit pkgs; };
     btrfs-maintenance-shell = import ../modules/storage/btrfs-maintenance/check.nix { inherit pkgs; };

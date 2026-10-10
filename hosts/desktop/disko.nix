@@ -79,6 +79,10 @@ in
                   mountpoint = "/.snapshots";
                   mountOptions = btrfsMountOptions;
                 };
+                "@minecraft" = {
+                  mountpoint = "/srv/minecraft";
+                  mountOptions = btrfsMountOptions;
+                };
               };
             };
           };

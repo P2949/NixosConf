@@ -2,10 +2,37 @@
 
 {
   virtualisation.vmVariantWithBootLoader =
-    { lib, username, ... }:
+    {
+      config,
+      lib,
+      username,
+      ...
+    }:
     {
       # Physical Btrfs maintenance cannot run against the guest ext4 disk.
       disabledModules = [ ../../modules/storage/btrfs-maintenance ];
+
+      services.minecraft-servers.enable = lib.mkForce false;
+
+      assertions = [
+        {
+          assertion =
+            !(config.system.preSwitchChecks ? minecraft)
+            && !(config.systemd.timers ? minecraft-backup)
+            && !(config.systemd.services ? minecraft-backup)
+            && !(config.systemd.services ? minecraft-server-survival)
+            && !(config.systemd.services ? minecraft-backup-timer-stamp-seed)
+            && !(config.systemd.slices ? minecraft)
+            && !(config.users.users ? minecraft)
+            && !(config.users.groups ? minecraft)
+            && !(lib.any (rule: lib.hasInfix "minecraft" rule) config.systemd.tmpfiles.rules)
+            && !(lib.elem "minecraft" config.users.users.${username}.extraGroups)
+            && !(lib.any (
+              file: file.filePath == "/var/lib/systemd/timers/stamp-minecraft-backup.timer"
+            ) config.environment.persistence."/persist".files);
+          message = "The disabled Minecraft deployment must not leak physical guards, services, timer persistence, slice or group membership into the bootloader VM.";
+        }
+      ];
 
       hardware.commanderCore.enable = lib.mkForce false;
       hardware.intelPackagePower.enable = lib.mkForce false;

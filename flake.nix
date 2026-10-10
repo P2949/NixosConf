@@ -14,6 +14,11 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     impermanence = {
       url = "github:nix-community/impermanence";
       inputs.nixpkgs.follows = "nixpkgs";
