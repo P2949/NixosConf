@@ -28,8 +28,14 @@ and recovery evidence remains bound to the baseline closures.
 
 ## Development phase
 
-The repository has retired completed journals and one-time migration tools.
-Permanent granular/root/recovery regression tests remain. General cleanup is complete. Narrow framework correctness changes belong in
-the draft foundation PR; authoritative results follow on separate experiment
-branches after framework integration. Ordinary workstation changes stay separate.
-[Historical records](history/README.md) are preserved by the immutable tag.
+The optimization-v2 experiment foundation is merged. The productive system
+remains the protected `nixos-26.05-optimization-stock-v1` control and no
+optimization candidate has been adopted into it.
+
+The first authoritative package experiment,
+[`zstd-skylake-v1`](../optimization/results/zstd-skylake-v1/), found
+compression inconclusive at the declared practical threshold and a material
+decompression regression. The candidate was therefore not adopted.
+
+Further optimization investigation is intentionally deferred. General
+workstation/readiness cleanup remains complete.

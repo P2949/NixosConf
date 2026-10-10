@@ -8,11 +8,13 @@ The physically booted benchmark control is the separately protected annotated
 `yf7jg059hm4qg2yhyls4ciddliwc8ych`. The intentional post-qualification
 journal change is documented in [stock policy](stock-policy.md).
 
-The v2 framework is under construction. Its first experiment compares stock
-zstd with package-scoped `-march=skylake -mtune=skylake` on the fixed-hash
-Silesia corpus. This is a framework validation experiment, not a global system
-optimization. The specification owns CPU selection, commands, warmups, duration,
-pilot and sampling policy. Only explicitly allowed packages receive CPU flags.
+The v2 framework is established on the protected working-stock control.
+
+The first completed reference experiment is
+[zstd-skylake-v1](../optimization/results/zstd-skylake-v1/). It tested
+package-scoped `-march=skylake -mtune=skylake` on zstd using the fixed Silesia
+corpus. Compression was inconclusive at the declared practical threshold and
+decompression regressed, so the candidate was not adopted.
 
 Each experiment must preserve byte-identical Nix-generated specification and
 build-provenance artifacts, a separate execution receipt, and independently versioned
@@ -53,65 +55,49 @@ campaign or whole-home backup is required. Preserve the tested secret recovery
 and tiny local-only exception archive. Optional storage forensics, manual GC,
 extra abstractions and cosmetic refactors do not block experiments.
 
-## Foundation acceptance and first result
+## Reference experiment procedure
 
-Keep the foundation PR draft until exact-head CI and all local checks pass:
-`nix fmt -- --ci`, `git diff --check`, and
-`nix flake check --no-write-lock-file --print-build-logs`. Python checks include
-compilation, Ruff format/lint and unit tests, including actual pinned-zstd output
-syntax. Build stock/candidate zstd, corpus, specification, build provenance and
-runner. Independently resolve normal/persistent/recovery outputs and require
-exact stock identities, lock hash and nixpkgs revision. The real CPU-stage
-output must contain the stock contamination contract's `-nixos-opt-cpu-` marker.
-Merge the foundation only after final PR-head CI passes, then require merged
-main CI. Framework-only source changes require no activation, reboot, stock
-retagging or application/readiness retests.
+The `zstd-skylake-v1` experiment successfully exercised the framework end to
+end. Its accepted public result is recorded in
+[`optimization/results/zstd-skylake-v1`](../optimization/results/zstd-skylake-v1/).
 
-Create `experiment/zstd-skylake-v1` from merged main for the first result. Build
-all inputs before the measurement window. Keep the normal desktop running;
-no CPU isolation boot, single-user mode, mitigation changes or GUI shutdown
-belongs in this package experiment. Admission requires clean source matching
-build provenance, exact current/booted stock, matching lock/normal/persistent
-identities, physical virtualization=`none`, expected SMT/online topology and
-125 W PL1/PL2, inactive maintenance timers/services and unchanged throttle
-counters. Record naturally dynamic temperature, memory, frequency and EPP
-observations without arbitrary admission thresholds.
+For future isolated package experiments, preserve the same workflow:
 
-Keep full private evidence under `/var/lib/nixos-optimization/runs/`, on the
-existing optimization subvolume, with mode 0700/umask 077. Run IDs combine
-experiment, UTC timestamp and source commit, and agree with directory names.
-Retain exact `specification.json`, `build-provenance.json`, separate
-`execution.json`, before/after runtime, raw output, observations, results and
-an artifact hash index. Execution records source commit/tree, original manifest
-hashes, exact binary/corpus paths/hashes/size, runner identity and timestamps.
-Build targets explicitly connect spec IDs and flake attributes to derivations.
+1. Create the experiment from a clean `main` revision while the productive
+   workstation remains on the protected stock control.
+2. Build the control, candidate, corpus, specification, build provenance and
+   runner before entering the measurement window.
+3. Require exact source and lock identity, current/booted stock equality,
+   physical-host identity, expected CPU topology and 125 W PL1/PL2, inactive
+   maintenance, and unchanged thermal-throttle counters.
+4. Keep full private evidence under `/var/lib/nixos-optimization/runs/` with
+   exact specification and build-provenance artifacts, execution metadata,
+   runtime snapshots, raw observations, results and an artifact hash index.
+5. Use independent pilot observations only to choose the bounded fresh
+   measurement count. Do not include pilot data in the final estimator.
+6. Use balanced randomized paired order on the declared CPU and retain exact
+   binary, corpus and command identities for every observation.
+7. Reject invalid runs rather than correcting them after the fact. Preserve
+   failed partial evidence with failed status.
+8. Validate artifact hashes, runtime intervals and reconstructed statistics
+   before accepting a result.
+9. Publish only a sanitized result containing the identities, hashes,
+   derivations, pair counts, statistics and
+   `IMPROVEMENT`/`REGRESSION`/`INCONCLUSIVE` interpretation.
+10. Commit the public result only after measurement so that it points back to
+    the clean measured source revision.
 
-The initial real spec uses three-second minimum evaluations, six independent
-pilot pairs and ten to thirty fresh measurement pairs. `targetDeltaHalfWidth`
-means an absolute half-width in fractional paired-delta units: 0.01 targets
-roughly one percentage point. If pilot demand exceeds the maximum, retain the
-limit and report limited precision rather than quietly claiming the target.
-Pilot data remain permanently available but excluded from final estimates.
+The first completed experiment used three-second minimum evaluations, six
+independent pilot pairs and ten fresh measurement pairs. Its zstd CPU-target
+candidate produced inconclusive compression performance at the declared
+practical threshold and a material decompression regression, so it was not
+adopted.
 
-Reject wrong identity/policy/input, maintenance overlap, throttle deltas,
-critical temperature, parser errors and command failures. Preserve failed
-partial bundles with failed status. Validate all hashes and the final runtime
-interval, and reconstruct summaries from the observations before acceptance.
-Publish only a small sanitized result with source/tree, artifact/private-bundle
-hashes, derivations, corpus hash, pair counts/statistics and
-IMPROVEMENT/REGRESSION/INCONCLUSIVE. Commit it after measurement, pointing back
-to the clean measured source. Full proc data, machine identifiers, reset receipts
-and large profiles remain private. A trustworthy inconclusive result is a
-successful framework-validation experiment.
+Future research may expand CPU targeting through additional packages and
+dependency sets before any system-level variant, followed separately by
+ThinLTO, PGO and BOLT when work resumes. VM variants are appropriate for
+functional system validation; authoritative performance measurements remain
+on the designated physical workstation.
 
-After this first result, expand CPU targeting gradually through several small
-packages and selected dependency sets before system targeting. Use real desktop
-VM variants (including bootloader variants) for system composition, activation,
-services and contamination tests; physical measurements remain authoritative.
-Use boot specialisations only when the runtime system is itself experimental.
-ThinLTO records compiler/linker, mode/flags, affected derivations and closure.
-PGO records training source and profile format as well as the identities above.
-Large PGO/BOLT profiles belong in the store or optimization subvolume with
-hash/size/producer references in Git. Distributed builders become useful when
-build costs justify them; the desktop remains the sole measurement target.
-No new general cleanup campaign or stock tag is needed for framework commits.
+No further optimization investigation, general cleanup campaign, stock retag,
+activation, reboot or readiness retest is currently required.
