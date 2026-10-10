@@ -3,7 +3,6 @@
 [baseline-final.md](baseline-final.md) is the canonical terminal record.
 Immutable tag: `nixos-26.05-pre-optimization-baseline`.
 Exact release identities belong to [baseline-final.md](baseline-final.md).
-Tested tree: `6e362cd658ed03da45df1aeb21aab903e06e4554`.
 
 Supporting point-in-time evidence:
 

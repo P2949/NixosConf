@@ -24,7 +24,7 @@ reconstructing and booting the designated benchmark control; see the
 
 ## CPU
 
-PL1 and PL2 are both 125 W, applied at boot and resume. The stock system
+PL1 and PL2 are both 125 W, applied at boot and resume. The benchmark control
 retains intel_pstate default policy; GameMode's accepted temporary request
 restores the previous policy on exit. No experimental governor, CPU isolation,
 mitigation disabling or RCU offload is declared. Commander Core cooling remains
@@ -53,8 +53,8 @@ Benchmark kernel/Mesa/graphics and package inputs remain frozen in the control.
 The optimization namespace exports isolated experiment packages, provenance and
 runners. The benchmark control remains frozen. Experiments
 must be explicitly selected and carry specification, build, runtime and result
-artifacts. The productive
-stock closure rejects project-owned optimization output namespaces; see the
+artifacts. Productive desktop and benchmark-control closures reject project-owned
+optimization output namespaces; see the
 [stock closure contract](stock-control.md). Runtime-policy changes, package
 refreshes and workstation features belong on separate branches.
 

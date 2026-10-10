@@ -7,7 +7,8 @@ The later documentation release **E** is bound by PR #7 metadata and the
 annotated baseline tag; this document does not certify its own future CI.
 
 Qualification tag: `nixos-26.05-pre-optimization-baseline`; merged main
-`1e3bdd13d179f88d6f1f0497d0ee75da88e67165`.
+`1e3bdd13d179f88d6f1f0497d0ee75da88e67165`, release tree
+`6e362cd658ed03da45df1aeb21aab903e06e4554`.
 
 ## Reproducible identities
 
