@@ -46,7 +46,7 @@ Building does not activate the configuration. Review
 The combined granular persistence VM is a permanent flake check. Other heavy
 VM outputs and physical acceptance are separate from ordinary checks;
 see [reconstruction](docs/reconstruction.md) and
-[development validation](docs/baselines/pre-optimization/evidence/development-validation.md).
+[development validation](docs/development-validation.md).
 
 ## Persistence and recovery
 

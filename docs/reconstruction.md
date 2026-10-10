@@ -31,7 +31,8 @@ production Btrfs subvolumes inspected read-only after shutdown; absence of
 `@home`/`@var`; root-local home/var probes discarded and declared home/var plus
 nested optimization probes retained; no failed units.
 Implementation/evaluation alone does not satisfy this gate: retain a successful
-execution receipt before the final baseline tag.
+execution receipt before merging storage/topology changes that affect this
+contract. The immutable baseline already contains an accepted successful execution.
 
 The evaluated-device import was tested after the first terminal pass and
 deferred: Disko's computed script values retained the production device path
