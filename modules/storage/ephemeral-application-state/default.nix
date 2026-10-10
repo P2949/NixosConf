@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.workstation.ephemeralHomeDirectories;
+  cfg = config.workstation.ephemeralApplicationState;
   home = config.users.users.${cfg.user}.home;
   policy = config.home-manager.users.${cfg.user}.home.persistence."/persist";
   persistedParents = map (entry: entry.directory) policy.directories;
@@ -30,32 +30,36 @@ let
     path:
     !(lib.hasPrefix "/" path)
     && lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" path);
+  applicationChildren = lib.types.submodule {
+    options = {
+      parent = lib.mkOption {
+        type = lib.types.str;
+        description = "Home-relative application directory explicitly retained by Home Manager persistence.";
+      };
+      children = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "Disposable paths relative to the persisted parent directory.";
+      };
+    };
+  };
+
 in
 {
-  options.workstation.ephemeralHomeDirectories = {
-    enable = lib.mkEnableOption "root-local cache children of persistent application profiles";
-    user = lib.mkOption { type = lib.types.str; };
+  options.workstation.ephemeralApplicationState = {
+    enable = lib.mkEnableOption "disposable directories and files within persistent application profiles";
+    user = lib.mkOption {
+      type = lib.types.str;
+      description = "User whose Home Manager persistence policy owns the application profiles.";
+    };
     paths = lib.mkOption {
-      type = lib.types.listOf (
-        lib.types.submodule {
-          options = {
-            parent = lib.mkOption { type = lib.types.str; };
-            children = lib.mkOption { type = lib.types.listOf lib.types.str; };
-          };
-        }
-      );
+      type = lib.types.listOf applicationChildren;
       default = [ ];
+      description = "Disposable directories bind-mounted from the reset root into persistent profiles.";
     };
     files = lib.mkOption {
-      type = lib.types.listOf (
-        lib.types.submodule {
-          options = {
-            parent = lib.mkOption { type = lib.types.str; };
-            children = lib.mkOption { type = lib.types.listOf lib.types.str; };
-          };
-        }
-      );
+      type = lib.types.listOf applicationChildren;
       default = [ ];
+      description = "Disposable files removed at normal boot; retained by the persistent-root specialisation.";
     };
   };
 

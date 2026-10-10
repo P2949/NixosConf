@@ -7,15 +7,15 @@
 }:
 
 {
-  imports = [ ../../modules/storage/ephemeral-home-directories ];
+  imports = [ ../../modules/storage/ephemeral-application-state ];
 
   config = {
 
-    workstation.ephemeralHomeDirectories = {
+    workstation.ephemeralApplicationState = {
       enable = true;
       user = username;
-      paths = import ../../home/p2949/ephemeral-app-state.nix;
-      files = import ../../home/p2949/ephemeral-app-files.nix;
+      paths = import ../../home/p2949/persistence/ephemeral-directories.nix;
+      files = import ../../home/p2949/persistence/ephemeral-files.nix;
     };
 
     environment.persistence."/persist" = {

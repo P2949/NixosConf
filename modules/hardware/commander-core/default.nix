@@ -43,51 +43,61 @@ in
       baseFanDuty = lib.mkOption {
         type = lib.types.ints.between 0 100;
         default = 60;
+        description = "Normal fan duty as a percentage.";
       };
 
       highFanDuty = lib.mkOption {
         type = lib.types.ints.between 0 100;
         default = 100;
+        description = "Fan duty as a percentage after the high-temperature threshold.";
       };
 
       pumpDuty = lib.mkOption {
         type = lib.types.ints.between 0 100;
         default = 100;
+        description = "Fixed pump duty as a percentage.";
       };
 
       highTemp = lib.mkOption {
         type = lib.types.number;
         default = 65;
+        description = "Coolant temperature in Celsius above which the high fan duty is requested.";
       };
 
       highDelay = lib.mkOption {
         type = lib.types.number;
         default = 1;
+        description = "Seconds above the high threshold before increasing fan duty.";
       };
 
       lowTemp = lib.mkOption {
         type = lib.types.number;
         default = 60;
+        description = "Coolant temperature in Celsius below which the normal fan duty is restored.";
       };
 
       lowDelay = lib.mkOption {
         type = lib.types.number;
         default = 10;
+        description = "Seconds below the low threshold before restoring normal fan duty.";
       };
 
       tempInterval = lib.mkOption {
         type = lib.types.number;
         default = 1;
+        description = "Seconds between coolant temperature samples.";
       };
 
       wakeInterval = lib.mkOption {
         type = lib.types.number;
         default = 10;
+        description = "Seconds between device health checks.";
       };
 
       resetDelay = lib.mkOption {
         type = lib.types.number;
         default = 3;
+        description = "Seconds to wait after resetting the USB device.";
       };
     };
   };

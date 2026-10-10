@@ -36,7 +36,7 @@ previously discarded data.
 | `/run`, `/dev`, `/proc`, `/sys` | Runtime/virtual | Recreated each boot |
 
 Home state persists only through
-[`home/p2949/persistence.nix`](../home/p2949/persistence.nix); system state through
+[`home/p2949/persistence/default.nix`](../home/p2949/persistence/default.nix); system state through
 [`hosts/desktop/persistence.nix`](../hosts/desktop/persistence.nix).
 The [state audit](ephemeral-state-audit.md) lists path categories, reasons and
 mixed-container exceptions. Never persist `.config`, `.local` or `.cache` as
@@ -45,10 +45,10 @@ Credentials, profile databases and atomic-save companions remain together in
 writable containing directories.
 
 Known disposable directory children of retained profiles bind to reset-root
-storage through [`ephemeral-app-state.nix`](../home/p2949/ephemeral-app-state.nix).
+storage through [`ephemeral-directories.nix`](../home/p2949/persistence/ephemeral-directories.nix).
 This preserves atomic settings/database replacement in the parent. Known
 disposable files use native boot-only tmpfiles rules through
-[`ephemeral-app-files.nix`](../home/p2949/ephemeral-app-files.nix); those rules
+[`ephemeral-files.nix`](../home/p2949/persistence/ephemeral-files.nix); those rules
 are absent in recovery and do not run during live reactivation.
 
 Fuzzel launch counts use persisted `.local/state/fuzzel/history`. Unity layouts,

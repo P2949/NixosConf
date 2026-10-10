@@ -141,7 +141,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 ## Disposable children of persisted profiles
 
 The exact directory exceptions are executable declarations in
-[`ephemeral-app-state.nix`](../home/p2949/ephemeral-app-state.nix). Each is a bind
+[`ephemeral-directories.nix`](../home/p2949/persistence/ephemeral-directories.nix). Each is a bind
 mount from the ordinary reset-root `.cache/ephemeral-app-state` tree. Profile
 parents remain writable and apps can still atomically replace settings/SQLite
 files. Recovery boots retain the same root-local cache tree. Hidden migration
@@ -198,7 +198,7 @@ The user explicitly chose to keep the quantified Steam/Unreal caches persistent
 when offered the option to reset them every boot on 2026-10-08.
 
 Known disposable files and boot-only behavior are in
-[`ephemeral-app-files.nix`](../home/p2949/ephemeral-app-files.nix). File-level
+[`ephemeral-files.nix`](../home/p2949/persistence/ephemeral-files.nix). File-level
 exceptions use native tmpfiles removal, rather than file bind mounts that would
 block atomic saves. Rules are absent in `persistent-root` and ignored by live
 tmpfiles reactivation because they are boot-only (`r!`).
