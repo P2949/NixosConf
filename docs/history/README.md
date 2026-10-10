@@ -18,3 +18,14 @@ git show nixos-26.05-pre-optimization-baseline:docs/granular-cutover.md
 ```
 
 Current operational guidance is in the persistence, recovery and safety documents.
+
+Prism Launcher completed through [PR #16](https://github.com/P2949/NixosConf/pull/16):
+final feature head `36e3d777d5c88c35ad94a7d3fb6a181b587bc393`, merged into main
+at `70f2e2b596772d3ae620bfb5e48ee69a738584ba`.
+The implementation journal remains accessible through Git:
+
+```bash
+git show 36e3d777d5c88c35ad94a7d3fb6a181b587bc393:docs/prism-launcher-plan.md
+```
+
+Permanent application classification is in the [state audit](../ephemeral-state-audit.md).

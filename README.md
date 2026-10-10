@@ -1,13 +1,13 @@
 # NixosConf
 
 Declarative NixOS configuration for one desktop workstation. The productive
-system is the stock control for later, separately identified optimization
-experiments.
+desktop advances independently of the immutable qualification
+baseline and frozen benchmark control.
 
 ## Where to start
 
 - [Current system](docs/status.md).
-- [Immutable stock baseline](docs/baselines/pre-optimization/baseline-final.md).
+- [Qualification baseline](docs/baselines/pre-optimization/baseline-final.md).
 - Persistence: [contract](docs/persistence-contract.md), [architecture](docs/impermanence.md), [state audit](docs/ephemeral-state-audit.md).
 - Recovery: [backup and restore](docs/backup-restore.md), [secrets bootstrap](docs/bootstrap-secrets.md).
 - Experiments: [stock control](docs/stock-control.md), [stock policy](docs/stock-policy.md).
@@ -25,7 +25,8 @@ experiments.
 | `packages/` | Custom derivations |
 | `images/` | Standalone recovery images |
 | `tests/` | Configuration and integration validation |
-| `docs/` | Design, procedures and evidence |
+| `docs/` | Current durable policy and procedures |
+| `scripts/` | Reusable operational tooling |
 | `optimization/` | Experiments after the accepted stock baseline |
 
 Hosts select features, profiles compose roles, and Home Manager owns user
@@ -64,7 +65,8 @@ rationale and application/cache exceptions are recorded in the
 The [baseline collector](docs/baseline-capture.md) records evidence without
 activating the system or starting stress tests. The
 [stock control](docs/stock-control.md) and [stock policy](docs/stock-policy.md)
-keep experiments out of the productive control.
+define the frozen benchmark environment and exclude experimental outputs from
+the productive desktop.
 
 Optimization starts from the accepted immutable stock tag, on a separate
 branch. Each experiment must retain source, toolchain, profile, derivation
