@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -10,23 +10,21 @@
     ./alacritty.nix
   ];
 
-  home.packages =
-    (with pkgs; [
-      # File manager
-      thunar
+  home.packages = with pkgs; [
+    # File manager
+    thunar
 
-      # Wayland utilities
-      wl-clipboard
-      grim
-      slurp
+    # Wayland utilities
+    wl-clipboard
+    grim
+    slurp
 
-      # Desktop utilities
-      brightnessctl
-      pavucontrol
+    # Desktop utilities
+    brightnessctl
+    pavucontrol
 
-      # Gaming
-      prismlauncher
+    # Gaming
+    prismlauncher
 
-    ])
-    ++ config.workstationHome.development.editorPackages;
+  ];
 }

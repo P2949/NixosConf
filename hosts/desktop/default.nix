@@ -8,7 +8,7 @@
     ./ephemeral-root.nix
 
     ../../profiles/workstation.nix
-    ../../modules/core/stock-control.nix
+    ../../modules/workstation/optimization-boundary.nix
 
     ../../modules/storage/btrfs-maintenance
     ../../modules/workstation/activation-safety
