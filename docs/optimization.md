@@ -10,6 +10,14 @@ journal change is documented in [stock policy](stock-policy.md).
 
 The v2 framework is established on the protected working-stock control.
 
+Ordinary desktop application additions may change the productive closure without
+retagging the immutable benchmark control. `nix flake check` retains the pinned
+control-input and optimization-dependency checks. Before an experiment, run
+`nix build .#optimization-control-identity --no-link` explicitly: it rejects
+evaluated normal/recovery closures that differ from the frozen control. The
+runner independently rejects evaluated/current/booted control mismatches.
+Prism candidates are ordinary workstation changes and are not benchmark controls.
+
 The first completed reference experiment is
 [zstd-skylake-v1](../optimization/results/zstd-skylake-v1/). It tested
 package-scoped `-march=skylake -mtune=skylake` on zstd using the fixed Silesia
@@ -67,6 +75,7 @@ For future isolated package experiments, preserve the same workflow:
    workstation remains on the protected stock control.
 2. Build the control, candidate, corpus, specification, build provenance and
    runner before entering the measurement window.
+   Build `.#optimization-control-identity` as the explicit admission gate.
 3. Require exact source and lock identity, current/booted stock equality,
    physical-host identity, expected CPU topology and 125 W PL1/PL2, inactive
    maintenance, and unchanged thermal-throttle counters.

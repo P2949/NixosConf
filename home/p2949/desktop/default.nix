@@ -24,6 +24,9 @@
       brightnessctl
       pavucontrol
 
+      # Gaming
+      prismlauncher
+
     ])
     ++ config.workstationHome.development.editorPackages;
 }
