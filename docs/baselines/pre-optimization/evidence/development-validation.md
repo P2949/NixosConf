@@ -6,12 +6,12 @@
 > proof of overheating. It is superseded by hardware/correctness evidence;
 > coretemp reports a 100°C critical limit. Historical attempts below retain
 > their original results. Current candidate and acceptance state belong in
-> [status](status.md); paste/contact history is not a prerequisite.
+> [status](../../../status.md); paste/contact history is not a prerequisite.
 
 > Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
 > /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
 > Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
-> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](../firmware-20261005.md)
 > for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
 
 
@@ -238,4 +238,4 @@ The desktop and cooling service remain active, failed units empty and no
 targeted kernel OOM/hardware/thermal errors were observed after the retry.
 Receipts/logs/samples remain private under
 /persist/nixos-readiness-20261005/{tuned-cpu,ram-24g,ram-22g}.
-See [current status](status.md) for changing acceptance classifications.
+See [current status](../../../status.md) for changing acceptance classifications.
