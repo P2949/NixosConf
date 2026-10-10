@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./vm.nix
     ./hardware-configuration.nix
     ./disko.nix
     ./persistence.nix

@@ -51,4 +51,8 @@ Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 
 Further optimization investigation is intentionally deferred. General
-workstation/readiness cleanup remains complete.
+repository organization is finished under the [repository policy](repository-policy.md).
+Generated custom-module documentation and the [interactive desktop bootloader
+VM](development-validation.md#interactive-desktop-vm) are explicit developer tools.
+The VM retains desktop composition with adapted storage and hardware; it does
+not replace accepted physical qualification.
