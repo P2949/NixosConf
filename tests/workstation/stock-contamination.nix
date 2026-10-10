@@ -7,7 +7,7 @@ let
     inherit pkgs;
     system = pkgs.stdenv.hostPlatform.system;
     modules = [
-      ../../modules/core/stock-control.nix
+      ../../modules/workstation/optimization-boundary.nix
       {
         boot.loader.grub.devices = [ "nodev" ];
         fileSystems."/" = {
