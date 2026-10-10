@@ -3,7 +3,7 @@
 > Current update, 2026-10-05 after the user reboot: VMX enabled in photos,
 > /dev/kvm accessible, QEMU KVM initialization PASS (guest paused).
 > Earlier VMX-disabled observations below are historical. Android/Gradle/AVD
-> validation is not applicable by user instruction2026-10-06. See [firmware observation](baselines/pre-optimization/firmware-20261005.md)
+> validation is not applicable by user instruction2026-10-06. See [firmware observation](../firmware-20261005.md)
 > for the captured AI Optimized50/49, MCE/XMP policy and remaining unknowns.
 
 
