@@ -46,6 +46,11 @@
         inherit system;
         config.allowUnfree = true;
       };
+      optimization = import ./optimization {
+        inherit pkgs inputs;
+        repository = inputs.self;
+        systemConfig = inputs.self.nixosConfigurations.desktop;
+      };
       validation = import ./tests {
         inherit
           inputs
@@ -101,10 +106,13 @@
         };
       };
 
-      checks.${system} = validation.checks;
-      packages.${system} = validation.packages // {
-        recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
-      };
+      checks.${system} = validation.checks // optimization.checks;
+      packages.${system} =
+        validation.packages
+        // optimization.packages
+        // {
+          recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
+        };
 
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         inherit system;
