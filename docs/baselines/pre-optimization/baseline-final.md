@@ -6,6 +6,9 @@ Captured 2026-10-10. Runtime freeze **F**:
 The later documentation release **E** is bound by PR #7 metadata and the
 annotated baseline tag; this document does not certify its own future CI.
 
+Qualification tag: `nixos-26.05-pre-optimization-baseline`; merged main
+`1e3bdd13d179f88d6f1f0497d0ee75da88e67165`.
+
 ## Reproducible identities
 
 - flake.lock SHA-256: `7efb19569e8a022768cd570498ff8b93cb98b108358149b668a658e2d9f406a2`.

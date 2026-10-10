@@ -1,14 +1,10 @@
 # Optimization experiments
 
-Qualification remains fixed at `nixos-26.05-pre-optimization-baseline`.
-The physically booted benchmark control is the separately protected annotated
-`nixos-26.05-optimization-stock-v1` tag at
-`53b58e38e36d7c6071807e7abedc85fce42c449c`. Its normal output begins
-`6rn4ggk32wcqrhcdv2chr55daqxxh026`; persistent-root begins
-`yf7jg059hm4qg2yhyls4ciddliwc8ych`. The intentional post-qualification
-journal change is documented in [stock policy](stock-policy.md).
-
-The v2 framework is established on the protected working-stock control.
+The immutable qualification baseline and frozen benchmark control are distinct
+from the current productive desktop. Exact benchmark identities and policy belong
+to [stock policy](stock-policy.md); qualification evidence belongs to the
+[canonical baseline](baselines/pre-optimization/baseline-final.md).
+The v2 framework is established on the frozen benchmark control.
 
 Ordinary desktop application additions may change the productive closure without
 retagging the immutable benchmark control. `nix flake check` retains the pinned
@@ -71,8 +67,9 @@ end. Its accepted public result is recorded in
 
 For future isolated package experiments, preserve the same workflow:
 
-1. Create the experiment from a clean `main` revision while the productive
-   workstation remains on the protected stock control.
+1. Create the experiment from a clean source revision compatible with the frozen
+   benchmark control, and boot that control for measurements. Ordinary `main`
+   revisions may have a different desktop closure.
 2. Build the control, candidate, corpus, specification, build provenance and
    runner before entering the measurement window.
    Build `.#optimization-control-identity` as the explicit admission gate.

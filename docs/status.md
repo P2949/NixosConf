@@ -1,9 +1,10 @@
 # Current status
 
-Pre-optimization readiness is complete. Immutable tag:
-`nixos-26.05-pre-optimization-baseline`, verified merged main
-`1e3bdd13d179f88d6f1f0497d0ee75da88e67165`.
-See the [canonical baseline](baselines/pre-optimization/baseline-final.md).
+The **productive desktop** is current `main`, including accepted Prism Launcher
+integration through [PR #16](https://github.com/P2949/NixosConf/pull/16).
+It advances independently of the immutable **qualification baseline** in the
+[canonical baseline](baselines/pre-optimization/baseline-final.md) and the frozen
+**benchmark control** in [stock policy](stock-policy.md).
 
 ## Storage and recovery
 
@@ -21,16 +22,15 @@ was disregarded by human intervention; it is not a measured PASS.
 
 The accepted CPU package baseline is 125 W PL1/PL2, with boot/resume application.
 Commander Core retains the accepted cooling policy. Bluetooth is disabled.
-Optimization-v2 framework development is active. The productive NixOS closure
-remains the protected `nixos-26.05-optimization-stock-v1` control. No optimization
+The optimization-v2 framework is merged. The productive desktop has advanced
+beyond the frozen benchmark control. No optimization
 derivation is installed into the productive system. Accepted display/audio/workload
 and recovery evidence remains bound to the baseline closures.
 
 ## Development phase
 
-The optimization-v2 experiment foundation is merged. The productive system
-remains the protected `nixos-26.05-optimization-stock-v1` control and no
-optimization candidate has been adopted into it.
+The optimization-v2 experiment foundation is merged. No optimization candidate
+has been adopted into the productive desktop.
 
 The first authoritative package experiment,
 [`zstd-skylake-v1`](../optimization/results/zstd-skylake-v1/), found
@@ -39,8 +39,8 @@ decompression regression. The candidate was therefore not adopted.
 
 Prism Launcher implementation is accepted; source integration is tracked by
 [PR #16](https://github.com/P2949/NixosConf/pull/16). See the
-[live plan](prism-launcher-plan.md). Its Phase 1 candidate retains the complete
-private launcher root. Normal boot, launcher/Java and real vanilla world
+[permanent state audit](ephemeral-state-audit.md). Its persistence policy retains
+the private launcher root with audited disposable cache/log overlays. Normal boot, launcher/Java and real vanilla world
 validation pass; refreshed account online features are user-confirmed. Cache/log
 exclusions pass normal-reboot persistence/reset and retained-file hash proofs.
 Post-reboot Fabric world, retained settings, graphics/input/audio and absence
