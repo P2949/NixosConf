@@ -121,7 +121,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | Paths | Class | Decision |
 | --- | --- | --- |
 | share/Steam | M | Library/manifests, client installation, configuration, userdata, saves and compatdata retained; disposable cache children below |
-| share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E with reboot-proven reset-root mounts; final post-reboot gameplay acceptance is pending in the [Prism plan](prism-launcher-plan.md). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
+| share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E with reboot-proven reset-root mounts; final post-reboot gameplay acceptance is recorded in the [Prism plan](prism-launcher-plan.md). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
 | share/keyrings | P | Future desktop credential stores, private mode; absent initially |
 | share/Trash | P | Potentially recoverable user files, retained conservatively |
 | share/applications, share/icons/hicolor | P | User/game launchers and icons |
@@ -184,7 +184,9 @@ copies below those mountpoints must be pruned after physical acceptance.
   mods, settings, assets/libraries and all unclassified children remain retained.
   Normal reboot proved parent persistence, reset of both root-local source
   markers and exact retained file hashes. Cache/feed and launcher logs have
-  regenerated; final post-reboot interactive world acceptance remains pending.
+  regenerated; user accepts the post-reboot Fabric world/settings, graphics,
+  input/audio and no full downloads. Proof files and the three approved hidden
+  pre-split disposable files are removed; regenerated live cache/log files remain.
 
 Deliberate `R` exceptions: Steam's 218 MiB shadercache and Unreal's approximately
 831 MiB shared DDC/Zen cache plus the small per-version DDC are reconstructable

@@ -121,35 +121,43 @@ Pasted citation placeholders are not usable source references.
   Parent resolves to `@persist`; cache/logs resolve to fresh normal `@root`;
   all three directories remain `p2949:users`, mode700. Private receipt:
   `Documents/.prism-integration/prism-cache-split-postboot.txt`.
-- [ ] Post-reboot account/world/game acceptance and cache/log regeneration.
+- [x] Post-reboot account/world/game acceptance and cache/log regeneration.
+  User confirms all settings retained, graphics/input/audible audio work and
+  no full assets/libraries download. Minecraft and Prism closed normally;
+  independent process checks confirm both exited. Live log proves world save
+  and normal server stop. Fabric is the user-selected retained workload.
   Launcher cache/feed and logs already regenerate on the fresh root-local mounts.
   Final `nix flake check` passes; desktop build matches the booted generation49
   closure. Private final check/build logs are retained with the reboot receipt.
 - [ ] Remove proof state, final review/checks, acceptance commit and integration.
+  Proof cleanup passes, including both hidden pre-split markers through a
+  temporary parent-only bind view. No authentication backup existed.
+  User explicitly authorized deletion of the three inspected old disposable
+  files: cache/feed/feed.xml (341173 bytes), logs/PrismLauncher-1.log (94514)
+  and logs/PrismLauncher-0.log (156314). Exact-file cleanup passes; hidden
+  cache/log trees contain no files and regenerated live cache/log files remain.
+  Private receipts: prism-proof-cleanup.txt and prism-old-cache-cleanup.txt.
   Draft [PR #16](https://github.com/P2949/NixosConf/pull/16) is open for review.
-  Remote validation is running against checkpoint `b754004`; the PR explicitly
-  retains the pending interactive acceptance and cleanup gates.
+  Final acceptance update will supersede the draft's pending runtime/cleanup
+  description; exact-head CI and merge remain required.
 
-Initial real-workload and reboot storage acceptance passed. Final post-reboot
-interactive game acceptance remains pending.
+Initial real-workload, reboot storage and final post-reboot interactive game
+acceptance pass. Proof and approved old-cache cleanup pass; integration remains.
 `meta` and `java` require separate later evidence.
 Microsoft authentication and physical visual/audio observations require the
 user; automated builds cannot satisfy those gates. Reboots remain user-controlled.
 No credentials or runtime game data belong in this ledger or Git.
 
-## Next user-controlled gate
+## Integration gate
 
-Prism has been reopened after the successful generation49 storage proof.
-Confirm the retained account and instances, launch the existing vanilla world,
-check graphics/input/audio and absence of full assets/libraries downloads, then
-quit Minecraft and Prism normally. Verify regenerated cache/log files, remove
-proof state, and complete source validation and integration.
+Complete final source validation, exact-head CI and merge. Runtime and cleanup
+gates are accepted. Preserve the physically validated generation49 closure.
 The user confirms intentionally removing the separate vanilla instance before
 reboot, since Fabric is the intended workload. The retained `26.3` Fabric
 instance has its settings intact. Post-reboot live logs show RX9070XT,
 Wayland, sound-engine startup and integrated-server startup; the existing
 `New World/level.dat` is updated. Final graphics/input/audible-output and
-no-full-download confirmation plus normal Quit are requested. The standalone
+no-full-download confirmation plus normal Quit are accepted. The standalone
 vanilla run was accepted earlier; the retained Fabric instance is the final
 post-reboot workload, as selected by the user.
 Content/performance mods were not installed or exercised; instance-tree
