@@ -29,19 +29,13 @@ active scrub or collection merely to start a benchmark.
 
 Git tags do not keep Nix store paths alive. Dedicated roots under
 `/nix/var/nix/gcroots/stock-baseline` retain the accepted normal,
-persistent-root and recovery ISO artifacts. The 2026-10-10 inventory and
-read-only dead-output preview are retained privately in
+persistent-root and recovery ISO artifacts. Superseded preparation roots
+have been retired; exact targets and restoration receipts remain private in
 `/persist/post-baseline-cleanup-20261010`.
 
-The supported ISO and final baseline closures are KEEP. Preparation roots for
-older generations, superseded candidates/ISOs and temporary VM builds were
-retirement candidates. Fourteen exact superseded preparation symlinks were
-retired after accepted-artifact protection was verified. Their targets are
-recorded in `retired-preparation-roots.json` for restoration. The accepted ISO
-root was retained. The post-retirement preview found 619 unreachable paths. No store outputs or profile generations were
-deleted. Repeat the preview before any later collection; the count is historical.
-Forensic Btrfs roots and the minimal recovery exception archive are separate
-from GC-root cleanup and remain retained.
+Preview unreachable outputs before manual collection and verify that supported
+recovery artifacts remain rooted. Forensic Btrfs roots and the minimal recovery
+exception archive are separate from GC-root cleanup and remain retained.
 
 ## Runtime diagnostics
 
@@ -58,9 +52,9 @@ Its system output differs from the immutable baseline because generated
 journald configuration changes. It is an intentional working-stock change, not a replacement qualification
 baseline. Installation is a separate host action.
 
-Existing external core files total 213 MiB. Core processing retains a 32 GiB
-limit, external files have an 8 GiB limit, with a 4 GiB total-use target and
-4 GiB keep-free. Upstream two-week tmpfiles retention is retained. The total-use
+External coredumps are root-local and therefore disposable across normal root
+resets. Within a boot, core processing retains a 32 GiB limit, external files
+have an 8 GiB limit, with a 4 GiB total-use target and 4 GiB keep-free. Upstream two-week tmpfiles retention is retained. The total-use
 target is not an instantaneous quota: a single new large dump can exceed it.
 Larger processes can still provide journal metadata/backtraces subject to the
 processing limit, while oversized external files are omitted. Reproduce under
@@ -70,7 +64,7 @@ private process memory and must not be committed to Git.
 The baseline maintenance configuration is preserved by the immutable tag. One-time store
 optimisation and content verification remain separate idle-period tasks.
 
-Pressure-triggered `min-free` / `max-free` GC is deferred: 763 GiB free of
-896 GiB was observed, while future large-build/workload demand is unmeasured.
+Pressure-triggered `min-free` / `max-free` GC is deferred until large-build
+space requirements justify a measured policy.
 Arbitrary thresholds would introduce collection outside the guarded window.
 Revisit with measured space requirements before large optimization builds.

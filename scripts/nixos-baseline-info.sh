@@ -23,7 +23,7 @@ capture_privileged() {
   fi
 }
 
-printf '# Workstation preparation snapshot\n\n'
+printf '# Workstation state snapshot\n\n'
 printf 'Captured: %s\n\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 printf 'This is observed runtime state, not final acceptance or an idle/load test.\n'
 capture 'Git identity' git log -1 --format='%H %s'
