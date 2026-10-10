@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import tempfile
+import subprocess
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -16,7 +17,7 @@ class RunnerContract(unittest.TestCase):
             with self.assertRaises(ValueError):
                 zstd.parse_output(output)
 
-    def experiment(self, root, fail=False):
+    def experiment(self, root, fail=False, restore_failure=False):
         repo = root / 'repo'; repo.mkdir(); (repo / 'flake.lock').write_text('{}')
         packages = {}
         for name in ('stock', 'candidate'):
@@ -41,6 +42,8 @@ class RunnerContract(unittest.TestCase):
         calls = []
         def command(argv, **kwargs):
             calls.append(argv)
+            if restore_failure and 'start' in argv and argv[-1] == 'nix-gc.timer':
+                raise subprocess.CalledProcessError(1, argv)
             if 'status' in argv: return ''
             if 'HEAD^{tree}' in argv: return 'fixture-tree'
             if 'HEAD' in argv: return 'fixture-commit'
@@ -51,7 +54,10 @@ class RunnerContract(unittest.TestCase):
         with patch.object(zstd, 'command', command), patch.object(zstd.subprocess, 'run', process), \
              patch.object(zstd.runtime, 'capture', lambda: {'fixture': 'runtime'}), \
              patch.object(zstd.runtime, 'validate_control'), patch.object(zstd.runtime, 'validate_interval'):
-            if fail:
+            if restore_failure:
+                with self.assertRaisesRegex(ValueError, "timer restoration failed"):
+                    zstd.run(spec_path, build_path, root / "output", repo)
+            elif fail:
                 with self.assertRaisesRegex(ValueError, 'command failed'):
                     zstd.run(spec_path, build_path, root / 'output', repo)
             else:
@@ -70,6 +76,13 @@ class RunnerContract(unittest.TestCase):
                 self.assertEqual(index['sha256'][name], zstd.digest(output / name))
             self.assertEqual(len([x for x in calls if 'stop' in x]), 3)
             self.assertEqual(len([x for x in calls if 'start' in x]), 3)
+
+    def test_failed_restart_still_attempts_all_timers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output, calls = self.experiment(Path(directory), restore_failure=True)
+            self.assertEqual(len([x for x in calls if 'start' in x]), 3)
+            self.assertEqual(json.loads((output / 'artifact-index.json').read_text())['status'], 'failed')
+            self.assertTrue((output / 'timer-restoration-errors.json').exists())
 
     def test_failure_retains_raw_evidence_and_restores_timers(self):
         with tempfile.TemporaryDirectory() as directory:

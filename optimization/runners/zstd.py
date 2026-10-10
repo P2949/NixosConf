@@ -91,8 +91,8 @@ def run(spec_path, build_path, output, repository):
             if state not in ('active', 'inactive'):
                 raise ValueError(f'timer state unavailable: {timer}')
             if state == 'active':
-                command(['sudo', '-n', 'systemctl', 'stop', timer])
                 stopped.append(timer)
+                command(['sudo', '-n', 'systemctl', 'stop', timer])
         snapshot()  # Check for maintenance activated during timer handling.
         observations = []
         summaries = {}
@@ -150,11 +150,20 @@ def run(spec_path, build_path, output, repository):
                              'finishedAt': now(), 'summaries': summaries, 'observations': observations})
         status = 'complete'
     finally:
+        restoration_errors = []
         for timer in stopped:
-            command(['sudo', '-n', 'systemctl', 'start', timer])
+            try:
+                command(['sudo', '-n', 'systemctl', 'start', timer])
+            except (OSError, subprocess.SubprocessError) as error:
+                restoration_errors.append({'timer': timer, 'error': str(error)})
+        if restoration_errors:
+            status = 'failed'
+            save('timer-restoration-errors.json', restoration_errors)
         files = {str(path.relative_to(output)): digest(path) for path in sorted(output.rglob('*')) if path.is_file()}
         save('artifact-index.json', {'schemaVersion': 1, 'kind': 'nixos-experiment-artifact-index',
                                     'status': status, 'finishedAt': now(), 'sha256': files})
+        if restoration_errors:
+            raise ValueError('timer restoration failed; all restarts attempted and errors retained')
 
 
 if __name__ == '__main__':
