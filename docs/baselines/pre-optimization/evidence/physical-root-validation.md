@@ -27,7 +27,7 @@ No second boot installation is needed unless the candidate changes.
 
 The user enabled VMX and rebooted normal generation37; /dev/kvm and actual
 KVM initialization now pass. Firmware photo/runtime evidence is recorded in
-[firmware baseline](baselines/pre-optimization/firmware-20261005.md).
+[firmware baseline](../firmware-20261005.md).
 CPU-heavy editor acceptance aborted at84C under the80C guard; review cooling
 and operating conditions before further heavy tests. Preserve the live session.
 
@@ -37,7 +37,7 @@ the root-local sentinel and retained the persistent sentinel. The private
 preparation, persistent-boot and return-normal receipts are terminal accepted
 evidence, detailed below. No remaining generation37 root-chain reboot is
 required. The tuned cooling candidate is separately test-active with unchanged
-kernel/initrd; see [current status](status.md) for its incomplete load validation.
+kernel/initrd; see [current status](../../../status.md) for its incomplete load validation.
 
 ## Physical validation procedure (generation37 sequence completed)
 
@@ -93,7 +93,7 @@ reboots for documentation, offline builds or repeated smoke tests.
 4. Inspect the ESP with `sudo bootctl list --no-pager`; record a current
    known-good persistent-root entry and its closure. The running closure is
    not proof an older boot entry works; rehearse rollback independently.
-5. Audit root-local data using the [persistence contract](persistence-contract.md).
+5. Audit root-local data using the [persistence contract](../../../persistence-contract.md).
    Check actual topology from a temporary top-level mount, then unmount it:
 
 ```sh
@@ -170,7 +170,7 @@ After boot one, create an unmistakable disposable `/root-reset-probe` and a
 persistent `/persist/root-reset-probe`; check the former disappears and the
 latter survives on boots two and three. Check one BEGIN and one RESET for
 each distinct boot ID. Validate ordinary work between boots. Keep the parent
-default until repeated physical acceptance is recorded in the historical readiness journal (see [history index](history/README.md)).
+default until repeated physical acceptance is recorded in the historical readiness journal (see [history index](../../../history/README.md)).
 
 ## Historical ISO staging and recovery drill procedure
 
@@ -183,7 +183,7 @@ The ISO was added on 2026-10-05 to the existing Ventoy data partition as
 `nixos-workstation-recovery-26.05.20261002.774debe-x86_64-linux.iso`, without
 replacing any existing images. Copy checksum matched; clean unmount completed
 and a subsequent read-only exFAT check reported clean. Post-remount checksum
-verification is recorded in the historical readiness journal (see [history index](history/README.md)). This older filename is retained as staging history. For a new drill use the
+verification is recorded in the historical readiness journal (see [history index](../../../history/README.md)). This older filename is retained as staging history. For a new drill use the
 current stable ISO identified in the maintenance-window section above. The user's previous
 successful recovery with another ISO does not establish this artifact's boot.
 Do not write a raw image to a device selected only by an assumed `/dev/sdX` name.

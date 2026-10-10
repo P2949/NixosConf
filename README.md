@@ -46,7 +46,7 @@ Building does not activate the configuration. Review
 The combined granular persistence VM is a permanent flake check. Other heavy
 VM outputs and physical acceptance are separate from ordinary checks;
 see [reconstruction](docs/reconstruction.md) and
-[development validation](docs/development-validation.md).
+[development validation](docs/baselines/pre-optimization/evidence/development-validation.md).
 
 ## Persistence and recovery
 
@@ -56,7 +56,7 @@ own explicit allow-list. Source home/var are root-local; persistence classificat
 rationale and application/cache exceptions are recorded in the
 [state audit](docs/ephemeral-state-audit.md). See [root design](docs/impermanence.md),
 [persistence contract](docs/persistence-contract.md),
-[physical validation](docs/physical-root-validation.md) and
+[physical validation](docs/baselines/pre-optimization/evidence/physical-root-validation.md) and
 [backup/restore](docs/backup-restore.md).
 
 ## Baseline and experiments
