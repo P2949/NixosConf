@@ -21,13 +21,15 @@ was disregarded by human intervention; it is not a measured PASS.
 
 The accepted CPU package baseline is 125 W PL1/PL2, with boot/resume application.
 Commander Core retains the accepted cooling policy. Bluetooth is disabled.
-Stock optimization namespace remains inert. Accepted display/audio/workload
+Optimization-v2 framework development is active. The productive NixOS closure
+remains the protected `nixos-26.05-optimization-stock-v1` control. No optimization
+derivation is installed into the productive system. Accepted display/audio/workload
 and recovery evidence remains bound to the baseline closures.
 
 ## Development phase
 
 The repository has retired completed journals and one-time migration tools.
-Permanent granular/root/recovery regression tests remain. No new runtime
-features or optimizations are part of cleanup. Future optimization-v2 and
-ordinary workstation features belong on separate baseline-descended branches.
+Permanent granular/root/recovery regression tests remain. General cleanup is complete. Narrow framework correctness changes belong in
+the draft foundation PR; authoritative results follow on separate experiment
+branches after framework integration. Ordinary workstation changes stay separate.
 [Historical records](history/README.md) are preserved by the immutable tag.

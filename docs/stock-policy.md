@@ -40,8 +40,10 @@ package inputs are pinned during closure-preserving cleanup.
 
 ## Experiment boundary
 
-`optimization/default.nix` is inert. Future experiments must be explicitly
-selected and carry provenance, runtime and result manifests. The productive
+The optimization namespace exports isolated experiment packages, provenance and
+runners. The productive desktop remains the protected stock control. Experiments
+must be explicitly selected and carry specification, build, runtime and result
+artifacts. The productive
 stock closure rejects project-owned optimization output namespaces; see the
 [stock closure contract](stock-control.md). Runtime-policy changes, package
 refreshes and workstation features belong on separate branches.
