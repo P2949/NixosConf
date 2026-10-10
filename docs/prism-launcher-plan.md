@@ -144,11 +144,14 @@ Confirm the retained account and instances, launch the existing vanilla world,
 check graphics/input/audio and absence of full assets/libraries downloads, then
 quit Minecraft and Prism normally. Verify regenerated cache/log files, remove
 proof state, and complete source validation and integration.
-Current runtime inspection finds only `26.3` with Fabric Loader and its saved
-`New World`; the earlier separate vanilla instance is no longer present.
-The user has been asked whether this reflects an intentional instance change
-and which instance was used for the post-reboot test. Do not infer vanilla
-post-reboot acceptance from retained file hashes or the earlier vanilla run.
+The user confirms intentionally removing the separate vanilla instance before
+reboot, since Fabric is the intended workload. The retained `26.3` Fabric
+instance has its settings intact. Post-reboot live logs show RX9070XT,
+Wayland, sound-engine startup and integrated-server startup; the existing
+`New World/level.dat` is updated. Final graphics/input/audible-output and
+no-full-download confirmation plus normal Quit are requested. The standalone
+vanilla run was accepted earlier; the retained Fabric instance is the final
+post-reboot workload, as selected by the user.
 Content/performance mods were not installed or exercised; instance-tree
 persistence covers their storage location without claiming mod compatibility.
 
