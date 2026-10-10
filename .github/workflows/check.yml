@@ -31,4 +31,4 @@ jobs:
         run: nix flake check --no-write-lock-file --print-build-logs
 
       - name: Build desktop system
-        run: nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link --print-build-logs
+        run: nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link --no-write-lock-file --print-build-logs

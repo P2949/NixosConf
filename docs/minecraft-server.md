@@ -12,7 +12,7 @@ qualification and acceptance receipts.
 ## Architecture and modes
 
 NixOS manages the server through nix-minecraft and systemd in `minecraft.slice`.
-Normal mode pins Minecraft Java 26.3, Fabric loader 0.19.5, OpenJDK 25 and
+Normal mode pins Minecraft Java Edition 26.3, Fabric loader 0.19.5, OpenJDK 25 and
 `-Xms1G -Xmx6G`. Fabric API, Lithium, FerriteCore, ServerCore and spark are the
 normal mod set. Empty-server pause is 60 seconds. The server uses
 `/srv/minecraft`, declared as the separate Btrfs `@minecraft` mount; recovery

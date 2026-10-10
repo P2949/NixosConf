@@ -15,7 +15,7 @@ From trusted recovery media, identify and mount the intended persistence
 subvolume. Restore into a temporary root-private directory first, compare the
 restored file with the expected source without printing either file, then
 install the confirmed hash at the declared path with root ownership and mode
-0600. Keep the secrets directory root-owned0700. Do not replace a conflicting
+0600. Keep the secrets directory root-owned mode 0700. Do not replace a conflicting
 existing file until its origin is understood. Unmount cleanly.
 
 Test fixture hashes are deliberately disposable. The reconstruction VM uses
