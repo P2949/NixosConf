@@ -34,39 +34,18 @@ in
         Type = "oneshot";
         RemainAfterExit = true;
       };
-      script =
-        if cfg.pl1Watts == cfg.pl2Watts then
-          ''
-            set -eu
-            zone=/sys/class/powercap/intel-rapl:0
-            test "$(cat "$zone/name")" = package-0
-            test "$(cat "$zone/enabled")" = 1
-            test "$(cat "$zone/constraint_0_name")" = long_term
-            test "$(cat "$zone/constraint_1_name")" = short_term
-            for constraint in 0 1; do
-              printf '%s\n' ${
-                toString (cfg.pl1Watts * 1000000)
-              } > "$zone/constraint_''${constraint}_power_limit_uw"
-            done
-            for constraint in 0 1; do
-              test "$(cat "$zone/constraint_''${constraint}_power_limit_uw")" = ${
-                toString (cfg.pl1Watts * 1000000)
-              }
-            done
-          ''
-        else
-          ''
-            set -eu
-            zone=/sys/class/powercap/intel-rapl:0
-            test "$(cat "$zone/name")" = package-0
-            test "$(cat "$zone/enabled")" = 1
-            test "$(cat "$zone/constraint_0_name")" = long_term
-            test "$(cat "$zone/constraint_1_name")" = short_term
-            printf '%s\n' ${toString (cfg.pl1Watts * 1000000)} > "$zone/constraint_0_power_limit_uw"
-            printf '%s\n' ${toString (cfg.pl2Watts * 1000000)} > "$zone/constraint_1_power_limit_uw"
-            test "$(cat "$zone/constraint_0_power_limit_uw")" = ${toString (cfg.pl1Watts * 1000000)}
-            test "$(cat "$zone/constraint_1_power_limit_uw")" = ${toString (cfg.pl2Watts * 1000000)}
-          '';
+      script = ''
+        set -eu
+        zone=/sys/class/powercap/intel-rapl:0
+        test "$(cat "$zone/name")" = package-0
+        test "$(cat "$zone/enabled")" = 1
+        test "$(cat "$zone/constraint_0_name")" = long_term
+        test "$(cat "$zone/constraint_1_name")" = short_term
+        printf '%s\n' ${toString (cfg.pl1Watts * 1000000)} > "$zone/constraint_0_power_limit_uw"
+        printf '%s\n' ${toString (cfg.pl2Watts * 1000000)} > "$zone/constraint_1_power_limit_uw"
+        test "$(cat "$zone/constraint_0_power_limit_uw")" = ${toString (cfg.pl1Watts * 1000000)}
+        test "$(cat "$zone/constraint_1_power_limit_uw")" = ${toString (cfg.pl2Watts * 1000000)}
+      '';
       path = [ pkgs.coreutils ];
     };
 

@@ -132,7 +132,7 @@ pkgs.testers.runNixOSTest {
           verbose = true;
 
           users.tester = {
-            imports = pkgs.lib.optionals granular [ ../../../home/p2949/persistence.nix ];
+            imports = pkgs.lib.optionals granular [ ../../../home/p2949/persistence/default.nix ];
             home.username = "tester";
             home.homeDirectory = "/home/tester";
             home.stateVersion = "26.05";

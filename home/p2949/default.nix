@@ -5,7 +5,7 @@
     ./cli.nix
     ./desktop
     ./development
-    ./persistence.nix
+    ./persistence
     ./shell.nix
     ./xdg.nix
   ];
