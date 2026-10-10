@@ -28,7 +28,7 @@ baseline and frozen benchmark control.
 | `tests/` | Configuration and integration validation |
 | `docs/` | Current durable policy and procedures |
 | `scripts/` | Reusable operational tooling |
-| `optimization/` | Experiments after the accepted stock baseline |
+| `optimization/` | Isolated experiments using the frozen benchmark control |
 
 Hosts select features, profiles compose roles, and Home Manager owns user
 policy. The flake remains explicit for this workstation.
@@ -73,7 +73,7 @@ activating the system or starting stress tests. The
 define the frozen benchmark environment and exclude experimental outputs from
 the productive desktop.
 
-Optimization starts from the accepted immutable stock tag, on a separate
+Optimization measurements use the frozen benchmark control on a separate
 branch. Each experiment must retain source, toolchain, profile, derivation
 and workload identity. BOLT outputs are new immutable derivations; existing
 Nix-store outputs are never modified. Readiness and experiment status belong
