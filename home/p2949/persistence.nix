@@ -76,6 +76,12 @@
 
       # .local is also split: no complete share/state container is persisted.
       ".local/share/Steam"
+      # Minecraft authentication, instances/worlds and expensive game data.
+      # Persist the complete root until real workload cache classification.
+      {
+        directory = ".local/share/PrismLauncher";
+        mode = "0700";
+      }
       {
         directory = ".local/share/keyrings";
         mode = "0700";

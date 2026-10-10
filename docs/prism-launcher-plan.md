@@ -20,6 +20,12 @@ Pasted citation placeholders are not usable source references.
 - [x] Pinned package evaluates to 11.1.1. Inspected pinned Nixpkgs wrapper:
   Java 25/21/17/8, Qt Wayland, driver/runtime libraries and GameMode support.
 - [ ] Candidate formatting, checks, closure build and evaluated mount review.
+  Formatting/diff review and evaluated package/private bind mount passed.
+  Candidate flake check currently fails at `optimization-control-identity`:
+  the newer framework asserts that every desktop change has the exact frozen
+  stock closure. Prism necessarily changes it. Keep `stock.nix`, immutable
+  tags and benchmark runtime gates intact; resolve ordinary-application policy
+  with the user before changing this gate or staging activation.
 - [ ] Boot-only installation; preserve prior accepted generation.
 - [ ] User-controlled normal reboot and private mount verification.
 - [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
