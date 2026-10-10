@@ -19,7 +19,7 @@ Pasted citation placeholders are not usable source references.
   persistent root; preliminary mixed-container audit updated.
 - [x] Pinned package evaluates to 11.1.1. Inspected pinned Nixpkgs wrapper:
   Java 25/21/17/8, Qt Wayland, driver/runtime libraries and GameMode support.
-- [ ] Candidate formatting, checks, closure build and evaluated mount review.
+- [x] Candidate formatting, checks, closure build and evaluated mount review.
   Formatting/diff review and evaluated package/private bind mount passed.
   Initial candidate flake check failed at `optimization-control-identity`:
   the newer framework asserts that every desktop change has the exact frozen
@@ -30,12 +30,16 @@ Pasted citation placeholders are not usable source references.
   identity and the existing forbidden optimization dependency guard. The frozen
   `stock.nix`, tags and benchmark runtime rejection remain unchanged.
   Negative validation correctly rejects the Prism candidate with the specific
-  frozen-control diagnostic; positive frozen-tag validation is in progress.
+  frozen-control diagnostic; positive frozen-tag validation passed.
+  Full candidate `nix flake check` passed, including granular storage regression.
   Candidate desktop build passed:
   `/nix/store/2mmvgbyd32qahwhy3y01l66s7vqwn3yk-nixos-system-desktop-26.05.20261004.0d9e9b8`.
   Closure contains wrapped Prism and Java 25/21/17/8; generated systemd mount
   binds `/persist/home/p2949/.local/share/PrismLauncher` to the live root.
-- [ ] Boot-only installation; preserve prior accepted generation.
+- [x] Boot-only installation passed: generation 48 points to the candidate
+  closure above. Generation 47 remains available; running system stays on
+  `6rn4ggk32wcqrhcdv2chr55daqxxh026`. Private validation/install logs are in
+  `/home/p2949/Documents/.prism-integration` (persistent, mode 0700).
 - [ ] User-controlled normal reboot and private mount verification.
 - [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
   GPU/audio/input and test-world acceptance; structural first-run audit.
@@ -50,6 +54,16 @@ observed workload gate. `meta` and `java` require separate later evidence.
 Microsoft authentication and physical visual/audio observations require the
 user; automated builds cannot satisfy those gates. Reboots remain user-controlled.
 No credentials or runtime game data belong in this ledger or Git.
+
+## Next user-controlled gate
+
+Reboot normally into generation 48, not `persistent-root`, then return here
+before launching Prism. Verify the private persistence mount and system health
+first. The agent can capture the structural pre-account tree after first launch;
+then the user completes Microsoft authentication and vanilla instance/world
+checks. Preserve all state and keep the whole launcher root persistent until
+that evidence is accepted. The existing package checkpoint commits record
+implementation only, not completed physical/runtime acceptance.
 
 ---
 
