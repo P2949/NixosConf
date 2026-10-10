@@ -26,7 +26,7 @@ and recovery evidence remains bound to the baseline closures.
 
 ## Development phase
 
-Post-baseline cleanup removes completed journals and one-time migration tools.
+The repository has retired completed journals and one-time migration tools.
 Permanent granular/root/recovery regression tests remain. No new runtime
 features or optimizations are part of cleanup. Future optimization-v2 and
 ordinary workstation features belong on separate baseline-descended branches.

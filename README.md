@@ -52,8 +52,8 @@ see [reconstruction](docs/reconstruction.md) and
 
 Normal boots reset the disposable Btrfs root. The `persistent-root`
 specialisation disables reset; home and persistent system state have their
-own explicit allow-list. Source home/var are root-local; physical migration
-status and application cache exceptions are recorded in the
+own explicit allow-list. Source home/var are root-local; persistence classification
+rationale and application/cache exceptions are recorded in the
 [state audit](docs/ephemeral-state-audit.md). See [root design](docs/impermanence.md),
 [persistence contract](docs/persistence-contract.md),
 [physical validation](docs/physical-root-validation.md) and
