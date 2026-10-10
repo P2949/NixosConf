@@ -25,8 +25,9 @@ Disk swap remains configured. IRQ balancing and zram are disabled. No
 experimental swappiness, dirty-page, THP, NUMA or scheduler tuning is declared.
 Retain kernel-selected NVMe scheduling and the declared Btrfs policy.
 Maintenance should run outside benchmark intervals. Root, home and ordinary
-var are disposable; journald uses volatile storage. Persistent journal size
-knobs in the maintenance module require a separate policy review.
+var are disposable; journald uses volatile storage. Runtime journal sizing uses systemd defaults. The ineffective persistent size
+knobs were removed in the separate volatile-journal policy change. The existing
+90-day upper time bound remains within a boot; reboot discards the journal.
 
 ## Build environment and graphics
 
@@ -44,3 +45,15 @@ selected and carry provenance, runtime and result manifests. The productive
 stock closure rejects project-owned optimization output namespaces; see the
 [stock closure contract](stock-control.md). Runtime-policy changes, package
 refreshes and workstation features belong on separate branches.
+
+## Working stock after journal policy correction
+
+The immutable qualification control above remains untouched. The deliberate
+journal configuration correction produces a distinct working stock:
+
+- Normal: `/nix/store/6rn4ggk32wcqrhcdv2chr55daqxxh026-nixos-system-desktop-26.05.20261004.0d9e9b8`
+- Persistent-root: `/nix/store/yf7jg059hm4qg2yhyls4ciddliwc8ych-nixos-system-desktop-26.05.20261004.0d9e9b8`
+
+Experiments must record their actual working-stock source/input and closure
+identities, rather than assuming the qualification and working controls match.
+No compiler, cooling, CPU-power, package-input or persistence change is included.

@@ -34,10 +34,11 @@ read-only dead-output preview are retained privately in
 `/persist/post-baseline-cleanup-20261010`.
 
 The supported ISO and final baseline closures are KEEP. Preparation roots for
-older generations, superseded candidates/ISOs and temporary VM builds are
-retirement candidates, not automatic deletion targets. Review operational
-references before retiring exact roots; preserve a receipt. The preview found
-503 currently unreachable paths. No store outputs or profile generations were
+older generations, superseded candidates/ISOs and temporary VM builds were
+retirement candidates. Fourteen exact superseded preparation symlinks were
+retired after accepted-artifact protection was verified. Their targets are
+recorded in `retired-preparation-roots.json` for restoration. The accepted ISO
+root was retained. The post-retirement preview found 619 unreachable paths. No store outputs or profile generations were
 deleted. Repeat the preview before any later collection; the count is historical.
 Forensic Btrfs roots and the minimal recovery exception archive are separate
 from GC-root cleanup and remain retained.
@@ -54,7 +55,8 @@ journal. Historical disk journals remain separate retained evidence.
 
 This is a separate maintenance-policy change from the closure-identical cleanup.
 Its system output differs from the immutable baseline because generated
-journald configuration changes. It is not installed or a replacement baseline.
+journald configuration changes. It is an intentional working-stock change, not a replacement qualification
+baseline. Installation is a separate host action.
 
 Existing external core files total 213 MiB. Core processing retains a 32 GiB
 limit, external files have an 8 GiB limit, with a 4 GiB total-use target and
