@@ -87,9 +87,12 @@
       }
       {
         assertion =
-          config.fileSystems ? "/var/lib/nixos-optimization"
-          && lib.elem "subvol=@optimization" config.fileSystems."/var/lib/nixos-optimization".options;
-        message = "Granular Impermanence must retain the dedicated @optimization mount.";
+          config.fileSystems."/".fsType != "btrfs"
+          || (
+            config.fileSystems ? "/var/lib/nixos-optimization"
+            && lib.elem "subvol=@optimization" config.fileSystems."/var/lib/nixos-optimization".options
+          );
+        message = "Granular Impermanence on Btrfs must retain the dedicated @optimization mount.";
       }
     ];
   };
