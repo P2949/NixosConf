@@ -19,6 +19,7 @@ let
   manifest = {
     schemaVersion = 1;
     kind = "nixos-experiment-build";
+    specificationSha256 = builtins.hashString "sha256" (builtins.toJSON specification + "\n");
     qualificationBaseline = import ../control/baseline.nix;
     source = {
       revision = repository.rev or (repository.dirtyRev or null);

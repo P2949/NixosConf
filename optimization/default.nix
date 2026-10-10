@@ -33,6 +33,21 @@ in
     silesia-corpus = corpus;
     optimization-spec = pkgs.writeText "experiment-spec.json" (builtins.toJSON specification + "\n");
     optimization-build-provenance = buildManifest;
+    optimization-zstd-runner = pkgs.writeShellApplication {
+      name = "nixos-optimization-zstd";
+      runtimeInputs = [
+        pkgs.python3
+        pkgs.git
+        pkgs.util-linux
+        pkgs.systemd
+        pkgs.sudo
+      ];
+      text = ''
+        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONPATH=${./provenance}:${./runners}
+        exec python ${./runners}/zstd.py "$@"
+      '';
+    };
   };
   checks = {
     optimization-schema =
@@ -47,6 +62,7 @@ in
           export PYTHONDONTWRITEBYTECODE=1
           python ${./provenance}/test_runtime.py
           python ${./runners}/test_statistics.py
+          PYTHONPATH=${./provenance}:${./runners} python ${./runners}/test_zstd.py
           touch "$out"
         '';
   };

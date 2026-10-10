@@ -42,6 +42,8 @@ def command(argv, **kwargs):
 
 def run(spec_path, build_path, output, repository):
     os.umask(0o077)
+    if output.resolve().is_relative_to(repository.resolve()):
+        raise ValueError('evidence output must be outside source repository')
     output.mkdir(mode=0o700)  # Refuse to overwrite earlier evidence.
     (output / 'raw').mkdir()
     spec = json.loads(spec_path.read_text())
@@ -58,6 +60,8 @@ def run(spec_path, build_path, output, repository):
     try:
         if spec['schemaVersion'] != 2 or build['schemaVersion'] != 1:
             raise ValueError('unsupported artifact version')
+        if digest(spec_path) != build['specificationSha256']:
+            raise ValueError('specification/build hash mismatch')
         if build['source']['dirty'] or command(['git', '-C', str(repository), 'status', '--porcelain']):
             raise ValueError('measurement requires clean source')
         revision = command(['git', '-C', str(repository), 'rev-parse', 'HEAD'])
@@ -104,7 +108,7 @@ def run(spec_path, build_path, output, repository):
                         *workload['command'][1:], f"-i{workload['minimumSeconds']}", str(corpus)]
                 started = now()
                 result = subprocess.run(argv, text=True, capture_output=True,
-                                        env={**os.environ, 'LC_ALL': 'C'}, timeout=120)
+                                        env={**os.environ, 'LC_ALL': 'C'}, timeout=max(120, workload['minimumSeconds'] * 3 + 30))
                 (output / 'raw' / (name + '.txt')).write_text(result.stdout + result.stderr)
                 end = snapshot()
                 save('raw/' + name + '-runtime.json', {'before': start, 'after': end})
