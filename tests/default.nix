@@ -8,6 +8,19 @@
 }:
 {
   checks = {
+    markdown-links =
+      pkgs.runCommand "check-markdown-links"
+        {
+          src = repoSource;
+          nativeBuildInputs = [ pkgs.python3 ];
+        }
+        ''
+          cd "$src"
+          export PYTHONDONTWRITEBYTECODE=1
+          python tests/test_markdown_links.py
+          python scripts/check-markdown-links.py .
+          touch "$out"
+        '';
     activation-safety-config = import ./workstation/activation-safety/config.nix { inherit pkgs; };
     btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
     activation-safety = import ./workstation/activation-safety/guard.nix { inherit pkgs; };
@@ -41,7 +54,7 @@
         '';
 
     desktop-evaluation = import ./workstation/evaluation.nix {
-      inherit pkgs;
+      inherit pkgs username;
       inherit (desktopSystem) config;
     };
 

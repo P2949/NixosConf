@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -12,6 +12,7 @@
 
     ../../modules/storage/btrfs-maintenance
     ../../modules/workstation/activation-safety
+    ../../modules/hardware/intel-package-power
     ../../modules/hardware/commander-core
   ];
 
@@ -38,36 +39,16 @@
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.intel.updateMicrocode = true;
 
-  # The retained firmware leaves package power unconstrained. Apply the
-  # selected workstation baseline at boot and again after suspend/resume.
-  systemd.services.cpu-package-power-limit = {
-    description = "Apply the desktop 125W CPU package power baseline";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-modules-load.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      set -eu
-      zone=/sys/class/powercap/intel-rapl:0
-      test "$(cat "$zone/name")" = package-0
-      test "$(cat "$zone/enabled")" = 1
-      test "$(cat "$zone/constraint_0_name")" = long_term
-      test "$(cat "$zone/constraint_1_name")" = short_term
-      for constraint in 0 1; do
-        printf '%s\n' 125000000 > "$zone/constraint_''${constraint}_power_limit_uw"
-      done
-      for constraint in 0 1; do
-        test "$(cat "$zone/constraint_''${constraint}_power_limit_uw")" = 125000000
-      done
-    '';
-    path = [ pkgs.coreutils ];
+  hardware.bluetooth = {
+    enable = false;
+    powerOnBoot = false;
   };
 
-  powerManagement.resumeCommands = ''
-    ${pkgs.systemd}/bin/systemctl restart cpu-package-power-limit.service
-  '';
+  hardware.intelPackagePower = {
+    enable = true;
+    pl1Watts = 125;
+    pl2Watts = 125;
+  };
 
   hardware.commanderCore = {
     enable = true;

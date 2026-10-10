@@ -16,3 +16,6 @@ Supporting point-in-time evidence:
 Supporting records may describe gates that were pending when captured.
 The canonical terminal record and immutable tag are authoritative for the
 completed baseline; historical evidence is not rewritten to imply later knowledge.
+
+Additional qualification records are in [evidence](evidence/): physical root,
+firmware, development, stable refresh and historical closure comparisons.

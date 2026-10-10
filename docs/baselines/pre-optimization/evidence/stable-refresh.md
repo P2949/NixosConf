@@ -10,7 +10,7 @@ Kernel: `6.18.55`. Matching recovery ISO/hash are recorded below.
 Physical normal → persistent-root → normal acceptance passed: root 295 reset,
 retained by recovery without another reset, then replaced by 297. Persistent
 probe and machine identity survived; root-local probe disappeared on final
-normal reset. See [current status](status.md) for remaining final-baseline gates.
+normal reset. See [current status](../../../status.md) for remaining final-baseline gates.
 
 The bv3 output and timings below are the historical pre-log-hardening offline
 candidate, superseded by the exact c5e batch in plan.md. They are preserved
@@ -35,7 +35,7 @@ Candidate:
 Compared with the prepared GameMode candidate, version changes are kernel/initrd
 6.18.54 to 6.18.55, Lua 5.5.0 to 5.5.1, WebKitGTK 2.54.0 to 2.54.1 and
 wpa_supplicant 2.11 to 2.12, plus system/source metadata. Mesa has no version
-change in the closure summary. The [full comparison](baselines/pre-optimization/stable-refresh-20261005-closure.txt)
+change in the closure summary. The [full comparison](../stable-refresh-20261005-closure.txt)
 is retained for review.
 
 The upstream [stable comparison](https://github.com/NixOS/nixpkgs/compare/774debe7a0d1b496e35677ad955a1011c6ff74f3...0d9e9b832d03ac387417e16ce1febf73b2e631e1)
