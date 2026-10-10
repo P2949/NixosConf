@@ -40,7 +40,20 @@ Pasted citation placeholders are not usable source references.
   closure above. Generation 47 remains available; running system stays on
   `6rn4ggk32wcqrhcdv2chr55daqxxh026`. Private validation/install logs are in
   `/home/p2949/Documents/.prism-integration` (persistent, mode 0700).
-- [ ] User-controlled normal reboot and private mount verification.
+- [x] User-controlled normal reboot and private mount verification.
+  Boot ID `87d07fff-fe78-45a5-b61b-df2f04db0ef2`: running/profile closures
+  match generation 48. System running with no failed units; Prism resolves to
+  wrapped Nix store 11.1.1. Root mount FSROOT is
+  `/@persist/home/p2949/.local/share/PrismLauncher`, owned `p2949:users`, mode 700.
+  Native Wayland Quick Setup observed (`xwayland=false`). User confirms setup,
+  UI and Java detection work. Process environment independently exposes the
+  four Nix Java paths; each executable's version check passed (25, 21, 17, 8).
+  User subsequently completed normal Quit; independent process check confirms
+  Prism exited. Quiesced pre-account tree/size inventories are saved privately
+  as `prism-tree-before-account.txt` and `prism-sizes-before-account.txt`.
+  `accounts.json` exists, which alone does not establish authentication. No
+  account contents were read. The rejected automatic compositor close attempt
+  did not mutate state; the user closed Prism normally.
 - [ ] Launcher/Java/UI acceptance; Microsoft authentication; vanilla game,
   GPU/audio/input and test-world acceptance; structural first-run audit.
 - [ ] Phase 1 state survival proof and acceptance commit.
