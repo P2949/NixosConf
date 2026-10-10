@@ -33,14 +33,29 @@ in
     # Explicit experiment admission gate. Ordinary workstation applications
     # may change the desktop; measurements still require the frozen control.
     optimization-control-identity =
-      assert toString systemConfig.config.system.build.toplevel == stock.normal;
-      assert
-        toString systemConfig.config.specialisation.persistent-root.configuration.system.build.toplevel
-        == stock.persistentRoot;
-      assert toString recoverySystem.config.system.build.isoImage == stock.recoveryIso;
       assert builtins.hashFile "sha256" (repository + "/flake.lock") == stock.lockSha256;
       assert inputs.nixpkgs.rev == stock.nixpkgsRevision;
-      pkgs.runCommand "check-optimization-control-identity" { } ''touch "$out"'';
+      pkgs.runCommand "check-optimization-control-identity"
+        {
+          actualNormal = builtins.unsafeDiscardStringContext (
+            toString systemConfig.config.system.build.toplevel
+          );
+          actualPersistentRoot = builtins.unsafeDiscardStringContext (
+            toString systemConfig.config.specialisation.persistent-root.configuration.system.build.toplevel
+          );
+          actualRecoveryIso = builtins.unsafeDiscardStringContext (
+            toString recoverySystem.config.system.build.isoImage
+          );
+        }
+        ''
+          if [ "$actualNormal" != ${pkgs.lib.escapeShellArg stock.normal} ] ||
+             [ "$actualPersistentRoot" != ${pkgs.lib.escapeShellArg stock.persistentRoot} ] ||
+             [ "$actualRecoveryIso" != ${pkgs.lib.escapeShellArg stock.recoveryIso} ]; then
+            echo "Evaluated system differs from frozen optimization control" >&2
+            exit 1
+          fi
+          touch "$out"
+        '';
     zstd-stock = pkgs.zstd;
     zstd-cpu-target = candidate;
     silesia-corpus = corpus;
