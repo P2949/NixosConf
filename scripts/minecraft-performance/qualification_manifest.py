@@ -23,6 +23,11 @@ def validate_candidate(manifest, repository):
         raise ValueError('unsupported qualification manifest')
     artifacts = [manifest['wrapper'], manifest['java'], manifest['pregen_policy'], manifest['queue_agent'],
                  *manifest['mods'], *manifest['pregen_mods'], *manifest['policies'].values()]
+    if 'client' in manifest:
+        client = manifest['client']
+        artifacts.extend([client['java'], client['launcher'], *client['libraries']])
+        for profile in client['profiles'].values():
+            artifacts.extend([profile['pack'], *profile['mods']])
     for artifact in artifacts:
         if sha256(artifact['path']) != artifact['sha256']:
             raise ValueError('candidate artifact hash mismatch')
@@ -32,6 +37,11 @@ def validate_candidate(manifest, repository):
         path = Path(filename)
         if path.is_absolute() or '..' in path.parts or sha256(repository / path) != digest:
             raise ValueError('qualification source differs from frozen candidate')
+    for sources in manifest['gate_source_files'].values():
+        for filename, digest in sources.items():
+            path = Path(filename)
+            if path.is_absolute() or '..' in path.parts or sha256(repository / path) != digest:
+                raise ValueError('external gate source differs from frozen candidate')
 
 
 def controlled_path(path, namespace, *, existing=False):
@@ -58,13 +68,16 @@ def verify_proof(reference, gate_name, manifest):
         proof = json.loads(path.read_text())
         identity = qualification_id(manifest)
         expected = {
-            'schema': 1, 'result': 'PASS', 'gate': gate_name,
+            'schema': 1, 'gate': gate_name,
             'qualification_id': identity, 'manifest_sha256': identity,
             'git_sha': manifest['git_sha'],
             'test_source_sha256': manifest['gate_test_sources'][gate_name],
             'baseline_uuid': manifest['baseline']['subvolume_uuid'],
         }
         if any(proof.get(key) != value for key, value in expected.items()):
+            return 'UNPROVEN'
+        outcome = proof.get('result')
+        if outcome not in ('PASS', 'FAIL', 'INCONCLUSIVE'):
             return 'UNPROVEN'
         evidence = proof.get('evidence')
         if not isinstance(evidence, list) or not evidence:
@@ -75,6 +88,6 @@ def verify_proof(reference, gate_name, manifest):
                 return 'UNPROVEN'
             if not artifact.is_absolute() or artifact != artifact.resolve() or sha256(artifact) != item['sha256']:
                 return 'UNPROVEN'
-        return 'PASS'
+        return outcome
     except (OSError, ValueError, KeyError, TypeError):
         return 'UNPROVEN'

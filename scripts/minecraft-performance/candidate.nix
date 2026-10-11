@@ -3,7 +3,7 @@ let
   flake = builtins.getFlake candidateUri;
   system = flake.nixosConfigurations.desktop;
   cfg = system.config;
-  pkgs = system.pkgs;
+  inherit (system) pkgs;
   server = cfg.services.minecraft-servers.servers.survival;
   pregen =
     cfg.specialisation.minecraft-pregen.configuration.services.minecraft-servers.servers.survival;

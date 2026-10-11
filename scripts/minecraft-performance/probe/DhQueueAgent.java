@@ -51,12 +51,17 @@ public final class DhQueueAgent {
         // One attach avoids repeated JVM warning/log writes during observation.
         capture(output, instrumentation, 0);
         Thread worker = new Thread(() -> {
+            try {
             for (int sequence = 1; sequence <= 91; sequence++) {
                 try {
                     Thread.sleep(10_000);
                     if (Files.exists(Path.of(output).getParent().resolve("stop"))) return;
                     capture(output, instrumentation, sequence);
                 } catch (Exception failure) { return; }
+            }
+            } finally {
+                try { Files.writeString(Path.of(output).getParent().resolve("stopped"), "stopped\n"); }
+                catch (Exception ignored) { }
             }
         }, "DH Qualification Queue Observer");
         worker.setDaemon(true);

@@ -3,22 +3,29 @@
 import argparse
 from collections import Counter
 import json
+import math
 from pathlib import Path
-import random
 import statistics
 
 from idle_metrics import indexed_pairs, pair_io_pass, pair_valid
 from qualification_manifest import verify_proof
+from assemble_functional_acceptance import REQUIRED, verify_bundle
+
+FIXED_PAIRS = 11
 
 
 def verified_gate(gate, gate_name=None, manifest=None):
     return verify_proof(gate, gate_name, manifest)
 
 
-def interval(values):
-    rng = random.Random(261011)
-    boot = sorted(statistics.median(rng.choices(values, k=len(values))) for _ in range(5000))
-    return [boot[125], boot[4874]]
+def paired_mean_interval(values):
+    if len(values) != FIXED_PAIRS or not all(math.isfinite(value) for value in values):
+        raise ValueError('one fixed batch of eleven finite paired deltas required')
+    # NIST mean CI: mean +/- t(.975, df=10) * sample SD / sqrt(11).
+    # Rounded slightly upward; inferential assumptions are recorded in output.
+    half_width = 2.228139 * statistics.stdev(values) / math.sqrt(FIXED_PAIRS)
+    mean = statistics.mean(values)
+    return [mean - half_width, mean + half_width]
 
 
 def stacks(path):
@@ -49,7 +56,9 @@ def stacks(path):
                           'use measured native-thread CPU accounting to rank costs.'}
 
 
-def analyze(root, expected_pair_count=5):
+def analyze(root, expected_pair_count=FIXED_PAIRS):
+    if expected_pair_count != FIXED_PAIRS:
+        raise ValueError('authoritative analysis requires the predeclared eleven pairs')
     results = json.loads((root / 'results.json').read_text())
     pairs = []
     clean = [r for r in results if r['variant'].startswith('pair-')]
@@ -63,18 +72,25 @@ def analyze(root, expected_pair_count=5):
     power = [p['power_delta_w'] for p in pairs]
     cpu = [p['on_cpu_pct'] for p in pairs]
     burst = [on['service_cpu_distribution_one_core_pct']['p95'] for off, on in paired]
-    power_interval = interval(power)
+    power_interval = paired_mean_interval(power)
     power_result = 'PASS' if power_interval[1] <= 1 else (
         'FAIL' if power_interval[0] > 1 else 'INCONCLUSIVE')
     result = {'pairs': pairs, 'median_on_interval_cpu_pct': statistics.median(cpu),
               'median_on_p95_cpu_pct': statistics.median(burst),
               'median_paired_power_delta_w': statistics.median(power),
+              'mean_paired_power_delta_w': statistics.mean(power),
+              'paired_power_deltas_w': power,
+              'paired_power_delta_range_w': [min(power), max(power)],
               'paired_power_delta_ci95_w': power_interval,
               'power_acceptance': power_result,
               'pair_count': expected_pair_count,
-              'additional_pairs_allowed': power_result == 'INCONCLUSIVE' and expected_pair_count < 11,
-              'on_cpu_median_ci95_pct': interval(cpu),
-              'resource_limits_pass': statistics.median(cpu) <= 5 and statistics.median(burst) <= 10 and max(interval(power)) <= 1,
+              'statistical_design': {'fixed_pairs': FIXED_PAIRS, 'interim_inferential_looks': 0,
+                  'primary_estimand': 'mean paired DH-on minus DH-off package power',
+                  'interval_method': 'two-sided Student t, df=10, nominal 95%',
+                  'assumptions': 'independent matched-pair deltas with approximately normal run means; '
+                                 'fixed sampling does not remove host confounding or model uncertainty',
+                  'reference': 'https://itl.nist.gov/div898/handbook/eda/section3/eda352.htm'},
+              'resource_limits_pass': statistics.median(cpu) <= 5 and statistics.median(burst) <= 10 and power_interval[1] <= 1,
               'host_load_pass': all(p['environment_valid'] for p in pairs),
               'io_pass': all(p['io_valid'] and off['io_sustained_pass'] and on['io_sustained_pass']
                              for p, (off, on) in zip(pairs, paired)),
@@ -89,12 +105,12 @@ def analyze(root, expected_pair_count=5):
     result['idle_acceptance'] = ('INCONCLUSIVE' if not result['host_load_pass'] else
         'FAIL' if definite_failure else 'PASS' if all(result[k] for k in gates) else 'INCONCLUSIVE')
     receipt = root / 'functional-acceptance.json'
-    required = ('dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
-                'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')
     acceptance = json.loads(receipt.read_text()) if receipt.exists() else {}
     manifest_path = root / 'candidate-manifest.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
-    result['functional_gates'] = {k: verified_gate(acceptance.get(k), k, manifest) for k in required}
+    result['functional_gates'] = verify_bundle(acceptance, manifest) if manifest else {k: 'UNPROVEN' for k in REQUIRED}
+    if result['idle_acceptance'] == 'FAIL' or 'FAIL' in result['functional_gates'].values():
+        result['result'] = 'FAIL'
     if result['idle_acceptance'] == 'PASS' and all(v == 'PASS' for v in result['functional_gates'].values()):
         result['result'] = 'PASS'
     for evidence in root.glob('*-evidence'):
@@ -108,8 +124,7 @@ def analyze(root, expected_pair_count=5):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('root', type=Path)
-    parser.add_argument('--pairs', type=int, choices=(5, 7, 9, 11), default=5)
     args = parser.parse_args()
-    result = analyze(args.root, expected_pair_count=args.pairs)
+    result = analyze(args.root)
     (args.root / 'analysis.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: v for k, v in result.items() if k != 'diagnostics'}, indent=2))

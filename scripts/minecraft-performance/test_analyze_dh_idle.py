@@ -3,11 +3,40 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from analyze_dh_idle import analyze, stacks, verified_gate
+from analyze_dh_idle import analyze, stacks, verified_gate, paired_mean_interval
 from idle_metrics import indexed_pairs
+from assemble_functional_acceptance import REQUIRED, assemble
+from qualification_proof import write_proof
 
 
 class IdleDecisionTests(unittest.TestCase):
+    def test_authentic_functional_failure_overrides_passing_resources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            manifest = {'git_sha': 'a' * 40, 'baseline': {'subvolume_uuid': 'fixed'},
+                        'gate_test_sources': {gate: 'source-' + gate for gate in REQUIRED}}
+            evidence = root / 'functional.log'
+            evidence.write_text('runtime fixture')
+            refs = {gate: write_proof(manifest, gate, root / (gate + '-proof.json'),
+                    [(evidence, 'log')], 'FAIL' if gate == 'backup' else 'PASS') for gate in REQUIRED}
+            (root / 'candidate-manifest.json').write_text(json.dumps(manifest))
+            (root / 'functional-acceptance.json').write_text(json.dumps(assemble(manifest, [refs])))
+            result = analyze(root)
+            self.assertEqual(result['idle_acceptance'], 'PASS')
+            self.assertEqual(result['functional_gates']['backup'], 'FAIL')
+            self.assertEqual(result['result'], 'FAIL')
+
+    def test_power_requires_fixed_eleven_and_uses_paired_mean(self):
+        for size in (5, 7, 9, 12):
+            with self.assertRaises(ValueError):
+                paired_mean_interval([1.] * size)
+        values = [0.] * 10 + [11.]
+        low, high = paired_mean_interval(values)
+        self.assertAlmostEqual((low + high) / 2, 1.)
+        self.assertLess(low, 1.)
+        self.assertGreater(high, 1.)
+
     def test_adaptive_pairs_have_a_finite_cap_and_require_every_variant(self):
         rows = [{'variant': f'pair-{i}-{variant}', 'service_cpu_interval_one_core_pct': 1,
                  'package_power_w': 5} for i in range(1, 12) for variant in ('off', 'on')]
@@ -27,7 +56,7 @@ class IdleDecisionTests(unittest.TestCase):
                                             'sha256': 'wrong'}), 'UNPROVEN')
     def fixture(self, root, delta=0.2):
         rows = []
-        for i in range(1, 6):
+        for i in range(1, 12):
             for variant, power, cpu in [('off', 5, .25), ('on', 5 + delta, 2)]:
                 rows.append({'variant': f'pair-{i}-{variant}', 'package_power_w': power,
                              'service_cpu_median_one_core_pct': cpu,
@@ -46,7 +75,7 @@ class IdleDecisionTests(unittest.TestCase):
             self.fixture(root, delta=2)
             result = analyze(root)
             self.assertFalse(result['resource_limits_pass'])
-            self.assertEqual(result['result'], 'INCONCLUSIVE')
+            self.assertEqual(result['result'], 'FAIL')
 
     def test_power_interval_straddling_budget_remains_inconclusive(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -56,12 +85,12 @@ class IdleDecisionTests(unittest.TestCase):
             for row in rows:
                 if row['variant'].endswith('on'):
                     index = int(row['variant'].split('-')[1])
-                    row['package_power_w'] = 5 + [.2, .4, 1, 1.5, 2][index - 1]
+                    row['package_power_w'] = 5 + ([.2, .4, 1, 1.5, 2] * 2 + [1])[index - 1]
             (root / 'results.json').write_text(json.dumps(rows))
             result = analyze(root)
             self.assertEqual(result['power_acceptance'], 'INCONCLUSIVE')
             self.assertEqual(result['idle_acceptance'], 'INCONCLUSIVE')
-            self.assertTrue(result['additional_pairs_allowed'])
+            self.assertEqual(result['statistical_design']['interim_inferential_looks'], 0)
 
     def test_resources_do_not_certify_functional_acceptance(self):
         with tempfile.TemporaryDirectory() as directory:

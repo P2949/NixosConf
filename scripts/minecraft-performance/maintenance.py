@@ -11,6 +11,7 @@ import shutil
 GUARD = 'minecraft-performance-safe-recovery'
 LAB = 'minecraft-performance-attribution.service'
 FUNCTIONAL = 'minecraft-performance-functional.service'
+CLIENT = 'minecraft-performance-client.service'
 SLICE = 'minecraftperformance.slice'
 SLICE_TEXT = ('[Unit]\nDescription=Disposable Minecraft qualification slice\n'
               '[Slice]\nCPUWeight=50\nIOWeight=50\n')
@@ -35,7 +36,7 @@ def restore(output):
     with (output / 'recovery.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         state = json.loads((output / 'maintenance.json').read_text())
-        for unit in (LAB, FUNCTIONAL):
+        for unit in (CLIENT, LAB, FUNCTIONAL):
             if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
                 subprocess.run(['systemctl', 'stop', unit], check=True)
         cleanup_slice()
@@ -79,7 +80,7 @@ def wait_backup():
 
 
 def enter(output):
-    for unit in (LAB, FUNCTIONAL):
+    for unit in (CLIENT, LAB, FUNCTIONAL):
         if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
             raise RuntimeError('qualification unit name occupied before maintenance')
     # An active backup transaction must finish before the recovery point is made.

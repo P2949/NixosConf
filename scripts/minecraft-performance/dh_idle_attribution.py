@@ -337,6 +337,10 @@ def execute_main():
          'slice': command('systemctl', 'show', 'minecraftperformance.slice',
                           '-p', 'ControlGroup', '-p', 'CPUWeight', '-p', 'IOWeight'),
          'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
+    save(args.output / 'sampling-plan.json', {'fixed_valid_pairs': 11,
+         'interim_inferential_looks': 0, 'primary_estimand': 'mean paired package-power delta',
+         'order': 'alternating off/on and on/off', 'maximum_environment_retries_per_pair': 3,
+         'measurement_seconds_per_run': 600})
     subprocess.run([str(JAVA / 'jfr'), 'configure', '--input', 'none',
                     '+jdk.ExecutionSample#enabled=true', '+jdk.ExecutionSample#period=20ms',
                     '+jdk.NativeMethodSample#enabled=true', '+jdk.NativeMethodSample#period=20ms',
@@ -371,11 +375,8 @@ def execute_main():
             save(args.output / 'rejected-pairs.json', rejected)
         else:
             raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
-        if i in (5, 7, 9, 11):
-            decision = analyze(args.output, expected_pair_count=i)
-            save(args.output / 'analysis.json', decision)
-            if decision['idle_acceptance'] != 'INCONCLUSIVE' or not decision['additional_pairs_allowed']:
-                break
+    decision = analyze(args.output)
+    save(args.output / 'analysis.json', decision)
     # Profiling is justified only by a definitive clean resource failure.
     resource_failure = (decision['median_on_interval_cpu_pct'] > 5
                         or decision['median_on_p95_cpu_pct'] > 10

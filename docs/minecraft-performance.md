@@ -13,7 +13,7 @@ checkpoint `31bf61c3bab50954ef283e31ec08b53c5426b240` is preserved remotely on
 `wip/minecraft-server-performance-dh-idle`. Historical failed samples remain
 evidence of their original gates, rather than being retroactively marked PASS.
 
-At least five paired, fresh-JVM runs use equivalent writable snapshots of the
+Exactly eleven valid paired, fresh-JVM runs use equivalent writable snapshots of the
 frozen world, identical non-DH mods, 1/8 GiB G1 heaps, 10/12 GiB cgroup limits,
 normal 60-second empty pause, 90-second settling, and 600-second intervals.
 Pair order alternates. Clean acceptance reads cgroup CPU directly, package RAPL,
@@ -28,10 +28,14 @@ Real-time updates, synchronization on load, generation, and all optional server
 features are disabled in separate disposable diagnostic variants only.
 
 Acceptance requires the median of DH-on interval-average CPU measurements at
-most 5% of one core, median run p95 CPU at most 10%, and the upper 95% paired
-bootstrap bound of package-power increase at most 1 W. An interval whose lower
-bound exceeds 1 W fails; a straddling interval remains INCONCLUSIVE and adds two
-balanced pairs, at 5/7/9/11 pairs, with eleven the absolute cap. These CPU limits
+most 5% of one core, median run p95 CPU at most 10%, and the upper nominal 95% Student t
+bound of mean paired package-power increase at most 1 W. The fixed design analyzes
+once after all eleven valid pairs; it has no inferential looks at pairs 5/7/9.
+An interval whose lower bound exceeds 1 W fails; a straddling interval remains
+INCONCLUSIVE. The interval assumes independent paired deltas with approximately
+normal run means; fixed sampling does not eliminate host confounding or model
+uncertainty. Raw deltas, range and median accompany the primary mean. The method
+follows [NIST mean confidence limits](https://itl.nist.gov/div898/handbook/eda/section3/eda352.htm). These CPU limits
 are project budgets rather than upstream DH guarantees. Normal
 pause, no continued generation, sustained database growth or disk I/O, memory
 pressure/OOM events, or unbounded work queues. No correctness, backup or recovery
@@ -173,6 +177,50 @@ retained privately under
 `/persist/minecraft-performance-functional-catchup-pilot-acb6cf1`.
 These receipts certify only the named frozen identity; they do not certify a later
 Git revision, complete DH acceptance, authoritative paired idle, CI or merge.
+
+The next review supersedes adaptive stopping with a fixed eleven-pair mean-power
+experiment. The runner records that sampling plan before measurements and the
+analyzer refuses early/incomplete batches. Authentic FAIL and INCONCLUSIVE proofs
+now retain their outcomes; tampered/stale evidence remains UNPROVEN. The committed
+gate-source mapping adds external dependencies to a conservative shared set of all
+performance-tool sources, and runtime validation rechecks every gate source.
+The deterministic eight-gate aggregator rejects duplicates, missing gates and
+mixed identities, preserves outcomes, and produces a canonical readonly bundle.
+Historical partial bundles cannot qualify through that path.
+
+The post-Chunky extent now derives requested full-chunk bounds from block center
+and radius: 496–528 inclusive for this workload. It rejects pre-existing target
+entries. Both root `region/` and the observed Minecraft 26.3
+`dimensions/minecraft/overworld/region/` layout have regression coverage.
+Offline inspection of the previous pilot found exactly 1,089 full chunks inside
+those bounds. Its other 1,936 entries are unfinished dependency chunks. A Java
+source helper now reads the pinned game's own accumulated generation radii:
+full/light/spawn 0, features/initialize-light 1, terrain 2,
+biomes/structure-references 3, structure-starts/empty 11. These radii and their
+classpath/source hashes enter the frozen manifest. The region parser independently
+checks NBT status and coordinates. Full chunks outside the requested bounds,
+unknown stages, or protochunks outside their stage-specific dependency bounds
+fail; there is no blanket ±32-chunk exemption. Normal-mode status promotion is
+also a generation failure. This is a methodology correction supported by the
+pinned game's own dependency graph, not a weaker terrain gate.
+
+Queue observers now use unique invocation directories, acknowledge termination,
+and remove only canonical directories with the recorded inode/device/owner and
+known regular files. Missing acknowledgement retains exact evidence without
+poisoning the next attempt. Client provenance can freeze both disposable profile
+inventories/configuration and the 77 library JARs without reading account files.
+It recompiles probes to reject a stale binary paired with current source hashes.
+The bounded GUI lifecycle checks actual JVM ownership/collector/heap; independent
+recovery stops that client before restoring production. Client execution and the
+five remaining functional adjudicators are still pending. All affected gates
+must be rerun under a new committed manifest before authoritative resources.
+
+The review-fix checkpoint passed 60 Python tests, disposable probe compilation,
+Nix formatting, the full flake check (including Statix/deadnix and Minecraft
+configuration/backup checks), and the desktop toplevel build. The game dependency
+helper runs in a temporary working directory to keep its logging outside the
+repository. These are local checks; fresh runtime gates and exact-head PR CI
+remain required.
 
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff

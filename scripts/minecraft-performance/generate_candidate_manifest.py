@@ -33,9 +33,13 @@ def baseline_identity(base):
             'content_manifest': files}
 
 
-def mod_inventory(directory):
+def mod_inventory(directory, *, prism=False):
     inventory = []
     for path in sorted(Path(directory).iterdir()):
+        if prism and path.name == '.index' and path.is_dir() and not path.is_symlink():
+            continue
+        if prism and (not path.name.endswith('.jar') or not path.is_file()):
+            raise ValueError('unexpected disposable client mod entry')
         with zipfile.ZipFile(path) as archive:
             metadata = json.loads(archive.read('fabric.mod.json'))
         inventory.append({'id': metadata['id'], 'version': metadata['version'],
@@ -43,7 +47,16 @@ def mod_inventory(directory):
     return inventory
 
 
-def generate(nix_manifest, base, sources, repository):
+def load_gate_mapping(repository, revision):
+    mapping = 'scripts/minecraft-performance/gate-sources.json'
+    committed = subprocess.check_output(['git', '-c', 'safe.directory=' + str(repository),
+        '-C', str(repository), 'show', revision + ':' + mapping])
+    if (repository / mapping).read_bytes() != committed:
+        raise ValueError('gate mapping differs from frozen candidate')
+    return json.loads(committed), hashlib.sha256(committed).hexdigest()
+
+
+def generate(nix_manifest, base, repository, client_root=None, client_launcher=None):
     result = json.loads(nix_manifest.read_text())
     if not re.fullmatch('[0-9a-f]{40}', result['git_sha']):
         raise ValueError('Nix input must have an exact committed revision')
@@ -74,7 +87,13 @@ def generate(nix_manifest, base, sources, repository):
         'white-list': False, 'enforce-whitelist': False, 'management-server-enabled': False}
     result['controlled_server_properties'].pop('management-server-secret', None)
     result['baseline'] = baseline_identity(base)
-    gate_sources = json.loads(sources.read_text())
+    if client_root is not None:
+        from client_identity import capture
+        if client_launcher is None:
+            raise ValueError('client launcher required with disposable client root')
+        result['client'] = capture(client_root, client_launcher,
+                                   Path(result['diagnostic_java_home']) / 'bin/java')
+    gate_sources, result['gate_source_mapping_sha256'] = load_gate_mapping(repository, result['git_sha'])
     gates = {'dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
              'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues'}
     if set(gate_sources) != gates:
@@ -94,7 +113,9 @@ def generate(nix_manifest, base, sources, repository):
     for gate, filenames in gate_sources.items():
         if not isinstance(filenames, list) or not filenames or len(filenames) != len(set(filenames)):
             raise ValueError('each gate needs a nonempty unique committed source list')
-        hashes = {}
+        # Every performance tool is a conservative shared dependency. The
+        # committed mapping adds gate-specific sources outside that namespace.
+        hashes = dict(result['tool_source_files'])
         for filename in filenames:
             path = Path(filename)
             if path.is_absolute() or '..' in path.parts:
@@ -106,6 +127,10 @@ def generate(nix_manifest, base, sources, repository):
             hashes[filename] = hashlib.sha256(committed).hexdigest()
         result['gate_source_files'][gate] = hashes
         result['gate_test_sources'][gate] = hashlib.sha256(canonical_bytes(hashes)).hexdigest()
+    if client_root is not None:
+        from client_identity import verify_probe_build, generation_bounds
+        verify_probe_build(result['client'])
+        result['generation_bounds'] = generation_bounds(result['client'])
     return result
 
 
@@ -113,11 +138,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--nix-manifest', type=Path, required=True)
     parser.add_argument('--baseline', type=Path, required=True)
-    parser.add_argument('--gate-sources', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--repository', type=Path, required=True)
+    parser.add_argument('--client-root', type=Path)
+    parser.add_argument('--client-launcher', type=Path)
     args = parser.parse_args()
-    manifest = generate(args.nix_manifest, args.baseline, args.gate_sources, args.repository.resolve())
+    manifest = generate(args.nix_manifest, args.baseline, args.repository.resolve(),
+                        args.client_root, args.client_launcher)
     with args.output.open('xb') as stream:
         stream.write(canonical_bytes(manifest))
     args.output.chmod(0o444)

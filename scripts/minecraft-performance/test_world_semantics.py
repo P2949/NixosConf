@@ -1,5 +1,6 @@
 from pathlib import Path
 import struct
+import zlib
 import tempfile
 import unittest
 
@@ -38,6 +39,33 @@ class TerrainAcceptanceTests(unittest.TestCase):
             path.write_bytes(data)
             with self.assertRaises(ValueError):
                 region_occupancy(world)
+
+    def test_full_chunk_status_and_header_coordinates_are_independent_checks(self):
+        def text(value):
+            data = value.encode()
+            return struct.pack('>H', len(data)) + data
+        payload = (b'\x0a\x00\x00' + b'\x08' + text('Status') + text('minecraft:full')
+                   + b'\x03' + text('xPos') + struct.pack('>i', 512)
+                   + b'\x03' + text('zPos') + struct.pack('>i', 512) + b'\x00')
+        compressed = zlib.compress(payload)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'region').mkdir()
+            data = bytearray(12288)
+            struct.pack_into('>I', data, 0, (2 << 8) | 1)
+            struct.pack_into('>I', data, 8192, len(compressed) + 1)
+            data[8196] = 2
+            data[8197:8197 + len(compressed)] = compressed
+            path = root / 'region/r.16.16.mca'
+            path.write_bytes(data)
+            before = region_occupancy(root, include_status=True)
+            self.assertEqual(before['region/r.16.16.mca']['chunk_metadata'][0]['Status'], 'minecraft:full')
+            path.rename(root / 'region/r.15.16.mca')
+            with self.assertRaisesRegex(ValueError, 'coordinate'):
+                region_occupancy(root, include_status=True)
+            after = {'region/r.16.16.mca': {**before['region/r.16.16.mca'],
+                     'chunk_metadata': [{'xPos': 512, 'zPos': 512, 'Status': 'minecraft:terrain'}]}}
+            self.assertFalse(no_unwanted_generation(before, after))
 
 
 if __name__ == '__main__':

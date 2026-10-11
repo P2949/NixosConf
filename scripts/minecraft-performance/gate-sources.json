@@ -1,0 +1,32 @@
+{
+  "dh_functional": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ],
+  "non_dh_client": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ],
+  "no_unwanted_generation": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ],
+  "backup": [
+    "hosts/desktop/minecraft-dh-identity.py",
+    "hosts/desktop/minecraft-backup.py",
+    "hosts/desktop/minecraft-msmp.py",
+    "hosts/desktop/minecraft-prerequisites.py"
+  ],
+  "restore": [
+    "hosts/desktop/minecraft-dh-identity.py",
+    "hosts/desktop/minecraft-backup.py",
+    "hosts/desktop/minecraft-msmp.py",
+    "hosts/desktop/minecraft-prerequisites.py"
+  ],
+  "identity_restart": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ],
+  "post_chunky_catchup": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ],
+  "no_unbounded_queues": [
+    "hosts/desktop/minecraft-dh-identity.py"
+  ]
+}

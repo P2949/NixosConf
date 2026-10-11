@@ -1,4 +1,8 @@
-"""Collect a bounded, one-second idle acceptance sample from a verified unit."""
+"""Legacy baseline diagnostics only; never authoritative DH acceptance.
+
+This historical sampler writes during measurement and retains the obsolete 1%
+gate. Use dh_idle_attribution.py/analyze_dh_idle.py for current qualification.
+"""
 
 import argparse
 import json
