@@ -25,7 +25,8 @@ final adjudication, and recovery status are separate fields.
 The revised DH driver checks finalized fresh-client SQLite copies and pairs a
 bounded distant gold-block landmark update with partial-update telemetry and
 changed terrain-data fingerprints. It verifies original air blocks and restores
-them before accepting the run. The restore driver binds server SQLite checks,
+them before accepting the run. The restore driver requires aggregate useful server DH data in the stopped
+recovery clone before boot and binds server SQLite checks,
 fresh DH data responses, and client SQLite usefulness alongside the ordinary
 client test. These stronger drivers still require fresh authoritative runtime
 qualification before a new Phase-A conclusion. C2ME release

@@ -1,10 +1,14 @@
+from contextlib import closing
+import os
+import sqlite3
+from types import SimpleNamespace
 import json
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 
-from realtime_updates import exercise_landmark, require_generated_landmark
+from realtime_updates import exercise_landmark, require_generated_landmark, qualify_realtime
 
 
 class LandmarkTests(unittest.TestCase):
@@ -64,3 +68,49 @@ class LandmarkTests(unittest.TestCase):
                     exercise_landmark(lab, client)
             self.assertIn('fill -320 300 0 -300 300 0 minecraft:air', commands)
             self.assertEqual(commands[-1], 'forceload remove -320 0 -300 0')
+
+    def test_remaining_realtime_preconditions_and_unchanged_section_fail(self):
+        from functional_dh import VERIFIED_DH_3_3_4_SHA256
+        for condition in ('missing_render', 'render_reaches_landmark', 'forced_chunks', 'live_initial_client', 'unchanged_section'):
+            with self.subTest(condition=condition), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                output = root / 'evidence'
+                (output / 'client-dh').mkdir(parents=True)
+                server = root / 'server'
+                (server / 'world').mkdir(parents=True)
+                if condition == 'forced_chunks':
+                    (server / 'world/chunks.dat').write_bytes(b'pre-existing')
+                cache = root / 'client/instances/dh-clean/minecraft/Distant_Horizons_server_data/server/id@minecraft@@overworld/DistantHorizons.sqlite'
+                cache.parent.mkdir(parents=True)
+                with closing(sqlite3.connect(cache)) as connection:
+                    connection.execute('CREATE TABLE FullData(DetailLevel, PosX, PosZ, DataChecksum, Data)')
+                    connection.execute('INSERT INTO FullData VALUES(0,-5,0,7,?)', (b'unchanged terrain',))
+                    connection.commit()
+                options = '' if condition == 'missing_render' else ('renderDistance:19\n' if condition == 'render_reaches_landmark' else 'renderDistance:8\n')
+                manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_DH_3_3_4_SHA256}],
+                            'client': {'root': str(root / 'client'), 'profiles': {'dh-clean': {
+                                'files': {'options.txt': {'content': options}}}}}}
+                lab = SimpleNamespace(server=server)
+                regions = {'region/r.-1.0.mca': {'chunk_metadata': [
+                    {'xPos': x, 'zPos': 0, 'Status': 'minecraft:full'} for x in (-20, -19)]}}
+                starts = []
+                class Client:
+                    pid = 99999999
+                    def __init__(self, manifest, path, profile, duration):
+                        starts.append(profile)
+                        path.mkdir()
+                        (path / 'result.json').write_text('{"result":"PASS"}')
+                        (path / 'heartbeat.json').write_text('{"connected":false,"elapsed_seconds":120}')
+                        (path / 'dh-received.jsonl').write_text(json.dumps({'monotonic_ns': 1, 'type': 'FullDataPartialUpdateMessage', 'exception_type': ''}) + '\n')
+                    def __enter__(self):
+                        return self
+                    def __exit__(self, *args):
+                        pass
+                initial_pid = os.getpid() if condition == 'live_initial_client' else 99999998
+                with patch('client_runtime.Client', Client), \
+                     patch('realtime_updates.exercise_landmark', return_value={'restored': True}):
+                    with self.assertRaises(RuntimeError):
+                        qualify_realtime(lab, manifest, output, regions, initial_pid)
+                self.assertFalse((output / 'dh-realtime.json').exists())
+                if condition != 'unchanged_section':
+                    self.assertFalse(starts)

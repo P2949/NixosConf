@@ -318,6 +318,8 @@ Received UUID: -
                 in calls[1]['evidence']
             )
 
+            self.assertIn(output / 'restore-dh.json', restore_evidence)
+
             self.assertIn(
                 str(Lab.log),
                 restore_evidence,
