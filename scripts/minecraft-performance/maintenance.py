@@ -267,6 +267,10 @@ def restore(output):
         health = json.loads(status)
         if health.get('health') != 'ok' or health.get('live_verification') != 'passed':
             raise RuntimeError('live backup health after restoration failed')
+        if client_restore_error is not None:
+            raise RuntimeError(
+                'disposable client input restoration failed after production recovery'
+            ) from client_restore_error
 
 
 def arm(output):
