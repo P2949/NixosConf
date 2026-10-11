@@ -152,16 +152,25 @@ def read_dh_messages(path):
     return messages
 
 
-def dh_outcome(messages):
-    """Require actual DH traffic and reject protocol exception messages."""
+def dh_outcome(messages, manifest=None):
+    """Require data traffic; allow only the inspected binary's split response."""
     if not messages:
         return 'FAIL'
 
-    if any(
-        message['type'] == 'ExceptionMessage'
-        or message['exception_type']
-        for message in messages
-    ):
+    verified_binary = manifest is not None and any(
+        mod.get('id') == 'distanthorizons'
+        and mod.get('sha256') == VERIFIED_EMPTY_SHELL_DH_SHA256
+        for mod in manifest.get('mods', [])
+    )
+    for message in messages:
+        if message['type'] == 'ExceptionMessage' or message['exception_type']:
+            if not (verified_binary and message['type'] == 'ExceptionMessage'
+                    and message['exception_type'] == 'SectionRequiresSplittingException'):
+                return 'FAIL'
+    if not any(message['type'] in (
+        'FullDataSourceResponseMessage', 'FullDataSplitMessage',
+        'FullDataPartialUpdateMessage',
+    ) and not message['exception_type'] for message in messages):
         return 'FAIL'
 
     return 'PASS'
@@ -249,7 +258,7 @@ def write_dh_proofs(
         )
 
     messages = read_dh_messages(messages_path)
-    dh_result = dh_outcome(messages)
+    dh_result = dh_outcome(messages, manifest)
     terrain_result = generation_outcome(before, after, manifest)
 
     before_path = output / 'terrain-before.json'

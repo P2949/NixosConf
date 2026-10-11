@@ -63,7 +63,7 @@ class FunctionalDhTests(unittest.TestCase):
 
         good = [{
             'monotonic_ns': 100,
-            'type': 'FullDataSourceRequestMessage',
+            'type': 'FullDataSourceResponseMessage',
             'exception_type': '',
         }]
 
@@ -82,6 +82,14 @@ class FunctionalDhTests(unittest.TestCase):
             dh_outcome(exception),
             'FAIL',
         )
+        manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_EMPTY_SHELL_DH_SHA256}]}
+        split = {'type': 'ExceptionMessage', 'exception_type': 'SectionRequiresSplittingException'}
+        self.assertEqual(dh_outcome(good + [split], manifest), 'PASS')
+        self.assertEqual(dh_outcome([split], manifest), 'FAIL')
+        self.assertEqual(dh_outcome(good + [split]), 'FAIL')
+        self.assertEqual(dh_outcome(good + exception, manifest), 'FAIL')
+        manifest['mods'][0]['sha256'] = 'unverified'
+        self.assertEqual(dh_outcome(good + [split], manifest), 'FAIL')
 
     def test_dh_telemetry_parser_rejects_malformed_or_regressing_rows(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -289,7 +297,7 @@ class FunctionalDhTests(unittest.TestCase):
                     ).write_text(
                         json.dumps({
                             'monotonic_ns': 100,
-                            'type': 'DhMessage',
+                            'type': 'FullDataSourceResponseMessage',
                             'exception_type': '',
                         })
                         + '\n'
