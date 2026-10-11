@@ -73,7 +73,9 @@ def exercise_landmark(lab, client):
 
 def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     from pathlib import Path
+    import math
     import re
+    from functional_dh import dh_outcome, read_dh_messages
     from client_runtime import Client
     from dh_database import inspect_closed_cache
     from qualification_manifest import canonical_bytes
@@ -93,6 +95,12 @@ def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     with Client(manifest, client_output, 'dh-clean', 120) as client:
         receipt = exercise_landmark(lab, client)
         pid = client.pid
+    messages = read_dh_messages(client_output / 'dh-received.jsonl')
+    heartbeat = json.loads((client_output / 'heartbeat.json').read_text())
+    result = json.loads((client_output / 'result.json').read_text())
+    elapsed = heartbeat.get('elapsed_seconds')
+    if dh_outcome(messages, manifest) != 'PASS' or result != {'result': 'PASS'} or not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
+        raise RuntimeError('DH landmark client completion or protocol evidence failed')
     after = inspect_closed_cache(cache, client_output,
                                  owner_stopped=not Path(f'/proc/{pid}').exists())
     before_fingerprints = sorted(database['full_data_fingerprint'] for database in before)

@@ -22,9 +22,13 @@ from the frozen Nix input rather than a remembered store path. Idle measurement
 requires an explicit verified eight-gate functional bundle; measurement outcome,
 final adjudication, and recovery status are separate fields.
 
-Before a fresh candidate is frozen, remaining review requirements include DH
-client/server SQLite proofs, real-time landmark propagation and restoration,
-stronger restored-world DH qualification, and durability checks. C2ME release
+The revised DH driver checks finalized fresh-client SQLite copies and pairs a
+bounded distant gold-block landmark update with partial-update telemetry and
+changed terrain-data fingerprints. It verifies original air blocks and restores
+them before accepting the run. The restore driver binds server SQLite checks,
+fresh DH data responses, and client SQLite usefulness alongside the ordinary
+client test. These stronger drivers still require fresh authoritative runtime
+qualification before a new Phase-A conclusion. C2ME release
 selection will re-query the official Fabric 26.3 release source instead of
 assuming the historical requested version exists.
 
