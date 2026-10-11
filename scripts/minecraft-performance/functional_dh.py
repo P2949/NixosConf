@@ -167,7 +167,10 @@ def dh_outcome(messages):
     return 'PASS'
 
 
-def generation_outcome(before, after):
+VERIFIED_EMPTY_SHELL_DH_SHA256 = 'ba3e5c85a765a109219831df99b99ef5cfcdee05b2dfa6796116993bd48d3947'
+
+
+def generation_outcome(before, after, manifest=None):
     # Entity and POI records change during ordinary play. Only terrain region
     # occupancy and generation status establish new terrain generation.
     terrain_before = {
@@ -178,9 +181,20 @@ def generation_outcome(before, after):
         name: region for name, region in after.items()
         if Path(name).parent.name == 'region'
     }
+    # Pinned RegionFileStorageExternalCache.getRegionFile checks only the
+    # parent directory before constructing RegionFile during reads. Permit
+    # its empty shells only for the inspected binary, never arbitrary builds.
+    verified_binary = manifest is not None and any(
+        mod.get('id') == 'distanthorizons'
+        and mod.get('sha256') == VERIFIED_EMPTY_SHELL_DH_SHA256
+        for mod in manifest.get('mods', [])
+    )
+    shells = [name for name, region in terrain_after.items()
+              if name not in terrain_before and region['size'] == 0 and not region['chunks']]
     return (
         'PASS'
-        if no_unwanted_generation(terrain_before, terrain_after)
+        if no_unwanted_generation(terrain_before, terrain_after,
+                                 verified_empty_shells=shells if verified_binary else ())
         else 'FAIL'
     )
 
@@ -236,7 +250,7 @@ def write_dh_proofs(
 
     messages = read_dh_messages(messages_path)
     dh_result = dh_outcome(messages)
-    terrain_result = generation_outcome(before, after)
+    terrain_result = generation_outcome(before, after, manifest)
 
     before_path = output / 'terrain-before.json'
     after_path = output / 'terrain-after.json'
