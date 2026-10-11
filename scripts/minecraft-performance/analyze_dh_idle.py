@@ -17,6 +17,7 @@ def interval(values):
 def stacks(path):
     events = json.loads(path.read_text())['recording']['events']
     counts = Counter()
+    native = Counter()
     names = {}
     for event in events:
         value = event['values']
@@ -29,11 +30,16 @@ def stacks(path):
         for frame in (value.get('stackTrace') or {}).get('frames', []):
             method = frame.get('method') or {}
             owner = (method.get('type') or {}).get('name', '')
-            counts[(names.get(str(tid), ''), owner + '.' + method.get('name', ''))] += 1
+            target = counts if event['type'] == 'jdk.ExecutionSample' else native
+            target[(names.get(str(tid), ''), owner + '.' + method.get('name', ''))] += 1
     return {'native_thread_names': names,
             'inclusive_stack_sample_counts': [dict(thread=t, method=m, samples=n)
                 for (t, m), n in counts.most_common(80)],
-            'limitation': 'Inclusive stack counts are sampled attribution, not exact CPU-time shares.'}
+            'native_stack_sample_counts': [dict(thread=t, method=m, samples=n)
+                for (t, m), n in native.most_common(30)],
+            'limitation': 'Execution stacks are sampled attribution, not exact CPU-time shares. '
+                          'Native samples can include blocked I/O and are not CPU cost; '
+                          'use measured native-thread CPU accounting to rank costs.'}
 
 
 def analyze(root):

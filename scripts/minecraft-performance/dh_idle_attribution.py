@@ -55,6 +55,42 @@ def threads(pid):
     return result
 
 
+def minecraft_clients():
+    """Detect conflicting clients using paths only; never read authentication arguments."""
+    found = []
+    for process in Path('/proc').iterdir():
+        if not process.name.isdigit():
+            continue
+        try:
+            if (process / 'comm').read_text().strip() != 'java':
+                continue
+            cwd = str((process / 'cwd').resolve())
+            if '/PrismLauncher/instances/' in cwd or '/minecraft-performance-client-' in cwd:
+                found.append(int(process.name))
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue
+    return found
+
+
+def wait_quiet(output):
+    # Bounded environmental retries; do not stop unrelated applications.
+    for attempt in range(1, 4):
+        deadline = time.monotonic() + 300
+        quiet_since = None
+        while time.monotonic() < deadline:
+            clients = minecraft_clients()
+            save(output / 'quiet-window.json', {'attempt': attempt, 'conflicting_client_pids': clients,
+                                                'quiet_since': quiet_since, 'deadline': deadline})
+            if clients:
+                quiet_since = None
+            elif quiet_since is None:
+                quiet_since = time.monotonic()
+            elif time.monotonic() - quiet_since >= 60:
+                return
+            time.sleep(5)
+    raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: normal Minecraft client still active after three bounded waits')
+
+
 def prepare(output, name):
     root = output / name
     subprocess.run(['btrfs', 'subvolume', 'snapshot', str(BASE), str(root)], check=True)
@@ -90,6 +126,7 @@ def prepare(output, name):
 
 
 def run(output, name, duration):
+    wait_quiet(output)
     evidence = output / (name + '-evidence')
     evidence.mkdir(mode=0o700)
     root, server = prepare(output, name)
@@ -146,6 +183,7 @@ def run(output, name, duration):
                     'io': (cg / 'io.stat').read_text(), 'threads': threads(pid),
                     'energy_uj': int((RAPL / 'energy_uj').read_text()),
                     'host_cpu': Path('/proc/stat').read_text().splitlines()[0],
+                    'conflicting_client_pids': minecraft_clients(),
                     'logical_cpu_idle_residency_us': {str(p): p.read_text().strip()
                         for p in Path('/sys/devices/system/cpu').glob('cpu*/cpuidle/state*/time')}}
 
@@ -178,6 +216,7 @@ def run(output, name, duration):
                   'package_energy_j': energy / 1e6,
                   'memory_events_delta': {k: rows[-1]['memory_events'][k] - v
                       for k, v in rows[0]['memory_events'].items()},
+                  'environment_clients_absent': all(not row['conflicting_client_pids'] for row in rows),
                   'world_unchanged': before_world == after_world,
                   'io_before': rows[0]['io'], 'io_after': rows[-1]['io'],
                   'threads': sorted(thread_cpu.items(), key=lambda x: -x[1]['cpu_seconds'])}
@@ -226,6 +265,8 @@ def main():
         result = run(args.output, variant, 600)
         results.append(result)
         save(args.output / 'results.json', results)
+        if not result['environment_clients_absent']:
+            raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: Minecraft client overlapped the idle interval')
         if any(result['memory_events_delta'][k] for k in ('max', 'oom', 'oom_kill')):
             raise RuntimeError('memory correctness gate failed')
     save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'MEASURED',
