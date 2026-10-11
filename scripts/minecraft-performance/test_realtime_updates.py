@@ -11,8 +11,9 @@ class LandmarkTests(unittest.TestCase):
     def test_unexplored_landmark_is_rejected(self):
         with self.assertRaisesRegex(RuntimeError, 'already-generated'):
             require_generated_landmark({})
-        require_generated_landmark({'dimensions/minecraft/overworld/region/r.-1.0.mca': {
-            'chunk_metadata': [{'xPos': x, 'zPos': 0, 'Status': 'minecraft:full'} for x in (-20, -19)]}})
+        for layout in ('region/r.-1.0.mca', 'dimensions/minecraft/overworld/region/r.-1.0.mca'):
+            require_generated_landmark({layout: {
+                'chunk_metadata': [{'xPos': x, 'zPos': 0, 'Status': 'minecraft:full'} for x in (-20, -19)]}})
 
     def test_restores_blocks_after_success_or_client_failure(self):
         for client_failure in (False, True):

@@ -1,6 +1,7 @@
 """Bounded reversible DH landmark update on generated disposable terrain."""
 
 import json
+from pathlib import Path
 import time
 
 from functional_clients import log_offset, wait_for_log_since
@@ -10,7 +11,7 @@ START, END = (-320, 300, 0), (-300, 300, 0)
 
 def require_generated_landmark(regions):
     full = {(entry['xPos'], entry['zPos'])
-            for name, region in regions.items() if '/region/' in name
+            for name, region in regions.items() if Path(name).parent.name == 'region'
             for entry in region.get('chunk_metadata', [])
             if entry.get('Status') == 'minecraft:full'}
     if not {(-20, 0), (-19, 0)}.issubset(full):
@@ -75,10 +76,12 @@ def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     from pathlib import Path
     import math
     import re
-    from functional_dh import dh_outcome, read_dh_messages
+    from functional_dh import dh_outcome, read_dh_messages, VERIFIED_DH_3_3_4_SHA256
     from client_runtime import Client
     from dh_database import inspect_closed_cache
     from qualification_manifest import canonical_bytes
+    if not any(mod.get('id') == 'distanthorizons' and mod.get('sha256') == VERIFIED_DH_3_3_4_SHA256 for mod in manifest.get('mods', [])):
+        raise RuntimeError('landmark section geometry requires inspected DH 3.3.4 artifact')
     require_generated_landmark(regions)
     if any((lab.server / 'world').rglob('chunks.dat')):
         raise RuntimeError('landmark fixture requires no pre-existing forced-chunk state')

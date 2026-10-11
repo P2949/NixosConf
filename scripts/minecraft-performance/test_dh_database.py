@@ -34,3 +34,27 @@ class DatabaseTests(unittest.TestCase):
             source.write_bytes(b'corrupt')
             with self.assertRaises(sqlite3.DatabaseError):
                 inspect_closed_database(source, root / 'copy.sqlite', owner_stopped=True)
+
+    def test_section_fingerprint_ignores_metadata_and_detects_terrain_change(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'source.sqlite'
+            with closing(sqlite3.connect(source)) as connection:
+                connection.execute('CREATE TABLE FullData(DetailLevel, PosX, PosZ, DataChecksum, Data, Timestamp)')
+                connection.execute('INSERT INTO FullData VALUES(0,-5,0,7,?,0)', (b'terrain',))
+                connection.commit()
+            def inspect(name):
+                return inspect_closed_database(source, root / name, owner_stopped=True,
+                                               requested_sections=((0, -5, 0),))
+            before = inspect('before.sqlite')
+            with closing(sqlite3.connect(source)) as connection:
+                connection.execute('UPDATE FullData SET Timestamp=1')
+                connection.commit()
+            metadata = inspect('metadata.sqlite')
+            self.assertNotEqual(before['sha256'], metadata['sha256'])
+            self.assertEqual(before['requested_section_fingerprints'], metadata['requested_section_fingerprints'])
+            with closing(sqlite3.connect(source)) as connection:
+                connection.execute('UPDATE FullData SET Data=?, DataChecksum=8', (b'gold landmark',))
+                connection.commit()
+            changed = inspect('changed.sqlite')
+            self.assertNotEqual(before['requested_section_fingerprints'], changed['requested_section_fingerprints'])
