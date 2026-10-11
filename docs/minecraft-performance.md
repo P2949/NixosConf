@@ -116,6 +116,19 @@ recorded after final qualification.
 
 ## Automated workload policy
 
+The subsequent conservative DH policy (two workers, runtime ratio 0.5) also
+failed paused-idle acceptance: across 300 seconds after a 90-second warmup,
+median service CPU was 3.259% of one core, p95 4.284%, and maximum 12.776%.
+Host CPU median was 2.848%; all cgroup memory-event deltas were zero. The
+required limit remains 1%. Thread diagnostics retain activity in DH request
+and update queues, but do not establish a complete causal explanation.
+Production was restored to the original safe closure; the server and backup
+timer are active and live backup verification passed. C2ME and collector
+experiments remain unstarted. Shutdown captured the generated DH identity
+unchanged; a complete candidate restart identity test remains unproven.
+Raw samples and diagnostics are retained under the private evidence root as
+`attempt-3-idle`, `attempt-3-thread-cpu.json`, and `attempt-3-thread-dump.txt`.
+
 Production worlds are excluded from terrain-generation and comparative runs.
 Each comparable run starts from a fresh writable Btrfs snapshot of the same
 read-only baseline, with loopback-only game and management endpoints and RCON
