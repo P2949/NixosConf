@@ -8,11 +8,25 @@ from functional_dh import (
     dh_outcome,
     execute,
     generation_outcome,
+    qualification_exit_code,
     read_dh_messages,
 )
 
 
 class FunctionalDhTests(unittest.TestCase):
+    def test_exit_status_requires_both_gates_and_propagates_failure(self):
+        references = {
+            'dh_functional': {'result': 'PASS'},
+            'no_unwanted_generation': {'result': 'PASS'},
+        }
+        self.assertEqual(qualification_exit_code(references), 0)
+        references['dh_functional']['result'] = 'FAIL'
+        self.assertEqual(qualification_exit_code(references), 1)
+        references['dh_functional']['result'] = 'INCONCLUSIVE'
+        self.assertEqual(qualification_exit_code(references), 2)
+        self.assertEqual(qualification_exit_code({}), 2)
+        self.assertEqual(qualification_exit_code({'dh_functional': {'result': 'PASS'}}), 2)
+
     def test_entity_saves_do_not_establish_terrain_generation(self):
         terrain = {
             'dimensions/minecraft/overworld/region/r.0.0.mca': {

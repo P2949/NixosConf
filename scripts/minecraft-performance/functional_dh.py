@@ -23,6 +23,15 @@ COMMAND_MARKER = 'QUALIFICATION_DH_COMMAND_OK'
 DISCONNECT_MARKER = f'{PLAYER} left the game'
 
 
+def qualification_exit_code(references):
+    outcomes = {reference.get('result') for reference in references.values()}
+    if 'FAIL' in outcomes:
+        return 1
+    if set(references) == {'dh_functional', 'no_unwanted_generation'} and outcomes == {'PASS'}:
+        return 0
+    return 2
+
+
 def exercise_dh_client(lab, client):
     """Exercise ordinary play while the DH client/server session is active."""
     client.wait_joined()
@@ -457,5 +466,4 @@ if __name__ == '__main__':
 
     references = execute(manifest, args.output)
     print(json.dumps(references))
-    outcomes = {reference['result'] for reference in references.values()}
-    sys.exit(1 if 'FAIL' in outcomes else 0 if outcomes == {'PASS'} else 2)
+    sys.exit(qualification_exit_code(references))
