@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "local.minecraft.performance",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["ClientProbeMixin"],
+  "injectors": {"defaultRequire": 1}
+}

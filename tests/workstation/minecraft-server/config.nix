@@ -64,7 +64,7 @@ assert server.autoStart;
 assert server.restart == "always";
 assert server.openFirewall;
 assert server.package.name == "minecraft-server-26.3-fabric-0.19.5";
-assert server.jvmOpts == "-Xms1G -Xmx6G";
+assert server.jvmOpts == "-Xms1G -Xmx8G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC";
 assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
@@ -80,7 +80,30 @@ assert
     fast-biome-lookups = false;
     cancel-duplicate-fluid-ticks = false;
   };
-assert pregenServer.files == server.files;
+assert
+  builtins.removeAttrs pregenServer.files [ "config/DistantHorizons.toml" ]
+  == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
+assert
+  server.files."config/DistantHorizons.toml".value == {
+    _version = 5;
+    server = {
+      synchronizeOnLoad = true;
+      enableRealTimeUpdates = true;
+    };
+    common.worldGenerator = {
+      chunkGeneratorMode = "PRE_EXISTING_ONLY";
+      generatorPlan = "CHUNKS_ONLY";
+    };
+  };
+assert
+  pregenServer.files."config/DistantHorizons.toml".value
+  == server.files."config/DistantHorizons.toml".value
+  // {
+    common.worldGenerator = {
+      chunkGeneratorMode = "PRE_EXISTING_ONLY";
+      generatorPlan = "DISABLED";
+    };
+  };
 assert pregenServer.extraStartPre == server.extraStartPre;
 
 assert properties."server-ip" == "";
@@ -124,8 +147,8 @@ assert pregenProperties."status-heartbeat-interval" == properties."status-heartb
 
 assert service.serviceConfig.Slice == "minecraft.slice";
 assert service.serviceConfig.Nice == 5;
-assert service.serviceConfig.MemoryHigh == "8G";
-assert service.serviceConfig.MemoryMax == "10G";
+assert service.serviceConfig.MemoryHigh == "10G";
+assert service.serviceConfig.MemoryMax == "12G";
 assert service.serviceConfig.EnvironmentFile == "/persist/secrets/minecraft-management.env";
 assert pregenService.serviceConfig.EnvironmentFile == service.serviceConfig.EnvironmentFile;
 
@@ -365,8 +388,10 @@ pkgs.runCommand "check-minecraft-server-config"
         extract_mods "$pregenMods" "$pregenActual"
 
         cat > "$normalExpected" <<'EOF'
+    distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
+    krypton 0.3.2
     lithium 0.26.2+mc26.3
     servercore 1.5.20+26.3
     spark 1.10.187
@@ -374,8 +399,10 @@ pkgs.runCommand "check-minecraft-server-config"
 
         cat > "$pregenExpected" <<'EOF'
     chunky 1.5.3
+    distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
+    krypton 0.3.2
     lithium 0.26.2+mc26.3
     servercore 1.5.20+26.3
     spark 1.10.187
