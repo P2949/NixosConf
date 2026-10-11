@@ -100,6 +100,7 @@ def run(output, name, duration):
         '--property=WorkingDirectory=' + str(server), '--property=Nice=5',
         '--property=CPUWeight=50', '--property=IOWeight=50',
         '--property=MemoryHigh=10G', '--property=MemoryMax=12G',
+        '--property=RuntimeMaxSec=1200',
         '--property=KillMode=mixed', '--property=TimeoutStopSec=120',
         '--property=StandardOutput=append:' + str(log),
         '--property=StandardError=append:' + str(log),
@@ -132,7 +133,7 @@ def run(output, name, duration):
         (evidence / 'threads-before.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
         # JFR startup/attach work happens before the measured interval.
         command(str(JAVA / 'jcmd'), str(pid), 'JFR.start', 'name=idle',
-                'settings=' + str(output / 'idle.jfc'), 'filename=' + str(root / 'idle.jfr'))
+                'settings=' + str(output / 'idle.jfc'), 'disk=false')
         time.sleep(10)
         before_world = disk_state(server / 'world')
         max_energy = int((RAPL / 'max_energy_range_uj').read_text())
@@ -183,7 +184,8 @@ def run(output, name, duration):
         save(evidence / 'world-before.json', before_world)
         save(evidence / 'world-after.json', after_world)
         save(evidence / 'result.json', result)
-        command(str(JAVA / 'jcmd'), str(pid), 'JFR.stop', 'name=idle')
+        command(str(JAVA / 'jcmd'), str(pid), 'JFR.stop', 'name=idle',
+                'filename=' + str(root / 'idle.jfr'))
         shutil.copy2(root / 'idle.jfr', evidence / 'idle.jfr')
         (evidence / 'threads-after.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
         # Convert JFR only after the fixed CPU/energy interval is over.
