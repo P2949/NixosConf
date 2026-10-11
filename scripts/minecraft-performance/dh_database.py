@@ -6,7 +6,7 @@ import shutil
 import sqlite3
 
 
-def inspect_closed_database(source, destination, *, owner_stopped, require_useful=True):
+def inspect_closed_database(source, destination, *, owner_stopped, require_useful=True, requested_sections=()):
     if owner_stopped is not True:
         raise RuntimeError('DH database owner must be stopped before inspection')
     source, destination = Path(source), Path(destination)
@@ -37,24 +37,31 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
         if require_useful and useful <= 0:
             raise RuntimeError('DH database contains no useful FullData rows')
         fingerprint = hashlib.sha256()
+        section_fingerprints = {}
         for row in connection.execute('SELECT DetailLevel, PosX, PosZ, DataChecksum, Data FROM FullData ORDER BY DetailLevel, PosX, PosZ'):
+            section = hashlib.sha256()
             for value in row:
                 encoded = value if isinstance(value, bytes) else str(value).encode()
                 fingerprint.update(len(encoded).to_bytes(8, 'big'))
                 fingerprint.update(encoded)
+                section.update(len(encoded).to_bytes(8, 'big'))
+                section.update(encoded)
+            if tuple(row[:3]) in requested_sections:
+                section_fingerprints[','.join(map(str, row[:3]))] = section.hexdigest()
         connection.execute('PRAGMA wal_checkpoint(TRUNCATE)')
     finally:
         connection.close()
     destination.chmod(0o400)
     with destination.open('rb') as stream:
         digest = hashlib.file_digest(stream, 'sha256').hexdigest()
-    return {'copy': str(destination), 'integrity': 'ok', 'size': destination.stat().st_size,
+    return {'source': str(source), 'copy': str(destination), 'integrity': 'ok', 'size': destination.stat().st_size,
             'sha256': digest,
             'schema': schema, 'useful_full_data_rows': useful,
-            'full_data_fingerprint': fingerprint.hexdigest()}
+            'full_data_fingerprint': fingerprint.hexdigest(),
+            'requested_section_fingerprints': section_fingerprints}
 
 
-def inspect_closed_cache(root, output, *, owner_stopped):
+def inspect_closed_cache(root, output, *, owner_stopped, requested_sections=()):
     root, output = Path(root), Path(output)
     if root.is_symlink() or root.resolve() != root or not root.is_dir():
         raise RuntimeError('fresh DH cache is missing or unsafe')
@@ -62,5 +69,5 @@ def inspect_closed_cache(root, output, *, owner_stopped):
     if not databases:
         raise RuntimeError('fresh DH cache has no database')
     return [inspect_closed_database(source, output / f'dh-database-{index}.sqlite',
-                                    owner_stopped=owner_stopped)
+                                    owner_stopped=owner_stopped, requested_sections=requested_sections)
             for index, source in enumerate(databases)]

@@ -90,7 +90,7 @@ def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     baseline_output = output / 'client-dh' / 'database-before-landmark'
     baseline_output.mkdir(mode=0o700)
     before = inspect_closed_cache(cache, baseline_output,
-                                  owner_stopped=not Path(f'/proc/{initial_client_pid}').exists())
+                                  owner_stopped=not Path(f'/proc/{initial_client_pid}').exists(), requested_sections=((0, -5, 0),))
     client_output = output / 'client-dh-update'
     with Client(manifest, client_output, 'dh-clean', 120) as client:
         receipt = exercise_landmark(lab, client)
@@ -102,11 +102,17 @@ def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     if dh_outcome(messages, manifest) != 'PASS' or result != {'result': 'PASS'} or not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
         raise RuntimeError('DH landmark client completion or protocol evidence failed')
     after = inspect_closed_cache(cache, client_output,
-                                 owner_stopped=not Path(f'/proc/{pid}').exists())
-    before_fingerprints = sorted(database['full_data_fingerprint'] for database in before)
-    after_fingerprints = sorted(database['full_data_fingerprint'] for database in after)
-    if before_fingerprints == after_fingerprints:
-        raise RuntimeError('distant landmark did not change finalized DH terrain data')
+                                 owner_stopped=not Path(f'/proc/{pid}').exists(), requested_sections=((0, -5, 0),))
+    # In pinned DH 3.3.4, detail-zero sections span 64 blocks; the landmark
+    # occupies section (-5, 0). Compare terrain data, excluding timestamps.
+    def landmark_fingerprints(databases):
+        return {database['source']: database['requested_section_fingerprints']['0,-5,0']
+                for database in databases if '@minecraft@@overworld' in database['source']
+                and '0,-5,0' in database['requested_section_fingerprints']}
+    before_fingerprints = landmark_fingerprints(before)
+    after_fingerprints = landmark_fingerprints(after)
+    if not before_fingerprints or set(before_fingerprints) != set(after_fingerprints) or before_fingerprints == after_fingerprints:
+        raise RuntimeError('distant landmark did not change its finalized DH terrain section')
     receipt.update({'result': 'PASS', 'database_before': before, 'database_after': after,
                     'client_pid': pid, 'vanilla_render_distance_chunks': int(render.group(1)),
                     'database_content_changed': True})

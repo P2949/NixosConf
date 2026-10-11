@@ -73,6 +73,11 @@ def exercise_dh_client(lab, client):
         offset,
     )
 
+    offset = log_offset(lab.log)
+    lab.send(f'tp @a[name={PLAYER},limit=1] 0 100 0')
+    lab.send(f'execute positioned 0 100 0 if entity @a[name={PLAYER},distance=..1] run say QUALIFICATION_DH_ORIGIN_INITIAL')
+    wait_for_log_since(lab.log, 'QUALIFICATION_DH_ORIGIN_INITIAL', offset)
+
     if not client.joined():
         raise RuntimeError(
             'DH client disconnected after controlled server action'
