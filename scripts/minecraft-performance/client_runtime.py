@@ -104,7 +104,11 @@ class Client:
             self.active = False
             # Prism/DH rewrite these disposable inputs during normal shutdown.
             # Restore frozen templates for a later run of the same candidate.
-            for filename, entry in self.identity['profiles'][self.profile]['files'].items():
+            profile = self.identity['profiles'][self.profile]
+            pack = controlled_path(self.instance / 'mmc-pack.json',
+                                   self.identity['root'], existing=True)
+            pack.write_text(profile['pack']['content'])
+            for filename, entry in profile['files'].items():
                 path = controlled_path(self.instance / 'minecraft' / filename,
                                        self.identity['root'], existing=True)
                 path.write_text(entry['content'])

@@ -1,6 +1,7 @@
 package local.minecraft.performance;
 
 import java.nio.file.Files;
+import local.minecraft.telemetry.TickBuffer;
 
 public final class TickBufferTest {
     public static void main(String[] args) throws Exception {

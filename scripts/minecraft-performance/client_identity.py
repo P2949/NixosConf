@@ -58,7 +58,7 @@ def capture(root, launcher, java):
         if ('local_performance_dh_probe' in ids) != has_dh:
             raise ValueError('functional packet probe inventory mismatch')
         result['profiles'][name] = {'settings': settings, 'files': files,
-            'pack': {'path': str(pack), 'sha256': sha256(pack)}, 'mods': inventory}
+            'pack': {'path': str(pack), 'sha256': sha256(pack), 'content': pack.read_text()}, 'mods': inventory}
     return result
 
 

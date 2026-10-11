@@ -1,4 +1,4 @@
-package local.minecraft.performance;
+package local.minecraft.telemetry;
 
 import java.io.IOException;
 import java.nio.file.Files;

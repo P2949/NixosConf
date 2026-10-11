@@ -3,6 +3,7 @@ package local.minecraft.performance;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import local.minecraft.telemetry.FrameBuffer;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
