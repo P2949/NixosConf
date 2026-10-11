@@ -147,16 +147,26 @@ def indexed_pairs(rows, expected_pair_count=5):
     return [(indexed[f'pair-{i}-off'], indexed[f'pair-{i}-on']) for i in range(1, expected_pair_count + 1)]
 
 
-def pair_valid(off, on):
-    for row in (off, on):
-        if row['mode'] != 'clean' or row['duration'] < 599 or not row['environment_clients_absent']:
-            return False
-        if not row['host_load_pass']:
-            return False
+def pair_invalidity_reasons(off, on):
+    reasons = []
+    for variant, row in (('off', off), ('on', on)):
+        checks = {
+            'mode_not_clean': row['mode'] == 'clean',
+            'duration_below_599_seconds': row['duration'] >= 599,
+            'minecraft_client_overlap': row['environment_clients_absent'],
+            'host_p95_above_5_percent': row['unrelated_host_cpu_pct']['p95'] <= 5,
+            'host_maximum_above_20_percent': row['unrelated_host_cpu_pct']['maximum'] <= 20,
+            'host_load_gate_failed': row['host_load_pass'],
+        }
+        reasons.extend(variant + ':' + name for name, passed in checks.items() if not passed)
     # Remove measured benchmark CPU before comparing the unrelated host load.
     if abs(off['unrelated_host_cpu_pct']['median'] - on['unrelated_host_cpu_pct']['median']) > .5:
-        return False
-    return True
+        reasons.append('unrelated_host_median_difference_above_0_5_percentage_points')
+    return reasons
+
+
+def pair_valid(off, on):
+    return not pair_invalidity_reasons(off, on)
 
 
 def pair_io_pass(off, on):

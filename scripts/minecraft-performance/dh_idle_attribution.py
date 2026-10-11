@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 
-from idle_metrics import pair_valid, summarize, unique_java, validate_rapl
+from idle_metrics import pair_invalidity_reasons, pair_valid, summarize, unique_java, validate_rapl
 from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, validate_candidate
 from generate_candidate_manifest import baseline_identity
 from analyze_dh_idle import analyze
@@ -270,6 +270,42 @@ def run(output, name, duration, attempt=0):
         subprocess.run(['systemctl', 'stop', UNIT], check=False)
 
 
+def collect_pairs(output, execute, results, rejected):
+    for i in range(1, 12):
+        for attempt in range(4):
+            order = ('off', 'on') if i % 2 else ('on', 'off')
+            measured = {v: execute(f'pair-{i}-{v}', attempt) for v in order}
+            if pair_valid(measured['off'], measured['on']):
+                results.extend(measured[v] for v in order)
+                save(output / 'results.json', results)
+                break
+            rejected.append({'pair': i, 'retry': attempt, 'result': 'INCONCLUSIVE',
+                             'reason': 'ENVIRONMENT_CONFOUND',
+                             'invalidity_reasons': pair_invalidity_reasons(measured['off'], measured['on']),
+                             'runs': measured})
+            save(output / 'rejected-pairs.json', rejected)
+        else:
+            return results, rejected, True
+    return results, rejected, False
+
+
+def record_environment_exhaustion(output, candidate, functional_bundle, functional_bundle_sha256, results, rejected):
+    decision = {'result': 'INCONCLUSIVE', 'idle_acceptance': 'INCONCLUSIVE',
+                'reason': 'INCONCLUSIVE_ENVIRONMENT_NOISE',
+                'valid_pair_count': len(results) // 2,
+                'qualification_id': qualification_id(candidate),
+                'git_sha': candidate['git_sha'],
+                'functional_bundle_path': str(functional_bundle.resolve()),
+                'functional_bundle_sha256': functional_bundle_sha256}
+    save(output / 'progress.json', {
+        **decision, 'phase': 'DH_IDLE_ATTRIBUTION',
+        'measurement_result': 'INCONCLUSIVE', 'final_decision': 'INCONCLUSIVE',
+        'recovery_status': 'PENDING',
+        'completed': [r['variant'] for r in results],
+        'rejected_attempt_count': len(rejected)})
+    return decision
+
+
 def execute_main():
     global JAVA, WRAPPER, MODS, BASE, CANDIDATE, OUTPUT
     parser = argparse.ArgumentParser(description=__doc__)
@@ -370,19 +406,10 @@ def execute_main():
             raise RuntimeError('FAIL_BACKGROUND_WORLD_DATABASE_MUTATION')
         return result
 
-    for i in range(1, 12):
-        for attempt in range(4):
-            order = ('off', 'on') if i % 2 else ('on', 'off')
-            measured = {v: execute(f'pair-{i}-{v}', attempt) for v in order}
-            if pair_valid(measured['off'], measured['on']):
-                results.extend(measured[v] for v in order)
-                save(args.output / 'results.json', results)
-                break
-            rejected.append({'pair': i, 'retry': attempt, 'result': 'INCONCLUSIVE',
-                             'reason': 'ENVIRONMENT_CONFOUND', 'runs': measured})
-            save(args.output / 'rejected-pairs.json', rejected)
-        else:
-            raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
+    results, rejected, exhausted = collect_pairs(args.output, execute, results, rejected)
+    if exhausted:
+        return record_environment_exhaustion(args.output, CANDIDATE, args.functional_bundle,
+                                             functional_bundle_sha256, results, rejected)
     if sha256(args.functional_bundle) != functional_bundle_sha256:
         raise RuntimeError('functional bundle changed during measurement')
     decision = analyze(args.output, functional_bundle=args.functional_bundle)
@@ -403,7 +430,7 @@ def execute_main():
     return decision
 
 
-if __name__ == '__main__':
+def main():
     def terminate(signum, frame):
         raise SystemExit('qualification interrupted by signal ' + str(signum))
     signal.signal(signal.SIGTERM, terminate)
@@ -420,4 +447,8 @@ if __name__ == '__main__':
                 progress['recovery_status'] = 'PASS'
                 save(progress_path, progress)
 
-    raise SystemExit({'PASS': 0, 'FAIL': 1, 'INCONCLUSIVE': 2}[decision['result']])
+    return {'PASS': 0, 'FAIL': 1, 'INCONCLUSIVE': 2}[decision['result']]
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

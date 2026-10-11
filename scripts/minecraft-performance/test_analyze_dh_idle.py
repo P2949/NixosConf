@@ -64,7 +64,7 @@ class IdleDecisionTests(unittest.TestCase):
                              'service_cpu_distribution_one_core_pct': {'p95': cpu},
                              'world_unchanged': True, 'memory_events_delta': {'oom': 0},
                              'mode': 'clean', 'duration': 600, 'environment_clients_absent': True,
-                             'host_load_pass': True, 'unrelated_host_cpu_pct': {'median': 1},
+                             'host_load_pass': True, 'unrelated_host_cpu_pct': {'median': 1, 'p95': 1, 'maximum': 1},
                              'io_sustained_pass': True,
                              'io_delta': {'rbytes': 0, 'wbytes': 81920, 'dbytes': 0}})
         (root / 'results.json').write_text(json.dumps(rows))
