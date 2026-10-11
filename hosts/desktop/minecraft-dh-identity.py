@@ -23,9 +23,17 @@ def capture(config, identity):
     if identity.exists() and validate(int(identity.read_text())) != value:
         raise ValueError("DH server identity changed unexpectedly")
     temporary = identity.with_suffix(".tmp")
-    temporary.write_text(str(value) + "\n")
-    temporary.chmod(0o600)
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(descriptor, "w") as stream:
+        stream.write(str(value) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
     os.replace(temporary, identity)
+    directory = os.open(identity.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
 
 
 def apply(config, identity):
