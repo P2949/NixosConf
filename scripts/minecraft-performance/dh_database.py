@@ -6,6 +6,22 @@ import shutil
 import sqlite3
 
 
+
+def _terrain_fingerprints(connection, requested_sections):
+    fingerprint = hashlib.sha256()
+    section_fingerprints = {}
+    for row in connection.execute('SELECT DetailLevel, PosX, PosZ, DataChecksum, Data FROM FullData ORDER BY DetailLevel, PosX, PosZ'):
+        section = hashlib.sha256()
+        for value in row:
+            encoded = value if isinstance(value, bytes) else str(value).encode()
+            fingerprint.update(len(encoded).to_bytes(8, 'big'))
+            fingerprint.update(encoded)
+            section.update(len(encoded).to_bytes(8, 'big'))
+            section.update(encoded)
+        if tuple(row[:3]) in requested_sections:
+            section_fingerprints[','.join(map(str, row[:3]))] = section.hexdigest()
+    return fingerprint.hexdigest(), section_fingerprints
+
 def inspect_closed_database(source, destination, *, owner_stopped, require_useful=True, requested_sections=()):
     if owner_stopped is not True:
         raise RuntimeError('DH database owner must be stopped before inspection')
@@ -36,18 +52,7 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
         useful = connection.execute('SELECT COUNT(*) FROM FullData WHERE length(Data) > 0').fetchone()[0]
         if require_useful and useful <= 0:
             raise RuntimeError('DH database contains no useful FullData rows')
-        fingerprint = hashlib.sha256()
-        section_fingerprints = {}
-        for row in connection.execute('SELECT DetailLevel, PosX, PosZ, DataChecksum, Data FROM FullData ORDER BY DetailLevel, PosX, PosZ'):
-            section = hashlib.sha256()
-            for value in row:
-                encoded = value if isinstance(value, bytes) else str(value).encode()
-                fingerprint.update(len(encoded).to_bytes(8, 'big'))
-                fingerprint.update(encoded)
-                section.update(len(encoded).to_bytes(8, 'big'))
-                section.update(encoded)
-            if tuple(row[:3]) in requested_sections:
-                section_fingerprints[','.join(map(str, row[:3]))] = section.hexdigest()
+        fingerprint, section_fingerprints = _terrain_fingerprints(connection, requested_sections)
         checkpoint = connection.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
         if checkpoint[0] != 0 or checkpoint[1] != checkpoint[2]:
             raise RuntimeError('DH evidence checkpoint did not complete')
@@ -61,7 +66,7 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
     # contains the same healthy useful-data observation before hashing it.
     standalone = sqlite3.connect(destination.as_uri() + '?immutable=1', uri=True)
     try:
-        if standalone.execute('PRAGMA integrity_check').fetchall() != [('ok',)] or standalone.execute('SELECT COUNT(*) FROM FullData WHERE length(Data) > 0').fetchone()[0] != useful:
+        if standalone.execute('PRAGMA integrity_check').fetchall() != [('ok',)] or standalone.execute('SELECT COUNT(*) FROM FullData WHERE length(Data) > 0').fetchone()[0] != useful or _terrain_fingerprints(standalone, requested_sections) != (fingerprint, section_fingerprints):
             raise RuntimeError('standalone DH evidence differs from inspected content')
     finally:
         standalone.close()
@@ -71,7 +76,7 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
     return {'source': str(source), 'copy': str(destination), 'integrity': 'ok', 'size': destination.stat().st_size,
             'sha256': digest,
             'schema': schema, 'useful_full_data_rows': useful,
-            'full_data_fingerprint': fingerprint.hexdigest(),
+            'full_data_fingerprint': fingerprint,
             'requested_section_fingerprints': section_fingerprints}
 
 
