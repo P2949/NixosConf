@@ -6,10 +6,11 @@ import json
 import os
 from pathlib import Path
 import shutil
-import statistics
 import subprocess
 import sys
 import time
+
+from idle_metrics import pair_valid, summarize, unique_java, validate_rapl
 
 JAVA = Path('/nix/store/jzgzdbryqzji2a6wqcxmbw46hqm7bga5-openjdk-25.0.4.1+1/bin')
 WRAPPER = '/nix/store/z3x5r4lcpr7x20nkpghfb4bcxyv2dhs4-minecraft-server/bin/minecraft-server'
@@ -35,12 +36,20 @@ def counters(path):
     return dict((k, int(v)) for k, v in (line.split() for line in path.read_text().splitlines()))
 
 
+def file_sha256(path):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
 def disk_state(world):
     # Include content hashes: fixed-size SQLite and region mutations matter too.
-    return {str(p.relative_to(world)): {'size': p.stat().st_size,
-            'sha256': hashlib.file_digest(p.open('rb'), 'sha256').hexdigest()}
-            for p in sorted(world.rglob('*')) if p.is_file() and
-            (p.suffix in ('.mca', '.sqlite') or p.name.endswith(('-wal', '-shm')))}
+    result = {}
+    for p in sorted(world.rglob('*')):
+        if p.is_file() and (p.suffix in ('.mca', '.sqlite') or p.name.endswith(('-wal', '-shm'))):
+            with p.open('rb') as stream:
+                result[str(p.relative_to(world))] = {
+                    'size': p.stat().st_size, 'sha256': hashlib.file_digest(stream, 'sha256').hexdigest()}
+    return result
 
 
 def threads(pid):
@@ -53,6 +62,25 @@ def threads(pid):
         except (FileNotFoundError, ProcessLookupError):
             continue
     return result
+
+
+def collect_sample(cg, rapl, mode, pid, host_stat=Path('/proc/stat')):
+    if mode not in ('clean', 'diagnostic'):
+        raise ValueError('unknown measurement mode')
+    row = {'time': time.monotonic(), 'utc': time.time(),
+           'cpu': counters(cg / 'cpu.stat'), 'memory_events': counters(cg / 'memory.events'),
+           'memory': int((cg / 'memory.current').read_text()), 'io': (cg / 'io.stat').read_text(),
+           'energy_uj': int((rapl / 'energy_uj').read_text()),
+           'host_cpu': host_stat.read_text().splitlines()[0]}
+    if mode == 'diagnostic':
+        row['threads'] = threads(pid)
+        row['logical_cpu_idle_residency_us'] = idle_residency()
+    return row
+
+
+def idle_residency():
+    return {str(p): p.read_text().strip()
+            for p in Path('/sys/devices/system/cpu').glob('cpu*/cpuidle/state*/time')}
 
 
 def minecraft_clients():
@@ -91,8 +119,8 @@ def wait_quiet(output):
     raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: normal Minecraft client still active after three bounded waits')
 
 
-def prepare(output, name):
-    root = output / name
+def prepare(output, name, run_name):
+    root = output / run_name
     subprocess.run(['btrfs', 'subvolume', 'snapshot', str(BASE), str(root)], check=True)
     server = root / 'survival'
     # Replace inherited managed links only inside this new snapshot.
@@ -125,17 +153,19 @@ def prepare(output, name):
     return root, server
 
 
-def run(output, name, duration):
+def run(output, name, duration, attempt=0):
+    mode = 'diagnostic' if name.startswith('diagnostic') else 'clean'
     wait_quiet(output)
-    evidence = output / (name + '-evidence')
+    run_name = name if not attempt else name + f'-retry-{attempt}'
+    evidence = output / (run_name + '-evidence')
     evidence.mkdir(mode=0o700)
-    root, server = prepare(output, name)
+    root, server = prepare(output, name, run_name)
     log = evidence / 'server.log'
     log.touch(mode=0o600)
     subprocess.run(['systemd-run', '--unit=' + UNIT, '--collect',
         '--property=User=minecraft', '--property=Group=minecraft',
         '--property=WorkingDirectory=' + str(server), '--property=Nice=5',
-        '--property=CPUWeight=50', '--property=IOWeight=50',
+        '--property=Slice=minecraftperformance.slice',
         '--property=MemoryHigh=10G', '--property=MemoryMax=12G',
         '--property=RuntimeMaxSec=1200',
         '--property=KillMode=mixed', '--property=TimeoutStopSec=120',
@@ -163,75 +193,61 @@ def run(output, name, duration):
                     pids.append(int(p.name))
             except (FileNotFoundError, ProcessLookupError):
                 pass
-        if len(pids) != 1:
-            raise RuntimeError('expected exactly one fresh Java process')
-        pid = pids[0]
-        command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l')
-        (evidence / 'threads-before.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
-        # JFR startup/attach work happens before the measured interval.
-        command(str(JAVA / 'jcmd'), str(pid), 'JFR.start', 'name=idle',
-                'settings=' + str(output / 'idle.jfc'), 'disk=false')
-        time.sleep(10)
+        pid = unique_java(pids)
+        if not group.startswith('/minecraftperformance.slice/'):
+            raise RuntimeError('benchmark not inside equivalent top-level slice')
+        if mode == 'diagnostic':
+            (evidence / 'threads-before.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
+            command(str(JAVA / 'jcmd'), str(pid), 'JFR.start', 'name=idle',
+                    'settings=' + str(output / 'idle.jfc'), 'disk=false')
         before_world = disk_state(server / 'world')
         max_energy = int((RAPL / 'max_energy_range_uj').read_text())
+        clients_before = minecraft_clients()
+        time.sleep(10)
+        save(evidence / 'measurement.json', {'mode': mode, 'start_monotonic': time.monotonic(),
+                                             'duration': duration})
 
         def sample():
-            return {'time': time.monotonic(), 'utc': time.time(),
-                    'cpu_ns': int(command('systemctl', 'show', UNIT, '-p', 'CPUUsageNSec', '--value')),
-                    'cpu': counters(cg / 'cpu.stat'), 'memory_events': counters(cg / 'memory.events'),
-                    'memory': int((cg / 'memory.current').read_text()),
-                    'io': (cg / 'io.stat').read_text(), 'threads': threads(pid),
-                    'energy_uj': int((RAPL / 'energy_uj').read_text()),
-                    'host_cpu': Path('/proc/stat').read_text().splitlines()[0],
-                    'conflicting_client_pids': minecraft_clients(),
-                    'logical_cpu_idle_residency_us': {str(p): p.read_text().strip()
-                        for p in Path('/sys/devices/system/cpu').glob('cpu*/cpuidle/state*/time')}}
+            return collect_sample(cg, RAPL, mode, pid)
 
         rows = [sample()]
+        for i in range(duration):
+            time.sleep(max(0, rows[0]['time'] + i + 1 - time.monotonic()))
+            rows.append(sample())
+        # Persistent output, JFR dumping and fingerprints happen after the interval.
         with (evidence / 'samples.jsonl').open('w') as stream:
-            stream.write(json.dumps(rows[0]) + '\n')
-            for i in range(duration):
-                time.sleep(max(0, rows[0]['time'] + i + 1 - time.monotonic()))
-                rows.append(sample())
-                stream.write(json.dumps(rows[-1]) + '\n')
-                stream.flush()
+            for row in rows:
+                stream.write(json.dumps(row) + '\n')
         elapsed = rows[-1]['time'] - rows[0]['time']
-        energy = sum((b['energy_uj'] - a['energy_uj']) % max_energy for a, b in zip(rows, rows[1:]))
-        cpu = [(b['cpu_ns'] - a['cpu_ns']) / (b['time'] - a['time']) / 1e7
-               for a, b in zip(rows, rows[1:])]
         thread_cpu = {}
         hz = os.sysconf('SC_CLK_TCK')
         for a, b in zip(rows, rows[1:]):
-            for tid, value in b['threads'].items():
-                if tid in a['threads']:
+            for tid, value in b.get('threads', {}).items():
+                if tid in a.get('threads', {}):
                     entry = thread_cpu.setdefault(tid, {'name': value['name'], 'cpu_seconds': 0})
                     entry['cpu_seconds'] += (value['ticks'] - a['threads'][tid]['ticks']) / hz
         for entry in thread_cpu.values():
             entry['one_core_pct'] = entry['cpu_seconds'] / elapsed * 100
         after_world = disk_state(server / 'world')
-        result = {'variant': name, 'pid': pid, 'duration': elapsed,
-                  'service_cpu_median_one_core_pct': statistics.median(cpu),
-                  'service_cpu_interval_one_core_pct': (rows[-1]['cpu_ns'] - rows[0]['cpu_ns']) / elapsed / 1e7,
-                  'package_power_w': energy / 1e6 / elapsed,
-                  'package_energy_j': energy / 1e6,
-                  'memory_events_delta': {k: rows[-1]['memory_events'][k] - v
-                      for k, v in rows[0]['memory_events'].items()},
-                  'environment_clients_absent': all(not row['conflicting_client_pids'] for row in rows),
+        result = {'variant': name, 'mode': mode, 'pid': pid, 'attempt': attempt,
+                  'evidence': str(evidence),
+                  **summarize(rows, max_energy, os.cpu_count()),
+                  'environment_clients_absent': not clients_before and not minecraft_clients(),
                   'world_unchanged': before_world == after_world,
                   'io_before': rows[0]['io'], 'io_after': rows[-1]['io'],
                   'threads': sorted(thread_cpu.items(), key=lambda x: -x[1]['cpu_seconds'])}
         save(evidence / 'world-before.json', before_world)
         save(evidence / 'world-after.json', after_world)
         save(evidence / 'result.json', result)
-        command(str(JAVA / 'jcmd'), str(pid), 'JFR.stop', 'name=idle',
-                'filename=' + str(root / 'idle.jfr'))
-        shutil.copy2(root / 'idle.jfr', evidence / 'idle.jfr')
-        (evidence / 'threads-after.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
-        # Convert JFR only after the fixed CPU/energy interval is over.
-        with (evidence / 'jfr-events.json').open('w') as stream:
-            subprocess.run([str(JAVA / 'jfr'), 'print', '--json', '--events',
-                            'jdk.ExecutionSample,jdk.NativeMethodSample,jdk.ThreadCPULoad,jdk.CPULoad',
-                            str(evidence / 'idle.jfr')], stdout=stream, check=True)
+        if mode == 'diagnostic':
+            command(str(JAVA / 'jcmd'), str(pid), 'JFR.stop', 'name=idle',
+                    'filename=' + str(root / 'idle.jfr'))
+            shutil.copy2(root / 'idle.jfr', evidence / 'idle.jfr')
+            (evidence / 'threads-after.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
+            with (evidence / 'jfr-events.json').open('w') as stream:
+                subprocess.run([str(JAVA / 'jfr'), 'print', '--json', '--events',
+                                'jdk.ExecutionSample,jdk.NativeMethodSample,jdk.ThreadCPULoad,jdk.CPULoad',
+                                str(evidence / 'idle.jfr')], stdout=stream, check=True)
         return result
     finally:
         subprocess.run(['systemctl', 'stop', UNIT], check=False)
@@ -248,6 +264,26 @@ def main():
     args.output.mkdir(mode=0o710)
     args.output.chmod(0o710)
     subprocess.run(['chown', 'root:minecraft', str(args.output)], check=True)
+    maximum = int((RAPL / 'max_energy_range_uj').read_text())
+    validate_rapl((RAPL / 'name').read_text().strip(), int((RAPL / 'enabled').read_text()), maximum)
+    int((RAPL / 'energy_uj').read_text())
+    # Hyphens imply nested slices, so this spelling deliberately has no hyphen.
+    slice_path = Path('/run/systemd/system/minecraftperformance.slice')
+    slice_path.write_text('[Unit]\nDescription=Disposable Minecraft qualification slice\n'
+                          '[Slice]\nCPUWeight=50\nIOWeight=50\n')
+    subprocess.run(['systemctl', 'daemon-reload'], check=True)
+    subprocess.run(['systemctl', 'start', 'minecraftperformance.slice'], check=True)
+    save(args.output / 'receipt.json', {'rapl_path': str(RAPL.resolve()), 'rapl_name': 'package-0',
+         'rapl_enabled': 1, 'rapl_max_energy_range_uj': maximum, 'base': str(BASE),
+         'base_subvolume': command('btrfs', 'subvolume', 'show', str(BASE)),
+         'branch_sha': command('git', '-C', str(HERE), 'rev-parse', 'HEAD').strip(),
+         'production_system': str(Path('/run/current-system').resolve()),
+         'wrapper_sha256': hashlib.sha256(Path(WRAPPER).read_bytes()).hexdigest(),
+         'helper_sha256': hashlib.sha256((HERE / 'idle_metrics.py').read_bytes()).hexdigest(),
+         'mod_sha256': {p.name: file_sha256(p) for p in MODS.iterdir()},
+         'slice': command('systemctl', 'show', 'minecraftperformance.slice',
+                          '-p', 'ControlGroup', '-p', 'CPUWeight', '-p', 'IOWeight'),
+         'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
     subprocess.run([str(JAVA / 'jfr'), 'configure', '--input', 'none',
                     '+jdk.ExecutionSample#enabled=true', '+jdk.ExecutionSample#period=20ms',
                     '+jdk.NativeMethodSample#enabled=true', '+jdk.NativeMethodSample#period=20ms',
@@ -256,19 +292,37 @@ def main():
                     '--output', str(args.output / 'idle.jfc')], check=True)
     (args.output / 'idle.jfc').chmod(0o644)
     results = []
-    variants = [f'pair-{i}-{v}' for i in range(1, 6)
-                for v in (('off', 'on') if i % 2 else ('on', 'off'))]
-    variants += ['diagnostic-realtime', 'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all']
-    for variant in variants:
-        save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'running': variant,
+    rejected = []
+
+    def execute(variant, attempt=0):
+        name = variant if not attempt else variant + f'-retry-{attempt}'
+        save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'running': name,
                                             'completed': [r['variant'] for r in results]})
-        result = run(args.output, variant, 600)
-        results.append(result)
+        result = run(args.output, variant, 600, attempt)
+        if any(result['memory_events_delta'].values()):
+            raise RuntimeError('FAIL_MEMORY_PRESSURE: memory event gate failed')
+        if not result['world_unchanged']:
+            raise RuntimeError('FAIL_BACKGROUND_WORLD_DATABASE_MUTATION')
+        return result
+
+    for i in range(1, 6):
+        for attempt in range(4):
+            order = ('off', 'on') if i % 2 else ('on', 'off')
+            measured = {v: execute(f'pair-{i}-{v}', attempt) for v in order}
+            if pair_valid(measured['off'], measured['on']):
+                results.extend(measured[v] for v in order)
+                save(args.output / 'results.json', results)
+                break
+            rejected.append({'pair': i, 'retry': attempt, 'result': 'INCONCLUSIVE',
+                             'reason': 'ENVIRONMENT_CONFOUND', 'runs': measured})
+            save(args.output / 'rejected-pairs.json', rejected)
+        else:
+            raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
+    # Power acceptance is already complete before any profiler starts.
+    for variant in ('diagnostic-off', 'diagnostic-normal', 'diagnostic-realtime',
+                    'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all'):
+        results.append(execute(variant))
         save(args.output / 'results.json', results)
-        if not result['environment_clients_absent']:
-            raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: Minecraft client overlapped the idle interval')
-        if any(result['memory_events_delta'][k] for k in ('max', 'oom', 'oom_kill')):
-            raise RuntimeError('memory correctness gate failed')
     save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'MEASURED',
                                         'completed': [r['variant'] for r in results]})
 

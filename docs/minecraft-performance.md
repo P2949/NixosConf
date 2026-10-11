@@ -16,19 +16,50 @@ evidence of their original gates, rather than being retroactively marked PASS.
 At least five paired, fresh-JVM runs use equivalent writable snapshots of the
 frozen world, identical non-DH mods, 1/8 GiB G1 heaps, 10/12 GiB cgroup limits,
 normal 60-second empty pause, 90-second settling, and 600-second intervals.
-Pair order alternates. Service CPU accounting, native-thread CPU, Java thread
-dumps, sampled JFR stacks, Intel package RAPL energy, cgroup I/O and memory events,
-and world/database content identities are retained outside the repository.
+Pair order alternates. Clean acceptance reads cgroup CPU directly, package RAPL,
+memory events, cgroup I/O and aggregate host CPU; samples stay in memory until
+the interval ends. It performs no JFR recording, thread scans, `jcmd`, per-sample
+`systemctl`, cpuidle scans or persistent sample writes. Diagnostic attribution
+runs follow separately with per-thread CPU, Java dumps and memory-backed JFR.
+All raw measurements and world/database identities stay outside the repository.
 Logical-CPU idle residency is supplemental evidence, not package C-state proof.
 Real-time updates, synchronization on load, generation, and all optional server
 features are disabled in separate disposable diagnostic variants only.
 
-Acceptance requires median DH-on CPU at most 5% of one core and attributable
-package-power increase at most 1 W across the controlled pairs, plus normal
+Acceptance requires the median of DH-on interval-average CPU measurements at
+most 5% of one core, median run p95 CPU at most 10%, and the upper 95% paired
+bootstrap bound of package-power increase at most 1 W. Normal
 pause, no continued generation, sustained database growth or disk I/O, memory
 pressure/OOM events, or unbounded work queues. No correctness, backup or recovery
 gate is relaxed. Confounding host load or inconsistent controls require a
-methodology correction before attribution or acceptance.
+methodology correction before attribution or acceptance. A pair is invalid if
+unrelated host CPU differs by over 0.5 percentage points between run medians,
+unrelated host p95 exceeds 5% or maximum exceeds 20%, or a Minecraft client
+overlaps the run. At most three fresh-pair environmental retries are allowed.
+Memory or world/database mutations are failures and are not retried as noise.
+
+The disposable `minecraftperformance.slice` is a top-level sibling of the
+production slice with CPU/IO weights 50; benchmark services use Nice 5 and the
+same memory limits. Slice names containing hyphens would imply nesting.
+RAPL must identify enabled `package-0` with a readable positive counter range;
+reset-like decreases or physically implausible readings invalidate the data.
+Burst statistics accompany interval accounting rather than replacing it.
+
+I/O acceptance requires zero p95 read/write rates, unchanged world/database
+content, no discards, and no DH-on read excess. The control reveals unavoidable
+JVM performance-counter writeback, approximately 4 KiB every 30 seconds. DH-on
+writes may exceed matched control by at most four metadata pages (16 KiB); this
+allows intermittent JVM bookkeeping without waiving sustained DH database work.
+Functional compatibility, backup, restore, identity restart, queue behavior and
+Chunky-to-normal-DH catch-up remain separate required gates in the final
+adjudicator. Passing resources alone cannot accept DH or unlock C2ME.
+
+The profiled and environmentally confounded pilot runs remain excluded. This
+host-specific harness and chronology are disposable qualification machinery:
+before PR creation remove them, move durable operating results to
+`docs/minecraft-server.md` and `docs/status.md`, and preserve detail in Git/PR
+history. Performance clients retain only the frame probe; packet logging is
+reserved for functional acceptance. The existing backup architecture is unchanged.
 
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff

@@ -2,10 +2,27 @@
 
 import argparse
 from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 import random
 import statistics
+
+from idle_metrics import indexed_pairs, pair_io_pass, pair_valid
+
+
+def verified_gate(gate):
+    if not isinstance(gate, dict) or gate.get('result') != 'PASS':
+        return 'UNPROVEN'
+    path = Path(gate.get('evidence', ''))
+    if not path.is_absolute() or not path.is_file():
+        return 'UNPROVEN'
+    with path.open('rb') as stream:
+        digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+    if digest != gate.get('sha256'):
+        return 'UNPROVEN'
+    proof = json.loads(path.read_text())
+    return 'PASS' if proof.get('result') == 'PASS' else 'UNPROVEN'
 
 
 def interval(values):
@@ -44,28 +61,46 @@ def stacks(path):
 
 def analyze(root):
     results = json.loads((root / 'results.json').read_text())
-    by_name = {r['variant']: r for r in results}
     pairs = []
-    for i in range(1, 6):
-        off, on = by_name[f'pair-{i}-off'], by_name[f'pair-{i}-on']
-        pairs.append({'pair': i, 'off_cpu_pct': off['service_cpu_median_one_core_pct'],
-                      'on_cpu_pct': on['service_cpu_median_one_core_pct'],
+    clean = [r for r in results if r['variant'].startswith('pair-')]
+    paired = indexed_pairs(clean)
+    for i, (off, on) in enumerate(paired, 1):
+        pairs.append({'pair': i, 'off_cpu_pct': off['service_cpu_interval_one_core_pct'],
+                      'on_cpu_pct': on['service_cpu_interval_one_core_pct'],
                       'off_power_w': off['package_power_w'], 'on_power_w': on['package_power_w'],
-                      'power_delta_w': on['package_power_w'] - off['package_power_w']})
+                      'power_delta_w': on['package_power_w'] - off['package_power_w'],
+                      'environment_valid': pair_valid(off, on), 'io_valid': pair_io_pass(off, on)})
     power = [p['power_delta_w'] for p in pairs]
     cpu = [p['on_cpu_pct'] for p in pairs]
-    result = {'pairs': pairs, 'median_on_cpu_pct': statistics.median(cpu),
+    burst = [on['service_cpu_distribution_one_core_pct']['p95'] for off, on in paired]
+    result = {'pairs': pairs, 'median_on_interval_cpu_pct': statistics.median(cpu),
+              'median_on_p95_cpu_pct': statistics.median(burst),
               'median_paired_power_delta_w': statistics.median(power),
               'paired_power_delta_ci95_w': interval(power),
               'on_cpu_median_ci95_pct': interval(cpu),
-              'resource_limits_pass': statistics.median(cpu) <= 5 and max(interval(power)) <= 1,
-              'world_unchanged_all': all(r['world_unchanged'] for r in results),
-              'memory_events_zero_all': all(not any(r['memory_events_delta'].values()) for r in results),
+              'resource_limits_pass': statistics.median(cpu) <= 5 and statistics.median(burst) <= 10 and max(interval(power)) <= 1,
+              'host_load_pass': all(p['environment_valid'] for p in pairs),
+              'io_pass': all(p['io_valid'] and off['io_sustained_pass'] and on['io_sustained_pass']
+                             for p, (off, on) in zip(pairs, paired)),
+              'world_unchanged_all': all(r['world_unchanged'] for r in clean),
+              'memory_events_zero_all': all(not any(r['memory_events_delta'].values()) for r in clean),
               'functional_recovery_and_queue_gates': 'REQUIRE_SEPARATE_REVIEW',
               'result': 'INCONCLUSIVE', 'diagnostics': [r for r in results if r['variant'].startswith('diagnostic')]}
+    gates = ('resource_limits_pass', 'host_load_pass', 'io_pass', 'world_unchanged_all', 'memory_events_zero_all')
+    result['idle_acceptance'] = 'PASS' if all(result[k] for k in gates) else (
+        'INCONCLUSIVE' if not result['host_load_pass'] else 'FAIL')
+    receipt = root / 'functional-acceptance.json'
+    required = ('dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
+                'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')
+    acceptance = json.loads(receipt.read_text()) if receipt.exists() else {}
+    result['functional_gates'] = {k: verified_gate(acceptance.get(k)) for k in required}
+    if result['idle_acceptance'] == 'PASS' and all(v == 'PASS' for v in result['functional_gates'].values()):
+        result['result'] = 'PASS'
     for evidence in root.glob('*-evidence'):
-        data = stacks(evidence / 'jfr-events.json')
-        (evidence / 'jfr-attribution.json').write_text(json.dumps(data, indent=2) + '\n')
+        recording = evidence / 'jfr-events.json'
+        if recording.exists():
+            data = stacks(recording)
+            (evidence / 'jfr-attribution.json').write_text(json.dumps(data, indent=2) + '\n')
     return result
 
 
