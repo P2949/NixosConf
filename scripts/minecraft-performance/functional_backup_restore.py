@@ -294,10 +294,20 @@ def replace_lab_root_with_snapshot(
     if (
         lab.root.parent != lab.output
         or not lab.root.exists()
+        or lab.root != lab.root.resolve()
     ):
         raise RuntimeError(
             'functional baseline clone is not owned'
         )
+
+    existing = subvolume_identity(lab.root)
+    baseline = lab.manifest['baseline']
+    if (
+        existing['readonly']
+        or existing['parent_uuid'] != baseline['subvolume_uuid']
+        or existing['filesystem_uuid'] != baseline['filesystem_uuid']
+    ):
+        raise RuntimeError('functional baseline clone identity mismatch before deletion')
 
     subprocess.run(
         [

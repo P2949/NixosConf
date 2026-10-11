@@ -2,11 +2,13 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from functional_backup_restore import (
     parse_subvolume_identity,
     require_fresh_backup,
+    replace_lab_root_with_snapshot,
     write_backup_restore_proofs,
 )
 
@@ -39,6 +41,25 @@ def status(
 
 
 class BackupRestoreTests(unittest.TestCase):
+    def test_clone_identity_mismatch_prevents_deletion(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory).resolve()
+            root = output / 'world-clone'
+            root.mkdir()
+            lab = SimpleNamespace(active=False, root=root, output=output,
+                manifest={'baseline': {'subvolume_uuid': 'expected-parent',
+                                       'filesystem_uuid': 'expected-filesystem'}})
+            for identity in (
+                {'readonly': False, 'parent_uuid': 'unrelated', 'filesystem_uuid': 'expected-filesystem'},
+                {'readonly': False, 'parent_uuid': 'expected-parent', 'filesystem_uuid': 'unrelated'},
+                {'readonly': True, 'parent_uuid': 'expected-parent', 'filesystem_uuid': 'expected-filesystem'},
+            ):
+                with patch('functional_backup_restore.subvolume_identity', return_value=identity), \
+                     patch('functional_backup_restore.subprocess.run') as run:
+                    with self.assertRaisesRegex(RuntimeError, 'identity mismatch before deletion'):
+                        replace_lab_root_with_snapshot(lab, {'path': '/.snapshots/minecraft/survival-test'})
+                    run.assert_not_called()
+
     def test_fresh_backup_requires_new_verified_recovery_point(self):
         old = status(
             'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
