@@ -53,5 +53,188 @@ class MaintenanceTests(unittest.TestCase):
                                      for call in run.call_args_list))
 
 
+    def test_recovery_restores_frozen_client_inputs_atomically(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            persist = base / 'persist'
+            output = base / 'functional'
+            root = persist / 'minecraft-performance-client-test'
+
+            persist.mkdir()
+            output.mkdir()
+
+            profiles = {}
+
+            for name in ('dh-clean', 'no-dh'):
+                instance = root / 'instances' / name
+                game = instance / 'minecraft'
+
+                (game / 'config').mkdir(parents=True)
+
+                pack = instance / 'mmc-pack.json'
+                options = game / 'options.txt'
+                dh_config = game / 'config/DistantHorizons.toml'
+
+                pack.write_text('mutated pack\n')
+                options.write_text('mutated options\n')
+                dh_config.write_text('mutated dh\n')
+
+                pack.chmod(0o644)
+                options.chmod(0o644)
+                dh_config.chmod(0o644)
+
+                profiles[name] = {
+                    'pack': {
+                        'path': str(pack),
+                        'content': f'frozen {name} pack\n',
+                    },
+                    'files': {
+                        'options.txt': {
+                            'content': f'frozen {name} options\n',
+                        },
+                        'config/DistantHorizons.toml': {
+                            'content': f'frozen {name} dh\n',
+                        },
+                    },
+                }
+
+            manifest = {
+                'client': {
+                    'root': str(root),
+                    'profiles': profiles,
+                },
+            }
+
+            (output / 'candidate-manifest.json').write_text(
+                json.dumps(manifest)
+            )
+
+            before = {}
+
+            for name in ('dh-clean', 'no-dh'):
+                instance = root / 'instances' / name
+
+                for relative in (
+                    'mmc-pack.json',
+                    'minecraft/options.txt',
+                    'minecraft/config/DistantHorizons.toml',
+                ):
+                    target = instance / relative
+                    info = target.stat()
+
+                    before[(name, relative)] = (
+                        info.st_uid,
+                        info.st_gid,
+                        info.st_mode & 0o777,
+                    )
+
+            maintenance.restore_client_inputs(
+                output,
+                persist,
+            )
+
+            for name in ('dh-clean', 'no-dh'):
+                instance = root / 'instances' / name
+
+                self.assertEqual(
+                    (instance / 'mmc-pack.json').read_text(),
+                    f'frozen {name} pack\n',
+                )
+                self.assertEqual(
+                    (instance / 'minecraft/options.txt').read_text(),
+                    f'frozen {name} options\n',
+                )
+                self.assertEqual(
+                    (
+                        instance
+                        / 'minecraft/config/DistantHorizons.toml'
+                    ).read_text(),
+                    f'frozen {name} dh\n',
+                )
+
+                for relative in (
+                    'mmc-pack.json',
+                    'minecraft/options.txt',
+                    'minecraft/config/DistantHorizons.toml',
+                ):
+                    target = instance / relative
+                    info = target.stat()
+
+                    self.assertEqual(
+                        (
+                            info.st_uid,
+                            info.st_gid,
+                            info.st_mode & 0o777,
+                        ),
+                        before[(name, relative)],
+                    )
+
+                    self.assertFalse(
+                        target.with_name(
+                            target.name
+                            + '.qualification-restore-tmp'
+                        ).exists()
+                    )
+
+    def test_recovery_refuses_symlinked_client_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            persist = base / 'persist'
+            output = base / 'functional'
+            root = persist / 'minecraft-performance-client-test'
+
+            persist.mkdir()
+            output.mkdir()
+
+            outside = base / 'outside-pack.json'
+            outside.write_text('outside\n')
+
+            profiles = {}
+
+            for name in ('dh-clean', 'no-dh'):
+                instance = root / 'instances' / name
+                game = instance / 'minecraft'
+
+                game.mkdir(parents=True)
+
+                pack = instance / 'mmc-pack.json'
+
+                if name == 'no-dh':
+                    pack.symlink_to(outside)
+                else:
+                    pack.write_text('mutated\n')
+
+                profiles[name] = {
+                    'pack': {
+                        'path': str(pack),
+                        'content': 'frozen\n',
+                    },
+                    'files': {},
+                }
+
+            (output / 'candidate-manifest.json').write_text(
+                json.dumps({
+                    'client': {
+                        'root': str(root),
+                        'profiles': profiles,
+                    },
+                })
+            )
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                'restoration target is unsafe',
+            ):
+                maintenance.restore_client_inputs(
+                    output,
+                    persist,
+                )
+
+            self.assertEqual(
+                outside.read_text(),
+                'outside\n',
+            )
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -2,6 +2,7 @@
 
 import fcntl
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -31,6 +32,210 @@ def cleanup_slice():
         subprocess.run(['systemctl', 'daemon-reload'], check=True)
 
 
+def _restore_frozen_text(path, root, content):
+    """Atomically restore one authenticated disposable client text input."""
+    path = Path(path)
+    root = Path(root)
+
+    if not isinstance(content, str):
+        raise RuntimeError('frozen client restoration content must be text')
+
+    if (
+        not root.is_absolute()
+        or root.is_symlink()
+        or not root.is_dir()
+        or root.resolve() != root
+    ):
+        raise RuntimeError('disposable client root is unsafe during recovery')
+
+    if (
+        not path.is_absolute()
+        or not path.is_relative_to(root)
+        or path.is_symlink()
+        or not path.is_file()
+        or path.resolve() != path
+    ):
+        raise RuntimeError('disposable client restoration target is unsafe')
+
+    info = path.stat()
+    temporary = path.with_name(
+        path.name + '.qualification-restore-tmp'
+    )
+
+    if os.path.lexists(temporary):
+        raise RuntimeError(
+            'stale disposable client restoration temporary exists'
+        )
+
+    flags = (
+        os.O_WRONLY
+        | os.O_CREAT
+        | os.O_EXCL
+        | os.O_CLOEXEC
+        | getattr(os, 'O_NOFOLLOW', 0)
+    )
+
+    descriptor = os.open(
+        temporary,
+        flags,
+        info.st_mode & 0o777,
+    )
+
+    try:
+        with os.fdopen(
+            descriptor,
+            'w',
+            encoding='utf-8',
+        ) as stream:
+            descriptor = None
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+
+        os.chown(
+            temporary,
+            info.st_uid,
+            info.st_gid,
+        )
+        os.chmod(
+            temporary,
+            info.st_mode & 0o777,
+        )
+
+        os.replace(
+            temporary,
+            path,
+        )
+
+        directory = os.open(
+            path.parent,
+            os.O_RDONLY
+            | os.O_DIRECTORY
+            | os.O_CLOEXEC
+            | getattr(os, 'O_NOFOLLOW', 0),
+        )
+
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def restore_client_inputs(
+    output,
+    persist_root=Path('/persist'),
+):
+    """Restore frozen Prism inputs after stopping any qualification client."""
+    manifest_path = output / 'candidate-manifest.json'
+
+    if not manifest_path.exists():
+        return
+
+    manifest = json.loads(manifest_path.read_text())
+    identity = manifest.get('client')
+
+    if identity is None:
+        return
+
+    persist_root = Path(persist_root)
+    root = Path(identity.get('root', ''))
+
+    if (
+        root.parent != persist_root
+        or not root.name.startswith('minecraft-performance-client-')
+        or root.is_symlink()
+        or not root.is_dir()
+        or root.resolve() != root
+    ):
+        raise RuntimeError(
+            'candidate contains unsafe disposable client root'
+        )
+
+    profiles = identity.get('profiles')
+
+    if (
+        not isinstance(profiles, dict)
+        or set(profiles) != {'dh-clean', 'no-dh'}
+    ):
+        raise RuntimeError(
+            'candidate disposable client profile set is invalid'
+        )
+
+    allowed_files = {
+        'options.txt',
+        'config/DistantHorizons.toml',
+    }
+
+    for name, profile in profiles.items():
+        instance = root / 'instances' / name
+
+        if (
+            instance.is_symlink()
+            or not instance.is_dir()
+            or instance.resolve() != instance
+        ):
+            raise RuntimeError(
+                'candidate disposable client instance is unsafe'
+            )
+
+        pack = profile.get('pack')
+
+        if not isinstance(pack, dict):
+            raise RuntimeError(
+                'candidate disposable client pack identity is invalid'
+            )
+
+        pack_path = Path(pack.get('path', ''))
+
+        if pack_path != instance / 'mmc-pack.json':
+            raise RuntimeError(
+                'candidate disposable client pack path is invalid'
+            )
+
+        _restore_frozen_text(
+            pack_path,
+            root,
+            pack.get('content'),
+        )
+
+        files = profile.get('files')
+
+        if (
+            not isinstance(files, dict)
+            or not set(files).issubset(allowed_files)
+        ):
+            raise RuntimeError(
+                'candidate disposable client controlled files are invalid'
+            )
+
+        for filename, entry in files.items():
+            relative = Path(filename)
+
+            if (
+                relative.is_absolute()
+                or '..' in relative.parts
+                or not isinstance(entry, dict)
+            ):
+                raise RuntimeError(
+                    'candidate disposable client controlled path is invalid'
+                )
+
+            _restore_frozen_text(
+                instance / 'minecraft' / relative,
+                root,
+                entry.get('content'),
+            )
+
+
 def restore(output):
     # The watchdog and controller can converge here; serialize restoration.
     with (output / 'recovery.lock').open('a') as lock:
@@ -39,6 +244,7 @@ def restore(output):
         for unit in (CLIENT, LAB, FUNCTIONAL):
             if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
                 subprocess.run(['systemctl', 'stop', unit], check=True)
+        restore_client_inputs(output)
         cleanup_slice()
         safe = Path(state['safe_system'])
         if Path('/run/current-system').resolve() != safe:
