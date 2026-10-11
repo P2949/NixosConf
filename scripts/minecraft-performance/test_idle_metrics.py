@@ -76,3 +76,13 @@ class CounterTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ToolPathRegressionTests(unittest.TestCase):
+    def test_idle_tools_come_from_frozen_nix_input(self):
+        root = Path(__file__).resolve().parent
+        source = (root / 'dh_idle_attribution.py').read_text()
+        self.assertNotRegex(source, r'/nix/store/[a-z0-9]{32}-coreutils')
+        self.assertIn("CANDIDATE['qualification_tools_path']", source)
+        self.assertIn('qualification_tools_path = pkgs.lib.makeBinPath',
+                      (root / 'candidate.nix').read_text())

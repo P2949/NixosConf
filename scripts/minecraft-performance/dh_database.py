@@ -6,7 +6,7 @@ import shutil
 import sqlite3
 
 
-def inspect_closed_database(source, destination, *, owner_stopped):
+def inspect_closed_database(source, destination, *, owner_stopped, require_useful=True):
     if owner_stopped is not True:
         raise RuntimeError('DH database owner must be stopped before inspection')
     source, destination = Path(source), Path(destination)
@@ -30,7 +30,7 @@ def inspect_closed_database(source, destination, *, owner_stopped):
         schema = connection.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name").fetchall()
         # Empty schema or rows without data cannot qualify useful cached terrain.
         useful = connection.execute('SELECT COUNT(*) FROM FullData WHERE length(Data) > 0').fetchone()[0]
-        if useful <= 0:
+        if require_useful and useful <= 0:
             raise RuntimeError('DH database contains no useful FullData rows')
         fingerprint = hashlib.sha256()
         for row in connection.execute('SELECT DetailLevel, PosX, PosZ, DataChecksum, Data FROM FullData ORDER BY DetailLevel, PosX, PosZ'):

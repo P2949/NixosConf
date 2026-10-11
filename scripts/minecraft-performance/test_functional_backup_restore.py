@@ -248,6 +248,7 @@ Received UUID: -
                 },
             }
 
+            (output / 'restore-dh.json').write_text(json.dumps({'result': 'PASS', 'evidence': []}))
             calls = []
 
             def fake_write_proof(

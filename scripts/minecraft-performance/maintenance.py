@@ -23,8 +23,8 @@ def call(*args):
     return subprocess.check_output(args, text=True)
 
 
-def cleanup_slice():
-    path = Path('/run/systemd/system') / SLICE
+def cleanup_slice(unit_root=Path('/run/systemd/system')):
+    path = unit_root / SLICE
     if path.exists():
         if path.is_symlink() or path.read_text() != SLICE_TEXT:
             raise RuntimeError('refuse cleanup of unrelated slice definition')

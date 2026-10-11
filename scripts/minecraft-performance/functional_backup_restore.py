@@ -10,6 +10,8 @@ import signal
 import subprocess
 from uuid import UUID
 
+from dh_database import inspect_closed_database, inspect_closed_cache
+from functional_dh import exercise_dh_client, read_dh_messages, dh_outcome
 from client_runtime import Client
 from functional_clients import exercise_non_dh_client
 from functional_runtime import Lab
@@ -467,6 +469,11 @@ def write_backup_restore_proofs(
         + '\n'
     )
 
+    dh_receipt_path = output / 'restore-dh.json'
+    dh_receipt = json.loads(dh_receipt_path.read_text())
+    if dh_receipt.get('result') != 'PASS':
+        raise RuntimeError('restored DH data path did not pass')
+
     restore_receipt = output / 'restore.json'
     restore_receipt.write_text(
         json.dumps(
@@ -487,6 +494,7 @@ def write_backup_restore_proofs(
                 'restore_clone_parent_uuid': (
                     clone_identity['parent_uuid']
                 ),
+                'dh_subtest': dh_receipt,
                 'client_probe_result': result,
                 'final_heartbeat': heartbeat,
                 'server_pid': server_pid,
@@ -537,6 +545,9 @@ def write_backup_restore_proofs(
         (launcher_log, 'log'),
         (lab.log, 'log'),
     ]
+
+    restore_evidence.append((dh_receipt_path, 'json'))
+    restore_evidence.extend((Path(entry['path']), entry['type']) for entry in dh_receipt['evidence'])
 
     references = {
         'backup': write_proof(
@@ -705,6 +716,13 @@ def execute(
             0o400
         )
 
+        server_databases = sorted(lab.server.rglob('DistantHorizons.sqlite'))
+        if not server_databases:
+            raise RuntimeError('restored server has no DH database')
+        restored_databases = [inspect_closed_database(source, output / f'server-dh-{index}.sqlite',
+                             owner_stopped=not lab.active, require_useful=False)
+                              for index, source in enumerate(server_databases)]
+
         with lab:
             lab.start()
 
@@ -727,6 +745,29 @@ def execute(
                 client_pid = client.pid
 
             server_pid = lab.pid
+            dh_output = lab_output / 'client-restore-dh'
+            with Client(manifest, dh_output, 'dh-clean', 60, fresh_cache=True) as client:
+                exercise_dh_client(lab, client)
+                dh_pid = client.pid
+            messages = read_dh_messages(dh_output / 'dh-received.jsonl')
+            if dh_outcome(messages, manifest) != 'PASS' or not any(
+                message['type'] in ('FullDataSourceResponseMessage', 'FullDataSplitMessage')
+                and not message['exception_type'] for message in messages
+            ):
+                raise RuntimeError('restored DH client received no useful full-data response')
+            client_databases = inspect_closed_cache(
+                Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data',
+                dh_output, owner_stopped=not Path(f'/proc/{dh_pid}').exists())
+            dh_evidence = [{'path': str(dh_output / filename), 'type': kind}
+                           for filename, kind in (('result.json', 'json'), ('heartbeat.json', 'json'),
+                                                  ('dh-received.jsonl', 'log'), ('launcher.log', 'log'))]
+            dh_evidence.extend({'path': database['copy'], 'type': 'sqlite'}
+                               for database in restored_databases + client_databases)
+            dh_receipt = {'result': 'PASS', 'server_databases': restored_databases,
+                          'client_databases': client_databases, 'client_pid': dh_pid,
+                          'message_count': len(messages), 'evidence': dh_evidence}
+            (output / 'restore-dh.json').write_bytes(canonical_bytes(dh_receipt))
+            (output / 'restore-dh.json').chmod(0o400)
 
         return write_backup_restore_proofs(
             manifest,

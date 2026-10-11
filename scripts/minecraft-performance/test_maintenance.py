@@ -53,6 +53,37 @@ class MaintenanceTests(unittest.TestCase):
                                      for call in run.call_args_list))
 
 
+    def test_foreign_slice_definition_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            definition = root / maintenance.SLICE
+            definition.write_text('[Slice]\nCPUWeight=900\n')
+            with patch.object(maintenance.subprocess, 'run') as run:
+                with self.assertRaisesRegex(RuntimeError, 'unrelated slice'):
+                    maintenance.cleanup_slice(root)
+                run.assert_not_called()
+            self.assertEqual(definition.read_text(), '[Slice]\nCPUWeight=900\n')
+
+    def test_guard_binds_manifest_and_restores_authenticated_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            (output / 'candidate-manifest.json').write_text('{}\n')
+            with patch.object(maintenance, 'call', return_value='not-found'), \
+                 patch.object(maintenance.subprocess, 'run'):
+                maintenance.arm(output)
+            state = json.loads((output / 'maintenance.json').read_text())
+            self.assertEqual(state['manifest_sha256'], maintenance.hashlib.sha256(b'{}\n').hexdigest())
+            def call(*args):
+                if args[0] == 'minecraft-backup':
+                    return '{"health":"ok","live_verification":"passed"}'
+                return 'not-found' if 'LoadState' in args else 'active'
+            with patch.object(maintenance, 'call', side_effect=call), \
+                 patch.object(maintenance.subprocess, 'run'), \
+                 patch.object(maintenance, 'cleanup_slice'), \
+                 patch.object(maintenance, 'restore_client_inputs') as client:
+                maintenance.restore(output)
+                client.assert_called_once_with(output)
+
     def test_cleanup_failures_do_not_block_production_recovery(self):
         for stage in ('show', 'stop', 'slice', 'manifest'):
             with self.subTest(stage=stage), tempfile.TemporaryDirectory() as directory:
