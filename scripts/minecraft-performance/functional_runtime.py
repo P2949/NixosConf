@@ -8,7 +8,7 @@ import sys
 import time
 
 from generate_candidate_manifest import baseline_identity
-from qualification_manifest import controlled_path, sha256
+from qualification_manifest import controlled_path, sha256, validate_candidate
 from idle_metrics import unique_java
 import maintenance
 
@@ -30,6 +30,7 @@ def identity_helper():
 
 class Lab:
     def __init__(self, manifest, output):
+        validate_candidate(manifest, HERE.parent.parent)
         self.manifest = manifest
         self.output = controlled_path(output, Path('/persist'))
         if self.output.parent != Path('/persist') or not self.output.name.startswith('minecraft-performance-functional-'):

@@ -26,6 +26,20 @@ let
         name
         value.value
   ) server.files;
+  queueAgent =
+    pkgs.runCommand "minecraft-qualification-queue-agent"
+      {
+        nativeBuildInputs = [ pkgs.openjdk25 ];
+        agentSource = flake.outPath + "/scripts/minecraft-performance/probe/DhQueueAgent.java";
+        attachSource = flake.outPath + "/scripts/minecraft-performance/probe/QueueAttach.java";
+      }
+      ''
+        mkdir -p classes "$out"
+        javac -d classes "$agentSource" "$attachSource"
+        printf 'Manifest-Version: 1.0\nAgent-Class: local.minecraft.performance.DhQueueAgent\n\n' > agent.manifest
+        jar --create --date=2026-01-01T00:00:00Z --file "$out/queue-agent.jar" \
+          --manifest agent.manifest -C classes .
+      '';
 in
 pkgs.writeText "minecraft-candidate-nix.json" (
   builtins.toJSON {
@@ -36,6 +50,7 @@ pkgs.writeText "minecraft-candidate-nix.json" (
     minecraft_package_name = server.package.name;
     java_home = pkgs.openjdk25_headless;
     diagnostic_java_home = pkgs.openjdk25;
+    queue_agent_path = "${queueAgent}/queue-agent.jar";
     mods_directory = server.symlinks.mods;
     pregen_mods_directory = pregen.symlinks.mods;
     pregen_dh_policy =

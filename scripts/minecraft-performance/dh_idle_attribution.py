@@ -12,7 +12,7 @@ import sys
 import time
 
 from idle_metrics import pair_valid, summarize, unique_java, validate_rapl
-from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256
+from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, validate_candidate
 from generate_candidate_manifest import baseline_identity
 from analyze_dh_idle import analyze
 import maintenance
@@ -278,6 +278,7 @@ def execute_main():
     parser.add_argument('--manifest', type=Path, required=True)
     args = parser.parse_args()
     CANDIDATE = json.loads(args.manifest.read_text())
+    validate_candidate(CANDIDATE, HERE.parent.parent)
     if CANDIDATE.get('schema') != 1:
         parser.error('unsupported candidate manifest schema')
     if (CANDIDATE['service']['CPUWeight'], CANDIDATE['service']['IOWeight']) != (50, 50):

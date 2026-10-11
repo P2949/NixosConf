@@ -61,6 +61,7 @@ def generate(nix_manifest, base, sources, repository):
                       'version': subprocess.check_output([str(java), '-version'], stderr=subprocess.STDOUT, text=True).strip()}
     wrapper = Path(result['minecraft_package']) / 'bin/minecraft-server'
     result['wrapper'] = {'path': str(wrapper), 'sha256': sha256(wrapper)}
+    result['queue_agent'] = {'path': result['queue_agent_path'], 'sha256': sha256(result['queue_agent_path'])}
     result['mods'] = mod_inventory(result['mods_directory'])
     result['pregen_mods'] = mod_inventory(result['pregen_mods_directory'])
     pregen_policy = Path(result['pregen_dh_policy'])

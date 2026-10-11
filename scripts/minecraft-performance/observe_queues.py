@@ -8,7 +8,7 @@ import subprocess
 import time
 
 from dh_idle_attribution import counters
-from idle_metrics import io_delta
+from idle_metrics import io_delta, percentile
 from qualification_manifest import canonical_bytes, qualification_id, sha256
 from queue_acceptance import convergence
 import maintenance
@@ -47,27 +47,48 @@ def observe(lab, agent, evidence, *, guarded=True):
     root.mkdir(mode=0o750, exist_ok=True)
     root.chmod(0o750)
     subprocess.run(['chown', 'root:minecraft', str(root)], check=True)
-    snapshot = root / (qualification_id(lab.manifest) + '.json')
-    if snapshot.exists():
-        raise ValueError('queue snapshot path already occupied')
-    snapshot.touch(mode=0o600)
-    subprocess.run(['chown', 'minecraft:minecraft', str(snapshot)], check=True)
+    directory = root / (qualification_id(lab.manifest) + '-' + evidence.stem)
+    directory.mkdir(mode=0o700)
+    directory.chmod(0o700)
+    subprocess.run(['chown', 'minecraft:minecraft', str(directory)], check=True)
+    snapshot = directory / 'sample.json'
     java = Path(lab.manifest['diagnostic_java_home']) / 'bin/java'
     rows = []
+    subprocess.run([str(java), '-cp', str(agent), 'local.minecraft.performance.QueueAttach',
+        str(lab.pid), str(agent), str(snapshot)], check=True, timeout=10,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     start = time.monotonic()
     previous_cpu = counters(lab.cgroup / 'cpu.stat')['usage_usec']
     previous_io = (lab.cgroup / 'io.stat').read_text()
     previous_time = start
+    previous_sequence = json.loads(snapshot.read_text())['sequence']
     try:
         for index in range(1, 92):
             if guarded:
                 maintenance.refresh()
-            time.sleep(max(0, start + index * 10 - time.monotonic()))
-            # Attach output is tmpfs; clean package-power samples never run this.
-            subprocess.run([str(java), '-cp', str(agent), 'local.minecraft.performance.QueueAttach',
-                str(lab.pid), str(agent), str(snapshot)], check=True, timeout=10,
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            rates = []
+            cpu_rates = []
+            sample_io, sample_time = previous_io, previous_time
+            sample_cpu = previous_cpu
+            for second in range(1, 11):
+                time.sleep(max(0, start + (index - 1) * 10 + second - time.monotonic()))
+                next_io, next_time = (lab.cgroup / 'io.stat').read_text(), time.monotonic()
+                next_cpu = counters(lab.cgroup / 'cpu.stat')['usage_usec']
+                if next_cpu < sample_cpu:
+                    raise ValueError('queue observation CPU counter reset')
+                cpu_rates.append((next_cpu - sample_cpu) / (next_time - sample_time) / 10000)
+                difference = io_delta(sample_io, next_io)
+                rates.append({key: difference[key] / (next_time - sample_time) for key in ('rbytes', 'wbytes')})
+                sample_io, sample_time, sample_cpu = next_io, next_time, next_cpu
             observation = json.loads(snapshot.read_text())
+            if observation.get('sequence', -1) <= previous_sequence:
+                deadline = time.monotonic() + 2
+                while observation.get('sequence', -1) <= previous_sequence and time.monotonic() < deadline:
+                    time.sleep(.1)
+                    observation = json.loads(snapshot.read_text())
+                if observation.get('sequence', -1) <= previous_sequence:
+                    raise ValueError('stale queue observer snapshot')
+            previous_sequence = observation['sequence']
             database_hash, database_backlog = database_state(lab.server / 'world')
             now = time.monotonic()
             current_cpu = counters(lab.cgroup / 'cpu.stat')['usage_usec']
@@ -79,8 +100,10 @@ def observe(lab, agent, evidence, *, guarded=True):
             observation.setdefault('queues', {}).update(database_backlog)
             observation.update({'elapsed': now - start,
                 'cpu_one_core_pct': (current_cpu - previous_cpu) / elapsed / 10000,
-                'read_bytes_per_second': delta['rbytes'] / elapsed,
-                'write_bytes_per_second': delta['wbytes'] / elapsed,
+                'read_bytes_per_second': percentile([rate['rbytes'] for rate in rates], .95),
+                'write_bytes_per_second': percentile([rate['wbytes'] for rate in rates], .95),
+                'io_interval_delta': delta,
+                'io_rates_one_second': rates, 'cpu_samples_one_second': cpu_rates,
                 'database_fingerprint': database_hash})
             rows.append(observation)
             result = convergence(rows)
@@ -90,4 +113,7 @@ def observe(lab, agent, evidence, *, guarded=True):
         evidence.write_text(json.dumps({'result': result, 'samples': rows}, indent=2) + '\n')
         return result
     finally:
-        snapshot.unlink(missing_ok=True)
+        (directory / 'stop').touch(mode=0o600)
+        if not evidence.exists():
+            evidence.write_text(json.dumps({'result': {'result': 'INCONCLUSIVE',
+                'reason': 'QUEUE_OBSERVATION_ABORTED'}, 'samples': rows}, indent=2) + '\n')

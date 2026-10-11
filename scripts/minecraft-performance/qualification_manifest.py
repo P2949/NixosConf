@@ -18,6 +18,22 @@ def qualification_id(manifest):
     return hashlib.sha256(canonical_bytes(manifest)).hexdigest()
 
 
+def validate_candidate(manifest, repository):
+    if manifest.get('schema') != 1:
+        raise ValueError('unsupported qualification manifest')
+    artifacts = [manifest['wrapper'], manifest['java'], manifest['pregen_policy'], manifest['queue_agent'],
+                 *manifest['mods'], *manifest['pregen_mods'], *manifest['policies'].values()]
+    for artifact in artifacts:
+        if sha256(artifact['path']) != artifact['sha256']:
+            raise ValueError('candidate artifact hash mismatch')
+        if 'content' in artifact and hashlib.sha256(artifact['content'].encode()).hexdigest() != artifact['sha256']:
+            raise ValueError('candidate policy content mismatch')
+    for filename, digest in manifest['tool_source_files'].items():
+        path = Path(filename)
+        if path.is_absolute() or '..' in path.parts or sha256(repository / path) != digest:
+            raise ValueError('qualification source differs from frozen candidate')
+
+
 def controlled_path(path, namespace, *, existing=False):
     """Reject aliases before any privileged mutation, including symlink parents."""
     path = Path(path)

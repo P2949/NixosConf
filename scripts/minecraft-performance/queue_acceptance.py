@@ -39,12 +39,18 @@ def convergence(samples, *, timeout=900, quiet_seconds=180, max_backlog=10000):
     starts = [index for index, row in enumerate(samples) if row['elapsed'] <= end - quiet_seconds]
     window = samples[starts[-1]:] if starts else samples
     sufficiently_long = window[-1]['elapsed'] - window[0]['elapsed'] >= quiet_seconds
+    io_rates = [rate for row in window for rate in row.get('io_rates_one_second',
+        [{'rbytes': row['read_bytes_per_second'], 'wbytes': row['write_bytes_per_second']}])]
+    cpu_rates = [value for row in window for value in row.get('cpu_samples_one_second', [row['cpu_one_core_pct']])]
+    if (not io_rates or not cpu_rates or any(not math.isfinite(value) or value < 0 for value in cpu_rates)
+            or any(not math.isfinite(rate[key]) or rate[key] < 0 for rate in io_rates for key in ('rbytes', 'wbytes'))):
+        return {'result': 'INCONCLUSIVE', 'reason': 'INVALID_SUBINTERVAL_RESOURCE_COUNTER'}
     quiet = (sufficiently_long and all(not any(row['queues'].values()) for row in window)
              and len({row['database_fingerprint'] for row in window}) == 1
              and statistics.mean(row['cpu_one_core_pct'] for row in window) <= 5
-             and percentile([row['cpu_one_core_pct'] for row in window], .95) <= 10
-             and percentile([row['read_bytes_per_second'] for row in window], .95) == 0
-             and percentile([row['write_bytes_per_second'] for row in window], .95) == 0)
+             and percentile(cpu_rates, .95) <= 10
+             and percentile([rate['rbytes'] for rate in io_rates], .95) == 0
+             and percentile([rate['wbytes'] for rate in io_rates], .95) == 0)
     if quiet and end <= timeout:
         return {'result': 'PASS', 'reason': 'STABLE_ZERO_QUEUES_DATABASE_AND_IDLE_RESOURCES',
                 'converged_by_seconds': end, 'quiet_window_seconds': quiet_seconds}

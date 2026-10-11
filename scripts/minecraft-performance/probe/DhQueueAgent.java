@@ -4,6 +4,7 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,6 +48,22 @@ public final class DhQueueAgent {
     }
 
     public static void agentmain(String output, Instrumentation instrumentation) throws Exception {
+        // One attach avoids repeated JVM warning/log writes during observation.
+        capture(output, instrumentation, 0);
+        Thread worker = new Thread(() -> {
+            for (int sequence = 1; sequence <= 91; sequence++) {
+                try {
+                    Thread.sleep(10_000);
+                    if (Files.exists(Path.of(output).getParent().resolve("stop"))) return;
+                    capture(output, instrumentation, sequence);
+                } catch (Exception failure) { return; }
+            }
+        }, "DH Qualification Queue Observer");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private static void capture(String output, Instrumentation instrumentation, int sequence) throws Exception {
         Path path = Path.of(output);
         if (!path.isAbsolute() || !path.equals(path.normalize())
                 || !path.startsWith("/run/minecraft-performance-queues")
@@ -91,7 +108,8 @@ public final class DhQueueAgent {
                 count(counts, method + "_queued", pool == null ? 0 : invoke(pool, "getQueueSize"));
                 count(counts, method + "_running", pool == null ? 0 : invoke(pool, "getRunningTaskCount"));
             }
-            StringBuilder json = new StringBuilder("{\"schema\":1,\"complete\":true,\"loaded_levels\":")
+            StringBuilder json = new StringBuilder("{\"schema\":1,\"complete\":true,\"sequence\":")
+                .append(sequence).append(",\"loaded_levels\":")
                 .append(levelCount).append(",\"queues\":{");
             boolean first = true;
             for (var entry : counts.entrySet()) {
@@ -99,13 +117,20 @@ public final class DhQueueAgent {
                 first = false;
                 json.append('"').append(entry.getKey()).append("\":").append(entry.getValue());
             }
-            Files.writeString(path, json.append("}}\n").toString());
+            writeSnapshot(path, json.append("}}\n").toString());
         } catch (Exception failure) {
             try {
-                Files.writeString(path, "{\"schema\":1,\"complete\":false,\"error_type\":\""
+                writeSnapshot(path, "{\"schema\":1,\"complete\":false,\"error_type\":\""
                     + failure.getClass().getSimpleName() + "\"}\n");
             } catch (Exception outputFailure) { failure.addSuppressed(outputFailure); }
             throw failure;
         }
+    }
+
+    private static void writeSnapshot(Path path, String json) throws Exception {
+        Path temporary = path.resolveSibling(path.getFileName() + ".tmp");
+        if (Files.isSymbolicLink(temporary)) throw new IllegalArgumentException("snapshot temporary alias");
+        Files.writeString(temporary, json);
+        Files.move(temporary, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 }

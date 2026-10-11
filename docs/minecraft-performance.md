@@ -135,6 +135,24 @@ content. Forty-two Python tests, probe compilation, Nix formatting and the
 Minecraft configuration check pass. The post-Chunky driver and its complete
 runtime acceptance remain pending; no authoritative clean pair has completed.
 
+The post-Chunky executable driver now specifies a square centered at block
+8192/8192 with radius 256, outside the fixed baseline's generated region. It
+requires a machine-parsed 100% completion marker, at least 1,024 new terrain
+chunks inside the bounded extent, the DH-disabled maintenance policy, normal
+PRE_EXISTING_ONLY/CHUNKS_ONLY after restart, unchanged DH identity, no added
+normal-mode region/chunk entries, and the timed convergence gate. It writes
+qualification-bound receipts only after those observations. Runtime remains
+unproven until this driver executes against a newly frozen manifest.
+
+The queue agent now attaches once and observes for at most 910 seconds, avoiding
+repeated JVM attach warnings in measured server I/O. Its snapshots are atomic
+tmpfs replacements, with sequence checks and a stop marker. One-second resource
+samples remain separate from ten-second queue/database observations, so a
+periodic JVM metadata write is not misclassified as sustained I/O by coarse
+sampling. The exact agent is built by Nix from the frozen Git source and hashed
+into the candidate manifest; arbitrary externally supplied agent JARs are
+rejected. Forty-four Python tests and the Minecraft configuration check pass.
+
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff
 patch attempt. An invasive permanent fork is rejected: omit server-side DH,

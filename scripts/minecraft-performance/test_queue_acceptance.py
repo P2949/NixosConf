@@ -45,6 +45,20 @@ class QueueConvergenceTests(unittest.TestCase):
                 rows[-1]['cpu_one_core_pct'] = float('nan')
             self.assertEqual(convergence(rows)['result'], 'INCONCLUSIVE', change)
 
+    def test_one_second_io_rates_distinguish_bookkeeping_from_sustained_work(self):
+        rows = self.samples()
+        for index, row in enumerate(rows):
+            row['io_rates_one_second'] = [{'rbytes': 0, 'wbytes': 0} for _ in range(10)]
+            if index % 3 == 0:
+                row['io_rates_one_second'][0]['wbytes'] = 4096
+        self.assertEqual(convergence(rows)['result'], 'PASS')
+        for row in rows:
+            row['io_rates_one_second'][0]['wbytes'] = 4096
+        self.assertNotEqual(convergence(rows)['result'], 'PASS')
+        for row in rows:
+            row['cpu_samples_one_second'] = [0] * 8 + [50, 50]
+        self.assertNotEqual(convergence(rows)['result'], 'PASS')
+
 
 if __name__ == '__main__':
     unittest.main()
