@@ -159,9 +159,19 @@ def dh_outcome(messages):
 
 
 def generation_outcome(before, after):
+    # Entity and POI records change during ordinary play. Only terrain region
+    # occupancy and generation status establish new terrain generation.
+    terrain_before = {
+        name: region for name, region in before.items()
+        if Path(name).parent.name == 'region'
+    }
+    terrain_after = {
+        name: region for name, region in after.items()
+        if Path(name).parent.name == 'region'
+    }
     return (
         'PASS'
-        if no_unwanted_generation(before, after)
+        if no_unwanted_generation(terrain_before, terrain_after)
         else 'FAIL'
     )
 

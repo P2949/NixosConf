@@ -13,6 +13,26 @@ from functional_dh import (
 
 
 class FunctionalDhTests(unittest.TestCase):
+    def test_entity_saves_do_not_establish_terrain_generation(self):
+        terrain = {
+            'dimensions/minecraft/overworld/region/r.0.0.mca': {
+                'size': 8192, 'chunks': [(0, 0)],
+                'chunk_metadata': [{'Status': 'minecraft:full', 'xPos': 0, 'zPos': 0}],
+            },
+        }
+        after = {
+            **terrain,
+            'dimensions/minecraft/overworld/entities/r.0.0.mca': {
+                'size': 12288, 'chunks': [(0, 0)],
+            },
+        }
+        self.assertEqual(generation_outcome(terrain, after), 'PASS')
+        after['dimensions/minecraft/overworld/region/r.1.0.mca'] = {
+            'size': 0, 'chunks': [], 'chunk_metadata': [],
+        }
+        # Empty terrain shells still require explicit pinned-source approval.
+        self.assertEqual(generation_outcome(terrain, after), 'FAIL')
+
     def test_dh_pass_requires_real_nonexception_traffic(self):
         self.assertEqual(
             dh_outcome([]),
