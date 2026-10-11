@@ -1,11 +1,14 @@
 from pathlib import Path
+import json
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from functional_clients import (
     COMMAND_MARKER,
     DISCONNECT_MARKER,
     PLAYER_PRESENT_MARKER,
+    execute,
     exercise_non_dh_client,
     wait_for_log_since,
 )
@@ -112,6 +115,130 @@ class FunctionalClientTests(unittest.TestCase):
 
             self.assertEqual(lab.commands, [])
             self.assertFalse(client.finished)
+
+    def test_execute_hashes_evidence_only_after_lab_shutdown(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'functional'
+            state = {}
+
+            class LifecycleLab:
+                def __init__(self, manifest, path):
+                    path.mkdir()
+                    self.output = path
+                    self.log = path / 'server.log'
+                    self.log.write_text('server running\n')
+                    self.server = path / 'world-clone/survival'
+                    self.pid = 111
+                    self.active = False
+                    state['lab'] = self
+
+                def start(self):
+                    self.active = True
+
+                def stop(self):
+                    if self.active:
+                        with self.log.open('a') as stream:
+                            stream.write('server stopped\n')
+                        self.active = False
+
+                def __enter__(self):
+                    return self
+
+                def __exit__(self, *exception):
+                    self.stop()
+
+            class LifecycleClient:
+                def __init__(
+                    self,
+                    manifest,
+                    client_output,
+                    profile,
+                    duration,
+                ):
+                    self.output = client_output
+                    self.pid = 222
+
+                def __enter__(self):
+                    self.output.mkdir()
+                    (self.output / 'result.json').write_text(
+                        json.dumps({'result': 'PASS'})
+                    )
+                    (self.output / 'heartbeat.json').write_text(
+                        json.dumps({'connected': False})
+                    )
+                    (self.output / 'launcher.log').write_text(
+                        'launcher finished\n'
+                    )
+                    return self
+
+                def __exit__(self, *exception):
+                    return None
+
+            def fake_write_proof(
+                manifest,
+                gate,
+                proof_path,
+                evidence,
+                result,
+            ):
+                lab = state['lab']
+
+                self.assertFalse(lab.active)
+                self.assertIn(
+                    'server stopped',
+                    lab.log.read_text(),
+                )
+                self.assertIn(
+                    (lab.log, 'log'),
+                    evidence,
+                )
+
+                proof_path.write_text('{}')
+                return {
+                    'result': result,
+                    'evidence': str(proof_path),
+                    'sha256': 'test-proof',
+                }
+
+            manifest = {
+                'client': {},
+                'baseline': {
+                    'subvolume_uuid': 'test-baseline',
+                },
+            }
+
+            with (
+                patch(
+                    'functional_clients.Lab',
+                    LifecycleLab,
+                ),
+                patch(
+                    'functional_clients.Client',
+                    LifecycleClient,
+                ),
+                patch(
+                    'functional_clients.exercise_non_dh_client',
+                ),
+                patch(
+                    'functional_clients.maintenance.enter',
+                ),
+                patch(
+                    'functional_clients.write_proof',
+                    side_effect=fake_write_proof,
+                ),
+            ):
+                references = execute(manifest, output)
+
+            self.assertEqual(
+                references['non_dh_client']['result'],
+                'PASS',
+            )
+            self.assertTrue(
+                (output / 'non-dh-client-reference.json').is_file()
+            )
+            self.assertFalse(
+                (output / 'functional-acceptance.json').exists()
+            )
 
 
 if __name__ == '__main__':

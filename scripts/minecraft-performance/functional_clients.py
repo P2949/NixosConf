@@ -89,6 +89,71 @@ def exercise_non_dh_client(lab, client):
     wait_for_log_since(lab.log, DISCONNECT_MARKER, disconnect_offset)
 
 
+def write_non_dh_pass(
+    manifest,
+    output,
+    lab,
+    client_output,
+    server_pid,
+    client_pid,
+):
+    """Write proof only after every hashed runtime evidence file is final."""
+    if lab.active:
+        raise RuntimeError(
+            'non-DH proof requires stopped functional server'
+        )
+
+    result_path = client_output / 'result.json'
+    heartbeat_path = client_output / 'heartbeat.json'
+    launcher_log = client_output / 'launcher.log'
+
+    result = json.loads(result_path.read_text())
+    heartbeat = json.loads(heartbeat_path.read_text())
+
+    if result.get('result') != 'PASS':
+        raise RuntimeError('non-DH client probe did not produce PASS')
+
+    receipt = output / 'non-dh-client.json'
+    receipt.write_text(json.dumps({
+        'result': 'PASS',
+        'profile': 'no-dh',
+        'player': PLAYER,
+        'server_player_marker': PLAYER_PRESENT_MARKER,
+        'server_command_marker': COMMAND_MARKER,
+        'clean_disconnect_marker': DISCONNECT_MARKER,
+        'client_probe_result': result,
+        'final_heartbeat': heartbeat,
+        'server_pid': server_pid,
+        'client_pid': client_pid,
+        'server_world': str(lab.server),
+        'baseline_uuid': manifest['baseline']['subvolume_uuid'],
+    }, indent=2) + '\n')
+    receipt.chmod(0o400)
+
+    evidence = [
+        (receipt, 'json'),
+        (result_path, 'json'),
+        (heartbeat_path, 'json'),
+        (launcher_log, 'log'),
+        (lab.log, 'log'),
+    ]
+
+    reference = write_proof(
+        manifest,
+        'non_dh_client',
+        output / 'non_dh_client-proof.json',
+        evidence,
+        'PASS',
+    )
+
+    references = {'non_dh_client': reference}
+    reference_path = output / 'non-dh-client-reference.json'
+    reference_path.write_bytes(canonical_bytes(references))
+    reference_path.chmod(0o400)
+
+    return references
+
+
 def execute(manifest, output):
     if 'client' not in manifest:
         raise ValueError('functional client identity missing from candidate manifest')
@@ -111,54 +176,20 @@ def execute(manifest, output):
                 45,
             ) as client:
                 exercise_non_dh_client(lab, client)
+                client_pid = client.pid
 
-            result_path = client_output / 'result.json'
-            heartbeat_path = client_output / 'heartbeat.json'
-            launcher_log = client_output / 'launcher.log'
+            server_pid = lab.pid
 
-            result = json.loads(result_path.read_text())
-            heartbeat = json.loads(heartbeat_path.read_text())
-
-            if result.get('result') != 'PASS':
-                raise RuntimeError('non-DH client probe did not produce PASS')
-
-            receipt = output / 'non-dh-client.json'
-            receipt.write_text(json.dumps({
-                'result': 'PASS',
-                'profile': 'no-dh',
-                'player': PLAYER,
-                'server_player_marker': PLAYER_PRESENT_MARKER,
-                'server_command_marker': COMMAND_MARKER,
-                'clean_disconnect_marker': DISCONNECT_MARKER,
-                'client_probe_result': result,
-                'final_heartbeat': heartbeat,
-                'server_pid': lab.pid,
-                'client_pid': client.pid,
-                'production_data_touched': False,
-            }, indent=2) + '\n')
-
-            evidence = [
-                (receipt, 'json'),
-                (result_path, 'json'),
-                (heartbeat_path, 'json'),
-                (launcher_log, 'log'),
-                (lab.log, 'log'),
-            ]
-
-            reference = write_proof(
-                manifest,
-                'non_dh_client',
-                output / 'non_dh_client-proof.json',
-                evidence,
-                'PASS',
-            )
-
-            references = {'non_dh_client': reference}
-            (output / 'functional-acceptance.json').write_text(
-                json.dumps(references, indent=2) + '\n'
-            )
-
-            return references
+        # Lab.__exit__ has now stopped the server. This matters because
+        # server shutdown can append to lab.log, which is hashed evidence.
+        return write_non_dh_pass(
+            manifest,
+            output,
+            lab,
+            client_output,
+            server_pid,
+            client_pid,
+        )
 
     finally:
         try:
