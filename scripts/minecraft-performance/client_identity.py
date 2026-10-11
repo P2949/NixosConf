@@ -6,6 +6,7 @@ from pathlib import Path
 import tempfile
 import subprocess
 import re
+import tomllib
 
 from generate_candidate_manifest import mod_inventory
 from qualification_manifest import canonical_bytes, controlled_path, sha256
@@ -55,6 +56,8 @@ def capture(root, launcher, java):
         has_dh = any(mod['id'] == 'distanthorizons' for mod in inventory)
         if has_dh != (name == 'dh-clean'):
             raise ValueError('DH/non-DH client inventory mismatch')
+        if has_dh and tomllib.loads(files['config/DistantHorizons.toml']['content'])['server']['syncOnLoadRateLimit'] != 20:
+            raise ValueError('qualification DH client requires synchronization rate 20')
         if ('local_performance_dh_probe' in ids) != has_dh:
             raise ValueError('functional packet probe inventory mismatch')
         result['profiles'][name] = {'settings': settings, 'files': files,

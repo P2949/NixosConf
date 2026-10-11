@@ -14,6 +14,17 @@ require stronger automated proofs. The interrupted idle study completed zero
 valid pairs; its private cancellation receipt records INCONCLUSIVE, preserves
 partial evidence, and records healthy production recovery.
 
+The stronger `b70c14a` candidate passed ordinary-client compatibility but failed
+DH qualification when the cached reconnect received one `RateLimitedException`
+before the landmark mutation. Both bounded clients completed and the landmark
+was restored; production and live backup health recovered. That exception remains
+a failure. The next candidate freezes the disposable DH client synchronization
+rate at 20 requests/second against the server's unchanged global 50/second
+ceiling and requires received session-config telemetry to confirm negotiation.
+Pinned DH 3.3.4 bytecode uses the minimum client/server session rate while its
+server limiter reads the global server setting. This gives request scheduling
+headroom; fresh qualification must establish whether it resolves the burst.
+
 Recovery binds client templates to the manifest digest captured when the guard
 is armed. Disposable unit, slice, and client-template errors are recorded and
 reported only after safe production restoration and live backup verification.

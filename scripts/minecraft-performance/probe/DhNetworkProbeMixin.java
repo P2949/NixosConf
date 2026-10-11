@@ -1,6 +1,7 @@
 package local.minecraft.performance;
 
 import com.seibel.distanthorizons.core.network.messages.AbstractNetworkMessage;
+import com.seibel.distanthorizons.core.network.messages.base.SessionConfigMessage;
 import com.seibel.distanthorizons.core.network.messages.requests.ExceptionMessage;
 import com.seibel.distanthorizons.core.network.session.NetworkSession;
 import java.io.IOException;
@@ -21,9 +22,11 @@ public abstract class DhNetworkProbeMixin {
         Files.createDirectories(directory);
         String exceptionType = message instanceof ExceptionMessage error && error.exception != null
             ? error.exception.getClass().getSimpleName() : "";
+        String sessionLimit = message instanceof SessionConfigMessage config
+            ? ",\"sync_on_login_rate_limit\":" + config.config.getSyncOnLoginRateLimit() : "";
         Files.writeString(directory.resolve("dh-received.jsonl"),
             "{\"monotonic_ns\":" + System.nanoTime() + ",\"type\":\"" +
-            message.getClass().getSimpleName() + "\",\"exception_type\":\"" + exceptionType + "\"}\n",
+            message.getClass().getSimpleName() + "\",\"exception_type\":\"" + exceptionType + "\"" + sessionLimit + "}\n",
             StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 }
