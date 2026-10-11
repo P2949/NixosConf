@@ -58,3 +58,41 @@ class DatabaseTests(unittest.TestCase):
                 connection.commit()
             changed = inspect('changed.sqlite')
             self.assertNotEqual(before['requested_section_fingerprints'], changed['requested_section_fingerprints'])
+
+    def test_wal_rows_become_self_contained_read_only_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            live = root / 'fixture-builder.sqlite'
+            frozen = root / 'closed-source.sqlite'
+            with closing(sqlite3.connect(live)) as connection:
+                connection.execute('PRAGMA journal_mode=WAL')
+                connection.execute('PRAGMA wal_autocheckpoint=0')
+                connection.execute('CREATE TABLE FullData(DetailLevel, PosX, PosZ, DataChecksum, Data)')
+                connection.execute('PRAGMA wal_checkpoint(TRUNCATE)')
+                connection.execute('INSERT INTO FullData VALUES(0,-5,0,7,?)', (b'committed WAL terrain',))
+                connection.commit()
+                # Freeze bytes, then close the fixture builder. The inspector's
+                # source has no live SQLite owner and contains an uncheckpointed WAL.
+                frozen.write_bytes(live.read_bytes())
+                Path(str(frozen) + '-wal').write_bytes(Path(str(live) + '-wal').read_bytes())
+            copy = root / 'copy.sqlite'
+            result = inspect_closed_database(frozen, copy, owner_stopped=True)
+            self.assertEqual(result['useful_full_data_rows'], 1)
+            self.assertFalse(Path(str(copy) + '-wal').exists())
+            self.assertFalse(Path(str(copy) + '-shm').exists())
+            with closing(sqlite3.connect(copy.as_uri() + '?immutable=1', uri=True)) as connection:
+                self.assertEqual(connection.execute('PRAGMA integrity_check').fetchall(), [('ok',)])
+                self.assertEqual(connection.execute('SELECT Data FROM FullData').fetchone()[0], b'committed WAL terrain')
+            self.assertEqual(copy.stat().st_mode & 0o777, 0o400)
+
+    def test_existing_destination_sidecar_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'source.sqlite'
+            source.write_bytes(b'source')
+            sidecar = root / 'copy.sqlite-wal'
+            sidecar.write_bytes(b'foreign')
+            with self.assertRaisesRegex(RuntimeError, 'sidecar destination already exists'):
+                inspect_closed_database(source, root / 'copy.sqlite', owner_stopped=True)
+            self.assertEqual(sidecar.read_bytes(), b'foreign')
+            self.assertFalse((root / 'copy.sqlite').exists())
