@@ -11,6 +11,7 @@ from functional_clients import (
     execute,
     exercise_non_dh_client,
     wait_for_log_since,
+    write_non_dh_pass,
 )
 
 
@@ -53,6 +54,22 @@ class FakeClient:
 
 
 class FunctionalClientTests(unittest.TestCase):
+    def test_malformed_heartbeat_cannot_produce_pass_proof(self):
+        for heartbeat in ({'connected': 'true', 'elapsed_seconds': 45},
+                          {'connected': False, 'elapsed_seconds': True},
+                          {'connected': False, 'elapsed_seconds': 0},
+                          {'connected': False, 'elapsed_seconds': float('nan')},
+                          {'connected': False, 'elapsed_seconds': float('inf')}):
+            with self.subTest(heartbeat=heartbeat), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / 'result.json').write_text('{"result":"PASS"}')
+                (root / 'heartbeat.json').write_text(json.dumps(heartbeat))
+                lab = type('StoppedLab', (), {'active': False})()
+                with self.assertRaisesRegex(RuntimeError, 'heartbeat is invalid'):
+                    write_non_dh_pass({}, root, lab, root, 111, 222)
+                self.assertFalse((root / 'non-dh-client.json').exists())
+
+
     def test_log_marker_must_be_newer_than_offset(self):
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / 'server.log'

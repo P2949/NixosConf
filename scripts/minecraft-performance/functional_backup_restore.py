@@ -749,6 +749,11 @@ def execute(
             with Client(manifest, dh_output, 'dh-clean', 60, fresh_cache=True) as client:
                 exercise_dh_client(lab, client)
                 dh_pid = client.pid
+            result = json.loads((dh_output / 'result.json').read_text())
+            heartbeat = json.loads((dh_output / 'heartbeat.json').read_text())
+            elapsed = heartbeat.get('elapsed_seconds')
+            if result != {'result': 'PASS'} or not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
+                raise RuntimeError('restored DH client completion evidence is malformed')
             messages = read_dh_messages(dh_output / 'dh-received.jsonl')
             if dh_outcome(messages, manifest) != 'PASS' or not any(
                 message['type'] in ('FullDataSourceResponseMessage', 'FullDataSplitMessage')

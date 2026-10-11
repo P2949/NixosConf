@@ -14,6 +14,10 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
         raise RuntimeError('unsafe DH database source')
     if destination.exists() or destination.is_symlink() or destination.resolve() != destination:
         raise RuntimeError('DH database copy destination must be new and canonical')
+    for suffix in ('-wal', '-shm'):
+        sidecar = Path(str(destination) + suffix)
+        if sidecar.exists() or sidecar.is_symlink():
+            raise RuntimeError('DH copy sidecar destination already exists')
     # Keep any final WAL beside the copy; SQLite reads only the private copy.
     shutil.copyfile(source, destination)
     for suffix in ('-wal', '-shm'):

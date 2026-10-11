@@ -78,6 +78,8 @@ def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     from dh_database import inspect_closed_cache
     from qualification_manifest import canonical_bytes
     require_generated_landmark(regions)
+    if any((lab.server / 'world').rglob('chunks.dat')):
+        raise RuntimeError('landmark fixture requires no pre-existing forced-chunk state')
     options = manifest['client']['profiles']['dh-clean']['files']['options.txt']['content']
     render = re.search(r'(?m)^renderDistance:(\d+)$', options)
     if render is None or int(render.group(1)) > 12:

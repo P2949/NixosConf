@@ -281,6 +281,7 @@ def execute_main():
     os.environ['PATH'] = CANDIDATE['qualification_tools_path'] + ':/run/current-system/sw/bin'
     validate_candidate(CANDIDATE, HERE.parent.parent)
     from assemble_functional_acceptance import verify_bundle
+    functional_bundle_sha256 = sha256(args.functional_bundle)
     gates = verify_bundle(json.loads(args.functional_bundle.read_text()), CANDIDATE)
     if not all(value == 'PASS' for value in gates.values()):
         parser.error('all eight authentic functional gates must pass before idle measurement')
@@ -331,6 +332,8 @@ def execute_main():
     subprocess.run(['systemctl', 'start', 'minecraftperformance.slice'], check=True)
     save(args.output / 'receipt.json', {'rapl_path': str(RAPL.resolve()), 'rapl_name': 'package-0',
          'qualification_id': qualification_id(CANDIDATE),
+         'functional_bundle_path': str(args.functional_bundle.resolve()),
+         'functional_bundle_sha256': functional_bundle_sha256,
          'rapl_enabled': 1, 'rapl_max_energy_range_uj': maximum, 'base': str(BASE),
          'base_subvolume': command('btrfs', 'subvolume', 'show', str(BASE)),
          'branch_sha': command('git', '-c', 'safe.directory=' + str(HERE.parent.parent),
@@ -380,6 +383,8 @@ def execute_main():
             save(args.output / 'rejected-pairs.json', rejected)
         else:
             raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
+    if sha256(args.functional_bundle) != functional_bundle_sha256:
+        raise RuntimeError('functional bundle changed during measurement')
     decision = analyze(args.output, functional_bundle=args.functional_bundle)
     save(args.output / 'analysis.json', decision)
     # Profiling is justified only by a definitive clean resource failure.
@@ -395,6 +400,7 @@ def execute_main():
                                         'final_decision': decision['result'],
                                         'recovery_status': 'PENDING',
                                         'completed': [r['variant'] for r in results]})
+    return decision
 
 
 if __name__ == '__main__':
@@ -402,7 +408,7 @@ if __name__ == '__main__':
         raise SystemExit('qualification interrupted by signal ' + str(signum))
     signal.signal(signal.SIGTERM, terminate)
     try:
-        execute_main()
+        decision = execute_main()
     finally:
         if OUTPUT is not None and (OUTPUT / 'maintenance.json').exists():
             maintenance.restore(OUTPUT)
@@ -413,3 +419,5 @@ if __name__ == '__main__':
                 progress = json.loads(progress_path.read_text())
                 progress['recovery_status'] = 'PASS'
                 save(progress_path, progress)
+
+    raise SystemExit({'PASS': 0, 'FAIL': 1, 'INCONCLUSIVE': 2}[decision['result']])
