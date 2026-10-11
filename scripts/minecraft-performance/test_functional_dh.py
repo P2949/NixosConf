@@ -17,14 +17,15 @@ from functional_dh import (
 class FunctionalDhTests(unittest.TestCase):
     def test_frozen_client_requires_negotiated_headroom_and_rejects_rate_errors(self):
         manifest = {'client': {'profiles': {'dh-clean': {'files': {
-            'config/DistantHorizons.toml': {'content': '[server]\nsyncOnLoadRateLimit = 20\n'},
+            'config/DistantHorizons.toml': {'content': '[server]\nsyncOnLoadRateLimit = 20\ngenerationRequestRateLimit = 8\n'},
         }}}}, 'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_DH_3_3_4_SHA256}]}
         data = {'monotonic_ns': 2, 'type': 'FullDataSourceResponseMessage', 'exception_type': ''}
         config = {'monotonic_ns': 1, 'type': 'SessionConfigMessage', 'exception_type': '',
-                  'sync_on_login_rate_limit': 20}
+                  'sync_on_login_rate_limit': 20, 'generation_request_rate_limit': 8}
         self.assertEqual(dh_outcome([config, data], manifest), 'PASS')
         self.assertEqual(dh_outcome([data], manifest), 'FAIL')
         self.assertEqual(dh_outcome([{**config, 'sync_on_login_rate_limit': 50}, data], manifest), 'FAIL')
+        self.assertEqual(dh_outcome([{**config, 'generation_request_rate_limit': 20}, data], manifest), 'FAIL')
         self.assertEqual(dh_outcome([config, data, {'monotonic_ns': 3,
             'type': 'ExceptionMessage', 'exception_type': 'RateLimitedException'}], manifest), 'FAIL')
         with tempfile.TemporaryDirectory() as directory:
@@ -32,6 +33,7 @@ class FunctionalDhTests(unittest.TestCase):
             path.write_text(json.dumps(config) + '\n' + json.dumps(data) + '\n')
             self.assertEqual(read_dh_messages(path), [config, data])
             for malformed in ({**config, 'sync_on_login_rate_limit': True},
+                              {**config, 'generation_request_rate_limit': True},
                               {**config, 'type': 'FullDataSourceResponseMessage'}):
                 path.write_text(json.dumps(malformed) + '\n')
                 with self.assertRaises(ValueError):

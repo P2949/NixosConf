@@ -56,8 +56,10 @@ def capture(root, launcher, java):
         has_dh = any(mod['id'] == 'distanthorizons' for mod in inventory)
         if has_dh != (name == 'dh-clean'):
             raise ValueError('DH/non-DH client inventory mismatch')
-        if has_dh and tomllib.loads(files['config/DistantHorizons.toml']['content'])['server']['syncOnLoadRateLimit'] != 20:
-            raise ValueError('qualification DH client requires synchronization rate 20')
+        if has_dh:
+            rates = tomllib.loads(files['config/DistantHorizons.toml']['content'])['server']
+            if rates['syncOnLoadRateLimit'] != 20 or rates['generationRequestRateLimit'] != 8:
+                raise ValueError('qualification DH client requires synchronization/full-data rates 20/8')
         if ('local_performance_dh_probe' in ids) != has_dh:
             raise ValueError('functional packet probe inventory mismatch')
         result['profiles'][name] = {'settings': settings, 'files': files,

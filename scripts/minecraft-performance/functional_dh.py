@@ -124,7 +124,7 @@ def read_dh_messages(path):
                 'monotonic_ns',
                 'type',
                 'exception_type',
-            }, {'monotonic_ns', 'type', 'exception_type', 'sync_on_login_rate_limit'})
+            }, {'monotonic_ns', 'type', 'exception_type', 'sync_on_login_rate_limit', 'generation_request_rate_limit'})
         ):
             raise ValueError(
                 f'invalid DH telemetry schema line {line_number}'
@@ -133,12 +133,13 @@ def read_dh_messages(path):
         monotonic = message['monotonic_ns']
         message_type = message['type']
         exception_type = message['exception_type']
-        if 'sync_on_login_rate_limit' in message and (
-            message_type != 'SessionConfigMessage'
-            or type(message['sync_on_login_rate_limit']) is not int
-            or message['sync_on_login_rate_limit'] <= 0
-        ):
-            raise ValueError('invalid DH negotiated synchronization rate')
+        for rate in ('sync_on_login_rate_limit', 'generation_request_rate_limit'):
+            if rate in message and (
+                message_type != 'SessionConfigMessage'
+                or type(message[rate]) is not int
+                or message[rate] <= 0
+            ):
+                raise ValueError('invalid DH negotiated request rate')
 
         if (
             type(monotonic) is not int
@@ -170,15 +171,17 @@ def dh_outcome(messages, manifest=None):
     if not messages:
         return 'FAIL'
 
-    # Real frozen clients advertise a conservative rate below the server's
-    # global 50/s limiter. Require the received negotiation to prove it took
+    # Real frozen clients advertise conservative rates below the server's
+    # global sync/full-data 50/20 limits. Require negotiation to prove it took
     # effect; no server exception is waived to compensate for request bursts.
     files = (manifest or {}).get('client', {}).get('profiles', {}).get('dh-clean', {}).get('files', {})
     if 'config/DistantHorizons.toml' in files:
         import tomllib
-        expected = tomllib.loads(files['config/DistantHorizons.toml']['content'])['server']['syncOnLoadRateLimit']
+        rates = tomllib.loads(files['config/DistantHorizons.toml']['content'])['server']
         configs = [message for message in messages if message['type'] == 'SessionConfigMessage']
-        if expected != 20 or not configs or any(message.get('sync_on_login_rate_limit') != expected for message in configs):
+        if rates.get('syncOnLoadRateLimit') != 20 or rates.get('generationRequestRateLimit') != 8 or not configs or any(
+            message.get('sync_on_login_rate_limit') != 20 or message.get('generation_request_rate_limit') != 8 for message in configs
+        ):
             return 'FAIL'
 
     verified_binary = manifest is not None and any(

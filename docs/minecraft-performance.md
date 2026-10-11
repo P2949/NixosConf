@@ -24,6 +24,11 @@ ceiling and requires received session-config telemetry to confirm negotiation.
 Pinned DH 3.3.4 bytecode uses the minimum client/server session rate while its
 server limiter reads the global server setting. This gives request scheduling
 headroom; fresh qualification must establish whether it resolves the burst.
+The `b408cea` run verified synchronization at 20 but still failed on the separate
+full-data request limiter, identified by its client log as 20 on both ends.
+The next frozen client uses synchronization/full-data rates 20/8 against the
+unchanged server defaults 50/20 and verifies both negotiated values. Failed
+attempts remain FAIL; no additional exception is allowed.
 
 Recovery binds client templates to the manifest digest captured when the guard
 is armed. Disposable unit, slice, and client-template errors are recorded and

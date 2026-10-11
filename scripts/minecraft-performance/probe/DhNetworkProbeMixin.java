@@ -23,7 +23,8 @@ public abstract class DhNetworkProbeMixin {
         String exceptionType = message instanceof ExceptionMessage error && error.exception != null
             ? error.exception.getClass().getSimpleName() : "";
         String sessionLimit = message instanceof SessionConfigMessage config
-            ? ",\"sync_on_login_rate_limit\":" + config.config.getSyncOnLoginRateLimit() : "";
+            ? ",\"sync_on_login_rate_limit\":" + config.config.getSyncOnLoginRateLimit()
+                + ",\"generation_request_rate_limit\":" + config.config.getGenerationRequestRateLimit() : "";
         Files.writeString(directory.resolve("dh-received.jsonl"),
             "{\"monotonic_ns\":" + System.nanoTime() + ",\"type\":\"" +
             message.getClass().getSimpleName() + "\",\"exception_type\":\"" + exceptionType + "\"" + sessionLimit + "}\n",
