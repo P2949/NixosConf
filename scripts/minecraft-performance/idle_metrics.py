@@ -120,7 +120,9 @@ def summarize(rows, maximum, logical_cpus):
             'host_load_pass': percentile(unrelated, .95) <= 5 and max(unrelated) <= 20}
 
 
-def indexed_pairs(rows):
+def indexed_pairs(rows, expected_pair_count=5):
+    if expected_pair_count not in (5, 7, 9, 11):
+        raise ValueError('paired qualification requires 5, 7, 9, or 11 pairs')
     def numeric_values(value):
         if isinstance(value, (int, float)):
             finite(value)
@@ -139,10 +141,10 @@ def indexed_pairs(rows):
         indexed[name] = row
         for key in ('service_cpu_interval_one_core_pct', 'package_power_w'):
             finite(row[key])
-    expected = {f'pair-{i}-{v}' for i in range(1, 6) for v in ('off', 'on')}
+    expected = {f'pair-{i}-{v}' for i in range(1, expected_pair_count + 1) for v in ('off', 'on')}
     if set(indexed) != expected:
         raise ValueError('missing or unexpected paired variants')
-    return [(indexed[f'pair-{i}-off'], indexed[f'pair-{i}-on']) for i in range(1, 6)]
+    return [(indexed[f'pair-{i}-off'], indexed[f'pair-{i}-on']) for i in range(1, expected_pair_count + 1)]
 
 
 def pair_valid(off, on):

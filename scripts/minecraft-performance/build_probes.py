@@ -16,7 +16,7 @@ def build(java_home, libraries, dh_jar, output):
         raise ValueError('Minecraft 26.3 client artifact missing')
     classpath = ':'.join(str(p) for p in sorted(libraries.rglob('*.jar'))) + ':' + str(dh_jar)
     variants = {
-        'client-probe': (['ClientProbeMixin.java'], 'fabric.mod.json', 'performance-client.mixins.json'),
+        'client-probe': (['FrameBuffer.java', 'ClientProbeMixin.java'], 'fabric.mod.json', 'performance-client.mixins.json'),
         'dh-probe': (['DhNetworkProbeMixin.java'], 'dh-fabric.mod.json', 'performance-dh.mixins.json'),
         'server-tick-probe': (['TickBuffer.java', 'ServerTickProbeMixin.java'], 'server-fabric.mod.json', 'performance-server.mixins.json'),
     }
@@ -29,6 +29,10 @@ def build(java_home, libraries, dh_jar, output):
                         str(source / 'TickBuffer.java'), str(source / 'TickBufferTest.java')], check=True)
         subprocess.run([str(java_home / 'bin/java'), '-cp', str(tests),
                         'local.minecraft.performance.TickBufferTest'], check=True)
+        subprocess.run([str(java_home / 'bin/javac'), '-d', str(tests),
+                        str(source / 'FrameBuffer.java'), str(source / 'FrameBufferTest.java')], check=True)
+        subprocess.run([str(java_home / 'bin/java'), '-cp', str(tests),
+                        'local.minecraft.performance.FrameBufferTest'], check=True)
         for name, (files, metadata, mixin) in variants.items():
             classes = root / name
             classes.mkdir()

@@ -2,27 +2,17 @@
 
 import argparse
 from collections import Counter
-import hashlib
 import json
 from pathlib import Path
 import random
 import statistics
 
 from idle_metrics import indexed_pairs, pair_io_pass, pair_valid
+from qualification_manifest import verify_proof
 
 
-def verified_gate(gate):
-    if not isinstance(gate, dict) or gate.get('result') != 'PASS':
-        return 'UNPROVEN'
-    path = Path(gate.get('evidence', ''))
-    if not path.is_absolute() or not path.is_file():
-        return 'UNPROVEN'
-    with path.open('rb') as stream:
-        digest = hashlib.file_digest(stream, 'sha256').hexdigest()
-    if digest != gate.get('sha256'):
-        return 'UNPROVEN'
-    proof = json.loads(path.read_text())
-    return 'PASS' if proof.get('result') == 'PASS' else 'UNPROVEN'
+def verified_gate(gate, gate_name=None, manifest=None):
+    return verify_proof(gate, gate_name, manifest)
 
 
 def interval(values):
@@ -59,11 +49,11 @@ def stacks(path):
                           'use measured native-thread CPU accounting to rank costs.'}
 
 
-def analyze(root):
+def analyze(root, expected_pair_count=5):
     results = json.loads((root / 'results.json').read_text())
     pairs = []
     clean = [r for r in results if r['variant'].startswith('pair-')]
-    paired = indexed_pairs(clean)
+    paired = indexed_pairs(clean, expected_pair_count)
     for i, (off, on) in enumerate(paired, 1):
         pairs.append({'pair': i, 'off_cpu_pct': off['service_cpu_interval_one_core_pct'],
                       'on_cpu_pct': on['service_cpu_interval_one_core_pct'],
@@ -73,10 +63,16 @@ def analyze(root):
     power = [p['power_delta_w'] for p in pairs]
     cpu = [p['on_cpu_pct'] for p in pairs]
     burst = [on['service_cpu_distribution_one_core_pct']['p95'] for off, on in paired]
+    power_interval = interval(power)
+    power_result = 'PASS' if power_interval[1] <= 1 else (
+        'FAIL' if power_interval[0] > 1 else 'INCONCLUSIVE')
     result = {'pairs': pairs, 'median_on_interval_cpu_pct': statistics.median(cpu),
               'median_on_p95_cpu_pct': statistics.median(burst),
               'median_paired_power_delta_w': statistics.median(power),
-              'paired_power_delta_ci95_w': interval(power),
+              'paired_power_delta_ci95_w': power_interval,
+              'power_acceptance': power_result,
+              'pair_count': expected_pair_count,
+              'additional_pairs_allowed': power_result == 'INCONCLUSIVE' and expected_pair_count < 11,
               'on_cpu_median_ci95_pct': interval(cpu),
               'resource_limits_pass': statistics.median(cpu) <= 5 and statistics.median(burst) <= 10 and max(interval(power)) <= 1,
               'host_load_pass': all(p['environment_valid'] for p in pairs),
@@ -87,13 +83,18 @@ def analyze(root):
               'functional_recovery_and_queue_gates': 'REQUIRE_SEPARATE_REVIEW',
               'result': 'INCONCLUSIVE', 'diagnostics': [r for r in results if r['variant'].startswith('diagnostic')]}
     gates = ('resource_limits_pass', 'host_load_pass', 'io_pass', 'world_unchanged_all', 'memory_events_zero_all')
-    result['idle_acceptance'] = 'PASS' if all(result[k] for k in gates) else (
-        'INCONCLUSIVE' if not result['host_load_pass'] else 'FAIL')
+    definite_failure = (statistics.median(cpu) > 5 or statistics.median(burst) > 10
+                        or power_result == 'FAIL' or not result['io_pass']
+                        or not result['world_unchanged_all'] or not result['memory_events_zero_all'])
+    result['idle_acceptance'] = ('INCONCLUSIVE' if not result['host_load_pass'] else
+        'FAIL' if definite_failure else 'PASS' if all(result[k] for k in gates) else 'INCONCLUSIVE')
     receipt = root / 'functional-acceptance.json'
     required = ('dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
                 'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')
     acceptance = json.loads(receipt.read_text()) if receipt.exists() else {}
-    result['functional_gates'] = {k: verified_gate(acceptance.get(k)) for k in required}
+    manifest_path = root / 'candidate-manifest.json'
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
+    result['functional_gates'] = {k: verified_gate(acceptance.get(k), k, manifest) for k in required}
     if result['idle_acceptance'] == 'PASS' and all(v == 'PASS' for v in result['functional_gates'].values()):
         result['result'] = 'PASS'
     for evidence in root.glob('*-evidence'):
@@ -107,7 +108,8 @@ def analyze(root):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('root', type=Path)
+    parser.add_argument('--pairs', type=int, choices=(5, 7, 9, 11), default=5)
     args = parser.parse_args()
-    result = analyze(args.root)
+    result = analyze(args.root, expected_pair_count=args.pairs)
     (args.root / 'analysis.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: v for k, v in result.items() if k != 'diagnostics'}, indent=2))

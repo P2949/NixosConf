@@ -1,6 +1,5 @@
 package local.minecraft.performance;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +17,9 @@ public abstract class ClientProbeMixin {
     @Unique private long probeJoined;
     @Unique private long probeLastFrame;
     @Unique private long probeHeartbeat;
-    @Unique private BufferedWriter probeFrames;
+    @Unique private FrameBuffer probeFrames;
+    @Unique private boolean probeOverflow;
+    @Unique private double probeDuration;
     @Unique private Path probeOutput;
     @Unique private boolean probeFinished;
 
@@ -31,30 +32,31 @@ public abstract class ClientProbeMixin {
             probeStarted = now;
             probeOutput = Path.of(System.getenv("MINECRAFT_PROBE_OUTPUT"));
             Files.createDirectories(probeOutput);
-            probeFrames = Files.newBufferedWriter(probeOutput.resolve("client-frametimes.csv"));
-            probeFrames.write("monotonic_ns,frame_time_ms\n");
+            probeDuration = Double.parseDouble(System.getenv("MINECRAFT_PROBE_DURATION"));
+            if (!Double.isFinite(probeDuration) || probeDuration <= 0 || probeDuration > 3600)
+                throw new IllegalArgumentException("probe duration outside 0..3600 seconds");
+            probeFrames = new FrameBuffer((int) Math.ceil((probeDuration + 180) * 1000));
             Files.writeString(probeOutput.resolve("pid"), Long.toString(ProcessHandle.current().pid()));
         }
         boolean connected = client.level != null && client.player != null && !client.hasSingleplayerServer();
         if (connected && probeJoined == 0) probeJoined = now;
         if (connected && probeLastFrame != 0 && render) {
-            probeFrames.write(now + "," + ((now - probeLastFrame) / 1_000_000.0) + "\n");
+            if (!probeFrames.add(now, now - probeLastFrame)) probeOverflow = true;
         }
         probeLastFrame = connected && render ? now : 0;
         if (now - probeHeartbeat >= 1_000_000_000L) {
             probeHeartbeat = now;
             Files.writeString(probeOutput.resolve("heartbeat.json"),
                 "{\"connected\":" + connected + ",\"elapsed_seconds\":" + ((now - probeStarted) / 1e9) + "}\n");
-            probeFrames.flush();
         }
-        double duration = Double.parseDouble(System.getenv("MINECRAFT_PROBE_DURATION"));
         String result = null;
-        if (probeJoined != 0 && !connected) result = "FAIL_DISCONNECTED";
+        if (probeOverflow) result = "FAIL_FRAME_BUFFER_OVERFLOW";
+        else if (probeJoined != 0 && !connected) result = "FAIL_DISCONNECTED";
         else if (probeJoined == 0 && now - probeStarted > 180_000_000_000L) result = "FAIL_NO_LOGIN";
-        else if (probeJoined != 0 && now - probeJoined >= duration * 1e9) result = "PASS";
+        else if (probeJoined != 0 && now - probeJoined >= probeDuration * 1e9) result = "PASS";
         if (result != null) {
             probeFinished = true;
-            probeFrames.close();
+            probeFrames.save(probeOutput.resolve("client-frametimes.csv"));
             Files.writeString(probeOutput.resolve("result.json"), "{\"result\":\"" + result + "\"}\n");
             if (connected) client.disconnectWithSavingScreen();
             client.stop();

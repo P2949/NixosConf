@@ -17,6 +17,12 @@ def main():
         parser.error("server command required")
     if Path.cwd().resolve().is_relative_to(Path("/srv/minecraft")):
         parser.error("production data directory prohibited")
+    if (not args.console.is_absolute() or '..' in args.console.parts
+            or args.console != args.console.resolve() or args.console.exists()
+            or not args.console.is_relative_to('/persist')
+            or not args.console.parent.name.startswith('minecraft-performance')
+                and not args.console.parent.parent.name.startswith('minecraft-performance')):
+        parser.error("console must be new and canonical inside private qualification data")
     listener = socket.socket(socket.AF_UNIX)
     listener.bind(str(args.console))
     os.chmod(args.console, 0o600)

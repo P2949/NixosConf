@@ -8,7 +8,7 @@ correctness, recovery and performance gates pass.
 ## Revised DH idle attribution policy
 
 The authorized continuation replaces the historical 1% binary DH idle gate with
-paired CPU and package-energy attribution before any production change. The
+paired CPU and package-energy attribution before adopting a production change. The
 checkpoint `31bf61c3bab50954ef283e31ec08b53c5426b240` is preserved remotely on
 `wip/minecraft-server-performance-dh-idle`. Historical failed samples remain
 evidence of their original gates, rather than being retroactively marked PASS.
@@ -20,7 +20,8 @@ Pair order alternates. Clean acceptance reads cgroup CPU directly, package RAPL,
 memory events, cgroup I/O and aggregate host CPU; samples stay in memory until
 the interval ends. It performs no JFR recording, thread scans, `jcmd`, per-sample
 `systemctl`, cpuidle scans or persistent sample writes. Diagnostic attribution
-runs follow separately with per-thread CPU, Java dumps and memory-backed JFR.
+runs occur only after a definitive clean resource failure, with per-thread CPU,
+Java dumps and memory-backed JFR.
 All raw measurements and world/database identities stay outside the repository.
 Logical-CPU idle residency is supplemental evidence, not package C-state proof.
 Real-time updates, synchronization on load, generation, and all optional server
@@ -28,7 +29,10 @@ features are disabled in separate disposable diagnostic variants only.
 
 Acceptance requires the median of DH-on interval-average CPU measurements at
 most 5% of one core, median run p95 CPU at most 10%, and the upper 95% paired
-bootstrap bound of package-power increase at most 1 W. Normal
+bootstrap bound of package-power increase at most 1 W. An interval whose lower
+bound exceeds 1 W fails; a straddling interval remains INCONCLUSIVE and adds two
+balanced pairs, at 5/7/9/11 pairs, with eleven the absolute cap. These CPU limits
+are project budgets rather than upstream DH guarantees. Normal
 pause, no continued generation, sustained database growth or disk I/O, memory
 pressure/OOM events, or unbounded work queues. No correctness, backup or recovery
 gate is relaxed. Confounding host load or inconsistent controls require a
@@ -60,6 +64,36 @@ before PR creation remove them, move durable operating results to
 `docs/minecraft-server.md` and `docs/status.md`, and preserve detail in Git/PR
 history. Performance clients retain only the frame probe; packet logging is
 reserved for functional acceptance. The existing backup architecture is unchanged.
+
+The latest review interrupted the first partial clean run in the `20261011g`
+experiment; it is excluded before qualification under the revised provenance
+requirements. Nix now evaluates an exact committed Git revision to produce
+candidate paths, JVM flags, generated policy files and service limits. The
+enriched manifest hashes all mod and policy artifacts and records the readonly
+baseline filesystem/subvolume UUIDs and immutable content manifest. Its canonical
+SHA256 is the qualification identity. Functional proofs must bind that identity,
+Git revision, named gate, test-source hash, baseline UUID and nonempty hashed
+evidence array. Historical correctly hashed PASS receipts cannot qualify a new
+candidate. World fingerprints precede the 90-second settling period.
+
+Authoritative package-power comparisons temporarily stop production and its
+backup timer after a verified recovery point. An independent 45-minute recovery
+timer is installed before either stop, refreshed before each bounded run, and
+retained until restoration and live backup health succeed. Normal exit,
+exceptions and SIGTERM restore production and remove the disposable slice.
+Unexpected slice definitions or occupied recovery unit names fail closed.
+The revised runner has not yet completed authoritative paired qualification;
+functional restart, post-Chunky catch-up and bounded queues remain unproven.
+
+The provenance/decision checkpoint passed 35 Python performance tests, the
+Minecraft configuration check (including prerequisite, identity, management and
+backup suites), Nix formatting and disposable probe compilation. The client
+frame probe now preallocates a raw-long buffer, formats CSV only after the
+measurement, and fails on overflow; its standalone Java test verifies bounded
+storage and conversion. Independent MangoHud agreement is still unproven.
+The abandoned slice from earlier pilots was stopped and its exact known unit
+definition removed; production and its timer remained active throughout these
+implementation checks. These are local checks, not runtime gate or CI evidence.
 
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff

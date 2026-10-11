@@ -4,9 +4,20 @@ import tempfile
 import unittest
 
 from analyze_dh_idle import analyze, stacks, verified_gate
+from idle_metrics import indexed_pairs
 
 
 class IdleDecisionTests(unittest.TestCase):
+    def test_adaptive_pairs_have_a_finite_cap_and_require_every_variant(self):
+        rows = [{'variant': f'pair-{i}-{variant}', 'service_cpu_interval_one_core_pct': 1,
+                 'package_power_w': 5} for i in range(1, 12) for variant in ('off', 'on')]
+        for count in (5, 7, 9, 11):
+            self.assertEqual(len(indexed_pairs(rows[:count * 2], count)), count)
+            with self.assertRaises(ValueError):
+                indexed_pairs(rows[:count * 2 - 1], count)
+        for count in (0, 4, 6, 10, 12, 13):
+            with self.assertRaises(ValueError):
+                indexed_pairs(rows, count)
     def test_bare_pass_and_stale_proof_cannot_certify_functional_gate(self):
         self.assertEqual(verified_gate('PASS'), 'UNPROVEN')
         with tempfile.TemporaryDirectory() as directory:
@@ -36,6 +47,21 @@ class IdleDecisionTests(unittest.TestCase):
             result = analyze(root)
             self.assertFalse(result['resource_limits_pass'])
             self.assertEqual(result['result'], 'INCONCLUSIVE')
+
+    def test_power_interval_straddling_budget_remains_inconclusive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            rows = json.loads((root / 'results.json').read_text())
+            for row in rows:
+                if row['variant'].endswith('on'):
+                    index = int(row['variant'].split('-')[1])
+                    row['package_power_w'] = 5 + [.2, .4, 1, 1.5, 2][index - 1]
+            (root / 'results.json').write_text(json.dumps(rows))
+            result = analyze(root)
+            self.assertEqual(result['power_acceptance'], 'INCONCLUSIVE')
+            self.assertEqual(result['idle_acceptance'], 'INCONCLUSIVE')
+            self.assertTrue(result['additional_pairs_allowed'])
 
     def test_resources_do_not_certify_functional_acceptance(self):
         with tempfile.TemporaryDirectory() as directory:

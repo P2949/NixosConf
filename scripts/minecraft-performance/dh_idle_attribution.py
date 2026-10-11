@@ -6,16 +6,19 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import sys
 import time
 
 from idle_metrics import pair_valid, summarize, unique_java, validate_rapl
+from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256
+from generate_candidate_manifest import baseline_identity
+from analyze_dh_idle import analyze
+import maintenance
 
-JAVA = Path('/nix/store/jzgzdbryqzji2a6wqcxmbw46hqm7bga5-openjdk-25.0.4.1+1/bin')
-WRAPPER = '/nix/store/z3x5r4lcpr7x20nkpghfb4bcxyv2dhs4-minecraft-server/bin/minecraft-server'
-MODS = Path('/nix/store/c88ym3hqq9axkhws6yrfnchv43n4y1wl-minecraft-survival-mods')
-BASE = Path('/persist/minecraft-performance-lab-20261011-012354-832014a/base')
+JAVA = WRAPPER = MODS = BASE = CANDIDATE = None
+OUTPUT = None
 UNIT = 'minecraft-performance-attribution.service'
 RAPL = Path('/sys/class/powercap/intel-rapl:0')
 HERE = Path(__file__).resolve().parent
@@ -122,7 +125,9 @@ def wait_quiet(output):
 
 
 def prepare(output, name, run_name):
-    root = output / run_name
+    if baseline_identity(BASE) != CANDIDATE['baseline']:
+        raise RuntimeError('baseline identity or immutable content changed')
+    root = controlled_path(output / run_name, output)
     subprocess.run(['btrfs', 'subvolume', 'snapshot', str(BASE), str(root)], check=True)
     server = root / 'survival'
     # Replace inherited managed links only inside this new snapshot.
@@ -136,15 +141,22 @@ def prepare(output, name, run_name):
             continue
         (server / 'mods' / mod.name).symlink_to(mod)
     (server / 'eula.txt').write_text('eula=true\n')
-    (server / 'server.properties').write_text(
-        'server-ip=127.0.0.1\nserver-port=25576\nonline-mode=false\n'
-        'enable-rcon=false\nmanagement-server-enabled=false\n'
-        'pause-when-empty-seconds=60\nview-distance=12\nsimulation-distance=8\n'
-        'level-name=world\nwhite-list=false\nmax-players=10\n')
+    properties = CANDIDATE['controlled_server_properties']
+    (server / 'server.properties').write_text(''.join(
+        f'{key}={str(value).lower() if isinstance(value, bool) else value}\n'
+        for key, value in sorted(properties.items())))
+    for filename, policy in CANDIDATE['policies'].items():
+        target = server / filename
+        if target.parent != target.parent.resolve() or not target.parent.is_relative_to(server):
+            raise RuntimeError('policy parent escapes disposable server')
+        if target.is_symlink():
+            target.unlink()
+        target.write_text(policy['content'])
     realtime = 'false' if name in ('diagnostic-realtime', 'diagnostic-all') else 'true'
     sync = 'false' if name in ('diagnostic-sync', 'diagnostic-all') else 'true'
     plan = 'DISABLED' if name in ('diagnostic-generation', 'diagnostic-all') else 'CHUNKS_ONLY'
-    (server / 'config' / 'DistantHorizons.toml').write_text(
+    if name.startswith('diagnostic'):
+        (server / 'config' / 'DistantHorizons.toml').write_text(
         '_version = 5\n[server]\nsynchronizeOnLoad = ' + sync + '\n'
         'enableRealTimeUpdates = ' + realtime + '\n'
         'sendLevelKeys = ' + ('false' if name == 'diagnostic-all' else 'true') + '\n'
@@ -156,6 +168,7 @@ def prepare(output, name, run_name):
 
 
 def run(output, name, duration, attempt=0):
+    maintenance.refresh()
     mode = 'diagnostic' if name.startswith('diagnostic') else 'clean'
     wait_quiet(output)
     run_name = name if not attempt else name + f'-retry-{attempt}'
@@ -166,22 +179,25 @@ def run(output, name, duration, attempt=0):
     log.touch(mode=0o600)
     subprocess.run(['systemd-run', '--unit=' + UNIT, '--collect',
         '--property=User=minecraft', '--property=Group=minecraft',
-        '--property=WorkingDirectory=' + str(server), '--property=Nice=5',
+        '--property=WorkingDirectory=' + str(server), '--property=Nice=' + str(CANDIDATE['service']['Nice']),
         '--property=Slice=minecraftperformance.slice',
-        '--property=MemoryHigh=10G', '--property=MemoryMax=12G',
+        '--property=MemoryHigh=' + CANDIDATE['service']['MemoryHigh'],
+        '--property=MemoryMax=' + CANDIDATE['service']['MemoryMax'],
         '--property=RuntimeMaxSec=1200',
         '--property=KillMode=mixed', '--property=TimeoutStopSec=120',
         '--property=StandardOutput=append:' + str(log),
         '--property=StandardError=append:' + str(log),
         sys.executable, str(HERE / 'server_runner.py'),
         '--console', str(root / 'console.sock'), WRAPPER,
-        '-Xms1G', '-Xmx8G', '-XX:+ExitOnOutOfMemoryError', '-XX:+UseG1GC'], check=True)
+        *CANDIDATE['jvm_flags']], check=True)
     try:
         deadline = time.monotonic() + 240
         while not log.exists() or 'pausing' not in log.read_text().lower():
             if time.monotonic() > deadline or command('systemctl', 'is-active', UNIT).strip() != 'active':
                 raise RuntimeError('server did not enter normal empty pause')
             time.sleep(2)
+        # Hashing itself causes disk and CPU activity: settle after this work.
+        before_world = disk_state(server / 'world')
         time.sleep(90)
         group = command('systemctl', 'show', UNIT, '-p', 'ControlGroup', '--value').strip()
         cg = Path('/sys/fs/cgroup') / group.lstrip('/')
@@ -202,7 +218,6 @@ def run(output, name, duration, attempt=0):
             (evidence / 'threads-before.txt').write_text(command(str(JAVA / 'jcmd'), str(pid), 'Thread.print', '-l'))
             command(str(JAVA / 'jcmd'), str(pid), 'JFR.start', 'name=idle',
                     'settings=' + str(output / 'idle.jfc'), 'disk=false')
-        before_world = disk_state(server / 'world')
         max_energy = int((RAPL / 'max_energy_range_uj').read_text())
         clients_before = minecraft_clients()
         time.sleep(10)
@@ -255,27 +270,61 @@ def run(output, name, duration, attempt=0):
         subprocess.run(['systemctl', 'stop', UNIT], check=False)
 
 
-def main():
+def execute_main():
+    global JAVA, WRAPPER, MODS, BASE, CANDIDATE, OUTPUT
     os.environ['PATH'] = '/run/current-system/sw/bin:/nix/store/833invqvsk7anqnqrki5hqncrcllj825-coreutils-9.11/bin'
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--manifest', type=Path, required=True)
     args = parser.parse_args()
+    CANDIDATE = json.loads(args.manifest.read_text())
+    if CANDIDATE.get('schema') != 1:
+        parser.error('unsupported candidate manifest schema')
+    if (CANDIDATE['service']['CPUWeight'], CANDIDATE['service']['IOWeight']) != (50, 50):
+        parser.error('disposable slice definition must match frozen candidate weights')
+    if args.manifest.read_bytes() != canonical_bytes(CANDIDATE):
+        parser.error('manifest must have canonical immutable encoding')
+    JAVA = Path(CANDIDATE['diagnostic_java_home']) / 'bin'
+    WRAPPER = CANDIDATE['wrapper']['path']
+    MODS = Path(CANDIDATE['mods_directory'])
+    BASE = Path(CANDIDATE['baseline']['path'])
+    for artifact in [CANDIDATE['wrapper'], CANDIDATE['java'], *CANDIDATE['mods'], *CANDIDATE['policies'].values()]:
+        if sha256(artifact['path']) != artifact['sha256']:
+            parser.error('candidate artifact hash mismatch')
+    for filename, digest in CANDIDATE['tool_source_files'].items():
+        path = Path(filename)
+        if path.is_absolute() or '..' in path.parts or sha256(HERE.parent.parent / path) != digest:
+            parser.error('qualification source differs from frozen candidate')
+    for policy in CANDIDATE['policies'].values():
+        if hashlib.sha256(policy['content'].encode()).hexdigest() != policy['sha256']:
+            parser.error('candidate policy content differs from immutable artifact')
+    controlled_path(args.output, Path('/persist'))
+    if args.output.parent != Path('/persist') or not args.output.name.startswith('minecraft-performance-dh-attribution-'):
+        parser.error('output must be a new direct private attribution directory under /persist')
     if os.geteuid() != 0 or args.output.exists() or not args.output.is_relative_to(Path('/persist')):
         parser.error('requires root and a new private persistent output directory')
     os.umask(0o077)
     args.output.mkdir(mode=0o710)
     args.output.chmod(0o710)
+    OUTPUT = args.output
+    (args.output / 'candidate-manifest.json').write_bytes(canonical_bytes(CANDIDATE))
+    (args.output / 'candidate-manifest.json').chmod(0o444)
     subprocess.run(['chown', 'root:minecraft', str(args.output)], check=True)
     maximum = int((RAPL / 'max_energy_range_uj').read_text())
     validate_rapl((RAPL / 'name').read_text().strip(), int((RAPL / 'enabled').read_text()), maximum)
     int((RAPL / 'energy_uj').read_text())
-    # Hyphens imply nested slices, so this spelling deliberately has no hyphen.
+    if command('systemctl', 'show', UNIT, '-p', 'LoadState', '--value').strip() != 'not-found':
+        raise RuntimeError('refuse occupied disposable server unit name')
     slice_path = Path('/run/systemd/system/minecraftperformance.slice')
-    slice_path.write_text('[Unit]\nDescription=Disposable Minecraft qualification slice\n'
-                          '[Slice]\nCPUWeight=50\nIOWeight=50\n')
+    if slice_path.exists() and (slice_path.is_symlink() or slice_path.read_text() != maintenance.SLICE_TEXT):
+        raise RuntimeError('refuse overwrite of unrelated slice unit')
+    maintenance.enter(args.output)
+    # Hyphens imply nested slices, so this spelling deliberately has no hyphen.
+    slice_path.write_text(maintenance.SLICE_TEXT)
     subprocess.run(['systemctl', 'daemon-reload'], check=True)
     subprocess.run(['systemctl', 'start', 'minecraftperformance.slice'], check=True)
     save(args.output / 'receipt.json', {'rapl_path': str(RAPL.resolve()), 'rapl_name': 'package-0',
+         'qualification_id': qualification_id(CANDIDATE),
          'rapl_enabled': 1, 'rapl_max_energy_range_uj': maximum, 'base': str(BASE),
          'base_subvolume': command('btrfs', 'subvolume', 'show', str(BASE)),
          'branch_sha': command('git', '-c', 'safe.directory=' + str(HERE.parent.parent),
@@ -308,7 +357,7 @@ def main():
             raise RuntimeError('FAIL_BACKGROUND_WORLD_DATABASE_MUTATION')
         return result
 
-    for i in range(1, 6):
+    for i in range(1, 12):
         for attempt in range(4):
             order = ('off', 'on') if i % 2 else ('on', 'off')
             measured = {v: execute(f'pair-{i}-{v}', attempt) for v in order}
@@ -321,15 +370,33 @@ def main():
             save(args.output / 'rejected-pairs.json', rejected)
         else:
             raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
-    # Power acceptance is already complete before any profiler starts.
-    for variant in ('diagnostic-off', 'diagnostic-normal', 'diagnostic-realtime',
-                    'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all'):
-        results.append(execute(variant))
-        save(args.output / 'results.json', results)
+        if i in (5, 7, 9, 11):
+            decision = analyze(args.output, expected_pair_count=i)
+            save(args.output / 'analysis.json', decision)
+            if decision['idle_acceptance'] != 'INCONCLUSIVE' or not decision['additional_pairs_allowed']:
+                break
+    # Profiling is justified only by a definitive clean resource failure.
+    resource_failure = (decision['median_on_interval_cpu_pct'] > 5
+                        or decision['median_on_p95_cpu_pct'] > 10
+                        or decision['power_acceptance'] == 'FAIL')
+    if decision['idle_acceptance'] == 'FAIL' and resource_failure:
+        for variant in ('diagnostic-off', 'diagnostic-normal', 'diagnostic-realtime',
+                        'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all'):
+            results.append(execute(variant))
+            save(args.output / 'results.json', results)
     save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'INCONCLUSIVE',
                                         'reason': 'MEASUREMENTS_COMPLETE_AWAITING_ADJUDICATION',
                                         'completed': [r['variant'] for r in results]})
 
 
 if __name__ == '__main__':
-    main()
+    def terminate(signum, frame):
+        raise SystemExit('qualification interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, terminate)
+    try:
+        execute_main()
+    finally:
+        if OUTPUT is not None and (OUTPUT / 'maintenance.json').exists():
+            maintenance.restore(OUTPUT)
+            if (OUTPUT / 'guard-armed').exists():
+                maintenance.disarm()
