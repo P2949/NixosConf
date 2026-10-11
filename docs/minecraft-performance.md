@@ -66,9 +66,15 @@ The restored server also accepted the no-DH client for 45 seconds, completed a
 scripted teleport and observed its clean disconnect.
 
 The updated Minecraft config check includes the analysis/setup Python tests and
-the Java tick-buffer fixture test, alongside all existing safety tests. Production
-idle sampling and generated-identity restart validation remain pending before
-the Krypton/DH phase can advance to C2ME.
+the Java tick-buffer fixture test, alongside all existing safety tests.
+
+The production idle sample then failed the phase gate: median service CPU was
+1.329% of one core across 300 seconds, p95 was 3.878% and maximum was 8.793%.
+The required median limit is 1%. All memory-event deltas remained zero. The
+original system configuration was restored, the production service and backup
+timer are active, and the corrected recovery guard's embedded live backup check
+passed. The generated-identity restart was not accepted as a completed gate.
+C2ME and collector experiments remain unstarted.
 
 ## Original baseline
 
