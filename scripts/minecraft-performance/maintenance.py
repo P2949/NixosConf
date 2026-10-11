@@ -262,7 +262,6 @@ def restore(output):
             cleanup_slice()
         except Exception as error:
             cleanup_errors.append({'stage': 'slice', 'error': str(error)})
-        (output / 'recovery-cleanup-errors.json').write_text(json.dumps(cleanup_errors, indent=2) + '\n')
         safe = Path(state['safe_system'])
         if Path('/run/current-system').resolve() != safe:
             subprocess.run([str(safe / 'bin/switch-to-configuration'), 'test'], check=True)
@@ -271,10 +270,14 @@ def restore(output):
             if call('systemctl', 'is-active', unit).strip() != 'active':
                 raise RuntimeError('production restoration failed')
         status = call('minecraft-backup', 'status', '--live')
-        (output / 'recovery-status.json').write_text(status)
         health = json.loads(status)
         if health.get('health') != 'ok' or health.get('live_verification') != 'passed':
             raise RuntimeError('live backup health after restoration failed')
+        try:
+            (output / 'recovery-status.json').write_text(status)
+            (output / 'recovery-cleanup-errors.json').write_text(json.dumps(cleanup_errors, indent=2) + '\n')
+        except Exception as error:
+            cleanup_errors.append({'stage': 'recovery_receipt', 'error': str(error)})
         if client_restore_error is not None:
             raise RuntimeError(
                 'disposable client input restoration failed after production recovery'
