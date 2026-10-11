@@ -160,7 +160,7 @@ in
 
           # Verified against the generated schema and commands of DH 3.3.4.
           # CHUNKS_ONLY avoids the surface pass; only existing chunks supply LODs.
-          # Its default worker allocation is the BALANCED equivalent.
+          # MINIMAL_IMPACT on this 12-thread host: ceil(12 * 0.1), ratio 0.5.
           files."config/DistantHorizons.toml".value = {
             _version = 5;
             server = {
@@ -171,6 +171,10 @@ in
               chunkGeneratorMode = "PRE_EXISTING_ONLY";
               generatorPlan = "CHUNKS_ONLY";
             };
+            common.multiThreading = {
+              numberOfThreads = 2;
+              threadRunTimeRatio = "0.5";
+            };
           };
 
           extraStartPre = ''
@@ -180,6 +184,9 @@ in
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
               exit 1
             fi
+          '';
+          extraStopPre = ''
+            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
           '';
 
           symlinks.mods = baseMods;

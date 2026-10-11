@@ -72,6 +72,7 @@ assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
 assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" service.preStart;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" server.extraStopPre;
 assert pkgs.lib.hasInfix "minecraft-dh-identity.py apply" server.extraStartPre;
 
 assert pkgs.lib.hasInfix "/bin/chmod 0600 server.properties" server.extraStartPre;
@@ -99,14 +100,20 @@ assert
       chunkGeneratorMode = "PRE_EXISTING_ONLY";
       generatorPlan = "CHUNKS_ONLY";
     };
+    common.multiThreading = {
+      numberOfThreads = 2;
+      threadRunTimeRatio = "0.5";
+    };
   };
 assert
   pregenServer.files."config/DistantHorizons.toml".value
   == server.files."config/DistantHorizons.toml".value
   // {
-    common.worldGenerator = {
-      chunkGeneratorMode = "PRE_EXISTING_ONLY";
-      generatorPlan = "DISABLED";
+    common = server.files."config/DistantHorizons.toml".value.common // {
+      worldGenerator = {
+        chunkGeneratorMode = "PRE_EXISTING_ONLY";
+        generatorPlan = "DISABLED";
+      };
     };
   };
 assert pregenServer.extraStartPre == server.extraStartPre;
