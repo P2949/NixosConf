@@ -5,7 +5,7 @@ was transiently activated and subsequently rolled back. Production currently
 runs the original baseline. A stage advances only after its automated
 correctness, recovery and performance gates pass.
 
-## Latest execution outcome
+## Earlier failed attempt
 
 The 2026-10-11 run ended with **FAIL** during isolated Krypton/DH runtime testing.
 The benchmark setup copied its DH policy file with mode 0444 and root ownership;
@@ -34,6 +34,41 @@ The machine-readable failure report and evidence digests are retained in
 path under `/var/lib/minecraft-performance-agent` points to this persistent
 directory. The isolated worktree, fixed baseline snapshot, failed clone and raw
 logs remain available for diagnosis.
+
+## Corrected qualification attempt
+
+The benchmark installer now copies template contents, inherits the destination
+directory's service ownership and applies mode 0660. Regression tests cover a
+read-only source and reject symlink destinations. The recovery guard's executable
+search path was corrected and its complete restoration/backup check passed.
+
+The corrected isolated server accepted a clean DH client for three minutes.
+Its probe recorded session configuration, level initialization and non-empty
+full-data responses. A reversible 21-block landmark change outside the client's
+eight-chunk vanilla render radius was followed by 20 partial-update messages;
+the client database changed and passed SQLite integrity checking. This accepts
+the real-time data path, not subjective visual appearance.
+
+Normal `PRE_EXISTING_ONLY` / `CHUNKS_ONLY` operation created 31 zero-byte region
+file shells. Inspection of the pinned DH `RegionFileStorageExternalCache` shows
+that its read path checks the parent directory, then constructs a `RegionFile`
+without checking whether that individual file already exists. These are explained
+read-side artifacts containing no generated chunks. They must be distinguished
+from non-empty distant region creation when assessing this gate.
+
+All three server DH databases from the actual production backup passed integrity
+checking on copies. An isolated writable restore booted successfully and served
+a fresh client cache: 1,371 full-data responses, a 9,486,336-byte healthy client
+database and 1,581 `FullData` rows. The 325 exception responses were all
+`SectionRequiresSplittingException`; the pinned client's request queue handles
+these by completing a split result. No unexpected exception type was recorded.
+The restored server also accepted the no-DH client for 45 seconds, completed a
+scripted teleport and observed its clean disconnect.
+
+The updated Minecraft config check includes the analysis/setup Python tests and
+the Java tick-buffer fixture test, alongside all existing safety tests. Production
+idle sampling and generated-identity restart validation remain pending before
+the Krypton/DH phase can advance to C2ME.
 
 ## Original baseline
 
