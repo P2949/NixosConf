@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import signal
+import sys
 import time
 import tomllib
 
@@ -239,6 +240,14 @@ def execute(manifest, output, agent):
                     maintenance.disarm()
 
 
+def qualification_exit_code(references):
+    outcomes = {reference.get('result') for reference in references.values()}
+    if 'FAIL' in outcomes:
+        return 1
+    required = {'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues'}
+    return 0 if set(references) == required and outcomes == {'PASS'} else 2
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', type=Path, required=True)
@@ -251,4 +260,6 @@ if __name__ == '__main__':
     def terminate(signum, frame):
         raise SystemExit('functional qualification interrupted')
     signal.signal(signal.SIGTERM, terminate)
-    print(json.dumps(execute(json.loads(args.manifest.read_text()), args.output, args.agent)))
+    references = execute(json.loads(args.manifest.read_text()), args.output, args.agent)
+    print(json.dumps(references))
+    sys.exit(qualification_exit_code(references))

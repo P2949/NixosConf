@@ -12,11 +12,22 @@ from post_chunky import (
     require_ungenerated,
     terrain_chunks,
     write_post_chunky_proofs,
+    qualification_exit_code,
 )
 from world_semantics import region_occupancy
 
 
 class ChunkyExtentTests(unittest.TestCase):
+    def test_exit_status_propagates_queue_outcomes_and_missing_gates(self):
+        references = {gate: {'result': 'PASS'} for gate in
+                      ('identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')}
+        self.assertEqual(qualification_exit_code(references), 0)
+        references['no_unbounded_queues']['result'] = 'FAIL'
+        self.assertEqual(qualification_exit_code(references), 1)
+        references['no_unbounded_queues']['result'] = 'INCONCLUSIVE'
+        self.assertEqual(qualification_exit_code(references), 2)
+        self.assertEqual(qualification_exit_code({}), 2)
+
     def test_target_must_be_ungenerated_before_start(self):
         require_ungenerated({'region/r.0.0.mca': {'chunks': [(0, 0)]}}, chunk_bounds())
         with self.assertRaisesRegex(RuntimeError, 'already generated'):
