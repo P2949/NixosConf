@@ -153,6 +153,27 @@ sampling. The exact agent is built by Nix from the frozen Git source and hashed
 into the candidate manifest; arbitrary externally supplied agent JARs are
 rejected. Forty-four Python tests and the Minecraft configuration check pass.
 
+The guarded runtime pilot at committed checkpoint
+`acb6cf14fcb0eeb70490b582663a3885007d975b` passed identity restart,
+post-Chunky behavior and bounded queues under qualification identity
+`d0fa283dd0cb1afe45945945cb7312a5371d828982ebfc310359404ce0282bfe`.
+Chunky processed 1,089 requested chunks; the bounded generation halo added
+3,025 terrain chunks. Normal zero-player DH added no terrain entries and showed
+no unsolicited backfill. Nineteen ten-second observations established a full
+180-second quiet interval by 190.21 seconds, with stable zero queues/database
+content and accepted one-second CPU/I/O samples. All three proof references
+passed the manifest-bound verifier. This proves the bounded zero-player workload;
+active client synchronization remains a separate gate.
+
+The controller exited successfully, production and its backup timer restarted,
+and live backup verification passed with health `ok`. The original system closure
+remained active. Both recovery units and the functional service unloaded, and the
+disposable slice stopped with its runtime definition removed. Raw evidence is
+retained privately under
+`/persist/minecraft-performance-functional-catchup-pilot-acb6cf1`.
+These receipts certify only the named frozen identity; they do not certify a later
+Git revision, complete DH acceptance, authoritative paired idle, CI or merge.
+
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff
 patch attempt. An invasive permanent fork is rejected: omit server-side DH,
