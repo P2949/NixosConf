@@ -133,10 +133,17 @@ def decide(runs, workloads):
                 "rule": "server_latency_win", "comparisons": comparisons}
     if g1_client_regresses:
         return {"result": "PASS", "decision": "ZGC", "rule": "client_performance_win", "comparisons": comparisons}
+    throughput_winners = set()
     for metrics in comparisons.values():
         throughput = metrics.get("worldgen_throughput")
         if throughput and credible(throughput, 5, True):
-            return {"result": "PASS", "decision": "ZGC", "rule": "throughput_tiebreaker", "comparisons": comparisons}
+            throughput_winners.add("ZGC")
+        if throughput and credible(throughput, 5, False):
+            throughput_winners.add("G1")
+    if len(throughput_winners) > 1:
+        return {"result": "INCONCLUSIVE", "decision": None, "rule": "conflicting_workload_throughput_wins", "comparisons": comparisons}
+    if throughput_winners:
+        return {"result": "PASS", "decision": throughput_winners.pop(), "rule": "throughput_tiebreaker", "comparisons": comparisons}
     return {"result": "PASS", "decision": "G1", "rule": "baseline_tie", "comparisons": comparisons}
 
 

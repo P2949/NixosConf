@@ -32,6 +32,16 @@ class AnalysisTests(unittest.TestCase):
     def test_tie(self):
         self.assertEqual(self.decision(fixture())["rule"], "baseline_tie")
 
+    def test_throughput_tiebreaker_is_symmetric(self):
+        for winner in ('G1', 'ZGC'):
+            rows = fixture()
+            for row in rows:
+                if row['variant'] == winner:
+                    row['metrics']['worldgen_throughput'] = 120
+            result = self.decision(rows)
+            self.assertEqual(result['decision'], winner)
+            self.assertEqual(result['rule'], 'throughput_tiebreaker')
+
     def test_client_regression(self):
         rows = fixture(.8)
         for row in rows:

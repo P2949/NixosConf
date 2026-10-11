@@ -9,7 +9,7 @@ from functional_dh import (
     execute,
     generation_outcome,
     qualification_exit_code,
-    VERIFIED_EMPTY_SHELL_DH_SHA256,
+    VERIFIED_DH_3_3_4_SHA256,
     read_dh_messages,
 )
 
@@ -47,11 +47,11 @@ class FunctionalDhTests(unittest.TestCase):
         }
         # Empty terrain shells still require explicit pinned-source approval.
         self.assertEqual(generation_outcome(terrain, after), 'FAIL')
-        manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_EMPTY_SHELL_DH_SHA256}]}
+        manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_DH_3_3_4_SHA256}]}
         self.assertEqual(generation_outcome(terrain, after, manifest), 'PASS')
         manifest['mods'][0]['sha256'] = 'unverified-build'
         self.assertEqual(generation_outcome(terrain, after, manifest), 'FAIL')
-        manifest['mods'][0]['sha256'] = VERIFIED_EMPTY_SHELL_DH_SHA256
+        manifest['mods'][0]['sha256'] = VERIFIED_DH_3_3_4_SHA256
         after['dimensions/minecraft/overworld/region/r.1.0.mca']['size'] = 8192
         self.assertEqual(generation_outcome(terrain, after, manifest), 'FAIL')
 
@@ -82,7 +82,7 @@ class FunctionalDhTests(unittest.TestCase):
             dh_outcome(exception),
             'FAIL',
         )
-        manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_EMPTY_SHELL_DH_SHA256}]}
+        manifest = {'mods': [{'id': 'distanthorizons', 'sha256': VERIFIED_DH_3_3_4_SHA256}]}
         split = {'type': 'ExceptionMessage', 'exception_type': 'SectionRequiresSplittingException'}
         self.assertEqual(dh_outcome(good + [split], manifest), 'PASS')
         self.assertEqual(dh_outcome([split], manifest), 'FAIL')

@@ -53,6 +53,43 @@ class MaintenanceTests(unittest.TestCase):
                                      for call in run.call_args_list))
 
 
+    def test_cleanup_failures_do_not_block_production_recovery(self):
+        for stage in ('show', 'stop', 'slice', 'manifest'):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as directory:
+                output = Path(directory)
+                (output / 'maintenance.json').write_text(json.dumps({
+                    'safe_system': str(Path('/run/current-system').resolve()),
+                    'manifest_sha256': 'bound-before-mutation' if stage == 'manifest' else None,
+                }))
+                if stage == 'manifest':
+                    (output / 'candidate-manifest.json').write_text('{}')
+                actions = []
+                def call(*args):
+                    actions.append(args)
+                    if args[0] == 'minecraft-backup':
+                        return '{"health":"ok","live_verification":"passed"}'
+                    if 'LoadState' in args:
+                        if stage == 'show':
+                            raise RuntimeError('show failed')
+                        return 'loaded' if stage == 'stop' else 'not-found'
+                    return 'active'
+                def run(args, **kwargs):
+                    actions.append(tuple(args))
+                    if stage == 'stop' and args[:2] == ['systemctl', 'stop']:
+                        raise RuntimeError('stop failed')
+                with patch.object(maintenance, 'call', side_effect=call), \
+                     patch.object(maintenance.subprocess, 'run', side_effect=run), \
+                     patch.object(maintenance, 'cleanup_slice', side_effect=RuntimeError('foreign slice retained') if stage == 'slice' else None), \
+                     patch.object(maintenance, 'restore_client_inputs') as client:
+                    with self.assertRaisesRegex(RuntimeError, 'after production recovery'):
+                        maintenance.restore(output)
+                    if stage in ('manifest', 'show', 'stop'):
+                        client.assert_not_called()
+                self.assertIn(('systemctl', 'start', 'minecraft-server-survival.service', 'minecraft-backup.timer'), actions)
+                self.assertIn(('minecraft-backup', 'status', '--live'), actions)
+                self.assertTrue((output / 'recovery-status.json').exists())
+                self.assertTrue(json.loads((output / 'recovery-cleanup-errors.json').read_text()))
+
     def test_recovery_restores_frozen_client_inputs_atomically(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

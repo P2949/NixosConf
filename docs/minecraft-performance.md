@@ -5,6 +5,29 @@ was transiently activated and subsequently rolled back. Production currently
 runs the original baseline. A stage advances only after its automated
 correctness, recovery and performance gates pass.
 
+## Qualification status
+
+Production remains on the original baseline. The eight-gate receipt at
+`da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
+client SQLite usefulness, controlled distant updates, and restored DH data still
+require stronger automated proofs. The interrupted idle study completed zero
+valid pairs; its private cancellation receipt records INCONCLUSIVE, preserves
+partial evidence, and records healthy production recovery.
+
+Recovery binds client templates to the manifest digest captured when the guard
+is armed. Disposable unit, slice, and client-template errors are recorded and
+reported only after safe production restoration and live backup verification.
+A failed client stop prevents template writes. Qualification tool paths come
+from the frozen Nix input rather than a remembered store path. Idle measurement
+requires an explicit verified eight-gate functional bundle; measurement outcome,
+final adjudication, and recovery status are separate fields.
+
+Before a fresh candidate is frozen, remaining review requirements include DH
+client/server SQLite proofs, real-time landmark propagation and restoration,
+stronger restored-world DH qualification, and durability checks. C2ME release
+selection will re-query the official Fabric 26.3 release source instead of
+assuming the historical requested version exists.
+
 ## Revised DH idle attribution policy
 
 The authorized continuation replaces the historical 1% binary DH idle gate with

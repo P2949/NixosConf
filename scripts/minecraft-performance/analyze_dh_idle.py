@@ -56,7 +56,7 @@ def stacks(path):
                           'use measured native-thread CPU accounting to rank costs.'}
 
 
-def analyze(root, expected_pair_count=FIXED_PAIRS):
+def analyze(root, expected_pair_count=FIXED_PAIRS, functional_bundle=None):
     if expected_pair_count != FIXED_PAIRS:
         raise ValueError('authoritative analysis requires the predeclared eleven pairs')
     results = json.loads((root / 'results.json').read_text())
@@ -104,7 +104,7 @@ def analyze(root, expected_pair_count=FIXED_PAIRS):
                         or not result['world_unchanged_all'] or not result['memory_events_zero_all'])
     result['idle_acceptance'] = ('INCONCLUSIVE' if not result['host_load_pass'] else
         'FAIL' if definite_failure else 'PASS' if all(result[k] for k in gates) else 'INCONCLUSIVE')
-    receipt = root / 'functional-acceptance.json'
+    receipt = Path(functional_bundle) if functional_bundle is not None else root / 'functional-acceptance.json'
     acceptance = json.loads(receipt.read_text()) if receipt.exists() else {}
     manifest_path = root / 'candidate-manifest.json'
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
@@ -123,8 +123,11 @@ def analyze(root, expected_pair_count=FIXED_PAIRS):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('root', type=Path)
+    parser.add_argument('--idle-run', type=Path, required=True)
+    parser.add_argument('--functional-bundle', type=Path, required=True)
     args = parser.parse_args()
-    result = analyze(args.root)
-    (args.root / 'analysis.json').write_text(json.dumps(result, indent=2) + '\n')
+    result = analyze(args.idle_run, functional_bundle=args.functional_bundle)
+    (args.idle_run / 'analysis.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: v for k, v in result.items() if k != 'diagnostics'}, indent=2))
+
+    raise SystemExit({'PASS': 0, 'FAIL': 1, 'INCONCLUSIVE': 2}[result['result']])

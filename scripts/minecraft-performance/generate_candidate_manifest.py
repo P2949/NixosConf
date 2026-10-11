@@ -65,6 +65,9 @@ def generate(nix_manifest, base, repository, client_root=None, client_launcher=N
         path = Path(result[key])
         if not path.is_relative_to('/nix/store') or not path.exists():
             raise ValueError('unrealized Nix candidate artifact: ' + key)
+    for directory in result['qualification_tools_path'].split(':'):
+        if not Path(directory).is_relative_to('/nix/store') or not Path(directory).is_dir():
+            raise ValueError('unrealized qualification tool directory')
     package_identity = re.fullmatch(r'minecraft-server-(.+)-fabric-(.+)', result['minecraft_package_name'])
     if package_identity is None:
         raise ValueError('candidate package does not identify Minecraft and Fabric versions')

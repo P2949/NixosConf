@@ -272,13 +272,18 @@ def run(output, name, duration, attempt=0):
 
 def execute_main():
     global JAVA, WRAPPER, MODS, BASE, CANDIDATE, OUTPUT
-    os.environ['PATH'] = '/run/current-system/sw/bin:/nix/store/833invqvsk7anqnqrki5hqncrcllj825-coreutils-9.11/bin'
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--manifest', type=Path, required=True)
+    parser.add_argument('--functional-bundle', type=Path, required=True)
     args = parser.parse_args()
     CANDIDATE = json.loads(args.manifest.read_text())
+    os.environ['PATH'] = CANDIDATE['qualification_tools_path'] + ':/run/current-system/sw/bin'
     validate_candidate(CANDIDATE, HERE.parent.parent)
+    from assemble_functional_acceptance import verify_bundle
+    gates = verify_bundle(json.loads(args.functional_bundle.read_text()), CANDIDATE)
+    if not all(value == 'PASS' for value in gates.values()):
+        parser.error('all eight authentic functional gates must pass before idle measurement')
     if CANDIDATE.get('schema') != 1:
         parser.error('unsupported candidate manifest schema')
     if (CANDIDATE['service']['CPUWeight'], CANDIDATE['service']['IOWeight']) != (50, 50):
@@ -375,7 +380,7 @@ def execute_main():
             save(args.output / 'rejected-pairs.json', rejected)
         else:
             raise RuntimeError('INCONCLUSIVE_ENVIRONMENT_NOISE: three paired retries exhausted')
-    decision = analyze(args.output)
+    decision = analyze(args.output, functional_bundle=args.functional_bundle)
     save(args.output / 'analysis.json', decision)
     # Profiling is justified only by a definitive clean resource failure.
     resource_failure = (decision['median_on_interval_cpu_pct'] > 5
@@ -386,8 +391,9 @@ def execute_main():
                         'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all'):
             results.append(execute(variant))
             save(args.output / 'results.json', results)
-    save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'INCONCLUSIVE',
-                                        'reason': 'MEASUREMENTS_COMPLETE_AWAITING_ADJUDICATION',
+    save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'measurement_result': decision['idle_acceptance'],
+                                        'final_decision': decision['result'],
+                                        'recovery_status': 'PENDING',
                                         'completed': [r['variant'] for r in results]})
 
 
@@ -402,3 +408,8 @@ if __name__ == '__main__':
             maintenance.restore(OUTPUT)
             if (OUTPUT / 'guard-armed').exists():
                 maintenance.disarm()
+            progress_path = OUTPUT / 'progress.json'
+            if progress_path.exists():
+                progress = json.loads(progress_path.read_text())
+                progress['recovery_status'] = 'PASS'
+                save(progress_path, progress)

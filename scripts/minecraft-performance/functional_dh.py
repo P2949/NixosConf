@@ -159,7 +159,7 @@ def dh_outcome(messages, manifest=None):
 
     verified_binary = manifest is not None and any(
         mod.get('id') == 'distanthorizons'
-        and mod.get('sha256') == VERIFIED_EMPTY_SHELL_DH_SHA256
+        and mod.get('sha256') == VERIFIED_DH_3_3_4_SHA256
         for mod in manifest.get('mods', [])
     )
     for message in messages:
@@ -176,7 +176,9 @@ def dh_outcome(messages, manifest=None):
     return 'PASS'
 
 
-VERIFIED_EMPTY_SHELL_DH_SHA256 = 'ba3e5c85a765a109219831df99b99ef5cfcdee05b2dfa6796116993bd48d3947'
+# SHA-256 of the inspected 3.3.4 jar: split protocol response and read-side
+# empty region shells are independently source-bound to this same artifact.
+VERIFIED_DH_3_3_4_SHA256 = 'ba3e5c85a765a109219831df99b99ef5cfcdee05b2dfa6796116993bd48d3947'
 
 
 def generation_outcome(before, after, manifest=None):
@@ -195,7 +197,7 @@ def generation_outcome(before, after, manifest=None):
     # its empty shells only for the inspected binary, never arbitrary builds.
     verified_binary = manifest is not None and any(
         mod.get('id') == 'distanthorizons'
-        and mod.get('sha256') == VERIFIED_EMPTY_SHELL_DH_SHA256
+        and mod.get('sha256') == VERIFIED_DH_3_3_4_SHA256
         for mod in manifest.get('mods', [])
     )
     shells = [name for name, region in terrain_after.items()

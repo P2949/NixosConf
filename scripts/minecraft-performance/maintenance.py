@@ -1,5 +1,6 @@
 """Bounded production maintenance with an independent recovery timer."""
 
+import hashlib
 import fcntl
 import json
 import os
@@ -90,17 +91,9 @@ def _restore_frozen_text(path, root, content):
             descriptor = None
             stream.write(content)
             stream.flush()
+            os.fchown(stream.fileno(), info.st_uid, info.st_gid)
+            os.fchmod(stream.fileno(), info.st_mode & 0o777)
             os.fsync(stream.fileno())
-
-        os.chown(
-            temporary,
-            info.st_uid,
-            info.st_gid,
-        )
-        os.chmod(
-            temporary,
-            info.st_mode & 0o777,
-        )
 
         os.replace(
             temporary,
@@ -241,20 +234,35 @@ def restore(output):
     with (output / 'recovery.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         state = json.loads((output / 'maintenance.json').read_text())
+        cleanup_errors = []
+        client_stopped = True
         for unit in (CLIENT, LAB, FUNCTIONAL):
-            if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
-                subprocess.run(['systemctl', 'stop', unit], check=True)
+            try:
+                if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
+                    subprocess.run(['systemctl', 'stop', unit], check=True)
+            except Exception as error:
+                cleanup_errors.append({'stage': unit, 'error': str(error)})
+                if unit == CLIENT:
+                    client_stopped = False
 
-        # Qualification-fixture corruption must invalidate the run, but it
-        # must never prevent restoration of the real production service.
+        # Never write client inputs while its process may still own them.
         client_restore_error = None
-
         try:
+            manifest_path = output / 'candidate-manifest.json'
+            actual = hashlib.sha256(manifest_path.read_bytes()).hexdigest() if manifest_path.exists() else None
+            if actual != state.get('manifest_sha256'):
+                raise RuntimeError('CLIENT_FIXTURE_MANIFEST_MISMATCH')
+            if not client_stopped:
+                raise RuntimeError('CLIENT_FIXTURE_PROCESS_NOT_STOPPED')
             restore_client_inputs(output)
         except Exception as error:
             client_restore_error = error
-
-        cleanup_slice()
+            cleanup_errors.append({'stage': 'client_inputs', 'error': str(error)})
+        try:
+            cleanup_slice()
+        except Exception as error:
+            cleanup_errors.append({'stage': 'slice', 'error': str(error)})
+        (output / 'recovery-cleanup-errors.json').write_text(json.dumps(cleanup_errors, indent=2) + '\n')
         safe = Path(state['safe_system'])
         if Path('/run/current-system').resolve() != safe:
             subprocess.run([str(safe / 'bin/switch-to-configuration'), 'test'], check=True)
@@ -271,6 +279,8 @@ def restore(output):
             raise RuntimeError(
                 'disposable client input restoration failed after production recovery'
             ) from client_restore_error
+        if cleanup_errors:
+            raise RuntimeError('disposable cleanup failed after production recovery')
 
 
 def arm(output):
@@ -279,7 +289,9 @@ def arm(output):
         state = call('systemctl', 'show', GUARD + suffix, '-p', 'LoadState', '--value').strip()
         if state != 'not-found':
             raise RuntimeError('recovery guard name already occupied')
-    state = {'safe_system': str(Path('/run/current-system').resolve())}
+    manifest_path = output / 'candidate-manifest.json'
+    state = {'safe_system': str(Path('/run/current-system').resolve()),
+             'manifest_sha256': hashlib.sha256(manifest_path.read_bytes()).hexdigest() if manifest_path.exists() else None}
     (output / 'maintenance.json').write_text(json.dumps(state) + '\n')
     recovery = output / 'recovery.py'
     shutil.copyfile(Path(__file__).resolve(), recovery)

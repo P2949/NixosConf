@@ -44,6 +44,13 @@ in
 pkgs.writeText "minecraft-candidate-nix.json" (
   builtins.toJSON {
     schema = 1;
+    qualification_tools_path = pkgs.lib.makeBinPath [
+      pkgs.coreutils
+      pkgs.btrfs-progs
+      pkgs.systemd
+      pkgs.git
+      pkgs.procps
+    ];
     git_sha = flake.rev;
     system_closure = cfg.system.build.toplevel;
     minecraft_package = server.package;

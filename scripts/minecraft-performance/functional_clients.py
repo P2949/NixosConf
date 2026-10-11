@@ -1,6 +1,7 @@
 """Bounded client compatibility qualification against a disposable candidate."""
 
 import argparse
+import math
 import json
 import os
 from pathlib import Path
@@ -112,6 +113,10 @@ def write_non_dh_pass(
 
     if result.get('result') != 'PASS':
         raise RuntimeError('non-DH client probe did not produce PASS')
+
+    elapsed = heartbeat.get('elapsed_seconds')
+    if not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
+        raise RuntimeError('non-DH client heartbeat is invalid')
 
     receipt = output / 'non-dh-client.json'
     receipt.write_text(json.dumps({

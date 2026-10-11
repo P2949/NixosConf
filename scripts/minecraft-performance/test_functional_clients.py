@@ -164,7 +164,7 @@ class FunctionalClientTests(unittest.TestCase):
                         json.dumps({'result': 'PASS'})
                     )
                     (self.output / 'heartbeat.json').write_text(
-                        json.dumps({'connected': False})
+                        json.dumps({'connected': False, 'elapsed_seconds': 45.0})
                     )
                     (self.output / 'launcher.log').write_text(
                         'launcher finished\n'
