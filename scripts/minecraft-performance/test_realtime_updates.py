@@ -47,3 +47,19 @@ class LandmarkTests(unittest.TestCase):
                 self.assertIn('fill -320 300 0 -300 300 0 minecraft:air', commands)
                 self.assertEqual(commands[-1], 'forceload remove -320 0 -300 0')
                 self.assertIn('QUALIFICATION_DH_LANDMARK_RESTORED_AIR', air_checks)
+
+    def test_old_partial_update_cannot_certify_mutation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'dh-received.jsonl').write_text(json.dumps({'type': 'FullDataPartialUpdateMessage', 'exception_type': ''}) + '\n')
+            commands = []
+            lab = type('Lab', (), {'log': root / 'server.log', 'send': lambda self, command: commands.append(command)})()
+            client = type('Client', (), {'output': root, 'wait_joined': lambda self: None})()
+            with patch('realtime_updates.wait_for_log_since'), \
+                 patch('realtime_updates.verify_air'), \
+                 patch('realtime_updates.time.sleep'), \
+                 patch('realtime_updates.time.monotonic', side_effect=[0, 46]):
+                with self.assertRaisesRegex(RuntimeError, 'no DH partial update'):
+                    exercise_landmark(lab, client)
+            self.assertIn('fill -320 300 0 -300 300 0 minecraft:air', commands)
+            self.assertEqual(commands[-1], 'forceload remove -320 0 -300 0')
