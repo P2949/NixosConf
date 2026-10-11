@@ -6,6 +6,7 @@ import math
 import os
 from pathlib import Path
 import signal
+import sys
 
 from client_runtime import Client
 from functional_clients import log_offset, wait_for_log_since
@@ -444,11 +445,7 @@ if __name__ == '__main__':
         args.manifest.read_text()
     )
 
-    print(
-        json.dumps(
-            execute(
-                manifest,
-                args.output,
-            )
-        )
-    )
+    references = execute(manifest, args.output)
+    print(json.dumps(references))
+    outcomes = {reference['result'] for reference in references.values()}
+    sys.exit(1 if 'FAIL' in outcomes else 0 if outcomes == {'PASS'} else 2)
