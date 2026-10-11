@@ -5,6 +5,37 @@ was transiently activated and subsequently rolled back. Production currently
 runs the original baseline. A stage advances only after its automated
 correctness, recovery and performance gates pass.
 
+## Revised DH idle attribution policy
+
+The authorized continuation replaces the historical 1% binary DH idle gate with
+paired CPU and package-energy attribution before any production change. The
+checkpoint `31bf61c3bab50954ef283e31ec08b53c5426b240` is preserved remotely on
+`wip/minecraft-server-performance-dh-idle`. Historical failed samples remain
+evidence of their original gates, rather than being retroactively marked PASS.
+
+At least five paired, fresh-JVM runs use equivalent writable snapshots of the
+frozen world, identical non-DH mods, 1/8 GiB G1 heaps, 10/12 GiB cgroup limits,
+normal 60-second empty pause, 90-second settling, and 600-second intervals.
+Pair order alternates. Service CPU accounting, native-thread CPU, Java thread
+dumps, sampled JFR stacks, Intel package RAPL energy, cgroup I/O and memory events,
+and world/database content identities are retained outside the repository.
+Logical-CPU idle residency is supplemental evidence, not package C-state proof.
+Real-time updates, synchronization on load, generation, and all optional server
+features are disabled in separate disposable diagnostic variants only.
+
+Acceptance requires median DH-on CPU at most 5% of one core and attributable
+package-power increase at most 1 W across the controlled pairs, plus normal
+pause, no continued generation, sustained database growth or disk I/O, memory
+pressure/OOM events, or unbounded work queues. No correctness, backup or recovery
+gate is relaxed. Confounding host load or inconsistent controls require a
+methodology correction before attribution or acceptance.
+
+If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
+Only demonstrated thread/method costs justify one bounded idle-aware backoff
+patch attempt. An invasive permanent fork is rejected: omit server-side DH,
+document the rejection, and continue independent Krypton, C2ME and collector
+qualification. No production DH feature is silently disabled to pass a test.
+
 ## Earlier failed attempt
 
 The 2026-10-11 run ended with **FAIL** during isolated Krypton/DH runtime testing.
