@@ -1,6 +1,7 @@
 package local.minecraft.performance;
 
 import com.seibel.distanthorizons.core.network.messages.AbstractNetworkMessage;
+import com.seibel.distanthorizons.core.network.messages.requests.ExceptionMessage;
 import com.seibel.distanthorizons.core.network.session.NetworkSession;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,9 +19,11 @@ public abstract class DhNetworkProbeMixin {
     private void incomingMessage(AbstractNetworkMessage message, CallbackInfo ci) throws IOException {
         Path directory = Path.of(System.getenv("MINECRAFT_PROBE_OUTPUT"));
         Files.createDirectories(directory);
+        String exceptionType = message instanceof ExceptionMessage error && error.exception != null
+            ? error.exception.getClass().getSimpleName() : "";
         Files.writeString(directory.resolve("dh-received.jsonl"),
             "{\"monotonic_ns\":" + System.nanoTime() + ",\"type\":\"" +
-            message.getClass().getSimpleName() + "\"}\n",
+            message.getClass().getSimpleName() + "\",\"exception_type\":\"" + exceptionType + "\"}\n",
             StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 }
