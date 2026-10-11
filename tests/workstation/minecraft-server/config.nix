@@ -39,6 +39,8 @@ let
   backupTests = ./test_backup.py;
   prerequisiteSource = ../../../hosts/desktop/minecraft-prerequisites.py;
   prerequisiteTests = ./test_prerequisites.py;
+  dhIdentitySource = ../../../hosts/desktop/minecraft-dh-identity.py;
+  dhIdentityTests = ./test_dh_identity.py;
 
   msmpTestPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
@@ -68,6 +70,8 @@ assert server.jvmOpts == "-Xms1G -Xmx8G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC
 assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" service.preStart;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py apply" server.extraStartPre;
 
 assert pkgs.lib.hasInfix "/bin/chmod 0600 server.properties" server.extraStartPre;
 assert server.whitelist == { };
@@ -264,6 +268,8 @@ pkgs.runCommand "check-minecraft-server-config"
     inherit
       prerequisiteSource
       prerequisiteTests
+      dhIdentitySource
+      dhIdentityTests
       backupSource
       backupTests
       backupClient
@@ -286,6 +292,7 @@ pkgs.runCommand "check-minecraft-server-config"
         set -eu
 
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
+        MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
 
         MINECRAFT_MSMP_SOURCE="$msmpSource" python3 "$msmpTests"
 

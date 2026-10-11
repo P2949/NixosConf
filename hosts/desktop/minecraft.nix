@@ -174,6 +174,7 @@ in
           };
 
           extraStartPre = ''
+            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} apply
             ${pkgs.coreutils}/bin/chmod 0600 server.properties
             if [[ ! "''${MINECRAFT_MANAGEMENT_SECRET:-}" =~ ^[A-Za-z0-9]{40}$ ]]; then
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
@@ -241,6 +242,12 @@ in
       };
 
       system.preSwitchChecks.minecraft = ''${lib.getExe minecraftPrerequisiteCheck} "$@"'';
+
+      # nix-minecraft removes its previous managed files before applying templates.
+      # Capture the generated ID first so restarts keep the same DH cache identity.
+      systemd.services.minecraft-server-survival.preStart = lib.mkBefore ''
+        ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
+      '';
 
       systemd.tmpfiles.rules = [
         "d /persist/minecraft-backup 0700 root root -"
