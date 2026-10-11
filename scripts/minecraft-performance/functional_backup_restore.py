@@ -604,6 +604,8 @@ def inspect_restored_server_dh(lab, output):
 
 
 def exercise_restored_dh(lab, manifest, output, restored_summary):
+    if restored_summary.get('inspected_before_server_boot') is not True or restored_summary.get('aggregate_useful_full_data_rows', 0) <= 0:
+        raise RuntimeError('restored DH client requires useful snapshot data inspected before boot')
     dh_output = lab.output / 'client-restore-dh'
     with Client(manifest, dh_output, 'dh-clean', 60, fresh_cache=True) as client:
         exercise_dh_client(lab, client)
