@@ -48,9 +48,23 @@ def inspect_closed_database(source, destination, *, owner_stopped, require_usefu
                 section.update(encoded)
             if tuple(row[:3]) in requested_sections:
                 section_fingerprints[','.join(map(str, row[:3]))] = section.hexdigest()
-        connection.execute('PRAGMA wal_checkpoint(TRUNCATE)')
+        checkpoint = connection.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
+        if checkpoint[0] != 0 or checkpoint[1] != checkpoint[2]:
+            raise RuntimeError('DH evidence checkpoint did not complete')
+        if connection.execute('PRAGMA journal_mode=DELETE').fetchone()[0] != 'delete':
+            raise RuntimeError('DH evidence did not become self-contained')
     finally:
         connection.close()
+    for suffix in ('-wal', '-shm'):
+        Path(str(destination) + suffix).unlink(missing_ok=True)
+    # Immutable mode ignores sidecars: independently prove the main file alone
+    # contains the same healthy useful-data observation before hashing it.
+    standalone = sqlite3.connect(destination.as_uri() + '?immutable=1', uri=True)
+    try:
+        if standalone.execute('PRAGMA integrity_check').fetchall() != [('ok',)] or standalone.execute('SELECT COUNT(*) FROM FullData WHERE length(Data) > 0').fetchone()[0] != useful:
+            raise RuntimeError('standalone DH evidence differs from inspected content')
+    finally:
+        standalone.close()
     destination.chmod(0o400)
     with destination.open('rb') as stream:
         digest = hashlib.file_digest(stream, 'sha256').hexdigest()

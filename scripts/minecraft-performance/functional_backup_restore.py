@@ -583,6 +583,60 @@ def write_backup_restore_proofs(
     return references
 
 
+def inspect_restored_server_dh(lab, output):
+    if lab.active:
+        raise RuntimeError('restored DH snapshot must be inspected before server boot')
+    sources = sorted(lab.server.rglob('DistantHorizons.sqlite'))
+    if not sources:
+        raise RuntimeError('restored server has no DH database')
+    databases = [inspect_closed_database(source, output / f'server-dh-{index}.sqlite',
+                 owner_stopped=True, require_useful=False) for index, source in enumerate(sources)]
+    useful_rows = sum(database['useful_full_data_rows'] for database in databases)
+    if useful_rows <= 0:
+        raise RuntimeError('restored snapshot contains no useful DH data before boot')
+    summary = {'inspected_before_server_boot': True, 'database_count': len(databases),
+               'useful_database_count': sum(database['useful_full_data_rows'] > 0 for database in databases),
+               'aggregate_useful_full_data_rows': useful_rows, 'databases': databases}
+    path = output / 'restore-server-dh.json'
+    path.write_bytes(canonical_bytes(summary))
+    path.chmod(0o400)
+    return summary
+
+
+def exercise_restored_dh(lab, manifest, output, restored_summary):
+    dh_output = lab.output / 'client-restore-dh'
+    with Client(manifest, dh_output, 'dh-clean', 60, fresh_cache=True) as client:
+        exercise_dh_client(lab, client)
+        dh_pid = client.pid
+    result = json.loads((dh_output / 'result.json').read_text())
+    heartbeat = json.loads((dh_output / 'heartbeat.json').read_text())
+    elapsed = heartbeat.get('elapsed_seconds')
+    if result != {'result': 'PASS'} or not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
+        raise RuntimeError('restored DH client completion evidence is malformed')
+    messages = read_dh_messages(dh_output / 'dh-received.jsonl')
+    if dh_outcome(messages, manifest) != 'PASS' or not any(
+        message['type'] in ('FullDataSourceResponseMessage', 'FullDataSplitMessage')
+        and not message['exception_type'] for message in messages
+    ):
+        raise RuntimeError('restored DH client received no useful full-data response')
+    client_databases = inspect_closed_cache(
+        Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data',
+        dh_output, owner_stopped=not Path(f'/proc/{dh_pid}').exists())
+    dh_evidence = [{'path': str(dh_output / filename), 'type': kind}
+                   for filename, kind in (('result.json', 'json'), ('heartbeat.json', 'json'),
+                                          ('dh-received.jsonl', 'log'), ('launcher.log', 'log'))]
+    dh_evidence.extend({'path': database['copy'], 'type': 'sqlite'}
+                       for database in restored_summary['databases'] + client_databases)
+    dh_evidence.append({'path': str(output / 'restore-server-dh.json'), 'type': 'json'})
+    dh_receipt = {'result': 'PASS', 'server_databases': restored_summary['databases'],
+                  'preboot_server_data': restored_summary,
+                  'client_databases': client_databases, 'client_pid': dh_pid,
+                  'message_count': len(messages), 'evidence': dh_evidence}
+    (output / 'restore-dh.json').write_bytes(canonical_bytes(dh_receipt))
+    (output / 'restore-dh.json').chmod(0o400)
+    return dh_receipt
+
+
 def execute(
     manifest,
     output,
@@ -716,12 +770,7 @@ def execute(
             0o400
         )
 
-        server_databases = sorted(lab.server.rglob('DistantHorizons.sqlite'))
-        if not server_databases:
-            raise RuntimeError('restored server has no DH database')
-        restored_databases = [inspect_closed_database(source, output / f'server-dh-{index}.sqlite',
-                             owner_stopped=not lab.active, require_useful=False)
-                              for index, source in enumerate(server_databases)]
+        restored_summary = inspect_restored_server_dh(lab, output)
 
         with lab:
             lab.start()
@@ -745,34 +794,7 @@ def execute(
                 client_pid = client.pid
 
             server_pid = lab.pid
-            dh_output = lab_output / 'client-restore-dh'
-            with Client(manifest, dh_output, 'dh-clean', 60, fresh_cache=True) as client:
-                exercise_dh_client(lab, client)
-                dh_pid = client.pid
-            result = json.loads((dh_output / 'result.json').read_text())
-            heartbeat = json.loads((dh_output / 'heartbeat.json').read_text())
-            elapsed = heartbeat.get('elapsed_seconds')
-            if result != {'result': 'PASS'} or not isinstance(heartbeat.get('connected'), bool) or isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed) or elapsed <= 0:
-                raise RuntimeError('restored DH client completion evidence is malformed')
-            messages = read_dh_messages(dh_output / 'dh-received.jsonl')
-            if dh_outcome(messages, manifest) != 'PASS' or not any(
-                message['type'] in ('FullDataSourceResponseMessage', 'FullDataSplitMessage')
-                and not message['exception_type'] for message in messages
-            ):
-                raise RuntimeError('restored DH client received no useful full-data response')
-            client_databases = inspect_closed_cache(
-                Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data',
-                dh_output, owner_stopped=not Path(f'/proc/{dh_pid}').exists())
-            dh_evidence = [{'path': str(dh_output / filename), 'type': kind}
-                           for filename, kind in (('result.json', 'json'), ('heartbeat.json', 'json'),
-                                                  ('dh-received.jsonl', 'log'), ('launcher.log', 'log'))]
-            dh_evidence.extend({'path': database['copy'], 'type': 'sqlite'}
-                               for database in restored_databases + client_databases)
-            dh_receipt = {'result': 'PASS', 'server_databases': restored_databases,
-                          'client_databases': client_databases, 'client_pid': dh_pid,
-                          'message_count': len(messages), 'evidence': dh_evidence}
-            (output / 'restore-dh.json').write_bytes(canonical_bytes(dh_receipt))
-            (output / 'restore-dh.json').chmod(0o400)
+            exercise_restored_dh(lab, manifest, output, restored_summary)
 
         return write_backup_restore_proofs(
             manifest,
