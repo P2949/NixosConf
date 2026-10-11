@@ -1,9 +1,18 @@
 from pathlib import Path
+import json
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 
-from post_chunky import chunk_bounds, in_target, terrain_chunks, generation_extent, require_ungenerated
+from post_chunky import (
+    chunk_bounds,
+    generation_extent,
+    in_target,
+    require_ungenerated,
+    terrain_chunks,
+    write_post_chunky_proofs,
+)
 from world_semantics import region_occupancy
 
 
@@ -52,6 +61,149 @@ class ChunkyExtentTests(unittest.TestCase):
         metadata[-1].update(Status='minecraft:structure_starts', xPos=484)
         chunks[-1] = (484, 485)
         self.assertEqual(generation_extent({}, regions, chunk_bounds(), policy)['result'], 'FAIL')
+
+
+    def test_proofs_bind_both_server_phases_and_use_partial_reference_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+
+            extent = output / 'chunky-extent.json'
+            catchup = output / 'catchup-observation.json'
+            pregen = output / 'server-phase-1.log'
+            normal = output / 'server-phase-2.log'
+            agent = output / 'agent.jar'
+
+            extent.write_text('{}')
+            catchup.write_text(
+                json.dumps({
+                    'result': 'PASS',
+                })
+            )
+            pregen.write_text(
+                'Chunky completed\n'
+            )
+            normal.write_text(
+                'normal catchup completed\n'
+            )
+            agent.write_bytes(
+                b'agent'
+            )
+
+            class Lab:
+                active = False
+                server = (
+                    output
+                    / 'world-clone/survival'
+                )
+
+            manifest = {
+                'baseline': {
+                    'subvolume_uuid': 'baseline',
+                },
+            }
+
+            queue_result = {
+                'result': 'PASS',
+            }
+
+            calls = []
+
+            def fake_write_proof(
+                manifest,
+                gate,
+                path,
+                evidence,
+                result,
+            ):
+                calls.append(
+                    (
+                        gate,
+                        result,
+                        list(evidence),
+                    )
+                )
+
+                path.write_text('{}')
+
+                return {
+                    'result': result,
+                    'evidence': str(path),
+                    'sha256': 'test-' + gate,
+                }
+
+            with patch(
+                'post_chunky.write_proof',
+                side_effect=fake_write_proof,
+            ):
+                references = write_post_chunky_proofs(
+                    manifest,
+                    output,
+                    Lab,
+                    agent,
+                    queue_result,
+                    1089,
+                    1089,
+                    '123',
+                    '123',
+                    extent,
+                    pregen,
+                    normal,
+                )
+
+            self.assertEqual(
+                set(references),
+                {
+                    'identity_restart',
+                    'post_chunky_catchup',
+                    'no_unbounded_queues',
+                },
+            )
+
+            for _, _, evidence in calls:
+                self.assertIn(
+                    (pregen, 'log'),
+                    evidence,
+                )
+
+                self.assertIn(
+                    (normal, 'log'),
+                    evidence,
+                )
+
+            self.assertTrue(
+                (
+                    output
+                    / 'post-chunky-reference.json'
+                ).is_file()
+            )
+
+            self.assertFalse(
+                (
+                    output
+                    / 'functional-acceptance.json'
+                ).exists()
+            )
+
+            Lab.active = True
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                'stopped functional server',
+            ):
+                write_post_chunky_proofs(
+                    manifest,
+                    output,
+                    Lab,
+                    agent,
+                    queue_result,
+                    1089,
+                    1089,
+                    '123',
+                    '123',
+                    extent,
+                    pregen,
+                    normal,
+                )
 
 
 if __name__ == '__main__':

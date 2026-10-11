@@ -74,6 +74,90 @@ def generation_extent(before, after, bounds, dependency_radii):
             'dependency_radius_chunks': dependency_radii, 'violations': violations}
 
 
+def write_post_chunky_proofs(
+    manifest,
+    output,
+    lab,
+    agent,
+    queue_result,
+    processed,
+    added_count,
+    identity_before,
+    identity_after,
+    extent,
+    pregen_log,
+    normal_log,
+):
+    if lab.active:
+        raise RuntimeError(
+            'post-Chunky proofs require stopped functional server'
+        )
+
+    catchup = output / 'catchup-observation.json'
+    receipt = output / 'workload.json'
+
+    receipt.write_text(json.dumps({
+        'result': queue_result['result'],
+        'processed': processed,
+        'new_terrain_chunks': added_count,
+        'identity_before': int(identity_before),
+        'identity_after': int(identity_after),
+        'queue_observation': queue_result,
+        'agent_sha256': sha256(agent),
+        'server_world': str(lab.server),
+        'baseline_uuid': manifest['baseline']['subvolume_uuid'],
+    }, indent=2) + '\n')
+
+    for artifact in (
+        receipt,
+        catchup,
+        extent,
+        pregen_log,
+        normal_log,
+    ):
+        artifact.chmod(0o400)
+
+    evidence = [
+        (receipt, 'json'),
+        (catchup, 'json'),
+        (extent, 'json'),
+        (pregen_log, 'log'),
+        (normal_log, 'log'),
+        (agent, 'binary'),
+    ]
+
+    references = {
+        gate: write_proof(
+            manifest,
+            gate,
+            output / (gate + '-proof.json'),
+            evidence,
+            (
+                'PASS'
+                if gate == 'identity_restart'
+                else queue_result['result']
+            ),
+        )
+        for gate in (
+            'identity_restart',
+            'post_chunky_catchup',
+            'no_unbounded_queues',
+        )
+    }
+
+    reference_path = (
+        output
+        / 'post-chunky-reference.json'
+    )
+
+    reference_path.write_bytes(
+        canonical_bytes(references)
+    )
+    reference_path.chmod(0o400)
+
+    return references
+
+
 def execute(manifest, output, agent):
     if str(agent) != manifest['queue_agent']['path'] or sha256(agent) != manifest['queue_agent']['sha256']:
         raise ValueError('queue observer must be the immutable Nix-built candidate artifact')
@@ -86,6 +170,7 @@ def execute(manifest, output, agent):
             bounds = chunk_bounds()
             require_ungenerated(before, bounds)
             lab.start(pregen=True)
+            pregen_log = lab.log
             effective = tomllib.loads((lab.server / 'config/DistantHorizons.toml').read_text())
             if effective['common']['worldGenerator']['generatorPlan'] != 'DISABLED':
                 raise RuntimeError('Chunky maintenance DH generation not disabled')
@@ -114,6 +199,7 @@ def execute(manifest, output, agent):
             identity_before = identity_path.read_text()
             maintenance.refresh()
             lab.start()
+            normal_log = lab.log
             actual = tomllib.loads((lab.server / 'config/DistantHorizons.toml').read_text())
             if actual['server']['serverId'] != int(identity_before):
                 raise RuntimeError('DH identity changed during maintenance-to-normal restart')
@@ -129,18 +215,20 @@ def execute(manifest, output, agent):
             after = region_occupancy(lab.server / 'world', include_status=True)
             if not no_unwanted_generation(generated, after):
                 raise RuntimeError('normal zero-player DH generated unexpected terrain')
-            receipt = output / 'workload.json'
-            receipt.write_text(json.dumps({'result': queue_result['result'], 'processed': processed,
-                'new_terrain_chunks': len(added), 'identity_before': int(identity_before),
-                'identity_after': int(identity_after), 'queue_observation': queue_result,
-                'agent_sha256': sha256(agent), 'production_data_touched': False}, indent=2) + '\n')
-            evidence = [(receipt, 'json'), (output / 'catchup-observation.json', 'json'),
-                        (extent, 'json'), (lab.log, 'log'), (agent, 'binary')]
-            references = {gate: write_proof(manifest, gate, output / (gate + '-proof.json'), evidence,
-                         'PASS' if gate == 'identity_restart' else queue_result['result'])
-                          for gate in ('identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')}
-            (output / 'functional-acceptance.json').write_text(json.dumps(references, indent=2) + '\n')
-            return references
+            return write_post_chunky_proofs(
+                manifest,
+                output,
+                lab,
+                agent,
+                queue_result,
+                processed,
+                len(added),
+                identity_before,
+                identity_after,
+                extent,
+                pregen_log,
+                normal_log,
+            )
     finally:
         try:
             lab.stop()

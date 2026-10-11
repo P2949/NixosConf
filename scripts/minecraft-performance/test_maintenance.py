@@ -236,5 +236,106 @@ class MaintenanceTests(unittest.TestCase):
             )
 
 
+    def test_client_fixture_failure_cannot_block_production_restore(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+
+            safe = str(
+                Path('/run/current-system').resolve()
+            )
+
+            (output / 'maintenance.json').write_text(
+                json.dumps({
+                    'safe_system': safe,
+                })
+            )
+
+            actions = []
+
+            def call(*args):
+                if args[0] == 'minecraft-backup':
+                    return json.dumps({
+                        'health': 'ok',
+                        'live_verification': 'passed',
+                    })
+
+                if 'LoadState' in args:
+                    return 'not-found'
+
+                if (
+                    args[:2]
+                    == (
+                        'systemctl',
+                        'is-active',
+                    )
+                ):
+                    return 'active'
+
+                return 'inactive'
+
+            def run(args, **kwargs):
+                actions.append(tuple(args))
+
+            with (
+                patch.object(
+                    maintenance,
+                    'call',
+                    side_effect=call,
+                ),
+                patch.object(
+                    maintenance,
+                    'restore_client_inputs',
+                    side_effect=RuntimeError(
+                        'fixture failure'
+                    ),
+                ),
+                patch.object(
+                    maintenance,
+                    'cleanup_slice',
+                ),
+                patch.object(
+                    maintenance.subprocess,
+                    'run',
+                    side_effect=run,
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    'disposable client input restoration failed',
+                ):
+                    maintenance.restore(output)
+
+            self.assertIn(
+                (
+                    'systemctl',
+                    'start',
+                    'minecraft-server-survival.service',
+                    'minecraft-backup.timer',
+                ),
+                actions,
+            )
+
+            self.assertTrue(
+                (output / 'recovery-status.json').is_file()
+            )
+
+            status = json.loads(
+                (
+                    output
+                    / 'recovery-status.json'
+                ).read_text()
+            )
+
+            self.assertEqual(
+                status['health'],
+                'ok',
+            )
+
+            self.assertEqual(
+                status['live_verification'],
+                'passed',
+            )
+
+
 if __name__ == '__main__':
     unittest.main()

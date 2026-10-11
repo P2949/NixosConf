@@ -244,7 +244,16 @@ def restore(output):
         for unit in (CLIENT, LAB, FUNCTIONAL):
             if call('systemctl', 'show', unit, '-p', 'LoadState', '--value').strip() != 'not-found':
                 subprocess.run(['systemctl', 'stop', unit], check=True)
-        restore_client_inputs(output)
+
+        # Qualification-fixture corruption must invalidate the run, but it
+        # must never prevent restoration of the real production service.
+        client_restore_error = None
+
+        try:
+            restore_client_inputs(output)
+        except Exception as error:
+            client_restore_error = error
+
         cleanup_slice()
         safe = Path(state['safe_system'])
         if Path('/run/current-system').resolve() != safe:
