@@ -344,13 +344,14 @@ class FunctionalDhTests(unittest.TestCase):
                 }
 
             manifest = {
-                'client': {},
+                'client': {'root': str(Path(directory) / 'client-root')},
                 'baseline': {
                     'subvolume_uuid': 'test-baseline',
                 },
             }
 
             with (
+                patch('functional_dh.inspect_closed_cache', return_value=[{'copy': str(output / 'client-dh/result.json'), 'useful_full_data_rows': 1}]),
                 patch(
                     'functional_dh.Lab',
                     LifecycleLab,

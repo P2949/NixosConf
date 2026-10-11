@@ -8,6 +8,7 @@ from pathlib import Path
 import signal
 import sys
 
+from dh_database import inspect_closed_cache
 from client_runtime import Client
 from functional_clients import log_offset, wait_for_log_since
 from functional_runtime import Lab
@@ -259,6 +260,14 @@ def write_dh_proofs(
             'DH client heartbeat is malformed'
         )
 
+    databases = inspect_closed_cache(
+        Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data',
+        client_output, owner_stopped=not Path(f'/proc/{client_pid}').exists(),
+    )
+    database_receipt = client_output / 'dh-databases.json'
+    database_receipt.write_bytes(canonical_bytes(databases))
+    database_receipt.chmod(0o400)
+
     messages = read_dh_messages(messages_path)
     dh_result = dh_outcome(messages, manifest)
     terrain_result = generation_outcome(before, after, manifest)
@@ -296,6 +305,7 @@ def write_dh_proofs(
                 'clean_disconnect_marker': DISCONNECT_MARKER,
                 'client_probe_result': result,
                 'final_heartbeat': heartbeat,
+                'client_databases': databases,
                 'dh_message_count': len(messages),
                 'dh_message_types': sorted({
                     message['type']
@@ -342,6 +352,9 @@ def write_dh_proofs(
         (launcher_log, 'log'),
         (lab.log, 'log'),
     ]
+
+    dh_evidence.append((database_receipt, 'json'))
+    dh_evidence.extend((Path(database['copy']), 'sqlite') for database in databases)
 
     if messages_path.exists():
         dh_evidence.insert(
