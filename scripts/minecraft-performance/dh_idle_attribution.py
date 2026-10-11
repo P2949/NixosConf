@@ -45,7 +45,9 @@ def disk_state(world):
     # Include content hashes: fixed-size SQLite and region mutations matter too.
     result = {}
     for p in sorted(world.rglob('*')):
-        if p.is_file() and (p.suffix in ('.mca', '.sqlite') or p.name.endswith(('-wal', '-shm'))):
+        # SQLite's -shm is a reconstructible WAL index, not database content.
+        # Its physical I/O is still included in the cgroup I/O gate.
+        if p.is_file() and (p.suffix in ('.mca', '.sqlite') or p.name.endswith('-wal')):
             with p.open('rb') as stream:
                 result[str(p.relative_to(world))] = {
                     'size': p.stat().st_size, 'sha256': hashlib.file_digest(stream, 'sha256').hexdigest()}
@@ -323,7 +325,8 @@ def main():
                     'diagnostic-sync', 'diagnostic-generation', 'diagnostic-all'):
         results.append(execute(variant))
         save(args.output / 'results.json', results)
-    save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'MEASURED',
+    save(args.output / 'progress.json', {'phase': 'DH_IDLE_ATTRIBUTION', 'result': 'INCONCLUSIVE',
+                                        'reason': 'MEASUREMENTS_COMPLETE_AWAITING_ADJUDICATION',
                                         'completed': [r['variant'] for r in results]})
 
 
