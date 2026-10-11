@@ -7,6 +7,7 @@
     ./disko.nix
     ./persistence.nix
     ./ephemeral-root.nix
+    ./minecraft.nix
 
     ../../profiles/workstation.nix
     ../../modules/workstation/optimization-boundary.nix

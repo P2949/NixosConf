@@ -5,6 +5,16 @@ Home and ordinary var are root-local, with explicit state islands backed by
 `@persist`. See the [persistence contract](persistence-contract.md) and
 [canonical baseline](baselines/pre-optimization/baseline-final.md).
 
+The [Minecraft server](minecraft-server.md) adds authoritative backup metadata
+directly under `/persist/minecraft-backup` and persists only the timer file
+`/var/lib/systemd/timers/stamp-minecraft-backup.timer`, backed under `/persist`.
+The timer depends on that file's Impermanence service so calendar catch-up can
+survive ordinary `/var` reset. Other systemd timer stamps are not added by this
+module. The world uses the separately declared and physically deployed
+`@minecraft` mount, whose persistence across a controlled reboot passed. Autosave recovery markers and the lock
+are volatile under `/run/minecraft-backup` and survive a service failure within
+the current boot.
+
 ## Reset contract
 
 `boot.ephemeralBtrfsRoot` is an opt-in reusable module. The defaults select

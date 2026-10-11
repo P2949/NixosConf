@@ -1,7 +1,7 @@
 # Desktop persistence contract
 
 On a normal boot, NixOS replaces `@root` and reconstructs declarative system
-and user configuration. Ordinary home and var state are root-local and
+and user configuration. Ordinary home, var and srv state are root-local and
 **ephemeral by default**. State survives only through an explicit persistence
 declaration or a deliberately persistent filesystem.
 
@@ -20,6 +20,7 @@ previously discarded data.
 | `/persist` (`@persist`) | Persistent | Explicit backing, secrets and justified recovery evidence |
 | `/var/lib/nixos-optimization` (`@optimization`) | Separate persistent mount | Existing artifacts; experiments inactive |
 | `/.snapshots` (`@snapshots`) | Persistent snapshot store | Deliberate retention; not an independent backup |
+| `/srv/minecraft` (`@minecraft`) | Separate persistent mount | Mutable Minecraft server state; isolated for snapshots and backup policy |
 | `/boot` | Persistent ESP | Verified normal/recovery boot artifacts |
 | `/etc/nixos` | Persisted containing directory | Repository and running ledger |
 | `/etc/NetworkManager/system-connections` | Persisted containing directory | Connection profiles and secrets |
@@ -32,7 +33,7 @@ previously discarded data.
 | Logs/journal/coredumps, `/var/cache`, `/var/tmp`, undeclared service state | Ephemeral | Journal storage explicitly volatile |
 | `/persist/secrets/p2949-password-hash` | Private persistent source | Declarative account authentication; no secrets in Git |
 | SSH host keys | Declare persistence before enabling sshd | Stable server identity; sshd currently undeclared |
-| `/etc` outside declarations, `/root`, `/srv`, `/tmp`, ordinary `/usr` mutable state | Ephemeral/reconstructed | Required new state needs an explicit audit/declaration |
+| `/etc` outside declarations, `/root`, ordinary `/srv` outside declared persistent mounts, `/tmp`, ordinary `/usr` mutable state | Ephemeral/reconstructed | Required new state needs an explicit audit/declaration |
 | `/run`, `/dev`, `/proc`, `/sys` | Runtime/virtual | Recreated each boot |
 
 Home state persists only through
