@@ -42,6 +42,10 @@ def exercise_landmark(lab, client):
         mutation_time = time.monotonic_ns()
         changed = True
         lab.send('fill -320 300 0 -300 300 0 minecraft:gold_block')
+        gold_conditions = ' '.join(f'if block {x} 300 0 minecraft:gold_block' for x in range(-320, -299))
+        gold_offset = log_offset(lab.log)
+        lab.send(f'execute {gold_conditions} run say QUALIFICATION_DH_LANDMARK_GOLD')
+        wait_for_log_since(lab.log, 'QUALIFICATION_DH_LANDMARK_GOLD', gold_offset)
         deadline = time.monotonic() + 45
         partial_updates = 0
         while not partial_updates:
@@ -66,10 +70,12 @@ def exercise_landmark(lab, client):
                 'client_origin': [0, 100, 0], 'distance_chunks': 19,
                 'original_and_restored_block': 'minecraft:air', 'restored': True}
     finally:
-        if changed:
-            lab.send('fill -320 300 0 -300 300 0 minecraft:air')
-            verify_air(lab, 'QUALIFICATION_DH_LANDMARK_RESTORED_AIR')
-        lab.send('forceload remove -320 0 -300 0')
+        try:
+            if changed:
+                lab.send('fill -320 300 0 -300 300 0 minecraft:air')
+                verify_air(lab, 'QUALIFICATION_DH_LANDMARK_RESTORED_AIR')
+        finally:
+            lab.send('forceload remove -320 0 -300 0')
 
 
 def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
