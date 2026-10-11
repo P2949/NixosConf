@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from qualification_manifest import canonical_bytes, qualification_id, verify_proof
@@ -49,6 +50,15 @@ def verify_bundle(bundle, manifest):
         return {gate: 'UNPROVEN' for gate in REQUIRED}
 
 
+def qualification_exit_code(bundle):
+    outcomes = bundle.get('outcomes', {})
+    if 'FAIL' in outcomes.values():
+        return 1
+    if set(outcomes) == set(REQUIRED) and set(outcomes.values()) == {'PASS'}:
+        return 0
+    return 2
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', type=Path, required=True)
@@ -59,3 +69,4 @@ if __name__ == '__main__':
     with args.output.open('xb') as stream:
         stream.write(canonical_bytes(result))
     args.output.chmod(0o444)
+    sys.exit(qualification_exit_code(result))
