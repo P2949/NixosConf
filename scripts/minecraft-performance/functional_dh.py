@@ -445,7 +445,7 @@ def execute(manifest, output):
                 )
                 client_pid = client.pid
 
-            qualify_realtime(lab, manifest, output, before)
+            qualify_realtime(lab, manifest, output, before, client_pid)
             server_pid = lab.pid
 
         # Lab.__exit__ has finalized server-phase-1.log.

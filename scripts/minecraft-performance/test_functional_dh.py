@@ -351,7 +351,7 @@ class FunctionalDhTests(unittest.TestCase):
             }
 
             with (
-                patch('functional_dh.qualify_realtime', side_effect=lambda lab, manifest, output, before: (output / 'dh-realtime.json').write_text(json.dumps({'result': 'PASS', 'restored': True, 'evidence': []}))),
+                patch('functional_dh.qualify_realtime', side_effect=lambda lab, manifest, output, before, client_pid: (output / 'dh-realtime.json').write_text(json.dumps({'result': 'PASS', 'restored': True, 'evidence': []}))),
                 patch('functional_dh.inspect_closed_cache', return_value=[{'copy': str(output / 'client-dh/result.json'), 'useful_full_data_rows': 1}]),
                 patch(
                     'functional_dh.Lab',

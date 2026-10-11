@@ -71,7 +71,7 @@ def exercise_landmark(lab, client):
         lab.send('forceload remove -320 0 -300 0')
 
 
-def qualify_realtime(lab, manifest, output, regions):
+def qualify_realtime(lab, manifest, output, regions, initial_client_pid):
     from pathlib import Path
     import re
     from client_runtime import Client
@@ -85,7 +85,8 @@ def qualify_realtime(lab, manifest, output, regions):
     cache = Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data'
     baseline_output = output / 'client-dh' / 'database-before-landmark'
     baseline_output.mkdir(mode=0o700)
-    before = inspect_closed_cache(cache, baseline_output, owner_stopped=True)
+    before = inspect_closed_cache(cache, baseline_output,
+                                  owner_stopped=not Path(f'/proc/{initial_client_pid}').exists())
     client_output = output / 'client-dh-update'
     with Client(manifest, client_output, 'dh-clean', 120) as client:
         receipt = exercise_landmark(lab, client)
