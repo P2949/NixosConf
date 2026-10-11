@@ -1,8 +1,39 @@
 # Minecraft server performance qualification
 
-The performance stack is undergoing staged qualification. No new server mod,
-memory limit or collector has been activated in production. A stage advances only
-after its automated correctness, recovery and performance gates pass.
+The performance stack is undergoing staged qualification. The first candidate
+was transiently activated and subsequently rolled back. Production currently
+runs the original baseline. A stage advances only after its automated
+correctness, recovery and performance gates pass.
+
+## Latest execution outcome
+
+The 2026-10-11 run ended with **FAIL** during isolated Krypton/DH runtime testing.
+The benchmark setup copied its DH policy file with mode 0444 and root ownership;
+the Minecraft service user could not write it. DH then threw a
+`NullPointerException` during configuration loading. This is a benchmark setup
+failure, not evidence that the production candidate or upstream mod is unsafe.
+The required phase nevertheless did not pass, and no later phase was attempted.
+
+Before that failure, static Minecraft checks, the existing Python suites,
+formatter, statix, deadnix, flake check and desktop build passed. Disposable
+clients launched automatically, received frame instrumentation, obeyed scripted
+spectator/teleport commands and exited cleanly. The transient production candidate
+accepted both DH and non-DH clients; the DH client logged receipt of a level-init
+message. These partial results do not certify full DH synchronization, real-time
+propagation, isolated restore, C2ME or collector acceptance.
+
+The recovery guard restored the original system and started the production
+service and timer. Its embedded backup check lacked an executable search path;
+an independent `minecraft-backup status --live` then passed. The guard is stopped,
+all disposable clients and test servers are stopped, and production again uses
+the 6 GiB heap and 8/10 GiB cgroup envelope. No PR was merged.
+
+The machine-readable failure report and evidence digests are retained in
+`/persist/minecraft-performance-agent/final-result.json` and
+`/persist/minecraft-performance-agent/evidence-manifest.json`. The agent's state
+path under `/var/lib/minecraft-performance-agent` points to this persistent
+directory. The isolated worktree, fixed baseline snapshot, failed clone and raw
+logs remain available for diagnosis.
 
 ## Original baseline
 
