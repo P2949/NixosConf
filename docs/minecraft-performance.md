@@ -95,6 +95,46 @@ The abandoned slice from earlier pilots was stopped and its exact known unit
 definition removed; production and its timer remained active throughout these
 implementation checks. These are local checks, not runtime gate or CI evidence.
 
+The committed manifest generator and independent recovery timer passed live
+preflights against checkpoint `c0643544e7c348ddc430c8270ffd375457a73277`.
+The preflight manifest identity is
+`72186dafed27f2a2469982f4bad869e905fc61336926a08d58ed265a57eb79ae`;
+it is explicitly excluded from acceptance because the functional drivers are
+not yet complete. The guard armed, restoration verified both production units
+and live backup health, and both transient guard units unloaded after disarming.
+Production was not stopped during this preflight.
+
+The terrain parser now distinguishes explicitly verified zero-byte region shells
+from actual chunk entries and nonempty unexplained regions. It parsed the fixed
+readonly baseline's 16 region files and 4,964 terrain/entity/POI entries; this is
+parser preflight evidence, not a terrain-generation PASS. Valid final sectors may
+end at the payload rather than a sector boundary; truncated payloads still fail.
+
+A disposable one-shot Java attach agent reads DH 3.3.4's concrete update,
+retrieval, request, delayed-save and executor counters. It writes snapshots to
+private tmpfs and is reserved for functional queue experiments; authoritative
+clean idle samples never attach it. The executable convergence policy requires
+180 seconds of stable zero queues, unchanged database fingerprints and resources
+within the project idle budget, inside a 900-second observation bound, with
+10,000 a conservative backlog ceiling for the bounded workload. Missing counters,
+changed queue identities or observation gaps remain INCONCLUSIVE. Persistent
+backlog, growth, I/O or CPU at the timeout fails. Forty Python tests and updated
+probe compilation pass; queue observation and post-Chunky runtime remain unproven.
+
+The live counter preflight subsequently read 47 counters across three loaded DH
+levels, all zero in that single snapshot. Its first attempt was excluded after
+the private tmpfs directory inherited mode 0700; applying explicit mode 0750
+allowed service-user access. Both attempts stopped their disposable server and
+left production active. This verifies counter access, not workload convergence.
+The manifest now includes the exact Chunky maintenance inventory and generated
+DH-disabled policy. A disposable lifecycle helper preserves DH identity while
+replacing the sparse Nix policy across maintenance and normal restarts; its
+cleanup tests cover identity failure and occupied units. The timed observer
+includes SQLite parent/child/regeneration backlog flags and hashes database/WAL
+content. Forty-two Python tests, probe compilation, Nix formatting and the
+Minecraft configuration check pass. The post-Chunky driver and its complete
+runtime acceptance remain pending; no authoritative clean pair has completed.
+
 If DH fails these limits, test one exact pinned upstream Minecraft 26.3 build.
 Only demonstrated thread/method costs justify one bounded idle-aware backoff
 patch attempt. An invasive permanent fork is rejected: omit server-side DH,

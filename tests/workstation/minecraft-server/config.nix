@@ -313,6 +313,9 @@ pkgs.runCommand "check-minecraft-server-config"
           "$performanceSource/probe/FrameBuffer.java" \
           "$performanceSource/probe/FrameBufferTest.java"
         java -cp "$TMPDIR/tick-probe-tests" local.minecraft.performance.FrameBufferTest
+        javac -d "$TMPDIR/tick-probe-tests" \
+          "$performanceSource/probe/DhQueueAgent.java" \
+          "$performanceSource/probe/QueueAttach.java"
 
         MINECRAFT_MSMP_SOURCE="$msmpSource" python3 "$msmpTests"
 

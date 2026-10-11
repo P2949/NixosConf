@@ -45,6 +45,17 @@ def build(java_home, libraries, dh_jar, output):
                             '--file', str(artifact), '-C', str(classes), '.'], check=True)
             manifest.append({'name': name, 'size': artifact.stat().st_size,
                              'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest()})
+        classes = root / 'queue-agent'
+        classes.mkdir()
+        subprocess.run([str(java_home / 'bin/javac'), '-d', str(classes),
+                        str(source / 'DhQueueAgent.java'), str(source / 'QueueAttach.java')], check=True)
+        metadata = root / 'queue-agent.manifest'
+        metadata.write_text('Manifest-Version: 1.0\nAgent-Class: local.minecraft.performance.DhQueueAgent\n\n')
+        artifact = output / 'queue-agent.jar'
+        subprocess.run([str(java_home / 'bin/jar'), '--create', '--date=2026-01-01T00:00:00Z',
+                        '--file', str(artifact), '--manifest', str(metadata), '-C', str(classes), '.'], check=True)
+        manifest.append({'name': 'queue-agent', 'size': artifact.stat().st_size,
+                         'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest()})
     (output / 'probe-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
 

@@ -5,6 +5,8 @@ let
   cfg = system.config;
   pkgs = system.pkgs;
   server = cfg.services.minecraft-servers.servers.survival;
+  pregen =
+    cfg.specialisation.minecraft-pregen.configuration.services.minecraft-servers.servers.survival;
   unit = cfg.systemd.services.minecraft-server-survival.serviceConfig;
   policyFiles = builtins.mapAttrs (
     name: value:
@@ -35,6 +37,11 @@ pkgs.writeText "minecraft-candidate-nix.json" (
     java_home = pkgs.openjdk25_headless;
     diagnostic_java_home = pkgs.openjdk25;
     mods_directory = server.symlinks.mods;
+    pregen_mods_directory = pregen.symlinks.mods;
+    pregen_dh_policy =
+      (pkgs.formats.toml { }).generate "config-DistantHorizons-pregen.toml"
+        pregen.files."config/DistantHorizons.toml".value;
+    pregen_pause_seconds = pregen.serverProperties.pause-when-empty-seconds;
     jvm_flags = pkgs.lib.splitString " " server.jvmOpts;
     policy_files = policyFiles;
     server_properties = server.serverProperties;

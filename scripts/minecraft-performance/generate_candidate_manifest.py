@@ -33,11 +33,22 @@ def baseline_identity(base):
             'content_manifest': files}
 
 
+def mod_inventory(directory):
+    inventory = []
+    for path in sorted(Path(directory).iterdir()):
+        with zipfile.ZipFile(path) as archive:
+            metadata = json.loads(archive.read('fabric.mod.json'))
+        inventory.append({'id': metadata['id'], 'version': metadata['version'],
+                          'filename': path.name, 'path': str(path.resolve()), 'sha256': sha256(path)})
+    return inventory
+
+
 def generate(nix_manifest, base, sources, repository):
     result = json.loads(nix_manifest.read_text())
     if not re.fullmatch('[0-9a-f]{40}', result['git_sha']):
         raise ValueError('Nix input must have an exact committed revision')
-    for key in ('system_closure', 'minecraft_package', 'java_home', 'diagnostic_java_home', 'mods_directory'):
+    for key in ('system_closure', 'minecraft_package', 'java_home', 'diagnostic_java_home',
+                'mods_directory', 'pregen_mods_directory', 'pregen_dh_policy'):
         path = Path(result[key])
         if not path.is_relative_to('/nix/store') or not path.exists():
             raise ValueError('unrealized Nix candidate artifact: ' + key)
@@ -50,12 +61,11 @@ def generate(nix_manifest, base, sources, repository):
                       'version': subprocess.check_output([str(java), '-version'], stderr=subprocess.STDOUT, text=True).strip()}
     wrapper = Path(result['minecraft_package']) / 'bin/minecraft-server'
     result['wrapper'] = {'path': str(wrapper), 'sha256': sha256(wrapper)}
-    result['mods'] = []
-    for path in sorted(Path(result['mods_directory']).iterdir()):
-        with zipfile.ZipFile(path) as archive:
-            metadata = json.loads(archive.read('fabric.mod.json'))
-        result['mods'].append({'id': metadata['id'], 'version': metadata['version'],
-                               'filename': path.name, 'path': str(path.resolve()), 'sha256': sha256(path)})
+    result['mods'] = mod_inventory(result['mods_directory'])
+    result['pregen_mods'] = mod_inventory(result['pregen_mods_directory'])
+    pregen_policy = Path(result['pregen_dh_policy'])
+    result['pregen_policy'] = {'path': str(pregen_policy), 'content': pregen_policy.read_text(),
+                               'sha256': sha256(pregen_policy)}
     result['policies'] = {name: {'path': path, 'content': Path(path).read_text(), 'sha256': sha256(path)}
                           for name, path in result['policy_files'].items()}
     result['controlled_server_properties'] = {**result['server_properties'],

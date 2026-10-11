@@ -18,7 +18,7 @@ class MaintenanceTests(unittest.TestCase):
                             'live_verification': 'passed', 'state': {'last_success': {
                                 'snapshot_uuid': 'snapshot', 'filesystem_uuid': 'filesystem',
                                 'snapshot_path': '/.snapshots/minecraft/verified'}}})
-                    return 'inactive'
+                    return 'not-found' if 'LoadState' in args else 'inactive'
                 with patch.object(maintenance, 'call', side_effect=call), \
                      patch.object(maintenance, 'arm', side_effect=lambda output: actions.append(('arm',))), \
                      patch.object(maintenance.subprocess, 'run', side_effect=lambda args, **kwargs: actions.append(tuple(args))):
