@@ -69,3 +69,42 @@ def exercise_landmark(lab, client):
             lab.send('fill -320 300 0 -300 300 0 minecraft:air')
             verify_air(lab, 'QUALIFICATION_DH_LANDMARK_RESTORED_AIR')
         lab.send('forceload remove -320 0 -300 0')
+
+
+def qualify_realtime(lab, manifest, output, regions):
+    from pathlib import Path
+    import re
+    from client_runtime import Client
+    from dh_database import inspect_closed_cache
+    from qualification_manifest import canonical_bytes
+    require_generated_landmark(regions)
+    options = manifest['client']['profiles']['dh-clean']['files']['options.txt']['content']
+    render = re.search(r'(?m)^renderDistance:(\d+)$', options)
+    if render is None or int(render.group(1)) > 12:
+        raise RuntimeError('controlled landmark must be outside vanilla render distance')
+    cache = Path(manifest['client']['root']) / 'instances/dh-clean/minecraft/Distant_Horizons_server_data'
+    baseline_output = output / 'client-dh' / 'database-before-landmark'
+    baseline_output.mkdir(mode=0o700)
+    before = inspect_closed_cache(cache, baseline_output, owner_stopped=True)
+    client_output = output / 'client-dh-update'
+    with Client(manifest, client_output, 'dh-clean', 120) as client:
+        receipt = exercise_landmark(lab, client)
+        pid = client.pid
+    after = inspect_closed_cache(cache, client_output,
+                                 owner_stopped=not Path(f'/proc/{pid}').exists())
+    before_fingerprints = sorted(database['full_data_fingerprint'] for database in before)
+    after_fingerprints = sorted(database['full_data_fingerprint'] for database in after)
+    if before_fingerprints == after_fingerprints:
+        raise RuntimeError('distant landmark did not change finalized DH terrain data')
+    receipt.update({'result': 'PASS', 'database_before': before, 'database_after': after,
+                    'client_pid': pid, 'vanilla_render_distance_chunks': int(render.group(1)),
+                    'database_content_changed': True})
+    evidence = [{'path': database['copy'], 'type': 'sqlite'} for database in before + after]
+    evidence.extend({'path': str(client_output / filename), 'type': kind}
+                    for filename, kind in (('dh-received.jsonl', 'log'), ('result.json', 'json'),
+                                           ('heartbeat.json', 'json'), ('launcher.log', 'log')))
+    receipt['evidence'] = evidence
+    path = output / 'dh-realtime.json'
+    path.write_bytes(canonical_bytes(receipt))
+    path.chmod(0o400)
+    return receipt

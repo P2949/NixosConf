@@ -9,6 +9,7 @@ import signal
 import sys
 
 from dh_database import inspect_closed_cache
+from realtime_updates import qualify_realtime
 from client_runtime import Client
 from functional_clients import log_offset, wait_for_log_since
 from functional_runtime import Lab
@@ -268,6 +269,11 @@ def write_dh_proofs(
     database_receipt.write_bytes(canonical_bytes(databases))
     database_receipt.chmod(0o400)
 
+    realtime_path = output / 'dh-realtime.json'
+    realtime = json.loads(realtime_path.read_text())
+    if realtime.get('result') != 'PASS' or realtime.get('restored') is not True:
+        raise RuntimeError('DH real-time landmark proof did not pass')
+
     messages = read_dh_messages(messages_path)
     dh_result = dh_outcome(messages, manifest)
     terrain_result = generation_outcome(before, after, manifest)
@@ -306,6 +312,7 @@ def write_dh_proofs(
                 'client_probe_result': result,
                 'final_heartbeat': heartbeat,
                 'client_databases': databases,
+                'real_time_updates': realtime,
                 'dh_message_count': len(messages),
                 'dh_message_types': sorted({
                     message['type']
@@ -353,6 +360,8 @@ def write_dh_proofs(
         (lab.log, 'log'),
     ]
 
+    dh_evidence.append((realtime_path, 'json'))
+    dh_evidence.extend((Path(entry['path']), entry['type']) for entry in realtime['evidence'])
     dh_evidence.append((database_receipt, 'json'))
     dh_evidence.extend((Path(database['copy']), 'sqlite') for database in databases)
 
@@ -436,6 +445,7 @@ def execute(manifest, output):
                 )
                 client_pid = client.pid
 
+            qualify_realtime(lab, manifest, output, before)
             server_pid = lab.pid
 
         # Lab.__exit__ has finalized server-phase-1.log.
