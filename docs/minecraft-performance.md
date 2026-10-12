@@ -7,6 +7,27 @@ correctness, recovery and performance gates pass.
 
 ## Qualification status
 
+Phase A is accepted for the frozen `a0f0921dc47d2aa57eb74d94f86ebfe53bc35515`
+candidate only. All eight independently verified functional proofs pass. The
+fixed eleven-pair idle study passes with median DH-on interval CPU 3.0121% of
+one core, median run p95 CPU 3.7525%, and mean paired package-power increase
+0.04449 W (nominal 95% Student t interval 0.01471–0.07427 W). Host, I/O, memory
+events and world invariance gates pass. One invalid pair attempt was retained
+and retried within the declared bound; thresholds were unchanged.
+
+The immutable functional bundle digest is
+`0d865f3782e013a345bb163df2694c33c2117f4f134f2a18a74bf2dd5f59e517`,
+qualification identity
+`aef9bc92755846d32fd9b004016e3f6cdaefa66f6b168ae7647270aefaded029`.
+Private evidence is in `/persist/minecraft-performance-candidate-a0f0921` and
+`/persist/minecraft-performance-dh-attribution-a0f0921`. Independent analysis
+matched the recorded result; recovery completed without cleanup errors, the
+controller exited successfully, production and its backup timer are active,
+live backup verification passes, and the qualification port is closed.
+Production still uses the safe original closure. C2ME, maintenance-mode and
+collector qualification, final exact-head CI and deployment remain outstanding.
+Earlier failures below retain their original outcomes.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
