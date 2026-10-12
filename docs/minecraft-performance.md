@@ -179,6 +179,25 @@ its fourth worldgen control completed the target but exceeded the previous
 the evidence remains in `/persist/minecraft-performance-functional-c2me-study-9f8fa49`.
 It must not be resumed or relabeled as an accepted comparison.
 
+The fresh `b39d3e22aa3aa73772ff89181c6b17b339a6f804` C2ME study completed
+five accepted pairs each for steady, worldgen and workstation contention.
+Its executable result is **PASS, C2ME_4, material_benefit**. Two environmental
+observations remain preserved and excluded. Independent decision replay matched;
+all 292 retained evidence hashes and all 32 tick/frame/GC/resource metric replays
+passed, along with terminal Java exit and DH protocol checks. Generation extent
+receipts require 16,641 full target chunks. Qualification selected executor four;
+it has not yet been deployed to production.
+
+Median worldgen completion improved 39.08% (95% interval 30.60–44.37% improvement);
+contention completion improved 20.69% (17.30–40.63%). Contention client 1% low
+improved 1.70% (0.93–1.97%), satisfying the declared non-inferiority policy.
+These are controlled render-loop measurements, not subjective visual acceptance.
+Production and backup recovery passed; live backup verification passed and the
+qualification port was closed. Private evidence remains under
+`/persist/minecraft-performance-functional-c2me-study-b39d3e2`.
+Results SHA256: `3be80401ee5f7ff72d7a71f6fe0042d83d9fc718aa7b5e150e408233e8db48ac`;
+analysis SHA256: `a44ff0a8c253564eac3e0669f690250cf25bf7a605de38958c7adb241e40e755`.
+
 The fresh `d3f6e6a` contention calibration passed all trial checks. Its private
 study is `/persist/minecraft-performance-functional-c2me-study-d3f6e6a-pilot`,
 with controller invocation `ad3e96c8303443558244acab90047fc8`; the trial receipt
