@@ -11,25 +11,68 @@ qualification and acceptance receipts.
 
 ## Architecture and modes
 
-NixOS manages the server through nix-minecraft and systemd in `minecraft.slice`.
-Normal mode pins Minecraft Java Edition 26.3, Fabric loader 0.19.5, OpenJDK 25 and
-`-Xms1G -Xmx6G`. Fabric API, Lithium, FerriteCore, ServerCore and spark are the
-normal mod set. Empty-server pause is 60 seconds. The server uses
-`/srv/minecraft`, declared as the separate Btrfs `@minecraft` mount; recovery
-snapshots live beneath `/.snapshots/minecraft` on the `@snapshots` mount of the
-same filesystem. Disko describes intended topology, not current physical state.
+NixOS manages the server through nix-minecraft and systemd in
+`minecraft.slice`. Normal mode pins Minecraft Java Edition 26.3, Fabric loader
+0.19.5 and OpenJDK 25. The server JVM uses `-Xms1G`, `-Xmx8G`,
+`-XX:+ExitOnOutOfMemoryError` and G1 through `-XX:+UseG1GC`.
 
-`minecraft-pregen` inherits the same server, management and security baseline,
-adds Chunky, and sets `pause-when-empty-seconds=-1`. Its backup timer is masked,
-and has no `timers.target` link. The manual backup service remains available.
-The live transition and bounded Chunky generation have passed. Inspect the selected generation's `specialisation/` directory
-and use the explicitly approved specialization activation procedure. Do not
-start the normal timer manually in pregen mode. Take a manual recovery point
-before planned bulk generation and after completion if appropriate.
+The normal mod set is Fabric API, Lithium, FerriteCore, Krypton, ServerCore,
+spark, Distant Horizons 3.3.4 and C2ME 0.4.2-alpha.0.90+26.3. C2ME uses config
+schema version 3 with `globalExecutorParallelism = 4`. Spark background
+profiling remains disabled.
 
-The Java service has Nice 5, MemoryHigh 8G and MemoryMax 10G; the slice has CPU
-and I/O weights 50. Backup runs at Nice 10 with CPU/I/O weights 25 and a 20-minute
-outer timeout, so it yields to foreground workstation work.
+Normal Distant Horizons operation keeps real-time updates and synchronization on
+load enabled while limiting world generation to `PRE_EXISTING_ONLY` /
+`CHUNKS_ONLY`. It uses two worker threads with `threadRunTimeRatio = 0.5`.
+Empty-server pause is 60 seconds.
+
+The server uses `/srv/minecraft`, declared as the separate Btrfs `@minecraft`
+mount; recovery snapshots live beneath `/.snapshots/minecraft` on the
+`@snapshots` mount of the same filesystem. Disko describes intended topology,
+not current physical state.
+
+`minecraft-pregen` inherits the normal server, management and security baseline,
+adds Chunky, sets `pause-when-empty-seconds=-1`, disables the automatic backup
+timer and disables Distant Horizons generation for the maintenance session. The
+manual backup service remains available.
+
+`minecraft-dh-pregen` keeps the normal mod inventory, sets
+`pause-when-empty-seconds=-1`, disables the automatic backup timer and switches
+Distant Horizons to `INTERNAL_SERVER` / `CHUNKS_ONLY` for explicit DH-driven
+generation.
+
+Both maintenance modes are intentional bounded operating modes rather than
+normal server policy. Take a manual recovery point before planned bulk
+generation and after completion when appropriate, and return to the normal
+configuration afterward.
+
+The Java service has Nice 5, MemoryHigh 10G and MemoryMax 12G; the slice has CPU
+and I/O weights 50. Backup runs at Nice 10 with CPU/I/O weights 25 and a
+20-minute outer timeout, so it yields to foreground workstation work.
+
+### Performance qualification
+
+C2ME executor four was accepted after functional and comparative qualification.
+The exact production-style stack passed all eight functional gates. The
+comparative C2ME study selected `C2ME_4` with material benefit: median worldgen
+completion improved 39.08%, contention completion improved 20.69%, and
+contention client 1% low improved 1.70%.
+
+The final collector comparison completed five valid G1 and five valid ZGC
+contention runs. It retained G1 under the declared baseline-tie rule. Client
+differences were negligible, both collectors recorded zero ticks over 50 ms,
+and ZGC world-generation throughput was about 4.8% lower in that comparison.
+
+One C2ME steady qualification run observed unexpected distant terrain
+generation. The behavior did not reproduce in two subsequent C2ME steady runs,
+which both produced zero terrain changes, while two no-C2ME controls also
+passed. The event is therefore retained as an unresolved, non-reproduced
+observation rather than attributed to C2ME.
+
+The immutable source checkpoint that was qualified and initially deployed is
+tagged `minecraft-server-qualified-2026-10-12`. Exact qualification receipts
+belong to the tag, PR history and retained private evidence rather than this
+operating runbook.
 
 ## Management endpoint
 
