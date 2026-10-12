@@ -47,6 +47,32 @@ schema and executor setting against the generated config and the startup
 fails as `FAIL_CONFIGURATION_NOT_APPLIED`; artifact mismatch also fails closed.
 Source: https://modrinth.com/mod/c2me-fabric/version/ODMLK8M9.
 
+Executor-four C2ME correctness passes for frozen source
+`647c3f17a9ab3364a049d0ee7db32de1b34bc0a1`. All eight functional gates
+independently verify PASS, including ordinary and DH clients, the controlled
+distant update, unwanted-generation exclusion, backup/restore, identity,
+post-Chunky catch-up and bounded queues. Chunky processed 1,089 chunks; normal
+restart converged with stable zero queues/database and idle resources over the
+required 180-second quiet window. Generated C2ME config preserves schema 3 and
+parallelism four, also confirmed by startup telemetry. Its experimental
+`gcFreeChunkSerializer` remains at the pinned default false.
+
+Startup retains warnings for absent Starlight integration targets, including
+`scalablelux.MixinChunkSystemHooks` and `scalablelux.MixinSchedulingUtil`; no
+failed mixin application or fatal classloading error occurred. These warnings
+remain in the private logs. Correctness does not establish comparative speed
+or workstation-client non-regression; C2ME is still qualification-only.
+
+Private evidence is under `/persist/minecraft-performance-candidate-647c3f1`
+and the four `/persist/minecraft-performance-functional-*-647c3f1` runs.
+Qualification ID:
+`8ad668627e6ed76bfa39c3e83b797d652ad44943b6241cb43c982d64b8e02990`.
+Immutable eight-gate bundle SHA-256:
+`60f748f6d0ecf4f0f98daf0d870fa13ea78ae0393dc7bddd2ade8771e5c7365a`.
+All controllers exited successfully and recovery receipts report healthy live
+backup verification with no cleanup errors. Production and its timer are active,
+the qualification port is closed, and the safe original closure remains active.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
