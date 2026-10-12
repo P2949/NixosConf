@@ -171,6 +171,22 @@ found a second reader mismatch: the Java frame column is `frame_time_ms`, not
 contract test using that Java header. These diagnostic checks do not rehabilitate
 the failed controller run or count it toward primary acceptance.
 
+The fresh `d3f6e6a` contention calibration passed all trial checks. Its private
+study is `/persist/minecraft-performance-functional-c2me-study-d3f6e6a-pilot`,
+with controller invocation `ad3e96c8303443558244acab90047fc8`; the trial receipt
+SHA256 is `30a2a031be30c9ec7582cab114db062bd527ea2495791e86c029b8c92531e961`.
+Independent replay verified every retained evidence hash, exact tick/frame/JFR
+metrics, DH protocol, host-load summary, terminal Java identity and zero
+OOM/MemoryMax/MemoryHigh events. The full 16,641-chunk target completed in
+120.791639729 seconds, covering the entire fixed 90-second client window;
+dependency extents passed. Recovery passed with no cleanup errors, production
+and its backup timer active, and qualification/guard units collected.
+The study correctly reports comparative INCONCLUSIVE with `pilot_outcome=PASS`
+and no selection. Keep radius 1,024 and all workload settings unchanged for the
+primary five-pair series. This documentation checkpoint changes no runtime or
+qualification tool source; newly frozen primary manifests retain the calibrated
+tool/artifact identities while recording their own committed source SHA.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
