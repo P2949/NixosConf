@@ -326,7 +326,8 @@ pkgs.runCommand "check-minecraft-server-config"
 
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
         MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
-        python3 -m unittest discover -s "$performanceSource" -v
+        MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" \
+          python3 -m unittest discover -s "$performanceSource" -v
         mkdir -p "$TMPDIR/tick-probe-tests"
         javac -d "$TMPDIR/tick-probe-tests" \
           "$performanceSource/probe/TickBuffer.java" \

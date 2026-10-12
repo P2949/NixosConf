@@ -3,10 +3,32 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from functional_runtime import Lab
+from functional_runtime import Lab, identity_helper
 
 
 class FunctionalLifecycleTests(unittest.TestCase):
+
+    def test_identity_helper_accepts_explicit_packaged_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / 'minecraft-dh-identity.py'
+            source.write_text(
+                "PACKAGED_TEST_MARKER = 'loaded'\n"
+            )
+
+            with patch.dict(
+                'os.environ',
+                {
+                    'MINECRAFT_DH_IDENTITY_SOURCE': str(source),
+                },
+                clear=False,
+            ):
+                module = identity_helper()
+
+            self.assertEqual(
+                module.PACKAGED_TEST_MARKER,
+                'loaded',
+            )
+
     def test_identity_failure_still_removes_owned_slice(self):
         lab = Lab.__new__(Lab)
         lab.active = True

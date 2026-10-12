@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -22,7 +23,16 @@ def command(*args):
 
 
 def identity_helper():
-    path = HERE.parent.parent / 'hosts/desktop/minecraft-dh-identity.py'
+    override = os.environ.get('MINECRAFT_DH_IDENTITY_SOURCE')
+    path = (
+        Path(override)
+        if override is not None
+        else HERE.parent.parent / 'hosts/desktop/minecraft-dh-identity.py'
+    )
+    if not path.is_absolute() or not path.is_file():
+        raise FileNotFoundError(
+            'Minecraft DH identity helper is unavailable: ' + str(path)
+        )
     spec = importlib.util.spec_from_file_location('candidate_dh_identity', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
