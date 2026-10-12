@@ -11,6 +11,7 @@ from post_chunky import (
     in_target,
     require_ungenerated,
     terrain_chunks,
+    inspect_maintenance_mode,
     write_post_chunky_proofs,
     qualification_exit_code,
 )
@@ -74,6 +75,133 @@ class ChunkyExtentTests(unittest.TestCase):
         self.assertEqual(generation_extent({}, regions, chunk_bounds(), policy)['result'], 'FAIL')
 
 
+    def test_maintenance_mode_state_requires_exact_runtime_policy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            server = root / 'survival'
+            config = server / 'config'
+            mods = server / 'mods'
+
+            config.mkdir(parents=True)
+            mods.mkdir()
+
+            artifact = root / 'c2me.jar'
+            artifact.write_bytes(b'c2me')
+
+            manifest = {
+                'controlled_server_properties': {
+                    'pause-when-empty-seconds': 60,
+                },
+                'dh_pregen_pause_seconds': -1,
+                'mode_backup_timers': {
+                    'normal': True,
+                    'chunky': False,
+                    'dh_pregen': False,
+                },
+                'mods': [
+                    {
+                        'id': 'c2me',
+                        'filename': 'c2me.jar',
+                    },
+                ],
+                'dh_pregen_mods': [
+                    {
+                        'id': 'c2me',
+                        'filename': 'c2me.jar',
+                    },
+                ],
+            }
+
+            class Lab:
+                pass
+
+            lab = Lab()
+            lab.server = server
+
+            def install_state(
+                generator_mode,
+                generator_plan,
+                pause,
+            ):
+                (
+                    config / 'DistantHorizons.toml'
+                ).write_text(
+                    '[server]\n'
+                    'serverId = 42\n'
+                    '[common.worldGenerator]\n'
+                    f'chunkGeneratorMode = "{generator_mode}"\n'
+                    f'generatorPlan = "{generator_plan}"\n'
+                )
+
+                (server / 'server.properties').write_text(
+                    f'pause-when-empty-seconds={pause}\n'
+                )
+
+                for path in mods.iterdir():
+                    path.unlink()
+
+                (mods / 'c2me.jar').symlink_to(artifact)
+
+            install_state(
+                'INTERNAL_SERVER',
+                'CHUNKS_ONLY',
+                -1,
+            )
+            state = inspect_maintenance_mode(
+                lab,
+                manifest,
+                'dh_pregen',
+                '42\n',
+            )
+
+            self.assertEqual(
+                state['chunk_generator_mode'],
+                'INTERNAL_SERVER',
+            )
+            self.assertEqual(
+                state['pause_when_empty_seconds'],
+                -1,
+            )
+            self.assertFalse(
+                state['declared_backup_timer_enabled']
+            )
+
+            install_state(
+                'PRE_EXISTING_ONLY',
+                'CHUNKS_ONLY',
+                60,
+            )
+            state = inspect_maintenance_mode(
+                lab,
+                manifest,
+                'normal',
+                '42\n',
+            )
+
+            self.assertEqual(
+                state['chunk_generator_mode'],
+                'PRE_EXISTING_ONLY',
+            )
+            self.assertEqual(
+                state['pause_when_empty_seconds'],
+                60,
+            )
+            self.assertTrue(
+                state['declared_backup_timer_enabled']
+            )
+
+            (mods / 'chunky.jar').symlink_to(artifact)
+            with self.assertRaisesRegex(
+                RuntimeError,
+                'mod inventory mismatch',
+            ):
+                inspect_maintenance_mode(
+                    lab,
+                    manifest,
+                    'normal',
+                    '42\n',
+                )
+
     def test_proofs_bind_both_server_phases_and_use_partial_reference_name(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
@@ -83,6 +211,9 @@ class ChunkyExtentTests(unittest.TestCase):
             pregen = output / 'server-phase-1.log'
             normal = output / 'server-phase-2.log'
             agent = output / 'agent.jar'
+            transition = output / 'maintenance-transitions.json'
+            dh_pregen = output / 'server-phase-3.log'
+            restored_normal = output / 'server-phase-4.log'
 
             extent.write_text('{}')
             catchup.write_text(
@@ -99,6 +230,9 @@ class ChunkyExtentTests(unittest.TestCase):
             agent.write_bytes(
                 b'agent'
             )
+            transition.write_text('{"result":"PASS"}\n')
+            dh_pregen.write_text('dh pregen started\n')
+            restored_normal.write_text('normal restored\n')
 
             class Lab:
                 active = False
@@ -159,6 +293,9 @@ class ChunkyExtentTests(unittest.TestCase):
                     extent,
                     pregen,
                     normal,
+                    transition,
+                    dh_pregen,
+                    restored_normal,
                 )
 
             self.assertEqual(
@@ -179,6 +316,29 @@ class ChunkyExtentTests(unittest.TestCase):
                 self.assertIn(
                     (normal, 'log'),
                     evidence,
+                )
+
+            evidence_by_gate = {
+                gate: evidence
+                for gate, _, evidence in calls
+            }
+
+            for item in (
+                (transition, 'json'),
+                (dh_pregen, 'log'),
+                (restored_normal, 'log'),
+            ):
+                self.assertIn(
+                    item,
+                    evidence_by_gate['identity_restart'],
+                )
+                self.assertNotIn(
+                    item,
+                    evidence_by_gate['post_chunky_catchup'],
+                )
+                self.assertNotIn(
+                    item,
+                    evidence_by_gate['no_unbounded_queues'],
                 )
 
             self.assertTrue(
@@ -214,6 +374,9 @@ class ChunkyExtentTests(unittest.TestCase):
                     extent,
                     pregen,
                     normal,
+                    transition,
+                    dh_pregen,
+                    restored_normal,
                 )
 
 

@@ -75,6 +75,128 @@ def generation_extent(before, after, bounds, dependency_radii):
             'dependency_radius_chunks': dependency_radii, 'violations': violations}
 
 
+
+def read_server_properties(path):
+    properties = {}
+    for line_number, line in enumerate(Path(path).read_text().splitlines(), 1):
+        if not line or line.startswith('#'):
+            continue
+        key, separator, value = line.partition('=')
+        if not separator or not key or key in properties:
+            raise ValueError(
+                f'invalid or duplicate server property on line {line_number}'
+            )
+        properties[key] = value
+    return properties
+
+
+def expected_mod_filenames(manifest, inventory_key):
+    inventory = manifest[inventory_key]
+    filenames = {entry['filename'] for entry in inventory}
+    if len(filenames) != len(inventory):
+        raise ValueError('duplicate maintenance mod filename')
+    if manifest.get('server_tick_probe'):
+        filenames.add('server-tick-probe.jar')
+    return filenames
+
+
+def inspect_maintenance_mode(lab, manifest, mode, expected_identity):
+    expected = {
+        'normal': {
+            'inventory': 'mods',
+            'generator_mode': 'PRE_EXISTING_ONLY',
+            'generator_plan': 'CHUNKS_ONLY',
+            'pause_seconds': manifest['controlled_server_properties'][
+                'pause-when-empty-seconds'
+            ],
+            'declared_backup_timer_enabled': True,
+        },
+        'dh_pregen': {
+            'inventory': 'dh_pregen_mods',
+            'generator_mode': 'INTERNAL_SERVER',
+            'generator_plan': 'CHUNKS_ONLY',
+            'pause_seconds': manifest['dh_pregen_pause_seconds'],
+            'declared_backup_timer_enabled': False,
+        },
+    }
+    if mode not in expected:
+        raise ValueError('unsupported maintenance transition mode')
+
+    wanted = expected[mode]
+
+    policy = tomllib.loads(
+        (lab.server / 'config/DistantHorizons.toml').read_text()
+    )
+    generator = policy['common']['worldGenerator']
+
+    if (
+        generator.get('chunkGeneratorMode') != wanted['generator_mode']
+        or generator.get('generatorPlan') != wanted['generator_plan']
+    ):
+        raise RuntimeError(mode + ' DH generator policy mismatch')
+
+    if int(policy['server']['serverId']) != int(expected_identity):
+        raise RuntimeError(mode + ' DH identity mismatch')
+
+    properties = read_server_properties(
+        lab.server / 'server.properties'
+    )
+    if (
+        properties.get('pause-when-empty-seconds')
+        != str(wanted['pause_seconds'])
+    ):
+        raise RuntimeError(mode + ' pause policy mismatch')
+
+    entries = list((lab.server / 'mods').iterdir())
+    if any(
+        not path.is_symlink() or not path.name.endswith('.jar')
+        for path in entries
+    ):
+        raise RuntimeError(
+            mode + ' mod directory contains unexpected entry'
+        )
+
+    actual_mods = {path.name for path in entries}
+    expected_mods = expected_mod_filenames(
+        manifest,
+        wanted['inventory'],
+    )
+    if actual_mods != expected_mods:
+        raise RuntimeError(mode + ' mod inventory mismatch')
+
+    if (
+        mode == 'dh_pregen'
+        and any(
+            entry.get('id') == 'chunky'
+            for entry in manifest[wanted['inventory']]
+        )
+    ):
+        raise RuntimeError(
+            'DH pregen inventory unexpectedly contains Chunky'
+        )
+
+    timer = manifest['mode_backup_timers'].get(mode)
+    if (
+        type(timer) is not bool
+        or timer != wanted['declared_backup_timer_enabled']
+    ):
+        raise RuntimeError(mode + ' backup timer policy mismatch')
+
+    return {
+        'mode': mode,
+        'server_id': int(expected_identity),
+        'chunk_generator_mode': generator['chunkGeneratorMode'],
+        'generator_plan': generator['generatorPlan'],
+        'pause_when_empty_seconds': int(
+            properties['pause-when-empty-seconds']
+        ),
+        # This is the frozen Nix policy. The disposable functional server
+        # itself does not own a separate backup timer.
+        'declared_backup_timer_enabled': timer,
+        'mods': sorted(actual_mods),
+    }
+
+
 def write_post_chunky_proofs(
     manifest,
     output,
@@ -88,6 +210,9 @@ def write_post_chunky_proofs(
     extent,
     pregen_log,
     normal_log,
+    transition_receipt,
+    dh_pregen_log,
+    restored_normal_log,
 ):
     if lab.active:
         raise RuntimeError(
@@ -115,6 +240,9 @@ def write_post_chunky_proofs(
         extent,
         pregen_log,
         normal_log,
+        transition_receipt,
+        dh_pregen_log,
+        restored_normal_log,
     ):
         artifact.chmod(0o400)
 
@@ -127,12 +255,22 @@ def write_post_chunky_proofs(
         (agent, 'binary'),
     ]
 
+    identity_evidence = evidence + [
+        (transition_receipt, 'json'),
+        (dh_pregen_log, 'log'),
+        (restored_normal_log, 'log'),
+    ]
+
     references = {
         gate: write_proof(
             manifest,
             gate,
             output / (gate + '-proof.json'),
-            evidence,
+            (
+                identity_evidence
+                if gate == 'identity_restart'
+                else evidence
+            ),
             (
                 'PASS'
                 if gate == 'identity_restart'
@@ -216,6 +354,58 @@ def execute(manifest, output, agent):
             after = region_occupancy(lab.server / 'world', include_status=True)
             if not no_unwanted_generation(generated, after):
                 raise RuntimeError('normal zero-player DH generated unexpected terrain')
+
+            # The no-unwanted-generation assertion deliberately ends before
+            # INTERNAL_SERVER is enabled: DH-pregen is allowed to generate
+            # vanilla chunks by design.
+            transition_identity = identity_after
+
+            maintenance.refresh()
+            lab.start(mode='dh_pregen')
+            dh_pregen_log = lab.log
+            dh_pregen_state = inspect_maintenance_mode(
+                lab,
+                manifest,
+                'dh_pregen',
+                transition_identity,
+            )
+            lab.stop()
+
+            identity_after_dh_pregen = identity_path.read_text()
+            if identity_after_dh_pregen != transition_identity:
+                raise RuntimeError(
+                    'DH identity changed during DH-pregen maintenance mode'
+                )
+
+            maintenance.refresh()
+            lab.start(mode='normal')
+            restored_normal_log = lab.log
+            restored_normal_state = inspect_maintenance_mode(
+                lab,
+                manifest,
+                'normal',
+                transition_identity,
+            )
+            lab.stop()
+
+            identity_final = identity_path.read_text()
+            if identity_final != transition_identity:
+                raise RuntimeError(
+                    'DH identity changed after restoring normal mode'
+                )
+
+            transition_receipt = output / 'maintenance-transitions.json'
+            transition_receipt.write_bytes(canonical_bytes({
+                'result': 'PASS',
+                'identity_before_dh_pregen': int(transition_identity),
+                'identity_after_dh_pregen': int(
+                    identity_after_dh_pregen
+                ),
+                'identity_after_normal_restore': int(identity_final),
+                'dh_pregen': dh_pregen_state,
+                'restored_normal': restored_normal_state,
+            }))
+
             return write_post_chunky_proofs(
                 manifest,
                 output,
@@ -225,10 +415,13 @@ def execute(manifest, output, agent):
                 processed,
                 len(added),
                 identity_before,
-                identity_after,
+                identity_final,
                 extent,
                 pregen_log,
                 normal_log,
+                transition_receipt,
+                dh_pregen_log,
+                restored_normal_log,
             )
     finally:
         try:
