@@ -15,6 +15,13 @@ def command(*args):
     return subprocess.check_output(args, text=True).strip()
 
 
+def freeze_server_tick_probe(probe, expected_sha256):
+    probe = controlled_path(probe, Path('/persist'), existing=True)
+    if sha256(probe) != expected_sha256:
+        raise ValueError('server tick probe differs from frozen source build')
+    return {'path': str(probe), 'sha256': sha256(probe)}
+
+
 def baseline_identity(base):
     controlled_path(base, Path('/persist'), existing=True)
     if not base.parent.name.startswith('minecraft-performance-lab-') or base.name != 'base':
@@ -56,7 +63,7 @@ def load_gate_mapping(repository, revision):
     return json.loads(committed), hashlib.sha256(committed).hexdigest()
 
 
-def generate(nix_manifest, base, repository, client_root=None, client_launcher=None):
+def generate(nix_manifest, base, repository, client_root=None, client_launcher=None, server_tick_probe=None):
     result = json.loads(nix_manifest.read_text())
     if not re.fullmatch('[0-9a-f]{40}', result['git_sha']):
         raise ValueError('Nix input must have an exact committed revision')
@@ -132,8 +139,13 @@ def generate(nix_manifest, base, repository, client_root=None, client_launcher=N
         result['gate_test_sources'][gate] = hashlib.sha256(canonical_bytes(hashes)).hexdigest()
     if client_root is not None:
         from client_identity import verify_probe_build, generation_bounds
-        verify_probe_build(result['client'])
+        probe_hashes = verify_probe_build(result['client'])
+        if server_tick_probe is not None:
+            result['server_tick_probe'] = freeze_server_tick_probe(
+                server_tick_probe, probe_hashes['server-tick-probe'])
         result['generation_bounds'] = generation_bounds(result['client'])
+    elif server_tick_probe is not None:
+        raise ValueError('server probe requires frozen client libraries for reproducible verification')
     return result
 
 
@@ -145,9 +157,10 @@ if __name__ == '__main__':
     parser.add_argument('--repository', type=Path, required=True)
     parser.add_argument('--client-root', type=Path)
     parser.add_argument('--client-launcher', type=Path)
+    parser.add_argument('--server-tick-probe', type=Path)
     args = parser.parse_args()
     manifest = generate(args.nix_manifest, args.baseline, args.repository.resolve(),
-                        args.client_root, args.client_launcher)
+                        args.client_root, args.client_launcher, args.server_tick_probe)
     with args.output.open('xb') as stream:
         stream.write(canonical_bytes(manifest))
     args.output.chmod(0o444)

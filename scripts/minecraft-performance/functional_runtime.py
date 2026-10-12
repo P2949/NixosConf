@@ -72,6 +72,10 @@ class Lab:
             if sha256(mod['path']) != mod['sha256']:
                 raise ValueError('functional mod artifact hash mismatch')
             (mods / mod['filename']).symlink_to(mod['path'])
+        if probe := self.manifest.get('server_tick_probe'):
+            if sha256(probe['path']) != probe['sha256']:
+                raise ValueError('server tick probe artifact changed')
+            (mods / 'server-tick-probe.jar').symlink_to(probe['path'])
         for filename, entry in self.manifest['policies'].items():
             destination = self.server / filename
             if destination.parent != destination.parent.resolve():
@@ -108,6 +112,16 @@ class Lab:
         subprocess.run(['systemctl', 'start', maintenance.SLICE], check=True)
         self.phase += 1
         self.log = self.output / f'server-phase-{self.phase}.log'
+        recording_args = []
+        if self.manifest.get('server_tick_probe'):
+            self.tick_output = self.output / f'server-phase-{self.phase}-ticks.csv'
+            self.jfr_output = self.output / f'server-phase-{self.phase}.jfr'
+            for path in (self.tick_output, self.jfr_output):
+                with path.open('xb'):
+                    pass
+                path.chmod(0o660)
+                subprocess.run(['chown', 'minecraft:minecraft', str(path)], check=True)
+            recording_args = ['--setenv=MINECRAFT_TICK_OUTPUT=' + str(self.tick_output)]
         service = self.manifest['service']
         self.active = True
         subprocess.run(['systemd-run', '--collect', '--unit=' + UNIT,
@@ -117,8 +131,11 @@ class Lab:
             '--property=MemoryMax=' + service['MemoryMax'], '--property=RuntimeMaxSec=1800',
             '--property=TimeoutStopSec=120', '--property=KillMode=mixed',
             '--property=StandardOutput=append:' + str(self.log), '--property=StandardError=append:' + str(self.log),
+            *recording_args,
             sys.executable, str(HERE / 'server_runner.py'), '--console', str(self.console),
-            self.manifest['wrapper']['path'], *self.manifest['jvm_flags']], check=True)
+            self.manifest['wrapper']['path'], *self.manifest['jvm_flags'],
+            *(['-XX:StartFlightRecording=settings=profile,dumponexit=true,maxsize=128m,filename=' + str(self.jfr_output)]
+              if recording_args else [])], check=True)
         self.wait_log('Done (', 240)
         from c2me_runtime import verify_startup
         verify_startup(

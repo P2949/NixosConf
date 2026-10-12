@@ -91,6 +91,14 @@ must be recorded as correctness FAIL even if the attempt is otherwise invalid;
 OOM, MemoryMax events and severe memory.high pressure also disqualify.
 The comparative runner and measured C2ME selection remain outstanding.
 
+Benchmark manifests may freeze a server tick probe with `--server-tick-probe`.
+Its digest must match a deterministic rebuild from the frozen Java/client
+libraries and committed probe source. This opt-in instrumentation adds the same
+tick probe and bounded profile JFR recording to either variant, with private
+per-phase outputs. Normal functional/production inventories omit it. Measured
+tick/frame/JFR windows still require validation by the comparative runner before
+being accepted as benchmark evidence.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still

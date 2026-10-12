@@ -102,6 +102,7 @@ def verify_probe_build(identity):
                     'local_performance_dh_probe': 'dh-probe'}.get(mod['id'])
             if name and mod['sha256'] != expected[name]:
                 raise ValueError('client probe binary differs from frozen source build')
+    return expected
 
 
 def generation_bounds(identity):
