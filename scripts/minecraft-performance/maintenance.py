@@ -15,6 +15,8 @@ LAB = 'minecraft-performance-attribution.service'
 FUNCTIONAL = 'minecraft-performance-functional.service'
 CLIENT = 'minecraft-performance-client.service'
 SLICE = 'minecraftperformance.slice'
+REFRESH_SECONDS = 300
+_last_refresh = None
 SLICE_TEXT = ('[Unit]\nDescription=Disposable Minecraft qualification slice\n'
               '[Slice]\nCPUWeight=50\nIOWeight=50\n')
 
@@ -287,6 +289,7 @@ def restore(output):
 
 
 def arm(output):
+    global _last_refresh
     # No guard name may replace a pre-existing unrelated transient unit.
     for suffix in ('.service', '.timer'):
         state = call('systemctl', 'show', GUARD + suffix, '-p', 'LoadState', '--value').strip()
@@ -303,6 +306,7 @@ def arm(output):
                     '--timer-property=AccuracySec=1s', '--property=TimeoutStartSec=300',
                     sys.executable, str(recovery), str(output)], check=True)
     (output / 'guard-armed').touch(mode=0o600)
+    _last_refresh = time.monotonic()
 
 
 def wait_backup():
@@ -339,11 +343,17 @@ def enter(output):
 
 
 def refresh():
+    global _last_refresh
+    now = time.monotonic()
+    if _last_refresh is not None and now - _last_refresh < REFRESH_SECONDS:
+        return
     subprocess.run(['systemctl', 'restart', GUARD + '.timer'], check=True)
+    _last_refresh = now
 
 
 def disarm():
-    subprocess.run(['systemctl', 'stop', GUARD + '.timer'], check=True)
+    if call('systemctl', 'show', GUARD + '.timer', '-p', 'LoadState', '--value').strip() != 'not-found':
+        subprocess.run(['systemctl', 'stop', GUARD + '.timer'], check=True)
     subprocess.run(['systemctl', 'reset-failed', GUARD + '.service'], check=False, capture_output=True)
 
 

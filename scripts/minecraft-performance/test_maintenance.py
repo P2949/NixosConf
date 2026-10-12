@@ -8,6 +8,34 @@ import maintenance
 
 
 class MaintenanceTests(unittest.TestCase):
+    def test_fast_sampling_cannot_exhaust_guard_start_limit(self):
+        with patch.object(maintenance, '_last_refresh', 0), \
+             patch.object(maintenance.time, 'monotonic', side_effect=[1, 299, 300, 301, 599, 600]), \
+             patch.object(maintenance.subprocess, 'run') as run:
+            for _ in range(6):
+                maintenance.refresh()
+            self.assertEqual(run.call_count, 2)
+            run.assert_called_with(['systemctl', 'restart', maintenance.GUARD + '.timer'], check=True)
+
+    def test_failed_refresh_does_not_advance_heartbeat(self):
+        with patch.object(maintenance, '_last_refresh', 0), \
+             patch.object(maintenance.time, 'monotonic', return_value=300), \
+             patch.object(maintenance.subprocess, 'run', side_effect=RuntimeError('restart failed')):
+            with self.assertRaises(RuntimeError):
+                maintenance.refresh()
+            self.assertEqual(maintenance._last_refresh, 0)
+
+    def test_disarm_accepts_collected_timer_but_propagates_stop_failure(self):
+        for state in ('not-found', 'loaded'):
+            with patch.object(maintenance, 'call', return_value=state), \
+                 patch.object(maintenance.subprocess, 'run', side_effect=RuntimeError('stop failed') if state == 'loaded' else None) as run:
+                if state == 'loaded':
+                    with self.assertRaises(RuntimeError):
+                        maintenance.disarm()
+                else:
+                    maintenance.disarm()
+                    self.assertFalse(any(c.args[0][:2] == ['systemctl', 'stop'] for c in run.call_args_list))
+
     def test_guard_is_installed_before_any_stop_and_backup_failure_stops_nothing(self):
         for healthy in (True, False):
             with tempfile.TemporaryDirectory() as directory:

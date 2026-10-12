@@ -283,6 +283,7 @@ def run_one(manifest, output, workload, variant):
             save(output / 'samples.json', list(sampler.rows))
         receipt['correctness'] = 'INCONCLUSIVE' if isinstance(exc, BenchmarkInterrupted) else 'FAIL'
         receipt['invalid_reason'] = 'interrupted' if isinstance(exc, BenchmarkInterrupted) else 'runtime_or_correctness_failure'
+        receipt['error'] = {'type': type(exc).__name__, 'message': str(exc)}
         save(output / 'run.json', receipt)
         raise RunFailure(receipt) from exc
     return receipt

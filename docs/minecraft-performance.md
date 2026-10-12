@@ -139,6 +139,18 @@ the exact configured square, not merely reach a plugin-reported 100% on a
 smaller/unrepresentative target. Any workload adjustment happens before freezing
 new primary-series manifests; primary settings remain fixed throughout the batch.
 
+The `88e9a9b` contention pilot reached instrumented Java startup and client join,
+then failed during warmup: restarting the independent recovery timer each second
+hit systemd's start limit. No generation window or valid comparison completed.
+Its FAIL and recovery evidence remain under
+`/persist/minecraft-performance-functional-c2me-study-88e9a9b-pilot`.
+Production and its backup timer were restored, with live backup health passed
+and no cleanup errors; the terminal progress remained PENDING because disarming
+the already collected timer raised an error. Recovery heartbeats are now limited
+to once every five minutes against the existing 45-minute recovery deadline;
+restart failures still abort qualification. Disarming tolerates a collected timer
+after verified recovery. Trial receipts retain the underlying exception details.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
