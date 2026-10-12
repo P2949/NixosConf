@@ -28,6 +28,21 @@ Production still uses the safe original closure. C2ME, maintenance-mode and
 collector qualification, final exact-head CI and deployment remain outstanding.
 Earlier failures below retain their original outcomes.
 
+C2ME release resolution on 2026-10-12 selected official Modrinth version
+`ODMLK8M9`, `0.4.2-alpha.0.90+26.3`, published 2026-10-07, with metadata
+explicitly listing Fabric and Minecraft 26.3. Its `fabric.mod.json` declares
+ID `c2me`, Fabric Loader >=0.18.3, Java >=25, Minecraft >1.21.11 and bundled
+`c2me-base`. The downloaded artifact matches upstream SHA-512; its SHA-256 is
+`69c89a014b12428e5c8b3cff1d00f78ec0141fce5f3997ab1a70ee8168999291`.
+The pin is qualification-only in `scripts/minecraft-performance/c2me.nix`.
+`candidate.nix` defaults to the accepted stack and adds C2ME only with
+`withC2ME = true`; both normal and Chunky inventories receive the same pin.
+Pinned bytecode confirms root-level `globalExecutorParallelism` and config
+schema version 3. The initial policy sets four, with no experimental overrides
+or OpenCL addon. Generated runtime config and startup evidence must still
+prove the effective value before correctness or performance acceptance.
+Source: https://modrinth.com/mod/c2me-fabric/version/ODMLK8M9.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still

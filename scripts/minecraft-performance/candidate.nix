@@ -1,4 +1,7 @@
-{ candidateUri }:
+{
+  candidateUri,
+  withC2ME ? false,
+}:
 let
   flake = builtins.getFlake candidateUri;
   system = flake.nixosConfigurations.desktop;
@@ -8,6 +11,17 @@ let
   pregen =
     cfg.specialisation.minecraft-pregen.configuration.services.minecraft-servers.servers.survival;
   unit = cfg.systemd.services.minecraft-server-survival.serviceConfig;
+  c2me = import (flake.outPath + "/scripts/minecraft-performance/c2me.nix") { inherit pkgs; };
+  qualificationMods =
+    directory:
+    if withC2ME then
+      pkgs.runCommand "minecraft-c2me-qualification-mods" { } ''
+        mkdir "$out"
+        cp -s ${directory}/*.jar "$out/"
+        ln -s ${c2me} "$out/c2me-fabric-mc26.3-0.4.2-alpha.0.90.jar"
+      ''
+    else
+      directory;
   policyFiles = builtins.mapAttrs (
     name: value:
     if builtins.isString value || builtins.isPath value then
@@ -58,14 +72,23 @@ pkgs.writeText "minecraft-candidate-nix.json" (
     java_home = pkgs.openjdk25_headless;
     diagnostic_java_home = pkgs.openjdk25;
     queue_agent_path = "${queueAgent}/queue-agent.jar";
-    mods_directory = server.symlinks.mods;
-    pregen_mods_directory = pregen.symlinks.mods;
+    mods_directory = qualificationMods server.symlinks.mods;
+    pregen_mods_directory = qualificationMods pregen.symlinks.mods;
     pregen_dh_policy =
       (pkgs.formats.toml { }).generate "config-DistantHorizons-pregen.toml"
         pregen.files."config/DistantHorizons.toml".value;
     pregen_pause_seconds = pregen.serverProperties.pause-when-empty-seconds;
     jvm_flags = pkgs.lib.splitString " " server.jvmOpts;
-    policy_files = policyFiles;
+    policy_files =
+      policyFiles
+      // pkgs.lib.optionalAttrs withC2ME {
+        # Pinned ConfigSystem requires schema version 3; ModuleEntryPoint reads
+        # globalExecutorParallelism at the root and logs its effective value.
+        "config/c2me.toml" = (pkgs.formats.toml { }).generate "c2me-qualification.toml" {
+          version = 3;
+          globalExecutorParallelism = 4;
+        };
+      };
     server_properties = server.serverProperties;
     service = {
       inherit (unit)
