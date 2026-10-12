@@ -10,6 +10,7 @@ import statistics
 from analyze import frame_summary, percentile
 from idle_metrics import cpu_percent, host_cpu, io_delta
 
+CLIENT_FRAME_COLUMN = 'frame_time_ms'
 
 def read_window(path, start, end, column):
     if not 0 < start < end:
@@ -41,7 +42,7 @@ def tick_metrics(path, start, end):
 
 
 def client_metrics(path, start, end):
-    return frame_summary(read_window(path, start, end, 'frame_ms'))
+    return frame_summary(read_window(path, start, end, CLIENT_FRAME_COLUMN))
 
 
 def resource_metrics(samples, start, end, cpu_count, memory_high_bytes):

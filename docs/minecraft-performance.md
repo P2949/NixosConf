@@ -164,6 +164,12 @@ Independent verification of the actual recording passed the unchanged DH rules
 (one negotiated session, 326 split-data and 160 partial-update messages).
 The reader and evidence hashing now use the emitted filename, checked against
 the probe source. This is still excluded pilot evidence, not an A/B decision.
+Offline inspection also verified exactly 16,641 full target chunks, valid
+dependency extents, readable tick/JFR windows and valid host-load samples. It
+found a second reader mismatch: the Java frame column is `frame_time_ms`, not
+`frame_ms`. The client reader now consumes the emitted header, with an integration
+contract test using that Java header. These diagnostic checks do not rehabilitate
+the failed controller run or count it toward primary acceptance.
 
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:

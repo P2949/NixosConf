@@ -3,10 +3,25 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from benchmark_metrics import jfr_gc_metrics, read_window, resource_metrics
+from benchmark_metrics import CLIENT_FRAME_COLUMN, client_metrics, jfr_gc_metrics, read_window, resource_metrics
 
 
 class BenchmarkWindowTests(unittest.TestCase):
+    def test_client_reader_accepts_the_java_probe_header_and_window(self):
+        source = (Path(__file__).parent / 'probe/FrameBuffer.java').read_text()
+        import re
+        header = re.search(r'"(monotonic_ns,[^"\\]+)\\n"', source)[1]
+        self.assertIn(CLIENT_FRAME_COLUMN, header.split(','))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'frames.csv'
+            with path.open('w') as stream:
+                stream.write(header + '\n')
+                writer = csv.writer(stream)
+                for i in range(1, 401):
+                    writer.writerow([i * 100000000, 10])
+            result = client_metrics(path, 10, 30)
+            self.assertEqual(result['client_1pct_fps'], 100)
+
     def test_probe_excludes_warmup_and_rejects_truncated_window(self):
         with tempfile.TemporaryDirectory() as directory:
             p = Path(directory) / 'ticks.csv'
