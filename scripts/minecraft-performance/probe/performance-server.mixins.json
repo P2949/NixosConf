@@ -1,7 +1,0 @@
-{
-  "required": true,
-  "package": "local.minecraft.performance",
-  "compatibilityLevel": "JAVA_25",
-  "mixins": ["ServerTickProbeMixin"],
-  "injectors": {"defaultRequire": 1}
-}

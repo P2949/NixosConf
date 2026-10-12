@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "id": "local_performance_dh_probe",
-  "version": "1.0.0",
-  "name": "Disposable DH Network Evidence Probe",
-  "environment": "client",
-  "mixins": ["performance-dh.mixins.json"],
-  "depends": {"fabricloader": "0.19.5", "minecraft": "26.3", "distanthorizons": "3.3.4", "java": ">=25"}
-}

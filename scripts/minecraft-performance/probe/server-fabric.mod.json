@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "id": "local_performance_tick_probe",
-  "version": "1.0.0",
-  "name": "Disposable Minecraft Server Tick Probe",
-  "environment": "server",
-  "mixins": ["performance-server.mixins.json"],
-  "depends": {"fabricloader": "0.19.5", "minecraft": "26.3", "java": ">=25"}
-}

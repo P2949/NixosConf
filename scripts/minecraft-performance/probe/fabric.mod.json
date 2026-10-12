@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "id": "local_performance_client_probe",
-  "version": "1.0.0",
-  "name": "Disposable Minecraft Performance Client Probe",
-  "environment": "client",
-  "mixins": ["performance-client.mixins.json"],
-  "depends": {"fabricloader": "0.19.5", "minecraft": "26.3", "java": ">=25"}
-}
