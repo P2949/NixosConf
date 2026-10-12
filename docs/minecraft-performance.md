@@ -73,6 +73,24 @@ All controllers exited successfully and recovery receipts report healthy live
 backup verification with no cleanup errors. Production and its timer are active,
 the qualification port is closed, and the safe original closure remains active.
 
+The C2ME-specific `analyze_c2me.py` adjudicator requires at least five valid
+independent runs per variant for steady, worldgen and contention workloads,
+interleaved execution, unique run/clone identities, correctness PASS and complete
+resource evidence. It reuses the deterministic run-level bootstrap comparison
+primitive, without invoking GC selection rules. A credible regression beyond
+5% p95 MSPT, 3% worldgen completion or 2% client 1% low rejects the candidate.
+Non-inferiority must be demonstrated by intervals inside those bounds; uncertain
+non-inferiority is INCONCLUSIVE. Adoption requires a supported material benefit:
+at least 5% completion or p95 MSPT improvement, or 15% fewer >50 ms ticks.
+A safe tie/small benefit retains the accepted stack without C2ME. The policy
+authorizes testing executor three only for a materially beneficial,
+server-non-regressing executor-four candidate whose sole credible regression is
+client 1% low under contention. It does not accept executor three automatically.
+Crashes, corruption, watchdogs, unsafe worldgen and repeatable protocol failure
+must be recorded as correctness FAIL even if the attempt is otherwise invalid;
+OOM, MemoryMax events and severe memory.high pressure also disqualify.
+The comparative runner and measured C2ME selection remain outstanding.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
