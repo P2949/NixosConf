@@ -5,10 +5,9 @@ import json
 import sys
 from pathlib import Path
 
-from qualification_manifest import canonical_bytes, qualification_id, verify_proof
+from qualification_manifest import canonical_bytes, qualification_id, verify_proof, REQUIRED_GATES
 
-REQUIRED = ('dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
-            'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues')
+REQUIRED = REQUIRED_GATES
 
 
 def read_input(path):

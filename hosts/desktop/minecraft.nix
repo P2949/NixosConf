@@ -12,6 +12,7 @@ let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
   baseModDrvs = builtins.attrValues {
+    c2me = import ./minecraft-c2me.nix { inherit pkgs; };
     krypton = pkgs.fetchurl {
       url = "https://cdn.modrinth.com/data/fQEb0iXm/versions/UugdIYJw/krypton-0.3.2.jar";
       sha512 = "d1d57ebd41395b75b01f130cd9503eb8d208212424a399ff9f367f50be8fbc1c6472442b33c686e777c3148f6a609520e8fb732c755157c358cb207fd4d1123a";
@@ -156,6 +157,11 @@ in
             cancel-duplicate-fluid-ticks = false;
           };
 
+          files."config/c2me.toml".value = {
+            version = 3;
+            globalExecutorParallelism = 4;
+          };
+
           files."config/spark/config.json".value.backgroundProfiler = false;
 
           # Verified against the generated schema and commands of DH 3.3.4.
@@ -245,6 +251,22 @@ in
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
           files."config/DistantHorizons.toml".value.common.worldGenerator.generatorPlan =
             lib.mkForce "DISABLED";
+        };
+      };
+
+      specialisation.minecraft-dh-pregen.configuration = {
+        systemd.timers.minecraft-backup = {
+          enable = lib.mkForce false;
+          wantedBy = lib.mkForce [ ];
+        };
+        services.minecraft-servers.servers.survival = {
+          serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
+          # Config$Common$WorldGenerator in the exact pinned DH 3.3.4 JAR
+          # documents INTERNAL_SERVER as generating and saving vanilla chunks.
+          files."config/DistantHorizons.toml".value.common.worldGenerator = {
+            chunkGeneratorMode = lib.mkForce "INTERNAL_SERVER";
+            generatorPlan = lib.mkForce "CHUNKS_ONLY";
+          };
         };
       };
 

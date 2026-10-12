@@ -49,6 +49,18 @@ class BenchmarkWindowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             resource_metrics(rows, 1, 21, 10, 200)
 
+    def test_candidate_memory_threshold_changes_pressure_classification(self):
+        rows = [dict(time=i + 1, service_us=i, client_us=0,
+                     host_cpu=f'cpu {i} 0 0 {i * 99} 0 0 0 0',
+                     memory_bytes=9 * 1024 ** 3,
+                     memory_events=dict(high=i, max=0, oom=0, oom_kill=0), io='')
+                for i in range(21)]
+        self.assertTrue(resource_metrics(rows, 1, 21, 12, 8 * 1024 ** 3)['severe_memory_high'])
+        self.assertFalse(resource_metrics(rows, 1, 21, 12, 11 * 1024 ** 3)['severe_memory_high'])
+        for value in (True, float('nan'), float('inf'), 0):
+            with self.assertRaises(ValueError):
+                resource_metrics(rows, 1, 21, 12, value)
+
     def test_jfr_filters_window_and_reads_pause_units(self):
         recording = {'recording': {'events': [
             {'type': 'jdk.GarbageCollection', 'values': {'startTime': '2026-10-12T00:00:00Z'}},

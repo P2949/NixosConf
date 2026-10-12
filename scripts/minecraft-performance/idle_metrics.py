@@ -5,7 +5,7 @@ import statistics
 
 
 def finite(value):
-    if not isinstance(value, (int, float)) or not math.isfinite(value):
+    if type(value) not in (int, float) or not math.isfinite(value):
         raise ValueError('non-finite or non-numeric measurement')
     return value
 
@@ -26,6 +26,7 @@ def distribution(values):
 
 
 def rapl_delta(before, after, maximum, seconds):
+    before, after, maximum, seconds = map(finite, (before, after, maximum, seconds))
     if maximum <= 0 or seconds <= 0 or not 0 <= before < maximum or not 0 <= after < maximum:
         raise ValueError('invalid RAPL range, reading or interval')
     if after < before and not (before >= .9 * maximum and after <= .1 * maximum):
@@ -37,6 +38,7 @@ def rapl_delta(before, after, maximum, seconds):
 
 
 def cpu_percent(before, after, seconds):
+    before, after, seconds = map(finite, (before, after, seconds))
     if seconds <= 0 or after < before:
         raise ValueError('CPU counter reset or invalid interval')
     return (after - before) / seconds / 10000
@@ -123,12 +125,15 @@ def summarize(rows, maximum, logical_cpus):
 def indexed_pairs(rows, expected_pair_count=5):
     if expected_pair_count not in (5, 7, 9, 11):
         raise ValueError('paired qualification requires 5, 7, 9, or 11 pairs')
-    def numeric_values(value):
+    def numeric_values(value, key=None):
+        if isinstance(value, bool) and key in ('environment_clients_absent', 'world_unchanged',
+                                               'host_load_pass', 'outside_client_seen', 'io_sustained_pass'):
+            return
         if isinstance(value, (int, float)):
             finite(value)
         elif isinstance(value, dict):
-            for item in value.values():
-                numeric_values(item)
+            for name, item in value.items():
+                numeric_values(item, name)
         elif isinstance(value, list):
             for item in value:
                 numeric_values(item)

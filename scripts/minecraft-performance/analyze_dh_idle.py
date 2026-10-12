@@ -19,7 +19,7 @@ def verified_gate(gate, gate_name=None, manifest=None):
 
 
 def paired_mean_interval(values):
-    if len(values) != FIXED_PAIRS or not all(math.isfinite(value) for value in values):
+    if len(values) != FIXED_PAIRS or not all(type(value) in (int, float) and math.isfinite(value) for value in values):
         raise ValueError('one fixed batch of eleven finite paired deltas required')
     # NIST mean CI: mean +/- t(.975, df=10) * sample SD / sqrt(11).
     # Rounded slightly upward; inferential assumptions are recorded in output.

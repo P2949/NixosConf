@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from client_overlap import minecraft_clients
 import shutil
 import signal
 import subprocess
@@ -76,7 +77,8 @@ def collect_sample(cg, rapl, mode, pid, host_stat=Path('/proc/stat')):
            'cpu': counters(cg / 'cpu.stat'), 'memory_events': counters(cg / 'memory.events'),
            'memory': int((cg / 'memory.current').read_text()), 'io': (cg / 'io.stat').read_text(),
            'energy_uj': int((rapl / 'energy_uj').read_text()),
-           'host_cpu': host_stat.read_text().splitlines()[0]}
+           'host_cpu': host_stat.read_text().splitlines()[0],
+           'outside_clients': minecraft_clients()}
     if mode == 'diagnostic':
         row['threads'] = threads(pid)
         row['logical_cpu_idle_residency_us'] = idle_residency()
@@ -87,22 +89,6 @@ def idle_residency():
     return {str(p): p.read_text().strip()
             for p in Path('/sys/devices/system/cpu').glob('cpu*/cpuidle/state*/time')}
 
-
-def minecraft_clients():
-    """Detect conflicting clients using paths only; never read authentication arguments."""
-    found = []
-    for process in Path('/proc').iterdir():
-        if not process.name.isdigit():
-            continue
-        try:
-            if (process / 'comm').read_text().strip() != 'java':
-                continue
-            cwd = str((process / 'cwd').resolve())
-            if '/PrismLauncher/instances/' in cwd or '/minecraft-performance-client-' in cwd:
-                found.append(int(process.name))
-        except (FileNotFoundError, PermissionError, ProcessLookupError):
-            continue
-    return found
 
 
 def wait_quiet(output):
@@ -184,7 +170,7 @@ def run(output, name, duration, attempt=0):
         '--property=MemoryHigh=' + CANDIDATE['service']['MemoryHigh'],
         '--property=MemoryMax=' + CANDIDATE['service']['MemoryMax'],
         '--property=RuntimeMaxSec=1200',
-        '--property=KillMode=mixed', '--property=TimeoutStopSec=120',
+        '--property=KillMode=mixed', '--property=TimeoutStopSec=330',
         '--property=StandardOutput=append:' + str(log),
         '--property=StandardError=append:' + str(log),
         sys.executable, str(HERE / 'server_runner.py'),
@@ -246,10 +232,13 @@ def run(output, name, duration, attempt=0):
         for entry in thread_cpu.values():
             entry['one_core_pct'] = entry['cpu_seconds'] / elapsed * 100
         after_world = disk_state(server / 'world')
+        clients_after = minecraft_clients()
+        outside_seen = bool(clients_before or clients_after or any(row['outside_clients'] for row in rows))
         result = {'variant': name, 'mode': mode, 'pid': pid, 'attempt': attempt,
                   'evidence': str(evidence),
                   **summarize(rows, max_energy, os.cpu_count()),
-                  'environment_clients_absent': not clients_before and not minecraft_clients(),
+                  'environment_clients_absent': not outside_seen,
+                  'outside_client_seen': outside_seen,
                   'world_unchanged': before_world == after_world,
                   'io_before': rows[0]['io'], 'io_after': rows[-1]['io'],
                   'threads': sorted(thread_cpu.items(), key=lambda x: -x[1]['cpu_seconds'])}

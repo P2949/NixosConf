@@ -7,6 +7,14 @@ correctness, recovery and performance gates pass.
 
 ## Qualification status
 
+The historical Phase-A and C2ME evidence below retains its recorded outcomes.
+C2ME executor four is a provisional selection pending fresh qualification after
+provenance and measurement hardening. Production remains on the original
+baseline. Final authorization requires reconstructed Git-bound gate provenance,
+same-source correctness bundles, and continuous outside-client sampling.
+Fresh functional, DH idle, and C2ME comparative evidence must precede GC testing
+or deployment.
+
 Phase A is accepted for the frozen `a0f0921dc47d2aa57eb74d94f86ebfe53bc35515`
 candidate only. All eight independently verified functional proofs pass. The
 fixed eleven-pair idle study passes with median DH-on interval CPU 3.0121% of
@@ -34,9 +42,10 @@ explicitly listing Fabric and Minecraft 26.3. Its `fabric.mod.json` declares
 ID `c2me`, Fabric Loader >=0.18.3, Java >=25, Minecraft >1.21.11 and bundled
 `c2me-base`. The downloaded artifact matches upstream SHA-512; its SHA-256 is
 `69c89a014b12428e5c8b3cff1d00f78ec0141fce5f3997ab1a70ee8168999291`.
-The pin is qualification-only in `scripts/minecraft-performance/c2me.nix`.
-`candidate.nix` defaults to the accepted stack and adds C2ME only with
-`withC2ME = true`; both normal and Chunky inventories receive the same pin.
+The declarative candidate pin is owned by `hosts/desktop/minecraft-c2me.nix`.
+All three candidate modes use executor four. `candidate.nix` produces the
+no-C2ME comparative control by default; `withC2ME = true` retains the candidate
+stack. These settings have not been activated in production.
 Pinned bytecode confirms root-level `globalExecutorParallelism` and config
 schema version 3. The initial policy sets four, with no experimental overrides
 or OpenCL addon. Generated runtime config and startup evidence must still
@@ -185,7 +194,7 @@ Its executable result is **PASS, C2ME_4, material_benefit**. Two environmental
 observations remain preserved and excluded. Independent decision replay matched;
 all 292 retained evidence hashes and all 32 tick/frame/GC/resource metric replays
 passed, along with terminal Java exit and DH protocol checks. Generation extent
-receipts require 16,641 full target chunks. Qualification selected executor four;
+receipts require 16,641 full target chunks. Historical qualification provisionally selected executor four;
 it has not yet been deployed to production.
 
 Median worldgen completion improved 39.08% (95% interval 30.60–44.37% improvement);
@@ -641,3 +650,15 @@ material workload, identical world/configuration state, JFR and client frame
 measurements, and the executable decision policy are required. Missing evidence
 is INCONCLUSIVE; a statistical tie selects G1. No candidate is persistent or
 merged until its required gates pass.
+
+## Declarative maintenance policy
+
+The normal candidate has no Chunky, pauses after 60 seconds, enables scheduled
+backups, and uses DH `PRE_EXISTING_ONLY` / `CHUNKS_ONLY`.
+`minecraft-pregen` adds Chunky, sets DH `DISABLED`, disables the backup timer,
+and sets pause to -1. `minecraft-dh-pregen` keeps Chunky absent and uses
+`INTERNAL_SERVER` / `CHUNKS_ONLY`, also disabling the timer and pause.
+`INTERNAL_SERVER` is verified in the pinned DH 3.3.4
+`Config$Common$WorldGenerator` schema; its description specifies generating and
+saving vanilla chunks. These maintenance transitions still require fresh
+runtime qualification, including return to normal and preserved DH identity.

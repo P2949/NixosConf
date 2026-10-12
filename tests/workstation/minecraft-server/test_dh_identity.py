@@ -23,6 +23,17 @@ class IdentityTests(unittest.TestCase):
             self.assertEqual(saved.read_text(), '-12345\n')
             self.assertEqual(saved.stat().st_mode & 0o777, 0o600)
 
+    def test_stale_temporary_does_not_block_capture(self):
+        with tempfile.TemporaryDirectory() as directory:
+            config, saved = Path(directory) / "config", Path(directory) / "id"
+            stale = saved.with_suffix(".tmp")
+            stale.write_text('interrupted capture')
+            config.write_text('[server]\nserverId = 42\n')
+            identity.capture(config, saved)
+            self.assertEqual(saved.read_text(), '42\n')
+            self.assertEqual(stale.read_text(), 'interrupted capture')
+            self.assertEqual(list(saved.parent.glob('id.*.tmp')), [])
+
     def test_changed_identity_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             config, saved = Path(directory) / "config", Path(directory) / "id"

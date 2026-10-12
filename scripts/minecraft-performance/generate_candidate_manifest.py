@@ -8,7 +8,7 @@ import re
 import subprocess
 import zipfile
 
-from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256
+from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, reconstruct_provenance
 
 
 def command(*args):
@@ -68,7 +68,8 @@ def generate(nix_manifest, base, repository, client_root=None, client_launcher=N
     if not re.fullmatch('[0-9a-f]{40}', result['git_sha']):
         raise ValueError('Nix input must have an exact committed revision')
     for key in ('system_closure', 'minecraft_package', 'java_home', 'diagnostic_java_home',
-                'mods_directory', 'pregen_mods_directory', 'pregen_dh_policy'):
+                'mods_directory', 'pregen_mods_directory', 'pregen_dh_policy',
+                'dh_pregen_mods_directory', 'dh_pregen_dh_policy'):
         path = Path(result[key])
         if not path.is_relative_to('/nix/store') or not path.exists():
             raise ValueError('unrealized Nix candidate artifact: ' + key)
@@ -87,6 +88,10 @@ def generate(nix_manifest, base, repository, client_root=None, client_launcher=N
     result['queue_agent'] = {'path': result['queue_agent_path'], 'sha256': sha256(result['queue_agent_path'])}
     result['mods'] = mod_inventory(result['mods_directory'])
     result['pregen_mods'] = mod_inventory(result['pregen_mods_directory'])
+    result['dh_pregen_mods'] = mod_inventory(result['dh_pregen_mods_directory'])
+    dh_policy = Path(result['dh_pregen_dh_policy'])
+    result['dh_pregen_policy'] = {'path': str(dh_policy), 'content': dh_policy.read_text(),
+                                  'sha256': sha256(dh_policy)}
     pregen_policy = Path(result['pregen_dh_policy'])
     result['pregen_policy'] = {'path': str(pregen_policy), 'content': pregen_policy.read_text(),
                                'sha256': sha256(pregen_policy)}
@@ -103,40 +108,7 @@ def generate(nix_manifest, base, repository, client_root=None, client_launcher=N
             raise ValueError('client launcher required with disposable client root')
         result['client'] = capture(client_root, client_launcher,
                                    Path(result['diagnostic_java_home']) / 'bin/java')
-    gate_sources, result['gate_source_mapping_sha256'] = load_gate_mapping(repository, result['git_sha'])
-    gates = {'dh_functional', 'non_dh_client', 'no_unwanted_generation', 'backup', 'restore',
-             'identity_restart', 'post_chunky_catchup', 'no_unbounded_queues'}
-    if set(gate_sources) != gates:
-        raise ValueError('must freeze a test-source identity for every required gate')
-    result['gate_test_sources'] = {}
-    result['gate_source_files'] = {}
-    result['tool_source_files'] = {}
-    filenames = command('git', '-c', 'safe.directory=' + str(repository), '-C', str(repository),
-                        'ls-tree', '-r', '--name-only', result['git_sha'],
-                        'scripts/minecraft-performance').splitlines()
-    for filename in filenames:
-        committed = subprocess.check_output(['git', '-c', 'safe.directory=' + str(repository),
-            '-C', str(repository), 'show', result['git_sha'] + ':' + filename])
-        if (repository / filename).read_bytes() != committed:
-            raise ValueError('qualification tool differs from frozen candidate: ' + filename)
-        result['tool_source_files'][filename] = hashlib.sha256(committed).hexdigest()
-    for gate, filenames in gate_sources.items():
-        if not isinstance(filenames, list) or not filenames or len(filenames) != len(set(filenames)):
-            raise ValueError('each gate needs a nonempty unique committed source list')
-        # Every performance tool is a conservative shared dependency. The
-        # committed mapping adds gate-specific sources outside that namespace.
-        hashes = dict(result['tool_source_files'])
-        for filename in filenames:
-            path = Path(filename)
-            if path.is_absolute() or '..' in path.parts:
-                raise ValueError('test source must be relative to candidate repository')
-            committed = subprocess.check_output(['git', '-c', 'safe.directory=' + str(repository),
-                '-C', str(repository), 'show', result['git_sha'] + ':' + filename])
-            if (repository / path).read_bytes() != committed:
-                raise ValueError('test source differs from frozen candidate: ' + filename)
-            hashes[filename] = hashlib.sha256(committed).hexdigest()
-        result['gate_source_files'][gate] = hashes
-        result['gate_test_sources'][gate] = hashlib.sha256(canonical_bytes(hashes)).hexdigest()
+    result.update(reconstruct_provenance(repository, result['git_sha']))
     if client_root is not None:
         from client_identity import verify_probe_build, generation_bounds
         probe_hashes = verify_probe_build(result['client'])

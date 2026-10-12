@@ -176,8 +176,10 @@ class Lab:
         with socket.socket(socket.AF_UNIX) as connection:
             connection.settimeout(10)
             connection.connect(str(self.console))
-            connection.sendall(text.encode())
-            if connection.recv(128) != b'QUEUED\n':
+            from server_runner import read_frame
+            connection.sendall(text.encode() + b'\n')
+            connection.shutdown(socket.SHUT_WR)
+            if read_frame(connection, 127) != b'QUEUED':
                 raise RuntimeError('console command rejected')
 
     def stop(self):

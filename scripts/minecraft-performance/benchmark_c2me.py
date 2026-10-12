@@ -99,15 +99,18 @@ def same_stack(control, candidate, accepted):
             raise ValueError('A/B identity differs: ' + field)
     if not control.get('server_tick_probe') or '-XX:+UseG1GC' not in control['jvm_flags']:
         raise ValueError('fixed G1 and source-verified tick probe required')
-    for key in ('mods', 'pregen_mods'):
-        without = [m for m in candidate[key] if m['id'] != 'c2me']
-        if any(m['id'] == 'c2me' for m in control[key]) or without != control[key]:
+    for key in ('mods', 'pregen_mods', 'dh_pregen_mods'):
+        without = [m for m in candidate.get(key, []) if m['id'] != 'c2me']
+        if any(m['id'] == 'c2me' for m in control.get(key, [])) or without != control.get(key, []):
             raise ValueError('A/B non-C2ME inventory differs')
     if {k: v for k, v in candidate['policies'].items() if k != 'config/c2me.toml'} != control['policies']:
         raise ValueError('A/B non-C2ME policy differs')
     for field in ('java', 'wrapper', 'mods', 'pregen_mods', 'policies', 'jvm_flags',
                   'service', 'baseline', 'client', 'controlled_server_properties',
-                  'pregen_policy', 'pregen_pause_seconds'):
+                  'pregen_policy', 'pregen_pause_seconds', 'server_tick_probe', 'generation_bounds',
+                  'gate_source_mapping_sha256', 'gate_test_sources', 'gate_source_files',
+                  'tool_source_files', 'dh_pregen_mods', 'dh_pregen_policy',
+                  'dh_pregen_pause_seconds', 'mode_backup_timers'):
         if candidate.get(field) != accepted.get(field):
             raise ValueError('benchmark differs from qualified C2ME stack: ' + field)
     if control['pregen_policy'] != candidate['pregen_policy'] or control['pregen_pause_seconds'] != candidate['pregen_pause_seconds']:
@@ -140,7 +143,10 @@ class Samples:
                     'host_cpu': Path('/proc/stat').read_text().splitlines()[0],
                     'memory_bytes': int((cg / 'memory.current').read_text()),
                     'memory_peak_bytes': int((cg / 'memory.peak').read_text()),
-                    'memory_events': counters(cg / 'memory.events'), 'io': (cg / 'io.stat').read_text()})
+                    'memory_events': counters(cg / 'memory.events'), 'io': (cg / 'io.stat').read_text(),
+                    'outside_clients': minecraft_clients(excluded_group=(
+                        '/' + str(self.client_group.relative_to('/sys/fs/cgroup'))
+                        if self.client_group is not None else None))})
                 self.done.wait(1)
         except BaseException as exc:
             self.error = exc
@@ -241,8 +247,8 @@ def run_one(manifest, output, workload, variant):
                 raise RuntimeError('server correctness log failure')
             # Sampling is stopped before the cgroup disappears. Keep all raw
             # samples in memory during the timed window, then persist once.
-            resources = resource_metrics(rows, start, end, os.cpu_count(), 10 * 1024 ** 3)
-            whole_run = resource_metrics(rows, rows[0]['time'], rows[-1]['time'], os.cpu_count(), 10 * 1024 ** 3)
+            resources = resource_metrics(rows, start, end, os.cpu_count(), manifest['service']['MemoryHighBytes'])
+            whole_run = resource_metrics(rows, rows[0]['time'], rows[-1]['time'], os.cpu_count(), manifest['service']['MemoryHighBytes'])
             metrics = tick_metrics(lab.tick_output, start, end)
             metrics.update({k: resources[k] for k in ('cpu_pct', 'cpu_p95_pct', 'memory_peak_bytes', 'io')})
             metrics['service_lifetime_memory_peak_bytes'] = terminal['memory_peak_bytes']
@@ -262,7 +268,8 @@ def run_one(manifest, output, workload, variant):
             reasons = []
             if not resources['environment_valid']:
                 reasons.append('unrelated_host_load')
-            if outside_clients_before or minecraft_clients():
+            if outside_clients_before or minecraft_clients() or any(
+                    row['outside_clients'] for row in rows if start <= row['time'] <= end):
                 reasons.append('outside_minecraft_client_overlap')
             if receipt['invalid_reason'] != 'not_completed':
                 reasons.append(receipt['invalid_reason'])
@@ -300,6 +307,7 @@ def execute(args):
     for manifest in manifests.values():
         validate_candidate(manifest, HERE.parent.parent)
     accepted = json.loads(args.correctness_manifest.read_text())
+    validate_candidate(accepted, HERE.parent.parent)
     bundle = json.loads(args.correctness_bundle.read_text())
     if set(verify_bundle(bundle, accepted).values()) != {'PASS'}:
         raise ValueError('authentic C2ME correctness bundle required')

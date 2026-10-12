@@ -1,9 +1,11 @@
+import copy
+import subprocess
 import json
 from pathlib import Path
 import tempfile
 import unittest
 
-from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, verify_proof, validate_candidate
+from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, verify_proof, validate_candidate, reconstruct_provenance, REQUIRED_GATES
 
 
 class ManifestProofTests(unittest.TestCase):
@@ -39,22 +41,57 @@ class ManifestProofTests(unittest.TestCase):
             self.assertEqual(check(proof), 'UNPROVEN')
             self.assertEqual(check({**proof, 'result': 'FAIL'}), 'UNPROVEN')
 
-    def test_external_gate_source_mutation_rejected(self):
+    def test_committed_provenance_and_all_tampering_fail_closed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            tools = root / 'scripts/minecraft-performance'
+            tools.mkdir(parents=True)
             source = root / 'external-identity.py'
-            source.write_text('frozen external gate implementation')
+            source.write_text('frozen external implementation')
+            (tools / 'gate-sources.json').write_bytes(canonical_bytes(
+                {gate: [source.name] for gate in REQUIRED_GATES}))
+            (tools / 'tool.py').write_text('frozen tool')
+            def git(*args):
+                return subprocess.check_output(['git', '-C', str(root), *args],
+                                               stderr=subprocess.DEVNULL, text=True).strip()
+            git('init')
+            git('add', '.')
+            git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
+                'commit', '-m', 'fixture')
+            revision = git('rev-parse', 'HEAD')
             artifact = root / 'artifact'
             artifact.write_bytes(b'fixed')
             entry = {'path': str(artifact), 'sha256': sha256(artifact)}
-            manifest = {'schema': 1, 'wrapper': entry, 'java': entry, 'pregen_policy': entry,
-                        'queue_agent': entry, 'mods': [], 'pregen_mods': [], 'policies': {},
-                        'tool_source_files': {}, 'gate_source_files': {
-                            'identity_restart': {source.name: sha256(source)}}}
+            manifest = {'schema': 1, 'git_sha': revision, 'wrapper': entry,
+                        'java': entry, 'pregen_policy': entry, 'queue_agent': entry,
+                        'mods': [], 'pregen_mods': [], 'policies': {},
+                        **reconstruct_provenance(root, revision)}
             validate_candidate(manifest, root)
-            source.write_text('changed outside performance tooling namespace')
-            with self.assertRaisesRegex(ValueError, 'external gate source'):
+            for field in ('gate_test_sources', 'gate_source_files', 'tool_source_files'):
+                for operation in ('missing', 'extra', 'changed'):
+                    changed = copy.deepcopy(manifest)
+                    value = changed[field]
+                    key = next(iter(value))
+                    if operation == 'missing':
+                        del value[key]
+                    elif operation == 'extra':
+                        value['foreign'] = value[key]
+                    else:
+                        value[key] = 'arbitrary'
+                    with self.subTest(field=field, operation=operation), self.assertRaises(ValueError):
+                        validate_candidate(changed, root)
+            for field, value in (('gate_source_mapping_sha256', 'arbitrary'),
+                                 ('git_sha', 'a' * 40), ('git_sha', True)):
+                with self.subTest(field=field), self.assertRaises(ValueError):
+                    validate_candidate({**manifest, field: value}, root)
+            source.write_text('new committed external implementation')
+            git('add', source.name)
+            git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
+                'commit', '-m', 'changed source')
+            with self.assertRaises(ValueError):
                 validate_candidate(manifest, root)
+            with self.assertRaises(ValueError):
+                validate_candidate({**manifest, 'git_sha': git('rev-parse', 'HEAD')}, root)
 
     def test_root_path_aliases_and_existing_outputs_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

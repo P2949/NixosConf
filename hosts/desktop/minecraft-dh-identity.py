@@ -4,6 +4,7 @@ import argparse
 import os
 import re
 import tomllib
+import tempfile
 from pathlib import Path
 
 
@@ -22,18 +23,24 @@ def capture(config, identity):
     value = validate(value)
     if identity.exists() and validate(int(identity.read_text())) != value:
         raise ValueError("DH server identity changed unexpectedly")
-    temporary = identity.with_suffix(".tmp")
-    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
-    with os.fdopen(descriptor, "w") as stream:
-        stream.write(str(value) + "\n")
-        stream.flush()
-        os.fsync(stream.fileno())
-    os.replace(temporary, identity)
-    directory = os.open(identity.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    if identity.is_symlink():
+        raise ValueError("DH identity must not be a symlink")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=identity.name + ".", suffix=".tmp",
+                                                 dir=identity.parent)
+    temporary = Path(temporary_name)
     try:
-        os.fsync(directory)
+        with os.fdopen(descriptor, "w") as stream:
+            stream.write(str(value) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, identity)
+        directory = os.open(identity.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
     finally:
-        os.close(directory)
+        temporary.unlink(missing_ok=True)
 
 
 def apply(config, identity):

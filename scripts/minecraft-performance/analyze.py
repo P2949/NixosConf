@@ -16,6 +16,8 @@ PRIMARY = ("server_p95_mspt", "server_p99_mspt", "ticks_over_50ms",
 def percentile(values, fraction):
     if not values:
         raise ValueError("empty metric")
+    if any(type(value) not in (int, float) or not math.isfinite(value) for value in values):
+        raise ValueError("invalid numeric metric")
     ordered = sorted(values)
     index = (len(ordered) - 1) * fraction
     low = int(index)
@@ -24,7 +26,7 @@ def percentile(values, fraction):
 
 
 def frame_summary(frame_ms):
-    if any(x <= 0 for x in frame_ms):
+    if any(type(x) not in (int, float) or not math.isfinite(x) or x <= 0 for x in frame_ms):
         raise ValueError("frame durations must be positive")
     p99 = percentile(frame_ms, .99)
     result = {"average_fps": 1000 / statistics.mean(frame_ms),
@@ -99,7 +101,7 @@ def decide(runs, workloads):
             if any(key not in r.get("metrics", {}) for variant in rows for r in rows[variant]):
                 return {"result": "INCONCLUSIVE", "decision": None,
                         "rule": "missing_metric", "workload": workload, "metric": key}
-            if any(not isinstance(r["metrics"][key], (int, float))
+            if any(type(r["metrics"][key]) not in (int, float)
                    or not math.isfinite(r["metrics"][key]) or r["metrics"][key] < 0
                    for variant in rows for r in rows[variant]):
                 return {"result": "INCONCLUSIVE", "decision": None,

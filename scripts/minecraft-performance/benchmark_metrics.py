@@ -8,7 +8,7 @@ import re
 import statistics
 
 from analyze import frame_summary, percentile
-from idle_metrics import cpu_percent, host_cpu, io_delta
+from idle_metrics import cpu_percent, host_cpu, io_delta, finite
 
 CLIENT_FRAME_COLUMN = 'frame_time_ms'
 
@@ -46,6 +46,14 @@ def client_metrics(path, start, end):
 
 
 def resource_metrics(samples, start, end, cpu_count, memory_high_bytes):
+    start, end, cpu_count, memory_high_bytes = map(finite, (start, end, cpu_count, memory_high_bytes))
+    if memory_high_bytes <= 0:
+        raise ValueError('invalid frozen memory high limit')
+    for row in samples:
+        for key in ('time', 'memory_bytes', 'service_us', 'client_us'):
+            finite(row[key])
+        for value in row['memory_events'].values():
+            finite(value)
     rows = [s for s in samples if start <= s['time'] <= end]
     if len(rows) < 3 or rows[-1]['time'] - rows[0]['time'] < (end - start) * .95:
         raise ValueError('incomplete resource measurement window')

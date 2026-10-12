@@ -11,17 +11,40 @@ let
   pregen =
     cfg.specialisation.minecraft-pregen.configuration.services.minecraft-servers.servers.survival;
   unit = cfg.systemd.services.minecraft-server-survival.serviceConfig;
-  c2me = import (flake.outPath + "/scripts/minecraft-performance/c2me.nix") { inherit pkgs; };
   qualificationMods =
     directory:
     if withC2ME then
-      pkgs.runCommand "minecraft-c2me-qualification-mods" { } ''
-        mkdir "$out"
-        cp -s ${directory}/*.jar "$out/"
-        ln -s ${c2me} "$out/c2me-fabric-mc26.3-0.4.2-alpha.0.90.jar"
-      ''
+      directory
     else
-      directory;
+      pkgs.runCommand "minecraft-control-without-c2me" { } ''
+        mkdir "$out"
+        for mod in ${directory}/*.jar; do
+          case "$(basename "$mod")" in
+            c2me-*) ;;
+            *) ln -s "$mod" "$out/" ;;
+          esac
+        done
+      '';
+  dhPregen =
+    cfg.specialisation.minecraft-dh-pregen.configuration.services.minecraft-servers.servers.survival;
+  memoryBytes =
+    value:
+    if builtins.isInt value then
+      value
+    else
+      let
+        parts = builtins.match "([0-9]+)([KMGT])" value;
+        factors = {
+          K = 1024;
+          M = 1048576;
+          G = 1073741824;
+          T = 1099511627776;
+        };
+      in
+      if parts == null then
+        throw "Unsupported qualification memory limit"
+      else
+        pkgs.lib.toInt (builtins.elemAt parts 0) * factors.${builtins.elemAt parts 1};
   policyFiles = builtins.mapAttrs (
     name: value:
     if builtins.isString value || builtins.isPath value then
@@ -80,17 +103,22 @@ pkgs.writeText "minecraft-candidate-nix.json" (
     pregen_pause_seconds = pregen.serverProperties.pause-when-empty-seconds;
     jvm_flags = pkgs.lib.splitString " " server.jvmOpts;
     policy_files =
-      policyFiles
-      // pkgs.lib.optionalAttrs withC2ME {
-        # Pinned ConfigSystem requires schema version 3; ModuleEntryPoint reads
-        # globalExecutorParallelism at the root and logs its effective value.
-        "config/c2me.toml" = (pkgs.formats.toml { }).generate "c2me-qualification.toml" {
-          version = 3;
-          globalExecutorParallelism = 4;
-        };
-      };
+      if withC2ME then policyFiles else builtins.removeAttrs policyFiles [ "config/c2me.toml" ];
+    dh_pregen_mods_directory = qualificationMods dhPregen.symlinks.mods;
+    dh_pregen_dh_policy =
+      (pkgs.formats.toml { }).generate "config-DistantHorizons-dh-pregen.toml"
+        dhPregen.files."config/DistantHorizons.toml".value;
+    dh_pregen_pause_seconds = dhPregen.serverProperties.pause-when-empty-seconds;
+    mode_backup_timers = {
+      normal = cfg.systemd.timers.minecraft-backup.enable;
+      chunky = cfg.specialisation.minecraft-pregen.configuration.systemd.timers.minecraft-backup.enable;
+      dh_pregen =
+        cfg.specialisation.minecraft-dh-pregen.configuration.systemd.timers.minecraft-backup.enable;
+    };
     server_properties = server.serverProperties;
     service = {
+      MemoryHighBytes = memoryBytes unit.MemoryHigh;
+      MemoryMaxBytes = memoryBytes unit.MemoryMax;
       inherit (unit)
         Nice
         MemoryHigh

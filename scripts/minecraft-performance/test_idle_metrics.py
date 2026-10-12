@@ -4,10 +4,19 @@ import unittest
 from unittest.mock import patch
 
 from dh_idle_attribution import collect_sample, disk_state
-from idle_metrics import cpu_percent, host_cpu, io_delta, rapl_delta, unique_java, validate_rapl
+from idle_metrics import cpu_percent, host_cpu, io_delta, rapl_delta, unique_java, validate_rapl, finite
 
 
 class CounterTests(unittest.TestCase):
+    def test_boolean_and_nonfinite_measurements_rejected(self):
+        for value in (True, False, float('nan'), float('inf'), -float('inf')):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                finite(value)
+            with self.assertRaises(ValueError):
+                cpu_percent(0, 1, value)
+            with self.assertRaises(ValueError):
+                rapl_delta(0, value, 1000, 1)
+
     def test_wraparound_and_reset_are_distinct(self):
         self.assertEqual(rapl_delta(950, 50, 1000, 1), 100)
         for before, after, maximum, duration in [(500, 100, 1000, 1), (0, 1000, 1000, 1),

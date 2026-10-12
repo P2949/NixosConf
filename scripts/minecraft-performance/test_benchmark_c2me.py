@@ -18,7 +18,6 @@ def manifests():
         candidate[name].append({'id': 'c2me'})
     candidate['policies']['config/c2me.toml'] = {}
     accepted = copy.deepcopy(candidate)
-    del accepted['server_tick_probe']
     accepted['git_sha'] = 'qualified-source'
     return base, candidate, accepted
 
@@ -71,6 +70,15 @@ class BenchmarkIdentityTests(unittest.TestCase):
         candidate['mods'][0]['id'] = 'unqualified-mod'
         with self.assertRaises(ValueError):
             same_stack(control, candidate, accepted)
+
+    def test_runtime_identical_older_correctness_source_rejected(self):
+        for field in ('gate_source_mapping_sha256', 'gate_test_sources',
+                      'gate_source_files', 'tool_source_files', 'server_tick_probe',
+                      'generation_bounds'):
+            control, candidate, accepted = manifests()
+            accepted[field] = {'older': 'identity'}
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                same_stack(control, candidate, accepted)
 
     def test_changed_qualified_policy_rejected(self):
         control, candidate, accepted = manifests()

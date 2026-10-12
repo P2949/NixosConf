@@ -11,6 +11,52 @@ GRACEFUL_STOP_SECONDS = 300
 FORCED_STOP_SECONDS = 15
 
 
+MAX_COMMAND_BYTES = 8191
+
+
+def read_frame(connection, maximum):
+    """Read one bounded newline frame; the sender must half-close its stream."""
+    data = bytearray()
+    while True:
+        part = connection.recv(min(4096, maximum + 2 - len(data)))
+        if not part:
+            if not data.endswith(b'\n'):
+                raise ValueError('incomplete console frame')
+            payload = bytes(data[:-1])
+            if not payload or b'\n' in payload or b'\r' in payload:
+                raise ValueError('invalid console frame')
+            payload.decode('utf-8', errors='strict')
+            return payload
+        data.extend(part)
+        if len(data) > maximum + 1:
+            raise ValueError('console frame exceeds bound')
+
+
+def force_stop(process):
+    if process.poll() is None:
+        process.terminate()
+        try:
+            process.wait(timeout=FORCED_STOP_SECONDS)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=FORCED_STOP_SECONDS)
+
+
+def cleanup(process, listener, console, receipt):
+    try:
+        force_stop(process)
+    finally:
+        try:
+            listener.close()
+        finally:
+            try:
+                console.unlink(missing_ok=True)
+            finally:
+                if receipt is not None:
+                    from server_exit import write_receipt
+                    write_receipt(receipt, process)
+
+
 def graceful_stop(process):
     process.stdin.write("stop\n")
     process.stdin.flush()
@@ -59,25 +105,20 @@ def main():
             except TimeoutError:
                 continue
             with connection:
-                # One bounded UTF-8 command per connection, no shell execution.
-                data = connection.recv(8192)
-                if not data or len(data) == 8192 or b"\n" in data or b"\r" in data:
+                connection.settimeout(10)
+                try:
+                    data = read_frame(connection, MAX_COMMAND_BYTES)
+                except (ValueError, UnicodeError, TimeoutError):
                     connection.sendall(b"INVALID\n")
                     continue
                 process.stdin.write(data.decode("utf-8") + "\n")
                 process.stdin.flush()
                 connection.sendall(b"QUEUED\n")
+                connection.shutdown(socket.SHUT_WR)
         if process.poll() is None:
             graceful_stop(process)
     finally:
-        if process.poll() is None:
-            process.terminate()
-            process.wait(timeout=FORCED_STOP_SECONDS)
-        listener.close()
-        args.console.unlink(missing_ok=True)
-        if args.exit_receipt is not None:
-            from server_exit import write_receipt
-            write_receipt(args.exit_receipt, process)
+        cleanup(process, listener, args.console, args.exit_receipt)
     raise SystemExit(process.returncode)
 
 

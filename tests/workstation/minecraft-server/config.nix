@@ -9,6 +9,9 @@ let
   properties = server.serverProperties;
   inherit (server.symlinks) mods;
 
+  dhPregenConfig = config.specialisation.minecraft-dh-pregen.configuration;
+  dhPregenServer = dhPregenConfig.services.minecraft-servers.servers.survival;
+
   pregenConfig = config.specialisation.minecraft-pregen.configuration;
   pregenServer = pregenConfig.services.minecraft-servers.servers.survival;
   pregenProperties = pregenServer.serverProperties;
@@ -117,6 +120,25 @@ assert
     };
   };
 assert pregenServer.extraStartPre == server.extraStartPre;
+
+assert
+  server.files."config/c2me.toml".value == {
+    version = 3;
+    globalExecutorParallelism = 4;
+  };
+assert dhPregenServer.symlinks.mods == server.symlinks.mods;
+assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
+assert dhPregenServer.files."config/c2me.toml" == server.files."config/c2me.toml";
+assert
+  dhPregenServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
+    chunkGeneratorMode = "INTERNAL_SERVER";
+    generatorPlan = "CHUNKS_ONLY";
+  };
+assert dhPregenServer.extraStartPre == server.extraStartPre;
+assert dhPregenServer.extraStopPre == server.extraStopPre;
+assert !dhPregenConfig.systemd.timers.minecraft-backup.enable;
+assert dhPregenConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
+assert !dhPregenConfig.systemd.units."minecraft-backup.timer".enable;
 
 assert properties."server-ip" == "";
 assert properties."server-port" == 25565;
@@ -296,6 +318,7 @@ pkgs.runCommand "check-minecraft-server-config"
       pkgs.jq
       pkgs.unzip
       pkgs.openjdk25
+      pkgs.git
     ];
   }
   ''
@@ -418,6 +441,7 @@ pkgs.runCommand "check-minecraft-server-config"
         extract_mods "$pregenMods" "$pregenActual"
 
         cat > "$normalExpected" <<'EOF'
+    c2me 0.4.2-alpha.0.90+26.3
     distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
@@ -429,6 +453,7 @@ pkgs.runCommand "check-minecraft-server-config"
 
         cat > "$pregenExpected" <<'EOF'
     chunky 1.5.3
+    c2me 0.4.2-alpha.0.90+26.3
     distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
