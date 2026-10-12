@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from benchmark_c2me import collect_trial_pair, RunFailure, same_stack, trial_directory
+from benchmark_c2me import collect_trial_pair, pilot_decision, RunFailure, same_stack, trial_directory
 
 
 def manifests():
@@ -24,6 +24,20 @@ def manifests():
 
 
 class BenchmarkIdentityTests(unittest.TestCase):
+    def test_pilot_never_selects_c2me_or_certifies_comparison(self):
+        row = dict(correctness='PASS', valid=True, severe_memory_high=False,
+                   memory_events=dict(oom=0, oom_kill=0, max=0),
+                   metrics=dict(worldgen_completion_seconds=120))
+        result = pilot_decision(row)
+        self.assertEqual(result['result'], 'INCONCLUSIVE')
+        self.assertEqual(result['pilot_outcome'], 'PASS')
+        self.assertIsNone(result['decision'])
+        row['correctness'] = 'INCONCLUSIVE'
+        self.assertEqual(pilot_decision(row)['pilot_outcome'], 'INCONCLUSIVE')
+        row['correctness'] = 'PASS'
+        row['memory_events']['max'] = 1
+        self.assertEqual(pilot_decision(row)['result'], 'FAIL')
+
     def test_console_bridge_rejects_overlong_path_before_launch(self):
         result = subprocess.run([sys.executable, str(Path(__file__).with_name('server_runner.py')),
             '--console', '/persist/' + 'x' * 110, '/bin/true'], capture_output=True, text=True)

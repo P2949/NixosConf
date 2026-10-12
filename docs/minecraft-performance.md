@@ -131,6 +131,14 @@ and compact; both orchestration and the console bridge reject overlong paths.
 Thresholds, workload windows and candidate settings are unchanged. A fresh
 committed/pushed source and new manifests are required for the corrected run.
 
+Use a separate `--pilot` output to calibrate the generation-overlap window and
+verify recording before the primary series. Pilot observations never count
+toward the five accepted A/B pairs and never select C2ME. Even a successful
+pilot leaves the comparative result INCONCLUSIVE. A generation run must cover
+the exact configured square, not merely reach a plugin-reported 100% on a
+smaller/unrepresentative target. Any workload adjustment happens before freezing
+new primary-series manifests; primary settings remain fixed throughout the batch.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still

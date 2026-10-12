@@ -57,6 +57,15 @@ def trial_directory(study, workload, pair, attempt, variant):
     return path
 
 
+def pilot_decision(row):
+    unsafe = (row['correctness'] == 'FAIL' or row['severe_memory_high'] or
+              any(row['memory_events'].get(k, 0) > 0 for k in ('oom', 'oom_kill', 'max')))
+    return {'result': 'FAIL' if unsafe else 'INCONCLUSIVE', 'decision': None,
+            'rule': 'pilot_only_not_adoption',
+            'pilot_outcome': 'FAIL' if unsafe else 'PASS' if row['valid'] and row['correctness'] == 'PASS' else 'INCONCLUSIVE',
+            'generation_seconds': row.get('metrics', {}).get('worldgen_completion_seconds')}
+
+
 def collect_trial_pair(workload, pair, execute_run, results):
     for attempt in range(ENVIRONMENT_RETRIES + 1):
         order = ('without_C2ME', 'C2ME_4') if (pair + attempt) % 2 == 0 else ('C2ME_4', 'without_C2ME')
@@ -218,7 +227,8 @@ def run_one(manifest, output, workload, variant):
                 extent = generation_extent(before, after, chunk_bounds(CENTER, CENTER, RADIUS),
                                            manifest['generation_bounds']['dependency_radius_chunks'])
                 save(output / 'generation-extent.json', extent)
-                if extent['result'] != 'PASS' or extent['new_full_chunks'] != int(completed[1].replace(',', '')):
+                expected = (2 * RADIUS // 16 + 1) ** 2
+                if extent['result'] != 'PASS' or extent['new_full_chunks'] != int(completed[1].replace(',', '')) or extent['new_full_chunks'] != expected:
                     raise RuntimeError('worldgen structural/extent validation failed')
             text = lab.log.read_text()
             if any(s in text for s in ('Mixin apply failed', 'MixinTransformerError', 'OutOfMemoryError',
@@ -297,6 +307,7 @@ def execute(args):
     output.mkdir(mode=0o700)
     (output / 'candidate-manifest.json').write_bytes(canonical_bytes(candidate))
     plan = {'pairs_per_workload': PAIRS, 'workloads': WORKLOADS, 'warmup_seconds': WARMUP,
+            'pilot_only': args.pilot,
             'environment_retries_per_pair': ENVIRONMENT_RETRIES,
             'client_window_seconds': WINDOW, 'client_duration_seconds': CLIENT_DURATION,
             'chunky_center_blocks': [CENTER, CENTER], 'chunky_radius_blocks': RADIUS,
@@ -307,9 +318,17 @@ def execute(args):
     (output / 'plan.json').chmod(0o444)
     results = []
     decision = None
-    save(output / 'progress.json', {'phase': 'C2ME_AB', 'result': 'PENDING', 'recovery_status': 'PENDING'})
+    phase = 'C2ME_PILOT' if args.pilot else 'C2ME_AB'
+    save(output / 'progress.json', {'phase': phase, 'result': 'PENDING', 'recovery_status': 'PENDING'})
     try:
         maintenance.enter(output)
+        if args.pilot:
+            row = run_one(candidate, trial_directory(output, 'contention', 0, 0, 'C2ME_4'), 'contention', 'C2ME_4')
+            results.append(row)
+            save(output / 'results.json', results)
+            decision = pilot_decision(row)
+            save(output / 'analysis.json', decision)
+            return decision
         for workload in WORKLOADS:
             for pair in range(PAIRS):
                 def execute_run(workload, pair, attempt, variant):
@@ -320,7 +339,7 @@ def execute(args):
                     return run_one(manifests[variant], run_output, workload, variant)
                 rejection = collect_trial_pair(workload, pair, execute_run, results)
                 save(output / 'results.json', results)
-                save(output / 'progress.json', {'phase': 'C2ME_AB', 'result': 'PENDING',
+                save(output / 'progress.json', {'phase': phase, 'result': 'PENDING',
                     'recovery_status': 'PENDING', 'completed_runs': len(results), 'workload': workload,
                     'completed_pair': pair + 1 if rejection is None else pair})
                 if rejection is not None:
@@ -347,7 +366,7 @@ def execute(args):
     finally:
         maintenance.restore(output)
         maintenance.disarm()
-        save(output / 'progress.json', {'phase': 'C2ME_AB', 'result': decision['result'] if decision else 'INCONCLUSIVE',
+        save(output / 'progress.json', {'phase': phase, 'result': decision['result'] if decision else 'INCONCLUSIVE',
                                       'recovery_status': 'PASS', 'completed_runs': len(results)})
 
 
@@ -355,6 +374,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('control-manifest', 'candidate-manifest', 'correctness-manifest', 'correctness-bundle', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--pilot', action='store_true', help='one calibration trial; never counts as A/B acceptance')
     args = parser.parse_args()
     if os.geteuid() != 0:
         parser.error('root required')
