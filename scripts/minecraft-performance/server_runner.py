@@ -7,6 +7,15 @@ import socket
 import subprocess
 from pathlib import Path
 
+GRACEFUL_STOP_SECONDS = 300
+FORCED_STOP_SECONDS = 15
+
+
+def graceful_stop(process):
+    process.stdin.write("stop\n")
+    process.stdin.flush()
+    process.wait(timeout=GRACEFUL_STOP_SECONDS)
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -59,13 +68,11 @@ def main():
                 process.stdin.flush()
                 connection.sendall(b"QUEUED\n")
         if process.poll() is None:
-            process.stdin.write("stop\n")
-            process.stdin.flush()
-            process.wait(timeout=100)
+            graceful_stop(process)
     finally:
         if process.poll() is None:
             process.terminate()
-            process.wait(timeout=15)
+            process.wait(timeout=FORCED_STOP_SECONDS)
         listener.close()
         args.console.unlink(missing_ok=True)
         if args.exit_receipt is not None:

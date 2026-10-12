@@ -171,6 +171,14 @@ found a second reader mismatch: the Java frame column is `frame_time_ms`, not
 contract test using that Java header. These diagnostic checks do not rehabilitate
 the failed controller run or count it toward primary acceptance.
 
+Qualification shutdown permits a bounded 300-second console save/exit window,
+with a 330-second systemd stop boundary. Successful terminal Java exit remains
+mandatory. The historical `9f8fa49` primary study remains FAIL with no selection:
+its fourth worldgen control completed the target but exceeded the previous
+100-second shutdown window and was terminated (exit 143). Recovery passed;
+the evidence remains in `/persist/minecraft-performance-functional-c2me-study-9f8fa49`.
+It must not be resumed or relabeled as an accepted comparison.
+
 The fresh `d3f6e6a` contention calibration passed all trial checks. Its private
 study is `/persist/minecraft-performance-functional-c2me-study-d3f6e6a-pilot`,
 with controller invocation `ad3e96c8303443558244acab90047fc8`; the trial receipt

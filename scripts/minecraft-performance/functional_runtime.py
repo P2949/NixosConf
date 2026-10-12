@@ -133,7 +133,7 @@ class Lab:
             '--property=WorkingDirectory=' + str(self.server), '--property=Slice=' + maintenance.SLICE,
             '--property=Nice=' + str(service['Nice']), '--property=MemoryHigh=' + service['MemoryHigh'],
             '--property=MemoryMax=' + service['MemoryMax'], '--property=RuntimeMaxSec=1800',
-            '--property=TimeoutStopSec=120', '--property=KillMode=mixed',
+            '--property=TimeoutStopSec=330', '--property=KillMode=mixed',
             '--property=StandardOutput=append:' + str(self.log), '--property=StandardError=append:' + str(self.log),
             *recording_args,
             sys.executable, str(HERE / 'server_runner.py'), '--console', str(self.console),
