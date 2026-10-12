@@ -12,6 +12,17 @@ let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
   baseModDrvs = builtins.attrValues {
+    c2me = import ./minecraft-c2me.nix { inherit pkgs; };
+    krypton = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/fQEb0iXm/versions/UugdIYJw/krypton-0.3.2.jar";
+      sha512 = "d1d57ebd41395b75b01f130cd9503eb8d208212424a399ff9f367f50be8fbc1c6472442b33c686e777c3148f6a609520e8fb732c755157c358cb207fd4d1123a";
+    };
+
+    distant-horizons = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/uCdwusMi/versions/TGgEbP9A/DistantHorizons-3.3.4-26.3-fabric-neoforge.jar";
+      sha512 = "0b90b1b08d99974bfc3c8e86b2ceb252e2f91715ed66b925004c28335fb44e1bddbbb6b8043e4d4d53c87ed247789cd1788b1ba4e3f4394efe154e0c59cff236";
+    };
+
     fabric-api = pkgs.fetchurl {
       url = "https://cdn.modrinth.com/data/P7dR8mSH/versions/v2j28coa/fabric-api-0.162.0%2B26.3.jar";
       sha512 = "5ab70908952f1d2346d16b122ca31327f4055db59c279a1bc3c3c581ce359bb541cba15730f55b0727be7c7c4debc4a4412a183c228e0d4dea81c734f7b412ce";
@@ -129,7 +140,9 @@ in
 
           jvmOpts = [
             "-Xms1G"
-            "-Xmx6G"
+            "-Xmx8G"
+            "-XX:+ExitOnOutOfMemoryError"
+            "-XX:+UseG1GC"
           ];
 
           # Access lists are authoritative runtime state on @minecraft.
@@ -144,14 +157,42 @@ in
             cancel-duplicate-fluid-ticks = false;
           };
 
+          files."config/c2me.toml".value = {
+            version = 3;
+            globalExecutorParallelism = 4;
+          };
+
           files."config/spark/config.json".value.backgroundProfiler = false;
 
+          # Verified against the generated schema and commands of DH 3.3.4.
+          # CHUNKS_ONLY avoids the surface pass; only existing chunks supply LODs.
+          # MINIMAL_IMPACT on this 12-thread host: ceil(12 * 0.1), ratio 0.5.
+          files."config/DistantHorizons.toml".value = {
+            _version = 5;
+            server = {
+              synchronizeOnLoad = true;
+              enableRealTimeUpdates = true;
+            };
+            common.worldGenerator = {
+              chunkGeneratorMode = "PRE_EXISTING_ONLY";
+              generatorPlan = "CHUNKS_ONLY";
+            };
+            common.multiThreading = {
+              numberOfThreads = 2;
+              threadRunTimeRatio = "0.5";
+            };
+          };
+
           extraStartPre = ''
+            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} apply
             ${pkgs.coreutils}/bin/chmod 0600 server.properties
             if [[ ! "''${MINECRAFT_MANAGEMENT_SECRET:-}" =~ ^[A-Za-z0-9]{40}$ ]]; then
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
               exit 1
             fi
+          '';
+          extraStopPre = ''
+            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
           '';
 
           symlinks.mods = baseMods;
@@ -208,10 +249,34 @@ in
         services.minecraft-servers.servers.survival = {
           symlinks.mods = lib.mkForce pregenMods;
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
+          files."config/DistantHorizons.toml".value.common.worldGenerator.generatorPlan =
+            lib.mkForce "DISABLED";
+        };
+      };
+
+      specialisation.minecraft-dh-pregen.configuration = {
+        systemd.timers.minecraft-backup = {
+          enable = lib.mkForce false;
+          wantedBy = lib.mkForce [ ];
+        };
+        services.minecraft-servers.servers.survival = {
+          serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
+          # Config$Common$WorldGenerator in the exact pinned DH 3.3.4 JAR
+          # documents INTERNAL_SERVER as generating and saving vanilla chunks.
+          files."config/DistantHorizons.toml".value.common.worldGenerator = {
+            chunkGeneratorMode = lib.mkForce "INTERNAL_SERVER";
+            generatorPlan = lib.mkForce "CHUNKS_ONLY";
+          };
         };
       };
 
       system.preSwitchChecks.minecraft = ''${lib.getExe minecraftPrerequisiteCheck} "$@"'';
+
+      # nix-minecraft removes its previous managed files before applying templates.
+      # Capture the generated ID first so restarts keep the same DH cache identity.
+      systemd.services.minecraft-server-survival.preStart = lib.mkBefore ''
+        ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
+      '';
 
       systemd.tmpfiles.rules = [
         "d /persist/minecraft-backup 0700 root root -"
@@ -282,8 +347,8 @@ in
           Slice = "minecraft.slice";
           Nice = 5;
 
-          MemoryHigh = "8G";
-          MemoryMax = "10G";
+          MemoryHigh = "10G";
+          MemoryMax = "12G";
         };
       };
 

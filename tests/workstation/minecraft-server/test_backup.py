@@ -220,6 +220,15 @@ class LockTests(unittest.TestCase):
 
 
 class PreflightTests(unittest.TestCase):
+    def test_snapshot_names_distinguish_subsecond_runs_and_accept_legacy_names(self):
+        root = Path('/.snapshots/minecraft')
+        first = datetime(2026, 10, 12, 18, 0, 0, 1, tzinfo=timezone.utc)
+        second = first.replace(microsecond=2)
+        paths = [backup.snapshot_destination(root, now=value) for value in (first, second)]
+        self.assertNotEqual(*paths)
+        for path in paths + [root / 'survival-20261012T180000Z']:
+            self.assertEqual(backup.checked_snapshot_path(str(path), root), path)
+
     @staticmethod
     def mounted(source, snapshot_mount):
         mounted_paths = {
@@ -271,7 +280,7 @@ class PreflightTests(unittest.TestCase):
                 plan.destination,
                 (
                     snapshot_root
-                    / "survival-20261010T180000Z"
+                    / "survival-20261010T180000000000Z"
                 ),
             )
             self.assertEqual(
@@ -1238,7 +1247,7 @@ class PersistentMetadataTests(unittest.TestCase):
         self.snapshots = self.root / "snapshots"
         self.snapshots.mkdir(mode=0o700)
         self.state, self.manifest = backup.load_metadata(self.directory, self.snapshots, create=True)
-        self.path = self.snapshots / "survival-20261010T180000Z"
+        self.path = self.snapshots / "survival-20261010T180000000000Z"
 
     def pending(self):
         self.state["pending_snapshot"] = {"path": str(self.path), "planned_at": self.TIME,

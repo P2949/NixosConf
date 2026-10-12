@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import math
 import json
 import os
 import re
@@ -628,10 +629,20 @@ def command_watch(args) -> None:
         operation_error(exc)
 
 
+def positive_timeout(value):
+    try:
+        timeout = float(value)
+    except (ValueError, TypeError) as exc:
+        raise argparse.ArgumentTypeError("timeout must be finite and strictly positive") from exc
+    if not math.isfinite(timeout) or timeout <= 0:
+        raise argparse.ArgumentTypeError("timeout must be finite and strictly positive")
+    return timeout
+
+
 def add_timeout_argument(parser, default) -> None:
     parser.add_argument(
         "--timeout",
-        type=float,
+        type=positive_timeout,
         default=default,
     )
 

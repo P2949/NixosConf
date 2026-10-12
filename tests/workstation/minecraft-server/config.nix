@@ -9,6 +9,9 @@ let
   properties = server.serverProperties;
   inherit (server.symlinks) mods;
 
+  dhPregenConfig = config.specialisation.minecraft-dh-pregen.configuration;
+  dhPregenServer = dhPregenConfig.services.minecraft-servers.servers.survival;
+
   pregenConfig = config.specialisation.minecraft-pregen.configuration;
   pregenServer = pregenConfig.services.minecraft-servers.servers.survival;
   pregenProperties = pregenServer.serverProperties;
@@ -39,6 +42,8 @@ let
   backupTests = ./test_backup.py;
   prerequisiteSource = ../../../hosts/desktop/minecraft-prerequisites.py;
   prerequisiteTests = ./test_prerequisites.py;
+  dhIdentitySource = ../../../hosts/desktop/minecraft-dh-identity.py;
+  dhIdentityTests = ./test_dh_identity.py;
 
   msmpTestPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
@@ -64,10 +69,13 @@ assert server.autoStart;
 assert server.restart == "always";
 assert server.openFirewall;
 assert server.package.name == "minecraft-server-26.3-fabric-0.19.5";
-assert server.jvmOpts == "-Xms1G -Xmx6G";
+assert server.jvmOpts == "-Xms1G -Xmx8G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC";
 assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" service.preStart;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" server.extraStopPre;
+assert pkgs.lib.hasInfix "minecraft-dh-identity.py apply" server.extraStartPre;
 
 assert pkgs.lib.hasInfix "/bin/chmod 0600 server.properties" server.extraStartPre;
 assert server.whitelist == { };
@@ -80,8 +88,56 @@ assert
     fast-biome-lookups = false;
     cancel-duplicate-fluid-ticks = false;
   };
-assert pregenServer.files == server.files;
+assert
+  builtins.removeAttrs pregenServer.files [ "config/DistantHorizons.toml" ]
+  == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
+assert
+  server.files."config/DistantHorizons.toml".value == {
+    _version = 5;
+    server = {
+      synchronizeOnLoad = true;
+      enableRealTimeUpdates = true;
+    };
+    common.worldGenerator = {
+      chunkGeneratorMode = "PRE_EXISTING_ONLY";
+      generatorPlan = "CHUNKS_ONLY";
+    };
+    common.multiThreading = {
+      numberOfThreads = 2;
+      threadRunTimeRatio = "0.5";
+    };
+  };
+assert
+  pregenServer.files."config/DistantHorizons.toml".value
+  == server.files."config/DistantHorizons.toml".value
+  // {
+    common = server.files."config/DistantHorizons.toml".value.common // {
+      worldGenerator = {
+        chunkGeneratorMode = "PRE_EXISTING_ONLY";
+        generatorPlan = "DISABLED";
+      };
+    };
+  };
 assert pregenServer.extraStartPre == server.extraStartPre;
+
+assert
+  server.files."config/c2me.toml".value == {
+    version = 3;
+    globalExecutorParallelism = 4;
+  };
+assert dhPregenServer.symlinks.mods == server.symlinks.mods;
+assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
+assert dhPregenServer.files."config/c2me.toml" == server.files."config/c2me.toml";
+assert
+  dhPregenServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
+    chunkGeneratorMode = "INTERNAL_SERVER";
+    generatorPlan = "CHUNKS_ONLY";
+  };
+assert dhPregenServer.extraStartPre == server.extraStartPre;
+assert dhPregenServer.extraStopPre == server.extraStopPre;
+assert !dhPregenConfig.systemd.timers.minecraft-backup.enable;
+assert dhPregenConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
+assert !dhPregenConfig.systemd.units."minecraft-backup.timer".enable;
 
 assert properties."server-ip" == "";
 assert properties."server-port" == 25565;
@@ -124,8 +180,8 @@ assert pregenProperties."status-heartbeat-interval" == properties."status-heartb
 
 assert service.serviceConfig.Slice == "minecraft.slice";
 assert service.serviceConfig.Nice == 5;
-assert service.serviceConfig.MemoryHigh == "8G";
-assert service.serviceConfig.MemoryMax == "10G";
+assert service.serviceConfig.MemoryHigh == "10G";
+assert service.serviceConfig.MemoryMax == "12G";
 assert service.serviceConfig.EnvironmentFile == "/persist/secrets/minecraft-management.env";
 assert pregenService.serviceConfig.EnvironmentFile == service.serviceConfig.EnvironmentFile;
 
@@ -241,6 +297,8 @@ pkgs.runCommand "check-minecraft-server-config"
     inherit
       prerequisiteSource
       prerequisiteTests
+      dhIdentitySource
+      dhIdentityTests
       backupSource
       backupTests
       backupClient
@@ -263,6 +321,7 @@ pkgs.runCommand "check-minecraft-server-config"
         set -eu
 
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
+        MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
 
         MINECRAFT_MSMP_SOURCE="$msmpSource" python3 "$msmpTests"
 
@@ -365,17 +424,23 @@ pkgs.runCommand "check-minecraft-server-config"
         extract_mods "$pregenMods" "$pregenActual"
 
         cat > "$normalExpected" <<'EOF'
+    c2me 0.4.2-alpha.0.90+26.3
+    distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
+    krypton 0.3.2
     lithium 0.26.2+mc26.3
     servercore 1.5.20+26.3
     spark 1.10.187
     EOF
 
         cat > "$pregenExpected" <<'EOF'
+    c2me 0.4.2-alpha.0.90+26.3
     chunky 1.5.3
+    distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
+    krypton 0.3.2
     lithium 0.26.2+mc26.3
     servercore 1.5.20+26.3
     spark 1.10.187

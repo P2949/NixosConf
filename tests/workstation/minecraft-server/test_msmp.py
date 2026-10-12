@@ -882,6 +882,17 @@ class BackupTransactionTests(unittest.TestCase):
 
 
 class ValidationTests(unittest.TestCase):
+    def test_timeout_cli_requires_finite_positive_value(self):
+        for command in ('discover', 'call', 'save-and-wait', 'watch'):
+            for value in ('nan', 'inf', '-inf', '0', '-1'):
+                arguments = [command]
+                if command == 'call':
+                    arguments.append('minecraft:server/status')
+                with self.subTest(command=command, value=value), self.assertRaises(SystemExit):
+                    msmp.build_parser().parse_args(arguments + ['--timeout=' + value])
+        self.assertIsNone(msmp.build_parser().parse_args(['watch']).timeout)
+        self.assertEqual(msmp.positive_timeout('0.25'), .25)
+
     def test_custom_paths_and_queries_are_rejected(self):
         secret = (
             "0123456789"

@@ -60,7 +60,17 @@ not replace accepted physical qualification.
 ## Minecraft server
 
 The Minecraft server and complete local Btrfs recovery scope are deployed on
-the desktop. The normal server and six-hour UTC backup timer are active. See [Minecraft operations](minecraft-server.md).
+the desktop. The normal server is configured for automatic startup and
+`restart=always`, and the six-hour UTC backup timer is active. Production runs
+Minecraft 26.3 / Fabric 0.19.5 / OpenJDK 25 with C2ME executor four, Distant
+Horizons 3.3.4 and G1 GC. See [Minecraft operations](minecraft-server.md).
+
+The exact production-style stack passed all eight functional acceptance gates.
+Controlled comparative testing selected C2ME executor four with material
+world-generation benefit, and the final G1-versus-ZGC comparison retained G1.
+One unexpected-terrain C2ME observation was not reproduced in two subsequent
+C2ME runs; two no-C2ME controls were also clean, so C2ME causality was not
+established.
 
 Real paused/online backups, autosave failure recovery, safe retention and a
 user-verified playable local restore passed. The latest helper rejects nested

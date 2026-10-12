@@ -306,7 +306,7 @@ def snapshot_destination(
         raise BackupError("snapshot timestamp must be timezone-aware")
 
     timestamp = now.astimezone(timezone.utc).strftime(
-        "%Y%m%dT%H%M%SZ"
+        "%Y%m%dT%H%M%S%fZ"
     )
 
     return snapshot_root / f"{SNAPSHOT_PREFIX}{timestamp}"
@@ -746,10 +746,11 @@ def checked_snapshot_path(value, snapshot_root):
     path = Path(value)
     if (not path.is_absolute() or str(path) != value
             or path.parent != snapshot_root
-            or re.fullmatch(r"survival-[0-9]{8}T[0-9]{6}Z", path.name) is None):
+            or re.fullmatch(r"survival-[0-9]{8}T[0-9]{6}(?:[0-9]{6})?Z", path.name) is None):
         raise BackupError("snapshot must be a named direct child of snapshot root", reason="metadata-invalid")
     try:
-        datetime.strptime(path.name, "survival-%Y%m%dT%H%M%SZ")
+        datetime.strptime(path.name, "survival-%Y%m%dT%H%M%S%fZ"
+                          if len(path.name) == 31 else "survival-%Y%m%dT%H%M%SZ")
     except ValueError as exc:
         raise BackupError("invalid snapshot name timestamp", reason="metadata-invalid") from exc
     return path
