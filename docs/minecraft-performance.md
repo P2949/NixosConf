@@ -99,6 +99,29 @@ per-phase outputs. Normal functional/production inventories omit it. Measured
 tick/frame/JFR windows still require validation by the comparative runner before
 being accepted as benchmark evidence.
 
+`benchmark_c2me.py` fixes five accepted pairs for each of steady generated-area
+play, Chunky generation and local-client contention. Pair order alternates;
+each trial creates a new writable baseline snapshot. The target is a square at
+8192/8192 with radius 1024 blocks. Client ZGC, heap, position/yaw, profile and
+probes remain fixed. The warmup is 30 seconds; client comparisons use a fixed
+90-second render-loop window. Contention requires generation to remain active
+throughout that window. A short workload is INCONCLUSIVE and is not retried as
+noise. Region/NBT generation extent, server logs, DH protocol, tick/frame windows,
+GC/JFR and resource counters are validated before counting a trial.
+
+The runner requires an authentic frozen C2ME correctness bundle and explicitly
+compares its artifact/configuration identity with the benchmark stack. The A/B
+manifests must differ only in C2ME and its policy; common recording instrumentation
+is separately frozen. Raw samples remain in memory during timed windows, then
+are retained privately with hashes. Unrelated host CPU excludes the owned server
+and qualification client; p95 above 5% or maximum above 20%, or an outside
+Minecraft client, invalidates a pair. Environmental retries are bounded at three,
+with fresh clones and reversed order; rejected observations remain preserved.
+No inferential result is computed until all five accepted pairs per workload.
+Runtime/configuration failures halt trials. Independent recovery is armed before
+production/timer shutdown and verified before a terminal recovery PASS.
+Implementation and unit tests do not certify completed comparative measurements.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still
