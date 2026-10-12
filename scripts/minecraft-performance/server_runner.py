@@ -11,6 +11,7 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--console", type=Path, required=True)
+    parser.add_argument('--exit-receipt', type=Path)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     if len(str(args.console).encode()) >= 108:
@@ -25,6 +26,9 @@ def main():
             or not args.console.parent.name.startswith('minecraft-performance')
                 and not args.console.parent.parent.name.startswith('minecraft-performance')):
         parser.error("console must be new and canonical inside private qualification data")
+    if args.exit_receipt is not None and (args.exit_receipt.parent != args.console.parent
+            or args.exit_receipt != args.exit_receipt.resolve() or args.exit_receipt.exists()):
+        parser.error('exit receipt must be new canonical console sibling')
     listener = socket.socket(socket.AF_UNIX)
     listener.bind(str(args.console))
     os.chmod(args.console, 0o600)
@@ -64,6 +68,9 @@ def main():
             process.wait(timeout=15)
         listener.close()
         args.console.unlink(missing_ok=True)
+        if args.exit_receipt is not None:
+            from server_exit import write_receipt
+            write_receipt(args.exit_receipt, process)
     raise SystemExit(process.returncode)
 
 

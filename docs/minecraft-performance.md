@@ -150,6 +150,12 @@ the already collected timer raised an error. Recovery heartbeats are now limited
 to once every five minutes against the existing 45-minute recovery deadline;
 restart failures still abort qualification. Disarming tolerates a collected timer
 after verified recovery. Trial receipts retain the underlying exception details.
+Instrumented trials also require a Java exit receipt bound to the systemd
+invocation and Java PID, written while the console wrapper still owns the cgroup.
+Final memory events and lifetime peak therefore include shutdown. Any nonzero
+exit, missing receipt, OOM/MemoryMax event, or additional unsampled shutdown
+MemoryHigh pressure rejects the trial; terminal evidence is hashed with its raw
+recordings. A collected unit's default status is never treated as exit proof.
 
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:

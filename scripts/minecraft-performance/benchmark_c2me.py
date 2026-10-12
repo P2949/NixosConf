@@ -219,6 +219,9 @@ def run_one(manifest, output, workload, variant):
             sampler = None
             save(output / 'samples.json', rows)
             lab.stop()
+            terminal = lab.exit_receipt
+            if terminal['memory_events']['high'] != rows[-1]['memory_events']['high']:
+                raise RuntimeError('unsampled shutdown memory pressure')
             after = region_occupancy(lab.server / 'world', include_status=True)
             if workload == 'steady':
                 if generation_outcome(before, after, manifest) != 'PASS':
@@ -241,7 +244,7 @@ def run_one(manifest, output, workload, variant):
             whole_run = resource_metrics(rows, rows[0]['time'], rows[-1]['time'], os.cpu_count(), 10 * 1024 ** 3)
             metrics = tick_metrics(lab.tick_output, start, end)
             metrics.update({k: resources[k] for k in ('cpu_pct', 'cpu_p95_pct', 'memory_peak_bytes', 'io')})
-            metrics['service_lifetime_memory_peak_bytes'] = rows[-1]['memory_peak_bytes']
+            metrics['service_lifetime_memory_peak_bytes'] = terminal['memory_peak_bytes']
             jfr_json = output / 'gc-events.json'
             if lab.jfr_output.stat().st_size == 0:
                 raise RuntimeError('JFR recording missing')
@@ -263,12 +266,12 @@ def run_one(manifest, output, workload, variant):
             if receipt['invalid_reason'] != 'not_completed':
                 reasons.append(receipt['invalid_reason'])
             receipt.update(correctness='PASS', valid=not reasons, invalid_reason=','.join(reasons),
-                metrics=metrics, memory_events=rows[-1]['memory_events'],
+                metrics=metrics, memory_events=terminal['memory_events'],
                 severe_memory_high=whole_run['severe_memory_high'], environment=resources,
                 measurement_start_monotonic=start, measurement_end_monotonic=end,
                 measurement_start_utc=start_utc, measurement_end_utc=end_utc,
                 evidence_sha256={str(p.relative_to(output)): sha256(p) for p in (
-                    lab.log, lab.tick_output, lab.jfr_output, output / 'samples.json', jfr_json)})
+                    lab.log, lab.tick_output, lab.jfr_output, lab.exit_receipt_path, output / 'samples.json', jfr_json)})
             if client is not None:
                 receipt['evidence_sha256'].update({str(p.relative_to(output)): sha256(p)
                     for p in (client.output / 'client-frametimes.csv', client.output / 'dh-messages.jsonl',

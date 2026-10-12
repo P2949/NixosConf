@@ -1,6 +1,7 @@
 """Disposable candidate lifecycle for automated functional qualification."""
 
 import importlib.util
+import json
 from pathlib import Path
 import socket
 import subprocess
@@ -113,7 +114,10 @@ class Lab:
         self.phase += 1
         self.log = self.output / f'server-phase-{self.phase}.log'
         recording_args = []
+        receipt_args = []
         if self.manifest.get('server_tick_probe'):
+            self.exit_receipt_path = self.root / f'server-phase-{self.phase}-exit.json'
+            receipt_args = ['--exit-receipt', str(self.exit_receipt_path)]
             self.tick_output = self.output / f'server-phase-{self.phase}-ticks.csv'
             self.jfr_output = self.output / f'server-phase-{self.phase}.jfr'
             for path in (self.tick_output, self.jfr_output):
@@ -133,9 +137,11 @@ class Lab:
             '--property=StandardOutput=append:' + str(self.log), '--property=StandardError=append:' + str(self.log),
             *recording_args,
             sys.executable, str(HERE / 'server_runner.py'), '--console', str(self.console),
+            *receipt_args,
             self.manifest['wrapper']['path'], *self.manifest['jvm_flags'],
             *(['-XX:StartFlightRecording=settings=profile,dumponexit=true,maxsize=128m,filename=' + str(self.jfr_output)]
               if recording_args else [])], check=True)
+        self.invocation = command('systemctl', 'show', UNIT, '-p', 'InvocationID', '--value')
         self.wait_log('Done (', 240)
         from c2me_runtime import verify_startup
         verify_startup(
@@ -183,6 +189,9 @@ class Lab:
                 helper = identity_helper()
                 helper.capture(self.server / 'config/DistantHorizons.toml',
                                self.server / 'config/distant-horizons-server-id')
+                if self.manifest.get('server_tick_probe'):
+                    from server_exit import verify
+                    self.exit_receipt = verify(json.loads(self.exit_receipt_path.read_text()), self.invocation, self.pid)
         finally:
             if self.owns_slice:
                 maintenance.cleanup_slice()
