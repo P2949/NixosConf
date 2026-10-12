@@ -120,6 +120,12 @@ class Lab:
             sys.executable, str(HERE / 'server_runner.py'), '--console', str(self.console),
             self.manifest['wrapper']['path'], *self.manifest['jvm_flags']], check=True)
         self.wait_log('Done (', 240)
+        from c2me_runtime import verify_startup
+        verify_startup(
+            self.manifest['pregen_mods'] if pregen else self.manifest['mods'],
+            (self.server / 'config/c2me.toml').read_text()
+                if (self.server / 'config/c2me.toml').exists() else '',
+            self.log.read_text())
         group = command('systemctl', 'show', UNIT, '-p', 'ControlGroup', '--value')
         self.cgroup = Path('/sys/fs/cgroup') / group.lstrip('/')
         pids = []

@@ -41,6 +41,10 @@ Pinned bytecode confirms root-level `globalExecutorParallelism` and config
 schema version 3. The initial policy sets four, with no experimental overrides
 or OpenCL addon. Generated runtime config and startup evidence must still
 prove the effective value before correctness or performance acceptance.
+Every functional server start now checks the pinned C2ME artifact digest,
+schema and executor setting against the generated config and the startup
+`Global Executor Parallelism` line. Missing, conflicting or reset configuration
+fails as `FAIL_CONFIGURATION_NOT_APPLIED`; artifact mismatch also fails closed.
 Source: https://modrinth.com/mod/c2me-fabric/version/ODMLK8M9.
 
 Production remains on the original baseline. The eight-gate receipt at
