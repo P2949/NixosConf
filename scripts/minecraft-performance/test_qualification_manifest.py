@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, verify_proof, validate_candidate, reconstruct_provenance, REQUIRED_GATES
+from qualification_manifest import canonical_bytes, controlled_path, qualification_id, sha256, verify_proof, validate_candidate, reconstruct_provenance, REQUIRED_GATES, memory_limit_bytes
 
 
 class ManifestProofTests(unittest.TestCase):
@@ -63,6 +63,8 @@ class ManifestProofTests(unittest.TestCase):
             artifact.write_bytes(b'fixed')
             entry = {'path': str(artifact), 'sha256': sha256(artifact)}
             manifest = {'schema': 1, 'git_sha': revision, 'wrapper': entry,
+                        'service': dict(MemoryHigh='9G', MemoryHighBytes=9 * 1024 ** 3,
+                                        MemoryMax='12G', MemoryMaxBytes=12 * 1024 ** 3),
                         'java': entry, 'pregen_policy': entry, 'queue_agent': entry,
                         'mods': [], 'pregen_mods': [], 'policies': {},
                         **reconstruct_provenance(root, revision)}
@@ -92,6 +94,13 @@ class ManifestProofTests(unittest.TestCase):
                 validate_candidate(manifest, root)
             with self.assertRaises(ValueError):
                 validate_candidate({**manifest, 'git_sha': git('rev-parse', 'HEAD')}, root)
+
+    def test_memory_bytes_follow_declarative_units(self):
+        self.assertEqual(memory_limit_bytes('9G'), 9 * 1024 ** 3)
+        self.assertEqual(memory_limit_bytes(123), 123)
+        for value in (True, 'infinity', '9GB', 0):
+            with self.assertRaises(ValueError):
+                memory_limit_bytes(value)
 
     def test_root_path_aliases_and_existing_outputs_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

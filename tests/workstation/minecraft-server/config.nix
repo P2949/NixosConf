@@ -452,8 +452,8 @@ pkgs.runCommand "check-minecraft-server-config"
     EOF
 
         cat > "$pregenExpected" <<'EOF'
-    chunky 1.5.3
     c2me 0.4.2-alpha.0.90+26.3
+    chunky 1.5.3
     distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0

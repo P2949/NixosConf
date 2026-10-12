@@ -29,6 +29,17 @@ def identity_helper():
     return module
 
 
+def mode_fields(pregen=False, mode=None):
+    mode = mode or ('chunky' if pregen else 'normal')
+    if mode not in ('normal', 'chunky', 'dh_pregen') or (pregen and mode != 'chunky'):
+        raise ValueError('invalid qualification maintenance mode')
+    return {
+        'normal': ('mods', None, None),
+        'chunky': ('pregen_mods', 'pregen_policy', 'pregen_pause_seconds'),
+        'dh_pregen': ('dh_pregen_mods', 'dh_pregen_policy', 'dh_pregen_pause_seconds'),
+    }[mode]
+
+
 class Lab:
     def __init__(self, manifest, output):
         validate_candidate(manifest, HERE.parent.parent)
@@ -49,7 +60,8 @@ class Lab:
         self.active = False
         self.owns_slice = False
 
-    def install(self, pregen=False):
+    def install(self, pregen=False, *, mode=None):
+        inventory_key, policy_key, pause_key = mode_fields(pregen, mode)
         if self.active:
             raise RuntimeError('policy replacement requires stopped functional server')
         helper = identity_helper()
@@ -68,7 +80,7 @@ class Lab:
                 path.unlink()
             mods.rmdir()
         mods.mkdir()
-        inventory = self.manifest['pregen_mods'] if pregen else self.manifest['mods']
+        inventory = self.manifest[inventory_key]
         for mod in inventory:
             if sha256(mod['path']) != mod['sha256']:
                 raise ValueError('functional mod artifact hash mismatch')
@@ -84,12 +96,12 @@ class Lab:
             if destination.is_symlink():
                 destination.unlink()
             destination.write_text(entry['content'])
-        if pregen:
-            policy.write_text(self.manifest['pregen_policy']['content'])
+        if policy_key is not None:
+            policy.write_text(self.manifest[policy_key]['content'])
         helper.apply(policy, identity)
         properties = dict(self.manifest['controlled_server_properties'])
-        if pregen:
-            properties['pause-when-empty-seconds'] = self.manifest['pregen_pause_seconds']
+        if pause_key is not None:
+            properties['pause-when-empty-seconds'] = self.manifest[pause_key]
         for filename in ('server.properties', 'eula.txt'):
             path = self.server / filename
             if path.is_symlink():
@@ -100,13 +112,14 @@ class Lab:
         (self.server / 'eula.txt').write_text('eula=true\n')
         subprocess.run(['chown', '-R', 'minecraft:minecraft', str(self.root)], check=True)
 
-    def start(self, pregen=False):
+    def start(self, pregen=False, *, mode=None):
+        inventory_key, _, _ = mode_fields(pregen, mode)
         if command('systemctl', 'show', UNIT, '-p', 'LoadState', '--value') != 'not-found':
             raise RuntimeError('functional unit name occupied')
         slice_path = Path('/run/systemd/system') / maintenance.SLICE
         if slice_path.exists():
             raise RuntimeError('functional slice name occupied')
-        self.install(pregen)
+        self.install(pregen, mode=mode)
         slice_path.write_text(maintenance.SLICE_TEXT)
         self.owns_slice = True
         subprocess.run(['systemctl', 'daemon-reload'], check=True)
@@ -145,7 +158,7 @@ class Lab:
         self.wait_log('Done (', 240)
         from c2me_runtime import verify_startup
         verify_startup(
-            self.manifest['pregen_mods'] if pregen else self.manifest['mods'],
+            self.manifest[inventory_key],
             (self.server / 'config/c2me.toml').read_text()
                 if (self.server / 'config/c2me.toml').exists() else '',
             self.log.read_text())

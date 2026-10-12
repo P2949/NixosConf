@@ -78,9 +78,22 @@ def reconstruct_provenance(repository, revision):
                 tool_source_files=tools, gate_source_files=sources, gate_test_sources=digests)
 
 
+def memory_limit_bytes(value):
+    if type(value) is int and value > 0:
+        return value
+    if not isinstance(value, str) or not (parts := re.fullmatch(r'([0-9]+)([KMGT])', value)):
+        raise ValueError('unsupported frozen memory limit')
+    return int(parts[1]) * 1024 ** ('KMGT'.index(parts[2]) + 1)
+
+
 def validate_candidate(manifest, repository):
-    if manifest.get('schema') != 1:
+    if type(manifest.get('schema')) is not int or manifest.get('schema') != 1:
         raise ValueError('unsupported qualification manifest')
+    service = manifest.get('service', {})
+    for key in ('MemoryHigh', 'MemoryMax'):
+        value = service.get(key + 'Bytes')
+        if type(value) is not int or value <= 0 or value != memory_limit_bytes(service.get(key)):
+            raise ValueError('frozen normalized memory limit mismatch: ' + key)
     artifacts = [manifest['wrapper'], manifest['java'], manifest['pregen_policy'], manifest['queue_agent'],
                  *manifest['mods'], *manifest['pregen_mods'], *manifest['policies'].values()]
     if 'dh_pregen_policy' in manifest:
