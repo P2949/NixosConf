@@ -17,6 +17,12 @@ def java_package(filename):
 
 
 class ProbeLayoutTests(unittest.TestCase):
+    def test_benchmark_reads_the_network_probe_output_filename(self):
+        from benchmark_c2me import DH_MESSAGES_FILENAME
+        sources = '\n'.join(path.read_text() for path in PROBE.glob('*.java'))
+        emitted = re.findall(r'resolve\("([^"\n]+\.jsonl)"\)', sources)
+        self.assertIn(DH_MESSAGES_FILENAME, emitted)
+
     def test_runtime_helpers_are_outside_mixin_owned_packages(self):
         cases = (
             (

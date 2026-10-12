@@ -156,6 +156,14 @@ Final memory events and lifetime peak therefore include shutdown. Any nonzero
 exit, missing receipt, OOM/MemoryMax event, or additional unsampled shutdown
 MemoryHigh pressure rejects the trial; terminal evidence is hashed with its raw
 recordings. A collected unit's default status is never treated as exit proof.
+The `d727756` pilot generated through the fixed client window but its controller
+then read `dh-messages.jsonl` instead of the Java probe's `dh-received.jsonl`.
+The failed attempt and healthy recovery remain under
+`/persist/minecraft-performance-functional-c2me-study-d727756-pilot`.
+Independent verification of the actual recording passed the unchanged DH rules
+(one negotiated session, 326 split-data and 160 partial-update messages).
+The reader and evidence hashing now use the emitted filename, checked against
+the probe source. This is still excluded pilot evidence, not an A/B decision.
 
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:

@@ -33,6 +33,7 @@ WARMUP = 30
 CLIENT_DURATION = 150
 ENVIRONMENT_RETRIES = 3
 COMPLETION = re.compile(r'Task finished for minecraft:overworld\. Processed: ([\d,]+) chunks \(100\.00%\)')
+DH_MESSAGES_FILENAME = 'dh-received.jsonl'
 
 
 class BenchmarkInterrupted(RuntimeError):
@@ -212,7 +213,7 @@ def run_one(manifest, output, workload, variant):
             end_utc = start_utc + end - start
             if client is not None:
                 client.wait_finished()
-                if dh_outcome(read_dh_messages(client.output / 'dh-messages.jsonl'), manifest) != 'PASS':
+                if dh_outcome(read_dh_messages(client.output / DH_MESSAGES_FILENAME), manifest) != 'PASS':
                     raise RuntimeError('benchmark DH protocol failure')
             sampler.stop()
             rows = sampler.rows
@@ -274,7 +275,7 @@ def run_one(manifest, output, workload, variant):
                     lab.log, lab.tick_output, lab.jfr_output, lab.exit_receipt_path, output / 'samples.json', jfr_json)})
             if client is not None:
                 receipt['evidence_sha256'].update({str(p.relative_to(output)): sha256(p)
-                    for p in (client.output / 'client-frametimes.csv', client.output / 'dh-messages.jsonl',
+                    for p in (client.output / 'client-frametimes.csv', client.output / DH_MESSAGES_FILENAME,
                               client.output / 'result.json', client.output / 'heartbeat.json', client.output / 'launcher.log')})
             save(output / 'run.json', receipt)
     except BaseException as exc:
