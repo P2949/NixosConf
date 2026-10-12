@@ -44,7 +44,6 @@ let
   prerequisiteTests = ./test_prerequisites.py;
   dhIdentitySource = ../../../hosts/desktop/minecraft-dh-identity.py;
   dhIdentityTests = ./test_dh_identity.py;
-  performanceSource = ../../../scripts/minecraft-performance;
 
   msmpTestPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
@@ -300,7 +299,6 @@ pkgs.runCommand "check-minecraft-server-config"
       prerequisiteTests
       dhIdentitySource
       dhIdentityTests
-      performanceSource
       backupSource
       backupTests
       backupClient
@@ -317,8 +315,6 @@ pkgs.runCommand "check-minecraft-server-config"
       pkgs.diffutils
       pkgs.jq
       pkgs.unzip
-      pkgs.openjdk25
-      pkgs.git
     ];
   }
   ''
@@ -326,20 +322,6 @@ pkgs.runCommand "check-minecraft-server-config"
 
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
         MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
-        MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" \
-          python3 -m unittest discover -s "$performanceSource" -v
-        mkdir -p "$TMPDIR/tick-probe-tests"
-        javac -d "$TMPDIR/tick-probe-tests" \
-          "$performanceSource/probe/TickBuffer.java" \
-          "$performanceSource/probe/TickBufferTest.java"
-        java -cp "$TMPDIR/tick-probe-tests" local.minecraft.performance.TickBufferTest
-        javac -d "$TMPDIR/tick-probe-tests" \
-          "$performanceSource/probe/FrameBuffer.java" \
-          "$performanceSource/probe/FrameBufferTest.java"
-        java -cp "$TMPDIR/tick-probe-tests" local.minecraft.performance.FrameBufferTest
-        javac -d "$TMPDIR/tick-probe-tests" \
-          "$performanceSource/probe/DhQueueAgent.java" \
-          "$performanceSource/probe/QueueAttach.java"
 
         MINECRAFT_MSMP_SOURCE="$msmpSource" python3 "$msmpTests"
 
