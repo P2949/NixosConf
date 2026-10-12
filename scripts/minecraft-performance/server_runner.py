@@ -13,6 +13,8 @@ def main():
     parser.add_argument("--console", type=Path, required=True)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    if len(str(args.console).encode()) >= 108:
+        parser.error('console exceeds Linux UNIX socket path limit')
     if not args.command:
         parser.error("server command required")
     if Path.cwd().resolve().is_relative_to(Path("/srv/minecraft")):

@@ -1,7 +1,10 @@
 import copy
 import unittest
+from pathlib import Path
+import subprocess
+import sys
 
-from benchmark_c2me import collect_trial_pair, RunFailure, same_stack
+from benchmark_c2me import collect_trial_pair, RunFailure, same_stack, trial_directory
 
 
 def manifests():
@@ -21,6 +24,26 @@ def manifests():
 
 
 class BenchmarkIdentityTests(unittest.TestCase):
+    def test_console_bridge_rejects_overlong_path_before_launch(self):
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name('server_runner.py')),
+            '--console', '/persist/' + 'x' * 110, '/bin/true'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('UNIX socket path limit', result.stderr)
+
+    def test_every_trial_socket_fits_linux_limit_and_names_are_unique(self):
+        study = Path('/persist/minecraft-performance-functional-c2me-study-' + 'a' * 20)
+        names = set()
+        for workload in ('steady', 'worldgen', 'contention'):
+            for pair in range(5):
+                for attempt in range(4):
+                    for variant in ('without_C2ME', 'C2ME_4'):
+                        path = trial_directory(study, workload, pair, attempt, variant)
+                        self.assertLess(len(str(path / 'world-clone/console.sock').encode()), 108)
+                        self.assertNotIn(path, names)
+                        names.add(path)
+        with self.assertRaises(ValueError):
+            trial_directory(Path(str(study) + 'x'), 'steady', 0, 0, 'C2ME_4')
+
     def test_only_c2me_and_recording_instrumentation_may_differ(self):
         same_stack(*manifests())
 

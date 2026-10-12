@@ -122,6 +122,15 @@ Runtime/configuration failures halt trials. Independent recovery is armed before
 production/timer shutdown and verified before a terminal recovery PASS.
 Implementation and unit tests do not certify completed comparative measurements.
 
+The first `d3b8809` instrumented trial failed before Java startup because its
+console path exceeded Linux's UNIX socket limit. It collected zero valid
+comparisons; the FAIL and healthy recovery receipts are preserved under
+`/persist/minecraft-performance-functional-c2me-study-d3b8809`. This is a harness
+failure, not a measured C2ME regression. Trial directory names are now bounded
+and compact; both orchestration and the console bridge reject overlong paths.
+Thresholds, workload windows and candidate settings are unchanged. A fresh
+committed/pushed source and new manifests are required for the corrected run.
+
 Production remains on the original baseline. The eight-gate receipt at
 `da0be1e` is historical evidence for that harness, not final Phase-A acceptance:
 client SQLite usefulness, controlled distant updates, and restored DH data still

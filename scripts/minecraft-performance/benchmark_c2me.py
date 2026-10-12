@@ -45,6 +45,18 @@ class RunFailure(RuntimeError):
         self.receipt = receipt
 
 
+def trial_directory(study, workload, pair, attempt, variant):
+    identity = study.name.removeprefix('minecraft-performance-functional-c2me-study-')
+    if not re.fullmatch(r'[A-Za-z0-9-]{1,20}', identity):
+        raise ValueError('bounded ASCII study identity required')
+    label = {'steady': 's', 'worldgen': 'w', 'contention': 'c'}[workload]
+    variant_label = {'without_C2ME': 'A', 'C2ME_4': 'B'}[variant]
+    path = study.parent / f'minecraft-performance-functional-c2me-{identity}-{label}{pair + 1}-r{attempt}-{variant_label}'
+    if len(str(path / 'world-clone/console.sock').encode()) >= 108:
+        raise ValueError('benchmark console exceeds Linux UNIX socket path limit')
+    return path
+
+
 def collect_trial_pair(workload, pair, execute_run, results):
     for attempt in range(ENVIRONMENT_RETRIES + 1):
         order = ('without_C2ME', 'C2ME_4') if (pair + attempt) % 2 == 0 else ('C2ME_4', 'without_C2ME')
@@ -304,7 +316,7 @@ def execute(args):
                     if command('git', '-c', 'safe.directory=' + str(HERE.parent.parent), '-C', str(HERE.parent.parent),
                                'ls-remote', 'origin', 'refs/heads/work/minecraft-performance-manual').split()[0] != candidate['git_sha']:
                         raise RuntimeError('remote source moved during benchmark')
-                    run_output = Path(str(output) + f'-{workload}-{pair + 1}-attempt-{attempt}-{variant.replace("_", "-")}')
+                    run_output = trial_directory(output, workload, pair, attempt, variant)
                     return run_one(manifests[variant], run_output, workload, variant)
                 rejection = collect_trial_pair(workload, pair, execute_run, results)
                 save(output / 'results.json', results)
