@@ -11,7 +11,7 @@
 let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
-  baseModDrvs = builtins.attrValues {
+  baseModDrvsByName = {
     c2me = import ./minecraft-c2me.nix { inherit pkgs; };
     krypton = pkgs.fetchurl {
       url = "https://cdn.modrinth.com/data/fQEb0iXm/versions/UugdIYJw/krypton-0.3.2.jar";
@@ -49,6 +49,8 @@ let
     };
   };
 
+  baseModDrvs = builtins.attrValues baseModDrvsByName;
+
   chunky = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/fALzjamp/versions/4Eotm6ov/Chunky-Fabric-1.5.3.jar";
     sha512 = "b83bfe7b218d0aa6232af977ae741dc1f82b10e50cd12bb759f65cf416b8b62beccb543e587ef0b9670abe03815660f8e091bc6823624d65cf07300571573516";
@@ -56,7 +58,12 @@ let
 
   baseMods = pkgs.linkFarmFromDrvs "minecraft-survival-mods" baseModDrvs;
 
-  pregenMods = pkgs.linkFarmFromDrvs "minecraft-survival-pregen-mods" (baseModDrvs ++ [ chunky ]);
+  # Chunky generation must run without Distant Horizons loaded. DH observes
+  # generated chunks even with its generator disabled, and its LOD backlog can
+  # exhaust the pregeneration JVM heap under sustained Chunky throughput.
+  pregenMods = pkgs.linkFarmFromDrvs "minecraft-survival-pregen-mods" (
+    builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
+  );
 
   minecraftManagementPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
