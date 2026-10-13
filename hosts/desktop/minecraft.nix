@@ -293,10 +293,10 @@ in
         };
         services.minecraft-servers.servers.survival = {
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
-          # Config$Common$WorldGenerator in the exact pinned DH 3.3.4 JAR
-          # documents INTERNAL_SERVER as generating and saving vanilla chunks.
+          # DH pregeneration must consume only vanilla chunks that already exist.
+          # INTERNAL_SERVER was live-proven to allocate additional boundary chunks.
           files."config/DistantHorizons.toml".value.common.worldGenerator = {
-            chunkGeneratorMode = lib.mkForce "INTERNAL_SERVER";
+            chunkGeneratorMode = lib.mkForce "PRE_EXISTING_ONLY";
             generatorPlan = lib.mkForce "CHUNKS_ONLY";
           };
         };

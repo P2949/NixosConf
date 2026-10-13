@@ -141,7 +141,7 @@ assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
 assert dhPregenServer.files."config/c2me.toml" == server.files."config/c2me.toml";
 assert
   dhPregenServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
-    chunkGeneratorMode = "INTERNAL_SERVER";
+    chunkGeneratorMode = "PRE_EXISTING_ONLY";
     generatorPlan = "CHUNKS_ONLY";
   };
 assert dhPregenServer.extraStartPre == server.extraStartPre;

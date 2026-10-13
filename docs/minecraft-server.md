@@ -37,9 +37,9 @@ timer and disables Distant Horizons generation for the maintenance session. The
 manual backup service remains available.
 
 `minecraft-dh-pregen` keeps the normal mod inventory, sets
-`pause-when-empty-seconds=-1`, disables the automatic backup timer and switches
-Distant Horizons to `INTERNAL_SERVER` / `CHUNKS_ONLY` for explicit DH-driven
-generation.
+`pause-when-empty-seconds=-1`, disables the automatic backup timer and forces
+Distant Horizons to `PRE_EXISTING_ONLY` / `CHUNKS_ONLY` for explicit LOD
+pregeneration over already-existing vanilla chunks.
 
 Both maintenance modes are intentional bounded operating modes rather than
 normal server policy. Take a manual recovery point before planned bulk
