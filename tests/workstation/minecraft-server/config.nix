@@ -89,8 +89,10 @@ assert
     cancel-duplicate-fluid-ticks = false;
   };
 assert
-  builtins.removeAttrs pregenServer.files [ "config/DistantHorizons.toml" ]
-  == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
+  builtins.removeAttrs pregenServer.files [
+    "config/DistantHorizons.toml"
+    "config/chunky/config.json"
+  ] == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
 assert
   server.files."config/DistantHorizons.toml".value == {
     _version = 5;
@@ -124,6 +126,15 @@ assert
   server.files."config/c2me.toml".value == {
     version = 3;
     globalExecutorParallelism = 4;
+  };
+assert
+  pregenServer.files."config/chunky/config.json".value == {
+    version = 2;
+    language = "en";
+    continueOnRestart = true;
+    forceLoadExistingChunks = false;
+    silent = false;
+    updateInterval = 1;
   };
 assert dhPregenServer.symlinks.mods == server.symlinks.mods;
 assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
@@ -162,7 +173,9 @@ assert properties."use-native-transport";
 
 assert pregenServer.enable;
 assert pregenServer.package.name == server.package.name;
-assert pregenServer.jvmOpts == server.jvmOpts;
+assert
+  pregenServer.jvmOpts
+  == "-Xms1G -Xmx10G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M";
 assert pregenServer.symlinks ? mods;
 assert pregenMods != mods;
 assert pregenProperties."pause-when-empty-seconds" == -1;
@@ -182,6 +195,8 @@ assert service.serviceConfig.Slice == "minecraft.slice";
 assert service.serviceConfig.Nice == 5;
 assert service.serviceConfig.MemoryHigh == "10G";
 assert service.serviceConfig.MemoryMax == "12G";
+assert pregenService.serviceConfig.MemoryHigh == "14G";
+assert pregenService.serviceConfig.MemoryMax == "16G";
 assert service.serviceConfig.EnvironmentFile == "/persist/secrets/minecraft-management.env";
 assert pregenService.serviceConfig.EnvironmentFile == service.serviceConfig.EnvironmentFile;
 

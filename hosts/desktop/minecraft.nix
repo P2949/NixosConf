@@ -246,9 +246,34 @@ in
           enable = lib.mkForce false;
           wantedBy = lib.mkForce [ ];
         };
+
+        systemd.services.minecraft-server-survival.serviceConfig = {
+          MemoryHigh = lib.mkForce "14G";
+          MemoryMax = lib.mkForce "16G";
+        };
+
         services.minecraft-servers.servers.survival = {
           symlinks.mods = lib.mkForce pregenMods;
+
+          jvmOpts = lib.mkForce [
+            "-Xms1G"
+            "-Xmx10G"
+            "-XX:+ExitOnOutOfMemoryError"
+            "-XX:+UseG1GC"
+            "-Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M"
+          ];
+
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
+
+          files."config/chunky/config.json".value = {
+            version = 2;
+            language = "en";
+            continueOnRestart = true;
+            forceLoadExistingChunks = false;
+            silent = false;
+            updateInterval = 1;
+          };
+
           files."config/DistantHorizons.toml".value.common.worldGenerator.generatorPlan =
             lib.mkForce "DISABLED";
         };
