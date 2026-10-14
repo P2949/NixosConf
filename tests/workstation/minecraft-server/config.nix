@@ -9,8 +9,8 @@ let
   properties = server.serverProperties;
   inherit (server.symlinks) mods;
 
-  dhPregenConfig = config.specialisation.minecraft-dh-pregen.configuration;
-  dhPregenServer = dhPregenConfig.services.minecraft-servers.servers.survival;
+  dhLodBackfillConfig = config.specialisation.minecraft-dh-lod-backfill.configuration;
+  dhLodBackfillServer = dhLodBackfillConfig.services.minecraft-servers.servers.survival;
 
   pregenConfig = config.specialisation.minecraft-pregen.configuration;
   pregenServer = pregenConfig.services.minecraft-servers.servers.survival;
@@ -136,19 +136,19 @@ assert
     silent = false;
     updateInterval = 1;
   };
-assert dhPregenServer.symlinks.mods == server.symlinks.mods;
-assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
-assert dhPregenServer.files."config/c2me.toml" == server.files."config/c2me.toml";
+assert dhLodBackfillServer.symlinks.mods == server.symlinks.mods;
+assert dhLodBackfillServer.serverProperties."pause-when-empty-seconds" == -1;
+assert dhLodBackfillServer.files."config/c2me.toml" == server.files."config/c2me.toml";
 assert
-  dhPregenServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
+  dhLodBackfillServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
     chunkGeneratorMode = "PRE_EXISTING_ONLY";
     generatorPlan = "CHUNKS_ONLY";
   };
-assert dhPregenServer.extraStartPre == server.extraStartPre;
-assert dhPregenServer.extraStopPre == server.extraStopPre;
-assert !dhPregenConfig.systemd.timers.minecraft-backup.enable;
-assert dhPregenConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
-assert !dhPregenConfig.systemd.units."minecraft-backup.timer".enable;
+assert dhLodBackfillServer.extraStartPre == server.extraStartPre;
+assert dhLodBackfillServer.extraStopPre == server.extraStopPre;
+assert !dhLodBackfillConfig.systemd.timers.minecraft-backup.enable;
+assert dhLodBackfillConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
+assert !dhLodBackfillConfig.systemd.units."minecraft-backup.timer".enable;
 
 assert properties."server-ip" == "";
 assert properties."server-port" == 25565;

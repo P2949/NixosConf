@@ -286,14 +286,14 @@ in
         };
       };
 
-      specialisation.minecraft-dh-pregen.configuration = {
+      specialisation.minecraft-dh-lod-backfill.configuration = {
         systemd.timers.minecraft-backup = {
           enable = lib.mkForce false;
           wantedBy = lib.mkForce [ ];
         };
         services.minecraft-servers.servers.survival = {
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
-          # DH pregeneration must consume only vanilla chunks that already exist.
+          # DH LOD backfill must consume only vanilla chunks that already exist.
           # INTERNAL_SERVER was live-proven to allocate additional boundary chunks.
           files."config/DistantHorizons.toml".value.common.worldGenerator = {
             chunkGeneratorMode = lib.mkForce "PRE_EXISTING_ONLY";
