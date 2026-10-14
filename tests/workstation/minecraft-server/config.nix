@@ -9,8 +9,8 @@ let
   properties = server.serverProperties;
   inherit (server.symlinks) mods;
 
-  dhPregenConfig = config.specialisation.minecraft-dh-pregen.configuration;
-  dhPregenServer = dhPregenConfig.services.minecraft-servers.servers.survival;
+  dhLodBackfillConfig = config.specialisation.minecraft-dh-lod-backfill.configuration;
+  dhLodBackfillServer = dhLodBackfillConfig.services.minecraft-servers.servers.survival;
 
   pregenConfig = config.specialisation.minecraft-pregen.configuration;
   pregenServer = pregenConfig.services.minecraft-servers.servers.survival;
@@ -89,8 +89,10 @@ assert
     cancel-duplicate-fluid-ticks = false;
   };
 assert
-  builtins.removeAttrs pregenServer.files [ "config/DistantHorizons.toml" ]
-  == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
+  builtins.removeAttrs pregenServer.files [
+    "config/DistantHorizons.toml"
+    "config/chunky/config.json"
+  ] == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
 assert
   server.files."config/DistantHorizons.toml".value == {
     _version = 5;
@@ -125,19 +127,28 @@ assert
     version = 3;
     globalExecutorParallelism = 4;
   };
-assert dhPregenServer.symlinks.mods == server.symlinks.mods;
-assert dhPregenServer.serverProperties."pause-when-empty-seconds" == -1;
-assert dhPregenServer.files."config/c2me.toml" == server.files."config/c2me.toml";
 assert
-  dhPregenServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
-    chunkGeneratorMode = "INTERNAL_SERVER";
+  pregenServer.files."config/chunky/config.json".value == {
+    version = 2;
+    language = "en";
+    continueOnRestart = true;
+    forceLoadExistingChunks = false;
+    silent = false;
+    updateInterval = 1;
+  };
+assert dhLodBackfillServer.symlinks.mods == server.symlinks.mods;
+assert dhLodBackfillServer.serverProperties."pause-when-empty-seconds" == -1;
+assert dhLodBackfillServer.files."config/c2me.toml" == server.files."config/c2me.toml";
+assert
+  dhLodBackfillServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
+    chunkGeneratorMode = "PRE_EXISTING_ONLY";
     generatorPlan = "CHUNKS_ONLY";
   };
-assert dhPregenServer.extraStartPre == server.extraStartPre;
-assert dhPregenServer.extraStopPre == server.extraStopPre;
-assert !dhPregenConfig.systemd.timers.minecraft-backup.enable;
-assert dhPregenConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
-assert !dhPregenConfig.systemd.units."minecraft-backup.timer".enable;
+assert dhLodBackfillServer.extraStartPre == server.extraStartPre;
+assert dhLodBackfillServer.extraStopPre == server.extraStopPre;
+assert !dhLodBackfillConfig.systemd.timers.minecraft-backup.enable;
+assert dhLodBackfillConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
+assert !dhLodBackfillConfig.systemd.units."minecraft-backup.timer".enable;
 
 assert properties."server-ip" == "";
 assert properties."server-port" == 25565;
@@ -162,7 +173,9 @@ assert properties."use-native-transport";
 
 assert pregenServer.enable;
 assert pregenServer.package.name == server.package.name;
-assert pregenServer.jvmOpts == server.jvmOpts;
+assert
+  pregenServer.jvmOpts
+  == "-Xms1G -Xmx10G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M";
 assert pregenServer.symlinks ? mods;
 assert pregenMods != mods;
 assert pregenProperties."pause-when-empty-seconds" == -1;
@@ -182,6 +195,8 @@ assert service.serviceConfig.Slice == "minecraft.slice";
 assert service.serviceConfig.Nice == 5;
 assert service.serviceConfig.MemoryHigh == "10G";
 assert service.serviceConfig.MemoryMax == "12G";
+assert pregenService.serviceConfig.MemoryHigh == "14G";
+assert pregenService.serviceConfig.MemoryMax == "16G";
 assert service.serviceConfig.EnvironmentFile == "/persist/secrets/minecraft-management.env";
 assert pregenService.serviceConfig.EnvironmentFile == service.serviceConfig.EnvironmentFile;
 
@@ -437,7 +452,6 @@ pkgs.runCommand "check-minecraft-server-config"
         cat > "$pregenExpected" <<'EOF'
     c2me 0.4.2-alpha.0.90+26.3
     chunky 1.5.3
-    distanthorizons 3.3.4
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
     krypton 0.3.2

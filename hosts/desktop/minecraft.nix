@@ -11,7 +11,7 @@
 let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
-  baseModDrvs = builtins.attrValues {
+  baseModDrvsByName = {
     c2me = import ./minecraft-c2me.nix { inherit pkgs; };
     krypton = pkgs.fetchurl {
       url = "https://cdn.modrinth.com/data/fQEb0iXm/versions/UugdIYJw/krypton-0.3.2.jar";
@@ -49,6 +49,8 @@ let
     };
   };
 
+  baseModDrvs = builtins.attrValues baseModDrvsByName;
+
   chunky = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/fALzjamp/versions/4Eotm6ov/Chunky-Fabric-1.5.3.jar";
     sha512 = "b83bfe7b218d0aa6232af977ae741dc1f82b10e50cd12bb759f65cf416b8b62beccb543e587ef0b9670abe03815660f8e091bc6823624d65cf07300571573516";
@@ -56,7 +58,12 @@ let
 
   baseMods = pkgs.linkFarmFromDrvs "minecraft-survival-mods" baseModDrvs;
 
-  pregenMods = pkgs.linkFarmFromDrvs "minecraft-survival-pregen-mods" (baseModDrvs ++ [ chunky ]);
+  # Chunky generation must run without Distant Horizons loaded. DH observes
+  # generated chunks even with its generator disabled, and its LOD backlog can
+  # exhaust the pregeneration JVM heap under sustained Chunky throughput.
+  pregenMods = pkgs.linkFarmFromDrvs "minecraft-survival-pregen-mods" (
+    builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
+  );
 
   minecraftManagementPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
@@ -246,25 +253,50 @@ in
           enable = lib.mkForce false;
           wantedBy = lib.mkForce [ ];
         };
+
+        systemd.services.minecraft-server-survival.serviceConfig = {
+          MemoryHigh = lib.mkForce "14G";
+          MemoryMax = lib.mkForce "16G";
+        };
+
         services.minecraft-servers.servers.survival = {
           symlinks.mods = lib.mkForce pregenMods;
+
+          jvmOpts = lib.mkForce [
+            "-Xms1G"
+            "-Xmx10G"
+            "-XX:+ExitOnOutOfMemoryError"
+            "-XX:+UseG1GC"
+            "-Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M"
+          ];
+
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
+
+          files."config/chunky/config.json".value = {
+            version = 2;
+            language = "en";
+            continueOnRestart = true;
+            forceLoadExistingChunks = false;
+            silent = false;
+            updateInterval = 1;
+          };
+
           files."config/DistantHorizons.toml".value.common.worldGenerator.generatorPlan =
             lib.mkForce "DISABLED";
         };
       };
 
-      specialisation.minecraft-dh-pregen.configuration = {
+      specialisation.minecraft-dh-lod-backfill.configuration = {
         systemd.timers.minecraft-backup = {
           enable = lib.mkForce false;
           wantedBy = lib.mkForce [ ];
         };
         services.minecraft-servers.servers.survival = {
           serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
-          # Config$Common$WorldGenerator in the exact pinned DH 3.3.4 JAR
-          # documents INTERNAL_SERVER as generating and saving vanilla chunks.
+          # DH LOD backfill must consume only vanilla chunks that already exist.
+          # INTERNAL_SERVER was live-proven to allocate additional boundary chunks.
           files."config/DistantHorizons.toml".value.common.worldGenerator = {
-            chunkGeneratorMode = lib.mkForce "INTERNAL_SERVER";
+            chunkGeneratorMode = lib.mkForce "PRE_EXISTING_ONLY";
             generatorPlan = lib.mkForce "CHUNKS_ONLY";
           };
         };
