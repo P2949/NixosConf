@@ -29,8 +29,11 @@ to the actual project; generated build products remain disposable.
 
 ## Android Studio
 
-Home Manager's `development/android.nix` owns `android-studio` and
-`android-tools`. Studio runs in the Nixpkgs FHS environment and manages a writable
+Home Manager's `development/android.nix` owns `android-studio` from the existing
+pinned unstable input and `android-tools` from stable Nixpkgs. The newer stable
+Studio channel supports the real project's AGP 9.3 toolchain; stable Nixpkgs'
+Panda 4 supports only AGP through 9.2. Studio runs in the Nixpkgs FHS environment
+and manages a writable
 SDK at `~/Android/Sdk` through **Tools → SDK Manager**. Nix pins the IDE and shell
 ADB; projects pin Gradle through their wrapper and select their Android Gradle
 Plugin/dependencies. Studio's bundled JDK runs the IDE; use the project's
@@ -60,6 +63,10 @@ For deployment and physical acceptance:
    `sudo nixos-rebuild boot --flake '.#desktop'`; use a controlled reboot for
    the new persistence mounts. Verify each new bind mount via
    `/proc/self/mountinfo`, including its persistent Btrfs root and ownership.
+   A requested live installation must first quiesce affected applications,
+   verify the backing copy and inspect a native activation preview. Verify
+   the live mounts and retained data after switching; reboot acceptance remains
+   separate. Live installation permits the project check before that reboot.
 3. Launch `android-studio`, select `~/Android/Sdk`, create/open the real Java
    project and complete Gradle sync/build. Create an AVD in Device Manager and
    run/debug the app with KVM acceleration. The SDK emulator binary belongs
@@ -73,6 +80,9 @@ For deployment and physical acceptance:
 
 Upstream references: [Nixpkgs Android support](https://github.com/NixOS/nixpkgs/blob/nixos-26.05/doc/languages-frameworks/android.section.md)
 and [Android Studio configuration directories](https://developer.android.com/studio/troubleshoot#directories).
+Check the [Studio/AGP compatibility table](https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility)
+when selecting an IDE for a project; do not downgrade a project's pinned
+toolchain to make an older IDE pass acceptance.
 
 ## Interactive desktop VM
 

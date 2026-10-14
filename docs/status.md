@@ -53,9 +53,13 @@ control and experiment admission gates remain protected.
 Android Studio and shell ADB are declared as a dedicated Home Manager development
 feature, with a Studio-managed writable SDK and initial private settings/Gradle
 persistence. See the [Android workflow](development-validation.md#android-studio)
-and [state audit](ephemeral-state-audit.md). Physical deployment, Java project
-build/emulator acceptance and normal-reboot retention are pending; the earlier
-application qualification does not cover Android Studio.
+and [state audit](ephemeral-state-audit.md). Initial live deployment and all four
+new persistence mounts passed verification; existing SDK/settings/Gradle state
+was preserved and checksum-verified before activation. The selected JournalApp
+project is retained under `Development/Android`; its AGP 9.3 toolchain requires
+the newer Studio channel from the existing pinned unstable input. Java project
+build/emulator acceptance, updated IDE deployment and normal-reboot retention
+are pending; the earlier application qualification does not cover Android Studio.
 
 Further optimization investigation is intentionally deferred. General
 repository organization is finished under the [repository policy](repository-policy.md).
