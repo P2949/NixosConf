@@ -56,9 +56,11 @@ persistence. See the [Android workflow](development-validation.md#android-studio
 and [state audit](ephemeral-state-audit.md). Initial live deployment and all four
 new persistence mounts passed verification; existing SDK/settings/Gradle state
 was preserved and checksum-verified before activation. The selected JournalApp
-project is retained under `Development/Android`; its AGP 9.3 toolchain requires
-the newer Studio channel from the existing pinned unstable input. Java project
-build/emulator acceptance, updated IDE deployment and normal-reboot retention
+project is retained under `Development/Android`; its AGP 9.3 toolchain uses the
+newer stable Studio channel from the existing pinned unstable input. Its debug
+APK, unit tests and Studio Gradle sync passed. The feature pins Android user/AVD
+state to retained `.android` to avoid an observed SDK/emulator XDG-path mismatch.
+Canonical-path IDE deployment, emulator acceptance and normal-reboot retention
 are pending; the earlier application qualification does not cover Android Studio.
 
 Further optimization investigation is intentionally deferred. General

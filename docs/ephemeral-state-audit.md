@@ -42,7 +42,7 @@ its Java/emulator and reboot acceptance remain distinct from those earlier trial
 | Unity | R | 18 GiB imperatively installed editor versions; deliberately retain |
 | .ssh, .gnupg | P | Future credentials; absent at inventory, create protected empty directories declaratively |
 | .pki | P | NSS/certificate state, protected directory |
-| .android | M | ADB/debug identity and AVDs retained privately; cache and adb.5037 runtime state discarded |
+| .android | M | ADB/debug signing identity, AVDs, Studio Android state and the SDK-installed CLI helper/runtime retained privately; cache and adb.5037 runtime state discarded. The Android feature pins user/AVD roots here because current SDK libraries otherwise follow XDG into undeclared `.config/.android`. |
 | Android/Sdk | R | Writable Studio-managed SDK, build/platform tools, emulator and system images; retained to avoid repeated large downloads |
 | .gradle | M | Initially retained privately: wrapper distributions, dependencies, configuration and managed JDKs; observed caches, daemon, native and temporary children await a workload audit before exclusions |
 | .codex | M | Authentication, config, goals, queue, threads, memories, sessions, attachments, plugins, skills retained; cache/temp/IPC/locks/shell snapshots and model-cache/diagnostic log DB reset |

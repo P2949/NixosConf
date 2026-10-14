@@ -40,11 +40,18 @@ Plugin/dependencies. Studio's bundled JDK runs the IDE; use the project's
 compatible Gradle JDK in Studio and a project dev shell for command-line builds.
 The host has KVM membership for direct emulator acceleration.
 
+The Android feature sets `ANDROID_USER_HOME=~/.android` and
+`ANDROID_AVD_HOME=~/.android/avd` in the user session and Studio launcher.
+Current SDK libraries otherwise follow `XDG_CONFIG_HOME` into `.config/.android`,
+while the emulator's default search still uses `.android`. Explicit paths keep
+SDK tools, Studio and the emulator on the retained identity/AVD tree. The SDK
+itself remains writable and selected through SDK Manager.
+
 Create Java projects using a Views-based template with **Language: Java**, under
 `~/Development/Android/<project>`. The Compose templates use Kotlin. Choose SDK
 components required by the actual course/project. The Nix SDK licence setting
 allows Nix-built SDK packages; a Studio-managed SDK still uses SDK Manager's
-own licence prompts. No SDK paths are forced globally.
+own licence prompts. No SDK installation path is forced globally.
 
 The [persistence contract](persistence-contract.md) owns retained paths.
 Google settings/plugins use stable parents so IDE version changes retain state;
