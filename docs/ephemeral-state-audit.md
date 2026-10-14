@@ -30,8 +30,8 @@ WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
 the trace is observational evidence, not complete coverage. No-data Btrfs diffs
 capture changed paths independently. Unity, Unreal, Blender and Steam functional
 sessions were not established by that trace; the user subsequently confirmed
-important real application workflows on 2026-10-09. Required post-trial application rechecks are accepted. The user uses all these apps; Android Studio is planned, with
-ADB keys already present.
+important real application workflows on 2026-10-09. Required post-trial application rechecks are accepted. Android Studio is now declared separately;
+its Java/emulator and reboot acceptance remain distinct from those earlier trials.
 
 ## Home top-level entries
 
@@ -42,7 +42,9 @@ ADB keys already present.
 | Unity | R | 18 GiB imperatively installed editor versions; deliberately retain |
 | .ssh, .gnupg | P | Future credentials; absent at inventory, create protected empty directories declaratively |
 | .pki | P | NSS/certificate state, protected directory |
-| .android | M | ADB/debug identity and future AVDs retained; cache and adb.5037 runtime state discarded |
+| .android | M | ADB/debug identity and AVDs retained privately; cache and adb.5037 runtime state discarded |
+| Android/Sdk | R | Writable Studio-managed SDK, build/platform tools, emulator and system images; retained to avoid repeated large downloads |
+| .gradle | M | Initially retained privately: wrapper distributions, dependencies, configuration and managed JDKs; observed caches, daemon, native and temporary children await a workload audit before exclusions |
 | .codex | M | Authentication, config, goals, queue, threads, memories, sessions, attachments, plugins, skills retained; cache/temp/IPC/locks/shell snapshots and model-cache/diagnostic log DB reset |
 | .plastic4 | P | Unity VCS credentials/settings; currently empty |
 | .zen | E | Invocation metadata identifies the Unreal engine's `Engine/Binaries/Linux/zen`; History/States are server invocation/runtime bookkeeping, not the browser profile or retained Zen data cache |
@@ -106,6 +108,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | pavucontrol.ini | E | Window geometry/filter/meter UI preferences only; audio device routes remain separately persistent |
 | git | P | Global Git configuration in a writable containing directory |
 | Code | M | User/global/workspace state, unsaved Backups, cookies, identity, extensions' storage retained; cache exceptions listed below |
+| Google | P | Private stable parent for versioned AndroidStudio settings; audit other Google applications before adopting them |
 | mozilla/firefox | M | profiles.ini, profile groups, passwords, cookies, bookmarks/history, extensions, sessions and site storage retained; cache/crash/telemetry exceptions below |
 | unityhub | M | Account/storage, install-state database, project registry, preferences, Templates and resumable editor installation payloads retained; cache exceptions below |
 | unity3d/Unity/config, unity3d/Unity/licenses | P | Licensing configuration/identity; sibling Licensing.Client logs discarded |
@@ -121,6 +124,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | Paths | Class | Decision |
 | --- | --- | --- |
 | share/Steam | M | Library/manifests, client installation, configuration, userdata, saves and compatdata retained; disposable cache children below |
+| share/Google | P/R | Private stable parent for Android Studio plugins/user data and consent settings; `.cache/Google` remains ephemeral |
 | share/PrismLauncher | M | Private account/settings, instances/worlds/mods and customization remain authoritative P; assets/libraries remain retained R. Observed root cache/feed and launcher logs are disposable E with reboot-proven reset-root mounts; final post-reboot gameplay acceptance is recorded in the [accepted PR #16](https://github.com/P2949/NixosConf/pull/16). Meta, translations, metacache and other children remain retained until separately classified; no launcher-managed Java directory was observed. |
 | share/keyrings | P | Future desktop credential stores, private mode; absent initially |
 | share/Trash | P | Potentially recoverable user files, retained conservatively |
@@ -257,7 +261,11 @@ with no required authoritative data left only in legacy home. Legacy home 256,
 var children263/264/266 and parent 261, and the four confirmed migration snapshots
 326/327/328/329 are retired. Unrelated backup/forensic state remains intentional.
 
-Android Studio is absent: audit its SDK/AVD and tool state after installation.
+Android Studio's initial retained boundaries are declared. Existing root-local
+SDK, versioned settings, consent data and Gradle state were observed before
+deployment; this is path evidence, not Java/emulator acceptance. After one real
+Java project and accelerated emulator run, repeat across a normal reboot and
+audit actual SDK/AVD/Gradle children before adding any disposable exceptions.
 Existing ADB keys persist; remote-device functionality is currently unexercised.
 Plastic's empty directory and future credential/data reservations are deliberate
 but cannot establish a current remote workflow. Current Unity Libraries and

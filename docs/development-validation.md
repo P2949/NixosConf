@@ -27,6 +27,53 @@ Steam FHS environment, using Epic's bundled compiler and sysroot. Do not
 substitute ambient Nix compilers. Engine/project paths and target names belong
 to the actual project; generated build products remain disposable.
 
+## Android Studio
+
+Home Manager's `development/android.nix` owns `android-studio` and
+`android-tools`. Studio runs in the Nixpkgs FHS environment and manages a writable
+SDK at `~/Android/Sdk` through **Tools → SDK Manager**. Nix pins the IDE and shell
+ADB; projects pin Gradle through their wrapper and select their Android Gradle
+Plugin/dependencies. Studio's bundled JDK runs the IDE; use the project's
+compatible Gradle JDK in Studio and a project dev shell for command-line builds.
+The host has KVM membership for direct emulator acceleration.
+
+Create Java projects using a Views-based template with **Language: Java**, under
+`~/Development/Android/<project>`. The Compose templates use Kotlin. Choose SDK
+components required by the actual course/project. The Nix SDK licence setting
+allows Nix-built SDK packages; a Studio-managed SDK still uses SDK Manager's
+own licence prompts. No SDK paths are forced globally.
+
+The [persistence contract](persistence-contract.md) owns retained paths.
+Google settings/plugins use stable parents so IDE version changes retain state;
+this does not authorize persisting other Google applications without an audit.
+Gradle's mixed user directory is initially retained, including expensive
+downloads. Audit its real children after normal use before introducing cleanup.
+Keep Android Studio caches under ephemeral `~/.cache/Google`.
+
+For deployment and physical acceptance:
+
+1. Close Studio, Gradle daemons and emulators. Before the first normal reboot,
+   copy any existing root-local SDK, Google settings/user data and `.gradle`
+   into their declared `/persist/home/p2949/` backing paths, retaining metadata
+   and verifying equality. Do not overwrite differing backing state blindly.
+2. Build/check the desktop and stage with
+   `sudo nixos-rebuild boot --flake '.#desktop'`; use a controlled reboot for
+   the new persistence mounts. Verify each new bind mount via
+   `/proc/self/mountinfo`, including its persistent Btrfs root and ownership.
+3. Launch `android-studio`, select `~/Android/Sdk`, create/open the real Java
+   project and complete Gradle sync/build. Create an AVD in Device Manager and
+   run/debug the app with KVM acceleration. The SDK emulator binary belongs
+   inside Studio's FHS environment; a bare host invocation may fail to link.
+4. Exit cleanly and capture retained-file hashes/metadata outside Git. Reboot
+   normally again; reopen the project, verify SDK/AVD/settings retention and
+   build/run again without reinstalling the SDK or system image. Confirm IDE
+   cache reset separately from retained state.
+5. Audit actual `.android`, SDK, Google and Gradle subtrees. Record unexercised
+   workflows explicitly and keep credentials/private receipts outside Git.
+
+Upstream references: [Nixpkgs Android support](https://github.com/NixOS/nixpkgs/blob/nixos-26.05/doc/languages-frameworks/android.section.md)
+and [Android Studio configuration directories](https://developer.android.com/studio/troubleshoot#directories).
+
 ## Interactive desktop VM
 
 Build the real desktop configuration with its bootloader variant:

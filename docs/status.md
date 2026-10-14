@@ -50,6 +50,13 @@ evidence are recorded in PR metadata.
 Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 
+Android Studio and shell ADB are declared as a dedicated Home Manager development
+feature, with a Studio-managed writable SDK and initial private settings/Gradle
+persistence. See the [Android workflow](development-validation.md#android-studio)
+and [state audit](ephemeral-state-audit.md). Physical deployment, Java project
+build/emulator acceptance and normal-reboot retention are pending; the earlier
+application qualification does not cover Android Studio.
+
 Further optimization investigation is intentionally deferred. General
 repository organization is finished under the [repository policy](repository-policy.md).
 Generated custom-module documentation and the [interactive desktop bootloader

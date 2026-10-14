@@ -24,6 +24,15 @@
       # Expensive, imperatively installed Unity editor versions.
       "Unity"
 
+      # Studio owns the writable SDK; projects belong under Development/Android.
+      "Android/Sdk"
+      # Retain Gradle downloads and configuration until a real-workload audit
+      # establishes safe disposable children.
+      {
+        directory = ".gradle";
+        mode = "0700";
+      }
+
       # Credentials, application identity and profiles.
       {
         directory = ".ssh";
@@ -54,6 +63,11 @@
       # Keep atomic application updates within one mounted directory. Known
       # cache children are instead bound to reset-root storage by the host.
       ".config/Code"
+      # Versioned Android Studio settings; IDE caches remain under .cache.
+      {
+        directory = ".config/Google";
+        mode = "0700";
+      }
       ".config/git"
       {
         directory = ".config/gh";
@@ -76,6 +90,11 @@
 
       # .local is also split: no complete share/state container is persisted.
       ".local/share/Steam"
+      # Versioned Android Studio plugins and user data.
+      {
+        directory = ".local/share/Google";
+        mode = "0700";
+      }
       # Minecraft authentication, instances/worlds and expensive game data.
       # Audited cache/log children reset through ephemeral-directories.nix.
       {
