@@ -209,6 +209,8 @@ in
             server-port = 25565;
             max-players = 10;
 
+            spawn-protection = 0;
+
             online-mode = true;
             white-list = true;
             enforce-whitelist = true;
