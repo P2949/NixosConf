@@ -270,7 +270,8 @@ network/resolver runtime state under `/run`. Userborn's account files remain
 outside `/etc`, with declarative symlinks into the immutable tree. These choices
 belong to this experiment and do not alter desktop policy or persistence.
 
-The guest uses its own store image rather than mounting the host store, so its
-Perl absence check describes the guest closure. Build/runtime evidence from this
+The guest uses its own store image with a disposable writable overlay for Nix
+path registration, rather than mounting the host store, so its Perl absence
+check describes the guest closure. Build/runtime evidence from this
 VM establishes functional behavior only; it does not establish a desktop
 performance or maintenance benefit, and does not authorize physical adoption.
