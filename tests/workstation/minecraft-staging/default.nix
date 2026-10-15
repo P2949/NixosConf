@@ -78,7 +78,7 @@ let
               servers.staging = {
                 enable = true;
                 autoStart = true;
-                package = production.package;
+                inherit (production) package files;
                 jvmOpts = [
                   "-Xms256M"
                   "-Xmx2G"
@@ -86,7 +86,6 @@ let
                   "-XX:+ExitOnOutOfMemoryError"
                 ];
                 symlinks.mods = production.symlinks.mods;
-                files = production.files;
                 serverProperties = production.serverProperties // {
                   # Offline login is confined to this disposable private network.
                   online-mode = false;
