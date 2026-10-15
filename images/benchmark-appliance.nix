@@ -40,7 +40,11 @@
   boot = {
     loader.grub.enable = false;
     initrd.systemd.enable = true;
-    initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" ];
+    initrd.availableKernelModules = [
+      "virtio_pci"
+      "virtio_blk"
+      "virtio_scsi"
+    ];
     kernelParams = [
       "console=ttyS0,115200n8"
       "systemd.verity_usr_options=panic-on-corruption"
@@ -89,6 +93,9 @@
       StandardError = "journal+console";
     };
     script = ''
+      exec >/dev/ttyS0 2>&1
+      set -x
+      findmnt --kernel -o TARGET,SOURCE,FSTYPE,OPTIONS
       test "$(findmnt -n -o FSTYPE /)" = tmpfs
       test "$(findmnt -n -o FSTYPE /nix/store)" = erofs
       findmnt -n -o OPTIONS /nix/store | grep -Eq '(^|,)ro(,|$)'
