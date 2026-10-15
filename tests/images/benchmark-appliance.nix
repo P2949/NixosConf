@@ -25,7 +25,6 @@ pkgs.testers.runNixOSTest {
     import shutil
     import subprocess
     import tempfile
-    from test_driver.machine import retry
 
     # Boot the exact standalone image; no guest agent or test credentials are
     # injected into it. Readiness and corruption are observed on its console.
