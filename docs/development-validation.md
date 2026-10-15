@@ -187,3 +187,28 @@ the driver terminal and press Enter to resume the existing recovery test.
 After it completes, `exit()` or Ctrl-D leaves the Python prompt and cleans up the
 VM. Socket paths are specific to the current run; use the command the driver
 prints rather than a saved socket name.
+
+## Distributed build routing proof
+
+Run the disposable two-node experiment with:
+
+```sh
+nix build .#distributed-builds --no-write-lock-file --no-link --print-build-logs
+```
+
+The coordinator disables local builds and substitutes. It generates its SSH key
+inside the guest and trusts the builder's freshly generated host key. Neither
+private keys nor workstation builder credentials enter the Nix store. The
+builder executes a sandboxed derivation whose output records the builder's
+hostname; the test requires the output to be initially absent from both stores
+and then valid with identical contents on both nodes. A second build requires
+an advertised test feature. A build requiring the unadvertised `kvm` feature
+must fail promptly without producing an output.
+
+The hostname marker is a deliberately declared sandbox input used only to prove
+execution location. This fixture does not establish reproducible benchmark
+inputs or configure a productive remote builder. It also invokes the existing
+optimization runtime admission function with the guest's observed identity and
+requires rejection because the guest is virtualized. Distributed compilation
+can produce candidates; authoritative measurements still require the designated
+physical target and the complete optimization provenance gates.

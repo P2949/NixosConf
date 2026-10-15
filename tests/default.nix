@@ -124,6 +124,7 @@
   };
 
   packages = {
+    distributed-builds = import ./build/distributed-builds.nix { inherit pkgs; };
     minecraft-staging = import ./workstation/minecraft-staging {
       inherit inputs pkgs desktopSystem;
     };
