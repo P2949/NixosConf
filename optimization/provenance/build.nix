@@ -58,6 +58,9 @@ in
 # This records derivation/output identities, without realizing every referenced
 # system/compiler/source closure merely to serialize the manifest. The runner
 # must independently verify its measured binaries and corpus exist and hash them.
-pkgs.writeText "experiment-build-provenance.json" (
+(pkgs.writeText "experiment-build-provenance.json" (
   builtins.unsafeDiscardStringContext (builtins.toJSON manifest) + "\n"
-)
+)).overrideAttrs
+  (_: {
+    passthru = { inherit manifest; };
+  })

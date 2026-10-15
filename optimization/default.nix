@@ -9,6 +9,19 @@ let
   stock = import ./control/stock.nix;
   gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
+  gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
+  gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
+  gcBuild = import ./experiments/boehmgc-nix-evaluation/build.nix {
+    inherit
+      pkgs
+      inputs
+      repository
+      systemConfig
+      ;
+    specification = gcSpecification;
+    corpus = gcCorpus;
+    packages = gcExperiment;
+  };
   specification = model.normalizeSpec (import ./experiments/zstd-skylake/spec.nix);
   corpus = import ./corpora/silesia.nix { inherit pkgs; };
   candidate = import ./stages/cpu-codegen.nix { inherit (pkgs) lib; } (
@@ -33,7 +46,11 @@ in
   packages = {
     boehmgc-stock = gcExperiment.stock;
     boehmgc-cpu-target = gcExperiment.candidate;
-    nix-evaluation-corpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
+    nix-evaluation-corpus = gcCorpus;
+    nix-evaluation-spec = pkgs.writeText "nix-evaluation-specification.json" (
+      builtins.toJSON gcSpecification + "\n"
+    );
+    nix-evaluation-build-provenance = gcBuild;
     nix-evaluation-stock = gcExperiment.stockCommand;
     nix-evaluation-candidate = gcExperiment.candidateCommand;
     zstd-stock = pkgs.zstd;

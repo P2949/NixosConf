@@ -39,7 +39,17 @@ clear `LD_PRELOAD` and `LD_AUDIT`. Loader diagnostics confirmed both selections;
 live candidate evaluation mappings confirmed the exact Nix executable and only
 the candidate GC. No existing Nix store binary is modified.
 
-The experiment still requires source/build manifests and an
-independent pilot followed by randomized paired measurements on the unchanged
-physical benchmark control. A successful package build is not an improvement
-verdict or authorization to adopt the candidate.
+`nix-evaluation-spec` declares wall time and CPU time, four independent pilot
+pairs, ten to twenty fresh measurement pairs, a one-percent practical threshold
+and balanced randomized ordering. The workload runs on declared CPU 2. The
+`@source@` argument is replaced only by the verified corpus source path.
+
+`nix-evaluation-build-provenance` records source/control/compiler identities,
+the identical Nix consumer, both GC derivations/sources and build flags, and the
+corpus identity. Provisional artifacts from a dirty source tree are ineligible
+for measurement. The existing zstd artifact serialization is unchanged.
+
+The experiment still requires the evidence-preserving runner, independent pilot
+and randomized paired measurements on the unchanged physical benchmark control.
+A successful functional evaluation is not an improvement verdict or
+authorization to adopt the candidate.
