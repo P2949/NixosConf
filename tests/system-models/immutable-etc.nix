@@ -56,6 +56,7 @@ pkgs.testers.runNixOSTest {
       virtualisation = {
         mountHostNixStore = false;
         useNixStoreImage = true;
+        writableStore = true;
         graphics = false;
         qemu.options = [ "-vga none" ];
       };
@@ -70,6 +71,7 @@ pkgs.testers.runNixOSTest {
         machine.wait_for_unit("dbus.service")
         machine.wait_for_unit("systemd-networkd.service")
         machine.wait_for_unit("systemd-resolved.service")
+        machine.wait_for_unit("register-nix-paths.service")
         machine.wait_for_unit("model-proof.service")
         machine.succeed(f"test $(cat /etc/model-version) = {version}")
         machine.succeed(f"test $(cat /var/lib/model-proof/result) = {version}")

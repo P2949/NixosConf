@@ -247,3 +247,30 @@ The image is independent of desktop deployment and the frozen benchmark
 control. Its VM is for functional validation. The included benchmark runner
 retains its physical control admission checks; booting this image does not
 qualify it as an authoritative performance environment.
+
+## Immutable `/etc`, Userborn and perlless VM
+
+```bash
+nix build .#immutable-etc-userborn --no-write-lock-file --print-build-logs
+```
+
+This explicit developer test imports Nixpkgs' perlless profile in a disposable
+VM, enables read-only `/etc`, and lets Userborn maintain account files under
+`/var/lib/nixos`. A service runs as a declarative UID and writes only to its
+systemd-managed state directory. The test switches to a second configuration
+with changed `/etc` content and an additional account, then switches back.
+At each stage it checks the service's output and ownership, stable identity,
+read-only `/etc`, and absence of Perl in the guest store. The profile also
+rejects Perl dependencies when building the system closure.
+
+Immutable `/etc` needs declarations for files that traditional services create
+there. The guest declares a synthetic machine ID before PID 1 and D-Bus start;
+it never copies the physical workstation's identity. Networkd and resolved keep
+network/resolver runtime state under `/run`. Userborn's account files remain
+outside `/etc`, with declarative symlinks into the immutable tree. These choices
+belong to this experiment and do not alter desktop policy or persistence.
+
+The guest uses its own store image rather than mounting the host store, so its
+Perl absence check describes the guest closure. Build/runtime evidence from this
+VM establishes functional behavior only; it does not establish a desktop
+performance or maintenance benefit, and does not authorize physical adoption.
