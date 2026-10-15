@@ -105,5 +105,19 @@ ThinLTO, PGO and BOLT when work resumes. VM variants are appropriate for
 functional system validation; authoritative performance measurements remain
 on the designated physical workstation.
 
-No further optimization investigation, general cleanup campaign, stock retag,
-activation, reboot or readiness retest is currently required.
+## Nix evaluation GC candidate
+
+The [GC evaluation experiment](../optimization/experiments/boehmgc-nix-evaluation/README.md)
+targets the Boehm GC hot path identified in a complete profile of actual
+repository evaluation. Its isolated stock/candidate commands use the same Nix
+executable and differ only in GC CPU-target flags. The pinned offline corpus,
+build manifests, physical admission, raw evidence and reconstruction verifier
+are implemented; authoritative performance measurements and a result verdict
+remain outstanding.
+
+Keep the frozen-compatible benchmark source separate from productive `main`.
+The Nix-checks workflow supports manual invocation for that pushed source ref;
+verify its exact head and successful conclusion before using the source for
+measurement. Build `.#optimization-control-identity` explicitly as the frozen
+source admission gate. Code integration does not retag the control or adopt the
+candidate. General cleanup and readiness qualification remain closed.

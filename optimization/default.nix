@@ -7,7 +7,21 @@
 }:
 let
   stock = import ./control/stock.nix;
+  gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
+  gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
+  gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
+  gcBuild = import ./experiments/boehmgc-nix-evaluation/build.nix {
+    inherit
+      pkgs
+      inputs
+      repository
+      systemConfig
+      ;
+    specification = gcSpecification;
+    corpus = gcCorpus;
+    packages = gcExperiment;
+  };
   specification = model.normalizeSpec (import ./experiments/zstd-skylake/spec.nix);
   corpus = import ./corpora/silesia.nix { inherit pkgs; };
   candidate = import ./stages/cpu-codegen.nix { inherit (pkgs) lib; } (
@@ -63,6 +77,29 @@ in
           fi
           touch "$out"
         '';
+    boehmgc-stock = gcExperiment.stock;
+    boehmgc-cpu-target = gcExperiment.candidate;
+    nix-evaluation-corpus = gcCorpus;
+    nix-evaluation-spec = pkgs.writeText "nix-evaluation-specification.json" (
+      builtins.toJSON gcSpecification + "\n"
+    );
+    nix-evaluation-build-provenance = gcBuild;
+    optimization-nix-evaluation-runner = pkgs.writeShellApplication {
+      name = "nixos-optimization-nix-evaluation";
+      runtimeInputs = [
+        pkgs.python3
+        pkgs.git
+        pkgs.util-linux
+        pkgs.systemd
+      ];
+      text = ''
+        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONPATH=${./provenance}:${./runners}
+        exec python ${./runners}/nix_evaluation.py "$@"
+      '';
+    };
+    nix-evaluation-stock = gcExperiment.stockCommand;
+    nix-evaluation-candidate = gcExperiment.candidateCommand;
     zstd-stock = pkgs.zstd;
     zstd-cpu-target = candidate;
     silesia-corpus = corpus;
@@ -111,6 +148,7 @@ in
           python ${./provenance}/test_runtime.py
           python ${./runners}/test_statistics.py
           PYTHONPATH=${./provenance}:${./runners} python ${./runners}/test_zstd.py
+          PYTHONPATH=${./provenance}:${./runners} python ${./runners}/test_nix_evaluation.py
           touch "$out"
         '';
   };
