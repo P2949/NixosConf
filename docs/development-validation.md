@@ -137,3 +137,53 @@ Hyprland and a rendered Alacritty window have been verified. System and user
 units reported no failures. Human interactive input/audio and application
 workloads remain unexercised in the VM; physical acceptance is separate.
 The desktop VM is an explicit developer tool and is not built by ordinary CI.
+
+## Interactive interrupted-recovery debugging
+
+`interrupted-recovery-debug` is a deliberately invoked developer artifact for
+inspecting the interrupted Btrfs root-replacement case over AF_VSOCK SSH. The
+ordinary `interrupted-recovery` test remains unattended; its derivation does not
+include the backdoor or the pause. The debug artifact is not a flake check and
+is not installed in the productive desktop.
+
+Build and run its interactive driver from a disposable working directory:
+
+```sh
+task_debug_driver="$(nix build .#interrupted-recovery-debug \
+  --no-write-lock-file --no-link --print-out-paths)"
+task_debug_work="$(mktemp -d)"
+cd "$task_debug_work"
+QEMU_OPTS='-display none' "$task_debug_driver/bin/nixos-test-driver"
+```
+
+At the Python prompt, enter `test_script()`. The test boots its VM, creates the
+staged `@root-next` subvolume and pauses before creating the other data
+subvolumes. At this checkpoint `@root` is absent, which exposes the interrupted
+replacement state before recovery changes it. Copy the printed
+`ssh -o User=root vsock-mux/.../machine_host.socket` command into another local
+terminal. The desktop's systemd SSH proxy handles this per-run local socket;
+no production SSH credential is involved. The backdoor provides unauthenticated
+root access inside this disposable test VM only.
+
+Useful commands inside the guest include:
+
+```sh
+journalctl -b --no-pager
+systemctl --failed
+systemctl status sshd.service
+findmnt /mnt/impermanence-root
+lsblk
+btrfs subvolume list /mnt/impermanence-root
+btrfs subvolume show /mnt/impermanence-root/@root-next
+test ! -e /mnt/impermanence-root/@root
+cat /proc/cmdline
+bootctl status --no-pager
+```
+
+The top-level Btrfs filesystem is already mounted at `/mnt/impermanence-root`.
+This allows direct inspection of the staged subvolume identity and missing
+active root alongside the live journal, systemd and bootloader state. Return to
+the driver terminal and press Enter to resume the existing recovery test.
+After it completes, `exit()` or Ctrl-D leaves the Python prompt and cleans up the
+VM. Socket paths are specific to the current run; use the command the driver
+prints rather than a saved socket name.

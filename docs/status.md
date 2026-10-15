@@ -50,7 +50,10 @@ physical USB-device workflows remain unexercised. See the
 General maintainability cleanup is complete under the
 [repository policy](repository-policy.md). Generated custom-module docs and the
 [interactive desktop bootloader VM](development-validation.md#interactive-desktop-vm)
-remain explicit developer tools. VM results do not replace physical acceptance.
+remain explicit developer tools. The
+[interrupted-recovery debug driver](development-validation.md#interactive-interrupted-recovery-debugging)
+provides a deliberate Btrfs checkpoint and local VSock SSH inspection.
+VM results do not replace physical acceptance.
 
 ## Minecraft server
 

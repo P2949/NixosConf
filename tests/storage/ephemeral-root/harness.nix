@@ -5,6 +5,7 @@
   recovery ? false,
   persistentFallback ? false,
   granular ? false,
+  debugPause ? false,
 }:
 
 let
@@ -24,6 +25,7 @@ let
   diskDevice = "/dev/disk/by-id/virtio-impermanence-root";
 in
 assert !persistentFallback || persistMachineId;
+assert !debugPause || recovery;
 pkgs.testers.runNixOSTest {
   name =
     if granular then
@@ -36,6 +38,9 @@ pkgs.testers.runNixOSTest {
       "impermanence-root-b"
     else
       "impermanence-root-a";
+
+  # Only the explicitly requested developer variant exposes this backdoor.
+  sshBackdoor.enable = debugPause;
 
   nodes.machine =
     { pkgs, ... }:
@@ -281,7 +286,11 @@ pkgs.testers.runNixOSTest {
           machine.succeed("chmod 1777 /mnt/impermanence-root/@root/tmp")
           machine.succeed("echo disposable > /mnt/impermanence-root/@root/root-sentinel")
 
-      machine.succeed("btrfs subvolume create /mnt/impermanence-root/@persist")
+      ${pkgs.lib.optionalString debugPause ''
+        machine.wait_for_unit("sshd.service")
+        machine.log("Debug checkpoint: interrupted @root-next exists; @root is absent")
+        input("Inspect this VM through the printed VSock SSH command; press Enter to continue: ")
+      ''}machine.succeed("btrfs subvolume create /mnt/impermanence-root/@persist")
       if granular:
           machine.succeed("btrfs subvolume create /mnt/impermanence-root/@optimization")
       else:

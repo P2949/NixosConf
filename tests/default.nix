@@ -154,6 +154,9 @@
       inherit pkgs;
     };
 
+    interrupted-recovery-debug = import ./storage/ephemeral-root/interrupted-recovery-debug.nix {
+      inherit inputs pkgs;
+    };
     interrupted-recovery = import ./storage/ephemeral-root/interrupted-recovery.nix {
       inherit inputs pkgs;
     };
