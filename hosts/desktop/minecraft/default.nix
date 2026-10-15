@@ -56,7 +56,7 @@ let
   minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
   minecraftManagementClient = pkgs.writeShellApplication {
     name = "minecraft-msmp";
-    text = ''exec ${minecraftTools}/bin/minecraft-msmp "$@"'';
+    text = ''exec ${minecraftTools}/bin/minecraft-msmp --config ${minecraftToolConfig} "$@"'';
   };
 
   timerStampSeedService = "minecraft-backup-timer-stamp-seed";
@@ -79,11 +79,11 @@ let
 
   minecraftPrerequisiteCheck = pkgs.writeShellApplication {
     name = "minecraft-prerequisites";
-    text = "exec ${minecraftTools}/bin/minecraft-prerequisites";
+    text = "exec ${minecraftTools}/bin/minecraft-prerequisites --config ${minecraftToolConfig}";
   };
   minecraftBackupRunner = pkgs.writeShellApplication {
     name = "minecraft-backup";
-    text = ''exec ${minecraftTools}/bin/minecraft-backup "$@"'';
+    text = ''exec ${minecraftTools}/bin/minecraft-backup --config ${minecraftToolConfig} "$@"'';
   };
 
 in

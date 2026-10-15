@@ -15,8 +15,7 @@ from websockets.exceptions import WebSocketException
 from websockets.sync.client import connect
 
 
-DEFAULT_URL = "ws://127.0.0.1:25585"
-DEFAULT_ENV_FILE = "/persist/secrets/minecraft-management.env"
+from minecraft_tools.config import MinecraftConfig, load_config
 SECRET_RE = re.compile(r"^[A-Za-z0-9]{40}$")
 
 DEFAULT_RPC_TIMEOUT = 10.0
@@ -140,14 +139,14 @@ def read_secret_from_environment_file(path: Path) -> str:
     return secrets[0]
 
 
-def load_secret() -> str:
+def load_secret(config: MinecraftConfig) -> str:
     secret = os.environ.get("MINECRAFT_MANAGEMENT_SECRET")
 
     if secret is None:
         env_file = Path(
             os.environ.get(
                 "MINECRAFT_MANAGEMENT_ENV_FILE",
-                DEFAULT_ENV_FILE,
+                str(config.environment_file),
             )
         )
         secret = read_secret_from_environment_file(env_file)
@@ -160,16 +159,16 @@ def load_secret() -> str:
     return secret
 
 
-def configuration() -> tuple[str, str]:
+def configuration(config: MinecraftConfig) -> tuple[str, str]:
     url = validate_url(
-        os.environ.get("MINECRAFT_MANAGEMENT_URL", DEFAULT_URL)
+        os.environ.get("MINECRAFT_MANAGEMENT_URL", config.management_url)
     )
-    secret = load_secret()
+    secret = load_secret(config)
     return url, secret
 
 
-def open_connection():
-    url, secret = configuration()
+def open_connection(config: MinecraftConfig):
+    url, secret = configuration(config)
 
     return connect(
         url,
@@ -515,8 +514,8 @@ def run_backup_transaction(
     return action_result
 
 
-def rpc_call(method: str, params, timeout: float):
-    with open_connection() as websocket:
+def rpc_call(method: str, params, timeout: float, config: MinecraftConfig):
+    with open_connection(config) as websocket:
         session = MsmpSession(websocket)
         return session.call(method, params, timeout)
 
@@ -544,9 +543,9 @@ def operation_error(exc: Exception) -> None:
     raise exc
 
 
-def command_validate(_args) -> None:
+def command_validate(args) -> None:
     try:
-        url, _secret = configuration()
+        url, _secret = configuration(args.config)
     except Exception as exc:
         operation_error(exc)
         return
@@ -560,6 +559,7 @@ def command_discover(args) -> None:
             "rpc.discover",
             None,
             args.timeout,
+            args.config,
         )
     except Exception as exc:
         operation_error(exc)
@@ -576,6 +576,7 @@ def command_call(args) -> None:
             args.method,
             params,
             args.timeout,
+            args.config,
         )
     except Exception as exc:
         operation_error(exc)
@@ -586,7 +587,7 @@ def command_call(args) -> None:
 
 def command_save_and_wait(args) -> None:
     try:
-        with open_connection() as websocket:
+        with open_connection(args.config) as websocket:
             session = MsmpSession(websocket)
             session.require_backup_capabilities(
                 timeout=args.timeout
@@ -603,7 +604,7 @@ def command_save_and_wait(args) -> None:
 
 def command_watch(args) -> None:
     try:
-        with open_connection() as websocket:
+        with open_connection(args.config) as websocket:
             session = MsmpSession(websocket)
 
             while True:
@@ -656,6 +657,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    parser.add_argument("--config", type=Path, required=True, help="non-secret deployment policy JSON")
     subparsers = parser.add_subparsers(
         dest="command",
         required=True,
@@ -712,6 +714,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    try:
+        args.config = load_config(args.config)
+    except (OSError, ValueError):
+        parser.error("cannot load deployment policy")
     args.func(args)
 
 

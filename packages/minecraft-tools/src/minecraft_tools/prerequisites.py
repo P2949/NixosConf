@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Read-only physical activation prerequisites; never emit credential contents."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -7,6 +8,9 @@ import re
 import stat
 import subprocess
 import sys
+
+
+from minecraft_tools.config import load_config
 
 
 class PrerequisiteError(RuntimeError):
@@ -25,10 +29,10 @@ def mount_record(path, runner=subprocess.run):
     return records[0]
 
 
-def validate_mounts(root, minecraft, snapshots):
+def validate_mounts(root, minecraft, snapshots, source_fs_root, snapshot_fs_root):
     identities = []
-    for record, fsroot in ((root, None), (minecraft, "/@minecraft"),
-                           (snapshots, "/@snapshots")):
+    for record, fsroot in ((root, None), (minecraft, source_fs_root),
+                           (snapshots, snapshot_fs_root)):
         if record.get("fstype") != "btrfs":
             raise PrerequisiteError("required filesystem is not Btrfs")
         if fsroot is not None and record.get("fsroot") != fsroot:
@@ -45,13 +49,14 @@ def validate_mounts(root, minecraft, snapshots):
         raise PrerequisiteError("Minecraft, root and snapshots must share the Btrfs filesystem")
 
 
-def validate_secret(directory=Path("/persist/secrets"), owner=0, group=0):
+def validate_secret(path, owner=0, group=0):
+    directory = path.parent
     info = directory.lstat()
     if not stat.S_ISDIR(info.st_mode) or info.st_uid != owner or info.st_gid != group or stat.S_IMODE(info.st_mode) != 0o700:
         raise PrerequisiteError("secret directory must be root-owned mode 0700")
     parent = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        descriptor = os.open("minecraft-management.env", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
         try:
             info = os.fstat(descriptor)
             if not stat.S_ISREG(info.st_mode) or info.st_uid != owner or info.st_gid != group or info.st_nlink != 1 or stat.S_IMODE(info.st_mode) != 0o600:
@@ -66,10 +71,15 @@ def validate_secret(directory=Path("/persist/secrets"), owner=0, group=0):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path, required=True)
+    args = parser.parse_args()
     try:
-        validate_mounts(mount_record("/"), mount_record("/srv/minecraft"),
-                        mount_record("/.snapshots"))
-        validate_secret()
+        config = load_config(args.config)
+        validate_mounts(mount_record("/"), mount_record(str(config.source)),
+                        mount_record(str(config.snapshot_mount)),
+                        config.source_fs_root, config.snapshot_fs_root)
+        validate_secret(config.environment_file)
     except Exception:
         print("Minecraft activation refused: prepare physical Btrfs mounts and root-only management secret; see docs/minecraft-server.md", file=sys.stderr)
         return 1

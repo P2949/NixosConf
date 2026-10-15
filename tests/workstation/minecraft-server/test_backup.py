@@ -4,6 +4,8 @@ import importlib.util
 import json
 import os
 import subprocess
+from minecraft_tools.config import MinecraftConfig
+from unittest.mock import patch
 import tempfile
 import unittest
 from collections import deque
@@ -24,6 +26,9 @@ if SPEC is None or SPEC.loader is None:
 backup = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(backup)
 
+
+TEST_CONFIG = MinecraftConfig(Path("/srv/test"), Path("/snapshots"), Path("/snapshots/test"),
+    Path("/state/test"), Path("/run/test"), "127.0.0.1", 25585, Path("/secrets/test.env"), 14, "/@test", "/@snapshots")
 
 def response(request_id, result):
     return {
@@ -1494,7 +1499,7 @@ class PersistentMetadataTests(unittest.TestCase):
     def managed_arguments(self, runner):
         source = self.root / "source"
         source.mkdir(exist_ok=True)
-        return dict(directory=self.directory, source=source, snapshot_mount=self.root,
+        return dict(connection_factory=lambda: self.fail("unexpected management connection"), directory=self.directory, source=source, snapshot_mount=self.root,
                     snapshot_root=self.snapshots, runner=runner,
                     mount_checker=lambda path: path in (source, self.root),
                     recovery_marker=self.root / "runtime" / "marker",
@@ -1522,7 +1527,7 @@ class PersistentMetadataTests(unittest.TestCase):
             self.assertTrue(restored)
             return original(*args, **kwargs)
         with patch.object(backup, "wait_for_management"), patch.object(backup, "perform_backup", side_effect=transaction), patch.object(backup, "verify_snapshot_identity", side_effect=verify):
-            backup.perform_managed_backup(**self.managed_arguments(runner))
+            backup.perform_managed_backup(**self.managed_arguments(runner), keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertEqual(state["last_attempt"]["result"], "success")
         self.assertEqual(len(manifest["snapshots"]), 1)
@@ -1538,7 +1543,7 @@ class PersistentMetadataTests(unittest.TestCase):
                                      f"2 1 0:2 / {source}/survival/database rw - {filesystem} /dev/other rw\n")
                 parser = backup.mounted_paths
                 with patch.object(backup, "mounted_paths", side_effect=lambda: parser(mountinfo)), patch.object(backup, "wait_for_management") as readiness, self.assertRaises(backup.BackupError):
-                    backup.perform_managed_backup(**self.managed_arguments(self.runner))
+                    backup.perform_managed_backup(**self.managed_arguments(self.runner), keep=14)
                 readiness.assert_not_called()
                 state, manifest = backup.load_metadata(self.directory, self.snapshots)
                 self.assertIsNone(state["pending_snapshot"])
@@ -1566,7 +1571,7 @@ class PersistentMetadataTests(unittest.TestCase):
             report = backup.live_status_report(self.state, self.manifest, **{
                 key: value for key, value in arguments.items()
                 if key in ("source", "snapshot_mount", "snapshot_root", "runner", "mount_checker")
-            })
+            }, keep=14, recovery_marker=Path("/nonexistent-test-recovery-marker"))
         self.assertEqual(report["live_verification"], "passed")
         self.assertEqual(before, {path: path.read_bytes() for path in self.directory.iterdir()})
 
@@ -1605,7 +1610,7 @@ class PersistentMetadataTests(unittest.TestCase):
                 with patch.object(backup.msmp, "open_connection", side_effect=AssertionError("must not connect")):
                     report = backup.live_status_report(self.state, self.manifest,
                         source=arguments["source"], snapshot_mount=self.root, snapshot_root=self.snapshots,
-                        runner=runner, mount_checker=check)
+                        runner=runner, mount_checker=check, keep=14, recovery_marker=Path("/nonexistent-test-recovery-marker"))
                 self.assertEqual(report["live_verification"], "passed" if kind == "valid" else "failed")
                 self.assertEqual(before, {path: path.read_bytes() for path in self.directory.iterdir()})
                 if kind == "missing":
@@ -1639,7 +1644,7 @@ class PersistentMetadataTests(unittest.TestCase):
             report = backup.live_status_report(self.state, self.manifest, **{
                 key: value for key, value in arguments.items()
                 if key in ("source", "snapshot_mount", "snapshot_root", "runner", "mount_checker")
-            })
+            }, keep=14, recovery_marker=Path("/nonexistent-test-recovery-marker"))
         self.assertEqual(report["live_verification"], "passed")
         self.assertEqual(visited, set(identities))
 
@@ -1664,7 +1669,7 @@ class PersistentMetadataTests(unittest.TestCase):
                 before = {path: path.read_bytes() for path in self.directory.iterdir()}
                 report = backup.live_status_report(self.state, self.manifest,
                     source=arguments["source"], snapshot_mount=self.root, snapshot_root=self.snapshots,
-                    runner=runner, mount_checker=(lambda path: False) if kind == "unmounted" else arguments["mount_checker"])
+                    runner=runner, mount_checker=(lambda path: False) if kind == "unmounted" else arguments["mount_checker"], keep=14, recovery_marker=Path("/nonexistent-test-recovery-marker"))
                 self.assertEqual(report["live_verification"], "failed")
                 self.assertIn("live-snapshot-verification-failed", report["problems"])
                 self.assertEqual(report["health"], "attention")
@@ -1679,7 +1684,7 @@ class PersistentMetadataTests(unittest.TestCase):
                 return subprocess.CompletedProcess(arguments, 0, stdout="ID 99 path nested\n")
             return self.runner(arguments, **kwargs)
         with patch.object(backup, "wait_for_management") as readiness, self.assertRaises(backup.BackupError):
-            backup.perform_managed_backup(**self.managed_arguments(runner))
+            backup.perform_managed_backup(**self.managed_arguments(runner), keep=14)
         readiness.assert_not_called()
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNone(state["pending_snapshot"])
@@ -1704,7 +1709,7 @@ class PersistentMetadataTests(unittest.TestCase):
             action()
             restored = True
         with patch.object(backup, "wait_for_management"), patch.object(backup, "perform_backup", side_effect=transaction), self.assertRaises(backup.BackupError) as failure:
-            backup.perform_managed_backup(**self.managed_arguments(runner))
+            backup.perform_managed_backup(**self.managed_arguments(runner), keep=14)
         self.assertEqual(failure.exception.reason, "sync-timeout")
         self.assertEqual(failure.exception.stage, "durability-sync")
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
@@ -1725,7 +1730,7 @@ class PersistentMetadataTests(unittest.TestCase):
             self.assertIsNotNone(backup.load_metadata(self.directory, self.snapshots)[0]["last_success"])
             raise backup.BackupError("stop before another capture")
         with patch.object(backup, "prepare_snapshot", side_effect=stop_after_reconciliation), self.assertRaises(backup.BackupError):
-            backup.perform_managed_backup(**self.managed_arguments(retry_runner))
+            backup.perform_managed_backup(**self.managed_arguments(retry_runner), keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNone(state["pending_snapshot"])
         self.assertEqual(state["last_success"]["snapshot_path"], str(self.path))
@@ -1741,14 +1746,14 @@ class PersistentMetadataTests(unittest.TestCase):
         args = self.managed_arguments(self.runner)
         args["connection_factory"] = fail_connection
         with patch.object(backup, "wait_for_management"), self.assertRaises(backup.BackupError):
-            backup.perform_managed_backup(**args)
+            backup.perform_managed_backup(**args, keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNotNone(state["pending_snapshot"])
         self.assertEqual(state["last_attempt"]["result"], "failed")
         self.assertNotIn(secret, json.dumps(state))
         self.assertNotIn(secret, json.dumps(manifest))
         stderr = io.StringIO()
-        with patch.object(backup.sys, "argv", ["minecraft-backup"]), patch.object(backup, "command_backup", side_effect=RuntimeError(secret)), contextlib.redirect_stderr(stderr):
+        with patch.object(backup, "load_config", return_value=TEST_CONFIG), patch.object(backup.sys, "argv", ["minecraft-backup", "--config", "/test-policy.json"]), patch.object(backup, "command_backup", side_effect=RuntimeError(secret)), contextlib.redirect_stderr(stderr):
             self.assertEqual(backup.main(), 1)
         self.assertNotIn(secret, stderr.getvalue())
 
@@ -1786,7 +1791,7 @@ class PersistentMetadataTests(unittest.TestCase):
                 factory.assert_called_once_with()
                 sleeper.assert_not_called()
                 with patch.object(backup, "wait_for_management", side_effect=error), self.assertRaises(backup.BackupError):
-                    backup.perform_managed_backup(**self.managed_arguments(self.runner))
+                    backup.perform_managed_backup(**self.managed_arguments(self.runner), keep=14)
                 state, manifest = backup.load_metadata(self.directory, self.snapshots)
                 self.assertIsNone(state["pending_snapshot"])
                 self.assertEqual(state["last_attempt"]["stage"], "readiness")
@@ -1906,17 +1911,17 @@ class PersistentMetadataTests(unittest.TestCase):
         arguments = self.managed_arguments(self.runner)
         arguments["mount_checker"] = lambda path: False
         with self.assertRaises(backup.BackupError):
-            backup.perform_managed_backup(**arguments)
+            backup.perform_managed_backup(**arguments, keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNone(state["pending_snapshot"])
         self.assertEqual(state["last_attempt"]["stage"], "environment-preflight")
-        report = backup.status_report(state, manifest, recovery_marker=self.root / "absent")
+        report = backup.status_report(state, manifest, recovery_marker=self.root / "absent", keep=14)
         self.assertIn("last-attempt-failed", report["problems"])
 
     def test_readiness_timeout_precedes_pending_plan(self):
         from unittest.mock import patch
         with patch.object(backup, "wait_for_management", side_effect=backup.BackupError("timeout")), self.assertRaises(backup.BackupError):
-            backup.perform_managed_backup(**self.managed_arguments(self.runner))
+            backup.perform_managed_backup(**self.managed_arguments(self.runner), keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNone(state["pending_snapshot"])
         self.assertEqual(state["last_attempt"]["stage"], "readiness")
@@ -1927,10 +1932,10 @@ class PersistentMetadataTests(unittest.TestCase):
         self.path.mkdir()
         self.reconcile()
         now = datetime(2026, 10, 11, 8, tzinfo=timezone.utc)
-        report = backup.status_report(self.state, self.manifest, now, self.root / "absent-marker")
+        report = backup.status_report(self.state, self.manifest, now, self.root / "absent-marker", keep=14)
         self.assertIn("success-overdue", report["problems"])
         self.manifest["snapshots"] = []
-        report = backup.status_report(self.state, self.manifest, now, self.root / "absent-marker")
+        report = backup.status_report(self.state, self.manifest, now, self.root / "absent-marker", keep=14)
         self.assertIn("last-success-not-owned", report["problems"])
         self.assertIn("established-manifest-empty", report["problems"])
 
@@ -1942,8 +1947,8 @@ class PersistentMetadataTests(unittest.TestCase):
         before = {path: path.read_bytes() for path in self.directory.iterdir()}
         output = io.StringIO()
         loader = backup.load_metadata
-        with patch.object(backup, "load_metadata", side_effect=lambda: loader(self.directory, self.snapshots)), patch.object(backup.msmp, "open_connection", side_effect=AssertionError("status must not connect")), contextlib.redirect_stdout(output):
-            backup.command_status()
+        with patch.object(backup, "load_metadata", side_effect=lambda *args, **kwargs: loader(self.directory, self.snapshots)), patch.object(backup.msmp, "open_connection", side_effect=AssertionError("status must not connect")), contextlib.redirect_stdout(output):
+            backup.command_status(TEST_CONFIG)
         self.assertEqual(before, {path: path.read_bytes() for path in self.directory.iterdir()})
         self.assertEqual(json.loads(output.getvalue())["managed_snapshot_count"], 0)
 
@@ -1980,7 +1985,7 @@ class PersistentMetadataTests(unittest.TestCase):
             self.state["last_attempt"] = dict(attempt, **{field: secret})
             backup.atomic_json(self.directory / "state.json", self.state)
             output, errors = io.StringIO(), io.StringIO()
-            with patch.object(backup.sys, "argv", ["minecraft-backup", "status"]), patch.object(backup, "load_metadata", side_effect=lambda: loader(self.directory, self.snapshots)), contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+            with patch.object(backup, "load_config", return_value=TEST_CONFIG), patch.object(backup.sys, "argv", ["minecraft-backup", "--config", "/test-policy.json", "status"]), patch.object(backup, "load_metadata", side_effect=lambda *args, **kwargs: loader(self.directory, self.snapshots)), contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
                 self.assertEqual(backup.main(), 1)
             self.assertEqual(output.getvalue(), "")
             self.assertNotIn(secret, errors.getvalue())
@@ -2050,7 +2055,7 @@ class PersistentMetadataTests(unittest.TestCase):
             return action()
         with patch.object(backup, "wait_for_management"), patch.object(backup, "atomic_json", side_effect=writer), patch.object(backup, "perform_backup", side_effect=transaction):
             with self.assertRaises(backup.BackupError):
-                backup.perform_managed_backup(**self.managed_arguments(runner))
+                backup.perform_managed_backup(**self.managed_arguments(runner), keep=14)
         self.state, self.manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertIsNotNone(self.state["pending_snapshot"])
         self.assertEqual(self.state["last_attempt"]["result"], "failed")
@@ -2113,7 +2118,7 @@ class RetentionTests(unittest.TestCase):
 
     def retain(self, runner=None, mount_checker=lambda path: False):
         backup.apply_retention(self.state, self.manifest, self.directory, self.snapshots,
-                               runner or self.runner, mount_checker)
+                               runner or self.runner, mount_checker, keep=14)
 
     def run_capture_with_pending_deletion(self, invalid_candidate=False):
         from unittest.mock import patch
@@ -2145,9 +2150,9 @@ class RetentionTests(unittest.TestCase):
         with patch.object(backup, "wait_for_management"), patch.object(backup, "perform_backup", side_effect=transaction):
             if invalid_candidate:
                 with self.assertRaises(backup.BackupError):
-                    backup.perform_managed_backup(**arguments)
+                    backup.perform_managed_backup(**arguments, keep=14)
             else:
-                backup.perform_managed_backup(**arguments)
+                backup.perform_managed_backup(**arguments, keep=14)
         state, manifest = backup.load_metadata(self.directory, self.snapshots)
         self.assertEqual(state["last_success"]["snapshot_path"], str(self.path))
         self.assertIsNone(state["pending_snapshot"])
@@ -2189,7 +2194,7 @@ class RetentionTests(unittest.TestCase):
             self.assertEqual(len(self.deleted) - before, backup.MAX_RETENTION_DELETIONS_PER_RUN)
             self.assertEqual(len(self.manifest["snapshots"]), remaining)
             durable, manifest = backup.load_metadata(self.directory, self.snapshots)
-            report = backup.status_report(durable, manifest, recovery_marker=self.directory / "absent")
+            report = backup.status_report(durable, manifest, recovery_marker=self.directory / "absent", keep=14)
             self.assertEqual(report["retention_backlog_count"], max(0, remaining - 14))
             self.assertEqual("retention-backlog" in report["problems"], remaining > 14)
         self.retain()
@@ -2207,7 +2212,7 @@ class RetentionTests(unittest.TestCase):
     def test_zero_remaining_budget_preserves_excess_records(self):
         self.populate(20)
         backup.apply_retention(self.state, self.manifest, self.directory, self.snapshots,
-                               self.runner, lambda path: False, deletion_budget=0)
+                               self.runner, lambda path: False, deletion_budget=0, keep=14)
         self.assertEqual(self.deleted, [])
         self.assertEqual(len(self.manifest["snapshots"]), 20)
 
@@ -2415,7 +2420,7 @@ class DiagnosticTests(unittest.TestCase):
         for error in errors:
             with self.subTest(type=type(error).__name__):
                 output = io.StringIO()
-                with patch.object(backup.sys, "argv", ["minecraft-backup"]), patch.object(backup, "command_backup", side_effect=error), contextlib.redirect_stderr(output):
+                with patch.object(backup, "load_config", return_value=TEST_CONFIG), patch.object(backup.sys, "argv", ["minecraft-backup", "--config", "/test-policy.json"]), patch.object(backup, "command_backup", side_effect=error), contextlib.redirect_stderr(output):
                     self.assertEqual(backup.main(), 1)
                 self.assertNotIn(canary, output.getvalue())
                 self.assertIn("reason=", output.getvalue())

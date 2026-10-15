@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import fcntl
 import json
 import stat
@@ -10,6 +11,7 @@ import re
 import subprocess
 import sys
 from contextlib import contextmanager
+from functools import partial
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,17 +20,9 @@ from uuid import UUID
 from websockets.exceptions import ConnectionClosed
 
 
-SOURCE_SUBVOLUME = Path("/srv/minecraft")
-SNAPSHOT_MOUNT = Path("/.snapshots")
-SNAPSHOT_ROOT = SNAPSHOT_MOUNT / "minecraft"
+from minecraft_tools.config import MinecraftConfig, load_config
+
 SNAPSHOT_PREFIX = "survival-"
-RECOVERY_DIRECTORY = Path("/run/minecraft-backup")
-LOCK_FILE = RECOVERY_DIRECTORY / "backup.lock"
-AUTOSAVE_RECOVERY_MARKER = (
-    RECOVERY_DIRECTORY / "autosave-needs-restore"
-)
-STATE_DIRECTORY = Path("/persist/minecraft-backup")
-KEEP_SNAPSHOTS = 14
 MAX_RETENTION_DELETIONS_PER_RUN = 4
 HEALTH_FAILURE_MESSAGE = "backup failed; inspect stage and service journal"
 HEALTH_FAILURE_STAGES = {
@@ -126,9 +120,9 @@ def reject_nested_mounts(source):
 
 @contextmanager
 def exclusive_backup_lock(
-    path: Path = LOCK_FILE,
+    path: Path = None,
 ):
-    if path == LOCK_FILE:
+    if path == None:
         prepare_recovery_directory()
     flags = os.O_RDWR | os.O_CREAT | os.O_CLOEXEC
 
@@ -175,8 +169,10 @@ def exclusive_backup_lock(
 
 
 def prepare_recovery_directory(
-    directory: Path = RECOVERY_DIRECTORY,
+    directory: Path = None,
 ) -> None:
+    if directory is None:
+        raise BackupError("explicit deployment policy values are required")
     directory.mkdir(
         mode=0o700,
         parents=True,
@@ -192,8 +188,10 @@ def prepare_recovery_directory(
 
 
 def create_autosave_recovery_marker(
-    marker: Path = AUTOSAVE_RECOVERY_MARKER,
+    marker: Path = None,
 ) -> None:
+    if marker is None:
+        raise BackupError("explicit deployment policy values are required")
     prepare_recovery_directory(
         directory=marker.parent,
     )
@@ -238,8 +236,10 @@ def create_autosave_recovery_marker(
 
 
 def autosave_recovery_needed(
-    marker: Path = AUTOSAVE_RECOVERY_MARKER,
+    marker: Path = None,
 ) -> bool:
+    if marker is None:
+        raise BackupError("explicit deployment policy values are required")
     try:
         status = marker.lstat()
     except FileNotFoundError:
@@ -260,8 +260,10 @@ def autosave_recovery_needed(
 
 
 def clear_autosave_recovery_marker(
-    marker: Path = AUTOSAVE_RECOVERY_MARKER,
+    marker: Path = None,
 ) -> None:
+    if marker is None:
+        raise BackupError("explicit deployment policy values are required")
     try:
         marker.unlink()
     except FileNotFoundError:
@@ -273,9 +275,11 @@ def clear_autosave_recovery_marker(
 
 
 def snapshot_destination(
-    snapshot_root: Path = SNAPSHOT_ROOT,
+    snapshot_root: Path = None,
     now: datetime | None = None,
 ) -> Path:
+    if snapshot_root is None:
+        raise BackupError("explicit deployment policy values are required")
     if now is None:
         now = datetime.now(timezone.utc)
 
@@ -406,14 +410,16 @@ def verify_source_completeness(source, runner=subprocess.run,
 
 
 def prepare_snapshot(
-    source: Path = SOURCE_SUBVOLUME,
-    snapshot_mount: Path = SNAPSHOT_MOUNT,
-    snapshot_root: Path = SNAPSHOT_ROOT,
+    source: Path = None,
+    snapshot_mount: Path = None,
+    snapshot_root: Path = None,
     now: datetime | None = None,
     runner=subprocess.run,
     mount_checker=is_mountpoint,
     timeout: float = DEFAULT_PREFLIGHT_TIMEOUT,
 ) -> SnapshotPlan:
+    if source is None or snapshot_mount is None or snapshot_root is None:
+        raise BackupError("explicit deployment policy values are required")
     if source.is_symlink():
         raise BackupError(
             f"Minecraft source must not be a symbolic link: {source}", reason="mount-missing"
@@ -549,9 +555,11 @@ def create_readonly_snapshot(
 
 
 def restore_autosave_with_fresh_connection(
-    connection_factory=msmp.open_connection,
+    connection_factory=None,
     rpc_timeout: float = DEFAULT_RPC_TIMEOUT,
 ) -> None:
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
     with connection_factory() as websocket:
         recovery_session = msmp.MsmpSession(websocket)
         recovery_session.set_autosave(
@@ -561,10 +569,14 @@ def restore_autosave_with_fresh_connection(
 
 
 def recover_abandoned_autosave(
-    marker: Path = AUTOSAVE_RECOVERY_MARKER,
-    connection_factory=msmp.open_connection,
+    marker: Path = None,
+    connection_factory=None,
     rpc_timeout: float = DEFAULT_RPC_TIMEOUT,
 ) -> bool:
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
+    if marker is None:
+        raise BackupError("explicit deployment policy values are required")
     if not autosave_recovery_needed(marker):
         return False
 
@@ -582,11 +594,15 @@ def recover_abandoned_autosave(
 
 def perform_backup(
     action=create_readonly_snapshot,
-    connection_factory=msmp.open_connection,
+    connection_factory=None,
     rpc_timeout: float = DEFAULT_RPC_TIMEOUT,
     save_timeout: float = DEFAULT_SAVE_TIMEOUT,
-    recovery_marker: Path = AUTOSAVE_RECOVERY_MARKER,
+    recovery_marker: Path = None,
 ):
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
+    if recovery_marker is None:
+        raise BackupError("explicit deployment policy values are required")
     recover_abandoned_autosave(
         marker=recovery_marker,
         connection_factory=connection_factory,
@@ -642,20 +658,24 @@ def perform_backup(
 
 
 def perform_snapshot_backup(
-    source: Path = SOURCE_SUBVOLUME,
-    snapshot_mount: Path = SNAPSHOT_MOUNT,
-    snapshot_root: Path = SNAPSHOT_ROOT,
+    source: Path = None,
+    snapshot_mount: Path = None,
+    snapshot_root: Path = None,
     now: datetime | None = None,
     mount_checker=is_mountpoint,
     preflight_runner=subprocess.run,
     snapshot_runner=subprocess.run,
     preflight_timeout: float = DEFAULT_PREFLIGHT_TIMEOUT,
     snapshot_timeout: float = DEFAULT_SNAPSHOT_TIMEOUT,
-    connection_factory=msmp.open_connection,
+    connection_factory=None,
     rpc_timeout: float = DEFAULT_RPC_TIMEOUT,
     save_timeout: float = DEFAULT_SAVE_TIMEOUT,
-    recovery_marker: Path = AUTOSAVE_RECOVERY_MARKER,
+    recovery_marker: Path = None,
 ):
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
+    if source is None or snapshot_mount is None or snapshot_root is None or recovery_marker is None:
+        raise BackupError("explicit deployment policy values are required")
     recover_abandoned_autosave(
         marker=recovery_marker,
         connection_factory=connection_factory,
@@ -875,7 +895,9 @@ def atomic_json(path, value):
             os.unlink(temporary)
 
 
-def load_metadata(directory=STATE_DIRECTORY, snapshot_root=SNAPSHOT_ROOT, create=False):
+def load_metadata(directory=None, snapshot_root=None, create=False):
+    if directory is None or snapshot_root is None:
+        raise BackupError("explicit deployment policy values are required")
     exists = secure_state_directory(directory, create=create)
     state = {"schema_version": 2, "pending_snapshot": None, "pending_deletion": None, "last_attempt": None,
              "last_success": None, "last_retention": None}
@@ -899,8 +921,10 @@ def verify_snapshot_root(snapshot_root, mount_checker):
         raise BackupError("snapshot root must be an owned unmounted mode 0700 directory")
 
 
-def verify_snapshot_identity(path, filesystem_uuid, snapshot_root=SNAPSHOT_ROOT,
+def verify_snapshot_identity(path, filesystem_uuid, snapshot_root=None,
                              runner=subprocess.run, mount_checker=is_mountpoint):
+    if snapshot_root is None:
+        raise BackupError("explicit deployment policy values are required")
     checked_snapshot_path(str(path), snapshot_root)
     verify_snapshot_root(snapshot_root, mount_checker)
     if path.is_symlink() or not path.is_dir() or mount_checker(path):
@@ -978,10 +1002,12 @@ def reconcile_deletion(state, manifest, directory, snapshot_root, runner, mount_
     atomic_json(directory / "state.json", state)
 
 
-def apply_retention(state, manifest, directory=STATE_DIRECTORY,
-                    snapshot_root=SNAPSHOT_ROOT, runner=subprocess.run,
-                    mount_checker=is_mountpoint, keep=KEEP_SNAPSHOTS,
+def apply_retention(state, manifest, directory=None,
+                    snapshot_root=None, runner=subprocess.run,
+                    mount_checker=is_mountpoint, keep=None,
                     deletion_budget=MAX_RETENTION_DELETIONS_PER_RUN):
+    if directory is None or snapshot_root is None or keep is None:
+        raise BackupError("explicit deployment policy values are required")
     validate_metadata(state, manifest, snapshot_root)
     if type(keep) is not int or keep < 1:
         raise BackupError("retention count must be a positive integer")
@@ -1028,11 +1054,17 @@ def sync_snapshot_filesystem(snapshot_mount, runner=subprocess.run):
     print(f"snapshot filesystem sync completed in {time.monotonic() - started:.3f} seconds", flush=True)
 
 
-def perform_managed_backup(directory=STATE_DIRECTORY, source=SOURCE_SUBVOLUME,
-                           snapshot_mount=SNAPSHOT_MOUNT, snapshot_root=SNAPSHOT_ROOT,
+def perform_managed_backup(directory=None, source=None,
+                           snapshot_mount=None, snapshot_root=None,
                            runner=subprocess.run, mount_checker=is_mountpoint,
-                           recovery_marker=AUTOSAVE_RECOVERY_MARKER,
-                           connection_factory=msmp.open_connection, now=None):
+                           recovery_marker=None,
+                           connection_factory=None, now=None, keep=None):
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
+    if directory is None or source is None or snapshot_mount is None or snapshot_root is None or recovery_marker is None:
+        raise BackupError("explicit deployment policy values are required")
+    if type(keep) is not int or keep < 1:
+        raise BackupError("retention count must be a positive integer")
     recover_abandoned_autosave(marker=recovery_marker, connection_factory=connection_factory)
     state, manifest = load_metadata(directory, snapshot_root, create=True)
     started = utc_now()
@@ -1054,7 +1086,7 @@ def perform_managed_backup(directory=STATE_DIRECTORY, source=SOURCE_SUBVOLUME,
         deletion_budget = MAX_RETENTION_DELETIONS_PER_RUN
         if state["pending_deletion"] is not None:
             deletion_budget -= apply_retention(state, manifest, directory, snapshot_root, runner, mount_checker,
-                                               deletion_budget=1)
+                                               deletion_budget=1, keep=keep)
         stage = "preflight"
         plan = prepare_snapshot(source, snapshot_mount, snapshot_root, now, runner, mount_checker)
         stage = "readiness"
@@ -1074,7 +1106,7 @@ def perform_managed_backup(directory=STATE_DIRECTORY, source=SOURCE_SUBVOLUME,
         atomic_json(directory / "state.json", state)
         stage = "retention"
         apply_retention(state, manifest, directory, snapshot_root, runner, mount_checker,
-                        deletion_budget=deletion_budget)
+                        deletion_budget=deletion_budget, keep=keep)
         return plan.destination
     except Exception as exc:
         # Reload durable state: failure after replace may already have published it.
@@ -1088,8 +1120,10 @@ def perform_managed_backup(directory=STATE_DIRECTORY, source=SOURCE_SUBVOLUME,
                           reason=diagnostic_reason(exc, stage), stage=stage) from exc
 
 
-def wait_for_management(connection_factory=msmp.open_connection, timeout=90.0,
+def wait_for_management(connection_factory=None, timeout=90.0,
                         clock=time.monotonic, sleeper=time.sleep):
+    if connection_factory is None:
+        raise BackupError("explicit management connection is required")
     deadline = clock() + timeout
     while clock() < deadline:
         try:
@@ -1124,7 +1158,11 @@ def wait_for_management(connection_factory=msmp.open_connection, timeout=90.0,
     raise BackupError("management readiness timed out", reason="management-unavailable")
 
 
-def status_report(state, manifest, now=None, recovery_marker=AUTOSAVE_RECOVERY_MARKER):
+def status_report(state, manifest, now=None, recovery_marker=None, keep=None):
+    if type(keep) is not int or keep < 1:
+        raise BackupError("retention count must be a positive integer")
+    if recovery_marker is None:
+        raise BackupError("explicit deployment policy values are required")
     now = now or datetime.now(timezone.utc)
     problems = []
     success = state["last_success"]
@@ -1132,7 +1170,7 @@ def status_report(state, manifest, now=None, recovery_marker=AUTOSAVE_RECOVERY_M
     if state["pending_snapshot"] is not None:
         protected.add(state["pending_snapshot"]["path"])
     ordered = sorted(manifest["snapshots"], key=lambda entry: (entry["created_at"], entry["path"]))
-    backlog = sum(record["path"] not in protected for record in ordered[:-KEEP_SNAPSHOTS])
+    backlog = sum(record["path"] not in protected for record in ordered[:-keep])
     if backlog:
         problems.append("retention-backlog")
     age = None
@@ -1168,10 +1206,12 @@ def status_report(state, manifest, now=None, recovery_marker=AUTOSAVE_RECOVERY_M
             "retention_backlog_count": backlog, "state": state}
 
 
-def live_status_report(state, manifest, source=SOURCE_SUBVOLUME,
-                       snapshot_mount=SNAPSHOT_MOUNT, snapshot_root=SNAPSHOT_ROOT,
-                       runner=subprocess.run, mount_checker=is_mountpoint):
-    report = status_report(state, manifest)
+def live_status_report(state, manifest, source=None,
+                       snapshot_mount=None, snapshot_root=None,
+                       runner=subprocess.run, mount_checker=is_mountpoint, recovery_marker=None, keep=None):
+    if source is None or snapshot_mount is None or snapshot_root is None:
+        raise BackupError("explicit deployment policy values are required")
+    report = status_report(state, manifest, recovery_marker=recovery_marker, keep=keep)
     try:
         for path in (source, snapshot_mount):
             if path.is_symlink() or not path.is_dir() or not mount_checker(path):
@@ -1203,9 +1243,11 @@ def live_status_report(state, manifest, source=SOURCE_SUBVOLUME,
     return report
 
 
-def command_status(live=False):
-    state, manifest = load_metadata()
-    report = live_status_report(state, manifest) if live else status_report(state, manifest)
+def command_status(config: MinecraftConfig, live=False):
+    state, manifest = load_metadata(config.state_directory, config.snapshot_root)
+    options = dict(recovery_marker=config.runtime_directory / "autosave-needs-restore", keep=config.keep_snapshots)
+    report = live_status_report(state, manifest, source=config.source, snapshot_mount=config.snapshot_mount,
+                               snapshot_root=config.snapshot_root, **options) if live else status_report(state, manifest, **options)
     print(json.dumps(report, sort_keys=True, indent=2))
     return 1 if report["problems"] else 0
 
@@ -1217,22 +1259,26 @@ def require_root() -> None:
         )
 
 
-def command_backup() -> None:
+def command_backup(config: MinecraftConfig) -> None:
     require_root()
 
-    with exclusive_backup_lock():
-        snapshot = perform_managed_backup()
+    with exclusive_backup_lock(config.runtime_directory / "backup.lock"):
+        snapshot = perform_managed_backup(directory=config.state_directory, source=config.source,
+            snapshot_mount=config.snapshot_mount, snapshot_root=config.snapshot_root,
+            recovery_marker=config.runtime_directory / "autosave-needs-restore",
+            connection_factory=partial(msmp.open_connection, config), keep=config.keep_snapshots)
 
     print(
         f"created read-only Minecraft snapshot: {snapshot}"
     )
 
 
-def command_recover_autosave() -> None:
+def command_recover_autosave(config: MinecraftConfig) -> None:
     require_root()
 
-    with exclusive_backup_lock():
-        recovered = recover_abandoned_autosave()
+    with exclusive_backup_lock(config.runtime_directory / "backup.lock"):
+        recovered = recover_abandoned_autosave(marker=config.runtime_directory / "autosave-needs-restore",
+            connection_factory=partial(msmp.open_connection, config))
 
     if recovered:
         print(
@@ -1241,21 +1287,21 @@ def command_recover_autosave() -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(usage="minecraft-backup --config FILE [status [--live]|recover-autosave]")
+    parser.add_argument("--config", type=Path, required=True)
+    parser.add_argument("command", nargs="?", choices=("status", "recover-autosave"), default=None)
+    parser.add_argument("--live", action="store_true")
+    args = parser.parse_args()
+    if args.live and args.command != "status":
+        parser.error("--live requires status")
     try:
-        if len(sys.argv) == 1:
-            command_backup()
-        elif sys.argv[1:] == ["status"]:
-            return command_status()
-        elif sys.argv[1:] == ["status", "--live"]:
-            return command_status(live=True)
-        elif sys.argv[1:] in (["--help"], ["-h"]):
-            print("usage: minecraft-backup [status [--live]|recover-autosave]")
-        elif sys.argv[1:] == ["recover-autosave"]:
-            command_recover_autosave()
+        config = load_config(args.config)
+        if args.command == "status":
+            return command_status(config, live=args.live)
+        if args.command == "recover-autosave":
+            command_recover_autosave(config)
         else:
-            raise BackupError(
-                "usage: minecraft-backup [status [--live]|recover-autosave]"
-            )
+            command_backup(config)
 
     except Exception as exc:
         stage = exc.stage if isinstance(exc, BackupError) and exc.stage in HEALTH_FAILURE_STAGES else "operation"
