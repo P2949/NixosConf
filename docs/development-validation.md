@@ -27,6 +27,73 @@ Steam FHS environment, using Epic's bundled compiler and sysroot. Do not
 substitute ambient Nix compilers. Engine/project paths and target names belong
 to the actual project; generated build products remain disposable.
 
+## Android Studio
+
+Home Manager's `development/android.nix` owns `android-studio` from the existing
+pinned unstable input and `android-tools` from stable Nixpkgs. The newer stable
+Studio channel supports the real project's AGP 9.3 toolchain; stable Nixpkgs'
+Panda 4 supports only AGP through 9.2. Studio runs in the Nixpkgs FHS environment
+and manages a writable SDK at `~/Android/Sdk` through **Tools → SDK Manager**.
+Nix pins the IDE and shell
+ADB; projects pin Gradle through their wrapper and select their Android Gradle
+Plugin/dependencies. Studio's bundled JDK runs the IDE; use the project's
+compatible Gradle JDK in Studio and a project dev shell for command-line builds.
+The host has KVM membership for direct emulator acceleration.
+
+The Android feature sets `ANDROID_USER_HOME=~/.android` and
+`ANDROID_AVD_HOME=~/.android/avd` in the user session and Studio launcher.
+Current SDK libraries otherwise follow `XDG_CONFIG_HOME` into `.config/.android`,
+while the emulator's default search still uses `.android`. Explicit paths keep
+SDK tools, Studio and the emulator on the retained identity/AVD tree. The SDK
+itself remains writable and selected through SDK Manager.
+
+Create Java projects using a Views-based template with **Language: Java**, under
+`~/Development/Android/<project>`. The Compose templates use Kotlin. Choose SDK
+components required by the actual course/project. The Nix SDK licence setting
+allows Nix-built SDK packages; a Studio-managed SDK still uses SDK Manager's
+own licence prompts. No SDK installation path is forced globally.
+
+The [persistence contract](persistence-contract.md) owns retained paths.
+Google settings/plugins use stable parents so IDE version changes retain state;
+this does not authorize persisting other Google applications without an audit.
+Gradle's mixed user directory is initially retained, including expensive
+downloads. Audit its real children after normal use before introducing cleanup.
+Keep Android Studio caches under ephemeral `~/.cache/Google`.
+
+For deployment and physical acceptance:
+
+1. Close Studio, Gradle daemons and emulators. Before the first normal reboot,
+   copy any existing root-local SDK, Google settings/user data and `.gradle`
+   into their declared `/persist/home/p2949/` backing paths, retaining metadata
+   and verifying equality. Do not overwrite differing backing state blindly.
+   If SDK tools have already used `.config/.android`, migrate its signing key,
+   AVDs and other authoritative state into `.android` with collision/identity
+   checks and updated AVD paths. Preserve the existing debug signing key.
+2. Build/check the desktop and stage with
+   `sudo nixos-rebuild boot --flake '.#desktop'`; use a controlled reboot for
+   the new persistence mounts. Verify each new bind mount via
+   `/proc/self/mountinfo`, including its persistent Btrfs root and ownership.
+   A requested live installation must first quiesce affected applications,
+   verify the backing copy and inspect a native activation preview. Verify
+   the live mounts and retained data after switching; reboot acceptance remains
+   separate. Live installation permits the project check before that reboot.
+3. Launch `android-studio`, select `~/Android/Sdk`, create/open the real Java
+   project and complete Gradle sync/build. Create an AVD in Device Manager and
+   run/debug the app with KVM acceleration. The SDK emulator binary belongs
+   inside Studio's FHS environment; a bare host invocation may fail to link.
+4. Exit cleanly and capture retained-file hashes/metadata outside Git. Reboot
+   normally again; reopen the project, verify SDK/AVD/settings retention and
+   build/run again without reinstalling the SDK or system image. Confirm IDE
+   cache reset separately from retained state.
+5. Audit actual `.android`, SDK, Google and Gradle subtrees. Record unexercised
+   workflows explicitly and keep credentials/private receipts outside Git.
+
+Upstream references: [Nixpkgs Android support](https://github.com/NixOS/nixpkgs/blob/nixos-26.05/doc/languages-frameworks/android.section.md)
+and [Android Studio configuration directories](https://developer.android.com/studio/troubleshoot#directories).
+Check the [Studio/AGP compatibility table](https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility)
+when selecting an IDE for a project; do not downgrade a project's pinned
+toolchain to make an older IDE pass acceptance.
+
 ## Interactive desktop VM
 
 Build the real desktop configuration with its bootloader variant:

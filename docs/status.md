@@ -50,6 +50,24 @@ evidence are recorded in PR metadata.
 Ordinary desktop changes may proceed while the immutable benchmark
 control and experiment admission gates remain protected.
 
+Android Studio integration is accepted; source integration is tracked by
+[PR #28](https://github.com/P2949/NixosConf/pull/28). A dedicated Home Manager
+feature owns Studio's stable channel from the existing pinned unstable input,
+shell ADB and canonical Android user/AVD paths. Studio manages the writable SDK;
+projects belong under `Development/Android`. See the
+[Android workflow](development-validation.md#android-studio) and
+[state audit](ephemeral-state-audit.md).
+
+The real Java JournalApp project passes Gradle sync, debug APK/unit-test builds,
+hardware-accelerated API 37 emulation, rendered activity and debugger attachment.
+A normal root-reset reboot preserves SDK/AVD/settings, ADB/debug signing keys,
+project and sampled Gradle state; IDE/Android cache probes reset. Fresh Studio
+sync, build reuse, retained AVD snapshot/app and repeat cold launch/debugging pass
+after reboot. Private roots remain user-owned 0700. Gradle's mixed directory and
+expensive SDK/AVD data are deliberately retained; additional cleanup requires
+separate classification. Third-party plugins and physical USB-device workflows
+remain unexercised. Exact source/CI and merge receipts belong to PR metadata.
+
 Further optimization investigation is intentionally deferred. General
 repository organization is finished under the [repository policy](repository-policy.md).
 Generated custom-module documentation and the [interactive desktop bootloader

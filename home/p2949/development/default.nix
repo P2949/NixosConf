@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./android.nix
     ./blender.nix
     ./unreal.nix
     ./unity.nix
