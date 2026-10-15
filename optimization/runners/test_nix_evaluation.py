@@ -403,6 +403,19 @@ class EvaluationEvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "memory policy"):
                 runner.verify(output)
 
+    def test_reindexed_private_configuration_change_is_rejected(self):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            self.experiment(Path(directory)) as output,
+        ):
+            path = next((output / "raw").glob("*.receipt.json"))
+            value = json.loads(path.read_text())
+            value["environment"]["NIX_CONF_DIR"] = "/etc/nix"
+            path.write_text(json.dumps(value))
+            self.reindex(output, [str(path.relative_to(output))])
+            with self.assertRaisesRegex(ValueError, "environment identity"):
+                runner.verify(output)
+
 
 if __name__ == "__main__":
     unittest.main()
