@@ -275,3 +275,25 @@ path registration, rather than mounting the host store, so its Perl absence
 check describes the guest closure. Build/runtime evidence from this
 VM establishes functional behavior only; it does not establish a desktop
 performance or maintenance benefit, and does not authorize physical adoption.
+
+## AArch64 package execution through binfmt
+
+```bash
+nix build .#aarch64-binfmt --no-write-lock-file --print-build-logs
+```
+
+This developer VM cross-builds GNU Hello for AArch64 using the pinned Nixpkgs
+cross package set. It checks the native and foreign ELF machine headers, then
+executes both package paths directly on an x86_64 guest. The guest alone enables
+`boot.binfmt.emulatedSystems = [ "aarch64-linux" ]`; the kernel dispatches the
+foreign binary through QEMU user emulation.
+
+The negative phase unregisters the guest's AArch64 rule and requires an explicit
+`Exec format error`, while native execution continues. Restarting
+`systemd-binfmt` must restore foreign execution. This distinguishes transparent
+kernel dispatch from invoking QEMU manually or accidentally testing a native
+binary. Registration changes affect only the disposable VM.
+
+Use this for cross-architecture packaging and execution validation. Emulated
+runtime is not comparable to native performance and is never benchmark evidence.
+No emulated platform is added to the physical workstation or benchmark control.
