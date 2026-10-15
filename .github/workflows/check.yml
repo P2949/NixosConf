@@ -27,5 +27,17 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Provide memory headroom for NixOS image checks
+        run: |
+          sudo fallocate -l 12G /mnt/nix-checks.swap
+          sudo chmod 600 /mnt/nix-checks.swap
+          sudo mkswap /mnt/nix-checks.swap
+          sudo swapon /mnt/nix-checks.swap
+          free -h
+          df -h / /mnt
+
       - name: Run flake checks
-        run: nix flake check --no-write-lock-file --print-build-logs
+        run: nix flake check --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2
+
+      - name: Build desktop system
+        run: nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2
