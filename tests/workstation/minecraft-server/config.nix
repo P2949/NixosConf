@@ -297,6 +297,7 @@ assert builtins.elem "minecraft" config.users.users.${username}.extraGroups;
 assert builtins.length managementClients == 1;
 assert managementClient.name == "minecraft-msmp";
 assert builtins.length backupClients == 1;
+assert backupClient.name == "minecraft-backup";
 
 pkgs.runCommand "check-minecraft-server-config"
   {
