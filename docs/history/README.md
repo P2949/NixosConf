@@ -29,3 +29,16 @@ git show 36e3d777d5c88c35ad94a7d3fb6a181b587bc393:docs/prism-launcher-plan.md
 ```
 
 Permanent application classification is in the [state audit](../ephemeral-state-audit.md).
+
+Minecraft local backup/recovery and accepted performance stack completed through
+[PR #23](https://github.com/P2949/NixosConf/pull/23) and
+[PR #24](https://github.com/P2949/NixosConf/pull/24). The immutable
+`minecraft-server-qualified-2026-10-12` tag preserves the qualified source;
+[PR #26](https://github.com/P2949/NixosConf/pull/26) records maintenance-mode
+hardening. Current procedures remain in the [Minecraft runbook](../minecraft-server.md).
+
+Android Studio integration completed through
+[PR #28](https://github.com/P2949/NixosConf/pull/28). Exact reboot, SDK/AVD,
+build/emulator and debugger acceptance belongs to its PR metadata. Current
+operations are in the [development guide](../development-validation.md#android-studio)
+and [state audit](../ephemeral-state-audit.md).
