@@ -121,6 +121,25 @@ in
     };
   };
   checks = {
+    nix-evaluation-gc-consumers =
+      pkgs.runCommand "check-nix-evaluation-gc-consumers" { nativeBuildInputs = [ pkgs.gnugrep ]; }
+        ''
+          export NIX_REMOTE=local
+          export NIX_STATE_DIR="$TMPDIR/nix-state"
+          export NIX_STORE_DIR="$TMPDIR/nix-store"
+          export NIX_LOG_DIR="$TMPDIR/nix-log"
+          LD_DEBUG=libs ${gcExperiment.stockCommand}/bin/nix-evaluation --version > stock.version 2> stock.loader
+          LD_DEBUG=libs ${gcExperiment.candidateCommand}/bin/nix-evaluation --version > candidate.version 2> candidate.loader
+          grep -F 'calling init: ${gcExperiment.stock}/lib/libgc.so.1' stock.loader
+          grep -F 'calling init: ${gcExperiment.candidate}/lib/libgc.so.1' candidate.loader
+          cmp stock.version candidate.version
+          test "$(cat stock.version)" = 'nix (Nix) ${gcExperiment.consumer.version}'
+          ${gcExperiment.stockCommand}/bin/nix-evaluation --extra-experimental-features nix-command eval --raw --expr "builtins.toString (builtins.foldl' (a: b: a + b) 0 (builtins.genList (x: x) 100000))" > stock.evaluation
+          ${gcExperiment.candidateCommand}/bin/nix-evaluation --extra-experimental-features nix-command eval --raw --expr "builtins.toString (builtins.foldl' (a: b: a + b) 0 (builtins.genList (x: x) 100000))" > candidate.evaluation
+          cmp stock.evaluation candidate.evaluation
+          test "$(cat stock.evaluation)" = 4999950000
+          touch "$out"
+        '';
     optimization-control-inputs =
       assert toString recoverySystem.config.system.build.isoImage == stock.recoveryIso;
       assert inputs.nixpkgs.rev == stock.nixpkgsRevision;

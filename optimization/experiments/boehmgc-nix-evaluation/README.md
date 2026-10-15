@@ -78,6 +78,11 @@ requires the declared process bindings and ordering, checks every runtime
 interval against the campaign's initial state, and reconstructs pilot sizing
 and measurement-only statistics. Use the recorded runner version and retain the
 realized input store paths for verification.
+Runtime-policy and statistics module hashes bind the verification policy as
+well as the runner itself. The `nix-evaluation-gc-consumers` flake check builds
+both GC variants, confirms their actual loader selections and compares a small
+allocation-heavy Nix expression in a disposable local store. This is a
+functional check; the pinned repository remains the measurement workload.
 
 The experiment still requires an independent pilot and randomized paired
 measurements on the unchanged physical benchmark control. A successful

@@ -15,6 +15,7 @@ import subprocess
 import sys
 
 import runtime
+import paired_statistics
 from paired_statistics import balanced_order, sample_plan, summarize
 
 
@@ -356,6 +357,16 @@ def run(spec_path, build_path, output, repository):
             "runner": {
                 "path": str(Path(__file__).resolve()),
                 "sha256": digest(Path(__file__)),
+                "supportModules": {
+                    name: {
+                        "path": str(Path(module.__file__).resolve()),
+                        "sha256": digest(Path(module.__file__)),
+                    }
+                    for name, module in {
+                        "runtime": runtime,
+                        "statistics": paired_statistics,
+                    }.items()
+                },
             },
             "measuredInputs": measured_inputs,
         }
@@ -601,6 +612,11 @@ def verify(output):
         raise ValueError("run identity mismatch")
     if execution["runner"]["sha256"] != digest(Path(__file__)):
         raise ValueError("verification requires the recorded runner version")
+    for name, module in {"runtime": runtime, "statistics": paired_statistics}.items():
+        if execution["runner"]["supportModules"][name]["sha256"] != digest(
+            Path(module.__file__)
+        ):
+            raise ValueError("verification support module identity mismatch")
     measured = execution["measuredInputs"]
     libraries = validate_libraries(build)
     consumer = (

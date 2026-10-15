@@ -416,6 +416,21 @@ class EvaluationEvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "environment identity"):
                 runner.verify(output)
 
+    def test_reindexed_verification_module_change_is_rejected(self):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            self.experiment(Path(directory)) as output,
+        ):
+            path = output / "execution.json"
+            value = json.loads(path.read_text())
+            value["runner"]["supportModules"]["runtime"]["sha256"] = (
+                "changed-policy-code"
+            )
+            path.write_text(json.dumps(value))
+            self.reindex(output, ["execution.json"])
+            with self.assertRaisesRegex(ValueError, "support module identity"):
+                runner.verify(output)
+
 
 if __name__ == "__main__":
     unittest.main()
