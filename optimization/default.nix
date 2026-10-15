@@ -7,6 +7,7 @@
 }:
 let
   stock = import ./control/stock.nix;
+  gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   specification = model.normalizeSpec (import ./experiments/zstd-skylake/spec.nix);
   corpus = import ./corpora/silesia.nix { inherit pkgs; };
@@ -30,6 +31,8 @@ let
 in
 {
   packages = {
+    boehmgc-stock = gcExperiment.stock;
+    boehmgc-cpu-target = gcExperiment.candidate;
     zstd-stock = pkgs.zstd;
     zstd-cpu-target = candidate;
     silesia-corpus = corpus;

@@ -1,0 +1,32 @@
+# Boehm GC CPU targeting for Nix evaluation
+
+The candidate changes only `-march=skylake -mtune=skylake` on Nix's Boehm GC
+8.2.12 dependency. The stock package retains Nix's large configuration and
+1,048,576-entry initial mark stack. It does not change the workstation, Nix
+version, collector policy, or the existing zstd experiment.
+
+Candidate selection comes from the real repository evaluation workload:
+
+```sh
+nix flake check --no-build --no-write-lock-file --no-eval-cache
+```
+
+A complete discovery profile of clean source
+`658c02f637f488bf02cd6907b51718b52e133f54` captured 9,085 CPU-cycle samples with no
+reported losses. GC accounted for 44.90% of sampled cycles and `libnixexpr` for
+36.17%; GC marking functions were the largest individual entries. The profiled
+command took 114.31 seconds and peaked at 17,864,860 KiB RSS. These observations
+include profiling overhead and ordinary productive desktop activity. They
+establish relevance, not candidate performance or a frozen-control result.
+
+Build the isolated libraries with:
+
+```sh
+nix build .#boehmgc-stock .#boehmgc-cpu-target --no-link --print-out-paths
+```
+
+The experiment still requires an immutable evaluation-input corpus, consumer
+identity and loaded-library verification, source/build manifests, and an
+independent pilot followed by randomized paired measurements on the unchanged
+physical benchmark control. A successful package build is not an improvement
+verdict or authorization to adopt the candidate.
