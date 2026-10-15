@@ -124,6 +124,13 @@
   };
 
   packages = {
+    minecraft-staging = import ./workstation/minecraft-staging {
+      inherit inputs pkgs desktopSystem;
+    };
+    minecraft-staging-interactive =
+      (import ./workstation/minecraft-staging {
+        inherit inputs pkgs desktopSystem;
+      }).driverInteractive;
     granular-impermanence = import ./storage/granular-impermanence.nix {
       inherit inputs pkgs;
     };

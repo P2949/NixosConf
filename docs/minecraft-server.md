@@ -662,6 +662,91 @@ on disposable subvolumes; do not replace a healthy production world for testing.
    use `btrfs subvolume delete --commit-after` on that single verified target.
    Never recursively delete the top-level tree or the managed snapshot directory.
 
+## Disposable staging before upgrades
+
+The staging environment is a declarative NixOS container inside a disposable
+validation VM. It inherits the selected server package, Fabric loader, mod farm
+and mod configuration from the evaluated desktop in the current checkout.
+Production paths, secrets, backup units and world mounts are not imported.
+The container has private networking, no forwarded ports or host data bindings,
+and does not start with its host VM. Validation starts it explicitly; its game
+service starts only inside that container. Stopping the container discards its
+state. No staging service or closure is added to ordinary desktop generations.
+
+Run the automated baseline or candidate gate:
+
+```sh
+nix build .#minecraft-staging --no-write-lock-file --no-link --print-build-logs
+```
+
+This boots the exact selected versions, verifies loaded mods, authenticates to
+loopback MSMP, and connects an actual synthetic player over the host VM's private
+veth. It checks a flushed online save, clean stop, world/player files, network
+isolation and state disposal. It also exports that stopped synthetic world and
+imports it into a fresh container, then logs in and saves again. The observer VM
+must fail to reach game/management through the host or a routed private address.
+The public fixture credential and offline login policy exist only inside this
+isolated environment. These checks establish functional staging behavior, not
+Minecraft performance or real-account authentication acceptance.
+
+For an update, create an isolated worktree/branch, change the explicit game,
+Fabric or mod pins there and run the staging output from that worktree. Preserve
+immutable URLs/hashes and inspect the resulting exact version inventory. This
+substitutes candidates declaratively without activating the desktop. Qualify the
+current production versions first; only then interpret a candidate result.
+The client probe supports the verified Minecraft 26.3 wire protocol (777).
+Another protocol requires an explicit codec update and validation; an unsupported
+protocol fails the gate rather than silently testing another version.
+
+For interactive inspection, build and run the separate driver:
+
+```sh
+task_staging_driver="$(nix build .#minecraft-staging-interactive \
+  --no-write-lock-file --no-link --print-out-paths)"
+task_staging_work="$(mktemp -d)"
+cd "$task_staging_work"
+QEMU_OPTS='-display none' "$task_staging_driver/bin/nixos-test-driver"
+```
+
+At its Python prompt, `test_script()` runs the full automated gate. To keep a
+container open instead, call `start_all()`, wait for `multi-user.target`, then
+`machine.succeed("nixos-container start minecraft-staging")`. Inspect it with
+`machine.succeed("nixos-container run minecraft-staging -- COMMAND")`.
+The server lives at `/srv/minecraft-staging/staging` inside the container;
+its game log is `logs/latest.log`, because nix-minecraft uses tmux. MSMP is on
+container loopback, with its synthetic credential at
+`/run/minecraft-staging/management.env`. Stop it with
+`machine.succeed("nixos-container stop minecraft-staging")`; `exit()` cleans up
+the VM. A subsequent start creates fresh state.
+
+### Private world-copy workflow
+
+Sensitive world-format changes need a private writable clone of an
+identity-checked, read-only recovery point. Follow the
+[recovery-point identity checks](#restore-a-recovery-point-into-production), then
+archive only `SNAPSHOT/survival/world`, not the whole server directory or
+`server.properties`. Keep this private archive outside Git and the Nix store.
+The original recovery point remains read-only and production remains untouched.
+
+In the interactive driver, upload that archive with
+`machine.copy_from_host("/private/world.tar", "/tmp/staging-world.tar")`.
+After the container reaches initialized MSMP status, stop its game service with
+`systemctl stop minecraft-server-staging.service` inside the container. Move its
+fresh `world` directory to an unused `world.generated` name, create an empty
+`world`, and extract the archive there. The host-VM-to-container transfer is:
+
+```python
+machine.succeed("nixos-container run minecraft-staging -- tar -C /srv/minecraft-staging/staging/world -xf - < /tmp/staging-world.tar")
+```
+
+Set ownership of the imported directory to `minecraft:minecraft` inside the
+container and start `minecraft-server-staging.service` again. Repeat management,
+client login, save, log and clean-stop checks against the candidate. Container
+shutdown discards this clone; driver exit discards the uploaded VM copy.
+The automated fixture exercises this transfer with its own synthetic world.
+A real production-world or cross-version migration is accepted only after its
+own candidate-specific evidence is recorded in the upgrade PR.
+
 ## Upgrade and rollback
 
 Before changing Minecraft, Fabric, Java or mod pins, run live integrity inspection
