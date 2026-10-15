@@ -11,6 +11,14 @@ pkgs.testers.runNixOSTest {
     {
       imports = [ "${modulesPath}/profiles/perlless.nix" ];
       system.etc.overlay.mutable = false;
+      networking.useNetworkd = true;
+      services.resolved.enable = true;
+      # Synthetic guest identity: immutable /etc must already contain this file
+      # before PID 1 and D-Bus start. Never copy the workstation's identity.
+      environment.etc."machine-id" = {
+        text = "c18dbaea46f44781b55a1ae69a330001\n";
+        mode = "0444";
+      };
       users.mutableUsers = false;
       users.groups.model-service.gid = 2400;
       users.users.model-service = {
@@ -59,6 +67,9 @@ pkgs.testers.runNixOSTest {
 
     def check(version):
         machine.wait_for_unit("userborn.service")
+        machine.wait_for_unit("dbus.service")
+        machine.wait_for_unit("systemd-networkd.service")
+        machine.wait_for_unit("systemd-resolved.service")
         machine.wait_for_unit("model-proof.service")
         machine.succeed(f"test $(cat /etc/model-version) = {version}")
         machine.succeed(f"test $(cat /var/lib/model-proof/result) = {version}")
@@ -66,6 +77,7 @@ pkgs.testers.runNixOSTest {
         machine.succeed("test $(id -u model-service) = 2400")
         machine.succeed("test $(stat -c %u /var/lib/model-proof/result) = 2400")
         machine.succeed("test $(readlink -f /etc/passwd) = /var/lib/nixos/passwd")
+        machine.succeed("test $(cat /etc/machine-id) = c18dbaea46f44781b55a1ae69a330001")
         machine.succeed("findmnt --first-only --target /etc -n -o OPTIONS | grep -Eq '(^|,)ro(,|$)'")
         machine.fail("touch /etc/forbidden-write")
         machine.fail("sh -c 'echo changed >> /etc/model-version'")
