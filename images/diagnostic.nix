@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   modulesPath,
@@ -28,7 +29,7 @@
   };
   environment.systemPackages = [
     pkgs.perf
-    pkgs.linuxPackages.turbostat
+    config.boot.kernelPackages.turbostat
     pkgs.hwloc
     pkgs.numactl
     pkgs.stress-ng
@@ -55,6 +56,7 @@
     };
     script = ''
       exec >/dev/ttyS0 2>&1
+      test "$(hostname)" = diagnostic
       test "$(findmnt --first-only --target / -n -o FSTYPE)" = tmpfs
       test "$(findmnt --first-only --target /nix/store -n -o FSTYPE)" = overlay
       test ! -e /run/before-kexec
@@ -65,7 +67,7 @@
       ip -4 route show default | grep -q default
       systemctl is-active --quiet sshd.service
       test -x ${pkgs.perf}/bin/perf
-      test -x ${pkgs.linuxPackages.turbostat}/bin/turbostat
+      test -x ${config.boot.kernelPackages.turbostat}/bin/turbostat
       test -x ${pkgs.stress-ng}/bin/stress-ng
       test -x ${pkgs.btrfs-progs}/bin/btrfs
       test -x ${pkgs.nvme-cli}/bin/nvme
