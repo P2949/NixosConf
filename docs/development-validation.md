@@ -212,3 +212,38 @@ optimization runtime admission function with the guest's observed identity and
 requires rejection because the guest is virtualized. Distributed compilation
 can produce candidates; authoritative measurements still require the designated
 physical target and the complete optimization provenance gates.
+
+## Standalone verity appliance
+
+Build the separate image and run its explicit QEMU integrity test:
+
+```bash
+nix build .#benchmark-appliance --no-write-lock-file
+nix build .#benchmark-appliance-test --no-write-lock-file --print-build-logs
+```
+
+The image output contains `benchmark-appliance_1.raw` and partition metadata in
+`repart-output.json`. Its GPT disk contains an ESP with a UKI, an EROFS `/usr`
+containing the Nix store, and a dm-verity hash partition. The root filesystem is
+volatile tmpfs. Update by replacing the whole image; this appliance does not
+provide an in-place NixOS switch or a writable package store.
+
+SSH, DHCP networking, perf, turbostat, hwloc, numactl and the existing evaluation
+benchmark runner are included. No login credential is shipped. To permit SSH,
+add the operator's public key through the standard
+`users.users.root.openssh.authorizedKeys.keys` option in the appliance
+configuration and rebuild. Private keys stay outside the image. Serial output
+reports the mount, verity, network and tool checks before emitting
+`BENCHMARK_APPLIANCE_READY`.
+
+The test boots the standalone image through UEFI with a disposable overlay;
+it does not inject a guest agent or test credentials. It then changes one byte
+in a private copy of the protected data partition and requires an explicit
+verity corruption report and kernel panic. The original Nix-store image remains
+unchanged. This tests integrity against the UKI's embedded root hash; the UKI is
+unsigned, so this does not establish authenticated Secure Boot.
+
+The image is independent of desktop deployment and the frozen benchmark
+control. Its VM is for functional validation. The included benchmark runner
+retains its physical control admission checks; booting this image does not
+qualify it as an authoritative performance environment.

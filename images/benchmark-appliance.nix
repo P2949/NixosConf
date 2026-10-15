@@ -94,11 +94,10 @@
     };
     script = ''
       exec >/dev/ttyS0 2>&1
-      set -x
-      findmnt --kernel -o TARGET,SOURCE,FSTYPE,OPTIONS
-      test "$(findmnt -n -o FSTYPE /)" = tmpfs
-      test "$(findmnt -n -o FSTYPE /nix/store)" = erofs
-      findmnt -n -o OPTIONS /nix/store | grep -Eq '(^|,)ro(,|$)'
+      test "$(findmnt --first-only --target / -n -o FSTYPE)" = tmpfs
+      test "$(findmnt --first-only --target /nix/store -n -o FSTYPE)" = erofs
+      findmnt --first-only --target /nix/store -n -o OPTIONS | grep -Eq '(^|,)ro(,|$)'
+      findmnt --first-only --target /nix/store -o TARGET,SOURCE,FSTYPE,OPTIONS
       veritysetup status usr
       for attempt in $(seq 1 60); do
         if ip -4 route show default | grep -q default; then break; fi
