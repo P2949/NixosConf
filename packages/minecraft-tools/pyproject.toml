@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minecraft-tools"
+version = "1.0.0"
+description = "Minecraft management and transactional local recovery tools"
+requires-python = ">=3.13"
+dependencies = ["websockets"]
+
+[project.scripts]
+minecraft-backup = "minecraft_tools.backup:main"
+minecraft-msmp = "minecraft_tools.msmp:main"
+minecraft-prerequisites = "minecraft_tools.prerequisites:main"
+minecraft-dh-identity = "minecraft_tools.dh_identity:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

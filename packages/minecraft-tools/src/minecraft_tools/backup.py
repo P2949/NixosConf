@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import fcntl
-import importlib.util
 import json
 import stat
 import tempfile
@@ -94,30 +93,8 @@ class BackupRecoveryError(BackupError):
         )
 
 
-def load_msmp():
-    source_value = os.environ.get("MINECRAFT_MSMP_SOURCE")
+from minecraft_tools import msmp
 
-    if source_value is None:
-        raise BackupError("MINECRAFT_MSMP_SOURCE is not set")
-
-    source = Path(source_value)
-
-    spec = importlib.util.spec_from_file_location(
-        "minecraft_msmp",
-        source,
-    )
-
-    if spec is None or spec.loader is None:
-        raise BackupError(
-            f"cannot load Minecraft management client from {source}"
-        )
-
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-msmp = load_msmp()
 
 DEFAULT_RPC_TIMEOUT = msmp.DEFAULT_RPC_TIMEOUT
 DEFAULT_SAVE_TIMEOUT = msmp.DEFAULT_SAVE_TIMEOUT

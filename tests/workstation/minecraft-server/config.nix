@@ -36,15 +36,16 @@ let
   ) config.environment.systemPackages;
   backupClient = builtins.head backupClients;
 
-  msmpSource = ../../../hosts/desktop/minecraft-msmp.py;
+  msmpSource = ../../../packages/minecraft-tools/src/minecraft_tools/msmp.py;
   msmpTests = ./test_msmp.py;
-  backupSource = ../../../hosts/desktop/minecraft-backup.py;
+  backupSource = ../../../packages/minecraft-tools/src/minecraft_tools/backup.py;
   backupTests = ./test_backup.py;
-  prerequisiteSource = ../../../hosts/desktop/minecraft-prerequisites.py;
+  prerequisiteSource = ../../../packages/minecraft-tools/src/minecraft_tools/prerequisites.py;
   prerequisiteTests = ./test_prerequisites.py;
-  dhIdentitySource = ../../../hosts/desktop/minecraft-dh-identity.py;
+  dhIdentitySource = ../../../packages/minecraft-tools/src/minecraft_tools/dh_identity.py;
   dhIdentityTests = ./test_dh_identity.py;
 
+  minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
   msmpTestPython = pkgs.python3.withPackages (pythonPackages: [
     pythonPackages.websockets
   ]);
@@ -73,9 +74,9 @@ assert server.jvmOpts == "-Xms1G -Xmx8G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC
 assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
-assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" service.preStart;
-assert pkgs.lib.hasInfix "minecraft-dh-identity.py capture" server.extraStopPre;
-assert pkgs.lib.hasInfix "minecraft-dh-identity.py apply" server.extraStartPre;
+assert pkgs.lib.hasInfix "minecraft-dh-identity capture" service.preStart;
+assert pkgs.lib.hasInfix "minecraft-dh-identity capture" server.extraStopPre;
+assert pkgs.lib.hasInfix "minecraft-dh-identity apply" server.extraStartPre;
 
 assert pkgs.lib.hasInfix "/bin/chmod 0600 server.properties" server.extraStartPre;
 assert server.whitelist == { };
@@ -334,6 +335,7 @@ pkgs.runCommand "check-minecraft-server-config"
   }
   ''
         set -eu
+        export PYTHONPATH="${minecraftTools}/${pkgs.python3.sitePackages}"
 
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
         MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"

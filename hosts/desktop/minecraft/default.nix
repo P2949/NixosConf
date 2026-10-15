@@ -25,15 +25,10 @@ let
     builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
   );
 
-  minecraftManagementPython = pkgs.python3.withPackages (pythonPackages: [
-    pythonPackages.websockets
-  ]);
-
+  minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
   minecraftManagementClient = pkgs.writeShellApplication {
     name = "minecraft-msmp";
-    text = ''
-      exec ${minecraftManagementPython}/bin/python3 ${../minecraft-msmp.py} "$@"
-    '';
+    text = ''exec ${minecraftTools}/bin/minecraft-msmp "$@"'';
   };
 
   timerStampSeedService = "minecraft-backup-timer-stamp-seed";
@@ -56,24 +51,13 @@ let
 
   minecraftPrerequisiteCheck = pkgs.writeShellApplication {
     name = "minecraft-prerequisites";
-    runtimeInputs = [ pkgs.util-linux ];
-    text = ''
-      exec ${pkgs.python3}/bin/python3 ${../minecraft-prerequisites.py}
-    '';
+    text = "exec ${minecraftTools}/bin/minecraft-prerequisites";
   };
-
   minecraftBackupRunner = pkgs.writeShellApplication {
     name = "minecraft-backup";
-
-    runtimeInputs = [
-      pkgs.btrfs-progs
-    ];
-
-    text = ''
-      export MINECRAFT_MSMP_SOURCE=${../minecraft-msmp.py}
-      exec ${minecraftManagementPython}/bin/python3 ${../minecraft-backup.py} "$@"
-    '';
+    text = ''exec ${minecraftTools}/bin/minecraft-backup "$@"'';
   };
+
 in
 {
   imports = [
@@ -151,7 +135,7 @@ in
           };
 
           extraStartPre = ''
-            ${pkgs.python3}/bin/python3 ${../minecraft-dh-identity.py} apply
+            ${minecraftTools}/bin/minecraft-dh-identity apply
             ${pkgs.coreutils}/bin/chmod 0600 server.properties
             if [[ ! "''${MINECRAFT_MANAGEMENT_SECRET:-}" =~ ^[A-Za-z0-9]{40}$ ]]; then
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
@@ -159,7 +143,7 @@ in
             fi
           '';
           extraStopPre = ''
-            ${pkgs.python3}/bin/python3 ${../minecraft-dh-identity.py} capture
+            ${minecraftTools}/bin/minecraft-dh-identity capture
           '';
 
           symlinks.mods = baseMods;
@@ -269,7 +253,7 @@ in
       # nix-minecraft removes its previous managed files before applying templates.
       # Capture the generated ID first so restarts keep the same DH cache identity.
       systemd.services.minecraft-server-survival.preStart = lib.mkBefore ''
-        ${pkgs.python3}/bin/python3 ${../minecraft-dh-identity.py} capture
+        ${minecraftTools}/bin/minecraft-dh-identity capture
       '';
 
       systemd.tmpfiles.rules = [
