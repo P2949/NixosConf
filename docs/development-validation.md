@@ -33,8 +33,8 @@ Home Manager's `development/android.nix` owns `android-studio` from the existing
 pinned unstable input and `android-tools` from stable Nixpkgs. The newer stable
 Studio channel supports the real project's AGP 9.3 toolchain; stable Nixpkgs'
 Panda 4 supports only AGP through 9.2. Studio runs in the Nixpkgs FHS environment
-and manages a writable
-SDK at `~/Android/Sdk` through **Tools → SDK Manager**. Nix pins the IDE and shell
+and manages a writable SDK at `~/Android/Sdk` through **Tools → SDK Manager**.
+Nix pins the IDE and shell
 ADB; projects pin Gradle through their wrapper and select their Android Gradle
 Plugin/dependencies. Studio's bundled JDK runs the IDE; use the project's
 compatible Gradle JDK in Studio and a project dev shell for command-line builds.
@@ -66,6 +66,9 @@ For deployment and physical acceptance:
    copy any existing root-local SDK, Google settings/user data and `.gradle`
    into their declared `/persist/home/p2949/` backing paths, retaining metadata
    and verifying equality. Do not overwrite differing backing state blindly.
+   If SDK tools have already used `.config/.android`, migrate its signing key,
+   AVDs and other authoritative state into `.android` with collision/identity
+   checks and updated AVD paths. Preserve the existing debug signing key.
 2. Build/check the desktop and stage with
    `sudo nixos-rebuild boot --flake '.#desktop'`; use a controlled reboot for
    the new persistence mounts. Verify each new bind mount via

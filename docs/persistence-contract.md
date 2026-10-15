@@ -57,8 +57,9 @@ search filters and overlays use persisted `.config/unity3d/Preferences`.
 The user deliberately retains Steam shaders, Unreal DDC/Zen and current Unity
 project Libraries; other audited project logs/temp/cache state resets. New
 applications, profiles and projects require a fresh audit for their actual paths.
-Android Studio owns its writable SDK at `Android/Sdk`; `.android` retains ADB
-identity and AVDs with the existing disposable runtime exceptions. Versioned
+Android Studio owns its writable SDK at `Android/Sdk`; the feature pins Android
+user/AVD paths to `.android`, retaining ADB/debug signing identity and AVDs with
+the existing disposable runtime exceptions. Versioned
 settings/plugins under `.config/Google` and `.local/share/Google` and the initial
 mixed `.gradle` directory persist privately; `.cache/Google` remains ephemeral.
 Projects belong under `Development/Android`. See the

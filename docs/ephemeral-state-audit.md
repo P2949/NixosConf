@@ -30,8 +30,8 @@ WirePlumber. Events resolve through top-level Btrfs paths, not only `/home` and
 the trace is observational evidence, not complete coverage. No-data Btrfs diffs
 capture changed paths independently. Unity, Unreal, Blender and Steam functional
 sessions were not established by that trace; the user subsequently confirmed
-important real application workflows on 2026-10-09. Required post-trial application rechecks are accepted. Android Studio is now declared separately;
-its Java/emulator and reboot acceptance remain distinct from those earlier trials.
+important real application workflows on 2026-10-09. Required post-trial application rechecks are accepted. Android Studio has separate real Java/emulator and normal-reboot
+acceptance; see [current desktop status](status.md).
 
 ## Home top-level entries
 
@@ -261,12 +261,18 @@ with no required authoritative data left only in legacy home. Legacy home 256,
 var children263/264/266 and parent 261, and the four confirmed migration snapshots
 326/327/328/329 are retired. Unrelated backup/forensic state remains intentional.
 
-Android Studio's initial retained boundaries are declared. Existing root-local
-SDK, versioned settings, consent data and Gradle state were observed before
-deployment; this is path evidence, not Java/emulator acceptance. After one real
-Java project and accelerated emulator run, repeat across a normal reboot and
-audit actual SDK/AVD/Gradle children before adding any disposable exceptions.
-Existing ADB keys persist; remote-device functionality is currently unexercised.
+Android's observed retained state includes SDK components/system images;
+ADB/debug signing identity; AVD configuration, user disks and boot snapshots;
+the SDK-installed CLI helper/runtime; versioned Studio settings and consent data;
+and Gradle wrapper distributions, dependencies and managed JDKs. Gradle's
+`android`, `caches`, `daemon`, `jdks`, `native`, `wrapper` and temporary children
+remain in its initial mixed retained boundary. Project-local `.gradle` and
+`app/build` are generated data currently retained within `Development/Android`;
+further exclusions require a separate workload audit. IDE caches/logs under
+`.cache/Google` and Android's existing `cache`/`adb.5037` exceptions remain
+disposable. Normal-reboot retained-file and cache-reset proofs and repeated real
+workload acceptance are recorded in [current status](status.md) and PR #28.
+Third-party Studio plugins and physical USB-device workflows are unexercised.
 Plastic's empty directory and future credential/data reservations are deliberate
 but cannot establish a current remote workflow. Current Unity Libraries and
 installed editors/runtimes are retained R state; old versions need not remain
