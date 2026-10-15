@@ -337,6 +337,10 @@ pkgs.runCommand "check-minecraft-server-config"
         set -eu
         export PYTHONPATH="${minecraftTools}/${pkgs.python3.sitePackages}"
 
+        python3 ${../../packages/minecraft-tools/test_config.py}
+        python3 -c 'from pathlib import Path; import sys; from minecraft_tools.config import load_config; policy = load_config(Path(sys.argv[1])); assert str(policy.source) == "/srv/minecraft"; assert policy.management_port == 25585; assert policy.source_fs_root == "/@minecraft"; assert policy.snapshot_fs_root == "/@snapshots"' ${
+          config.environment.etc."minecraft-tools.json".source
+        }
         MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
         MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
 

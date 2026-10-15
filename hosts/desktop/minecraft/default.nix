@@ -25,6 +25,34 @@ let
     builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
   );
 
+  minecraftToolPolicy = {
+    schemaVersion = 1;
+    source = config.services.minecraft-servers.dataDir;
+    snapshotMount = "/.snapshots";
+    snapshotRoot = "/.snapshots/minecraft";
+    stateDirectory = "/persist/minecraft-backup";
+    runtimeDirectory = "/run/minecraft-backup";
+    management = {
+      host = config.services.minecraft-servers.servers.survival.serverProperties."management-server-host";
+      port = config.services.minecraft-servers.servers.survival.serverProperties."management-server-port";
+      environmentFile = config.services.minecraft-servers.environmentFile;
+    };
+    retention.snapshots = 14;
+    btrfs = {
+      sourceRoot = "/${
+        lib.removePrefix "subvol=" (
+          lib.findFirst (lib.hasPrefix "subvol=") "" config.fileSystems.${minecraftToolPolicy.source}.options
+        )
+      }";
+      snapshotRoot = "/${
+        lib.removePrefix "subvol=" (
+          lib.findFirst (lib.hasPrefix "subvol=") ""
+            config.fileSystems.${minecraftToolPolicy.snapshotMount}.options
+        )
+      }";
+    };
+  };
+  minecraftToolConfig = pkgs.writeText "minecraft-tools.json" (builtins.toJSON minecraftToolPolicy);
   minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
   minecraftManagementClient = pkgs.writeShellApplication {
     name = "minecraft-msmp";
@@ -66,6 +94,7 @@ in
 
   config = lib.mkMerge [
     {
+      environment.etc."minecraft-tools.json".source = minecraftToolConfig;
       nixpkgs.overlays = [
         inputs.nix-minecraft.overlay
       ];
