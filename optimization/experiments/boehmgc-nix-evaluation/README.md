@@ -56,6 +56,14 @@ provenance and runner from the same clean source revision. The output directory
 must be new, outside Git, and named
 `boehmgc-nix-evaluation-cpu-target-<UTC-time>-<source-short-revision>`.
 
+Measurement artifacts must come from a frozen-compatible benchmark source
+revision. Productive `main` has a separate desktop identity; rebasing the
+benchmark source onto it would invalidate the control. The code can be
+integrated on the productive branch independently of the measured source.
+The manually invoked Nix-checks workflow can qualify the exact frozen source
+ref before measurement. Build `.#optimization-control-identity` explicitly as
+well; a productive configuration must fail that admission gate.
+
 The runner requires the exact evaluated, current and booted physical benchmark
 control with inactive maintenance. It does not activate a system, stop services,
 or adjust CPU policy. Every observation uses fresh private HOME/XDG state,
