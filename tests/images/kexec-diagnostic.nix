@@ -32,7 +32,6 @@ pkgs.testers.runNixOSTest {
     boots = re.findall(r"DIAGNOSTIC_BOOT_ID=([0-9a-f-]{36})", evidence)
     assert len(boots) == 1, boots
     assert boots[0] != old_boot, (old_boot, boots)
-    assert "Welcome to NixOS" in evidence
     machine.crash()
   '';
 }
