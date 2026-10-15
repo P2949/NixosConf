@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
 
-import importlib.util
 import json
 import os
 import unittest
 from collections import deque
-from pathlib import Path
 
-
-SOURCE = Path(os.environ["MINECRAFT_MSMP_SOURCE"])
-SPEC = importlib.util.spec_from_file_location(
-    "minecraft_msmp",
-    SOURCE,
-)
-
-if SPEC is None or SPEC.loader is None:
-    raise RuntimeError(f"cannot load {SOURCE}")
-
-msmp = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(msmp)
+from minecraft_tools import msmp as msmp
 
 
 def response(request_id, result):
@@ -65,12 +52,7 @@ def method_response(results):
 def backup_discovery():
     return {
         "openrpc": "1.3.2",
-        "methods": [
-            {"name": name}
-            for name in sorted(
-                msmp.BACKUP_CAPABILITIES
-            )
-        ],
+        "methods": [{"name": name} for name in sorted(msmp.BACKUP_CAPABILITIES)],
     }
 
 
@@ -106,9 +88,7 @@ class MsmpSessionTests(unittest.TestCase):
     def test_call_buffers_notification_before_response(self):
         websocket = FakeWebSocket(
             [
-                notification(
-                    "minecraft:notification/server/activity"
-                ),
+                notification("minecraft:notification/server/activity"),
                 response(1, True),
             ]
         )
@@ -182,9 +162,7 @@ class MsmpSessionTests(unittest.TestCase):
         )
         session = msmp.MsmpSession(websocket)
 
-        self.assertTrue(
-            session.get_autosave(timeout=1)
-        )
+        self.assertTrue(session.get_autosave(timeout=1))
         self.assertFalse(
             session.set_autosave(
                 False,
@@ -215,12 +193,7 @@ class MsmpSessionTests(unittest.TestCase):
     def test_discovery_requires_backup_capabilities(self):
         document = {
             "openrpc": "1.3.2",
-            "methods": [
-                {"name": name}
-                for name in sorted(
-                    msmp.BACKUP_CAPABILITIES
-                )
-            ],
+            "methods": [{"name": name} for name in sorted(msmp.BACKUP_CAPABILITIES)],
         }
 
         session = msmp.MsmpSession(
@@ -231,9 +204,7 @@ class MsmpSessionTests(unittest.TestCase):
             )
         )
 
-        session.require_backup_capabilities(
-            timeout=1
-        )
+        session.require_backup_capabilities(timeout=1)
 
     def test_discovery_rejects_missing_capability(self):
         document = {
@@ -254,9 +225,7 @@ class MsmpSessionTests(unittest.TestCase):
         )
 
         with self.assertRaises(msmp.ProtocolError):
-            session.require_backup_capabilities(
-                timeout=1
-            )
+            session.require_backup_capabilities(timeout=1)
 
     def test_discovery_rejects_malformed_methods_structure(self):
         documents = (
@@ -272,9 +241,7 @@ class MsmpSessionTests(unittest.TestCase):
 
         for document in documents:
             with self.subTest(document=document):
-                with self.assertRaises(
-                    msmp.ProtocolError
-                ):
+                with self.assertRaises(msmp.ProtocolError):
                     msmp.discovered_names(document)
 
     def test_nested_names_do_not_satisfy_discovery_capabilities(self):
@@ -287,10 +254,7 @@ class MsmpSessionTests(unittest.TestCase):
             ],
             "nested": {
                 "fake_methods": [
-                    {"name": name}
-                    for name in sorted(
-                        msmp.BACKUP_CAPABILITIES
-                    )
+                    {"name": name} for name in sorted(msmp.BACKUP_CAPABILITIES)
                 ],
             },
         }
@@ -308,12 +272,8 @@ class MsmpSessionTests(unittest.TestCase):
             )
         )
 
-        with self.assertRaises(
-            msmp.ProtocolError
-        ):
-            session.require_backup_capabilities(
-                timeout=1
-            )
+        with self.assertRaises(msmp.ProtocolError):
+            session.require_backup_capabilities(timeout=1)
 
     def test_save_waits_for_notifications_after_response(self):
         websocket = FakeWebSocket(
@@ -322,12 +282,8 @@ class MsmpSessionTests(unittest.TestCase):
                     1,
                     True,
                 ),
-                notification(
-                    msmp.SAVING_NOTIFICATION
-                ),
-                notification(
-                    msmp.SAVED_NOTIFICATION
-                ),
+                notification(msmp.SAVING_NOTIFICATION),
+                notification(msmp.SAVED_NOTIFICATION),
             ]
         )
 
@@ -346,12 +302,8 @@ class MsmpSessionTests(unittest.TestCase):
     def test_save_handles_notifications_before_response(self):
         websocket = FakeWebSocket(
             [
-                notification(
-                    msmp.SAVING_NOTIFICATION
-                ),
-                notification(
-                    msmp.SAVED_NOTIFICATION
-                ),
+                notification(msmp.SAVING_NOTIFICATION),
+                notification(msmp.SAVED_NOTIFICATION),
                 response(
                     1,
                     True,
@@ -365,16 +317,12 @@ class MsmpSessionTests(unittest.TestCase):
     def test_stale_saved_notification_does_not_satisfy_barrier(self):
         websocket = FakeWebSocket(
             [
-                notification(
-                    msmp.SAVED_NOTIFICATION
-                ),
+                notification(msmp.SAVED_NOTIFICATION),
                 response(
                     1,
                     True,
                 ),
-                notification(
-                    msmp.SAVING_NOTIFICATION
-                ),
+                notification(msmp.SAVING_NOTIFICATION),
             ]
         )
 
@@ -648,23 +596,16 @@ class BackupTransactionTests(unittest.TestCase):
             msmp.ProtocolError,
         )
 
-
     def test_unread_stale_save_pair_does_not_satisfy_new_barrier(self):
         websocket = FakeWebSocket(
             [
                 response(1, backup_discovery()),
                 response(2, True),
                 response(3, False),
-
                 # A complete old save pair is already unread on the
                 # WebSocket when the barrier fence begins.
-                notification(
-                    msmp.SAVING_NOTIFICATION
-                ),
-                notification(
-                    msmp.SAVED_NOTIFICATION
-                ),
-
+                notification(msmp.SAVING_NOTIFICATION),
+                notification(msmp.SAVED_NOTIFICATION),
                 # With the hardened implementation this is the fence
                 # autosave query and must report autosave disabled.
                 # Without the fence, this dynamically becomes the SAVE
@@ -676,19 +617,12 @@ class BackupTransactionTests(unittest.TestCase):
                         msmp.SAVE_METHOD: True,
                     }
                 ),
-
                 # Response for the real flushed save in the hardened
                 # implementation.
                 response(5, True),
-
                 # The new save starts but deliberately never completes.
-                notification(
-                    msmp.SAVING_NOTIFICATION
-                ),
-                TimeoutError(
-                    "new save completion notification missing"
-                ),
-
+                notification(msmp.SAVING_NOTIFICATION),
+                TimeoutError("new save completion notification missing"),
                 # Autosave restoration after the primary timeout.
                 response(6, True),
             ]
@@ -741,14 +675,10 @@ class BackupTransactionTests(unittest.TestCase):
         events = []
 
         def before_disable():
-            events.append(
-                ("before-disable", len(websocket.sent))
-            )
+            events.append(("before-disable", len(websocket.sent)))
 
         def after_restore():
-            events.append(
-                ("after-restore", len(websocket.sent))
-            )
+            events.append(("after-restore", len(websocket.sent)))
 
         msmp.run_backup_transaction(
             session,
@@ -861,9 +791,7 @@ class BackupTransactionTests(unittest.TestCase):
         def fail_after_restore():
             raise RuntimeError("marker cleanup failed")
 
-        with self.assertRaises(
-            msmp.BackupTransactionError
-        ) as context:
+        with self.assertRaises(msmp.BackupTransactionError) as context:
             msmp.run_backup_transaction(
                 session,
                 lambda: None,
@@ -872,9 +800,7 @@ class BackupTransactionTests(unittest.TestCase):
                 after_autosave_restore=fail_after_restore,
             )
 
-        self.assertIsNone(
-            context.exception.primary_error
-        )
+        self.assertIsNone(context.exception.primary_error)
         self.assertIsInstance(
             context.exception.restore_error,
             RuntimeError,
@@ -883,48 +809,41 @@ class BackupTransactionTests(unittest.TestCase):
 
 class ValidationTests(unittest.TestCase):
     def test_timeout_cli_requires_finite_positive_value(self):
-        for command in ('discover', 'call', 'save-and-wait', 'watch'):
-            for value in ('nan', 'inf', '-inf', '0', '-1'):
-                arguments = [command]
-                if command == 'call':
-                    arguments.append('minecraft:server/status')
-                with self.subTest(command=command, value=value), self.assertRaises(SystemExit):
-                    msmp.build_parser().parse_args(arguments + ['--timeout=' + value])
-        self.assertIsNone(msmp.build_parser().parse_args(['watch']).timeout)
-        self.assertEqual(msmp.positive_timeout('0.25'), .25)
+        for command in ("discover", "call", "save-and-wait", "watch"):
+            for value in ("nan", "inf", "-inf", "0", "-1"):
+                arguments = ["--config", "/test-policy.json", command]
+                if command == "call":
+                    arguments.append("minecraft:server/status")
+                with (
+                    self.subTest(command=command, value=value),
+                    self.assertRaises(SystemExit),
+                ):
+                    msmp.build_parser().parse_args(arguments + ["--timeout=" + value])
+        self.assertIsNone(
+            msmp.build_parser()
+            .parse_args(["--config", "/test-policy.json", "watch"])
+            .timeout
+        )
+        self.assertEqual(msmp.positive_timeout("0.25"), 0.25)
 
     def test_custom_paths_and_queries_are_rejected(self):
-        secret = (
-            "0123456789"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcd"
-        )
+        secret = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcd"
 
-        old_secret = os.environ.get(
-            "MINECRAFT_MANAGEMENT_SECRET"
-        )
-        old_url = os.environ.get(
-            "MINECRAFT_MANAGEMENT_URL"
-        )
+        old_secret = os.environ.get("MINECRAFT_MANAGEMENT_SECRET")
+        old_url = os.environ.get("MINECRAFT_MANAGEMENT_URL")
 
         try:
-            os.environ[
-                "MINECRAFT_MANAGEMENT_SECRET"
-            ] = secret
+            os.environ["MINECRAFT_MANAGEMENT_SECRET"] = secret
 
             for url in (
                 "ws://127.0.0.1:25585/custom",
                 "ws://127.0.0.1:25585?query=yes",
                 "ws://127.0.0.1:25585/#fragment",
             ):
-                os.environ[
-                    "MINECRAFT_MANAGEMENT_URL"
-                ] = url
+                os.environ["MINECRAFT_MANAGEMENT_URL"] = url
 
-                with self.assertRaises(
-                    msmp.ConfigurationError
-                ):
-                    msmp.configuration()
+                with self.assertRaises(msmp.ConfigurationError):
+                    msmp.validate_url(url)
 
         finally:
             if old_secret is None:
@@ -933,9 +852,7 @@ class ValidationTests(unittest.TestCase):
                     None,
                 )
             else:
-                os.environ[
-                    "MINECRAFT_MANAGEMENT_SECRET"
-                ] = old_secret
+                os.environ["MINECRAFT_MANAGEMENT_SECRET"] = old_secret
 
             if old_url is None:
                 os.environ.pop(
@@ -943,9 +860,7 @@ class ValidationTests(unittest.TestCase):
                     None,
                 )
             else:
-                os.environ[
-                    "MINECRAFT_MANAGEMENT_URL"
-                ] = old_url
+                os.environ["MINECRAFT_MANAGEMENT_URL"] = old_url
 
 
 if __name__ == "__main__":

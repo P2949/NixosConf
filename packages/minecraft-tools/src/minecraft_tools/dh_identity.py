@@ -3,8 +3,8 @@
 import argparse
 import os
 import re
-import tomllib
 import tempfile
+import tomllib
 from pathlib import Path
 
 
@@ -25,8 +25,9 @@ def capture(config, identity):
         raise ValueError("DH server identity changed unexpectedly")
     if identity.is_symlink():
         raise ValueError("DH identity must not be a symlink")
-    descriptor, temporary_name = tempfile.mkstemp(prefix=identity.name + ".", suffix=".tmp",
-                                                 dir=identity.parent)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=identity.name + ".", suffix=".tmp", dir=identity.parent
+    )
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w") as stream:
@@ -34,7 +35,9 @@ def capture(config, identity):
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, identity)
-        directory = os.open(identity.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        directory = os.open(
+            identity.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC
+        )
         try:
             os.fsync(directory)
         finally:
@@ -59,13 +62,19 @@ def apply(config, identity):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("capture", "apply"))
-    parser.add_argument("--config", type=Path, default=Path("config/DistantHorizons.toml"))
-    parser.add_argument("--identity", type=Path, default=Path("config/distant-horizons-server-id"))
+    parser.add_argument(
+        "--config", type=Path, default=Path("config/DistantHorizons.toml")
+    )
+    parser.add_argument(
+        "--identity", type=Path, default=Path("config/distant-horizons-server-id")
+    )
     args = parser.parse_args()
     try:
         {"capture": capture, "apply": apply}[args.action](args.config, args.identity)
     except (OSError, ValueError, tomllib.TOMLDecodeError):
-        raise SystemExit("DH identity preservation failed; retaining state for diagnosis") from None
+        raise SystemExit(
+            "DH identity preservation failed; retaining state for diagnosis"
+        ) from None
 
 
 if __name__ == "__main__":

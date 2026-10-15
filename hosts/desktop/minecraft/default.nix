@@ -11,50 +11,10 @@
 let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
-  baseModDrvsByName = {
-    c2me = import ./minecraft-c2me.nix { inherit pkgs; };
-    krypton = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/fQEb0iXm/versions/UugdIYJw/krypton-0.3.2.jar";
-      sha512 = "d1d57ebd41395b75b01f130cd9503eb8d208212424a399ff9f367f50be8fbc1c6472442b33c686e777c3148f6a609520e8fb732c755157c358cb207fd4d1123a";
-    };
-
-    distant-horizons = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/uCdwusMi/versions/TGgEbP9A/DistantHorizons-3.3.4-26.3-fabric-neoforge.jar";
-      sha512 = "0b90b1b08d99974bfc3c8e86b2ceb252e2f91715ed66b925004c28335fb44e1bddbbb6b8043e4d4d53c87ed247789cd1788b1ba4e3f4394efe154e0c59cff236";
-    };
-
-    fabric-api = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/P7dR8mSH/versions/v2j28coa/fabric-api-0.162.0%2B26.3.jar";
-      sha512 = "5ab70908952f1d2346d16b122ca31327f4055db59c279a1bc3c3c581ce359bb541cba15730f55b0727be7c7c4debc4a4412a183c228e0d4dea81c734f7b412ce";
-    };
-
-    lithium = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/gvQqBUqZ/versions/xS0Q8LSi/lithium-fabric-0.26.2%2Bmc26.3.jar";
-      sha512 = "4d7fee66132eedc71feab9390b92c95d7058edbdad0fecfac1d836a2950b97a7ca463afbede61c7ef361ce65e1f927ab9e89dde5bf2e0e0ce486afb5c5dbee40";
-    };
-
-    ferritecore = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/uXXizFIs/versions/d5ddUdiB/ferritecore-9.0.0-fabric.jar";
-      sha512 = "d81fa97e11784c19d42f89c2f433831d007603dd7193cee45fa177e4a6a9c52b384b198586e04a0f7f63cd996fed713322578bde9a8db57e1188854ae5cbe584";
-    };
-
-    servercore = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/4WWQxlQP/versions/LCG1Bm84/servercore-fabric-1.5.20%2B26.3.jar";
-      sha512 = "abe1f806ea587971faf7de826e18b07314a4a9e690f64a4c3a54e7f61c3e6f4792633b13a917252bd8de154cec39da6619110d83799cf533450c5b4cac7a8448";
-    };
-
-    spark = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/l6YH9Als/versions/e3hsPc1o/spark-1.10.187-fabric.jar";
-      sha512 = "c74bf5d5a16b2445ec6ea717eac756412b272a8015e91f91a7bf5a27e6f2f99c4a11878d434510f941f37b0344b3a7d1ba0dd6c34e80642762c48fb6e9a93894";
-    };
-  };
-
+  mods = import ./mods.nix { inherit pkgs; };
+  baseModDrvsByName = builtins.removeAttrs mods [ "chunky" ];
   baseModDrvs = builtins.attrValues baseModDrvsByName;
-
-  chunky = pkgs.fetchurl {
-    url = "https://cdn.modrinth.com/data/fALzjamp/versions/4Eotm6ov/Chunky-Fabric-1.5.3.jar";
-    sha512 = "b83bfe7b218d0aa6232af977ae741dc1f82b10e50cd12bb759f65cf416b8b62beccb543e587ef0b9670abe03815660f8e091bc6823624d65cf07300571573516";
-  };
+  inherit (mods) chunky;
 
   baseMods = pkgs.linkFarmFromDrvs "minecraft-survival-mods" baseModDrvs;
 
@@ -65,15 +25,38 @@ let
     builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
   );
 
-  minecraftManagementPython = pkgs.python3.withPackages (pythonPackages: [
-    pythonPackages.websockets
-  ]);
-
+  minecraftToolPolicy = {
+    schemaVersion = 1;
+    source = config.services.minecraft-servers.dataDir;
+    snapshotMount = "/.snapshots";
+    snapshotRoot = "/.snapshots/minecraft";
+    stateDirectory = "/persist/minecraft-backup";
+    runtimeDirectory = "/run/minecraft-backup";
+    management = {
+      host = config.services.minecraft-servers.servers.survival.serverProperties."management-server-host";
+      port = config.services.minecraft-servers.servers.survival.serverProperties."management-server-port";
+      environmentFile = config.services.minecraft-servers.environmentFile;
+    };
+    retention.snapshots = 14;
+    btrfs = {
+      sourceRoot = "/${
+        lib.removePrefix "subvol=" (
+          lib.findFirst (lib.hasPrefix "subvol=") "" config.fileSystems.${minecraftToolPolicy.source}.options
+        )
+      }";
+      snapshotRoot = "/${
+        lib.removePrefix "subvol=" (
+          lib.findFirst (lib.hasPrefix "subvol=") ""
+            config.fileSystems.${minecraftToolPolicy.snapshotMount}.options
+        )
+      }";
+    };
+  };
+  minecraftToolConfig = pkgs.writeText "minecraft-tools.json" (builtins.toJSON minecraftToolPolicy);
+  minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
   minecraftManagementClient = pkgs.writeShellApplication {
     name = "minecraft-msmp";
-    text = ''
-      exec ${minecraftManagementPython}/bin/python3 ${./minecraft-msmp.py} "$@"
-    '';
+    text = ''exec ${minecraftTools}/bin/minecraft-msmp --config ${minecraftToolConfig} "$@"'';
   };
 
   timerStampSeedService = "minecraft-backup-timer-stamp-seed";
@@ -96,24 +79,13 @@ let
 
   minecraftPrerequisiteCheck = pkgs.writeShellApplication {
     name = "minecraft-prerequisites";
-    runtimeInputs = [ pkgs.util-linux ];
-    text = ''
-      exec ${pkgs.python3}/bin/python3 ${./minecraft-prerequisites.py}
-    '';
+    text = "exec ${minecraftTools}/bin/minecraft-prerequisites --config ${minecraftToolConfig}";
   };
-
   minecraftBackupRunner = pkgs.writeShellApplication {
     name = "minecraft-backup";
-
-    runtimeInputs = [
-      pkgs.btrfs-progs
-    ];
-
-    text = ''
-      export MINECRAFT_MSMP_SOURCE=${./minecraft-msmp.py}
-      exec ${minecraftManagementPython}/bin/python3 ${./minecraft-backup.py} "$@"
-    '';
+    text = ''exec ${minecraftTools}/bin/minecraft-backup --config ${minecraftToolConfig} "$@"'';
   };
+
 in
 {
   imports = [
@@ -122,6 +94,7 @@ in
 
   config = lib.mkMerge [
     {
+      environment.etc."minecraft-tools.json".source = minecraftToolConfig;
       nixpkgs.overlays = [
         inputs.nix-minecraft.overlay
       ];
@@ -191,7 +164,7 @@ in
           };
 
           extraStartPre = ''
-            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} apply
+            ${minecraftTools}/bin/minecraft-dh-identity apply
             ${pkgs.coreutils}/bin/chmod 0600 server.properties
             if [[ ! "''${MINECRAFT_MANAGEMENT_SECRET:-}" =~ ^[A-Za-z0-9]{40}$ ]]; then
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
@@ -199,7 +172,7 @@ in
             fi
           '';
           extraStopPre = ''
-            ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
+            ${minecraftTools}/bin/minecraft-dh-identity capture
           '';
 
           symlinks.mods = baseMods;
@@ -309,7 +282,7 @@ in
       # nix-minecraft removes its previous managed files before applying templates.
       # Capture the generated ID first so restarts keep the same DH cache identity.
       systemd.services.minecraft-server-survival.preStart = lib.mkBefore ''
-        ${pkgs.python3}/bin/python3 ${./minecraft-dh-identity.py} capture
+        ${minecraftTools}/bin/minecraft-dh-identity capture
       '';
 
       systemd.tmpfiles.rules = [
