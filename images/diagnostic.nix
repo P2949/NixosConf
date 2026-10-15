@@ -56,7 +56,7 @@
     };
     script = ''
       exec >/dev/ttyS0 2>&1
-      test "$(hostname)" = diagnostic
+      test "$(cat /proc/sys/kernel/hostname)" = diagnostic
       test "$(findmnt --first-only --target / -n -o FSTYPE)" = tmpfs
       test "$(findmnt --first-only --target /nix/store -n -o FSTYPE)" = overlay
       test ! -e /run/before-kexec
