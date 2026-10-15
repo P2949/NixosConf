@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 import argparse
-import math
 import json
+import math
 import os
 import re
 import sys
@@ -14,8 +12,8 @@ from urllib.parse import urlparse
 from websockets.exceptions import WebSocketException
 from websockets.sync.client import connect
 
-
 from minecraft_tools.config import MinecraftConfig, load_config
+
 SECRET_RE = re.compile(r"^[A-Za-z0-9]{40}$")
 
 DEFAULT_RPC_TIMEOUT = 10.0
@@ -93,12 +91,7 @@ def validate_url(url: str) -> str:
     if parsed.username is not None or parsed.password is not None:
         raise ConfigurationError("management URL must not contain credentials")
 
-    if (
-        parsed.path not in {"", "/"}
-        or parsed.params
-        or parsed.query
-        or parsed.fragment
-    ):
+    if parsed.path not in {"", "/"} or parsed.params or parsed.query or parsed.fragment:
         raise ConfigurationError(
             "management URL must not contain a custom path, query, or fragment"
         )
@@ -211,9 +204,7 @@ def decode_message(raw) -> dict:
 
 def discovered_names(document) -> set[str]:
     if not isinstance(document, dict):
-        raise ProtocolError(
-            "rpc.discover returned a non-object document"
-        )
+        raise ProtocolError("rpc.discover returned a non-object document")
 
     methods = document.get("methods")
 
@@ -226,16 +217,12 @@ def discovered_names(document) -> set[str]:
 
     for index, method in enumerate(methods):
         if not isinstance(method, dict):
-            raise ProtocolError(
-                f"rpc.discover methods[{index}] is not an object"
-            )
+            raise ProtocolError(f"rpc.discover methods[{index}] is not an object")
 
         name = method.get("name")
 
         if not isinstance(name, str) or not name:
-            raise ProtocolError(
-                f"rpc.discover methods[{index}] has no valid name"
-            )
+            raise ProtocolError(f"rpc.discover methods[{index}] has no valid name")
 
         names.add(name)
 
@@ -344,8 +331,9 @@ class MsmpSession:
     def discover(self, timeout: float = DEFAULT_RPC_TIMEOUT):
         return self.call("rpc.discover", timeout=timeout)
 
-    def require_backup_capabilities(self, timeout: float = DEFAULT_RPC_TIMEOUT,
-                                    additional_capabilities=()) -> None:
+    def require_backup_capabilities(
+        self, timeout: float = DEFAULT_RPC_TIMEOUT, additional_capabilities=()
+    ) -> None:
         document = self.discover(timeout=timeout)
         names = discovered_names(document)
         missing = sorted((BACKUP_CAPABILITIES | set(additional_capabilities)) - names)
@@ -363,9 +351,7 @@ class MsmpSession:
         )
 
         if not isinstance(result, bool):
-            raise ProtocolError(
-                "autosave query returned an unexpected result"
-            )
+            raise ProtocolError("autosave query returned an unexpected result")
 
         return result
 
@@ -381,14 +367,10 @@ class MsmpSession:
         )
 
         if not isinstance(result, bool):
-            raise ProtocolError(
-                "autosave update returned an unexpected result"
-            )
+            raise ProtocolError("autosave update returned an unexpected result")
 
         if result != enabled:
-            raise ProtocolError(
-                "autosave update did not reach the requested state"
-            )
+            raise ProtocolError("autosave update did not reach the requested state")
 
         return result
 
@@ -435,9 +417,7 @@ class MsmpSession:
         )
 
         if result is not True:
-            raise ProtocolError(
-                "flush save was not accepted by the server"
-            )
+            raise ProtocolError("flush save was not accepted by the server")
 
         self.wait_notifications_in_order(
             [
@@ -507,9 +487,7 @@ def run_backup_transaction(
                 ) from restore_error
 
     if primary_error is not None:
-        raise primary_error.with_traceback(
-            primary_error.__traceback__
-        )
+        raise primary_error.with_traceback(primary_error.__traceback__)
 
     return action_result
 
@@ -589,12 +567,8 @@ def command_save_and_wait(args) -> None:
     try:
         with open_connection(args.config) as websocket:
             session = MsmpSession(websocket)
-            session.require_backup_capabilities(
-                timeout=args.timeout
-            )
-            session.save_and_wait(
-                timeout=args.timeout
-            )
+            session.require_backup_capabilities(timeout=args.timeout)
+            session.save_and_wait(timeout=args.timeout)
     except Exception as exc:
         operation_error(exc)
         return
@@ -634,7 +608,9 @@ def positive_timeout(value):
     try:
         timeout = float(value)
     except (ValueError, TypeError) as exc:
-        raise argparse.ArgumentTypeError("timeout must be finite and strictly positive") from exc
+        raise argparse.ArgumentTypeError(
+            "timeout must be finite and strictly positive"
+        ) from exc
     if not math.isfinite(timeout) or timeout <= 0:
         raise argparse.ArgumentTypeError("timeout must be finite and strictly positive")
     return timeout
@@ -652,12 +628,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="minecraft-msmp",
         description=(
-            "Loopback-only client for the Minecraft Server "
-            "Management Protocol."
+            "Loopback-only client for the Minecraft Server Management Protocol."
         ),
     )
 
-    parser.add_argument("--config", type=Path, required=True, help="non-secret deployment policy JSON")
+    parser.add_argument(
+        "--config", type=Path, required=True, help="non-secret deployment policy JSON"
+    )
     subparsers = parser.add_subparsers(
         dest="command",
         required=True,
@@ -684,7 +661,7 @@ def build_parser() -> argparse.ArgumentParser:
     call_parser.add_argument(
         "params",
         nargs="?",
-        help='optional JSON params, e.g. \'{"flush":true}\'',
+        help="optional JSON params, e.g. '{\"flush\":true}'",
     )
     add_timeout_argument(call_parser, DEFAULT_RPC_TIMEOUT)
     call_parser.set_defaults(func=command_call)

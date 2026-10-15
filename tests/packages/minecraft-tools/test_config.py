@@ -1,11 +1,12 @@
 """Reject ambiguous or unsafe deployment policy before any operation."""
+
 import copy
 import json
 import tempfile
 import unittest
 from pathlib import Path
-from minecraft_tools.config import load_config
 
+from minecraft_tools.config import load_config
 
 POLICY = {
     "schemaVersion": 1,
@@ -14,7 +15,11 @@ POLICY = {
     "snapshotRoot": "/snapshots/game",
     "stateDirectory": "/state/game",
     "runtimeDirectory": "/run/game",
-    "management": {"host": "127.0.0.1", "port": 25585, "environmentFile": "/secrets/game.env"},
+    "management": {
+        "host": "127.0.0.1",
+        "port": 25585,
+        "environmentFile": "/secrets/game.env",
+    },
     "retention": {"snapshots": 14},
     "btrfs": {"sourceRoot": "/@game", "snapshotRoot": "/@snapshots"},
 }
@@ -37,9 +42,13 @@ class ConfigTests(unittest.TestCase):
 
     def test_invalid_policy_fails_closed(self):
         changes = [
-            ("schemaVersion", True), ("schemaVersion", 2), ("source", "/"),
-            ("source", "relative"), ("source", "/srv/../game"),
-            ("snapshotRoot", "/other/game"), ("runtimeDirectory", "/state/game/run"),
+            ("schemaVersion", True),
+            ("schemaVersion", 2),
+            ("source", "/"),
+            ("source", "relative"),
+            ("source", "/srv/../game"),
+            ("snapshotRoot", "/other/game"),
+            ("runtimeDirectory", "/state/game/run"),
             ("management", dict(POLICY["management"], port=True)),
             ("management", dict(POLICY["management"], port=65536)),
             ("management", dict(POLICY["management"], host="0.0.0.0")),

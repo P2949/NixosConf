@@ -21,7 +21,11 @@ class MinecraftConfig:
 
     @property
     def management_url(self) -> str:
-        host = f"[{self.management_host}]" if ":" in self.management_host else self.management_host
+        host = (
+            f"[{self.management_host}]"
+            if ":" in self.management_host
+            else self.management_host
+        )
         return f"ws://{host}:{self.management_port}"
 
 
@@ -34,7 +38,11 @@ def _object(value, keys):
 def _path(value):
     if not isinstance(value, str) or not value.startswith("/"):
         raise ValueError("configuration paths must be absolute")
-    if value == "/" or any(part in {"", ".", ".."} for part in value.split("/")[1:]) or any(ord(c) < 32 for c in value):
+    if (
+        value == "/"
+        or any(part in {"", ".", ".."} for part in value.split("/")[1:])
+        or any(ord(c) < 32 for c in value)
+    ):
         raise ValueError("configuration paths must be normalized non-root paths")
     return Path(value)
 
@@ -55,10 +63,20 @@ def _unique(pairs):
 
 
 def load_config(path: Path) -> MinecraftConfig:
-    policy = _object(json.loads(path.read_text(), object_pairs_hook=_unique), (
-        "schemaVersion", "source", "snapshotMount", "snapshotRoot", "stateDirectory",
-        "runtimeDirectory", "management", "retention", "btrfs",
-    ))
+    policy = _object(
+        json.loads(path.read_text(), object_pairs_hook=_unique),
+        (
+            "schemaVersion",
+            "source",
+            "snapshotMount",
+            "snapshotRoot",
+            "stateDirectory",
+            "runtimeDirectory",
+            "management",
+            "retention",
+            "btrfs",
+        ),
+    )
     _integer(policy["schemaVersion"], 1, 1)
     management = _object(policy["management"], ("host", "port", "environmentFile"))
     retention = _object(policy["retention"], ("snapshots",))
@@ -81,9 +99,14 @@ def load_config(path: Path) -> MinecraftConfig:
     )
     if result.snapshot_root.parent != result.snapshot_mount:
         raise ValueError("snapshot root must be a direct child of snapshot mount")
-    paths = (result.source, result.snapshot_mount, result.state_directory, result.runtime_directory)
+    paths = (
+        result.source,
+        result.snapshot_mount,
+        result.state_directory,
+        result.runtime_directory,
+    )
     for index, left in enumerate(paths):
-        for right in paths[index + 1:]:
+        for right in paths[index + 1 :]:
             if left == right or left in right.parents or right in left.parents:
                 raise ValueError("deployment directories must be disjoint")
     if result.source_fs_root == result.snapshot_fs_root:

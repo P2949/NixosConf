@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import os
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from minecraft_tools import prerequisites as guard
@@ -15,13 +15,32 @@ class PrerequisiteTests(unittest.TestCase):
         minecraft = dict(root, fsroot="/@minecraft")
         snapshots = dict(root, fsroot="/@snapshots")
         guard.validate_mounts(root, minecraft, snapshots, "/@minecraft", "/@snapshots")
-        for key, value in (("fstype", "ext4"), ("fsroot", "/@root"),
-                           ("uuid", "11111111-2222-3333-4444-555555555556"),
-                           ("uuid", ""), ("options", "ro,relatime")):
-            with self.subTest(key=key, value=value), self.assertRaises(guard.PrerequisiteError):
-                guard.validate_mounts(root, dict(minecraft, **{key: value}), snapshots, "/@minecraft", "/@snapshots")
+        for key, value in (
+            ("fstype", "ext4"),
+            ("fsroot", "/@root"),
+            ("uuid", "11111111-2222-3333-4444-555555555556"),
+            ("uuid", ""),
+            ("options", "ro,relatime"),
+        ):
+            with (
+                self.subTest(key=key, value=value),
+                self.assertRaises(guard.PrerequisiteError),
+            ):
+                guard.validate_mounts(
+                    root,
+                    dict(minecraft, **{key: value}),
+                    snapshots,
+                    "/@minecraft",
+                    "/@snapshots",
+                )
         with self.assertRaises(guard.PrerequisiteError):
-            guard.validate_mounts(root, minecraft, dict(snapshots, fsroot="/@root"), "/@minecraft", "/@snapshots")
+            guard.validate_mounts(
+                root,
+                minecraft,
+                dict(snapshots, fsroot="/@root"),
+                "/@minecraft",
+                "/@snapshots",
+            )
 
     def test_secret_permissions_format_and_link_rejections(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -32,8 +51,13 @@ class PrerequisiteTests(unittest.TestCase):
             secret.write_bytes(content)
             secret.chmod(0o600)
             guard.validate_secret(secret, os.getuid(), os.getgid())
-            for data in (b"", content + content, content + b"EXTRA=value\n",
-                         content.replace(b"A", b"!", 1), content.replace(b"A", b"\xff", 1)):
+            for data in (
+                b"",
+                content + content,
+                content + b"EXTRA=value\n",
+                content.replace(b"A", b"!", 1),
+                content.replace(b"A", b"\xff", 1),
+            ):
                 secret.write_bytes(data)
                 with self.assertRaises(guard.PrerequisiteError):
                     guard.validate_secret(secret, os.getuid(), os.getgid())
@@ -59,8 +83,19 @@ class PrerequisiteTests(unittest.TestCase):
     def test_failure_output_never_includes_exception_or_secret(self):
         import contextlib
         import io
+
         output = io.StringIO()
-        with patch.object(guard.sys, "argv", ["minecraft-prerequisites", "--config", "/missing-policy.json"]), patch.object(guard, "mount_record", side_effect=RuntimeError("secret-canary")), contextlib.redirect_stderr(output):
+        with (
+            patch.object(
+                guard.sys,
+                "argv",
+                ["minecraft-prerequisites", "--config", "/missing-policy.json"],
+            ),
+            patch.object(
+                guard, "mount_record", side_effect=RuntimeError("secret-canary")
+            ),
+            contextlib.redirect_stderr(output),
+        ):
             self.assertEqual(guard.main(), 1)
         self.assertNotIn("secret-canary", output.getvalue())
 

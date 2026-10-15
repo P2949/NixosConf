@@ -8,6 +8,7 @@ pkgs.runCommand "check-minecraft-tools-python"
     nativeBuildInputs = [
       python
       pkgs.jq
+      pkgs.ruff
     ];
     backupClient = tools;
     managementClient = tools;
@@ -16,6 +17,8 @@ pkgs.runCommand "check-minecraft-tools-python"
     set -eu
     export PYTHONPATH="${tools}/${pkgs.python3.sitePackages}:${./.}"
     export PYTHONDONTWRITEBYTECODE=1
+    ruff format --config ${../../../packages/minecraft-tools}/pyproject.toml --check ${../../../packages/minecraft-tools} ${./.}
+    ruff check --config ${../../../packages/minecraft-tools}/pyproject.toml ${../../../packages/minecraft-tools} ${./.}
     python3 -m unittest discover -s ${./.} -p 'test_*.py' -v
     policy="$TMPDIR/policy.json"
     python3 -c 'import json, sys; from test_config import POLICY; p = dict(POLICY); p["source"] = sys.argv[2]+"/source"; p["stateDirectory"] = sys.argv[2]+"/state"; p["snapshotMount"] = sys.argv[2]+"/snapshots"; p["snapshotRoot"] = sys.argv[2]+"/snapshots/game"; p["runtimeDirectory"] = sys.argv[2]+"/runtime"; json.dump(p, open(sys.argv[1], "w"))' "$policy" "$TMPDIR"

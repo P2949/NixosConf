@@ -88,6 +88,7 @@
             pkgs.gnumake
             pkgs.pkg-config
             pkgs.python3
+            pkgs.ruff
           ];
         };
 

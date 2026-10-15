@@ -1,4 +1,5 @@
 """Filesystem identity checks and bounded Btrfs operations."""
+
 import fcntl
 import os
 import re
@@ -9,8 +10,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import UUID
+
 from .errors import BackupError
-from .metadata import checked_uuid, checked_snapshot_path
+from .metadata import checked_snapshot_path, checked_uuid
+
 DEFAULT_PREFLIGHT_TIMEOUT = 10.0
 DEFAULT_SNAPSHOT_TIMEOUT = 60.0
 SNAPSHOT_PREFIX = "survival-"
@@ -22,19 +25,19 @@ class SnapshotPlan:
     destination: Path
 
 
-
 def mounted_paths(mountinfo=Path("/proc/self/mountinfo")):
     paths = set()
     for line in mountinfo.read_text().splitlines():
         fields = line.split()
         if len(fields) < 6:
             raise BackupError("malformed mount table")
-        mounted = re.sub(r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), fields[4])
+        mounted = re.sub(
+            r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), fields[4]
+        )
         if not Path(mounted).is_absolute():
             raise BackupError("non-absolute mount path")
         paths.add(Path(mounted))
     return paths
-
 
 
 def is_mountpoint(path, mountinfo=Path("/proc/self/mountinfo")):
@@ -42,12 +45,13 @@ def is_mountpoint(path, mountinfo=Path("/proc/self/mountinfo")):
     return Path(os.path.abspath(path)) in mounted_paths(mountinfo)
 
 
-
 def reject_nested_mounts(source):
     target = Path(os.path.abspath(source))
     if any(target in mounted.parents for mounted in mounted_paths()):
-        raise BackupError("nested Minecraft mounts are not covered by snapshots", reason="nested-mount")
-
+        raise BackupError(
+            "nested Minecraft mounts are not covered by snapshots",
+            reason="nested-mount",
+        )
 
 
 def snapshot_destination(
@@ -62,12 +66,9 @@ def snapshot_destination(
     if now.tzinfo is None:
         raise BackupError("snapshot timestamp must be timezone-aware")
 
-    timestamp = now.astimezone(timezone.utc).strftime(
-        "%Y%m%dT%H%M%S%fZ"
-    )
+    timestamp = now.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
 
     return snapshot_root / f"{SNAPSHOT_PREFIX}{timestamp}"
-
 
 
 def run_btrfs_preflight(
@@ -85,15 +86,12 @@ def run_btrfs_preflight(
         )
     except subprocess.TimeoutExpired as exc:
         raise BackupError(
-            "Btrfs preflight command timed out: "
-            + " ".join(map(str, arguments))
+            "Btrfs preflight command timed out: " + " ".join(map(str, arguments))
         ) from exc
     except subprocess.CalledProcessError as exc:
         raise BackupError(
-            "Btrfs preflight command failed: "
-            + " ".join(map(str, arguments))
+            "Btrfs preflight command failed: " + " ".join(map(str, arguments))
         ) from exc
-
 
 
 def verify_btrfs_subvolume(
@@ -111,7 +109,6 @@ def verify_btrfs_subvolume(
         runner=runner,
         timeout=timeout,
     )
-
 
 
 def btrfs_filesystem_uuid(
@@ -138,14 +135,14 @@ def btrfs_filesystem_uuid(
             fcntl.ioctl(descriptor, 0x8400941F, info, True)
             return checked_uuid(str(UUID(bytes=bytes(info[16:32]))))
         except OSError as ioctl_error:
-            raise BackupError("cannot determine Btrfs filesystem identity") from ioctl_error
+            raise BackupError(
+                "cannot determine Btrfs filesystem identity"
+            ) from ioctl_error
         finally:
             os.close(descriptor)
 
     if not isinstance(result.stdout, str):
-        raise BackupError(
-            f"Btrfs filesystem query returned non-text output for {path}"
-        )
+        raise BackupError(f"Btrfs filesystem query returned non-text output for {path}")
 
     filesystem_uuids = []
 
@@ -162,9 +159,7 @@ def btrfs_filesystem_uuid(
             continue
 
         try:
-            filesystem_uuids.append(
-                checked_uuid(str(UUID(match.group(1))))
-            )
+            filesystem_uuids.append(checked_uuid(str(UUID(match.group(1)))))
         except ValueError as exc:
             raise BackupError("malformed Btrfs filesystem UUID") from exc
 
@@ -176,18 +171,21 @@ def btrfs_filesystem_uuid(
     return filesystem_uuids[0]
 
 
-
-def verify_source_completeness(source, runner=subprocess.run,
-                               timeout=DEFAULT_PREFLIGHT_TIMEOUT):
+def verify_source_completeness(
+    source, runner=subprocess.run, timeout=DEFAULT_PREFLIGHT_TIMEOUT
+):
     reject_nested_mounts(source)
     verify_btrfs_subvolume(source, runner=runner, timeout=timeout)
     descendants = run_btrfs_preflight(
-        ["btrfs", "subvolume", "list", "-o", str(source)], runner=runner, timeout=timeout,
+        ["btrfs", "subvolume", "list", "-o", str(source)],
+        runner=runner,
+        timeout=timeout,
     )
     if descendants.stdout.strip():
-        raise BackupError("nested Minecraft subvolumes are not covered by snapshots",
-                          reason="nested-subvolume")
-
+        raise BackupError(
+            "nested Minecraft subvolumes are not covered by snapshots",
+            reason="nested-subvolume",
+        )
 
 
 def prepare_snapshot(
@@ -203,12 +201,14 @@ def prepare_snapshot(
         raise BackupError("explicit deployment policy values are required")
     if source.is_symlink():
         raise BackupError(
-            f"Minecraft source must not be a symbolic link: {source}", reason="mount-missing"
+            f"Minecraft source must not be a symbolic link: {source}",
+            reason="mount-missing",
         )
 
     if not source.is_dir():
         raise BackupError(
-            f"Minecraft source directory does not exist: {source}", reason="mount-missing"
+            f"Minecraft source directory does not exist: {source}",
+            reason="mount-missing",
         )
 
     if not mount_checker(source):
@@ -218,7 +218,8 @@ def prepare_snapshot(
 
     if snapshot_mount.is_symlink():
         raise BackupError(
-            f"snapshot mount must not be a symbolic link: {snapshot_mount}", reason="mount-missing"
+            f"snapshot mount must not be a symbolic link: {snapshot_mount}",
+            reason="mount-missing",
         )
 
     if not snapshot_mount.is_dir():
@@ -228,13 +229,12 @@ def prepare_snapshot(
 
     if not mount_checker(snapshot_mount):
         raise BackupError(
-            f"snapshot path must be a mount point: {snapshot_mount}", reason="mount-missing"
+            f"snapshot path must be a mount point: {snapshot_mount}",
+            reason="mount-missing",
         )
 
     if snapshot_root.parent != snapshot_mount:
-        raise BackupError(
-            "snapshot root must be a direct child of the snapshot mount"
-        )
+        raise BackupError("snapshot root must be a direct child of the snapshot mount")
 
     verify_source_completeness(source, runner=runner, timeout=timeout)
 
@@ -252,13 +252,12 @@ def prepare_snapshot(
     if source_uuid != snapshot_uuid:
         raise BackupError(
             "Minecraft source and snapshot destination are on "
-            "different Btrfs filesystems", reason="filesystem-mismatch"
+            "different Btrfs filesystems",
+            reason="filesystem-mismatch",
         )
 
     if snapshot_root.is_symlink():
-        raise BackupError(
-            f"snapshot root must not be a symbolic link: {snapshot_root}"
-        )
+        raise BackupError(f"snapshot root must not be a symbolic link: {snapshot_root}")
 
     try:
         snapshot_root.mkdir(
@@ -272,19 +271,13 @@ def prepare_snapshot(
         ) from exc
 
     if snapshot_root.is_symlink():
-        raise BackupError(
-            f"snapshot root must not be a symbolic link: {snapshot_root}"
-        )
+        raise BackupError(f"snapshot root must not be a symbolic link: {snapshot_root}")
 
     if mount_checker(snapshot_root):
-        raise BackupError(
-            f"snapshot root must not be a mount point: {snapshot_root}"
-        )
+        raise BackupError(f"snapshot root must not be a mount point: {snapshot_root}")
 
     if not snapshot_root.is_dir():
-        raise BackupError(
-            f"snapshot root is not a directory: {snapshot_root}"
-        )
+        raise BackupError(f"snapshot root is not a directory: {snapshot_root}")
 
     if snapshot_root.lstat().st_uid != os.geteuid():
         raise BackupError("snapshot root must be owned by the backup user")
@@ -302,15 +295,12 @@ def prepare_snapshot(
     )
 
     if os.path.lexists(destination):
-        raise BackupError(
-            f"snapshot destination already exists: {destination}"
-        )
+        raise BackupError(f"snapshot destination already exists: {destination}")
 
     return SnapshotPlan(
         source=source,
         destination=destination,
     )
-
 
 
 def create_readonly_snapshot(
@@ -336,41 +326,61 @@ def create_readonly_snapshot(
     return plan.destination
 
 
-
 def verify_snapshot_root(snapshot_root, mount_checker):
     info = snapshot_root.lstat()
-    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid()
-            or stat.S_IMODE(info.st_mode) != 0o700 or mount_checker(snapshot_root)):
-        raise BackupError("snapshot root must be an owned unmounted mode 0700 directory")
+    if (
+        not stat.S_ISDIR(info.st_mode)
+        or info.st_uid != os.geteuid()
+        or stat.S_IMODE(info.st_mode) != 0o700
+        or mount_checker(snapshot_root)
+    ):
+        raise BackupError(
+            "snapshot root must be an owned unmounted mode 0700 directory"
+        )
 
 
-
-def verify_snapshot_identity(path, filesystem_uuid, snapshot_root=None,
-                             runner=subprocess.run, mount_checker=is_mountpoint):
+def verify_snapshot_identity(
+    path,
+    filesystem_uuid,
+    snapshot_root=None,
+    runner=subprocess.run,
+    mount_checker=is_mountpoint,
+):
     if snapshot_root is None:
         raise BackupError("explicit deployment policy values are required")
     checked_snapshot_path(str(path), snapshot_root)
     verify_snapshot_root(snapshot_root, mount_checker)
     if path.is_symlink() or not path.is_dir() or mount_checker(path):
         raise BackupError("snapshot must be an unmounted real subvolume")
-    result = run_btrfs_preflight(["btrfs", "subvolume", "show", str(path)], runner=runner)
+    result = run_btrfs_preflight(
+        ["btrfs", "subvolume", "show", str(path)], runner=runner
+    )
     matches = re.findall(r"^\s*UUID:\s*(\S+)\s*$", result.stdout, flags=re.MULTILINE)
     if len(matches) != 1:
         raise BackupError("could not determine exactly one snapshot UUID")
     identity = checked_uuid(matches[0])
     if btrfs_filesystem_uuid(path, runner=runner) != filesystem_uuid:
-        raise BackupError("snapshot filesystem UUID mismatch", reason="filesystem-mismatch")
-    result = run_btrfs_preflight(["btrfs", "property", "get", "-t", "s", str(path), "ro"], runner=runner)
+        raise BackupError(
+            "snapshot filesystem UUID mismatch", reason="filesystem-mismatch"
+        )
+    result = run_btrfs_preflight(
+        ["btrfs", "property", "get", "-t", "s", str(path), "ro"], runner=runner
+    )
     if result.stdout.strip() != "ro=true":
         raise BackupError("snapshot is not read-only", reason="snapshot-not-readonly")
     return identity
 
 
-
 def sync_snapshot_filesystem(snapshot_mount, runner=subprocess.run):
     started = time.monotonic()
-    runner(["btrfs", "filesystem", "sync", str(snapshot_mount)],
-           check=True, capture_output=True, text=True,
-           timeout=DEFAULT_SNAPSHOT_TIMEOUT)
-    print(f"snapshot filesystem sync completed in {time.monotonic() - started:.3f} seconds", flush=True)
-
+    runner(
+        ["btrfs", "filesystem", "sync", str(snapshot_mount)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=DEFAULT_SNAPSHOT_TIMEOUT,
+    )
+    print(
+        f"snapshot filesystem sync completed in {time.monotonic() - started:.3f} seconds",
+        flush=True,
+    )
