@@ -119,6 +119,7 @@
         // optimization.packages
         // {
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
+          benchmark-appliance = inputs.self.nixosConfigurations.benchmark-appliance.config.system.build.image;
           module-docs =
             (pkgs.nixosOptionsDoc {
               options =
@@ -188,6 +189,11 @@
       nixosConfigurations.recovery = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./images/recovery.nix ];
+      };
+      nixosConfigurations.benchmark-appliance = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs.benchmarkRunner = optimization.packages.optimization-nix-evaluation-runner;
+        modules = [ ./images/benchmark-appliance.nix ];
       };
     };
 }
