@@ -24,6 +24,7 @@ Build the isolated libraries with:
 ```sh
 nix build .#boehmgc-stock .#boehmgc-cpu-target --no-link --print-out-paths
 nix build .#nix-evaluation-corpus --no-link --print-out-paths
+nix build .#nix-evaluation-stock .#nix-evaluation-candidate --no-link --print-out-paths
 ```
 
 The corpus pins that repository revision by NAR hash and retains all ten source
@@ -31,8 +32,14 @@ trees (the repository plus every locked input) as store references. Its JSON
 records the lock-file hash and each input's revision, NAR hash and store path.
 Evaluation of the pinned store source passed offline with a fresh private cache.
 
-The experiment still requires consumer identity and loaded-library verification,
-source/build manifests, and an
+Both command packages expose `bin/nix-evaluation` and execute the same pinned
+Nix 2.34.8 binary, which resolves to the executable observed during profiling.
+They set `LD_LIBRARY_PATH` to only their respective GC library directory and
+clear `LD_PRELOAD` and `LD_AUDIT`. Loader diagnostics confirmed both selections;
+live candidate evaluation mappings confirmed the exact Nix executable and only
+the candidate GC. No existing Nix store binary is modified.
+
+The experiment still requires source/build manifests and an
 independent pilot followed by randomized paired measurements on the unchanged
 physical benchmark control. A successful package build is not an improvement
 verdict or authorization to adopt the candidate.

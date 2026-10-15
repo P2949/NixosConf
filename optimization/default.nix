@@ -34,6 +34,8 @@ in
     boehmgc-stock = gcExperiment.stock;
     boehmgc-cpu-target = gcExperiment.candidate;
     nix-evaluation-corpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
+    nix-evaluation-stock = gcExperiment.stockCommand;
+    nix-evaluation-candidate = gcExperiment.candidateCommand;
     zstd-stock = pkgs.zstd;
     zstd-cpu-target = candidate;
     silesia-corpus = corpus;
