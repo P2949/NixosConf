@@ -23,10 +23,16 @@ Build the isolated libraries with:
 
 ```sh
 nix build .#boehmgc-stock .#boehmgc-cpu-target --no-link --print-out-paths
+nix build .#nix-evaluation-corpus --no-link --print-out-paths
 ```
 
-The experiment still requires an immutable evaluation-input corpus, consumer
-identity and loaded-library verification, source/build manifests, and an
+The corpus pins that repository revision by NAR hash and retains all ten source
+trees (the repository plus every locked input) as store references. Its JSON
+records the lock-file hash and each input's revision, NAR hash and store path.
+Evaluation of the pinned store source passed offline with a fresh private cache.
+
+The experiment still requires consumer identity and loaded-library verification,
+source/build manifests, and an
 independent pilot followed by randomized paired measurements on the unchanged
 physical benchmark control. A successful package build is not an improvement
 verdict or authorization to adopt the candidate.

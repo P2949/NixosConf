@@ -33,6 +33,7 @@ in
   packages = {
     boehmgc-stock = gcExperiment.stock;
     boehmgc-cpu-target = gcExperiment.candidate;
+    nix-evaluation-corpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
     zstd-stock = pkgs.zstd;
     zstd-cpu-target = candidate;
     silesia-corpus = corpus;
