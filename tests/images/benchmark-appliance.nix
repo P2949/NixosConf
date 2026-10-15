@@ -21,9 +21,11 @@ pkgs.testers.runNixOSTest {
     import json
     import os
     from pathlib import Path
+    import re
     import shutil
     import subprocess
     import tempfile
+    from test_driver.machine import retry
 
     # Boot the exact standalone image; no guest agent or test credentials are
     # injected into it. Readiness and corruption are observed on its console.
@@ -44,14 +46,20 @@ pkgs.testers.runNixOSTest {
     def overlay(destination, backing):
         subprocess.run(["${nodes.machine.virtualisation.qemu.package}/bin/qemu-img", "create", "-f", "qcow2", "-F", "raw", "-b", str(backing), str(destination)], check=True)
 
+    def wait_console(pattern, timeout=180):
+        # The driver's queue-based helper consumes only one line per second.
+        # Match the complete current boot log so verbose boots cannot exhaust
+        # the deadline while the required evidence is already available.
+        retry(lambda _: re.search(pattern, machine.get_console_log()) is not None, timeout)
+
     with tempfile.TemporaryDirectory() as directory:
         work = Path(directory)
         pristine = digest(original)
         overlay(work / "healthy.qcow2", original)
         os.environ["NIX_DISK_IMAGE"] = str(work / "healthy.qcow2")
         machine.start()
-        machine.wait_for_console_text("BENCHMARK_APPLIANCE_READY", timeout=180)
-        machine.wait_for_console_text("Reached target.*Multi-User System", timeout=60)
+        wait_console("BENCHMARK_APPLIANCE_READY")
+        wait_console("Reached target.*Multi-User System", timeout=60)
         machine.crash()
 
         damaged = work / "damaged.raw"
@@ -68,8 +76,8 @@ pkgs.testers.runNixOSTest {
         overlay(work / "damaged.qcow2", damaged)
         os.environ["NIX_DISK_IMAGE"] = str(work / "damaged.qcow2")
         machine.start()
-        machine.wait_for_console_text("device-mapper: verity:.*data block.*corrupt", timeout=180)
-        machine.wait_for_console_text("Kernel panic.*dm-verity device corrupted", timeout=60)
+        wait_console("device-mapper: verity:.*data block.*corrupt")
+        wait_console("Kernel panic.*dm-verity device corrupted", timeout=60)
         machine.crash()
         assert digest(original) == pristine
         print("CORRUPTION_DETECTED: protected data byte changed; original store image unchanged")
