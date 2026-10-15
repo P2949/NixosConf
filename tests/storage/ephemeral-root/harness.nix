@@ -177,6 +177,13 @@ pkgs.testers.runNixOSTest {
 
         memorySize = 2048;
         cores = 2;
+      }
+      // pkgs.lib.optionalAttrs granular {
+        # This storage test uses no display assertions. Hosted CI stalled in
+        # bochs framebuffer work; keep its console and virtual hardware serial-only.
+        graphics = false;
+        qemu.consoles = [ "ttyS0,115200n8" ];
+        qemu.options = [ "-vga none" ];
       };
 
       boot.loader.systemd-boot.enable = true;
