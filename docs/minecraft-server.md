@@ -50,29 +50,13 @@ The Java service has Nice 5, MemoryHigh 10G and MemoryMax 12G; the slice has CPU
 and I/O weights 50. Backup runs at Nice 10 with CPU/I/O weights 25 and a
 20-minute outer timeout, so it yields to foreground workstation work.
 
-### Performance qualification
+### Qualification history
 
-C2ME executor four was accepted after functional and comparative qualification.
-The exact production-style stack passed all eight functional gates. The
-comparative C2ME study selected `C2ME_4` with material benefit: median worldgen
-completion improved 39.08%, contention completion improved 20.69%, and
-contention client 1% low improved 1.70%.
-
-The final collector comparison completed five valid G1 and five valid ZGC
-contention runs. It retained G1 under the declared baseline-tie rule. Client
-differences were negligible, both collectors recorded zero ticks over 50 ms,
-and ZGC world-generation throughput was about 4.8% lower in that comparison.
-
-One C2ME steady qualification run observed unexpected distant terrain
-generation. The behavior did not reproduce in two subsequent C2ME steady runs,
-which both produced zero terrain changes, while two no-C2ME controls also
-passed. The event is therefore retained as an unresolved, non-reproduced
-observation rather than attributed to C2ME.
-
-The immutable source checkpoint that was qualified and initially deployed is
-tagged `minecraft-server-qualified-2026-10-12`. Exact qualification receipts
-belong to the tag, PR history and retained private evidence rather than this
-operating runbook.
+The accepted production stack and G1 selection are recorded in
+[PR #24](https://github.com/P2949/NixosConf/pull/24) and the immutable
+`minecraft-server-qualified-2026-10-12` tag. An unexpected-terrain observation
+was not reproduced; causality remains unresolved. Current operational
+limitations are summarized in [status](status.md#minecraft-server).
 
 ## Tool ownership and configuration
 
@@ -312,7 +296,7 @@ Read-only diagnostics for a recorded path can use `findmnt`,
 `btrfs property get -t s PATH ro`. Inspect exact paths from the manifest; a
 `survival-*` filename does not prove ownership or authorize deletion.
 
-## Hardening and accepted operation
+## Hardening and backup scope
 
 The backup runs as root initially for Btrfs snapshots/deletion, privileged
 metadata queries, root-only state and recovery. `ProtectSystem=strict`,
@@ -326,37 +310,16 @@ PrivateNetwork is explicitly false so the client sees host loopback. Cgroup IP
 filtering denies other networks and allows localhost; address families are
 limited to UNIX, IPv4 and IPv6. The client independently enforces the loopback
 endpoint. No speculative capability bounding set or syscall allow-list is
-introduced. Offline systemd security analysis of the qualified hardening unit
-reported 6.5; that diagnostic is not functional acceptance or proof of live BPF
-enforcement. Real service snapshot/retention runs passed with the actual Btrfs
-ioctls and namespace mount visibility; interruption recovery exercised the
-recovery hook. Isolated non-loopback peers separately verified host ingress
-and management/RCON rejection. No stronger BPF-specific enforcement claim is made.
+introduced. These controls do not establish BPF-specific enforcement or
+replace functional backup and network validation.
 
-Minecraft recovery is intentionally local-only. Read-only Btrfs snapshots on this system are the complete backup scope for the server. They provide rollback and local recovery but deliberately do not cover total device loss.
-
-They share storage and initially share extents with the world. See
+Read-only Btrfs snapshots on this system are the complete Minecraft backup scope.
+They provide rollback and local recovery but do not cover total device loss.
+Snapshots share storage and initially share extents with the world; see
 [Btrfs snapshot and deletion semantics](https://btrfs.readthedocs.io/en/latest/btrfs-subvolume.html).
-
-Physical deployment prepared the separate `@minecraft` mount and management
-secret, then activated the guarded candidate. Real paused and online-player
-backups, protocol/save ordering, autosave interruption recovery, isolated
-retention/deletion recovery and a user-verified playable local restore passed.
-The normal → pregen → normal switch also passed: a 32-block-radius square
-Chunky run processed 25 chunks, manual backup succeeded, and normal mode restored
-pause 60 with Chunky absent and the ordinary timer active. Disposable acceptance
-snapshots and the writable restore clone were removed by exact verified targets;
-raw cleanup identities remain in the local receipt.
-
-Actual reboot persistence passed: the timer stamp remained a regular bind-mounted
-file with unchanged persistent inode/timestamp and the seed/server/timer started.
-Host ingress was tested from isolated IPv4 and IPv6 peers; the game handshake/ping
-passed and management/RCON were unavailable. The latest backup completed during
-a VM build with sync 0.325 seconds and total duration about 2.1 seconds; the user
-reported no stalls during that workload. Ordinary scheduled-event acceptance is
-delayed; genuine missed-event catch-up is a user-approved post-merge observation.
-The unavailable laptop's actual LAN/gameplay path remains a recommended later
-operational smoke test. These are separate from the accepted host ingress proof.
+Acceptance history belongs to
+[PR #23](https://github.com/P2949/NixosConf/pull/23) and the
+[history index](history/README.md).
 
 ## Reproduce the declarative gate
 
@@ -388,14 +351,6 @@ must preserve these access restrictions and install the current management
 secret before starting a restored server. See
 [secret bootstrap and rotation](bootstrap-secrets.md) and
 [backup policy](backup-restore.md).
-
-Paused-server backup after more than 60 seconds empty and online-player backup
-passed against the real endpoint. P2949 was added to the runtime whitelist and
-joined successfully; no operator role was added. Generated mod policy was reviewed
-and meaningful parity/profiling settings are declared in Nix. Empty-server CPU,
-return to idle after backup, one-player CPU/RSS and user-reported workstation
-responsiveness were measured separately; see the idle/resource observation below.
-
 
 Retention removes at most four eligible managed snapshots per backup invocation,
 including a recovered deletion intent. Protected capture and last-success paths
@@ -749,42 +704,20 @@ secret injection, whitelist, player acceptance and a fresh local recovery point.
 The first real version upgrade must exercise this workflow; current deployment
 has not claimed a cross-version world rollback test.
 
-## Accepted idle observation
+## Deferred operational observations
 
-After the user disconnected, the server logged its normal 60-second empty pause.
-A 30-second service CPU sample used 0.24% of one core before a real backup and
-0.29% afterward. The server stayed empty and the service invocation did not
-change; live recovery integrity passed afterward. Raw measurements are retained
-in a local root-private receipt. These short samples prove return to negligible
-idle CPU for this run; representative multi-minute active/resource observation
-remains separate from performance tuning.
+Ordinary, unmodified UTC calendar activation and genuine missed-event catch-up
+remain unexercised operational observations. The six-hour timer remains active.
+For an ordinary event, verify service execution, a newly registered read-only
+recovery point, autosave enabled, no pending state/marker, complete live recovery
+integrity, sane retention and an advanced persistent timer stamp. Manual starts
+and artificial stale stamps do not establish this observation.
 
+For genuine catch-up, observe a real maintenance shutdown spanning a scheduled
+event, then verify the same transaction and timer-stamp invariants after startup.
+Synthetic stale-stamp tests and reboot persistence cover mechanisms but do not
+prove an actual missed calendar event. Actual laptop/LAN gameplay and multi-player
+resource capacity remain unexercised. None requires another backup tier.
 
-## Integration acceptance policy
-
-Ordinary, unmodified UTC calendar activation acceptance is a user-approved
-post-merge observation. The temporary live observer was cancelled and removed; the production
-six-hour timer remains active. This test is unexercised and does not block integration. When resumed,
-verify service execution, a newly registered read-only recovery point, autosave
-enabled, no pending state/marker, complete live recovery-set integrity, sane
-retention and an advanced persistent timer stamp. Manual starts and artificial
-stale stamps do not count as this observation.
-
-The user explicitly moved genuine missed-event catch-up to a post-merge
-operational observation. Synthetic stale-stamp catch-up and actual reboot/stamp
-persistence are accepted evidence for the underlying mechanisms; they are not
-claimed as an actual missed calendar event. Observe that later during a real
-maintenance shutdown spanning a scheduled event. Laptop gameplay is also a
-recommended later home-network smoke test. Neither requires another backup tier.
-Local health visibility and optional loopback-hostname hardening are deferred;
-normal management uses literal `127.0.0.1` with systemd loopback IP filtering.
-
-
-A subsequent three-minute resource observation included 61.7 seconds paused and
-111.3 seconds with one player connected (excluding the join interval). Paused
-CPU averaged 0.246% of one core and RSS stayed around 1469 MiB. Active CPU
-averaged 14.3% of one core, with 10-second samples ranging from 5.45% to 70.2%;
-RSS was 1581–1648 MiB. The Minecraft slice tracked service CPU closely.
-This is a small one-player sample, not a multi-player capacity benchmark.
-The user reported no noticeable Minecraft stutter or desktop stalls during
-this play session.
+Normal management uses literal `127.0.0.1` with systemd loopback IP filtering.
+Optional loopback-hostname hardening remains deferred.
