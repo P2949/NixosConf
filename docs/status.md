@@ -66,6 +66,10 @@ The [immutable `/etc` VM](development-validation.md#immutable-etc-userborn-and-p
 proves read-only configuration replacement, Userborn account updates and
 perlless service operation across a switch and switch back. It remains a
 disposable experiment; no physical desktop adoption is implied.
+The [AArch64 binfmt VM](development-validation.md#aarch64-package-execution-through-binfmt)
+checks a cross-built package's ELF identity and transparent execution, rejection
+without its guest kernel registration, and recovery after restoring the rule.
+This is functional packaging validation only.
 VM results do not replace physical acceptance.
 
 ## Minecraft server
