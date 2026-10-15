@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import importlib.util
 import json
 import os
 import unittest
@@ -8,17 +7,7 @@ from collections import deque
 from pathlib import Path
 
 
-SOURCE = Path(os.environ["MINECRAFT_MSMP_SOURCE"])
-SPEC = importlib.util.spec_from_file_location(
-    "minecraft_msmp",
-    SOURCE,
-)
-
-if SPEC is None or SPEC.loader is None:
-    raise RuntimeError(f"cannot load {SOURCE}")
-
-msmp = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(msmp)
+from minecraft_tools import msmp as msmp
 
 
 def response(request_id, result):

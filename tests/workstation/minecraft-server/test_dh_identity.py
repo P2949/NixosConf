@@ -1,12 +1,9 @@
-import importlib.util
 import os
 import tempfile
 import unittest
 from pathlib import Path
 
-spec = importlib.util.spec_from_file_location("identity", os.environ["MINECRAFT_DH_IDENTITY_SOURCE"])
-identity = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(identity)
+from minecraft_tools import dh_identity as identity
 
 
 class IdentityTests(unittest.TestCase):

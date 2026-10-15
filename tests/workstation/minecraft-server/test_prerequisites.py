@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-import importlib.util
 import os
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 
-spec = importlib.util.spec_from_file_location("prerequisites", os.environ["MINECRAFT_PREREQUISITES_SOURCE"])
-guard = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(guard)
+from minecraft_tools import prerequisites as guard
 
 
 class PrerequisiteTests(unittest.TestCase):
