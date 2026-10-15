@@ -25,7 +25,7 @@ baseline and frozen benchmark control.
 | `modules/` | Reusable NixOS features |
 | `home/` | User and session policy |
 | `packages/` | Custom derivations |
-| `images/` | Standalone recovery images |
+| `images/` | Standalone recovery and experimental appliance images |
 | `tests/` | Configuration and integration validation |
 | `docs/` | Current durable policy and procedures |
 | `scripts/` | Reusable operational tooling |

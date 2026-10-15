@@ -58,6 +58,10 @@ provides isolated version/mod and world-copy validation.
 The [distributed-build VM proof](development-validation.md#distributed-build-routing-proof)
 checks remote execution, output transfer and builder feature rejection while
 retaining physical-only benchmark admission.
+The separate [verity appliance](development-validation.md#standalone-verity-appliance)
+boots a UKI with a read-only EROFS store and volatile root. Its QEMU test proves
+normal readiness and explicit dm-verity failure after corrupting a private image
+copy. It remains independent of desktop deployment and benchmark control.
 VM results do not replace physical acceptance.
 
 ## Minecraft server
