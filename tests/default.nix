@@ -24,6 +24,7 @@
     activation-safety-config = import ./workstation/activation-safety/config.nix { inherit pkgs; };
     btrfs-maintenance-config = import ./storage/btrfs-maintenance/config.nix { inherit pkgs; };
 
+    minecraft-tools-python = import ./packages/minecraft-tools { inherit pkgs; };
     minecraft-server-config = import ./workstation/minecraft-server/config.nix {
       inherit pkgs username;
       inherit (desktopSystem) config;

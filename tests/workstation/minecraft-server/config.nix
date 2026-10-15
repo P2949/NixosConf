@@ -36,19 +36,9 @@ let
   ) config.environment.systemPackages;
   backupClient = builtins.head backupClients;
 
-  msmpSource = ../../../packages/minecraft-tools/src/minecraft_tools/msmp.py;
-  msmpTests = ./test_msmp.py;
-  backupSource = ../../../packages/minecraft-tools/src/minecraft_tools/backup.py;
-  backupTests = ./test_backup.py;
-  prerequisiteSource = ../../../packages/minecraft-tools/src/minecraft_tools/prerequisites.py;
-  prerequisiteTests = ./test_prerequisites.py;
-  dhIdentitySource = ../../../packages/minecraft-tools/src/minecraft_tools/dh_identity.py;
-  dhIdentityTests = ./test_dh_identity.py;
-
   minecraftTools = pkgs.callPackage ../../../packages/minecraft-tools { };
-  msmpTestPython = pkgs.python3.withPackages (pythonPackages: [
-    pythonPackages.websockets
-  ]);
+  msmpTestPython = pkgs.python3.withPackages (pythonPackages: [ pythonPackages.websockets ]);
+
 in
 assert config.services.minecraft-servers.enable;
 assert config.services.minecraft-servers.eula;
@@ -310,20 +300,7 @@ assert builtins.length backupClients == 1;
 
 pkgs.runCommand "check-minecraft-server-config"
   {
-    inherit
-      prerequisiteSource
-      prerequisiteTests
-      dhIdentitySource
-      dhIdentityTests
-      backupSource
-      backupTests
-      backupClient
-      managementClient
-      mods
-      msmpSource
-      msmpTests
-      pregenMods
-      ;
+    inherit mods pregenMods;
 
     nativeBuildInputs = [
       msmpTestPython
@@ -337,95 +314,9 @@ pkgs.runCommand "check-minecraft-server-config"
         set -eu
         export PYTHONPATH="${minecraftTools}/${pkgs.python3.sitePackages}"
 
-        python3 ${../../packages/minecraft-tools/test_config.py}
         python3 -c 'from pathlib import Path; import sys; from minecraft_tools.config import load_config; policy = load_config(Path(sys.argv[1])); assert str(policy.source) == "/srv/minecraft"; assert policy.management_port == 25585; assert policy.source_fs_root == "/@minecraft"; assert policy.snapshot_fs_root == "/@snapshots"' ${
           config.environment.etc."minecraft-tools.json".source
         }
-        MINECRAFT_PREREQUISITES_SOURCE="$prerequisiteSource" python3 "$prerequisiteTests"
-        MINECRAFT_DH_IDENTITY_SOURCE="$dhIdentitySource" python3 "$dhIdentityTests"
-
-        MINECRAFT_MSMP_SOURCE="$msmpSource" python3 "$msmpTests"
-
-        MINECRAFT_MSMP_SOURCE="$msmpSource" MINECRAFT_BACKUP_SOURCE="$backupSource" python3 "$backupTests"
-
-        "$backupClient/bin/minecraft-backup" --help | grep -F 'status [--live]|recover-autosave'
-        "$backupClient/bin/minecraft-backup" status | jq -e '.managed_snapshot_count == 0'
-        if "$backupClient/bin/minecraft-backup" invalid-command >/dev/null 2>&1; then
-          echo "minecraft-backup accepted an invalid command" >&2
-          exit 1
-        fi
-
-        client="$managementClient/bin/minecraft-msmp"
-        validSecret="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcd"
-
-        if [ ! -x "$client" ]; then
-          echo "minecraft-msmp executable is missing" >&2
-          exit 1
-        fi
-
-        helpOutput="$("$client" --help)"
-
-        case "$helpOutput" in
-          *"{validate,discover,call,save-and-wait,watch}"*)
-            ;;
-          *)
-            echo "minecraft-msmp help output is missing expected commands" >&2
-            exit 1
-            ;;
-        esac
-
-        validateOutput="$(
-          MINECRAFT_MANAGEMENT_SECRET="$validSecret"             "$client" validate
-        )"
-
-        if [ "$validateOutput" != "configuration valid: ws://127.0.0.1:25585" ]; then
-          echo "minecraft-msmp default configuration validation differed from expected output" >&2
-          exit 1
-        fi
-
-        if           MINECRAFT_MANAGEMENT_SECRET="too-short"             "$client" validate >/dev/null 2>&1
-        then
-          echo "minecraft-msmp accepted a short management secret" >&2
-          exit 1
-        fi
-
-        if           MINECRAFT_MANAGEMENT_SECRET="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabc!"             "$client" validate >/dev/null 2>&1
-        then
-          echo "minecraft-msmp accepted a non-alphanumeric management secret" >&2
-          exit 1
-        fi
-
-        managementEnv="$TMPDIR/minecraft-management.env"
-
-        cat > "$managementEnv" <<'EOF'
-    MINECRAFT_MANAGEMENT_SECRET=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcd
-    EOF
-
-        env           -u MINECRAFT_MANAGEMENT_SECRET           MINECRAFT_MANAGEMENT_ENV_FILE="$managementEnv"           "$client" validate >/dev/null
-
-        cat > "$managementEnv" <<'EOF'
-    MINECRAFT_MANAGEMENT_SECRET=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcd
-    MINECRAFT_MANAGEMENT_SECRET=abcd0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
-    EOF
-
-        if           env             -u MINECRAFT_MANAGEMENT_SECRET             MINECRAFT_MANAGEMENT_ENV_FILE="$managementEnv"             "$client" validate >/dev/null 2>&1
-        then
-          echo "minecraft-msmp accepted duplicate secret assignments" >&2
-          exit 1
-        fi
-
-        if           MINECRAFT_MANAGEMENT_SECRET="$validSecret"           MINECRAFT_MANAGEMENT_URL="ws://192.0.2.1:25585"             "$client" validate >/dev/null 2>&1
-        then
-          echo "minecraft-msmp accepted a non-loopback management endpoint" >&2
-          exit 1
-        fi
-
-        if           MINECRAFT_MANAGEMENT_SECRET="$validSecret"           MINECRAFT_MANAGEMENT_URL="wss://127.0.0.1:25585"             "$client" validate >/dev/null 2>&1
-        then
-          echo "minecraft-msmp accepted TLS despite the configured plaintext loopback endpoint" >&2
-          exit 1
-        fi
-
         normalActual="$TMPDIR/minecraft-mods.txt"
         normalExpected="$TMPDIR/expected-minecraft-mods.txt"
         pregenActual="$TMPDIR/minecraft-pregen-mods.txt"

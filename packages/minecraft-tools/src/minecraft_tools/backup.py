@@ -82,8 +82,9 @@ DEFAULT_SAVE_TIMEOUT = msmp.DEFAULT_SAVE_TIMEOUT
 def exclusive_backup_lock(
     path: Path = None,
 ):
-    if path == None:
-        prepare_recovery_directory()
+    if path is None:
+        raise BackupError("explicit lock path is required")
+    prepare_recovery_directory(path.parent)
     flags = os.O_RDWR | os.O_CREAT | os.O_CLOEXEC
 
     if hasattr(os, "O_NOFOLLOW"):
