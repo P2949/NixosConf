@@ -8,6 +8,19 @@
 }:
 
 let
+  ephemeralDirectories = import ../../../home/p2949/persistence/ephemeral-directories.nix;
+  ephemeralFiles = import ../../../home/p2949/persistence/ephemeral-files.nix;
+  applicationCachePaths = pkgs.lib.concatMap (
+    entry: map (child: "/home/tester/${entry.parent}/${child}/granular-proof") entry.children
+  ) ephemeralDirectories;
+  # Instantiate each glob with a deterministic filename that its tmpfiles rule
+  # must remove. Never hand-transcribe the application's disposable file list.
+  applicationFilePaths = pkgs.lib.concatMap (
+    entry:
+    map (
+      child: "/home/tester/${entry.parent}/${builtins.replaceStrings [ "*" ] [ "granular-proof-" ] child}"
+    ) entry.children
+  ) ephemeralFiles;
   diskDevice = "/dev/disk/by-id/virtio-impermanence-root";
 in
 assert !persistentFallback || persistMachineId;
@@ -202,6 +215,8 @@ pkgs.testers.runNixOSTest {
     in
     ''
       import re
+      from pathlib import PurePosixPath
+      from shlex import quote as q
 
       recovery = ${if recovery then "True" else "False"}
       persist_machine_id = ${if persistMachineId then "True" else "False"}
@@ -220,25 +235,24 @@ pkgs.testers.runNixOSTest {
           "/var/lib/nixos-optimization/granular-proof", "/persist/granular-proof",
           "/etc/NetworkManager/system-connections/granular-proof",
       ]
-      application_cache_paths = [
-          "/home/tester/Development/Unity/VR-AR-project-2/Temp/granular-proof",
-          "/home/tester/Development/Unreal/Projects/AI_Gavin_Project/Intermediate/granular-proof",
-          "/home/tester/.codex/cache/granular-proof",
-          "/home/tester/.config/mozilla/firefox/y34aofre.default/cache2/granular-proof",
-          "/home/tester/.config/Code/GPUCache/granular-proof",
-          "/home/tester/.config/unityhub/Cache/granular-proof",
-          "/home/tester/.config/Epic/UnrealEngine/5.8/Intermediate/granular-proof",
-          "/home/tester/.local/share/Steam/appcache/granular-proof",
-      ]
+      application_cache_paths = ${builtins.toJSON applicationCachePaths}
+      application_file_paths = ${builtins.toJSON applicationFilePaths}
       if granular:
           ephemeral_paths += application_cache_paths
-          ephemeral_paths += ["/home/tester/.codex/models_cache.json", "/home/tester/.codex/logs_2.sqlite"]
+          ephemeral_paths += application_file_paths
           ephemeral_paths += ["/var/lib/NetworkManager/granular-test.lease"]
           persistent_paths += ["/var/lib/NetworkManager/granular-proof"]
           persistent_paths += [
               "/home/tester/.local/share/Steam/steamapps/shadercache/granular-proof",
               "/home/tester/.config/Epic/UnrealEngine/Common/DerivedDataCache/granular-proof",
           ]
+
+      def write_sentinel(path, persistent=False):
+          content = "printf 'persistent\\n' > " + q(path) if persistent else "touch " + q(path)
+          command = "mkdir -p " + q(str(PurePosixPath(path).parent)) + "; " + content
+          if path.startswith("/home/tester/"):
+              command = "su - tester -c " + q(command)
+          machine.succeed(command)
 
       machine.start(allow_reboot=True)
       machine.wait_for_unit("multi-user.target")
@@ -428,37 +442,31 @@ pkgs.testers.runNixOSTest {
               machine.succeed("test -f /home/home-sentinel")
           else:
               for path in ["/home", "/var", "/home/tester/.cache"]:
-                  machine.fail(f"mountpoint {path}")
+                  machine.fail(f"mountpoint {q(path)}")
               machine.succeed("findmnt -rn -o OPTIONS /var/lib/nixos-optimization | grep -q 'subvol=/@optimization'")
               machine.succeed("grep -Fx declarative /home/tester/.config/reconstruction-proof")
               for path in ["/home/tester/Documents", "/home/tester/.ssh", "/var/lib/nixos"]:
-                  machine.succeed(f"mountpoint {path}")
+                  machine.succeed(f"mountpoint {q(path)}")
               for path in ephemeral_paths:
-                  machine.succeed(f"test ! -e {path}")
+                  machine.succeed(f"test ! -e {q(path)}")
               if expected_boot_count > 1:
                   for path in persistent_paths:
-                      machine.succeed(f"grep -Fx persistent {path}")
+                      machine.succeed(f"grep -Fx persistent {q(path)}")
                   machine.succeed("cmp /var/lib/impermanence-fixture /persist/var/lib/impermanence-fixture")
               # Write through the active user mounts as the actual user, proving
               # that mount ownership permits ordinary application writes.
               machine.succeed("su - tester -c 'printf \"persistent\\n\" > ~/Documents/granular-proof; printf \"persistent\\n\" > ~/.ssh/granular-proof'")
               for path in persistent_paths[2:]:
-                  if path.startswith("/home/tester/"):
-                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); printf \"persistent\\n\" > {path}'")
-                  else:
-                      machine.succeed(f"mkdir -p $(dirname {path}); printf 'persistent\\n' > {path}")
+                  write_sentinel(path, persistent=True)
               for path in ephemeral_paths:
-                  if path.startswith("/home/tester/"):
-                      machine.succeed(f"su - tester -c 'mkdir -p $(dirname {path}); touch {path}'")
-                  else:
-                      machine.succeed(f"mkdir -p $(dirname {path}); touch {path}")
+                  write_sentinel(path)
               machine.succeed("test $(stat -c %a /home/tester/.ssh) = 700")
               machine.succeed("test $(stat -c %U:%G /home/tester/Documents) = tester:users")
               for path in application_cache_paths:
                   # The overlay must come from reset-root storage, not the
                   # persistent application's underlying directory.
-                  machine.succeed(f"findmnt -rn -o SOURCE -T {path} | grep -F '/@root/'")
-                  machine.succeed(f"su - tester -c 'touch {path}'")
+                  machine.succeed(f"findmnt -rn -o SOURCE -T {q(path)} | grep -F '/@root/'")
+                  write_sentinel(path)
               # Applications must be able to save configuration atomically.
               if expected_boot_count > 1:
                   machine.succeed("grep -Fx second /home/tester/.config/Code/preferences-fixture")
@@ -468,7 +476,7 @@ pkgs.testers.runNixOSTest {
               machine.succeed("su - tester -c 'git config --global impermanence.fixture edited'")
               machine.succeed("grep -q edited /persist/home/tester/.config/git/config")
               for path in ["/var/lib/portables", "/var/lib/machines", "/var/tmp"]:
-                  machine.fail(f"btrfs subvolume show {path}")
+                  machine.fail(f"btrfs subvolume show {q(path)}")
 
           machine.succeed("mkdir /tmp/ephemeral-root-probe")
           machine.succeed("rmdir /tmp/ephemeral-root-probe")
@@ -622,18 +630,18 @@ pkgs.testers.runNixOSTest {
     + pkgs.lib.optionalString granular ''
       # A second recovery boot must retain ordinary home/var state as well.
       for path in ephemeral_paths:
-          machine.succeed(f"test -e {path}")
+          machine.succeed(f"test -e {q(path)}")
       for path in persistent_paths:
-          machine.succeed(f"grep -Fx persistent {path}")
+          machine.succeed(f"grep -Fx persistent {q(path)}")
       machine.reboot()
       machine.wait_for_unit("multi-user.target")
       machine.wait_for_unit("home-manager-tester.service")
       machine.succeed("test \"$(readlink -f /run/current-system)\" = '${fallbackSystem}'")
       assert machine.succeed("cat /persist/ephemeral-root-reset.log") == reset_log_before_fallback
       for path in ephemeral_paths:
-          machine.succeed(f"test -e {path}")
+          machine.succeed(f"test -e {q(path)}")
       for path in persistent_paths:
-          machine.succeed(f"grep -Fx persistent {path}")
+          machine.succeed(f"grep -Fx persistent {q(path)}")
 
       # Installing the recovery-only profile above lets bootloader cleanup
       # remove the normal initrd. Reinstall the normal generation, as a real
