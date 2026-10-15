@@ -74,6 +74,40 @@ tagged `minecraft-server-qualified-2026-10-12`. Exact qualification receipts
 belong to the tag, PR history and retained private evidence rather than this
 operating runbook.
 
+## Tool ownership and configuration
+
+[Host policy](../hosts/desktop/minecraft/default.nix) owns the server settings,
+resource limits, maintenance modes and backup schedule. Pinned mod derivations
+live in [mods.nix](../hosts/desktop/minecraft/mods.nix). The installed
+[minecraft-tools package](../packages/minecraft-tools/pyproject.toml) owns MSMP,
+backup transactions, filesystem identity checks, durable metadata and the DH
+identity helper.
+
+Nix generates immutable, non-secret deployment JSON and exposes it as
+`/etc/minecraft-tools.json`. It derives the data directory and management endpoint
+from the evaluated server and the expected Btrfs roots from its mount policy.
+The file contains the credential file's path, never its contents. Tool operations
+require `--config FILE`; `--help` works without it. Desktop command wrappers pass
+the generated store path, so systemd does not depend on a mutable JSON file.
+Use an explicit config when invoking a package directly or diagnosing a built
+candidate before activation:
+
+```sh
+sudo minecraft-msmp --config /etc/minecraft-tools.json validate
+sudo minecraft-backup --config /etc/minecraft-tools.json status --live
+```
+
+The parser rejects unknown or duplicate fields, non-normalized or overlapping
+deployment directories, non-loopback management hosts and invalid retention
+values. Invalid policy fails before a backup transaction begins. The DH helper
+uses relative TOML/identity paths within the server working directory; its
+`--config` argument names that TOML file rather than deployment JSON.
+
+`minecraft-tools-python` checks the installed package, protocol and backup failure
+paths, CLI configuration requirements, Ruff formatting and lint. The separate
+`minecraft-server-config` check owns NixOS deployment assertions and pinned mod
+contents. Ruff is available in the default development shell.
+
 ## Management endpoint
 
 MSMP is WebSocket JSON-RPC at `ws://127.0.0.1:25585`. The bearer secret must be
@@ -241,7 +275,7 @@ sudo systemctl start minecraft-backup.service
 systemctl status minecraft-backup.service
 journalctl -u minecraft-backup.service
 systemctl list-timers minecraft-backup.timer
-sudo minecraft-backup status
+sudo minecraft-backup --config /etc/minecraft-tools.json status
 ```
 
 A successful service start means capture, registration and retention completed.
@@ -265,7 +299,7 @@ timer is masked; keep using the manual service for planned recovery points.
 
 | Observation | Action after deployment |
 | --- | --- |
-| Recovery marker remains | Keep it; restore management availability and run `sudo minecraft-backup recover-autosave`. Confirm success before another capture. The command also takes the exclusive lock. |
+| Recovery marker remains | Keep it; restore management availability and run `sudo minecraft-backup --config /etc/minecraft-tools.json recover-autosave`. Confirm success before another capture. The command also takes the exclusive lock. |
 | Pending capture | A later backup reconciles it before new work. Inspect JSON and the exact recorded object read-only; do not rename, delete or force adoption. |
 | Metadata/schema/permission failure | Stop new backup attempts, preserve both documents, inspect ownership/modes and the last trusted receipt. Restore known valid metadata only after proving object identities; do not replace it with empty JSON. |
 | Preflight or registration failure | Inspect actual mount topology, Btrfs filesystem/subvolume UUIDs and read-only properties. An unused destination is required; colliding names are never overwritten. |
@@ -327,13 +361,9 @@ operational smoke test. These are separate from the accepted host ingress proof.
 ## Reproduce the declarative gate
 
 ```sh
-nix develop .#default -c python3 -m py_compile \
-  hosts/desktop/minecraft-msmp.py hosts/desktop/minecraft-backup.py \
-  tests/workstation/minecraft-server/test_msmp.py \
-  tests/workstation/minecraft-server/test_backup.py \
-  hosts/desktop/minecraft-prerequisites.py \
-  tests/workstation/minecraft-server/test_prerequisites.py
-nix build .#checks.x86_64-linux.minecraft-server-config --print-build-logs
+nix build .#checks.x86_64-linux.minecraft-tools-python \
+  .#checks.x86_64-linux.minecraft-server-config \
+  --no-write-lock-file --no-link --print-build-logs
 nix develop .#default -c statix check .
 nix develop .#default -c deadnix --fail \
   --exclude hosts/desktop/hardware-configuration.nix -- .
@@ -514,7 +544,7 @@ backup services/timer, stamp persistence/seed, resource overrides, slice, tmpfil
 and automatic Minecraft group membership. Administrative CLI tools remain
 available. The bootloader VM asserts this isolation.
 
-`sudo minecraft-backup status --live` adds read-only source-completeness and
+`sudo minecraft-backup --config /etc/minecraft-tools.json status --live` adds read-only source-completeness and
 all-managed-snapshot verification (filesystem UUID, subvolume UUID, mount status
 and read-only flag) to metadata health. Both nested mounts and nested Btrfs
 subvolumes in the source are rejected. Unknown snapshots are ignored. It contacts no Minecraft endpoint and never repairs metadata or deletes
@@ -575,7 +605,7 @@ on disposable subvolumes; do not replace a healthy production world for testing.
    If an autosave recovery marker remains, preserve it and diagnose recovery before
    proceeding; do not clear it by hand.
 
-2. Run `sudo minecraft-backup status --live`. Identify the intended record from
+2. Run `sudo minecraft-backup --config /etc/minecraft-tools.json status --live`. Identify the intended record from
    the root-private `managed-snapshots.json`. Verify its exact direct-child path,
    recorded filesystem UUID, subvolume UUID, and `ro=true` using `btrfs subvolume
    show`, `btrfs filesystem show` (or the helper's FSID ioctl fallback), and
@@ -662,8 +692,8 @@ on disposable subvolumes; do not replace a healthy production world for testing.
    ```sh
    flock --unlock 9
    exec 9>&-
-   minecraft-backup
-   minecraft-backup status --live
+   minecraft-backup --config /etc/minecraft-tools.json
+   minecraft-backup --config /etc/minecraft-tools.json status --live
    systemctl start minecraft-backup.timer
    umount /run/minecraft-restore-top
    rmdir /run/minecraft-restore-top
