@@ -14,7 +14,7 @@
     workstation.ephemeralApplicationState = {
       enable = true;
       user = username;
-      paths = import ../../home/p2949/persistence/ephemeral-directories.nix;
+      directories = import ../../home/p2949/persistence/ephemeral-directories.nix;
       files = import ../../home/p2949/persistence/ephemeral-files.nix;
     };
 

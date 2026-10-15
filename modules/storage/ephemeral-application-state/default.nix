@@ -16,7 +16,7 @@ let
       inherit (entry) parent;
       relative = "${entry.parent}/${child}";
     }) entry.children
-  ) cfg.paths;
+  ) cfg.directories;
   disposableFiles = lib.concatMap (
     entry:
     map (child: {
@@ -51,7 +51,7 @@ in
       type = lib.types.str;
       description = "User whose Home Manager persistence policy owns the application profiles.";
     };
-    paths = lib.mkOption {
+    directories = lib.mkOption {
       type = lib.types.listOf applicationChildren;
       default = [ ];
       description = "Disposable directories bind-mounted from the reset root into persistent profiles.";

@@ -52,6 +52,12 @@ disposable files use native boot-only tmpfiles rules through
 [`ephemeral-files.nix`](../home/p2949/persistence/ephemeral-files.nix); those rules
 are absent in recovery and do not run during live reactivation.
 
+The module exposes `workstation.ephemeralApplicationState.directories` and
+`.files`. The granular Impermanence VM derives directory and file probes from
+these same metadata lists, including matching filenames for disposable-file
+globs. Each declared child is checked across normal reset and persistent-root
+recovery boots; adding policy entries automatically expands this coverage.
+
 Fuzzel launch counts use persisted `.local/state/fuzzel/history`. Unity layouts,
 search filters and overlays use persisted `.config/unity3d/Preferences`.
 The user deliberately retains Steam shaders, Unreal DDC/Zen and current Unity
