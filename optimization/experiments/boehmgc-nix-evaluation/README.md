@@ -49,7 +49,29 @@ the identical Nix consumer, both GC derivations/sources and build flags, and the
 corpus identity. Provisional artifacts from a dirty source tree are ineligible
 for measurement. The existing zstd artifact serialization is unchanged.
 
-The experiment still requires the evidence-preserving runner, independent pilot
-and randomized paired measurements on the unchanged physical benchmark control.
-A successful functional evaluation is not an improvement verdict or
-authorization to adopt the candidate.
+`optimization-nix-evaluation-runner` exposes
+`nixos-optimization-nix-evaluation run SPEC BUILD OUTPUT REPOSITORY` and
+`nixos-optimization-nix-evaluation verify OUTPUT`. Build the specification,
+provenance and runner from the same clean source revision. The output directory
+must be new, outside Git, and named
+`boehmgc-nix-evaluation-cpu-target-<UTC-time>-<source-short-revision>`.
+
+The runner requires the exact evaluated, current and booted physical benchmark
+control with inactive maintenance. It does not activate a system, stop services,
+or adjust CPU policy. Every observation uses fresh private HOME/XDG state,
+offline evaluation and verified live Nix/GC process mappings. Raw stdout/stderr,
+timing receipts, runtime snapshots, ordering, independent pilot decisions and
+fresh measurement results remain in the private evidence directory. Failed runs
+retain a failed artifact index. Mutable execution caches are excluded from the
+evidence hash index.
+
+The verifier checks artifact/input hashes, reconstructs elapsed and CPU time,
+requires the declared process bindings and ordering, checks every runtime
+interval against the campaign's initial state, and reconstructs pilot sizing
+and measurement-only statistics. Use the recorded runner version and retain the
+realized input store paths for verification.
+
+The experiment still requires an independent pilot and randomized paired
+measurements on the unchanged physical benchmark control. A successful
+functional evaluation is not an improvement verdict or authorization to adopt
+the candidate.

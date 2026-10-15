@@ -51,6 +51,20 @@ in
       builtins.toJSON gcSpecification + "\n"
     );
     nix-evaluation-build-provenance = gcBuild;
+    optimization-nix-evaluation-runner = pkgs.writeShellApplication {
+      name = "nixos-optimization-nix-evaluation";
+      runtimeInputs = [
+        pkgs.python3
+        pkgs.git
+        pkgs.util-linux
+        pkgs.systemd
+      ];
+      text = ''
+        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONPATH=${./provenance}:${./runners}
+        exec python ${./runners}/nix_evaluation.py "$@"
+      '';
+    };
     nix-evaluation-stock = gcExperiment.stockCommand;
     nix-evaluation-candidate = gcExperiment.candidateCommand;
     zstd-stock = pkgs.zstd;
@@ -106,6 +120,7 @@ in
           python ${./provenance}/test_runtime.py
           python ${./runners}/test_statistics.py
           PYTHONPATH=${./provenance}:${./runners} python ${./runners}/test_zstd.py
+          PYTHONPATH=${./provenance}:${./runners} python ${./runners}/test_nix_evaluation.py
           touch "$out"
         '';
   };
