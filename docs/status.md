@@ -55,6 +55,9 @@ remain explicit developer tools. The
 provides a deliberate Btrfs checkpoint and local VSock SSH inspection. The
 [disposable Minecraft staging environment](minecraft-server.md#disposable-staging-before-upgrades)
 provides isolated version/mod and world-copy validation.
+The [distributed-build VM proof](development-validation.md#distributed-build-routing-proof)
+checks remote execution, output transfer and builder feature rejection while
+retaining physical-only benchmark admission.
 VM results do not replace physical acceptance.
 
 ## Minecraft server

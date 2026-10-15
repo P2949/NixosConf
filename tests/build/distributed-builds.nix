@@ -141,8 +141,10 @@ pkgs.testers.runNixOSTest {
 
     with subtest("unsupported kvm builder is rejected without local fallback"):
         status, build_log = coordinator.execute("timeout 30 nix-build /etc/distributed-proof.nix --argstr mode kvm --no-out-link 2>&1")
+        print(build_log)
         assert status != 0 and status != 124, (status, build_log)
-        assert "kvm" in build_log, build_log
+        assert "kvm" in build_log and "required" in build_log, build_log
+        assert "building '" not in build_log, build_log
         output = coordinator.succeed("nix-instantiate --eval --strict /etc/distributed-proof.nix --argstr mode kvm -A outPath").strip().strip('"')
         for node in [coordinator, builder]:
             node.fail("nix-store --check-validity " + output)
