@@ -70,6 +70,10 @@ The [AArch64 binfmt VM](development-validation.md#aarch64-package-execution-thro
 checks a cross-built package's ELF identity and transparent execution, rejection
 without its guest kernel registration, and recovery after restoring the rule.
 This is functional packaging validation only.
+The separate [kexec diagnostic image](development-validation.md#future-kexec-diagnostic-sessions)
+provides a future headless maintenance environment. Its QEMU test enters the
+standalone image with a new kernel boot ID and working diagnostic services.
+No physical transition or performance qualification is implied.
 VM results do not replace physical acceptance.
 
 ## Minecraft server
