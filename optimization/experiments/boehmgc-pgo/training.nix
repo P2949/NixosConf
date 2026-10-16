@@ -17,8 +17,8 @@ let
         acceptance = "TRAINING_ONLY_NOT_BENCHMARK";
         sourceRevision = repository.rev;
         sourceNarHash = repository.narHash;
-        compilerVersion = pkgs.llvmPackages.clang.version;
-        compiler = toString pkgs.llvmPackages.clang;
+        compilerVersion = packages.controls.generic.compilerExperiment.compiler.version;
+        compiler = toString packages.controls.generic.compilerExperiment.compiler;
         consumer = toString packages.consumer;
         variants = builtins.mapAttrs (id: package: {
           instrumentedDerivation = package.drvPath;
