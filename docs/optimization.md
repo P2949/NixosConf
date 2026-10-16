@@ -101,7 +101,7 @@ adopted.
 
 Future research may expand CPU targeting through additional packages and
 dependency sets before any system-level variant, followed separately by
-ThinLTO, PGO and BOLT when work resumes. VM variants are appropriate for
+ThinLTO, PGO and BOLT as separate research stages. VM variants are appropriate for
 functional system validation; authoritative performance measurements remain
 on the designated physical workstation.
 
@@ -121,3 +121,25 @@ verify its exact head and successful conclusion before using the source for
 measurement. Build `.#optimization-control-identity` explicitly as the frozen
 source admission gate. Code integration does not retag the control or adopt the
 candidate. General cleanup and readiness qualification remain closed.
+
+## GC compiler and profile experiments
+
+The [ThinLTO matrix](../optimization/experiments/boehmgc-thinlto/README.md)
+provides matched Clang/LLD controls with generic and Skylake code generation,
+with and without ThinLTO. Its separate GCC-to-Clang bridge changes both compiler
+and linker; it cannot isolate an LTO effect.
+
+The [PGO workflow](../optimization/experiments/boehmgc-pgo/README.md) builds
+instrumented libraries, trains them against a distinct pinned real repository,
+retains raw and merged profiles, and consumes selected content-addressed profile
+artifacts in optimized derivations. Training and functional VM results remain
+separate from independent benchmark evidence.
+
+[Compiler comparison admission](../optimization/experiments/boehmgc-compiler-measurements/README.md)
+binds each pair to its source, toolchains, build audits, collector policy and
+actual consumer/command/library identities. Parameterized PGO targets record the
+committed Nix expression and source hash. These paths retain the physical and
+frozen-control gates and bounded paired sampling. Authoritative runtime effects
+and performance verdicts remain outstanding; functional/build preparation does
+not satisfy the prerequisites for BOLT, dependency/system targeting or further
+combinations.

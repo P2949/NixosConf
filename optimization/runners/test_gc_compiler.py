@@ -5,8 +5,13 @@ import json
 import os
 from pathlib import Path
 import unittest
+import tempfile
 
-from gc_compiler import validate_preparation
+from gc_compiler import (
+    validate_preparation,
+    target_attributes,
+    validate_expression_file,
+)
 import nix_evaluation
 
 
@@ -25,6 +30,51 @@ class CompilerPreparationTests(unittest.TestCase):
                 os.environ.get("GC_COMPILER_MEASUREMENT_ARTIFACTS", "[]")
             )
         ]
+        cls.expressions = [
+            json.loads(Path(path).read_text())
+            for path in json.loads(
+                os.environ.get("GC_COMPILER_EXPRESSION_ARTIFACTS", "[]")
+            )
+        ]
+
+    def test_expression_target_and_source_bindings(self):
+        if not self.expressions:
+            self.skipTest("expression artifacts not supplied")
+        for build in self.expressions:
+            with self.subTest(comparison=build["compilerComparison"]["comparison"]):
+                self.assertEqual(
+                    target_attributes(build),
+                    {"stock": "commands.stock", "candidate": "commands.candidate"},
+                )
+                nix_evaluation.validate_libraries(build)
+                validate_expression_file(
+                    build, Path(os.environ["GC_COMPILER_EXPRESSION_SOURCE"])
+                )
+
+    def test_expression_source_tampering_rejected(self):
+        if not self.expressions:
+            self.skipTest("expression artifacts not supplied")
+        with tempfile.TemporaryDirectory() as directory:
+            altered = Path(directory) / "measurement.nix"
+            altered.write_bytes(
+                Path(os.environ["GC_COMPILER_EXPRESSION_SOURCE"]).read_bytes() + b"\n"
+            )
+            for build in self.expressions:
+                with self.assertRaisesRegex(
+                    ValueError, "measurement expression hash mismatch"
+                ):
+                    validate_expression_file(build, altered)
+
+    def test_expression_target_substitution_rejected(self):
+        if not self.expressions:
+            self.skipTest("expression artifacts not supplied")
+        for build in self.expressions:
+            altered = copy.deepcopy(build)
+            altered["packages"]["candidate"]["expressionAttribute"] = "commands.stock"
+            with self.assertRaisesRegex(
+                ValueError, "unexpected expression target attributes"
+            ):
+                target_attributes(altered)
 
     def test_generated_measurement_bindings(self):
         if not self.measurements:

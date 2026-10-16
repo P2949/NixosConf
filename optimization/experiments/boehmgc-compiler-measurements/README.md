@@ -36,6 +36,15 @@ to retain selected content-addressed profiles before constructing those pairs.
 The runner verifies profile bytes and rejects reuse of the training repository
 revision as the independent benchmark.
 
+For a parameterized PGO build, set `expressionTargets = true` and use
+`targetAttributes = { stock = "commands.stock"; candidate = "commands.candidate"; }`
+when importing `measurement.nix`. These identify the actual attributes returned
+by that Nix expression. The build manifest records the committed entrypoint and
+its SHA-256, rather than claiming local-profile commands are normal flake
+outputs. Admission checks the source file in the clean checkout and retains it
+as `source-expression.nix` in the evidence directory. Verification checks the
+retained hash and target attributes along with the normal artifact index.
+
 `build.nix` also emits preparation metadata. Its
 `PREPARATION_ONLY_NOT_PERFORMANCE` classification remains mandatory, including
 when embedded in a measurement build manifest. It records facts rather than a
