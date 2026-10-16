@@ -8,6 +8,42 @@
 let
   stock = import ./control/stock.nix;
   gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
+  gcThinLTO = import ./experiments/boehmgc-thinlto/packages.nix { inherit pkgs repository; };
+  gcPGO = import ./experiments/boehmgc-pgo/packages.nix { inherit pkgs; };
+  gcPGOTraining = import ./experiments/boehmgc-pgo/training.nix {
+    inherit pkgs repository;
+    packages = gcPGO;
+  };
+  compilerMeasurements =
+    pkgs.lib.genAttrs
+      [
+        "clang-cpu"
+        "thinlto"
+        "cpu-thinlto"
+        "toolchain-bridge"
+      ]
+      (
+        comparison:
+        import ./experiments/boehmgc-compiler-measurements/measurement.nix {
+          inherit
+            pkgs
+            inputs
+            repository
+            systemConfig
+            comparison
+            ;
+          targetAttributes = {
+            stock = "boehmgc-${comparison}-measurement-stock";
+            candidate = "boehmgc-${comparison}-measurement-candidate";
+          };
+        }
+      );
+  compilerPackages = pkgs.lib.concatMapAttrs (comparison: experiment: {
+    "boehmgc-${comparison}-measurement-stock" = experiment.commands.stock;
+    "boehmgc-${comparison}-measurement-candidate" = experiment.commands.candidate;
+    "boehmgc-${comparison}-measurement-spec" = experiment.spec;
+    "boehmgc-${comparison}-measurement-build" = experiment.build;
+  }) compilerMeasurements;
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -43,7 +79,30 @@ let
   };
 in
 {
-  packages = {
+  packages = compilerPackages // {
+    boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
+    boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
+    boehmgc-pgo-training = gcPGOTraining;
+    boehmgc-pgo-profile = import ./experiments/boehmgc-pgo/merge.nix {
+      inherit pkgs;
+      training = gcPGOTraining;
+      variant = "generic";
+    };
+    boehmgc-pgo-cpu-profile = import ./experiments/boehmgc-pgo/merge.nix {
+      inherit pkgs;
+      training = gcPGOTraining;
+      variant = "skylake";
+    };
+    boehmgc-lto-clang-stock = gcThinLTO.variants.clang-stock;
+    boehmgc-lto-clang-cpu = gcThinLTO.variants.clang-cpu;
+    boehmgc-lto-clang-thinlto = gcThinLTO.variants.clang-thinlto;
+    boehmgc-lto-clang-cpu-thinlto = gcThinLTO.variants.clang-cpu-thinlto;
+    boehmgc-lto-matrix = gcThinLTO.manifest;
+    boehmgc-lto-functional = import ./experiments/boehmgc-thinlto/functional.nix {
+      inherit pkgs;
+      packages = gcThinLTO;
+      corpus = gcCorpus;
+    };
     # Explicit experiment admission gate. Ordinary workstation applications
     # may change the desktop; measurements still require the frozen control.
     optimization-control-identity =
@@ -121,6 +180,72 @@ in
     };
   };
   checks = {
+    boehmgc-compiler-preparation =
+      let
+        comparisons =
+          map
+            (
+              comparison:
+              import ./experiments/boehmgc-compiler-measurements/build.nix {
+                inherit pkgs repository comparison;
+              }
+            )
+            [
+              "clang-cpu"
+              "thinlto"
+              "cpu-thinlto"
+              "toolchain-bridge"
+            ];
+        audits = pkgs.lib.concatMap (
+          comparison:
+          map (package: package.audit) (
+            pkgs.lib.filter (package: package ? audit) (builtins.attrValues comparison.libraries)
+          )
+        ) comparisons;
+      in
+      pkgs.runCommand "check-boehmgc-compiler-preparation"
+        {
+          nativeBuildInputs = [ pkgs.python3 ];
+          GC_COMPILER_ARTIFACTS = builtins.toJSON (map (comparison: comparison.metadata) comparisons);
+          GC_COMPILER_MEASUREMENT_ARTIFACTS = builtins.toJSON (
+            map (experiment: experiment.build) (builtins.attrValues compilerMeasurements)
+          );
+          requiredAuditOutputs = audits;
+          requiredLibraryOutputs = pkgs.lib.concatMap (
+            comparison: builtins.attrValues comparison.libraries
+          ) comparisons;
+        }
+        ''
+          export PYTHONDONTWRITEBYTECODE=1
+          export PYTHONPATH=${./provenance}:${./runners}
+          python ${./runners}/test_gc_compiler.py
+          touch "$out"
+        '';
+    boehmgc-pgo-tools =
+      pkgs.runCommand "check-boehmgc-pgo-profile-tools"
+        {
+          nativeBuildInputs = [
+            pkgs.python3
+            pkgs.ruff
+          ];
+        }
+        ''
+          cp ${./experiments/boehmgc-pgo/merge.py} merge.py
+          python -m py_compile merge.py
+          ruff check merge.py
+          ruff format --check merge.py
+          touch "$out"
+        '';
+    boehmgc-thinlto-metadata =
+      let
+        metadataClosure = pkgs.closureInfo { rootPaths = [ gcThinLTO.manifest ]; };
+      in
+      pkgs.runCommand "check-boehmgc-thinlto-metadata-boundary" { } ''
+        # Provenance strings must not retain compiler/bootstrap closures.
+        test "$(wc -l < ${metadataClosure}/store-paths)" -eq 1
+        grep -Fx '${gcThinLTO.manifest}' ${metadataClosure}/store-paths
+        touch "$out"
+      '';
     nix-evaluation-gc-consumers =
       pkgs.runCommand "check-nix-evaluation-gc-consumers" { nativeBuildInputs = [ pkgs.gnugrep ]; }
         ''

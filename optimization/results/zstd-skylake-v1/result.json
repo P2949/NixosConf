@@ -1,0 +1,130 @@
+{
+  "buildProvenanceSha256": "91a62a4c849f09ae886896138af470572e0ffc4988babde00f43f44b3c83a1da",
+  "corpus": {
+    "bytes": 211938580,
+    "path": "/nix/store/31akvrvkd85111q097ngy6xvas36phhn-silesia-corpus/silesia",
+    "sha256": "8df8cf2a9456a3765834b7cd8b7c1114df9dca708dd505e4d37bc12e536395b0"
+  },
+  "experimentId": "zstd-cpu-target",
+  "kind": "nixos-sanitized-experiment-result",
+  "packages": {
+    "candidate": {
+      "derivation": "/nix/store/fyp0sccaabn9bislgr3sfl4l2zfbxcd0-nixos-opt-cpu-zstd-skylake-skylake-1.5.7.drv",
+      "flakeAttribute": "zstd-cpu-target",
+      "id": "candidate",
+      "output": "/nix/store/l6r3js5dijkxqkq3n3d869hmvw4scray-nixos-opt-cpu-zstd-skylake-skylake-1.5.7-bin"
+    },
+    "stock": {
+      "derivation": "/nix/store/l0fqfr95dgm2bj9d0a25xz21w97v2zq5-zstd-1.5.7.drv",
+      "flakeAttribute": "zstd-stock",
+      "id": "stock",
+      "output": "/nix/store/m65jx29i0xqgzxl890drxrn8sj97v2yr-zstd-1.5.7-bin"
+    }
+  },
+  "privateArtifactIndexSha256": "c1f08aafe349774528539748a3a76bc7f2d0d615e75088ec48b2489a0c9beac9",
+  "privateBundleSha256": "49ca308c8c86e5b78a2b772e67810c478ee282626f6efbe9d11f0f7a41d3909a",
+  "runId": "zstd-cpu-target-20261010T111643Z-f6fdd6a",
+  "runnerSha256": "ab4a4ea34b53192dd0f1adbedbdc1b0e0751d032a3198c9d2f1867565d1def8f",
+  "schemaVersion": 1,
+  "source": {
+    "revision": "f6fdd6a01b13635932b5b8c5b2e5f31b5a4c28e3",
+    "tree": "d48be5827e3e81e5985caaa5dcdaca7e42372b35"
+  },
+  "specificationSha256": "f6c4dcdd03bd0f933807dd3ad4274f03b19c1ba0037f3aff00f5630e3ce7be7d",
+  "summaries": {
+    "level-1": {
+      "measurementPairs": 10,
+      "metrics": {
+        "compression": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            0.0016871377383106956,
+            0.0116396212820707
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261010,
+          "candidate": {
+            "mean": 542.14,
+            "median": 542.2,
+            "standardDeviation": 5.254458424360519
+          },
+          "control": {
+            "mean": 538.4300000000001,
+            "median": 539.05,
+            "standardDeviation": 4.526723121886548
+          },
+          "interpretation": "inconclusive",
+          "meanPairedRelativeDelta": 0.0069117916171607344,
+          "medianPairedRelativeDelta": 0.0071359030318765004,
+          "pairedRelativeDeltas": [
+            0.006864564007421192,
+            0.005701673717123157,
+            0.008273579702151146,
+            -0.00018549434242254303,
+            0.0069943289224954075,
+            0.011200298674631348,
+            -0.010699133001291439,
+            0.011294204776893135,
+            0.022396416573348343,
+            0.007277477141257593
+          ],
+          "pairedRelativeStandardDeviation": 0.0084416178195632,
+          "pairs": 10
+        },
+        "decompression": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            -0.029717249480669495,
+            -0.0233403203115524
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261010,
+          "candidate": {
+            "mean": 1712.44,
+            "median": 1712.5500000000002,
+            "standardDeviation": 5.053315743153205
+          },
+          "control": {
+            "mean": 1759.48,
+            "median": 1764.65,
+            "standardDeviation": 11.075378097383398
+          },
+          "interpretation": "regression",
+          "meanPairedRelativeDelta": -0.026707567407017428,
+          "medianPairedRelativeDelta": -0.029553359486056197,
+          "pairedRelativeDeltas": [
+            -0.03034944406625828,
+            -0.018233944954128445,
+            -0.030558065973791293,
+            -0.01894700579893205,
+            -0.03075705320291744,
+            -0.02027181361352215,
+            -0.03096343258236145,
+            -0.02581375601471836,
+            -0.03242388295769072,
+            -0.028757274905854113
+          ],
+          "pairedRelativeStandardDeviation": 0.0055148719373052735,
+          "pairs": 10
+        }
+      },
+      "pilotPairs": 6,
+      "samplingDecision": {
+        "compression": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        },
+        "decompression": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        }
+      }
+    }
+  },
+  "validation": "Artifact hashes, exact source tree, raw observations, balanced order, reconstructed statistics and all runtime intervals passed; maintenance timers restored.",
+  "workingStock": "nixos-26.05-optimization-stock-v1"
+}
