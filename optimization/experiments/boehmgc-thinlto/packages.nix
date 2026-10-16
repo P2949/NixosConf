@@ -119,79 +119,81 @@ let
   manifest =
     assert repository != null && repository ? rev;
     pkgs.writeText "boehmgc-thinlto-functional-matrix.json" (
-      builtins.toJSON {
-        schemaVersion = 1;
-        kind = "boehmgc-thinlto-functional-matrix";
-        acceptance = "FUNCTIONAL_ONLY_NOT_PERFORMANCE";
-        sourceRevision = repository.rev;
-        sourceNarHash = repository.narHash;
-        collectorPolicy = {
-          enableLargeConfig = true;
-          initialMarkStackSize = 1048576;
-        };
-        consumer = {
-          output = toString gcc.consumer;
-          derivation = gcc.consumer.drvPath;
-          inherit (gcc.consumer) version;
-        };
-        variants = lib.mapAttrs (
-          id: package:
-          let
-            compiler = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc else clang;
-            linker = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc.bintools else llvm.bintools;
-            tool = value: {
-              output = toString value;
-              derivation = value.drvPath;
-              version = value.version;
-            };
-          in
-          {
-            output = toString package;
-            derivation = package.drvPath;
-            command = toString commands.${id};
-            audit = if package ? audit then toString package.audit else null;
-            compiler = tool compiler;
-            linker = tool linker;
-            source = {
-              output = toString package.src;
-              derivation = package.src.drvPath;
-              narHash = package.src.outputHash;
-            };
-            inherit (package) version configureFlags makeFlags;
-            compileFlags = package.NIX_CFLAGS_COMPILE or "";
-            linkFlags = package.NIX_LDFLAGS or "";
-            cpuTarget = lib.elem id [
+      builtins.unsafeDiscardStringContext (
+        builtins.toJSON {
+          schemaVersion = 1;
+          kind = "boehmgc-thinlto-functional-matrix";
+          acceptance = "FUNCTIONAL_ONLY_NOT_PERFORMANCE";
+          sourceRevision = repository.rev;
+          sourceNarHash = repository.narHash;
+          collectorPolicy = {
+            enableLargeConfig = true;
+            initialMarkStackSize = 1048576;
+          };
+          consumer = {
+            output = toString gcc.consumer;
+            derivation = gcc.consumer.drvPath;
+            inherit (gcc.consumer) version;
+          };
+          variants = lib.mapAttrs (
+            id: package:
+            let
+              compiler = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc else clang;
+              linker = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc.bintools else llvm.bintools;
+              tool = value: {
+                output = toString value;
+                derivation = value.drvPath;
+                version = value.version;
+              };
+            in
+            {
+              output = toString package;
+              derivation = package.drvPath;
+              command = toString commands.${id};
+              audit = if package ? audit then toString package.audit else null;
+              compiler = tool compiler;
+              linker = tool linker;
+              source = {
+                output = toString package.src;
+                derivation = package.src.drvPath;
+                narHash = package.src.outputHash;
+              };
+              inherit (package) version configureFlags makeFlags;
+              compileFlags = package.NIX_CFLAGS_COMPILE or "";
+              linkFlags = package.NIX_LDFLAGS or "";
+              cpuTarget = lib.elem id [
+                "gcc-cpu"
+                "clang-cpu"
+                "clang-cpu-thinlto"
+              ];
+              thinLTO = lib.hasSuffix "thinlto" id;
+            }
+          ) allVariants;
+          comparisons = {
+            gccCpu = [
+              "gcc-stock"
               "gcc-cpu"
+            ];
+            clangCpu = [
+              "clang-stock"
+              "clang-cpu"
+            ];
+            thinLTO = [
+              "clang-stock"
+              "clang-thinlto"
+            ];
+            cpuThinLTO = [
               "clang-cpu"
               "clang-cpu-thinlto"
             ];
-            thinLTO = lib.hasSuffix "thinlto" id;
-          }
-        ) allVariants;
-        comparisons = {
-          gccCpu = [
-            "gcc-stock"
-            "gcc-cpu"
-          ];
-          clangCpu = [
-            "clang-stock"
-            "clang-cpu"
-          ];
-          thinLTO = [
-            "clang-stock"
-            "clang-thinlto"
-          ];
-          cpuThinLTO = [
-            "clang-cpu"
-            "clang-cpu-thinlto"
-          ];
-          # This bridge changes compiler AND linker; it cannot isolate LTO.
-          toolchainBridge = [
-            "gcc-stock"
-            "clang-stock"
-          ];
-        };
-      }
+            # This bridge changes compiler AND linker; it cannot isolate LTO.
+            toolchainBridge = [
+              "gcc-stock"
+              "clang-stock"
+            ];
+          };
+        }
+      )
       + "\n"
     );
 in

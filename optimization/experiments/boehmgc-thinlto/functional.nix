@@ -8,8 +8,9 @@ pkgs.testers.runNixOSTest {
   nodes.machine = {
     system.extraDependencies = [
       corpus
-      packages.manifest
-    ];
+    ]
+    ++ builtins.attrValues packages.allVariants
+    ++ builtins.attrValues packages.commands;
     virtualisation = {
       memorySize = 4096;
       cores = 2;
