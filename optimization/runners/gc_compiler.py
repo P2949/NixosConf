@@ -142,6 +142,12 @@ def validate_preparation(manifest):
             stock["toolchain"] == candidate["toolchain"],
             "toolchain changed alongside compiler stage",
         )
+    else:
+        for tool in ("compiler", "linker"):
+            require(
+                stock["toolchain"][tool] != candidate["toolchain"][tool],
+                "bridge must identify both compiler and linker changes",
+            )
     expected_stock, expected_candidate = PAIRS[comparison]
     require(
         shlex.split(stock["compileFlags"]) == expected_stock,
@@ -169,6 +175,11 @@ def validate_preparation(manifest):
         require(
             shlex.split(library["linkFlags"]) == expected_link,
             "unexpected linker flags",
+        )
+        require(
+            library["audit"] is not None
+            or (comparison == "toolchain-bridge" and key == "stock"),
+            "compiler audit required",
         )
         if library["audit"] is not None:
             audit = store_path(library["audit"])

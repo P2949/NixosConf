@@ -79,6 +79,14 @@ class CompilerPreparationTests(unittest.TestCase):
                 ):
                     validate_preparation(altered)
 
+    def test_missing_candidate_audit_rejected(self):
+        for artifact in self.artifacts:
+            altered = copy.deepcopy(artifact)
+            altered["libraries"]["candidate"]["audit"] = None
+            with self.subTest(comparison=artifact["comparison"]):
+                with self.assertRaisesRegex(ValueError, "compiler audit required"):
+                    validate_preparation(altered)
+
     def test_collector_policy_change_rejected(self):
         for artifact in self.artifacts:
             altered = copy.deepcopy(artifact)
