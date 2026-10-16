@@ -19,12 +19,20 @@ let
         sourceNarHash = repository.narHash;
         compilerVersion = packages.controls.generic.compilerExperiment.compiler.version;
         compiler = toString packages.controls.generic.compilerExperiment.compiler;
+        compilerDerivation = packages.controls.generic.compilerExperiment.compiler.drvPath;
+        linker = toString packages.controls.generic.compilerExperiment.linker;
+        linkerDerivation = packages.controls.generic.compilerExperiment.linker.drvPath;
         consumer = toString packages.consumer;
+        consumerDerivation = packages.consumer.drvPath;
         variants = builtins.mapAttrs (id: package: {
+          package = package.pname;
+          inherit (package) version;
           instrumentedDerivation = package.drvPath;
           instrumentedOutput = toString package;
           command = "${packages.commands.${id}}/bin/nix-evaluation-pgo-training";
           source = toString package.src;
+          sourceDerivation = package.src.drvPath;
+          sourceHash = package.src.outputHash;
           compileFlags = package.NIX_CFLAGS_COMPILE;
         }) packages.instrumented;
       }
