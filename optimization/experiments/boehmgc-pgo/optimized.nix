@@ -28,6 +28,11 @@ assert metadata.training.artifact.instrumentedDerivation == instrumented.drvPath
 assert metadata.training.artifact.instrumentedOutput == toString instrumented;
 assert metadata.training.artifact.source == toString control.src;
 assert metadata.training.artifact.compileFlags == instrumented.NIX_CFLAGS_COMPILE;
+assert metadata.training.compiler == toString control.compilerExperiment.compiler;
+assert metadata.training.compilerDerivation == control.compilerExperiment.compiler.drvPath;
+assert metadata.training.linker == toString control.compilerExperiment.linker;
+assert metadata.training.linkerDerivation == control.compilerExperiment.linker.drvPath;
+assert metadata.training.consumerDerivation == packages.consumer.drvPath;
 assert metadata.mergedProfileSha256 == builtins.hashFile "sha256" (profile + "/merged.profdata");
 control.overrideAttrs (old: {
   name = "nixos-opt-pgo-boehm-gc-${variant}-${old.version}";

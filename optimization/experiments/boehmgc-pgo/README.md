@@ -27,3 +27,42 @@ its receipt must identify the independent benchmark separately from training.
 Generic and Skylake instrumentation require separate compatible profiles.
 
 These outputs do not activate the desktop or authorize physical measurements.
+
+## Profile artifacts and consumption
+
+`boehmgc-pgo-training` runs an 8 GiB VM with two vCPUs. It evaluates the actual
+desktop toplevel from repository revision
+`4a122b6f2898269d9c8d85a15d655f4bcb80b195`, offline with fresh user state for
+each variant. This training input is distinct from the existing benchmark
+corpus at `658c02f637f488bf02cd6907b51718b52e133f54`. VM execution supplies
+training counts, never authoritative performance timings.
+
+Build both merges together to share one training run:
+
+```console
+nix build .#boehmgc-pgo-profile .#boehmgc-pgo-cpu-profile --no-link --print-out-paths --max-jobs 1 --cores 2
+```
+
+Each profile artifact retains raw files, the training receipt, the exact merge
+command/tool version, merged bytes and SHA-256, and a function-count summary.
+Merging rejects a changed raw file set or hash and requires a nonzero count for
+`GC_mark_some`, part of the identified hot marking code. Keep the original
+training output for loader logs and evaluation results.
+
+Training counts and process IDs can vary between rebuilds. Promote the selected
+merged artifact with `nix store add-path --name boehmgc-pgo-profile PATH`, then
+record its content-addressed store path and `nix hash path` result. Root or
+archive the selected artifact before garbage collection; rebuilding the training
+recipe is not a promise to regenerate identical profile bytes.
+
+`optimized.nix` deliberately requires explicit `variant`, `profilePath` and
+`profileNarHash` parameters, alongside the pinned `pkgs`. It verifies the whole
+artifact NAR hash, merged-file hash, instrumented derivation, compiler/linker,
+consumer and CPU variant before consuming the profile. Different profile bytes
+produce a different optimized derivation. Compiler warnings for stale or missing
+instrumentation profiles are errors; optimized libraries must not retain the
+profile-writing runtime. Record the resulting optimized derivation and output
+alongside the independent benchmark descriptor in an execution receipt.
+
+The default flake has no dependency on a machine-local promoted profile. BOLT
+and performance conclusions remain gated on a reliable independent benchmark.
