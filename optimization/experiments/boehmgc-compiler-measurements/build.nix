@@ -43,7 +43,7 @@ let
     acceptance = "PREPARATION_ONLY_NOT_PERFORMANCE";
     source = {
       revision = repository.rev;
-      narHash = repository.narHash;
+      inherit (repository) narHash;
       lockSha256 = builtins.hashFile "sha256" (repository + "/flake.lock");
     };
     inherit comparison;

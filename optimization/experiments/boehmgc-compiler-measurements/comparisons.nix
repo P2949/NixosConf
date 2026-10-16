@@ -15,7 +15,7 @@ let
   ) profiles;
   pair = stock: candidate: attribution: {
     inherit stock candidate attribution;
-    consumer = lto.consumer;
+    inherit (lto) consumer;
     packageAllowList = [ "boehm-gc" ];
     collectorPolicy = {
       enableLargeConfig = true;
