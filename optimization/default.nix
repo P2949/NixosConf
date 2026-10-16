@@ -150,6 +150,21 @@ in
     };
   };
   checks = {
+    boehmgc-pgo-tools =
+      pkgs.runCommand "check-boehmgc-pgo-profile-tools"
+        {
+          nativeBuildInputs = [
+            pkgs.python3
+            pkgs.ruff
+          ];
+        }
+        ''
+          cp ${./experiments/boehmgc-pgo/merge.py} merge.py
+          python -m py_compile merge.py
+          ruff check merge.py
+          ruff format --check merge.py
+          touch "$out"
+        '';
     boehmgc-thinlto-metadata =
       let
         metadataClosure = pkgs.closureInfo { rootPaths = [ gcThinLTO.manifest ]; };

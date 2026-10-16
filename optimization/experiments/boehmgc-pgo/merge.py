@@ -58,4 +58,6 @@ manifest = {
     "mergedProfileSha256": sha256(merged),
     "summarySha256": sha256(output / "profile-summary.txt"),
 }
-(output / "profile.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+(output / "profile.json").write_text(
+    json.dumps(manifest, sort_keys=True, indent=2) + "\n"
+)
