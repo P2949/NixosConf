@@ -14,6 +14,36 @@ let
     inherit pkgs repository;
     packages = gcPGO;
   };
+  compilerMeasurements =
+    pkgs.lib.genAttrs
+      [
+        "clang-cpu"
+        "thinlto"
+        "cpu-thinlto"
+        "toolchain-bridge"
+      ]
+      (
+        comparison:
+        import ./experiments/boehmgc-compiler-measurements/measurement.nix {
+          inherit
+            pkgs
+            inputs
+            repository
+            systemConfig
+            comparison
+            ;
+          targetAttributes = {
+            stock = "boehmgc-${comparison}-measurement-stock";
+            candidate = "boehmgc-${comparison}-measurement-candidate";
+          };
+        }
+      );
+  compilerPackages = pkgs.lib.concatMapAttrs (comparison: experiment: {
+    "boehmgc-${comparison}-measurement-stock" = experiment.commands.stock;
+    "boehmgc-${comparison}-measurement-candidate" = experiment.commands.candidate;
+    "boehmgc-${comparison}-measurement-spec" = experiment.spec;
+    "boehmgc-${comparison}-measurement-build" = experiment.build;
+  }) compilerMeasurements;
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -49,7 +79,7 @@ let
   };
 in
 {
-  packages = {
+  packages = compilerPackages // {
     boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
     boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
     boehmgc-pgo-training = gcPGOTraining;
@@ -150,6 +180,47 @@ in
     };
   };
   checks = {
+    boehmgc-compiler-preparation =
+      let
+        comparisons =
+          map
+            (
+              comparison:
+              import ./experiments/boehmgc-compiler-measurements/build.nix {
+                inherit pkgs repository comparison;
+              }
+            )
+            [
+              "clang-cpu"
+              "thinlto"
+              "cpu-thinlto"
+              "toolchain-bridge"
+            ];
+        audits = pkgs.lib.concatMap (
+          comparison:
+          map (package: package.audit) (
+            pkgs.lib.filter (package: package ? audit) (builtins.attrValues comparison.libraries)
+          )
+        ) comparisons;
+      in
+      pkgs.runCommand "check-boehmgc-compiler-preparation"
+        {
+          nativeBuildInputs = [ pkgs.python3 ];
+          GC_COMPILER_ARTIFACTS = builtins.toJSON (map (comparison: comparison.metadata) comparisons);
+          GC_COMPILER_MEASUREMENT_ARTIFACTS = builtins.toJSON (
+            map (experiment: experiment.build) (builtins.attrValues compilerMeasurements)
+          );
+          requiredAuditOutputs = audits;
+          requiredLibraryOutputs = pkgs.lib.concatMap (
+            comparison: builtins.attrValues comparison.libraries
+          ) comparisons;
+        }
+        ''
+          export PYTHONDONTWRITEBYTECODE=1
+          export PYTHONPATH=${./provenance}:${./runners}
+          python ${./runners}/test_gc_compiler.py
+          touch "$out"
+        '';
     boehmgc-pgo-tools =
       pkgs.runCommand "check-boehmgc-pgo-profile-tools"
         {

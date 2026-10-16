@@ -104,10 +104,34 @@ let
     assert require (lib.elem value.kind [
       "stock"
       "cpu-codegen"
+      "gc-compiler-comparison"
     ]) "stage implementation not yet supported";
     assert require (
       if value.kind == "stock" then
         value.parameters == { }
+      else if value.kind == "gc-compiler-comparison" then
+        closed [ "comparison" "packageAllowList" "profileNarHash" ] value.parameters
+        && lib.elem value.parameters.comparison [
+          "clang-cpu"
+          "thinlto"
+          "cpu-thinlto"
+          "toolchain-bridge"
+          "pgo"
+          "cpu-pgo"
+        ]
+        && value.parameters.packageAllowList == [ "boehm-gc" ]
+        && (
+          if
+            lib.elem value.parameters.comparison [
+              "pgo"
+              "cpu-pgo"
+            ]
+          then
+            text value.parameters.profileNarHash
+            && builtins.match "sha256-[A-Za-z0-9+/]{43}=" value.parameters.profileNarHash != null
+          else
+            value.parameters.profileNarHash == null
+        )
       else
         closed [ "march" "mtune" "packageAllowList" ] value.parameters
         && text value.parameters.march
