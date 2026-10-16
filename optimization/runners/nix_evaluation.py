@@ -16,6 +16,7 @@ import sys
 
 import runtime
 import paired_statistics
+import gc_compiler
 from paired_statistics import balanced_order, sample_plan, summarize
 
 
@@ -79,6 +80,10 @@ def validate_corpus(path, nix):
 def validate_libraries(build):
     if build.get("kind") != "nixos-nix-evaluation-build":
         raise ValueError("unsupported evaluation build manifest")
+    if build.get("stage", {}).get("kind") == "gc-compiler-comparison":
+        return gc_compiler.validate_measurement(build)
+    if "compilerComparison" in build:
+        raise ValueError("compiler comparison requires an explicit compiler stage")
     if build["collectorPolicy"] != {
         "enableLargeConfig": True,
         "initialMarkStackSize": 1048576,
@@ -108,6 +113,13 @@ def validate_libraries(build):
         key: (Path(value["output"]) / "lib/libgc.so.1").resolve(strict=True)
         for key, value in build["libraries"].items()
     }
+
+
+def support_modules(build):
+    modules = {"runtime": runtime, "statistics": paired_statistics}
+    if build.get("stage", {}).get("kind") == "gc-compiler-comparison":
+        modules["gcCompiler"] = gc_compiler
+    return modules
 
 
 def process_binding(pid, executable, library, proc_root=Path("/proc")):
@@ -321,6 +333,8 @@ def run(spec_path, build_path, output, repository):
         ).resolve(strict=True)
         corpus = Path(build["workloadCorpus"]["output"])
         corpus_identity = validate_corpus(corpus, consumer)
+        if "compilerComparison" in build:
+            gc_compiler.validate_benchmark(build, corpus_identity)
         shutil.copyfile(corpus, output / "corpus.json")
         measured_inputs = {
             "binaries": {
@@ -362,10 +376,7 @@ def run(spec_path, build_path, output, repository):
                         "path": str(Path(module.__file__).resolve()),
                         "sha256": digest(Path(module.__file__)),
                     }
-                    for name, module in {
-                        "runtime": runtime,
-                        "statistics": paired_statistics,
-                    }.items()
+                    for name, module in support_modules(build).items()
                 },
             },
             "measuredInputs": measured_inputs,
@@ -522,6 +533,8 @@ def run(spec_path, build_path, output, repository):
         ):
             raise ValueError("measured input changed during measurement")
         validate_corpus(corpus, consumer)
+        if "compilerComparison" in build:
+            validate_libraries(build)
         after = snapshot()
         save("runtime-after.json", after)
         runtime.validate_interval(before, after)
@@ -612,7 +625,7 @@ def verify(output):
         raise ValueError("run identity mismatch")
     if execution["runner"]["sha256"] != digest(Path(__file__)):
         raise ValueError("verification requires the recorded runner version")
-    for name, module in {"runtime": runtime, "statistics": paired_statistics}.items():
+    for name, module in support_modules(build).items():
         if execution["runner"]["supportModules"][name]["sha256"] != digest(
             Path(module.__file__)
         ):
@@ -641,6 +654,8 @@ def verify(output):
         != measured["corpus"]["identity"]
     ):
         raise ValueError("corpus identity mismatch")
+    if "compilerComparison" in build:
+        gc_compiler.validate_benchmark(build, measured["corpus"]["identity"])
 
     anchor = read("runtime-before.json")
 

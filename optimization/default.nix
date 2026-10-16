@@ -14,6 +14,36 @@ let
     inherit pkgs repository;
     packages = gcPGO;
   };
+  compilerMeasurements =
+    pkgs.lib.genAttrs
+      [
+        "clang-cpu"
+        "thinlto"
+        "cpu-thinlto"
+        "toolchain-bridge"
+      ]
+      (
+        comparison:
+        import ./experiments/boehmgc-compiler-measurements/measurement.nix {
+          inherit
+            pkgs
+            inputs
+            repository
+            systemConfig
+            comparison
+            ;
+          targetAttributes = {
+            stock = "boehmgc-${comparison}-measurement-stock";
+            candidate = "boehmgc-${comparison}-measurement-candidate";
+          };
+        }
+      );
+  compilerPackages = pkgs.lib.concatMapAttrs (comparison: experiment: {
+    "boehmgc-${comparison}-measurement-stock" = experiment.commands.stock;
+    "boehmgc-${comparison}-measurement-candidate" = experiment.commands.candidate;
+    "boehmgc-${comparison}-measurement-spec" = experiment.spec;
+    "boehmgc-${comparison}-measurement-build" = experiment.build;
+  }) compilerMeasurements;
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -49,7 +79,7 @@ let
   };
 in
 {
-  packages = {
+  packages = compilerPackages // {
     boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
     boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
     boehmgc-pgo-training = gcPGOTraining;

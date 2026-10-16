@@ -192,3 +192,69 @@ def validate_preparation(manifest):
                     "ThinLink indexes missing",
                 )
     return {"comparison": comparison, "acceptance": manifest["acceptance"]}
+
+
+def validate_measurement(build):
+    """Bind prepared facts to the measurement manifest, never to an adoption verdict."""
+    prepared = build["compilerComparison"]
+    validate_preparation(prepared)
+    profile_hash = (
+        None if prepared["profile"] is None else prepared["profile"]["profileNarHash"]
+    )
+    require(
+        build["stage"]
+        == {
+            "kind": "gc-compiler-comparison",
+            "parameters": {
+                "comparison": prepared["comparison"],
+                "packageAllowList": ["boehm-gc"],
+                "profileNarHash": profile_hash,
+            },
+        },
+        "compiler comparison stage mismatch",
+    )
+    require(
+        build["libraries"] == prepared["libraries"],
+        "comparison library binding mismatch",
+    )
+    require(
+        build["collectorPolicy"] == prepared["collectorPolicy"],
+        "comparison collector binding mismatch",
+    )
+    for field in ("revision", "narHash", "lockSha256"):
+        require(
+            build["source"][field] == prepared["source"][field],
+            "comparison source binding mismatch",
+        )
+    for field in ("output", "derivation"):
+        require(
+            build["consumer"][field] == prepared["consumer"][field],
+            "comparison consumer binding mismatch",
+        )
+    require(
+        build["toolchains"]
+        == {key: value["toolchain"] for key, value in prepared["libraries"].items()},
+        "comparison toolchain binding mismatch",
+    )
+    for key, library in prepared["libraries"].items():
+        for field in ("output", "derivation"):
+            require(
+                build["packages"][key][field] == library["command"][field],
+                "comparison command binding mismatch",
+            )
+    return {
+        key: (store_path(value["output"]) / "lib/libgc.so.1").resolve(strict=True)
+        for key, value in prepared["libraries"].items()
+    }
+
+
+def validate_benchmark(build, corpus):
+    profile = build["compilerComparison"]["profile"]
+    if profile is not None:
+        training = json.loads(
+            (store_path(profile["profilePath"]) / "profile.json").read_text()
+        )["training"]
+        require(
+            training["trainingCorpus"]["source"]["rev"] != corpus["source"]["rev"],
+            "training corpus reused as benchmark",
+        )
