@@ -72,7 +72,8 @@ let
         ]
       then
         {
-          inherit (profiles.${profileVariant}) profilePath profileNarHash;
+          inherit (profiles.${profileVariant}) profileNarHash;
+          profilePath = toString pair.candidate.pgoProfile;
           variant = profileVariant;
           mergedProfileSha256 = builtins.hashFile "sha256" (pair.candidate.pgoProfile + "/merged.profdata");
           metadataSha256 = builtins.hashFile "sha256" (pair.candidate.pgoProfile + "/profile.json");
