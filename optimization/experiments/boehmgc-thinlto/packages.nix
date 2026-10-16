@@ -7,7 +7,7 @@ let
   gcc = import ../boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
   llvm = pkgs.llvmPackages;
   # Keep the C++ ABI while selecting LLVM's linker and bitcode-aware tools.
-  clang = llvm.clang.override { bintools = llvm.bintools; };
+  clang = llvm.clang.override { inherit (llvm) bintools; };
   clangStdenv = pkgs.overrideCC pkgs.stdenv clang;
   clangBase = pkgs.boehmgc.override {
     stdenv = clangStdenv;
@@ -143,7 +143,7 @@ let
               tool = value: {
                 output = toString value;
                 derivation = value.drvPath;
-                version = value.version;
+                inherit (value) version;
               };
             in
             {
@@ -206,5 +206,5 @@ in
     ;
   gccStock = gcc.stock;
   gccCpu = gcc.candidate;
-  consumer = gcc.consumer;
+  inherit (gcc) consumer;
 }
