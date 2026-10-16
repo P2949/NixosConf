@@ -44,6 +44,20 @@ let
     "boehmgc-${comparison}-measurement-spec" = experiment.spec;
     "boehmgc-${comparison}-measurement-build" = experiment.build;
   }) compilerMeasurements;
+  compilerExpressionMeasurement = import ./experiments/boehmgc-compiler-measurements/measurement.nix {
+    inherit
+      pkgs
+      inputs
+      repository
+      systemConfig
+      ;
+    comparison = "thinlto";
+    expressionTargets = true;
+    targetAttributes = {
+      stock = "commands.stock";
+      candidate = "commands.candidate";
+    };
+  };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -210,6 +224,8 @@ in
           GC_COMPILER_MEASUREMENT_ARTIFACTS = builtins.toJSON (
             map (experiment: experiment.build) (builtins.attrValues compilerMeasurements)
           );
+          GC_COMPILER_EXPRESSION_ARTIFACTS = builtins.toJSON [ compilerExpressionMeasurement.build ];
+          GC_COMPILER_EXPRESSION_SOURCE = ./experiments/boehmgc-compiler-measurements/measurement.nix;
           requiredAuditOutputs = audits;
           requiredLibraryOutputs = pkgs.lib.concatMap (
             comparison: builtins.attrValues comparison.libraries
