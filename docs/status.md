@@ -62,6 +62,10 @@ The separate [verity appliance](development-validation.md#standalone-verity-appl
 boots a UKI with a read-only EROFS store and volatile root. Its QEMU test proves
 normal readiness and explicit dm-verity failure after corrupting a private image
 copy. It remains independent of desktop deployment and benchmark control.
+The [immutable `/etc` VM](development-validation.md#immutable-etc-userborn-and-perlless-vm)
+proves read-only configuration replacement, Userborn account updates and
+perlless service operation across a switch and switch back. It remains a
+disposable experiment; no physical desktop adoption is implied.
 VM results do not replace physical acceptance.
 
 ## Minecraft server
