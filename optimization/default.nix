@@ -8,6 +8,7 @@
 let
   stock = import ./control/stock.nix;
   gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
+  gcThinLTO = import ./experiments/boehmgc-thinlto/packages.nix { inherit pkgs repository; };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -44,6 +45,16 @@ let
 in
 {
   packages = {
+    boehmgc-lto-clang-stock = gcThinLTO.variants.clang-stock;
+    boehmgc-lto-clang-cpu = gcThinLTO.variants.clang-cpu;
+    boehmgc-lto-clang-thinlto = gcThinLTO.variants.clang-thinlto;
+    boehmgc-lto-clang-cpu-thinlto = gcThinLTO.variants.clang-cpu-thinlto;
+    boehmgc-lto-matrix = gcThinLTO.manifest;
+    boehmgc-lto-functional = import ./experiments/boehmgc-thinlto/functional.nix {
+      inherit pkgs;
+      packages = gcThinLTO;
+      corpus = gcCorpus;
+    };
     # Explicit experiment admission gate. Ordinary workstation applications
     # may change the desktop; measurements still require the frozen control.
     optimization-control-identity =

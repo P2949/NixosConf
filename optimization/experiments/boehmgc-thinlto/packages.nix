@@ -1,4 +1,7 @@
-{ pkgs }:
+{
+  pkgs,
+  repository ? null,
+}:
 let
   inherit (pkgs) lib;
   gcc = import ../boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
@@ -93,9 +96,96 @@ let
       thinLTO = true;
     };
   };
+  allVariants = {
+    gcc-stock = gcc.stock;
+    gcc-cpu = gcc.candidate;
+  }
+  // variants;
+  commands = {
+    gcc-stock = gcc.stockCommand;
+    gcc-cpu = gcc.candidateCommand;
+  }
+  // lib.mapAttrs (
+    _: package:
+    pkgs.writeShellApplication {
+      name = "nix-evaluation";
+      text = ''
+        unset LD_PRELOAD LD_AUDIT
+        export LD_LIBRARY_PATH=${package}/lib
+        exec ${gcc.consumer}/bin/nix "$@"
+      '';
+    }
+  ) variants;
+  manifest =
+    assert repository != null && repository ? rev;
+    pkgs.writeText "boehmgc-thinlto-functional-matrix.json" (
+      builtins.toJSON {
+        schemaVersion = 1;
+        kind = "boehmgc-thinlto-functional-matrix";
+        acceptance = "FUNCTIONAL_ONLY_NOT_PERFORMANCE";
+        sourceRevision = repository.rev;
+        sourceNarHash = repository.narHash;
+        collectorPolicy = {
+          enableLargeConfig = true;
+          initialMarkStackSize = 1048576;
+        };
+        consumer = {
+          output = toString gcc.consumer;
+          derivation = gcc.consumer.drvPath;
+        };
+        variants = lib.mapAttrs (id: package: {
+          output = toString package;
+          derivation = package.drvPath;
+          command = toString commands.${id};
+          audit = if package ? audit then toString package.audit else null;
+          source = {
+            output = toString package.src;
+            derivation = package.src.drvPath;
+          };
+          inherit (package) version configureFlags makeFlags;
+          compileFlags = package.NIX_CFLAGS_COMPILE or "";
+          linkFlags = package.NIX_LDFLAGS or "";
+          cpuTarget = lib.elem id [
+            "gcc-cpu"
+            "clang-cpu"
+            "clang-cpu-thinlto"
+          ];
+          thinLTO = lib.hasSuffix "thinlto" id;
+        }) allVariants;
+        comparisons = {
+          gccCpu = [
+            "gcc-stock"
+            "gcc-cpu"
+          ];
+          clangCpu = [
+            "clang-stock"
+            "clang-cpu"
+          ];
+          thinLTO = [
+            "clang-stock"
+            "clang-thinlto"
+          ];
+          cpuThinLTO = [
+            "clang-cpu"
+            "clang-cpu-thinlto"
+          ];
+          # This bridge changes compiler AND linker; it cannot isolate LTO.
+          toolchainBridge = [
+            "gcc-stock"
+            "clang-stock"
+          ];
+        };
+      }
+      + "\n"
+    );
 in
 {
-  inherit variants;
+  inherit
+    variants
+    allVariants
+    commands
+    manifest
+    ;
   gccStock = gcc.stock;
   gccCpu = gcc.candidate;
   consumer = gcc.consumer;
