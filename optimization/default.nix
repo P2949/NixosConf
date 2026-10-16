@@ -10,6 +10,10 @@ let
   gcExperiment = import ./experiments/boehmgc-nix-evaluation/packages.nix { inherit pkgs; };
   gcThinLTO = import ./experiments/boehmgc-thinlto/packages.nix { inherit pkgs repository; };
   gcPGO = import ./experiments/boehmgc-pgo/packages.nix { inherit pkgs; };
+  gcPGOTraining = import ./experiments/boehmgc-pgo/training.nix {
+    inherit pkgs repository;
+    packages = gcPGO;
+  };
   model = import ./experiment/model.nix { inherit (pkgs) lib; };
   gcSpecification = model.normalizeSpec (import ./experiments/boehmgc-nix-evaluation/spec.nix);
   gcCorpus = import ./corpora/nix-evaluation.nix { inherit pkgs; };
@@ -48,9 +52,16 @@ in
   packages = {
     boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
     boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
-    boehmgc-pgo-training = import ./experiments/boehmgc-pgo/training.nix {
-      inherit pkgs repository;
-      packages = gcPGO;
+    boehmgc-pgo-training = gcPGOTraining;
+    boehmgc-pgo-profile = import ./experiments/boehmgc-pgo/merge.nix {
+      inherit pkgs;
+      training = gcPGOTraining;
+      variant = "generic";
+    };
+    boehmgc-pgo-cpu-profile = import ./experiments/boehmgc-pgo/merge.nix {
+      inherit pkgs;
+      training = gcPGOTraining;
+      variant = "skylake";
     };
     boehmgc-lto-clang-stock = gcThinLTO.variants.clang-stock;
     boehmgc-lto-clang-cpu = gcThinLTO.variants.clang-cpu;
