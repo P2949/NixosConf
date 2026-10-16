@@ -120,6 +120,7 @@
         // {
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
           benchmark-appliance = inputs.self.nixosConfigurations.benchmark-appliance.config.system.build.image;
+          diagnostic-kexec = inputs.self.nixosConfigurations.diagnostic.config.system.build.kexecTree;
           module-docs =
             (pkgs.nixosOptionsDoc {
               options =
@@ -194,6 +195,10 @@
         inherit system;
         specialArgs.benchmarkRunner = optimization.packages.optimization-nix-evaluation-runner;
         modules = [ ./images/benchmark-appliance.nix ];
+      };
+      nixosConfigurations.diagnostic = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./images/diagnostic.nix ];
       };
     };
 }

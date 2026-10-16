@@ -297,3 +297,31 @@ binary. Registration changes affect only the disposable VM.
 Use this for cross-architecture packaging and execution validation. Emulated
 runtime is not comparable to native performance and is never benchmark evidence.
 No emulated platform is added to the physical workstation or benchmark control.
+
+## Future kexec diagnostic sessions
+
+```bash
+nix build .#diagnostic-kexec --no-write-lock-file
+nix build .#kexec-diagnostic-test --no-write-lock-file --print-build-logs
+```
+
+The separate `diagnostic` configuration builds Nixpkgs' native `kexecTree` with
+`bzImage`, `initrd.gz` and `kexec-boot`. It contains a volatile root and embedded
+store, SSH/networking, perf, matching-kernel turbostat, hwloc, numactl, stress-ng,
+Btrfs/NVMe/SMART tools and hardware inventory commands. It has no desktop or
+workstation storage policy, and ships no login credential. An operator can add
+an SSH public key through the standard root `authorizedKeys` option and rebuild;
+private keys do not belong in the image.
+
+The explicit QEMU test invokes `kexec-boot` only inside its disposable guest.
+The target is the standalone diagnostic image, without a test guest agent. Its
+serial health check requires the diagnostic hostname, a fresh volatile root,
+network route, SSH and diagnostic tools. The test requires a changed kernel boot
+ID before accepting `DIAGNOSTIC_READY`.
+
+Keep this as a future maintenance capability. The generated `kexec-boot` script
+immediately replaces the running kernel; building it does not invoke it. No
+physical transition is part of the VM workflow. A physical diagnostic session
+requires its own maintenance window and orderly shutdown of productive work.
+Kexec skips firmware initialization, so results from it never qualify as
+physical performance A/B evidence or replace the frozen benchmark control.
