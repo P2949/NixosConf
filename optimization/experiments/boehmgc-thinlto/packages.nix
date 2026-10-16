@@ -132,26 +132,42 @@ let
         consumer = {
           output = toString gcc.consumer;
           derivation = gcc.consumer.drvPath;
+          inherit (gcc.consumer) version;
         };
-        variants = lib.mapAttrs (id: package: {
-          output = toString package;
-          derivation = package.drvPath;
-          command = toString commands.${id};
-          audit = if package ? audit then toString package.audit else null;
-          source = {
-            output = toString package.src;
-            derivation = package.src.drvPath;
-          };
-          inherit (package) version configureFlags makeFlags;
-          compileFlags = package.NIX_CFLAGS_COMPILE or "";
-          linkFlags = package.NIX_LDFLAGS or "";
-          cpuTarget = lib.elem id [
-            "gcc-cpu"
-            "clang-cpu"
-            "clang-cpu-thinlto"
-          ];
-          thinLTO = lib.hasSuffix "thinlto" id;
-        }) allVariants;
+        variants = lib.mapAttrs (
+          id: package:
+          let
+            compiler = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc else clang;
+            linker = if lib.hasPrefix "gcc-" id then pkgs.stdenv.cc.bintools else llvm.bintools;
+            tool = value: {
+              output = toString value;
+              derivation = value.drvPath;
+              version = value.version;
+            };
+          in
+          {
+            output = toString package;
+            derivation = package.drvPath;
+            command = toString commands.${id};
+            audit = if package ? audit then toString package.audit else null;
+            compiler = tool compiler;
+            linker = tool linker;
+            source = {
+              output = toString package.src;
+              derivation = package.src.drvPath;
+              narHash = package.src.outputHash;
+            };
+            inherit (package) version configureFlags makeFlags;
+            compileFlags = package.NIX_CFLAGS_COMPILE or "";
+            linkFlags = package.NIX_LDFLAGS or "";
+            cpuTarget = lib.elem id [
+              "gcc-cpu"
+              "clang-cpu"
+              "clang-cpu-thinlto"
+            ];
+            thinLTO = lib.hasSuffix "thinlto" id;
+          }
+        ) allVariants;
         comparisons = {
           gccCpu = [
             "gcc-stock"
