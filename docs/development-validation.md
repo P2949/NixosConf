@@ -325,3 +325,37 @@ physical transition is part of the VM workflow. A physical diagnostic session
 requires its own maintenance window and orderly shutdown of productive work.
 Kexec skips firmware initialization, so results from it never qualify as
 physical performance A/B evidence or replace the frozen benchmark control.
+
+## Facter hardware comparison
+
+Use Facter for a deliberate audit, rather than replacing curated hardware policy.
+Obtain the scanner from the repository's pinned Nixpkgs input:
+
+```bash
+facter_package=$(nix build --impure --no-link --print-out-paths --expr \
+  '(builtins.getFlake "/etc/nixos").inputs.nixpkgs.legacyPackages.x86_64-linux.nixos-facter')
+umask 077
+sudo "$facter_package/bin/nixos-facter" > /path/to/private/facter.json
+```
+
+Choose a fresh report path outside Git in retained private storage. Reports
+contain machine identifiers. Keep raw reports and closure receipts private;
+record source/tool identities and the scanner's actual version output alongside
+them. A scan does not activate hardware configuration.
+
+For a comparison, extend the desktop configuration in a private Nix expression
+with `hardware.facter.report = builtins.fromJSON (builtins.readFile reportPath)`.
+Compare the selected options and realized toplevel closures against the same
+committed source with Facter disabled. Keep the curated configuration in both
+sides to identify what enabling inferred policy would add. Do not activate the
+comparison output. Incorporate a finding only when it solves an identified
+hardware need; automatic defaults are not evidence that current policy is wrong.
+
+The workstation audit found the detected storage drivers already available in
+the initrd, with existing firmware and microcode policy covering those findings.
+The inferred configuration additionally selected early AMD graphics, explicit
+KVM loading, per-interface DHCP and different GRUB/X defaults. Its built initrd
+and NAR-accounted store closure grew, without establishing a missing hardware
+capability or a runtime benefit. The running system already had AMD graphics
+and KVM loaded. Retain curated hardware policy; the inferred configuration was
+built for comparison and was not activated or runtime-qualified.

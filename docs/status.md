@@ -74,6 +74,9 @@ The separate [kexec diagnostic image](development-validation.md#future-kexec-dia
 provides a future headless maintenance environment. Its QEMU test enters the
 standalone image with a new kernel boot ID and working diagnostic services.
 No physical transition or performance qualification is implied.
+The [Facter hardware comparison](development-validation.md#facter-hardware-comparison)
+is complete. Its inferred policy did not justify replacing the curated hardware
+configuration; raw reports and closure receipts remain private.
 VM results do not replace physical acceptance.
 
 ## Minecraft server
