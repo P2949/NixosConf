@@ -207,11 +207,17 @@ in
         {
           nativeBuildInputs = [ pkgs.python3 ];
           GC_COMPILER_ARTIFACTS = builtins.toJSON (map (comparison: comparison.metadata) comparisons);
+          GC_COMPILER_MEASUREMENT_ARTIFACTS = builtins.toJSON (
+            map (experiment: experiment.build) (builtins.attrValues compilerMeasurements)
+          );
           requiredAuditOutputs = audits;
+          requiredLibraryOutputs = pkgs.lib.concatMap (
+            comparison: builtins.attrValues comparison.libraries
+          ) comparisons;
         }
         ''
           export PYTHONDONTWRITEBYTECODE=1
-          export PYTHONPATH=${./runners}
+          export PYTHONPATH=${./provenance}:${./runners}
           python ${./runners}/test_gc_compiler.py
           touch "$out"
         '';

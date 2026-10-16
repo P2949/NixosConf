@@ -7,6 +7,7 @@ from pathlib import Path
 import unittest
 
 from gc_compiler import validate_preparation
+import nix_evaluation
 
 
 class CompilerPreparationTests(unittest.TestCase):
@@ -18,6 +19,47 @@ class CompilerPreparationTests(unittest.TestCase):
         ]
         if not cls.artifacts:
             raise ValueError("real comparison artifacts required")
+        cls.measurements = [
+            json.loads(Path(path).read_text())
+            for path in json.loads(
+                os.environ.get("GC_COMPILER_MEASUREMENT_ARTIFACTS", "[]")
+            )
+        ]
+
+    def test_generated_measurement_bindings(self):
+        if not self.measurements:
+            self.skipTest("measurement artifacts not supplied")
+        for build in self.measurements:
+            with self.subTest(comparison=build["compilerComparison"]["comparison"]):
+                libraries = nix_evaluation.validate_libraries(build)
+                self.assertEqual(set(libraries), {"stock", "candidate"})
+                self.assertIn("gcCompiler", nix_evaluation.support_modules(build))
+
+    def test_unbound_measurement_stage_rejected(self):
+        if not self.measurements:
+            self.skipTest("measurement artifacts not supplied")
+        for build in self.measurements:
+            altered = copy.deepcopy(build)
+            altered["stage"]["parameters"]["comparison"] = "unbound"
+            with self.subTest(comparison=build["compilerComparison"]["comparison"]):
+                with self.assertRaisesRegex(
+                    ValueError, "compiler comparison stage mismatch"
+                ):
+                    nix_evaluation.validate_libraries(altered)
+
+    def test_command_substitution_rejected(self):
+        if not self.measurements:
+            self.skipTest("measurement artifacts not supplied")
+        for build in self.measurements:
+            altered = copy.deepcopy(build)
+            altered["packages"]["candidate"]["output"] = altered["packages"]["stock"][
+                "output"
+            ]
+            with self.subTest(comparison=build["compilerComparison"]["comparison"]):
+                with self.assertRaisesRegex(
+                    ValueError, "comparison command binding mismatch"
+                ):
+                    nix_evaluation.validate_libraries(altered)
 
     def test_real_artifacts_and_build_evidence(self):
         for artifact in self.artifacts:
