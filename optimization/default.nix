@@ -150,6 +150,41 @@ in
     };
   };
   checks = {
+    boehmgc-compiler-preparation =
+      let
+        comparisons =
+          map
+            (
+              comparison:
+              import ./experiments/boehmgc-compiler-measurements/build.nix {
+                inherit pkgs repository comparison;
+              }
+            )
+            [
+              "clang-cpu"
+              "thinlto"
+              "cpu-thinlto"
+              "toolchain-bridge"
+            ];
+        audits = pkgs.lib.concatMap (
+          comparison:
+          map (package: package.audit) (
+            pkgs.lib.filter (package: package ? audit) (builtins.attrValues comparison.libraries)
+          )
+        ) comparisons;
+      in
+      pkgs.runCommand "check-boehmgc-compiler-preparation"
+        {
+          nativeBuildInputs = [ pkgs.python3 ];
+          GC_COMPILER_ARTIFACTS = builtins.toJSON (map (comparison: comparison.metadata) comparisons);
+          requiredAuditOutputs = audits;
+        }
+        ''
+          export PYTHONDONTWRITEBYTECODE=1
+          export PYTHONPATH=${./runners}
+          python ${./runners}/test_gc_compiler.py
+          touch "$out"
+        '';
     boehmgc-pgo-tools =
       pkgs.runCommand "check-boehmgc-pgo-profile-tools"
         {
