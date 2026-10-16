@@ -19,9 +19,7 @@ let
   };
   corpus = import ../../corpora/nix-evaluation.nix { inherit pkgs; };
   metadata = pkgs.writeText "boehmgc-pgo-functional.json" (
-    builtins.unsafeDiscardStringContext (
-      builtins.toJSON (builtins.mapAttrs (_: package: toString package) variants)
-    )
+    builtins.unsafeDiscardStringContext (builtins.toJSON (builtins.mapAttrs (_: toString) variants))
   );
 in
 assert
