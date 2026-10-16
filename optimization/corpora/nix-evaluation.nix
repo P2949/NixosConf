@@ -1,11 +1,15 @@
-{ pkgs }:
+{
+  pkgs,
+  revision ? "658c02f637f488bf02cd6907b51718b52e133f54",
+  narHash ? "sha256-PGKO4Qb7PPDRcZv0SATXhKDNp9ZePk71dxgHGEBy0Kc=",
+}:
 let
   source = builtins.fetchTree {
     type = "github";
     owner = "P2949";
     repo = "NixosConf";
-    rev = "658c02f637f488bf02cd6907b51718b52e133f54";
-    narHash = "sha256-PGKO4Qb7PPDRcZv0SATXhKDNp9ZePk71dxgHGEBy0Kc=";
+    rev = revision;
+    inherit narHash;
   };
   lock = builtins.fromJSON (builtins.readFile (source.outPath + "/flake.lock"));
   lockedNodes = pkgs.lib.filterAttrs (_: node: node ? locked) lock.nodes;
