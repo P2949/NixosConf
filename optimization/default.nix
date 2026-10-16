@@ -48,6 +48,10 @@ in
   packages = {
     boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
     boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
+    boehmgc-pgo-training = import ./experiments/boehmgc-pgo/training.nix {
+      inherit pkgs repository;
+      packages = gcPGO;
+    };
     boehmgc-lto-clang-stock = gcThinLTO.variants.clang-stock;
     boehmgc-lto-clang-cpu = gcThinLTO.variants.clang-cpu;
     boehmgc-lto-clang-thinlto = gcThinLTO.variants.clang-thinlto;
