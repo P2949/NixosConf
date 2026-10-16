@@ -269,3 +269,51 @@ def validate_benchmark(build, corpus):
             training["trainingCorpus"]["source"]["rev"] != corpus["source"]["rev"],
             "training corpus reused as benchmark",
         )
+
+
+def expression_path(build):
+    expression = build.get("targetExpression")
+    if expression is None:
+        return None
+    require(
+        build["stage"]["kind"] == "gc-compiler-comparison",
+        "unsupported expression stage",
+    )
+    require(
+        set(expression) == {"path", "sha256"}, "unexpected expression identity fields"
+    )
+    require(
+        expression["path"]
+        == "optimization/experiments/boehmgc-compiler-measurements/measurement.nix",
+        "unsupported measurement expression",
+    )
+    require(
+        re.fullmatch(r"[0-9a-f]{64}", expression["sha256"]) is not None,
+        "invalid expression hash",
+    )
+    return Path(expression["path"])
+
+
+def target_attributes(build):
+    expression = expression_path(build)
+    field = "expressionAttribute" if expression is not None else "flakeAttribute"
+    attributes = {key: value[field] for key, value in build["packages"].items()}
+    if expression is not None:
+        require(
+            attributes
+            == {"stock": "commands.stock", "candidate": "commands.candidate"},
+            "unexpected expression target attributes",
+        )
+        require(
+            all("flakeAttribute" not in value for value in build["packages"].values()),
+            "ambiguous target attribute source",
+        )
+    return attributes
+
+
+def validate_expression_file(build, path):
+    require(expression_path(build) is not None, "expression identity required")
+    require(
+        digest(path) == build["targetExpression"]["sha256"],
+        "measurement expression hash mismatch",
+    )

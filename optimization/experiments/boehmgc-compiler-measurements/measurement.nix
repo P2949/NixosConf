@@ -5,6 +5,7 @@
   systemConfig,
   comparison,
   targetAttributes,
+  expressionTargets ? false,
   profiles ? { },
 }:
 let
@@ -57,27 +58,49 @@ let
       ;
     targets = prepared.commands;
   };
-  manifest = (builtins.removeAttrs base.manifest [ "toolchain" ]) // {
-    kind = "nixos-nix-evaluation-build";
-    compilerComparison = prepared.manifest;
-    inherit (prepared.manifest) libraries collectorPolicy;
-    consumer = prepared.manifest.consumer // {
-      executable = "bin/nix";
+  manifest =
+    (builtins.removeAttrs base.manifest [ "toolchain" ])
+    // {
+      kind = "nixos-nix-evaluation-build";
+      compilerComparison = prepared.manifest;
+      inherit (prepared.manifest) libraries collectorPolicy;
+      consumer = prepared.manifest.consumer // {
+        executable = "bin/nix";
+      };
+      workloadCorpus = {
+        output = toString corpus;
+        derivation = corpus.drvPath;
+        id = "nix-evaluation";
+        flakeAttribute = "nix-evaluation-corpus";
+      };
+      toolchains = builtins.mapAttrs (_: library: library.toolchain) prepared.manifest.libraries;
+    }
+    // pkgs.lib.optionalAttrs expressionTargets {
+      targetExpression = {
+        path = "optimization/experiments/boehmgc-compiler-measurements/measurement.nix";
+        sha256 = builtins.hashFile "sha256" ./measurement.nix;
+      };
+      packages = builtins.mapAttrs (
+        id: package:
+        (builtins.removeAttrs package [ "flakeAttribute" ])
+        // {
+          expressionAttribute = targetAttributes.${id};
+        }
+      ) base.manifest.packages;
     };
-    workloadCorpus = {
-      output = toString corpus;
-      derivation = corpus.drvPath;
-      id = "nix-evaluation";
-      flakeAttribute = "nix-evaluation-corpus";
-    };
-    toolchains = builtins.mapAttrs (_: library: library.toolchain) prepared.manifest.libraries;
-  };
 in
 assert
   builtins.attrNames targetAttributes == [
     "candidate"
     "stock"
   ];
+assert
+  !expressionTargets
+  ||
+    targetAttributes == {
+      stock = "commands.stock";
+      candidate = "commands.candidate";
+    };
 {
   inherit specification manifest;
   inherit (prepared) commands libraries;
