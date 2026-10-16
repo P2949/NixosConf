@@ -39,7 +39,8 @@ control.overrideAttrs (old: {
   NIX_CFLAGS_COMPILE =
     (old.NIX_CFLAGS_COMPILE or "")
     + " -fprofile-instr-use=${profile}/merged.profdata"
-    + " -Werror=profile-instr-out-of-date -Werror=profile-instr-unprofiled";
+    # Configure probes and upstream test programs are intentionally untrained.
+    + " -Werror=profile-instr-out-of-date";
   postInstall = (old.postInstall or "") + ''
     ${pkgs.llvmPackages.llvm}/bin/llvm-nm --defined-only "$out/lib/libgc.so" > "$audit/profile-consumption-symbols.txt"
     if grep -q __llvm_profile_write_file "$audit/profile-consumption-symbols.txt"; then

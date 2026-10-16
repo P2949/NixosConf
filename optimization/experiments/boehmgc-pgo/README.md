@@ -59,8 +59,10 @@ recipe is not a promise to regenerate identical profile bytes.
 `profileNarHash` parameters, alongside the pinned `pkgs`. It verifies the whole
 artifact NAR hash, merged-file hash, instrumented derivation, compiler/linker,
 consumer and CPU variant before consuming the profile. Different profile bytes
-produce a different optimized derivation. Compiler warnings for stale or missing
-instrumentation profiles are errors; optimized libraries must not retain the
+produce a different optimized derivation. Compiler warnings for stale
+instrumentation profiles are errors. Missing-profile warnings remain visible for
+untrained configure probes, auxiliary libraries and upstream test programs;
+the merge requires executed GC marking code. Optimized libraries must not retain the
 profile-writing runtime. Record the resulting optimized derivation and output
 alongside the independent benchmark descriptor in an execution receipt.
 
