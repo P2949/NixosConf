@@ -35,6 +35,9 @@ ThinLink indexes live in a separate `audit` output. Runtime libraries do not
 refer back to that evidence or acquire a compiler dependency through it. Both
 Clang controls use the same diagnostic linker flag to save intermediate files.
 All package variants retain the upstream test suite.
+LLD and its ThinLTO backend each use one thread per link; record the caller's
+Make job budget separately when measuring build cost. A native closure check
+requires the provenance file to retain no compiler or bootstrap dependencies.
 
 The VM runs the exact Nix consumer against all six libraries, with a fresh home
 and cache for each. It evaluates a known policy attribute from the existing

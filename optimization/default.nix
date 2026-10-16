@@ -132,6 +132,16 @@ in
     };
   };
   checks = {
+    boehmgc-thinlto-metadata =
+      let
+        metadataClosure = pkgs.closureInfo { rootPaths = [ gcThinLTO.manifest ]; };
+      in
+      pkgs.runCommand "check-boehmgc-thinlto-metadata-boundary" { } ''
+        # Provenance strings must not retain compiler/bootstrap closures.
+        test "$(wc -l < ${metadataClosure}/store-paths)" -eq 1
+        grep -Fx '${gcThinLTO.manifest}' ${metadataClosure}/store-paths
+        touch "$out"
+      '';
     nix-evaluation-gc-consumers =
       pkgs.runCommand "check-nix-evaluation-gc-consumers" { nativeBuildInputs = [ pkgs.gnugrep ]; }
         ''

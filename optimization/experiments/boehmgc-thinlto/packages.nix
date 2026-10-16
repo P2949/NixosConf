@@ -39,7 +39,7 @@ let
       outputs = lib.unique ((old.outputs or [ "out" ]) ++ [ "audit" ]);
       NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + lib.optionalString thinLTO " -flto=thin";
       # Identical diagnostic linker flags in both matched Clang controls.
-      NIX_LDFLAGS = (old.NIX_LDFLAGS or "") + " --save-temps";
+      NIX_LDFLAGS = (old.NIX_LDFLAGS or "") + " --save-temps --threads=1 --thinlto-jobs=1";
       postBuild =
         (old.postBuild or "")
         + ''
