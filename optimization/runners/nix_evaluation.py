@@ -318,11 +318,19 @@ def run(spec_path, build_path, output, repository):
             raise ValueError(
                 "evaluation runner supports exactly stock/candidate package targets"
             )
-        if any(
-            build["packages"][key]["flakeAttribute"] != value["attribute"]
-            for key, value in targets.items()
-        ):
+        attributes = (
+            gc_compiler.target_attributes(build)
+            if build["stage"]["kind"] == "gc-compiler-comparison"
+            else {
+                key: value["flakeAttribute"] for key, value in build["packages"].items()
+            }
+        )
+        if any(attributes[key] != value["attribute"] for key, value in targets.items()):
             raise ValueError("target attribute/build mismatch")
+        if build.get("targetExpression") is not None:
+            expression = repository / gc_compiler.expression_path(build)
+            gc_compiler.validate_expression_file(build, expression)
+            shutil.copyfile(expression, output / "source-expression.nix")
         binaries = {
             key: Path(value["output"]) / "bin/nix-evaluation"
             for key, value in build["packages"].items()
@@ -621,6 +629,13 @@ def verify(output):
         raise ValueError("unsupported evaluation workload")
     if build["stage"] != spec["stage"]:
         raise ValueError("stage identity mismatch")
+    if build.get("targetExpression") is not None:
+        attributes = gc_compiler.target_attributes(build)
+        if attributes != {
+            target["id"]: target["attribute"] for target in spec["targets"]
+        }:
+            raise ValueError("expression target identity mismatch")
+        gc_compiler.validate_expression_file(build, output / "source-expression.nix")
     if any(value["runId"] != output.name for value in (index, execution, results)):
         raise ValueError("run identity mismatch")
     if execution["runner"]["sha256"] != digest(Path(__file__)):
