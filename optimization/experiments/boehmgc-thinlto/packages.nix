@@ -44,7 +44,7 @@ let
           ${clang}/bin/clang --version > compiler-audit/compiler-version.txt
           ${llvm.bintools}/bin/ld --version > compiler-audit/linker-version.txt
           grep -q '^LLD ' compiler-audit/linker-version.txt
-          object=$(find . -type f -path '*/.libs/*' \( -name alloc.o -o -name '*-alloc.o' \) | sort | head -n 1)
+          object=$(find . -type f -path '*/.libs/*' \( -name alloc.o -o -name '*-alloc.o' -o -name gc.o -o -name '*-gc.o' \) | sort | head -n 1)
           test -n "$object"
           ${pkgs.file}/bin/file -b "$object" > compiler-audit/object-format.txt
           sha256sum "$object" > compiler-audit/object-sha256.txt
