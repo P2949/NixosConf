@@ -43,7 +43,6 @@ pkgs.testers.runNixOSTest {
     };
   };
   testScript = ''
-    import hashlib
     import json
     from pathlib import Path
     import shlex
