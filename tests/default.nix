@@ -126,6 +126,7 @@
   packages = {
     benchmark-appliance-test = import ./images/benchmark-appliance.nix { inherit inputs pkgs; };
     immutable-etc-userborn = import ./system-models/immutable-etc.nix { inherit pkgs; };
+    aarch64-binfmt = import ./system-models/aarch64-binfmt.nix { inherit pkgs; };
     distributed-builds = import ./build/distributed-builds.nix { inherit pkgs; };
     minecraft-staging = import ./workstation/minecraft-staging {
       inherit inputs pkgs desktopSystem;
