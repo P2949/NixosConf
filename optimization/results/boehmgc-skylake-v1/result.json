@@ -1,0 +1,256 @@
+{
+  "adoption": "NOT_ADOPTED",
+  "buildProvenanceSha256": "83abddd4e43c1371b87ae36c289ec65c1fdb539715b3fabb713c475774dc2ee5",
+  "collectorPolicy": {
+    "enableLargeConfig": true,
+    "initialMarkStackSize": 1048576
+  },
+  "consumer": {
+    "derivation": "/nix/store/fy9ikn9qnbfhbkh6zz0flp5raqvb9f3r-nix-2.34.8.drv",
+    "executable": "bin/nix",
+    "output": "/nix/store/f82xir6jh4ad169dpcs8hf32pjzs7sgy-nix-2.34.8",
+    "version": "2.34.8"
+  },
+  "corpus": {
+    "identity": {
+      "inputs": {
+        "disko": {
+          "narHash": "sha256-uZkBR7yHdIKUFB5SZdfgh1qkGfI3XmYmI/lTiquxbck=",
+          "path": "/nix/store/adcpmshidndclaz4dxjsgklrx3gqhaxp-source",
+          "revision": "725ea35e410ad83be4931d1bff7e090eacaf3563"
+        },
+        "flake-compat": {
+          "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+          "path": "/nix/store/b0my5vy8pzfzjqrr3g58j0w6md9jf3ch-source",
+          "revision": "9100a0f413b0c601e0533d1d94ffd501ce2e7885"
+        },
+        "home-manager": {
+          "narHash": "sha256-f+kOxEmOUnQazVAmGg0i8hzwgd1kX/geY+k/Dpheye8=",
+          "path": "/nix/store/41xfn9jzjgn6avsdpwiv0zrnwbiz5mmb-source",
+          "revision": "db7d5e2332710f5abb088f6b5de927d7f9511b35"
+        },
+        "impermanence": {
+          "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
+          "path": "/nix/store/3ib4ns4q84wcjfqim5wc0jsjw7v18lpd-source",
+          "revision": "7b1d382faf603b6d264f58627330f9faa5cba149"
+        },
+        "liquidctl-pr886": {
+          "narHash": "sha256-DRrnLrG1hqXdQcQu8fHyViYkwBsCgsULvFK2hFv3bK0=",
+          "path": "/nix/store/gwpp2b1mkvk0af1v9xwkjjzyvj4bv9q9-source",
+          "revision": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59"
+        },
+        "nix-minecraft": {
+          "narHash": "sha256-rsNrfGjPl6gZ9xLA4JuxErUuzXG3i0eVEPt7R+g2/es=",
+          "path": "/nix/store/gl72w1l8jm08xs1d5znbz9md78pr7pa4-source",
+          "revision": "2b3de3195966ba80499063064dca608c805cb34a"
+        },
+        "nixpkgs": {
+          "narHash": "sha256-9+n3ReS2y9xS199LoJjKUWHwZrISGHWgkD/LUZTDZyA=",
+          "path": "/nix/store/hwg0y945hq5cr4rpkjsr9ffl2yqrvz3m-source",
+          "revision": "0d9e9b832d03ac387417e16ce1febf73b2e631e1"
+        },
+        "nixpkgs-unstable": {
+          "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+          "path": "/nix/store/fd5qgysvbfx27wj651swlr899w6jnbwd-source",
+          "revision": "c59305bab2065cfecc4944690d9eedbb56f3a9fa"
+        },
+        "systems": {
+          "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+          "path": "/nix/store/yj1wxm9hh8610iyzqnz75kvs6xl8j3my-source",
+          "revision": "da67096a3b9bf56a91d16901293e51ba5b49a27e"
+        }
+      },
+      "kind": "nixos-nix-evaluation-corpus",
+      "schemaVersion": 1,
+      "source": {
+        "lockSha256": "f9138547f8becdfd54abf5099aa30615390b9470d7ca59765107b88c47331148",
+        "narHash": "sha256-PGKO4Qb7PPDRcZv0SATXhKDNp9ZePk71dxgHGEBy0Kc=",
+        "path": "/nix/store/b101sbpbrga420hgxr46b9ixn5a0iimj-source",
+        "rev": "658c02f637f488bf02cd6907b51718b52e133f54"
+      }
+    },
+    "path": "/nix/store/mcki7vjlyjbjkxdzkrkdybkzhy6liliv-nix-evaluation-corpus.json",
+    "sha256": "56dd369532c393c3abd99ccb1eeae3c231b0eeac28779beb640289d1fee4071b"
+  },
+  "experimentId": "boehmgc-nix-evaluation-cpu-target",
+  "kind": "nixos-sanitized-experiment-result",
+  "libraries": {
+    "candidate": {
+      "compileFlags": "-march=skylake -mtune=skylake",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/j9m67hnsmp306ynsl6ysli28l9bb9f75-nixos-opt-cpu-boehm-gc-skylake-skylake-8.2.12.drv",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/mf3g0xxhmh517j02rm5bwjvv9jwz0fgc-nixos-opt-cpu-boehm-gc-skylake-skylake-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "version": "8.2.12"
+    },
+    "stock": {
+      "compileFlags": "",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/calsn6zvvmqpc8pcnnlrbn0qp6cxdc1l-boehm-gc-8.2.12.drv",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/gyqhxsj0cadwwibipafg47xnh7848i4n-boehm-gc-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "version": "8.2.12"
+    }
+  },
+  "packages": {
+    "candidate": {
+      "derivation": "/nix/store/x2wfjhwf1va37ki46pzzjyvq6d98wgmn-nix-evaluation.drv",
+      "flakeAttribute": "nix-evaluation-candidate",
+      "id": "candidate",
+      "output": "/nix/store/dh5ci2wjdv2byrg5acnliipmaqybmqhk-nix-evaluation"
+    },
+    "stock": {
+      "derivation": "/nix/store/w0dka5gc9rs0w8ar0wk3x9bzhc7pggmv-nix-evaluation.drv",
+      "flakeAttribute": "nix-evaluation-stock",
+      "id": "stock",
+      "output": "/nix/store/24q7jfsv6ws3x07vj85pfcs0nf0kas93-nix-evaluation"
+    }
+  },
+  "privateArtifactIndexSha256": "f500be0569d08292fb64ff1141f8d5f7c08ec270b76188a5bfe9b23a603eabf9",
+  "privateBundleSha256": "e910f6d8eea94784fcc687117f7d888b04599436bb754583c197bb79d7af70ba",
+  "runId": "boehmgc-nix-evaluation-cpu-target-20261017T220309Z-468c24c",
+  "runnerSha256": "4e325abd671665fd78286cf2fc62f05f40ee05c984fc60ff50ddff89638bcd4e",
+  "schemaVersion": 1,
+  "source": {
+    "revision": "468c24c1ef944122a5b394ce3e33c9841eb62501",
+    "tree": "92e8a783a608e72f6ff979170571ea5b086a8558"
+  },
+  "specificationSha256": "debf59b8d218d9a7213baf2f783931c1fe25e4bd4d9ab4210bfdb14cb40a4ca6",
+  "summaries": {
+    "repository-evaluation": {
+      "measurementPairs": 10,
+      "metrics": {
+        "cpuTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            -0.007427483028930748,
+            -0.003931904727375724
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 133.0354416,
+            "median": 132.8479830000001,
+            "standardDeviation": 0.7059145881460035
+          },
+          "control": {
+            "mean": 132.27883220000004,
+            "median": 132.13562250000018,
+            "standardDeviation": 0.5267957073209708
+          },
+          "interpretation": "inconclusive",
+          "meanPairedRelativeDelta": -0.005718251261854257,
+          "medianPairedRelativeDelta": -0.006269035586814797,
+          "pairedRelativeDeltas": [
+            -0.009279944063909307,
+            -0.005820130071941376,
+            -0.004756261035136822,
+            -0.00042707668607366855,
+            -0.007039309142872208,
+            -0.007009800086722251,
+            -0.0067179411016882185,
+            -0.004066807471148071,
+            -0.002124644856664304,
+            -0.009940598102386344
+          ],
+          "pairedRelativeStandardDeviation": 0.0029720951643722204,
+          "pairs": 10
+        },
+        "wallTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            -0.0072943430129768895,
+            -0.003956204297521105
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 134.1153268140999,
+            "median": 133.90900407799973,
+            "standardDeviation": 0.7378648291549615
+          },
+          "control": {
+            "mean": 133.3606092731,
+            "median": 133.20671385900005,
+            "standardDeviation": 0.5829185833871828
+          },
+          "interpretation": "inconclusive",
+          "meanPairedRelativeDelta": -0.005657822332504159,
+          "medianPairedRelativeDelta": -0.006234851201018965,
+          "pairedRelativeDeltas": [
+            -0.009399312520603775,
+            -0.00572013797633919,
+            -0.004848034253342348,
+            -0.0006584411316483685,
+            -0.007085386019707096,
+            -0.006800916571390925,
+            -0.00674956442569874,
+            -0.0037976366886840474,
+            -0.0022513811197246714,
+            -0.009267412617902426
+          ],
+          "pairedRelativeStandardDeviation": 0.002833960301294583,
+          "pairs": 10
+        }
+      },
+      "pilotPairs": 4,
+      "samplingDecision": {
+        "cpuTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        },
+        "wallTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        }
+      }
+    }
+  },
+  "supportModuleSha256": {
+    "runtime": "d2994edc27665384dc194343208860a1068dc19639ab9374ac85c4767136fc0c",
+    "statistics": "509c845ad9982bbc4d467597a2fd32c38b5ef0b74f7f9ff4cdfd7302124f36ac"
+  },
+  "toolchain": {
+    "binutils": {
+      "derivation": "/nix/store/qj5gsknffyga4012rjjyxwsl5kznqz7i-binutils-wrapper-2.46.drv",
+      "output": "/nix/store/lydiw6nfl7g2mz09wkacic38bzhqhr1v-binutils-wrapper-2.46"
+    },
+    "compiler": {
+      "derivation": "/nix/store/bsxmxcjdr31b90h50l2d3dh5fmc7aamm-gcc-wrapper-15.3.0.drv",
+      "output": "/nix/store/79mr0jw3qccq7hhf1hh62knxd88dwazc-gcc-wrapper-15.3.0"
+    },
+    "compilerImplementation": {
+      "derivation": "/nix/store/hnp6alghy4jijj6yvn7npdcgsc01q4va-gcc-15.3.0.drv",
+      "output": "/nix/store/w4910jj1pb63k12d3gbnl03n1ixcf1js-gcc-15.3.0"
+    },
+    "compilerVersion": "15.3.0"
+  },
+  "validation": "Exact source, artifact hashes, raw observations, balanced order, reconstructed statistics and physical runtime intervals passed independent verification; maintenance timers restored.",
+  "workingStock": "nixos-26.05-optimization-stock-v1"
+}
