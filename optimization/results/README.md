@@ -8,6 +8,7 @@ evidence remains outside Git where documented by each result.
 | [zstd-skylake-v1](zstd-skylake-v1/) | CPU codegen (`-march=skylake -mtune=skylake`) | Compression inconclusive; decompression regression |
 | [boehmgc-skylake-v1](boehmgc-skylake-v1/) | CPU codegen (`-march=skylake -mtune=skylake`) | Evaluation wall/CPU time inconclusive; not adopted |
 | [boehmgc-clang-skylake-v1](boehmgc-clang-skylake-v1/) | CPU codegen with matched Clang/LLD | Evaluation wall/CPU time inconclusive; not adopted |
+| [boehmgc-thinlto-v1](boehmgc-thinlto-v1/) | Generic ThinLTO with matched Clang/LLD | Evaluation wall/CPU time inconclusive; not adopted |
 
 No result listed here implies adoption into the productive system unless stated
 explicitly. The productive workstation remains the protected stock control.
