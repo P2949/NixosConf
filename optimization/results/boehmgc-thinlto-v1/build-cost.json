@@ -1,0 +1,75 @@
+{
+  "budget": {
+    "lldThreadsPerLink": 1,
+    "makeCores": 2,
+    "maxJobs": 1,
+    "thinLtoJobsPerLink": 1
+  },
+  "classification": "BUILD_DRIVER_WALL_TIME_NOT_RUNTIME_PERFORMANCE",
+  "kind": "thinlto-build-cost-observation",
+  "matrix": "/nix/store/8bxh6rkgvywzyh4cy1y31fd0l9q2kxcn-boehmgc-thinlto-functional-matrix.json",
+  "matrixSha256": "4a6b6697697c247b5bd5074698533806fd50062ebdef0308639b6c1be717bcda",
+  "nixExecutable": "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+  "nixExecutableSha256": "a0474ebd0c5c66d3dbebc18ae4c834be8c5ddcdde9222addc8aec8a76d1a8bbe",
+  "nixVersion": "nix (Nix) 2.34.8",
+  "privateReceiptSha256": "4db0102ef3c363bbccb9dbd0560d2f35277503b553a9b12ba28af9cf12c52b63",
+  "schemaVersion": 1,
+  "scope": "Elapsed Nix invocation including evaluation, rebuild, upstream checks and output verification; dependencies prebuilt; ordinary desktop background activity uncontrolled.",
+  "sourceNarHash": "sha256-PNyupTmopkNChUoQ3gyJPZkzqoc7zIBhL7yZBI5a6z8=",
+  "sourceRevision": "87675e7ad29c1270a73ef4e7bad3584e9c6b482e",
+  "status": "PASS",
+  "variants": {
+    "candidate": {
+      "command": [
+        "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+        "build",
+        ".#boehmgc-lto-clang-thinlto",
+        "--rebuild",
+        "--no-link",
+        "--no-write-lock-file",
+        "--max-jobs",
+        "1",
+        "--cores",
+        "2",
+        "--print-build-logs"
+      ],
+      "compileFlags": " -flto=thin",
+      "derivation": "/nix/store/pqkskqychx5i8wwmn1cn1nm21g584d2y-nixos-opt-lto-boehm-gc-clang-thinlto-8.2.12.drv",
+      "elapsedNanoseconds": 20612050526,
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "logSha256": "69051f2dcacc59da73211bbfbd02da2ddf4561e384cfbba0a25c6954f78e734e",
+      "output": "/nix/store/ray9804ghchgvxxlk27kgnvzkyqc2inr-nixos-opt-lto-boehm-gc-clang-thinlto-8.2.12",
+      "outputNarBytes": 297920,
+      "outputNarHash": "sha256-/MaCFIXlNdZfUh11M6ouCdReN43+MR6Fuj91YNLQgaQ=",
+      "returnCode": 0,
+      "thinLTO": true,
+      "variant": "clang-thinlto"
+    },
+    "stock": {
+      "command": [
+        "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+        "build",
+        ".#boehmgc-lto-clang-stock",
+        "--rebuild",
+        "--no-link",
+        "--no-write-lock-file",
+        "--max-jobs",
+        "1",
+        "--cores",
+        "2",
+        "--print-build-logs"
+      ],
+      "compileFlags": "",
+      "derivation": "/nix/store/vzx9f5galwq38dl2y6j3gdfbhqrnzrfm-nixos-opt-lto-boehm-gc-clang-stock-8.2.12.drv",
+      "elapsedNanoseconds": 19938952094,
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "logSha256": "2c03e13b4816b7ead40c2bc7255103ebfaf7936616e84906f1389f596e5400ec",
+      "output": "/nix/store/a2hgvpdk1hqsakg9m94pcvil37zaqgkn-nixos-opt-lto-boehm-gc-clang-stock-8.2.12",
+      "outputNarBytes": 299128,
+      "outputNarHash": "sha256-FplzYBhVT1GSn0y8BCfOLBMx1SnTvXLdhKlv86cMWv8=",
+      "returnCode": 0,
+      "thinLTO": false,
+      "variant": "clang-stock"
+    }
+  }
+}
