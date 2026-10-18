@@ -1,0 +1,75 @@
+{
+  "budget": {
+    "lldThreadsPerLink": 1,
+    "makeCores": 2,
+    "maxJobs": 1,
+    "thinLtoJobsPerLink": 1
+  },
+  "classification": "BUILD_DRIVER_WALL_TIME_NOT_RUNTIME_PERFORMANCE",
+  "kind": "thinlto-build-cost-observation",
+  "matrix": "/nix/store/8bxh6rkgvywzyh4cy1y31fd0l9q2kxcn-boehmgc-thinlto-functional-matrix.json",
+  "matrixSha256": "4a6b6697697c247b5bd5074698533806fd50062ebdef0308639b6c1be717bcda",
+  "nixExecutable": "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+  "nixExecutableSha256": "a0474ebd0c5c66d3dbebc18ae4c834be8c5ddcdde9222addc8aec8a76d1a8bbe",
+  "nixVersion": "nix (Nix) 2.34.8",
+  "privateReceiptSha256": "4db0102ef3c363bbccb9dbd0560d2f35277503b553a9b12ba28af9cf12c52b63",
+  "schemaVersion": 1,
+  "scope": "Elapsed Nix invocation including evaluation, rebuild, upstream checks and output verification; dependencies prebuilt; ordinary desktop background activity uncontrolled.",
+  "sourceNarHash": "sha256-PNyupTmopkNChUoQ3gyJPZkzqoc7zIBhL7yZBI5a6z8=",
+  "sourceRevision": "87675e7ad29c1270a73ef4e7bad3584e9c6b482e",
+  "status": "PASS",
+  "variants": {
+    "candidate": {
+      "command": [
+        "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+        "build",
+        ".#boehmgc-lto-clang-cpu-thinlto",
+        "--rebuild",
+        "--no-link",
+        "--no-write-lock-file",
+        "--max-jobs",
+        "1",
+        "--cores",
+        "2",
+        "--print-build-logs"
+      ],
+      "compileFlags": "-march=skylake -mtune=skylake -flto=thin",
+      "derivation": "/nix/store/c0n6mxd1pr21ixd6phkjqxa5rqx4cyyi-nixos-opt-lto-boehm-gc-clang-cpu-thinlto-8.2.12.drv",
+      "elapsedNanoseconds": 20027384692,
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "logSha256": "abb946ced34bd4be0bfb55fe77acfe739124b3b884ee6896daafcf6663d33498",
+      "output": "/nix/store/a58yhp57j6hp6pqllm5yf0rpsbfqx03d-nixos-opt-lto-boehm-gc-clang-cpu-thinlto-8.2.12",
+      "outputNarBytes": 307872,
+      "outputNarHash": "sha256-VO4iBVDGMnzb13Vl8U8xSLo1kdafXlHWZvrnG5oDw4g=",
+      "returnCode": 0,
+      "thinLTO": true,
+      "variant": "clang-cpu-thinlto"
+    },
+    "stock": {
+      "command": [
+        "/nix/store/ima4p8pl9chccjprd6rdg9pqbr1qmfnq-nix-2.34.8/bin/nix",
+        "build",
+        ".#boehmgc-lto-clang-cpu",
+        "--rebuild",
+        "--no-link",
+        "--no-write-lock-file",
+        "--max-jobs",
+        "1",
+        "--cores",
+        "2",
+        "--print-build-logs"
+      ],
+      "compileFlags": "-march=skylake -mtune=skylake",
+      "derivation": "/nix/store/rsi4c37cj81k7fqlijkiz0vgp8805mcs-nixos-opt-lto-boehm-gc-clang-cpu-8.2.12.drv",
+      "elapsedNanoseconds": 20857441881,
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "logSha256": "c735115c077827e01e1f332cdd8f692a317beb382719ea3309b69e1d64588e47",
+      "output": "/nix/store/vam4fx1mf0rz4hjjgn3s6b3pxgrvsh7b-nixos-opt-lto-boehm-gc-clang-cpu-8.2.12",
+      "outputNarBytes": 309744,
+      "outputNarHash": "sha256-W0YTBJdmdCp5uBgMvzUiIxdGV9EPX6mhBYX1ddMDEeg=",
+      "returnCode": 0,
+      "thinLTO": false,
+      "variant": "clang-cpu"
+    }
+  }
+}
