@@ -1,0 +1,307 @@
+{
+  "adoption": "NOT_ADOPTED",
+  "attribution": "CPU code generation with matched Clang/LLD",
+  "buildProvenanceSha256": "e4546ea81fdafc3ee90c8c508b7f83828fc212ac207e8ff5332dd1cc24b1667a",
+  "collectorPolicy": {
+    "enableLargeConfig": true,
+    "initialMarkStackSize": 1048576
+  },
+  "comparison": "clang-cpu",
+  "consumer": {
+    "derivation": "/nix/store/fy9ikn9qnbfhbkh6zz0flp5raqvb9f3r-nix-2.34.8.drv",
+    "executable": "bin/nix",
+    "output": "/nix/store/f82xir6jh4ad169dpcs8hf32pjzs7sgy-nix-2.34.8"
+  },
+  "corpus": {
+    "identity": {
+      "inputs": {
+        "disko": {
+          "narHash": "sha256-uZkBR7yHdIKUFB5SZdfgh1qkGfI3XmYmI/lTiquxbck=",
+          "path": "/nix/store/adcpmshidndclaz4dxjsgklrx3gqhaxp-source",
+          "revision": "725ea35e410ad83be4931d1bff7e090eacaf3563"
+        },
+        "flake-compat": {
+          "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+          "path": "/nix/store/b0my5vy8pzfzjqrr3g58j0w6md9jf3ch-source",
+          "revision": "9100a0f413b0c601e0533d1d94ffd501ce2e7885"
+        },
+        "home-manager": {
+          "narHash": "sha256-f+kOxEmOUnQazVAmGg0i8hzwgd1kX/geY+k/Dpheye8=",
+          "path": "/nix/store/41xfn9jzjgn6avsdpwiv0zrnwbiz5mmb-source",
+          "revision": "db7d5e2332710f5abb088f6b5de927d7f9511b35"
+        },
+        "impermanence": {
+          "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
+          "path": "/nix/store/3ib4ns4q84wcjfqim5wc0jsjw7v18lpd-source",
+          "revision": "7b1d382faf603b6d264f58627330f9faa5cba149"
+        },
+        "liquidctl-pr886": {
+          "narHash": "sha256-DRrnLrG1hqXdQcQu8fHyViYkwBsCgsULvFK2hFv3bK0=",
+          "path": "/nix/store/gwpp2b1mkvk0af1v9xwkjjzyvj4bv9q9-source",
+          "revision": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59"
+        },
+        "nix-minecraft": {
+          "narHash": "sha256-rsNrfGjPl6gZ9xLA4JuxErUuzXG3i0eVEPt7R+g2/es=",
+          "path": "/nix/store/gl72w1l8jm08xs1d5znbz9md78pr7pa4-source",
+          "revision": "2b3de3195966ba80499063064dca608c805cb34a"
+        },
+        "nixpkgs": {
+          "narHash": "sha256-9+n3ReS2y9xS199LoJjKUWHwZrISGHWgkD/LUZTDZyA=",
+          "path": "/nix/store/hwg0y945hq5cr4rpkjsr9ffl2yqrvz3m-source",
+          "revision": "0d9e9b832d03ac387417e16ce1febf73b2e631e1"
+        },
+        "nixpkgs-unstable": {
+          "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+          "path": "/nix/store/fd5qgysvbfx27wj651swlr899w6jnbwd-source",
+          "revision": "c59305bab2065cfecc4944690d9eedbb56f3a9fa"
+        },
+        "systems": {
+          "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+          "path": "/nix/store/yj1wxm9hh8610iyzqnz75kvs6xl8j3my-source",
+          "revision": "da67096a3b9bf56a91d16901293e51ba5b49a27e"
+        }
+      },
+      "kind": "nixos-nix-evaluation-corpus",
+      "schemaVersion": 1,
+      "source": {
+        "lockSha256": "f9138547f8becdfd54abf5099aa30615390b9470d7ca59765107b88c47331148",
+        "narHash": "sha256-PGKO4Qb7PPDRcZv0SATXhKDNp9ZePk71dxgHGEBy0Kc=",
+        "path": "/nix/store/b101sbpbrga420hgxr46b9ixn5a0iimj-source",
+        "rev": "658c02f637f488bf02cd6907b51718b52e133f54"
+      }
+    },
+    "path": "/nix/store/mcki7vjlyjbjkxdzkrkdybkzhy6liliv-nix-evaluation-corpus.json",
+    "sha256": "56dd369532c393c3abd99ccb1eeae3c231b0eeac28779beb640289d1fee4071b"
+  },
+  "experimentId": "boehmgc-clang-cpu",
+  "kind": "nixos-sanitized-experiment-result",
+  "libraries": {
+    "candidate": {
+      "audit": "/nix/store/bh03rdzhd9s7pi6ic4pwiqyx8xc0mz0q-nixos-opt-lto-boehm-gc-clang-cpu-8.2.12-audit",
+      "command": {
+        "derivation": "/nix/store/na372d0c8h1942xbblj3bljy86c91mpc-nix-evaluation.drv",
+        "output": "/nix/store/0kjmm2jdyxfd1vxil6kxr06g99hypbdn-nix-evaluation"
+      },
+      "compileFlags": "-march=skylake -mtune=skylake",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/rsi4c37cj81k7fqlijkiz0vgp8805mcs-nixos-opt-lto-boehm-gc-clang-cpu-8.2.12.drv",
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/vam4fx1mf0rz4hjjgn3s6b3pxgrvsh7b-nixos-opt-lto-boehm-gc-clang-cpu-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "narHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "toolchain": {
+        "compiler": {
+          "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+          "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+        },
+        "compilerVersion": "21.1.8",
+        "linker": {
+          "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+          "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+        },
+        "linkerVersion": "21.1.8"
+      },
+      "version": "8.2.12"
+    },
+    "stock": {
+      "audit": "/nix/store/zi0lxnxmvx7b429lqd6s3gjdfc0mwkcr-nixos-opt-lto-boehm-gc-clang-stock-8.2.12-audit",
+      "command": {
+        "derivation": "/nix/store/m8749sfi5053kimw1x62n515gaj4xm68-nix-evaluation.drv",
+        "output": "/nix/store/33zx1x4sfsxpvjm2r762dlxlkd18hq09-nix-evaluation"
+      },
+      "compileFlags": "",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/vzx9f5galwq38dl2y6j3gdfbhqrnzrfm-nixos-opt-lto-boehm-gc-clang-stock-8.2.12.drv",
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/a2hgvpdk1hqsakg9m94pcvil37zaqgkn-nixos-opt-lto-boehm-gc-clang-stock-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "narHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "toolchain": {
+        "compiler": {
+          "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+          "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+        },
+        "compilerVersion": "21.1.8",
+        "linker": {
+          "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+          "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+        },
+        "linkerVersion": "21.1.8"
+      },
+      "version": "8.2.12"
+    }
+  },
+  "packages": {
+    "candidate": {
+      "derivation": "/nix/store/na372d0c8h1942xbblj3bljy86c91mpc-nix-evaluation.drv",
+      "flakeAttribute": "boehmgc-clang-cpu-measurement-candidate",
+      "id": "candidate",
+      "output": "/nix/store/0kjmm2jdyxfd1vxil6kxr06g99hypbdn-nix-evaluation"
+    },
+    "stock": {
+      "derivation": "/nix/store/m8749sfi5053kimw1x62n515gaj4xm68-nix-evaluation.drv",
+      "flakeAttribute": "boehmgc-clang-cpu-measurement-stock",
+      "id": "stock",
+      "output": "/nix/store/33zx1x4sfsxpvjm2r762dlxlkd18hq09-nix-evaluation"
+    }
+  },
+  "privateArtifactIndexSha256": "d875fe45cdfc97f84f52c30f11294ad09fd0f99180390764e4cf9422c5793dbb",
+  "privateBundleSha256": "c43442c6dea002f8baee0b040eb9d39600f2bc6380f2bf5a1d702218c42a70ee",
+  "runId": "boehmgc-clang-cpu-20261017T231231Z-46ea637",
+  "runnerSha256": "c3c58f6b14918c6ffb10c508be884f355c60bbed3a69c8b9537e73e176b7b8e4",
+  "schemaVersion": 1,
+  "source": {
+    "revision": "46ea637b071ae23c789a030840f228442f433166",
+    "tree": "aecc3199fe24bffae05e13df5dce48e49f371baa"
+  },
+  "specificationSha256": "5f2c50b91a19b25b34218819a8618ee931b85e81d5535a7773791aeb9f6c74cb",
+  "summaries": {
+    "repository-evaluation": {
+      "measurementPairs": 10,
+      "metrics": {
+        "cpuTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            -0.011246446505151853,
+            -0.007643536559651531
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 134.0967424000001,
+            "median": 134.11085950000006,
+            "standardDeviation": 0.35583211119013874
+          },
+          "control": {
+            "mean": 132.84949149999986,
+            "median": 132.87363449999975,
+            "standardDeviation": 0.36405421473958677
+          },
+          "interpretation": "inconclusive",
+          "meanPairedRelativeDelta": -0.009392850014786536,
+          "medianPairedRelativeDelta": -0.009444824139963504,
+          "pairedRelativeDeltas": [
+            -0.008881249319633744,
+            -0.00697451894895007,
+            -0.00970896467357596,
+            -0.009962456835373334,
+            -0.005833385712211481,
+            -0.010936635783840298,
+            -0.00487926497964386,
+            -0.012377386582327343,
+            -0.015193953705958219,
+            -0.009180683606351048
+          ],
+          "pairedRelativeStandardDeviation": 0.0030653118104564912,
+          "pairs": 10
+        },
+        "wallTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            -0.011316849839810827,
+            -0.007724002375614258
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 135.1778753700997,
+            "median": 135.16646591699964,
+            "standardDeviation": 0.34906121947832713
+          },
+          "control": {
+            "mean": 133.9083877195002,
+            "median": 133.91707866900015,
+            "standardDeviation": 0.3682237070573026
+          },
+          "interpretation": "inconclusive",
+          "meanPairedRelativeDelta": -0.009484870567210434,
+          "medianPairedRelativeDelta": -0.009549737651266432,
+          "pairedRelativeDeltas": [
+            -0.008844129628012842,
+            -0.007792589852845921,
+            -0.00968814173735999,
+            -0.010091023394870113,
+            -0.00555190015312812,
+            -0.01116340754906564,
+            -0.0047877451514646285,
+            -0.012320837700677378,
+            -0.015197596939506841,
+            -0.009411333565172875
+          ],
+          "pairedRelativeStandardDeviation": 0.003068028558332959,
+          "pairs": 10
+        }
+      },
+      "pilotPairs": 4,
+      "samplingDecision": {
+        "cpuTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        },
+        "wallTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        }
+      }
+    }
+  },
+  "supportModuleSha256": {
+    "gcCompiler": "34eb4053a4ef607d54aadd2c99eae9a105c8bb28e175a10537becfb0350459d7",
+    "runtime": "d2994edc27665384dc194343208860a1068dc19639ab9374ac85c4767136fc0c",
+    "statistics": "509c845ad9982bbc4d467597a2fd32c38b5ef0b74f7f9ff4cdfd7302124f36ac"
+  },
+  "toolchains": {
+    "candidate": {
+      "compiler": {
+        "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+        "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+      },
+      "compilerVersion": "21.1.8",
+      "linker": {
+        "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+        "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+      },
+      "linkerVersion": "21.1.8"
+    },
+    "stock": {
+      "compiler": {
+        "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+        "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+      },
+      "compilerVersion": "21.1.8",
+      "linker": {
+        "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+        "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+      },
+      "linkerVersion": "21.1.8"
+    }
+  },
+  "validation": "Exact source, artifact hashes, raw observations, balanced order, reconstructed statistics and physical runtime intervals passed independent verification; maintenance timers restored.",
+  "workingStock": "nixos-26.05-optimization-stock-v1"
+}
