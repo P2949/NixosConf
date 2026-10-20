@@ -8,3 +8,4 @@ $data modify storage chunky_offline:tracking $(key).centerX set from storage chu
 $data modify storage chunky_offline:tracking $(key).centerZ set from storage chunky_offline:tracking $(key).lastActivityZ
 $data modify storage chunky_offline:tracking $(key).hasTask set value 1b
 $data modify storage chunky_offline:tracking $(key).pending set value 0b
+$data remove storage chunky_offline:tracking $(key).owner

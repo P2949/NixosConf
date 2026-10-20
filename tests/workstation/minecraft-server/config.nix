@@ -282,6 +282,15 @@ pkgs.runCommand "check-minecraft-server-config"
     for key in ["nether", "end"]:
         assert f'unless data storage chunky_offline:tracking {key}' in load
         assert f'{key} set value {{enabled:0b,hasTask:0b' in load
+    assert 'as @a[distance=0..]' in functions["sample.mcfunction"]
+    assert 'sort=random' not in functions["sample.mcfunction"]
+    assert 'limit=1' not in functions["sample.mcfunction"]
+    assert 'chunky_offline:refresh' in functions["sample.mcfunction"]
+    assert 'chunky_offline:candidate' in functions["sample.mcfunction"]
+    assert '.owner set from entity @s UUID' in functions["record.mcfunction"]
+    assert 'store success score #different' in functions["refresh.mcfunction"]
+    assert '#different co_control matches 0' in functions["refresh.mcfunction"]
+    assert '#distance co_control > #best co_control' in functions["candidate.mcfunction"]
     assert 'matches 200..' in functions["online.mcfunction"]
     assert 'chunky pause' in functions["online.mcfunction"]
     assert 'chunky continue' in functions["offline.mcfunction"]

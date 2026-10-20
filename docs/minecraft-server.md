@@ -24,23 +24,33 @@ Spark background profiling remains disabled. Distant Horizons is removed.
 The locally extended [Chunky Offline package](../hosts/desktop/minecraft/chunky-offline.nix)
 keeps generation paused whenever players are online. Every 200 online ticks
 (about 10 seconds), its [functions](../hosts/desktop/minecraft/chunky-offline/)
-sample one randomly selected player in each occupied dimension, recording that
-dimension's latest activity position. The single sample avoids player-list bias;
-there is no history or clustering. First Nether/End visits trigger an immediate sample. Other movement that
-begins and ends between samples may not be observed.
+inspect all players in each occupied dimension and choose the farthest from its
+current center, using maximum X/Z displacement. One candidate position and its
+owner's UUID are retained per dimension, including after that owner disconnects;
+near-center players cannot erase another player's remote candidate. If its owner
+is sampled back inside, that candidate clears and another remote player can win.
+An online owner's movement updates their candidate before comparing all players;
+equal-distance ties retain the existing candidate. There is no activity history
+or queue: a farther candidate can replace the retained one. A dimension change
+preserves the previous dimension's last candidate, just like a disconnect.
+First Nether/End visits trigger an immediate sample; movement entirely between
+samples may not be observed. Legacy pending positions without owner UUIDs are
+retained until a farther sample replaces them or the next empty transition
+consumes them; a return cannot be attributed to an unknown owner.
 
 Targets are square: Overworld radius 10,000, Nether 1,250, End 5,000. The
 Overworld starts enabled at 0,0 and adopts the existing Chunky task unchanged.
 Nether and End remain disabled until a player appears there. At the next
 empty-server transition their first tasks start around their latest sampled
 positions. A pending recenter is set when either axis reaches 75% of the radius
-(7,500 / 938 / 3,750 blocks). Returning inside that deadzone before the final
-sample clears the pending recenter. When the last player leaves, only dimensions
-with pending targets replace their own tasks; all saved tasks then resume.
+(7,500 / 938 / 3,750 blocks). The candidate owner returning inside that deadzone
+before the final sample clears their pending recenter; another near-center player
+does not. When the last player leaves, only dimensions with pending targets
+replace their own tasks; all saved tasks then resume.
 Existing generated chunks remain intact and are skipped by Chunky.
 
-Per-dimension centers, activity, visit flags and pending state live in the world's
-`chunky_offline:tracking` command storage. Startup preserves that storage and saved
+Per-dimension centers, candidate activity/owner, visit flags and pending state
+live in the world's `chunky_offline:tracking` command storage. Startup preserves that storage and saved
 Chunky tasks; it never resets centers or restarts completed targets. Inspect with
 `data get storage chunky_offline:tracking` from the server console. Target policy
 is owned by the packaged functions; the upstream manual configuration functions
