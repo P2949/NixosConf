@@ -8,6 +8,15 @@
 }:
 {
   checks = {
+    gamemode-gpu-profile = import ./packages/gamemode-gpu-profile { inherit pkgs; };
+    workstation-smoke = import ./workstation/smoke.nix {
+      inherit
+        inputs
+        pkgs
+        pkgsUnstable
+        username
+        ;
+    };
     markdown-links =
       pkgs.runCommand "check-markdown-links"
         {
@@ -60,7 +69,7 @@
         '';
 
     desktop-evaluation = import ./workstation/evaluation.nix {
-      inherit pkgs username;
+      inherit pkgs pkgsUnstable username;
       inherit (desktopSystem) config;
     };
 

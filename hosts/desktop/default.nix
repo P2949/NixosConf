@@ -8,6 +8,7 @@
     ./persistence.nix
     ./ephemeral-root.nix
     ./minecraft
+    ./gpu-policy.nix
 
     ../../profiles/workstation.nix
     ../../modules/workstation/optimization-boundary.nix
