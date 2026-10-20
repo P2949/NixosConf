@@ -217,6 +217,7 @@ pkgs.runCommand "check-minecraft-server-config"
       pkgs.diffutils
       pkgs.jq
       pkgs.unzip
+      pkgs.jdk25
     ];
   }
   ''
@@ -258,7 +259,9 @@ pkgs.runCommand "check-minecraft-server-config"
           exit 1
         fi
 
-        python3 - "$mods" ${../../../hosts/desktop/minecraft/chunky-offline} <<'PYTEST'
+        python3 - "$mods" ${../../../hosts/desktop/minecraft/chunky-offline} ${
+          (import ../../../hosts/desktop/minecraft/chunky.nix { inherit pkgs; }).upstream
+        } <<'PYTEST'
     import json
     import re
     import sys
@@ -267,6 +270,11 @@ pkgs.runCommand "check-minecraft-server-config"
 
     jars = [zipfile.ZipFile(p) for p in Path(sys.argv[1]).glob("*.jar")]
     pack = next(j for j in jars if json.loads(j.read("fabric.mod.json"))["id"] == "mr_chunky_offline")
+    chunky = next(j for j in jars if json.loads(j.read("fabric.mod.json"))["id"] == "chunky")
+    upstream = zipfile.ZipFile(sys.argv[3])
+    assert set(chunky.namelist()) == {n for n in upstream.namelist() if not n.endswith("/")}
+    changed = {n for n in chunky.namelist() if chunky.read(n) != upstream.read(n)}
+    assert changed == {"org/popcraft/chunky/GenerationTask.class"}, changed
     prefix = "data/chunky_offline/function/"
     owned = Path(sys.argv[2])
     for source in owned.glob("*.mcfunction"):
@@ -299,6 +307,12 @@ pkgs.runCommand "check-minecraft-server-config"
     assert 'chunky start $(world) square $(lastActivityX) $(lastActivityZ) $(radius)' in functions["replace.mcfunction"]
     assert not re.search(r'chunky cancel["}]', "\n".join(functions.values()))
     PYTEST
+
+        chunkyJar=$(find "$mods" -name '*Chunky-Fabric-1.5.3*.jar' -print -quit)
+        test -n "$chunkyJar"
+        cp ${./ChunkyRetirementTest.java} ChunkyRetirementTest.java
+        javac --release 17 -cp "$chunkyJar" -d "$TMPDIR" ChunkyRetirementTest.java
+        java -cp "$TMPDIR:$chunkyJar" ChunkyRetirementTest
 
         echo "Minecraft server configuration invariants passed"
         touch "$out"
