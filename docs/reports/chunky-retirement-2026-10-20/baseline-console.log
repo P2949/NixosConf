@@ -1,0 +1,542 @@
+Unpacking 26.3/server-26.3.jar (versions:26.3) to versions/26.3/server-26.3.jar
+Unpacking at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar (libraries:at.yawk.lz4:lz4-java:1.10.1) to libraries/at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar
+Unpacking com/azure/azure-json/1.4.0/azure-json-1.4.0.jar (libraries:com.azure:azure-json:1.4.0) to libraries/com/azure/azure-json/1.4.0/azure-json-1.4.0.jar
+Unpacking com/github/oshi/oshi-core/6.9.0/oshi-core-6.9.0.jar (libraries:com.github.oshi:oshi-core:6.9.0) to libraries/com/github/oshi/oshi-core/6.9.0/oshi-core-6.9.0.jar
+Unpacking com/google/code/gson/gson/2.14.0/gson-2.14.0.jar (libraries:com.google.code.gson:gson:2.14.0) to libraries/com/google/code/gson/gson/2.14.0/gson-2.14.0.jar
+Unpacking com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar (libraries:com.google.guava:failureaccess:1.0.3) to libraries/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar
+Unpacking com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar (libraries:com.google.guava:guava:33.6.0-jre) to libraries/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar
+Unpacking com/microsoft/azure/msal4j/1.24.1/msal4j-1.24.1.jar (libraries:com.microsoft.azure:msal4j:1.24.1) to libraries/com/microsoft/azure/msal4j/1.24.1/msal4j-1.24.1.jar
+Unpacking com/mojang/authlib/10.0.77/authlib-10.0.77.jar (libraries:com.mojang:authlib:10.0.77) to libraries/com/mojang/authlib/10.0.77/authlib-10.0.77.jar
+Unpacking com/mojang/brigadier/1.3.11/brigadier-1.3.11.jar (libraries:com.mojang:brigadier:1.3.11) to libraries/com/mojang/brigadier/1.3.11/brigadier-1.3.11.jar
+Unpacking com/mojang/datafixerupper/10.0.21/datafixerupper-10.0.21.jar (libraries:com.mojang:datafixerupper:10.0.21) to libraries/com/mojang/datafixerupper/10.0.21/datafixerupper-10.0.21.jar
+Unpacking com/mojang/jtracy/1.14.38/jtracy-1.14.38.jar (libraries:com.mojang:jtracy:1.14.38) to libraries/com/mojang/jtracy/1.14.38/jtracy-1.14.38.jar
+Unpacking com/mojang/logging/1.7.12/logging-1.7.12.jar (libraries:com.mojang:logging:1.7.12) to libraries/com/mojang/logging/1.7.12/logging-1.7.12.jar
+Unpacking commons-io/commons-io/2.20.0/commons-io-2.20.0.jar (libraries:commons-io:commons-io:2.20.0) to libraries/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar
+Unpacking io/netty/netty-buffer/4.2.16.Final/netty-buffer-4.2.16.Final.jar (libraries:io.netty:netty-buffer:4.2.16.Final) to libraries/io/netty/netty-buffer/4.2.16.Final/netty-buffer-4.2.16.Final.jar
+Unpacking io/netty/netty-codec-base/4.2.16.Final/netty-codec-base-4.2.16.Final.jar (libraries:io.netty:netty-codec-base:4.2.16.Final) to libraries/io/netty/netty-codec-base/4.2.16.Final/netty-codec-base-4.2.16.Final.jar
+Unpacking io/netty/netty-codec-compression/4.2.16.Final/netty-codec-compression-4.2.16.Final.jar (libraries:io.netty:netty-codec-compression:4.2.16.Final) to libraries/io/netty/netty-codec-compression/4.2.16.Final/netty-codec-compression-4.2.16.Final.jar
+Unpacking io/netty/netty-codec-http/4.2.16.Final/netty-codec-http-4.2.16.Final.jar (libraries:io.netty:netty-codec-http:4.2.16.Final) to libraries/io/netty/netty-codec-http/4.2.16.Final/netty-codec-http-4.2.16.Final.jar
+Unpacking io/netty/netty-common/4.2.16.Final/netty-common-4.2.16.Final.jar (libraries:io.netty:netty-common:4.2.16.Final) to libraries/io/netty/netty-common/4.2.16.Final/netty-common-4.2.16.Final.jar
+Unpacking io/netty/netty-handler/4.2.16.Final/netty-handler-4.2.16.Final.jar (libraries:io.netty:netty-handler:4.2.16.Final) to libraries/io/netty/netty-handler/4.2.16.Final/netty-handler-4.2.16.Final.jar
+Unpacking io/netty/netty-resolver/4.2.16.Final/netty-resolver-4.2.16.Final.jar (libraries:io.netty:netty-resolver:4.2.16.Final) to libraries/io/netty/netty-resolver/4.2.16.Final/netty-resolver-4.2.16.Final.jar
+Unpacking io/netty/netty-transport/4.2.16.Final/netty-transport-4.2.16.Final.jar (libraries:io.netty:netty-transport:4.2.16.Final) to libraries/io/netty/netty-transport/4.2.16.Final/netty-transport-4.2.16.Final.jar
+Unpacking io/netty/netty-transport-classes-epoll/4.2.16.Final/netty-transport-classes-epoll-4.2.16.Final.jar (libraries:io.netty:netty-transport-classes-epoll:4.2.16.Final) to libraries/io/netty/netty-transport-classes-epoll/4.2.16.Final/netty-transport-classes-epoll-4.2.16.Final.jar
+Unpacking io/netty/netty-transport-classes-kqueue/4.2.16.Final/netty-transport-classes-kqueue-4.2.16.Final.jar (libraries:io.netty:netty-transport-classes-kqueue:4.2.16.Final) to libraries/io/netty/netty-transport-classes-kqueue/4.2.16.Final/netty-transport-classes-kqueue-4.2.16.Final.jar
+Unpacking io/netty/netty-transport-native-epoll/4.2.16.Final/netty-transport-native-epoll-4.2.16.Final-linux-x86_64.jar (libraries:io.netty:netty-transport-native-epoll:4.2.16.Final:linux-x86_64) to libraries/io/netty/netty-transport-native-epoll/4.2.16.Final/netty-transport-native-epoll-4.2.16.Final-linux-x86_64.jar
+Unpacking io/netty/netty-transport-native-epoll/4.2.16.Final/netty-transport-native-epoll-4.2.16.Final-linux-aarch_64.jar (libraries:io.netty:netty-transport-native-epoll:4.2.16.Final:linux-aarch_64) to libraries/io/netty/netty-transport-native-epoll/4.2.16.Final/netty-transport-native-epoll-4.2.16.Final-linux-aarch_64.jar
+Unpacking io/netty/netty-transport-native-kqueue/4.2.16.Final/netty-transport-native-kqueue-4.2.16.Final-osx-x86_64.jar (libraries:io.netty:netty-transport-native-kqueue:4.2.16.Final:osx-x86_64) to libraries/io/netty/netty-transport-native-kqueue/4.2.16.Final/netty-transport-native-kqueue-4.2.16.Final-osx-x86_64.jar
+Unpacking io/netty/netty-transport-native-kqueue/4.2.16.Final/netty-transport-native-kqueue-4.2.16.Final-osx-aarch_64.jar (libraries:io.netty:netty-transport-native-kqueue:4.2.16.Final:osx-aarch_64) to libraries/io/netty/netty-transport-native-kqueue/4.2.16.Final/netty-transport-native-kqueue-4.2.16.Final-osx-aarch_64.jar
+Unpacking io/netty/netty-transport-native-unix-common/4.2.16.Final/netty-transport-native-unix-common-4.2.16.Final.jar (libraries:io.netty:netty-transport-native-unix-common:4.2.16.Final) to libraries/io/netty/netty-transport-native-unix-common/4.2.16.Final/netty-transport-native-unix-common-4.2.16.Final.jar
+Unpacking it/unimi/dsi/fastutil/8.5.18/fastutil-8.5.18.jar (libraries:it.unimi.dsi:fastutil:8.5.18) to libraries/it/unimi/dsi/fastutil/8.5.18/fastutil-8.5.18.jar
+Unpacking net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar (libraries:net.java.dev.jna:jna:5.17.0) to libraries/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar
+Unpacking net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar (libraries:net.java.dev.jna:jna-platform:5.17.0) to libraries/net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar
+Unpacking net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar (libraries:net.sf.jopt-simple:jopt-simple:5.0.4) to libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar
+Unpacking org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar (libraries:org.apache.commons:commons-lang3:3.20.0) to libraries/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar
+Unpacking org/apache/logging/log4j/log4j-api/2.26.0/log4j-api-2.26.0.jar (libraries:org.apache.logging.log4j:log4j-api:2.26.0) to libraries/org/apache/logging/log4j/log4j-api/2.26.0/log4j-api-2.26.0.jar
+Unpacking org/apache/logging/log4j/log4j-core/2.26.0/log4j-core-2.26.0.jar (libraries:org.apache.logging.log4j:log4j-core:2.26.0) to libraries/org/apache/logging/log4j/log4j-core/2.26.0/log4j-core-2.26.0.jar
+Unpacking org/apache/logging/log4j/log4j-slf4j2-impl/2.26.0/log4j-slf4j2-impl-2.26.0.jar (libraries:org.apache.logging.log4j:log4j-slf4j2-impl:2.26.0) to libraries/org/apache/logging/log4j/log4j-slf4j2-impl/2.26.0/log4j-slf4j2-impl-2.26.0.jar
+Unpacking org/joml/joml/1.10.9/joml-1.10.9.jar (libraries:org.joml:joml:1.10.9) to libraries/org/joml/joml/1.10.9/joml-1.10.9.jar
+Unpacking org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar (libraries:org.jspecify:jspecify:1.0.0) to libraries/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar
+Unpacking org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar (libraries:org.slf4j:slf4j-api:2.0.17) to libraries/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar
+Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
+2026-10-20T21:50:52.254110337Z main WARN The use of package scanning to locate Log4j plugins is deprecated.
+Please remove the `packages` attribute from your configuration file.
+See https://logging.apache.org/log4j/2.x/faq.html#package-scanning for details.
+[22:50:52] [main/INFO]: Loading Minecraft 26.3 with Fabric Loader 0.19.5
+[22:50:52] [main/INFO]: Loading 83 mods:
+	- c2me 0.4.2-alpha.0.90+26.3
+	   |-- c2me-base 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-chunkio-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-general-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-worldgen-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-worldgen-vanilla-bugs 0.4.2-alpha.0.90+26.3
+	   |-- c2me-notickvd 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-allocs 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-chunkio 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-math 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-natives-math 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-scheduling 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-worldgen-general 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-worldgen-vanilla 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunk-serializer 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunk-system 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunkio 0.4.2-alpha.0.90+26.3
+	   |-- c2me-server-utils 0.4.2-alpha.0.90+26.3
+	   |-- c2me-threading-lighting 0.4.2-alpha.0.90+26.3
+	   |-- com_electronwill_night-config_core 3.6.5
+	   |-- com_electronwill_night-config_toml 3.6.5
+	   |-- com_github_ben-manes_caffeine_caffeine 3.2.1
+	   |-- com_ibm_async_asyncutil 0.1.0
+	   |-- io_reactivex_rxjava3_rxjava 3.1.12
+	   |-- mixinsquared 0.3.7-beta.1
+	   |-- net_objecthunter_exp4j 0.4.8
+	   |-- org_jctools_jctools-core 4.0.5
+	   \-- org_reactivestreams_reactive-streams 1.0.4
+	- chunky 1.5.3
+	- fabric-api 0.162.0+26.3
+	   |-- fabric-advancement-api-v1 1.0.0+38c7a2d55d
+	   |-- fabric-api-base 2.0.6+fcdff87f5d
+	   |-- fabric-api-lookup-api-v1 2.0.24+3434d6d95d
+	   |-- fabric-biome-api-v1 20.1.0+c6aa69a85d
+	   |-- fabric-block-api-v1 3.1.0+0ae6f9115d
+	   |-- fabric-block-getter-api-v2 2.0.9+3434d6d95d
+	   |-- fabric-command-api-v2 3.1.2+fcdff87f5d
+	   |-- fabric-content-registries-v0 15.0.4+74ed1ea55d
+	   |-- fabric-convention-tags-v2 4.10.3+6b5b47fd5d
+	   |-- fabric-crash-report-info-v1 1.0.7+fcdff87f5d
+	   |-- fabric-creative-tab-api-v1 5.0.21+fcdff87f5d
+	   |-- fabric-data-attachment-api-v1 2.2.31+b9b88df45d
+	   |-- fabric-data-generation-api-v1 27.3.0+5be2453c5d
+	   |-- fabric-debug-api-v1 1.0.4+3434d6d95d
+	   |-- fabric-dimensions-v1 5.1.19+47f74c985d
+	   |-- fabric-entity-events-v1 6.0.4+3434d6d95d
+	   |-- fabric-events-interaction-v0 5.3.7+b9b88df45d
+	   |-- fabric-game-rule-api-v1 4.0.10+3434d6d95d
+	   |-- fabric-item-api-v1 14.7.0+cf6bc2db5d
+	   |-- fabric-lifecycle-events-v1 4.1.9+ffef5f675d
+	   |-- fabric-loot-api-v3 4.0.8+4068fd645d
+	   |-- fabric-menu-api-v1 2.0.28+ed66f0a35d
+	   |-- fabric-message-api-v1 7.0.10+3434d6d95d
+	   |-- fabric-networking-api-v1 6.3.9+b9b88df45d
+	   |-- fabric-object-builder-api-v1 24.1.10+3434d6d95d
+	   |-- fabric-particles-v1 5.0.25+3434d6d95d
+	   |-- fabric-permission-api-v1 1.0.8+fcdff87f5d
+	   |-- fabric-recipe-api-v1 10.0.9+b9b88df45d
+	   |-- fabric-registry-sync-v0 8.0.2+1ca9f6365d
+	   |-- fabric-rendering-fluids-v1 6.0.6+3434d6d95d
+	   |-- fabric-resource-conditions-api-v1 6.2.0+0d124ae85d
+	   |-- fabric-resource-loader-v0 3.3.26+4fc5413f5d
+	   |-- fabric-resource-loader-v1 3.0.4+ba0d6c0d5d
+	   |-- fabric-serialization-api-v1 2.0.7+74ed1ea55d
+	   |-- fabric-tag-api-v1 2.1.10+fcdff87f5d
+	   |-- fabric-transfer-api-v1 8.0.25+fcdff87f5d
+	   \-- fabric-transitive-access-wideners-v1 8.1.16+52268a0e5d
+	- fabricloader 0.19.5
+	   \-- mixinextras 0.5.5
+	- ferritecore 9.0.0
+	- java 25
+	- krypton 0.3.2
+	   \-- com_velocitypowered_velocity-native 3.4.0-SNAPSHOT
+	- lithium 0.26.2+mc26.3
+	- minecraft 26.3
+	- mr_chunky_offline 1-v1.1.0
+	- servercore 1.5.20+26.3
+	   |-- org_yaml_snakeyaml 2.7
+	   |-- placeholder-api 3.2.0+26.3
+	   |-- space_arim_dazzleconf_dazzleconf-core 1.3.0-M2
+	   \-- space_arim_dazzleconf_dazzleconf-ext-snakeyaml 1.3.0-M2
+	- spark 1.10.187
+	   \-- fabric-permissions-api-v0 0.7.0
+[22:50:52] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/nix/store/rl5q61knv76ljl047k5a5v38di3dcl6c-sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[22:50:52] [main/INFO]: Initializing com.ishland.c2me.base.mixin
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.sun.jna.Native in an unnamed module (file:/tmp/chunky-retirement-baseline/libraries/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+[22:50:52] [main/WARN]: Did not find udev library in operating system. Some features may not work.
+[22:50:53] [main/INFO]: CPU name: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
+[22:50:53] [main/INFO]: Detected 6 available physical CPUs, 12 available logical CPUs
+[22:50:53] [main/INFO]: Detected 6 available physical CPUs, 12 available logical CPUs
+[22:50:53] [main/INFO]: Config globalExecutorParallelism changed from 6 to 4
+[22:50:53] [main/INFO]: Global Executor Parallelism: 4 configured, 6 evaluated, 6 default evaluated
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.fixes.chunkio.threading_issues.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.fixes.general.threading_issues.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.fixes.worldgen.threading_issues.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.fixes.worldgen.vanilla_bugs.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.notickvd.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.allocs.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.chunkio.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.math.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.natives_math.mixin
+[22:50:53] [main/INFO]: Attempting to call native library. If your game crashes right after this point, native acceleration may not be available for your system.
+[22:50:53] [main/INFO]: Detected maximum supported ISA target: AVX2
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.scheduling.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.worldgen.general.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.opts.worldgen.vanilla.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunk_serializer.mixin
+[22:50:53] [main/INFO]: Disabling com.ishland.c2me.rewrites.chunk_serializer.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunksystem.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunkio.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.server.utils.mixin
+[22:50:53] [main/INFO]: Initializing com.ishland.c2me.threading.lighting.mixin
+[22:50:53] [main/INFO]: Loaded configuration file for Lithium: 170 options available, 0 override(s) found.
+[22:50:53] [main/WARN]: Error loading class: ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks (java.lang.ClassNotFoundException: ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks)
+[22:50:53] [main/WARN]: @Mixin target ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks was not found c2me-rewrites-chunk-system.mixins.json:scalablelux.MixinChunkSystemHooks from mod c2me-rewrites-chunk-system
+[22:50:53] [main/WARN]: Error loading class: ca/spottedleaf/starlight/common/thread/SchedulingUtil (java.lang.ClassNotFoundException: ca/spottedleaf/starlight/common/thread/SchedulingUtil)
+[22:50:54] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.joml.MemUtil$MemUtilUnsafe (file:/tmp/chunky-retirement-baseline/libraries/org/joml/joml/1.10.9/joml-1.10.9.jar)
+WARNING: Please consider reporting this to the maintainers of class org.joml.MemUtil$MemUtilUnsafe
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[22:51:00] [main/INFO]: Compression will use libdeflate (Linux x86_64), encryption will use Java
+[22:51:00] [main/INFO]: [ServerCore] Loaded V1.5.20+26.3!
+[22:51:00] [main/INFO]: Krypton is now accelerating your Minecraft server's networking stack 🚀
+[22:51:00] [main/INFO]: Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[22:51:01] [Worker-Main-4/INFO]: No existing world data, creating new world
+[22:51:01] [Worker-Main-1/INFO]: Loaded 1866 advancements
+[22:51:01] [main/INFO]: Applied 0 biome modifications to 0 of 67 new biomes in 1.344 ms
+[22:51:02] [Server thread/INFO]: Starting background profiler...
+[22:51:02] [Server thread/INFO]: Starting minecraft server version 26.3
+[22:51:02] [Server thread/INFO]: Loading properties
+[22:51:02] [Server thread/INFO]: Default game type: SURVIVAL
+[22:51:02] [Server thread/INFO]: Generating keypair
+[22:51:02] [Server thread/INFO]: Starting Minecraft server on 127.0.0.1:25566
+[22:51:02] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[22:51:02] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[22:51:02] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[22:51:02] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[22:51:02] [Server thread/INFO]: Preparing level "world"
+[22:51:02] [Server thread/INFO]: Enforcing safe world random access
+[22:51:02] [Server thread/INFO]: Using TheSpeedyObjectFactory without Unsafe
+[22:51:02] [Server thread/INFO]: Selecting global world spawn...
+[22:51:05] [Server thread/INFO]: Loading 0 persistent chunks...
+[22:51:05] [Server thread/INFO]: Preparing spawn area: 100%
+[22:51:05] [Server thread/INFO]: Time elapsed: 2458 ms
+[22:51:05] [Server thread/INFO]: Done (2.795s)! For help, type "help"
+[22:51:05] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[22:51:05] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[22:51:05] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[22:51:05] [Server thread/INFO]: System chat: [Chunky] No tasks to continue.
+[22:51:05] [Server thread/INFO]: System chat: [Chunky] Task started in minecraft:overworld for the square region centered at 0, 0 with radius 10000.
+[22:51:05] [Server thread/INFO]: System chat: [Chunky] Nothing to confirm!
+[22:51:06] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5 chunks (0.00%), ETA: 9:39:02, Rate: 45.0 cps, Current: 2, 4
+[22:51:06] [Server thread/INFO]: System chat: [Chunky] Task started in minecraft:the_nether for the square region centered at 100, 0 with radius 1250.
+[22:51:06] [Server thread/INFO]: System chat: [Chunky] Nothing to confirm!
+[22:51:07] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 9 chunks (0.04%), ETA: 0:09:13, Rate: 45.7 cps, Current: 2, 3
+[22:51:07] [Server thread/INFO]: System chat: [Chunky] Task started in minecraft:the_end for the square region centered at 1000, 0 with radius 5000.
+[22:51:07] [Server thread/INFO]: System chat: [Chunky] Nothing to confirm!
+[22:51:07] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 39 chunks (0.00%), ETA: 12:33:03, Rate: 34.6 cps, Current: 4, 1
+[22:51:07] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 13 chunks (0.00%), ETA: 0:53:55, Rate: 121.5 cps, Current: 36, 3
+[22:51:07] [Server thread/INFO]: System chat: Modified storage chunky_offline:tracking
+[22:51:07] [Server thread/INFO]: System chat: Modified storage chunky_offline:tracking
+[22:51:07] [Server thread/INFO]: System chat: Modified storage chunky_offline:tracking
+[22:51:07] [Server thread/INFO]: System chat: Modified storage chunky_offline:tracking
+[22:51:07] [Server thread/INFO]: System chat: Stopping the server
+[22:51:07] [Chunky-minecraft:overworld Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:overworld.
+[22:51:07] [Chunky-minecraft:the_nether Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:the_nether.
+[22:51:07] [Chunky-minecraft:the_end Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:the_end.
+[22:51:08] [Server thread/INFO]: Stopping server
+[22:51:08] [Server thread/INFO]: Saving players
+[22:51:08] [Server thread/INFO]: Saving worlds
+[22:51:08] [Server thread/INFO]: ServerLevel[world]/minecraft:overworld: waiting for 1124 chunks to unload
+[22:51:08] [Server thread/INFO]: ServerLevel[world]/minecraft:the_nether: waiting for 1052 chunks to unload
+[22:51:08] [Server thread/INFO]: ServerLevel[world]/minecraft:the_end: waiting for 946 chunks to unload
+[22:51:08] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[22:51:08] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[22:51:08] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[22:51:08] [C2ME Storage #3/INFO]: Storage thread Thread[#96,C2ME Storage #3,8,main] stopped
+[22:51:08] [C2ME Storage #2/INFO]: Storage thread Thread[#95,C2ME Storage #2,8,main] stopped
+[22:51:08] [C2ME Storage #1/INFO]: Storage thread Thread[#94,C2ME Storage #1,8,main] stopped
+[22:51:08] [C2ME Storage #6/INFO]: Storage thread Thread[#102,C2ME Storage #6,8,main] stopped
+[22:51:08] [C2ME Storage #5/INFO]: Storage thread Thread[#101,C2ME Storage #5,8,main] stopped
+[22:51:08] [C2ME Storage #4/INFO]: Storage thread Thread[#100,C2ME Storage #4,8,main] stopped
+[22:51:08] [C2ME Storage #9/INFO]: Storage thread Thread[#105,C2ME Storage #9,8,main] stopped
+[22:51:08] [C2ME Storage #8/INFO]: Storage thread Thread[#104,C2ME Storage #8,8,main] stopped
+[22:51:08] [C2ME Storage #7/INFO]: Storage thread Thread[#103,C2ME Storage #7,8,main] stopped
+Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
+2026-10-20T21:51:09.774106937Z main WARN The use of package scanning to locate Log4j plugins is deprecated.
+Please remove the `packages` attribute from your configuration file.
+See https://logging.apache.org/log4j/2.x/faq.html#package-scanning for details.
+[22:51:09] [main/INFO]: Loading Minecraft 26.3 with Fabric Loader 0.19.5
+[22:51:10] [main/INFO]: Loading 83 mods:
+	- c2me 0.4.2-alpha.0.90+26.3
+	   |-- c2me-base 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-chunkio-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-general-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-worldgen-threading-issues 0.4.2-alpha.0.90+26.3
+	   |-- c2me-fixes-worldgen-vanilla-bugs 0.4.2-alpha.0.90+26.3
+	   |-- c2me-notickvd 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-allocs 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-chunkio 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-math 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-natives-math 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-scheduling 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-worldgen-general 0.4.2-alpha.0.90+26.3
+	   |-- c2me-opts-worldgen-vanilla 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunk-serializer 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunk-system 0.4.2-alpha.0.90+26.3
+	   |-- c2me-rewrites-chunkio 0.4.2-alpha.0.90+26.3
+	   |-- c2me-server-utils 0.4.2-alpha.0.90+26.3
+	   |-- c2me-threading-lighting 0.4.2-alpha.0.90+26.3
+	   |-- com_electronwill_night-config_core 3.6.5
+	   |-- com_electronwill_night-config_toml 3.6.5
+	   |-- com_github_ben-manes_caffeine_caffeine 3.2.1
+	   |-- com_ibm_async_asyncutil 0.1.0
+	   |-- io_reactivex_rxjava3_rxjava 3.1.12
+	   |-- mixinsquared 0.3.7-beta.1
+	   |-- net_objecthunter_exp4j 0.4.8
+	   |-- org_jctools_jctools-core 4.0.5
+	   \-- org_reactivestreams_reactive-streams 1.0.4
+	- chunky 1.5.3
+	- fabric-api 0.162.0+26.3
+	   |-- fabric-advancement-api-v1 1.0.0+38c7a2d55d
+	   |-- fabric-api-base 2.0.6+fcdff87f5d
+	   |-- fabric-api-lookup-api-v1 2.0.24+3434d6d95d
+	   |-- fabric-biome-api-v1 20.1.0+c6aa69a85d
+	   |-- fabric-block-api-v1 3.1.0+0ae6f9115d
+	   |-- fabric-block-getter-api-v2 2.0.9+3434d6d95d
+	   |-- fabric-command-api-v2 3.1.2+fcdff87f5d
+	   |-- fabric-content-registries-v0 15.0.4+74ed1ea55d
+	   |-- fabric-convention-tags-v2 4.10.3+6b5b47fd5d
+	   |-- fabric-crash-report-info-v1 1.0.7+fcdff87f5d
+	   |-- fabric-creative-tab-api-v1 5.0.21+fcdff87f5d
+	   |-- fabric-data-attachment-api-v1 2.2.31+b9b88df45d
+	   |-- fabric-data-generation-api-v1 27.3.0+5be2453c5d
+	   |-- fabric-debug-api-v1 1.0.4+3434d6d95d
+	   |-- fabric-dimensions-v1 5.1.19+47f74c985d
+	   |-- fabric-entity-events-v1 6.0.4+3434d6d95d
+	   |-- fabric-events-interaction-v0 5.3.7+b9b88df45d
+	   |-- fabric-game-rule-api-v1 4.0.10+3434d6d95d
+	   |-- fabric-item-api-v1 14.7.0+cf6bc2db5d
+	   |-- fabric-lifecycle-events-v1 4.1.9+ffef5f675d
+	   |-- fabric-loot-api-v3 4.0.8+4068fd645d
+	   |-- fabric-menu-api-v1 2.0.28+ed66f0a35d
+	   |-- fabric-message-api-v1 7.0.10+3434d6d95d
+	   |-- fabric-networking-api-v1 6.3.9+b9b88df45d
+	   |-- fabric-object-builder-api-v1 24.1.10+3434d6d95d
+	   |-- fabric-particles-v1 5.0.25+3434d6d95d
+	   |-- fabric-permission-api-v1 1.0.8+fcdff87f5d
+	   |-- fabric-recipe-api-v1 10.0.9+b9b88df45d
+	   |-- fabric-registry-sync-v0 8.0.2+1ca9f6365d
+	   |-- fabric-rendering-fluids-v1 6.0.6+3434d6d95d
+	   |-- fabric-resource-conditions-api-v1 6.2.0+0d124ae85d
+	   |-- fabric-resource-loader-v0 3.3.26+4fc5413f5d
+	   |-- fabric-resource-loader-v1 3.0.4+ba0d6c0d5d
+	   |-- fabric-serialization-api-v1 2.0.7+74ed1ea55d
+	   |-- fabric-tag-api-v1 2.1.10+fcdff87f5d
+	   |-- fabric-transfer-api-v1 8.0.25+fcdff87f5d
+	   \-- fabric-transitive-access-wideners-v1 8.1.16+52268a0e5d
+	- fabricloader 0.19.5
+	   \-- mixinextras 0.5.5
+	- ferritecore 9.0.0
+	- java 25
+	- krypton 0.3.2
+	   \-- com_velocitypowered_velocity-native 3.4.0-SNAPSHOT
+	- lithium 0.26.2+mc26.3
+	- minecraft 26.3
+	- mr_chunky_offline 1-v1.1.0
+	- servercore 1.5.20+26.3
+	   |-- org_yaml_snakeyaml 2.7
+	   |-- placeholder-api 3.2.0+26.3
+	   |-- space_arim_dazzleconf_dazzleconf-core 1.3.0-M2
+	   \-- space_arim_dazzleconf_dazzleconf-ext-snakeyaml 1.3.0-M2
+	- spark 1.10.187
+	   \-- fabric-permissions-api-v0 0.7.0
+[22:51:10] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/nix/store/rl5q61knv76ljl047k5a5v38di3dcl6c-sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.base.mixin
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.sun.jna.Native in an unnamed module (file:/tmp/chunky-retirement-baseline/libraries/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+[22:51:10] [main/WARN]: Did not find udev library in operating system. Some features may not work.
+[22:51:10] [main/INFO]: CPU name: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
+[22:51:10] [main/INFO]: Detected 6 available physical CPUs, 12 available logical CPUs
+[22:51:10] [main/INFO]: Detected 6 available physical CPUs, 12 available logical CPUs
+[22:51:10] [main/INFO]: Config globalExecutorParallelism changed from 6 to 4
+[22:51:10] [main/INFO]: Global Executor Parallelism: 4 configured, 6 evaluated, 6 default evaluated
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.fixes.chunkio.threading_issues.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.fixes.general.threading_issues.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.fixes.worldgen.threading_issues.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.fixes.worldgen.vanilla_bugs.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.notickvd.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.allocs.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.chunkio.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.math.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.natives_math.mixin
+[22:51:10] [main/INFO]: Attempting to call native library. If your game crashes right after this point, native acceleration may not be available for your system.
+[22:51:10] [main/INFO]: Detected maximum supported ISA target: AVX2
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.scheduling.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.worldgen.general.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.opts.worldgen.vanilla.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunk_serializer.mixin
+[22:51:10] [main/INFO]: Disabling com.ishland.c2me.rewrites.chunk_serializer.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunksystem.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.rewrites.chunkio.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.server.utils.mixin
+[22:51:10] [main/INFO]: Initializing com.ishland.c2me.threading.lighting.mixin
+[22:51:10] [main/INFO]: Loaded configuration file for Lithium: 170 options available, 0 override(s) found.
+[22:51:11] [main/WARN]: Error loading class: ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks (java.lang.ClassNotFoundException: ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks)
+[22:51:11] [main/WARN]: @Mixin target ca/spottedleaf/starlight/common/integration/v0/ChunkSystemHooks was not found c2me-rewrites-chunk-system.mixins.json:scalablelux.MixinChunkSystemHooks from mod c2me-rewrites-chunk-system
+[22:51:11] [main/WARN]: Error loading class: ca/spottedleaf/starlight/common/thread/SchedulingUtil (java.lang.ClassNotFoundException: ca/spottedleaf/starlight/common/thread/SchedulingUtil)
+[22:51:11] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.joml.MemUtil$MemUtilUnsafe (file:/tmp/chunky-retirement-baseline/libraries/org/joml/joml/1.10.9/joml-1.10.9.jar)
+WARNING: Please consider reporting this to the maintainers of class org.joml.MemUtil$MemUtilUnsafe
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[22:51:17] [main/INFO]: Compression will use libdeflate (Linux x86_64), encryption will use Java
+[22:51:17] [main/INFO]: [ServerCore] Loaded V1.5.20+26.3!
+[22:51:17] [main/INFO]: Krypton is now accelerating your Minecraft server's networking stack 🚀
+[22:51:17] [main/INFO]: Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[22:51:19] [Worker-Main-7/INFO]: Loaded 1866 advancements
+[22:51:19] [main/INFO]: Applied 0 biome modifications to 0 of 67 new biomes in 1.035 ms
+[22:51:19] [Server thread/INFO]: Starting background profiler...
+[22:51:19] [Server thread/INFO]: Starting minecraft server version 26.3
+[22:51:19] [Server thread/INFO]: Loading properties
+[22:51:19] [Server thread/INFO]: Default game type: SURVIVAL
+[22:51:19] [Server thread/INFO]: Generating keypair
+[22:51:19] [Server thread/INFO]: Starting Minecraft server on 127.0.0.1:25566
+[22:51:20] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[22:51:20] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[22:51:20] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[22:51:20] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[22:51:20] [Server thread/INFO]: Preparing level "world"
+[22:51:20] [Server thread/INFO]: Enforcing safe world random access
+[22:51:20] [Server thread/INFO]: Using TheSpeedyObjectFactory without Unsafe
+[22:51:20] [Server thread/INFO]: Loading 0 persistent chunks...
+[22:51:20] [Server thread/INFO]: Preparing spawn area: 100%
+[22:51:20] [Server thread/INFO]: Time elapsed: 192 ms
+[22:51:20] [Server thread/INFO]: Done (0.720s)! For help, type "help"
+[22:51:20] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[22:51:20] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[22:51:20] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[22:51:20] [Server thread/INFO]: System chat: [Chunky] Task continuing for minecraft:overworld.
+[22:51:20] [Server thread/INFO]: System chat: [Chunky] Task continuing for minecraft:the_nether.
+[22:51:20] [Server thread/INFO]: System chat: [Chunky] Task continuing for minecraft:the_end.
+[22:51:21] [Chunky-minecraft:overworld Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:overworld.
+[22:51:21] [Server thread/INFO]: System chat: Storage chunky_offline:tracking has the following contents: {enabled: 1b, hasTask: 1b, lastActivityZ: 0, lastActivityX: 9000, pending: 0b, centerX: 9000, centerZ: 0}
+[22:51:21] [Server thread/INFO]: System chat: [Chunky] Current selection
+[22:51:21] [Server thread/INFO]: System chat: World: minecraft:overworld
+[22:51:21] [Server thread/INFO]: System chat: Shape: square
+[22:51:21] [Server thread/INFO]: System chat: Center: 9000, 0
+[22:51:21] [Server thread/INFO]: System chat: Radius: 10000
+[22:51:22] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 29 chunks (0.01%), ETA: 11:16:50, Rate: 9.7 cps, Current: 33, 4
+[22:51:23] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 125 chunks (0.03%), ETA: 2:32:48, Rate: 42.9 cps, Current: 43, 10
+[22:51:24] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4 chunks (0.00%), ETA: 17:10:17, Rate: 25.3 cps, Current: 546, 5
+[22:51:24] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 155 chunks (0.04%), ETA: 3:05:07, Rate: 35.4 cps, Current: 46, 13
+[22:51:25] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 37 chunks (0.00%), ETA: 13:44:04, Rate: 31.7 cps, Current: 551, 1
+[22:51:26] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 210 chunks (0.05%), ETA: 2:47:33, Rate: 39.1 cps, Current: 33, 13
+[22:51:26] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 91 chunks (0.01%), ETA: 10:25:40, Rate: 41.7 cps, Current: 553, 8
+[22:51:27] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 289 chunks (0.07%), ETA: 2:29:30, Rate: 43.8 cps, Current: 47, 14
+[22:51:27] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 150 chunks (0.01%), ETA: 9:13:36, Rate: 47.1 cps, Current: 553, 14
+[22:51:28] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 360 chunks (0.09%), ETA: 2:17:40, Rate: 47.5 cps, Current: 39, 29
+[22:51:28] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 213 chunks (0.01%), ETA: 8:49:18, Rate: 49.3 cps, Current: 553, 0
+[22:51:29] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 412 chunks (0.10%), ETA: 2:16:22, Rate: 48.0 cps, Current: 44, 22
+[22:51:29] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 277 chunks (0.02%), ETA: 8:27:10, Rate: 51.4 cps, Current: 545, 23
+[22:51:30] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 577 chunks (0.15%), ETA: 1:47:57, Rate: 60.6 cps, Current: 51, 30
+[22:51:30] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 339 chunks (0.02%), ETA: 8:11:28, Rate: 53.1 cps, Current: 544, 8
+[22:51:31] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 627 chunks (0.16%), ETA: 1:50:29, Rate: 59.2 cps, Current: 40, 31
+[22:51:31] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 402 chunks (0.03%), ETA: 8:00:59, Rate: 54.2 cps, Current: 557, 26
+[22:51:32] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 734 chunks (0.19%), ETA: 1:43:13, Rate: 63.4 cps, Current: 62, 19
+[22:51:32] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 491 chunks (0.03%), ETA: 7:27:47, Rate: 58.2 cps, Current: 563, 17
+[22:51:33] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 791 chunks (0.20%), ETA: 1:44:28, Rate: 62.6 cps, Current: 56, 13
+[22:51:33] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 610 chunks (0.04%), ETA: 6:43:34, Rate: 64.6 cps, Current: 551, 31
+[22:51:34] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 925 chunks (0.24%), ETA: 1:36:14, Rate: 67.9 cps, Current: 58, 8
+[22:51:34] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 714 chunks (0.05%), ETA: 6:21:28, Rate: 68.3 cps, Current: 572, 17
+[22:51:35] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 774 chunks (0.05%), ETA: 6:26:12, Rate: 67.5 cps, Current: 569, 31
+[22:51:36] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1059 chunks (0.27%), ETA: 1:34:21, Rate: 69.3 cps, Current: 48, 0
+[22:51:36] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 911 chunks (0.06%), ETA: 5:56:49, Rate: 73.1 cps, Current: 563, 1
+[22:51:37] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1123 chunks (0.29%), ETA: 1:35:00, Rate: 68.8 cps, Current: 75, 8
+[22:51:37] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1027 chunks (0.07%), ETA: 5:42:32, Rate: 76.1 cps, Current: 580, 5
+[22:51:38] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1161 chunks (0.30%), ETA: 1:37:33, Rate: 67.0 cps, Current: 73, 0
+[22:51:38] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1086 chunks (0.07%), ETA: 5:47:59, Rate: 74.9 cps, Current: 588, 4
+[22:51:39] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1400 chunks (0.36%), ETA: 1:25:26, Rate: 76.4 cps, Current: 74, 24
+[22:51:39] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1165 chunks (0.07%), ETA: 5:46:59, Rate: 75.1 cps, Current: 586, 11
+[22:51:40] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1556 chunks (0.40%), ETA: 1:21:05, Rate: 80.5 cps, Current: 79, 24
+[22:51:40] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1317 chunks (0.08%), ETA: 5:26:43, Rate: 79.8 cps, Current: 578, 26
+[22:51:41] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1429 chunks (0.09%), ETA: 5:19:21, Rate: 81.6 cps, Current: 589, 30
+[22:51:41] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1620 chunks (0.41%), ETA: 1:25:01, Rate: 76.7 cps, Current: 65, 31
+[22:51:42] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1558 chunks (0.10%), ETA: 5:09:43, Rate: 84.1 cps, Current: 592, 24
+[22:51:42] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1768 chunks (0.45%), ETA: 1:21:33, Rate: 80.0 cps, Current: 93, 14
+[22:51:43] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1656 chunks (0.11%), ETA: 5:07:17, Rate: 84.8 cps, Current: 603, 29
+[22:51:43] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1853 chunks (0.47%), ETA: 1:21:21, Rate: 80.2 cps, Current: 82, 11
+[22:51:44] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1767 chunks (0.11%), ETA: 5:02:48, Rate: 86.0 cps, Current: 605, 13
+[22:51:44] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 1952 chunks (0.50%), ETA: 1:20:32, Rate: 80.9 cps, Current: 88, 2
+[22:51:45] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1851 chunks (0.12%), ETA: 5:03:10, Rate: 85.9 cps, Current: 595, 13
+[22:51:46] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 1955 chunks (0.12%), ETA: 5:00:28, Rate: 86.7 cps, Current: 600, 2
+[22:51:47] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2042 chunks (0.52%), ETA: 1:25:05, Rate: 76.6 cps, Current: 80, 0
+[22:51:47] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2029 chunks (0.13%), ETA: 5:02:21, Rate: 86.2 cps, Current: 577, -28
+[22:51:48] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2167 chunks (0.55%), ETA: 1:23:10, Rate: 78.3 cps, Current: 76, -22
+[22:51:48] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2082 chunks (0.13%), ETA: 5:07:15, Rate: 84.8 cps, Current: 585, -31
+[22:51:49] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2244 chunks (0.57%), ETA: 1:23:16, Rate: 78.2 cps, Current: 68, -20
+[22:51:49] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2140 chunks (0.14%), ETA: 5:11:23, Rate: 83.6 cps, Current: 576, -27
+[22:51:50] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2267 chunks (0.58%), ETA: 1:25:31, Rate: 76.2 cps, Current: 65, -16
+[22:51:50] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2217 chunks (0.14%), ETA: 5:12:20, Rate: 83.4 cps, Current: 581, -20
+[22:51:51] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2464 chunks (0.63%), ETA: 1:18:05, Rate: 83.4 cps, Current: 78, -8
+[22:51:51] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2292 chunks (0.15%), ETA: 5:13:52, Rate: 83.0 cps, Current: 581, -13
+[22:51:52] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2604 chunks (0.66%), ETA: 1:16:09, Rate: 85.5 cps, Current: 80, -8
+[22:51:52] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2372 chunks (0.15%), ETA: 5:14:18, Rate: 82.9 cps, Current: 580, -9
+[22:51:53] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2751 chunks (0.70%), ETA: 1:11:46, Rate: 90.6 cps, Current: 89, -13
+[22:51:53] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2517 chunks (0.16%), ETA: 5:06:34, Rate: 84.9 cps, Current: 590, -11
+[22:51:54] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2860 chunks (0.73%), ETA: 1:11:21, Rate: 91.1 cps, Current: 80, -18
+[22:51:54] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2643 chunks (0.17%), ETA: 4:55:15, Rate: 88.2 cps, Current: 597, -4
+[22:51:55] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 2983 chunks (0.76%), ETA: 1:09:31, Rate: 93.5 cps, Current: 89, -30
+[22:51:55] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2740 chunks (0.18%), ETA: 4:49:56, Rate: 89.8 cps, Current: 599, -11
+[22:51:56] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3043 chunks (0.77%), ETA: 1:09:31, Rate: 93.5 cps, Current: 95, -14
+[22:51:56] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2805 chunks (0.18%), ETA: 4:49:06, Rate: 90.1 cps, Current: 601, -16
+[22:51:57] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3087 chunks (0.79%), ETA: 1:10:12, Rate: 92.6 cps, Current: 36, -31
+[22:51:57] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 2910 chunks (0.19%), ETA: 4:44:55, Rate: 91.4 cps, Current: 592, -24
+[22:51:58] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3011 chunks (0.19%), ETA: 4:40:04, Rate: 93.0 cps, Current: 605, -24
+[22:51:59] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3105 chunks (0.79%), ETA: 1:11:45, Rate: 90.6 cps, Current: 91, -32
+[22:51:59] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3066 chunks (0.20%), ETA: 4:40:02, Rate: 93.0 cps, Current: 592, -32
+[22:52:00] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3287 chunks (0.84%), ETA: 1:11:15, Rate: 91.2 cps, Current: 33, -18
+[22:52:01] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3127 chunks (0.20%), ETA: 4:41:40, Rate: 92.4 cps, Current: 553, -29
+[22:52:01] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3321 chunks (0.84%), ETA: 1:12:47, Rate: 89.3 cps, Current: 47, -30
+[22:52:02] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3222 chunks (0.21%), ETA: 4:42:32, Rate: 92.1 cps, Current: 553, -18
+[22:52:02] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3393 chunks (0.86%), ETA: 1:13:15, Rate: 88.7 cps, Current: 32, -24
+[22:52:03] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3310 chunks (0.21%), ETA: 4:44:05, Rate: 91.6 cps, Current: 550, -15
+[22:52:03] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 3919 chunks (1.00%), ETA: 1:02:05, Rate: 104.5 cps, Current: 54, -20
+[22:52:04] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3363 chunks (0.21%), ETA: 4:48:47, Rate: 90.1 cps, Current: 545, -10
+[22:52:04] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4117 chunks (1.05%), ETA: 1:00:50, Rate: 106.6 cps, Current: 7, -31
+[22:52:05] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3503 chunks (0.22%), ETA: 4:41:14, Rate: 92.5 cps, Current: 558, -6
+[22:52:05] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4140 chunks (1.05%), ETA: 1:01:56, Rate: 104.7 cps, Current: 10, -31
+[22:52:06] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3631 chunks (0.23%), ETA: 4:41:33, Rate: 92.4 cps, Current: 560, -4
+[22:52:06] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4230 chunks (1.08%), ETA: 1:01:23, Rate: 105.6 cps, Current: 12, -21
+[22:52:07] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3789 chunks (0.24%), ETA: 4:37:11, Rate: 93.9 cps, Current: 569, -13
+[22:52:07] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4278 chunks (1.09%), ETA: 1:01:09, Rate: 106.0 cps, Current: 4, -22
+[22:52:08] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 3930 chunks (0.25%), ETA: 4:30:46, Rate: 96.1 cps, Current: 562, -22
+[22:52:08] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4287 chunks (1.09%), ETA: 1:06:45, Rate: 97.1 cps, Current: 1, -22
+[22:52:09] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4069 chunks (0.26%), ETA: 4:25:34, Rate: 98.0 cps, Current: 574, -31
+[22:52:10] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4314 chunks (1.10%), ETA: 1:10:09, Rate: 92.4 cps, Current: 14, -32
+[22:52:10] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4119 chunks (0.26%), ETA: 4:32:36, Rate: 95.4 cps, Current: 520, -31
+[22:52:11] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4481 chunks (1.14%), ETA: 1:05:52, Rate: 98.3 cps, Current: 14, -3
+[22:52:11] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4158 chunks (0.27%), ETA: 4:40:48, Rate: 92.6 cps, Current: 519, -27
+[22:52:12] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4561 chunks (1.16%), ETA: 1:07:33, Rate: 95.9 cps, Current: 0, -18
+[22:52:12] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4284 chunks (0.27%), ETA: 4:41:24, Rate: 92.4 cps, Current: 515, -24
+[22:52:13] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 4735 chunks (1.20%), ETA: 1:05:24, Rate: 99.0 cps, Current: 31, -3
+[22:52:13] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4355 chunks (0.28%), ETA: 4:44:24, Rate: 91.5 cps, Current: 527, -20
+[22:52:14] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 5031 chunks (1.28%), ETA: 1:01:11, Rate: 105.7 cps, Current: 24, -28
+[22:52:14] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4420 chunks (0.28%), ETA: 4:51:04, Rate: 89.4 cps, Current: 512, -23
+[22:52:15] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_end. Processed: 5105 chunks (1.30%), ETA: 0:58:30, Rate: 110.5 cps, Current: 16, -32
+[22:52:15] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4583 chunks (0.29%), ETA: 4:40:56, Rate: 92.6 cps, Current: 527, -14
+[22:52:16] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4718 chunks (0.30%), ETA: 4:40:10, Rate: 92.8 cps, Current: 524, -1
+[22:52:17] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 4935 chunks (0.32%), ETA: 4:27:13, Rate: 97.3 cps, Current: 532, -20
+[22:52:18] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5105 chunks (0.33%), ETA: 4:16:41, Rate: 101.3 cps, Current: 540, -31
+[22:52:18] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 53 chunks (0.21%), ETA: 0:10:55, Rate: 38.5 cps, Current: 10, 2
+[22:52:19] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 194 chunks (0.77%), ETA: 0:03:17, Rate: 127.3 cps, Current: 2, 9
+[22:52:20] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 374 chunks (1.48%), ETA: 0:02:46, Rate: 149.3 cps, Current: 7, 25
+[22:52:21] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 536 chunks (2.12%), ETA: 0:02:43, Rate: 151.5 cps, Current: 21, 22
+[22:52:22] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:the_nether. Processed: 712 chunks (2.82%), ETA: 0:02:36, Rate: 156.8 cps, Current: 24, 17
+[22:52:23] [Server thread/INFO]: Alice[/127.0.0.1:36118] logged in with entity id 1893 at (156.5, 76.0, 153.5)
+[22:52:23] [Server thread/INFO]: System chat: Alice joined the game
+[22:52:23] [Chunky-minecraft:the_nether Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:the_nether.
+[22:52:23] [Server thread/INFO]: System chat: Set Alice's game mode to Spectator Mode
+[22:52:23] [Chunky-minecraft:the_end Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:the_end.
+[22:52:24] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5121 chunks (0.33%), ETA: 5:14:41, Rate: 82.6 cps, Current: 514, 0
+[22:52:25] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5245 chunks (0.34%), ETA: 5:07:29, Rate: 84.5 cps, Current: 526, 11
+[22:52:26] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5345 chunks (0.34%), ETA: 5:07:29, Rate: 84.5 cps, Current: 513, 16
+[22:52:27] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5438 chunks (0.35%), ETA: 5:08:59, Rate: 84.1 cps, Current: 516, 28
+[22:52:28] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5560 chunks (0.36%), ETA: 5:01:31, Rate: 86.2 cps, Current: 523, 20
+[22:52:29] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5688 chunks (0.36%), ETA: 4:53:01, Rate: 88.7 cps, Current: 528, 30
+[22:52:30] [Server thread/INFO]: System chat: [Chunky] Task running for minecraft:overworld. Processed: 5868 chunks (0.37%), ETA: 4:41:37, Rate: 92.3 cps, Current: 541, 17
+[22:52:31] [Server thread/INFO]: Alice lost connection: Disconnected
+[22:52:31] [Server thread/INFO]: System chat: Alice left the game
+[22:52:31] [Server thread/INFO]: System chat: Stopping the server
+[22:52:31] [Chunky-minecraft:overworld Thread/INFO]: System chat: [Chunky] Task stopped for minecraft:overworld.
+[22:52:31] [Server thread/INFO]: Stopping server
+[22:52:31] [Server thread/INFO]: Saving players
+[22:52:31] [Server thread/INFO]: Saving worlds
+[22:52:31] [Server thread/INFO]: ServerLevel[world]/minecraft:overworld: waiting for 2448 chunks to unload
+[22:52:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[22:52:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[22:52:31] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[22:52:31] [C2ME Storage #3/INFO]: Storage thread Thread[#97,C2ME Storage #3,8,main] stopped
+[22:52:31] [C2ME Storage #2/INFO]: Storage thread Thread[#96,C2ME Storage #2,8,main] stopped
+[22:52:31] [C2ME Storage #1/INFO]: Storage thread Thread[#95,C2ME Storage #1,8,main] stopped
+[22:52:31] [C2ME Storage #6/INFO]: Storage thread Thread[#100,C2ME Storage #6,8,main] stopped
+[22:52:31] [C2ME Storage #5/INFO]: Storage thread Thread[#99,C2ME Storage #5,8,main] stopped
+[22:52:31] [C2ME Storage #4/INFO]: Storage thread Thread[#98,C2ME Storage #4,8,main] stopped
+[22:52:31] [C2ME Storage #9/INFO]: Storage thread Thread[#103,C2ME Storage #9,8,main] stopped
+[22:52:31] [C2ME Storage #8/INFO]: Storage thread Thread[#102,C2ME Storage #8,8,main] stopped
+[22:52:31] [C2ME Storage #7/INFO]: Storage thread Thread[#101,C2ME Storage #7,8,main] stopped

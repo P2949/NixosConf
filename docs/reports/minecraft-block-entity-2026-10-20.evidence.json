@@ -1,0 +1,166 @@
+{
+  "position": [
+    -9224,
+    43,
+    -5323
+  ],
+  "region": [
+    -19,
+    -11
+  ],
+  "live_read_stable": true,
+  "snapshot_readonly": "ro=true",
+  "results": [
+    {
+      "source": "/srv/minecraft",
+      "region": "/srv/minecraft/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "compressed_sha256": "bd8fe17bd4b2fcfb29e3d6fd68092638eb1294fc4a682a04367aca79e859711c",
+      "codec": 2,
+      "data_version": 5023,
+      "block_entities": [],
+      "block_state": {
+        "": "minecraft:chest"
+      },
+      "block_state_name": "minecraft:chest",
+      "result": "READ_OK"
+    },
+    {
+      "source": "/srv/minecraft",
+      "region": "/srv/minecraft/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "compressed_sha256": "bd8fe17bd4b2fcfb29e3d6fd68092638eb1294fc4a682a04367aca79e859711c",
+      "codec": 2,
+      "data_version": 5023,
+      "block_entities": [],
+      "block_state": {
+        "": "minecraft:chest"
+      },
+      "block_state_name": "minecraft:chest",
+      "result": "READ_OK"
+    },
+    {
+      "source": "/.snapshots/minecraft/survival-20261020T194652213923Z",
+      "region": "/.snapshots/minecraft/survival-20261020T194652213923Z/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "compressed_sha256": "1d735208ca6be2995ead8425f711f7cf472d1bd430729bfc19c03a4da11a9b8d",
+      "codec": 2,
+      "data_version": 5023,
+      "block_entities": [
+        {
+          "id": "minecraft:brushable_block",
+          "x": -9224,
+          "y": 43,
+          "z": -5323,
+          "keys": [
+            "LootTable",
+            "LootTableSeed",
+            "components",
+            "id",
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      ],
+      "block_state": {
+        "": "minecraft:chest"
+      },
+      "block_state_name": "minecraft:chest",
+      "result": "READ_OK"
+    },
+    {
+      "source": "/.snapshots/minecraft/survival-20261020T191542676525Z",
+      "region": "/.snapshots/minecraft/survival-20261020T191542676525Z/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "compressed_sha256": "1d735208ca6be2995ead8425f711f7cf472d1bd430729bfc19c03a4da11a9b8d",
+      "codec": 2,
+      "data_version": 5023,
+      "block_entities": [
+        {
+          "id": "minecraft:brushable_block",
+          "x": -9224,
+          "y": 43,
+          "z": -5323,
+          "keys": [
+            "LootTable",
+            "LootTableSeed",
+            "components",
+            "id",
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      ],
+      "block_state": {
+        "": "minecraft:chest"
+      },
+      "block_state_name": "minecraft:chest",
+      "result": "READ_OK"
+    },
+    {
+      "source": "/.snapshots/minecraft/survival-20261020T190454464356Z",
+      "region": "/.snapshots/minecraft/survival-20261020T190454464356Z/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "compressed_sha256": "1d735208ca6be2995ead8425f711f7cf472d1bd430729bfc19c03a4da11a9b8d",
+      "codec": 2,
+      "data_version": 5023,
+      "block_entities": [
+        {
+          "id": "minecraft:brushable_block",
+          "x": -9224,
+          "y": 43,
+          "z": -5323,
+          "keys": [
+            "LootTable",
+            "LootTableSeed",
+            "components",
+            "id",
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      ],
+      "block_state": {
+        "": "minecraft:chest"
+      },
+      "block_state_name": "minecraft:chest",
+      "result": "READ_OK"
+    },
+    {
+      "source": "/.snapshots/minecraft/survival-20261020T184040719886Z",
+      "region": "/.snapshots/minecraft/survival-20261020T184040719886Z/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "result": "REGION_ABSENT"
+    },
+    {
+      "source": "/.snapshots/minecraft/survival-20261019T000001632174Z",
+      "region": "/.snapshots/minecraft/survival-20261019T000001632174Z/survival/world/dimensions/minecraft/overworld/region/r.-19.-11.mca",
+      "chunk": [
+        -577,
+        -333
+      ],
+      "result": "REGION_ABSENT"
+    }
+  ]
+}
