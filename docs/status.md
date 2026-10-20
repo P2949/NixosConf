@@ -87,8 +87,10 @@ recovery. Normal policy pins Minecraft 26.3, Fabric 0.19.5, OpenJDK 25, C2ME
 executor four and G1. Distant Horizons and the Minecraft maintenance
 specialisations are removed. Chunky 1.5.3 and locally extended Chunky Offline
 1.1.0 are permanent production features: players online pauses all generation;
-empty server applies pending centers and resumes saved tasks. Activity is sampled
-every 200 online ticks, with a 75% square deadzone. Radii are Overworld 10,000,
+empty server applies pending centers and resumes saved tasks. All online players
+are sampled every 200 online ticks, with a 75% square deadzone. The farthest candidate is
+retained with its owner UUID across disconnects; near-center players cannot erase
+it. The owner returning inside clears it. Radii are Overworld 10,000,
 Nether 1,250 and End 5,000; Nether/End become enabled lazily on first visits.
 Centers and visit state survive restarts. Empty-server tick pausing remains
 disabled (`pause-when-empty-seconds=-1`). Six-hour backups remain enabled.
