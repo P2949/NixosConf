@@ -57,14 +57,40 @@ assertions, and the existing workstation VM extended for hook installation,
 runtime locking, writable seeding and daemon-restart ordering. The VM does not
 prove physical AMD clocks, power, temperature or fan behavior.
 
-Final implementation acceptance requires one declarative boot/readback and one
-10–15 minute DSR/GameMode Stock → Daily → Stock integration run, then returning to
-Daily. Prior electrical, fan, boot and accepted suspend evidence remains closed;
-ordinary use is a nonblocking soak.
+Implementation acceptance is complete. PR #50 merged after required exact-head CI;
+post-merge main CI, boot/readback and GameMode smoke passed. Real GameMode
+Stock → Daily → Stock switching, user-validated normal DSR/Proton gameplay and
+post-merge boot/smoke passed. Prior electrical, fan, boot, daemon-restart and
+accepted suspend evidence is closed. Ordinary use is nonblocking; no additional
+qualification, reboot campaign or formal workday test is required.
 
-Ordinary updates need a build, boot and exact Daily readback. Material changes to
-the kernel/amdgpu stack, LACT schema, electrical policy or fan curve need a compact
-regression: exact Daily, GameMode Stock → Daily → Stock, one representative
-approximately 10-minute GPU load, and return to zero RPM. Reopen broader tuning
-only when evidence justifies it. Preserve recovery generation 62 and the separate
-evidence branch until post-merge acceptance succeeds.
+For ordinary NixOS/configuration updates, run `nix flake check` and
+`nixos-rebuild build`, switch/reboot as normally appropriate, and confirm Daily
+is active. No GPU workload is required for unrelated configuration changes or
+package refreshes without material GPU-stack changes.
+
+Material changes to kernel/amdgpu, Mesa/RADV, LACT or its schema, GameMode, the
+profile helper, policy YAML, electrical settings or fan curve require a compact
+regression after the same automated checks and normal activation:
+
+1. Verify exact Daily: 238 W, −150 mV, factory clocks, accepted PMFW curve,
+   zero RPM enabled and LACT auto-switch disabled.
+2. Verify Stock → GameMode → Daily → client exit → Stock.
+3. Run one representative approximately 10-minute GPU workload. Require no
+   thermal flags, hotspot and memory at most 95°C, and no GPU reset/fault.
+4. Return to Daily and verify zero-RPM recovery, then stop.
+
+Reopen only tests relevant to an actual regression: fan tests for changed fan
+behavior, electrical/stability tests for instability, helper/profile tests for
+GameMode restoration, or lifecycle/readback for boot recovery. Do not routinely
+repeat the historical transition/static/motion/light-use matrix.
+
+`main` owns production implementation. The experimental evidence may be archived
+in one verified offline Git bundle and removed from GitHub and the active
+checkout. Do not merge it into main or append routine health logs. Future
+experiments use fresh branches. Generation 62 is optional retained
+historical recovery, not an outstanding acceptance gate. No special retirement
+test is needed; retain it until newer known-good generations make it unnecessary.
+
+Keep the existing automated coverage. Additional profiles, automatic LACT rules,
+supervisors, periodic health loggers and thermal rollback daemons are not needed.
