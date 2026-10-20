@@ -6,11 +6,6 @@
     sha512 = "d1d57ebd41395b75b01f130cd9503eb8d208212424a399ff9f367f50be8fbc1c6472442b33c686e777c3148f6a609520e8fb732c755157c358cb207fd4d1123a";
   };
 
-  distant-horizons = pkgs.fetchurl {
-    url = "https://cdn.modrinth.com/data/uCdwusMi/versions/TGgEbP9A/DistantHorizons-3.3.4-26.3-fabric-neoforge.jar";
-    sha512 = "0b90b1b08d99974bfc3c8e86b2ceb252e2f91715ed66b925004c28335fb44e1bddbbb6b8043e4d4d53c87ed247789cd1788b1ba4e3f4394efe154e0c59cff236";
-  };
-
   fabric-api = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/P7dR8mSH/versions/v2j28coa/fabric-api-0.162.0%2B26.3.jar";
     sha512 = "5ab70908952f1d2346d16b122ca31327f4055db59c279a1bc3c3c581ce359bb541cba15730f55b0727be7c7c4debc4a4412a183c228e0d4dea81c734f7b412ce";
@@ -38,5 +33,9 @@
   chunky = pkgs.fetchurl {
     url = "https://cdn.modrinth.com/data/fALzjamp/versions/4Eotm6ov/Chunky-Fabric-1.5.3.jar";
     sha512 = "b83bfe7b218d0aa6232af977ae741dc1f82b10e50cd12bb759f65cf416b8b62beccb543e587ef0b9670abe03815660f8e091bc6823624d65cf07300571573516";
+  };
+  chunky-offline = pkgs.fetchurl {
+    url = "https://cdn.modrinth.com/data/VfHc5JEX/versions/56xL4i2r/chunky-offline-v1.1.0.jar";
+    sha512 = "12506295bba4909b8882b8e4b8802cadb648877be1ba8dfe3f7d8f9a7dbe5cbc6ff712be7d5a3f3b54cdc4190df1be005ae8bb53ae202b40173064810ffb536e";
   };
 }

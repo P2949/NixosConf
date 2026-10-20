@@ -12,18 +12,7 @@ let
   timerStamp = "/var/lib/systemd/timers/stamp-minecraft-backup.timer";
   timerStampService = "persist-${utils.escapeSystemdPath "/persist${timerStamp}"}.service";
   mods = import ./mods.nix { inherit pkgs; };
-  baseModDrvsByName = builtins.removeAttrs mods [ "chunky" ];
-  baseModDrvs = builtins.attrValues baseModDrvsByName;
-  inherit (mods) chunky;
-
-  baseMods = pkgs.linkFarmFromDrvs "minecraft-survival-mods" baseModDrvs;
-
-  # Chunky generation must run without Distant Horizons loaded. DH observes
-  # generated chunks even with its generator disabled, and its LOD backlog can
-  # exhaust the pregeneration JVM heap under sustained Chunky throughput.
-  pregenMods = pkgs.linkFarmFromDrvs "minecraft-survival-pregen-mods" (
-    builtins.attrValues (builtins.removeAttrs baseModDrvsByName [ "distant-horizons" ]) ++ [ chunky ]
-  );
+  serverMods = pkgs.linkFarmFromDrvs "minecraft-survival-mods" (builtins.attrValues mods);
 
   minecraftToolPolicy = {
     schemaVersion = 1;
@@ -144,38 +133,23 @@ in
 
           files."config/spark/config.json".value.backgroundProfiler = false;
 
-          # Verified against the generated schema and commands of DH 3.3.4.
-          # CHUNKS_ONLY avoids the surface pass; only existing chunks supply LODs.
-          # MINIMAL_IMPACT on this 12-thread host: ceil(12 * 0.1), ratio 0.5.
-          files."config/DistantHorizons.toml".value = {
-            _version = 5;
-            server = {
-              synchronizeOnLoad = true;
-              enableRealTimeUpdates = true;
-            };
-            common.worldGenerator = {
-              chunkGeneratorMode = "PRE_EXISTING_ONLY";
-              generatorPlan = "CHUNKS_ONLY";
-            };
-            common.multiThreading = {
-              numberOfThreads = 2;
-              threadRunTimeRatio = "0.5";
-            };
+          files."config/chunky/config.json".value = {
+            version = 2;
+            language = "en";
+            continueOnRestart = true;
+            forceLoadExistingChunks = false;
+            silent = false;
+            updateInterval = 1;
           };
 
           extraStartPre = ''
-            ${minecraftTools}/bin/minecraft-dh-identity apply
             ${pkgs.coreutils}/bin/chmod 0600 server.properties
             if [[ ! "''${MINECRAFT_MANAGEMENT_SECRET:-}" =~ ^[A-Za-z0-9]{40}$ ]]; then
               echo "Minecraft management secret must be exactly 40 alphanumeric characters" >&2
               exit 1
             fi
           '';
-          extraStopPre = ''
-            ${minecraftTools}/bin/minecraft-dh-identity capture
-          '';
-
-          symlinks.mods = baseMods;
+          symlinks.mods = serverMods;
 
           serverProperties = {
             server-ip = "";
@@ -191,7 +165,8 @@ in
             view-distance = 12;
             simulation-distance = 8;
 
-            pause-when-empty-seconds = 60;
+            # Chunky Offline needs ticks while the finite pregeneration task runs.
+            pause-when-empty-seconds = -1;
 
             management-server-enabled = true;
             management-server-host = "127.0.0.1";
@@ -223,67 +198,7 @@ in
         }
       ];
 
-      specialisation.minecraft-pregen.configuration = {
-        systemd.timers.minecraft-backup = {
-          enable = lib.mkForce false;
-          wantedBy = lib.mkForce [ ];
-        };
-
-        systemd.services.minecraft-server-survival.serviceConfig = {
-          MemoryHigh = lib.mkForce "14G";
-          MemoryMax = lib.mkForce "16G";
-        };
-
-        services.minecraft-servers.servers.survival = {
-          symlinks.mods = lib.mkForce pregenMods;
-
-          jvmOpts = lib.mkForce [
-            "-Xms1G"
-            "-Xmx10G"
-            "-XX:+ExitOnOutOfMemoryError"
-            "-XX:+UseG1GC"
-            "-Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M"
-          ];
-
-          serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
-
-          files."config/chunky/config.json".value = {
-            version = 2;
-            language = "en";
-            continueOnRestart = true;
-            forceLoadExistingChunks = false;
-            silent = false;
-            updateInterval = 1;
-          };
-
-          files."config/DistantHorizons.toml".value.common.worldGenerator.generatorPlan =
-            lib.mkForce "DISABLED";
-        };
-      };
-
-      specialisation.minecraft-dh-lod-backfill.configuration = {
-        systemd.timers.minecraft-backup = {
-          enable = lib.mkForce false;
-          wantedBy = lib.mkForce [ ];
-        };
-        services.minecraft-servers.servers.survival = {
-          serverProperties."pause-when-empty-seconds" = lib.mkForce (-1);
-          # DH LOD backfill must consume only vanilla chunks that already exist.
-          # INTERNAL_SERVER was live-proven to allocate additional boundary chunks.
-          files."config/DistantHorizons.toml".value.common.worldGenerator = {
-            chunkGeneratorMode = lib.mkForce "PRE_EXISTING_ONLY";
-            generatorPlan = lib.mkForce "CHUNKS_ONLY";
-          };
-        };
-      };
-
       system.preSwitchChecks.minecraft = ''${lib.getExe minecraftPrerequisiteCheck} "$@"'';
-
-      # nix-minecraft removes its previous managed files before applying templates.
-      # Capture the generated ID first so restarts keep the same DH cache identity.
-      systemd.services.minecraft-server-survival.preStart = lib.mkBefore ''
-        ${minecraftTools}/bin/minecraft-dh-identity capture
-      '';
 
       systemd.tmpfiles.rules = [
         "d /persist/minecraft-backup 0700 root root -"

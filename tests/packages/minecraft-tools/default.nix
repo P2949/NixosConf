@@ -96,7 +96,7 @@ pkgs.runCommand "check-minecraft-tools-python"
           fi
 
 
-    for command in minecraft-backup minecraft-msmp minecraft-prerequisites minecraft-dh-identity; do
+    for command in minecraft-backup minecraft-msmp minecraft-prerequisites; do
       "${tools}/bin/$command" --help >/dev/null
     done
     for command in minecraft-backup minecraft-msmp minecraft-prerequisites; do

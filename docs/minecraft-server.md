@@ -9,7 +9,7 @@ the unavailable laptop path is a recommended later operational smoke test.
 Permanent operating policy is recorded here; PR metadata owns exact
 qualification and acceptance receipts.
 
-## Architecture and modes
+## Architecture
 
 NixOS manages the server through nix-minecraft and systemd in
 `minecraft.slice`. Normal mode pins Minecraft Java Edition 26.3, Fabric loader
@@ -17,34 +17,28 @@ NixOS manages the server through nix-minecraft and systemd in
 `-XX:+ExitOnOutOfMemoryError` and G1 through `-XX:+UseG1GC`.
 
 The normal mod set is Fabric API, Lithium, FerriteCore, Krypton, ServerCore,
-spark, Distant Horizons 3.3.4 and C2ME 0.4.2-alpha.0.90+26.3. C2ME uses config
-schema version 3 with `globalExecutorParallelism = 4`. Spark background
-profiling remains disabled.
+spark, C2ME 0.4.2-alpha.0.90+26.3, Chunky 1.5.3 and Chunky Offline 1.1.0.
+C2ME uses config schema version 3 with `globalExecutorParallelism = 4`.
+Spark background profiling remains disabled. Distant Horizons is removed.
 
-Normal Distant Horizons operation keeps real-time updates and synchronization on
-load enabled while limiting world generation to `PRE_EXISTING_ONLY` /
-`CHUNKS_ONLY`. It uses two worker threads with `threadRunTimeRatio = 0.5`.
-Empty-server pause is 60 seconds.
+Chunky Offline manages finite background pregeneration automatically: an empty
+server generates chunks; a player joining pauses Chunky; the last player leaving
+resumes it. The upstream target is radius 10,000 around 0,0 in the overworld.
+Normal empty-server tick pausing is disabled with `pause-when-empty-seconds=-1`
+while this work is active. The upstream package initializes its target once in
+world storage; manual target changes are not operational policy.
+
+Once Chunky reports the full target complete, remove Chunky Offline and Chunky
+and restore `pause-when-empty-seconds=60` in a small follow-up commit. Verify
+completion before removing them; the final service then returns to paused idle.
 
 The server uses `/srv/minecraft`, declared as the separate Btrfs `@minecraft`
 mount; recovery snapshots live beneath `/.snapshots/minecraft` on the
 `@snapshots` mount of the same filesystem. Disko describes intended topology,
 not current physical state.
 
-`minecraft-pregen` inherits the normal server, management and security baseline,
-adds Chunky, sets `pause-when-empty-seconds=-1`, disables the automatic backup
-timer and disables Distant Horizons generation for the maintenance session. The
-manual backup service remains available.
-
-`minecraft-dh-lod-backfill` keeps the normal mod inventory, sets
-`pause-when-empty-seconds=-1`, disables the automatic backup timer and forces
-Distant Horizons to `PRE_EXISTING_ONLY` / `CHUNKS_ONLY` for explicit LOD
-backfill over already-existing vanilla chunks.
-
-Both maintenance modes are intentional bounded operating modes rather than
-normal server policy. Take a manual recovery point before planned bulk
-generation and after completion when appropriate, and return to the normal
-configuration afterward.
+There are no Minecraft maintenance specialisations. The normal six-hour backup
+timer remains enabled throughout background pregeneration.
 
 The Java service has Nice 5, MemoryHigh 10G and MemoryMax 12G; the slice has CPU
 and I/O weights 50. Backup runs at Nice 10 with CPU/I/O weights 25 and a
@@ -61,11 +55,10 @@ limitations are summarized in [status](status.md#minecraft-server).
 ## Tool ownership and configuration
 
 [Host policy](../hosts/desktop/minecraft/default.nix) owns the server settings,
-resource limits, maintenance modes and backup schedule. Pinned mod derivations
+resource limits and backup schedule. Pinned mod derivations
 live in [mods.nix](../hosts/desktop/minecraft/mods.nix). The installed
 [minecraft-tools package](../packages/minecraft-tools/pyproject.toml) owns MSMP,
-backup transactions, filesystem identity checks, durable metadata and the DH
-identity helper.
+backup transactions, filesystem identity checks and durable metadata.
 
 Nix generates immutable, non-secret deployment JSON and exposes it as
 `/etc/minecraft-tools.json`. It derives the data directory and management endpoint
@@ -83,9 +76,7 @@ sudo minecraft-backup --config /etc/minecraft-tools.json status --live
 
 The parser rejects unknown or duplicate fields, non-normalized or overlapping
 deployment directories, non-loopback management hosts and invalid retention
-values. Invalid policy fails before a backup transaction begins. The DH helper
-uses relative TOML/identity paths within the server working directory; its
-`--config` argument names that TOML file rather than deployment JSON.
+values. Invalid policy fails before a backup transaction begins.
 
 `minecraft-tools-python` checks the installed package, protocol and backup failure
 paths, CLI configuration requirements, Ruff formatting and lint. The separate
@@ -276,8 +267,8 @@ sudo systemctl stop minecraft-server-survival.service
 
 Let an active backup finish and inspect its result before planned server
 maintenance. The Minecraft `/stop` command alone is insufficient for a
-maintenance stop: `restart=always` would restart the Java service. In pregen the
-timer is masked; keep using the manual service for planned recovery points.
+maintenance stop: `restart=always` would restart the Java service. Restart the
+normal backup timer after maintenance.
 
 ## Failure diagnosis
 
@@ -338,7 +329,7 @@ nix build .#nixosConfigurations.desktop.config.system.build.toplevel --print-bui
 systemd-analyze calendar --iterations=4 '*-*-* 00,06,12,18:00:00 UTC'
 ```
 
-Inspect the resulting service/timer units and the pregen timer mask in the built
+Inspect the resulting service/timer units in the built
 closure. Do not use a successful build as permission to switch or start services.
 
 ## Secret-bearing snapshots
