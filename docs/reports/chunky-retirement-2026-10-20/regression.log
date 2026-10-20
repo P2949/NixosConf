@@ -1,0 +1,12 @@
+warning: Git tree '/etc/nixos' is dirty
+these 3 derivations will be built:
+  /nix/store/8f8hnqsw7n1cj5aixl8k6xa0pglsjvi8-Chunky-Fabric-1.5.3-retirement.jar.drv
+  /nix/store/ga41kp7g395fb1kc6v08wj2y16phh3lv-minecraft-survival-mods.drv
+  /nix/store/gr7im6cdzmg5g735xr2fzzfbkaqyb183-check-minecraft-server-config.drv
+building '/nix/store/8f8hnqsw7n1cj5aixl8k6xa0pglsjvi8-Chunky-Fabric-1.5.3-retirement.jar.drv'...
+Chunky-Fabric> patching file GenerationTask.java
+building '/nix/store/ga41kp7g395fb1kc6v08wj2y16phh3lv-minecraft-survival-mods.drv'...
+building '/nix/store/gr7im6cdzmg5g735xr2fzzfbkaqyb183-check-minecraft-server-config.drv'...
+check-minecraft-server-config> late old retirement: replacement registered=true, replacement checkpoint=true
+check-minecraft-server-config> PASS: identity-safe retirement, checkpoint ownership and normal pause persistence
+check-minecraft-server-config> Minecraft server configuration invariants passed

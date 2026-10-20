@@ -1,0 +1,2 @@
+snapshot filesystem sync completed in 0.017 seconds
+created read-only Minecraft snapshot: /.snapshots/minecraft/survival-20261020T221004661582Z
