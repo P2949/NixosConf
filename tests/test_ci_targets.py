@@ -50,6 +50,11 @@ class SelectionTests(unittest.TestCase):
             <= set(ci.select([], "workflow_dispatch")["targets"])
         )
 
+    def test_gpu_helper_selects_workstation(self):
+        result = ci.select(["packages/gamemode-gpu-profile/helper.py"], "pull_request")
+        self.assertEqual(result["targets"], ["workstation-smoke"])
+        self.assertTrue(result["desktop"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -8,6 +8,7 @@
 }:
 {
   fastChecks = {
+    gpu-policy = import ./workstation/gpu-policy { inherit pkgs; };
     gamemode-gpu-profile = import ./packages/gamemode-gpu-profile { inherit pkgs; };
     ci-selection =
       pkgs.runCommand "check-ci-selection"

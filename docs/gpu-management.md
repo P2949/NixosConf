@@ -52,6 +52,9 @@ investigating a failure; do not overwrite a manual profile choice to hide it.
 
 ## Validation and maintenance
 
+The exact Stock/Daily policy semantics are regression-tested by `gpu-policy` on
+every `nix flake check`.
+
 The flake includes five fake-LACT helper cases, real desktop configuration
 assertions, and the existing workstation VM extended for hook installation,
 runtime locking, writable seeding and daemon-restart ordering. The VM does not
