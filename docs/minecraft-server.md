@@ -20,6 +20,9 @@ The normal mod set is Fabric API, Lithium, FerriteCore, Krypton, ServerCore,
 spark, C2ME 0.4.2-alpha.0.90+26.3, Chunky 1.5.3 and Chunky Offline 1.1.0.
 C2ME uses config schema version 3 with `globalExecutorParallelism = 4`.
 Spark background profiling remains disabled. Distant Horizons is removed.
+Chunky 1.5.3 carries a [task-retirement patch](../hosts/desktop/minecraft/chunky.nix):
+checkpoint saving and identity-checked registry removal share one atomic
+per-world operation, preventing a retiring worker from removing its replacement.
 
 The locally extended [Chunky Offline package](../hosts/desktop/minecraft/chunky-offline.nix)
 keeps generation paused whenever players are online. Every 200 online ticks

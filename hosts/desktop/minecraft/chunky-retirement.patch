@@ -1,0 +1,19 @@
+--- a/GenerationTask.java
++++ b/GenerationTask.java
+@@ -163,8 +163,14 @@
+         } else {
+             cancelled = true;
+         }
+-        chunky.getTaskLoader().saveTask(this);
+-        chunky.getGenerationTasks().remove(selection.world().getName());
++        // Serialize checkpoint ownership and retirement against same-world replacements.
++        chunky.getGenerationTasks().compute(selection.world().getName(), (world, current) -> {
++            if (current != this) {
++                return current;
++            }
++            chunky.getTaskLoader().saveTask(this);
++            return null;
++        });
+         Thread.currentThread().setName(poolThreadName);
+         chunky.getEventBus().call(new GenerationTaskFinishEvent(this));
+         chunky.getEventBus().call(new GenerationCompleteEvent(selection.world().getName()));
