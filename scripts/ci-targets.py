@@ -53,7 +53,14 @@ def select(paths, event):
         if storage:
             targets.update(STORAGE)
         if broad or path.startswith(
-            ("home/", "hosts/", "modules/", "tests/workstation/", "profiles/")
+            (
+                "home/",
+                "hosts/",
+                "modules/",
+                "tests/workstation/",
+                "profiles/",
+                "packages/gamemode-gpu-profile/",
+            )
         ):
             targets.add("workstation-smoke")
         if broad or path.startswith(("optimization/", "tests/build/")):
