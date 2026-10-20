@@ -7,16 +7,21 @@
   repoSource,
 }:
 {
-  checks = {
+  fastChecks = {
     gamemode-gpu-profile = import ./packages/gamemode-gpu-profile { inherit pkgs; };
-    workstation-smoke = import ./workstation/smoke.nix {
-      inherit
-        inputs
-        pkgs
-        pkgsUnstable
-        username
-        ;
-    };
+    ci-selection =
+      pkgs.runCommand "check-ci-selection"
+        {
+          src = repoSource;
+          nativeBuildInputs = [ pkgs.python3 ];
+        }
+        ''
+          cd "$src"
+          export PYTHONDONTWRITEBYTECODE=1
+          python tests/test_ci_targets.py
+          touch "$out"
+        '';
+
     markdown-links =
       pkgs.runCommand "check-markdown-links"
         {
@@ -71,10 +76,6 @@
     desktop-evaluation = import ./workstation/evaluation.nix {
       inherit pkgs pkgsUnstable username;
       inherit (desktopSystem) config;
-    };
-
-    granular-impermanence = import ./storage/granular-impermanence.nix {
-      inherit inputs pkgs;
     };
 
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
