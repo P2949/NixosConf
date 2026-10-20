@@ -113,9 +113,27 @@
         };
       };
 
-      checks.${system} = validation.checks // optimization.checks;
+      checks.${system} =
+        validation.fastChecks
+        // optimization.fastChecks
+        // {
+          # Evaluate explicit integration targets without building their dependencies.
+          integration-evaluation =
+            let
+              targets = validation.packages // optimization.integrationChecks;
+              paths = builtins.mapAttrs (_: target: builtins.unsafeDiscardStringContext target.drvPath) targets;
+            in
+            pkgs.runCommand "check-integration-evaluation"
+              {
+                evaluatedTargets = builtins.toJSON paths;
+              }
+              ''
+                printf '%s\n' "$evaluatedTargets" > "$out"
+              '';
+        };
       packages.${system} =
         validation.packages
+        // optimization.integrationChecks
         // optimization.packages
         // {
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;

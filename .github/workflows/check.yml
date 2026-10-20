@@ -8,7 +8,7 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: nix-checks-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -18,27 +18,76 @@ jobs:
   checks:
     name: Flake checks
     runs-on: ubuntu-24.04
-
+    outputs:
+      targets: ${{ steps.select.outputs.targets }}
+      integration: ${{ steps.select.outputs.integration }}
+      desktop: ${{ steps.select.outputs.desktop }}
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
+        with:
+          fetch-depth: 0
+      - name: Select affected integration targets
+        id: select
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then
+            git ls-files -z | python3 scripts/ci-targets.py "$EVENT"
+          else
+            git diff --no-renames --name-only -z "$BASE" "$HEAD" | python3 scripts/ci-targets.py "$EVENT"
+          fi
       - name: Install Nix
         uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Provide memory headroom for NixOS image checks
+      - name: Provide evaluation memory headroom
         run: |
           sudo fallocate -l 12G /mnt/nix-checks.swap
           sudo chmod 600 /mnt/nix-checks.swap
           sudo mkswap /mnt/nix-checks.swap
           sudo swapon /mnt/nix-checks.swap
-          free -h
-          df -h / /mnt
-
       - name: Run flake checks
-        run: nix flake check --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2
+        run: nix flake check --no-write-lock-file --print-build-logs --max-jobs 2 --cores 2
 
+  integration:
+    name: Integration checks
+    needs: checks
+    if: needs.checks.outputs.integration == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Provide memory headroom
+        run: |
+          sudo fallocate -l 12G /mnt/nix-checks.swap
+          sudo chmod 600 /mnt/nix-checks.swap
+          sudo mkswap /mnt/nix-checks.swap
+          sudo swapon /mnt/nix-checks.swap
+      - name: Build selected integration targets
+        env:
+          TARGETS: ${{ needs.checks.outputs.targets }}
+        run: |
+          mapfile -t targets < <(jq -r '.[] | ".#" + .' <<< "$TARGETS")
+          nix build "${targets[@]}" --no-link --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2
+
+  desktop:
+    name: Desktop build
+    needs: checks
+    if: needs.checks.outputs.desktop == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build desktop system
         run: nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2

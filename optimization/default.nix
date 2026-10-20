@@ -92,7 +92,7 @@ let
     };
   };
 in
-{
+rec {
   packages = compilerPackages // {
     boehmgc-pgo-instrumented = gcPGO.instrumented.generic;
     boehmgc-pgo-cpu-instrumented = gcPGO.instrumented.skylake;
@@ -193,6 +193,11 @@ in
       '';
     };
   };
+  fastChecks = builtins.removeAttrs checks [
+    "boehmgc-compiler-preparation"
+    "nix-evaluation-gc-consumers"
+  ];
+  integrationChecks = pkgs.lib.filterAttrs (name: _: !(builtins.hasAttr name fastChecks)) checks;
   checks = {
     boehmgc-compiler-preparation =
       let
