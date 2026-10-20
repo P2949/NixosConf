@@ -404,5 +404,7 @@ checks before publication, then verify all selected jobs on the exact PR head
 and the main push after merge. Retain run identities and measured durations in
 the PR rather than treating the timing targets above as acceptance evidence.
 The integration-evaluation derivation must depend only on Bash/stdenv, not the
-enumerated VM/compiler derivations. CI registration changes do not authorize
+enumerated VM/compiler derivations. All variants in the shared root-reset/recovery
+harness use a serial console and disable VGA to avoid hosted framebuffer
+stalls; their storage assertions remain intact. CI registration changes do not authorize
 physical optimization measurements or runtime deployment.

@@ -182,10 +182,9 @@ pkgs.testers.runNixOSTest {
 
         memorySize = 2048;
         cores = 2;
-      }
-      // pkgs.lib.optionalAttrs granular {
-        # This storage test uses no display assertions. Hosted CI stalled in
-        # bochs framebuffer work; keep its console and virtual hardware serial-only.
+        # None of these storage variants uses display assertions. Apply the
+        # documented hosted-CI bochs framebuffer workaround to the entire
+        # shared harness, including the root-reset and recovery variants.
         graphics = false;
         qemu.consoles = [ "ttyS0,115200n8" ];
         qemu.options = [ "-vga none" ];
