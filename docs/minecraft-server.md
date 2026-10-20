@@ -58,8 +58,7 @@ limitations are summarized in [status](status.md#minecraft-server).
 resource limits and backup schedule. Pinned mod derivations
 live in [mods.nix](../hosts/desktop/minecraft/mods.nix). The installed
 [minecraft-tools package](../packages/minecraft-tools/pyproject.toml) owns MSMP,
-backup transactions, filesystem identity checks, durable metadata and the DH
-identity helper.
+backup transactions, filesystem identity checks and durable metadata.
 
 Nix generates immutable, non-secret deployment JSON and exposes it as
 `/etc/minecraft-tools.json`. It derives the data directory and management endpoint
@@ -77,9 +76,7 @@ sudo minecraft-backup --config /etc/minecraft-tools.json status --live
 
 The parser rejects unknown or duplicate fields, non-normalized or overlapping
 deployment directories, non-loopback management hosts and invalid retention
-values. Invalid policy fails before a backup transaction begins. The DH helper
-uses relative TOML/identity paths within the server working directory; its
-`--config` argument names that TOML file rather than deployment JSON.
+values. Invalid policy fails before a backup transaction begins.
 
 `minecraft-tools-python` checks the installed package, protocol and backup failure
 paths, CLI configuration requirements, Ruff formatting and lint. The separate
@@ -270,8 +267,8 @@ sudo systemctl stop minecraft-server-survival.service
 
 Let an active backup finish and inspect its result before planned server
 maintenance. The Minecraft `/stop` command alone is insufficient for a
-maintenance stop: `restart=always` would restart the Java service. In pregen the
-timer is masked; keep using the manual service for planned recovery points.
+maintenance stop: `restart=always` would restart the Java service. Restart the
+normal backup timer after maintenance.
 
 ## Failure diagnosis
 
@@ -332,7 +329,7 @@ nix build .#nixosConfigurations.desktop.config.system.build.toplevel --print-bui
 systemd-analyze calendar --iterations=4 '*-*-* 00,06,12,18:00:00 UTC'
 ```
 
-Inspect the resulting service/timer units and the pregen timer mask in the built
+Inspect the resulting service/timer units in the built
 closure. Do not use a successful build as permission to switch or start services.
 
 ## Secret-bearing snapshots
