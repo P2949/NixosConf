@@ -398,13 +398,11 @@ Inspect Actions job durations and memory behavior before increasing parallelism.
 When merging, verify the current head's fast check and any selected integration
 and desktop jobs; a successful fast job alone does not prove those jobs passed.
 
-Implementation validation (2026-10-20): path-selection regressions (four test
-cases), Ruff, Actionlint, Nix formatting, Statix and Deadnix passed. A clean
-committed snapshot in a temporary checkout passed full flake evaluation and all
-fast builds except the existing Markdown-link failure in
-`.gpu-tuning-work/motion/README.md` (three relative report links). Integration
-evaluation's build dependencies contain only Bash/stdenv, not the enumerated
-VM/compiler derivations. Heavy integration execution and hosted CI timing have
-not been measured as part of this registration change. The working checkout
-retains the existing optimization requirement for clean-revision provenance;
-validation did not relax it or start a physical measurement campaign.
+Validate changes from a clean committed source: optimization package provenance
+requires a Git revision. Run the routing regressions, Ruff, Actionlint and flake
+checks before publication, then verify all selected jobs on the exact PR head
+and the main push after merge. Retain run identities and measured durations in
+the PR rather than treating the timing targets above as acceptance evidence.
+The integration-evaluation derivation must depend only on Bash/stdenv, not the
+enumerated VM/compiler derivations. CI registration changes do not authorize
+physical optimization measurements or runtime deployment.
