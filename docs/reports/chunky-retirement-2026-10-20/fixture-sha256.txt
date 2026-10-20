@@ -1,0 +1,3 @@
+ecdfc55a0f67f3ec6f40850687615c941ae226bd88f4e06188a7b268fd3da942  /tmp/chunky.jar
+68c82d13a70f03656b349783810f3ccf7d6fecbd50e4344dd09a10d6f7438687  /tmp/Chunky-1.5.3-gated-baseline.jar
+d8caab95b4f5f487daa42d77cbe008bea4b1322016ac600479315a2de8c9ccc3  /tmp/Chunky-1.5.3-gated-patched.jar
