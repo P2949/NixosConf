@@ -18,6 +18,7 @@ vmPkgs.testers.runNixOSTest {
       inputs.impermanence.nixosModules.impermanence
       ../../profiles/workstation.nix
       ../../modules/hardware/commander-core
+      ../../modules/hardware/lact-policy
       ../../modules/storage/ephemeral-btrfs-root
     ];
     _module.args = { inherit inputs username pkgsUnstable; };
@@ -26,6 +27,12 @@ vmPkgs.testers.runNixOSTest {
     # Guest storage/networking come from the NixOS test harness, never Disko
     # or the physical host. No controller, destructive reset or GPU workload.
     hardware.commanderCore.enable = lib.mkForce false;
+    # Exercise writable policy transport, not physical RDNA4 properties.
+    hardware.lactPolicy = {
+      enable = true;
+      source = ../../hosts/desktop/lact-policy.yaml;
+    };
+    programs.gamemode.gpuProfile.enable = true;
     boot.ephemeralBtrfsRoot.enable = lib.mkForce false;
     boot.initrd.systemd.enable = true;
     fileSystems."/persist" = {
@@ -81,6 +88,20 @@ vmPkgs.testers.runNixOSTest {
       machine.succeed("grep -Fx 'XDG_PROJECTS_DIR=\"/home/${username}/Development\"' /home/${username}/.config/user-dirs.dirs")
       machine.succeed("grep -Fx 'XDG_DOCUMENTS_DIR=\"/home/${username}/Documents\"' /home/${username}/.config/user-dirs.dirs")
 
+      machine.wait_for_unit("gpu-lact-config-seed.service")
+      machine.wait_for_unit("lactd.service")
+      machine.succeed("test -f /etc/lact/config.yaml && test ! -L /etc/lact/config.yaml")
+      machine.succeed("test $(stat -c %a /etc/lact/config.yaml) = 600")
+      machine.succeed("grep -Fx 'current_profile: Daily' /etc/lact/config.yaml")
+      seed_invocation = machine.succeed("systemctl show gpu-lact-config-seed -p InvocationID --value").strip()
+      machine.succeed("systemctl restart lactd.service")
+      assert machine.succeed("systemctl show gpu-lact-config-seed -p InvocationID --value").strip() == seed_invocation, "daemon restart must not rerun boot seed"
+      machine.succeed("grep -F 'gamemode-gpu-profile start' /etc/gamemode.ini")
+      machine.succeed("grep -F 'gamemode-gpu-profile end' /etc/gamemode.ini")
+      machine.succeed("command -v gamemode-gpu-profile")
+      machine.succeed("install -d -m 0700 -o ${username} /run/gpu-helper-test")
+      machine.succeed("runuser -u ${username} -- env XDG_RUNTIME_DIR=/run/gpu-helper-test gamemode-gpu-profile end")
+      machine.succeed("test $(stat -c %a /run/gpu-helper-test/gamemode-gpu-profile) = 700")
       machine.succeed("busctl --system list --no-pager")
       machine.succeed("nmcli general status")
       machine.succeed("test $(id -u ${username}) = 1000")
