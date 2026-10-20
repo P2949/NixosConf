@@ -258,6 +258,39 @@ pkgs.runCommand "check-minecraft-server-config"
           exit 1
         fi
 
+        python3 - "$mods" ${../../../hosts/desktop/minecraft/chunky-offline} <<'PYTEST'
+    import json
+    import re
+    import sys
+    import zipfile
+    from pathlib import Path
+
+    jars = [zipfile.ZipFile(p) for p in Path(sys.argv[1]).glob("*.jar")]
+    pack = next(j for j in jars if json.loads(j.read("fabric.mod.json"))["id"] == "mr_chunky_offline")
+    prefix = "data/chunky_offline/function/"
+    owned = Path(sys.argv[2])
+    for source in owned.glob("*.mcfunction"):
+        assert pack.read(prefix + source.name) == source.read_bytes(), source.name
+    functions = {Path(n).name: pack.read(n).decode() for n in pack.namelist() if n.startswith(prefix) and n.endswith(".mcfunction")}
+    assert set(functions) == {p.name for p in owned.glob("*.mcfunction")}
+    policy = functions["policy.mcfunction"]
+    for world, radius, threshold in [("overworld", 10000, 7500), ("the_nether", 1250, 938), ("the_end", 5000, 3750)]:
+        assert f'world:"minecraft:{world}",radius:{radius},threshold:{threshold}' in policy
+    load = functions["load.mcfunction"]
+    assert 'unless data storage chunky_offline:tracking overworld' in load
+    assert 'overworld set value {enabled:1b,hasTask:1b,centerX:0,centerZ:0' in load
+    for key in ["nether", "end"]:
+        assert f'unless data storage chunky_offline:tracking {key}' in load
+        assert f'{key} set value {{enabled:0b,hasTask:0b' in load
+    assert 'matches 200..' in functions["online.mcfunction"]
+    assert 'chunky pause' in functions["online.mcfunction"]
+    assert 'chunky continue' in functions["offline.mcfunction"]
+    assert 'execute if entity @a run return 0' in functions["replace.mcfunction"]
+    assert 'chunky cancel $(world)' in functions["replace.mcfunction"]
+    assert 'chunky start $(world) square $(lastActivityX) $(lastActivityZ) $(radius)' in functions["replace.mcfunction"]
+    assert not re.search(r'chunky cancel["}]', "\n".join(functions.values()))
+    PYTEST
+
         echo "Minecraft server configuration invariants passed"
         touch "$out"
   ''

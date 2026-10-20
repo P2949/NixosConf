@@ -85,12 +85,14 @@ Minecraft production is deployed on the desktop with automatic startup,
 `Restart=always`, a six-hour UTC backup timer and transactional local Btrfs
 recovery. Normal policy pins Minecraft 26.3, Fabric 0.19.5, OpenJDK 25, C2ME
 executor four and G1. Distant Horizons and the Minecraft maintenance
-specialisations are removed. Chunky 1.5.3 and Chunky Offline 1.1.0 manage finite
-background pregeneration at radius 10,000 around 0,0: empty server generates;
-a player joining pauses Chunky. Empty-server tick pausing is temporarily disabled
-(`pause-when-empty-seconds=-1`); after completion, remove both Chunky mods and
-restore 60 seconds. Six-hour backups remain enabled. Spark background profiling
-is disabled.
+specialisations are removed. Chunky 1.5.3 and locally extended Chunky Offline
+1.1.0 are permanent production features: players online pauses all generation;
+empty server applies pending centers and resumes saved tasks. Activity is sampled
+every 200 online ticks, with a 75% square deadzone. Radii are Overworld 10,000,
+Nether 1,250 and End 5,000; Nether/End become enabled lazily on first visits.
+Centers and visit state survive restarts. Empty-server tick pausing remains
+disabled (`pause-when-empty-seconds=-1`). Six-hour backups remain enabled.
+Spark background profiling is disabled.
 See [Minecraft operations](minecraft-server.md).
 
 The accepted stack, backup/recovery and maintenance behavior are recorded in

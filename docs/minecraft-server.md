@@ -21,16 +21,34 @@ spark, C2ME 0.4.2-alpha.0.90+26.3, Chunky 1.5.3 and Chunky Offline 1.1.0.
 C2ME uses config schema version 3 with `globalExecutorParallelism = 4`.
 Spark background profiling remains disabled. Distant Horizons is removed.
 
-Chunky Offline manages finite background pregeneration automatically: an empty
-server generates chunks; a player joining pauses Chunky; the last player leaving
-resumes it. The upstream target is radius 10,000 around 0,0 in the overworld.
-Normal empty-server tick pausing is disabled with `pause-when-empty-seconds=-1`
-while this work is active. The upstream package initializes its target once in
-world storage; manual target changes are not operational policy.
+The locally extended [Chunky Offline package](../hosts/desktop/minecraft/chunky-offline.nix)
+keeps generation paused whenever players are online. Every 200 online ticks
+(about 10 seconds), its [functions](../hosts/desktop/minecraft/chunky-offline/)
+sample one randomly selected player in each occupied dimension, recording that
+dimension's latest activity position. The single sample avoids player-list bias;
+there is no history or clustering. First Nether/End visits trigger an immediate sample. Other movement that
+begins and ends between samples may not be observed.
 
-Once Chunky reports the full target complete, remove Chunky Offline and Chunky
-and restore `pause-when-empty-seconds=60` in a small follow-up commit. Verify
-completion before removing them; the final service then returns to paused idle.
+Targets are square: Overworld radius 10,000, Nether 1,250, End 5,000. The
+Overworld starts enabled at 0,0 and adopts the existing Chunky task unchanged.
+Nether and End remain disabled until a player appears there. At the next
+empty-server transition their first tasks start around their latest sampled
+positions. A pending recenter is set when either axis reaches 75% of the radius
+(7,500 / 938 / 3,750 blocks). Returning inside that deadzone before the final
+sample clears the pending recenter. When the last player leaves, only dimensions
+with pending targets replace their own tasks; all saved tasks then resume.
+Existing generated chunks remain intact and are skipped by Chunky.
+
+Per-dimension centers, activity, visit flags and pending state live in the world's
+`chunky_offline:tracking` command storage. Startup preserves that storage and saved
+Chunky tasks; it never resets centers or restarts completed targets. Inspect with
+`data get storage chunky_offline:tracking` from the server console. Target policy
+is owned by the packaged functions; the upstream manual configuration functions
+are removed.
+
+Chunky and the controller are permanent production features. Normal empty-server
+tick pausing stays disabled with `pause-when-empty-seconds=-1` so future activity
+can trigger background generation. There is no final removal phase.
 
 The server uses `/srv/minecraft`, declared as the separate Btrfs `@minecraft`
 mount; recovery snapshots live beneath `/.snapshots/minecraft` on the
