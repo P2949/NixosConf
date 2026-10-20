@@ -165,7 +165,7 @@ in
             view-distance = 12;
             simulation-distance = 8;
 
-            # Chunky Offline needs ticks while the finite pregeneration task runs.
+            # Chunky Offline permanently tracks and generates targets while empty.
             pause-when-empty-seconds = -1;
 
             management-server-enabled = true;
