@@ -9,15 +9,6 @@ let
   properties = server.serverProperties;
   inherit (server.symlinks) mods;
 
-  dhLodBackfillConfig = config.specialisation.minecraft-dh-lod-backfill.configuration;
-  dhLodBackfillServer = dhLodBackfillConfig.services.minecraft-servers.servers.survival;
-
-  pregenConfig = config.specialisation.minecraft-pregen.configuration;
-  pregenServer = pregenConfig.services.minecraft-servers.servers.survival;
-  pregenProperties = pregenServer.serverProperties;
-  pregenMods = pregenServer.symlinks.mods;
-  pregenService = pregenConfig.systemd.services.minecraft-server-survival;
-
   service = config.systemd.services.minecraft-server-survival;
   backupService = config.systemd.services.minecraft-backup;
   backupTimer = config.systemd.timers.minecraft-backup;
@@ -64,9 +55,6 @@ assert server.jvmOpts == "-Xms1G -Xmx8G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC
 assert server.symlinks ? mods;
 assert pkgs.lib.hasInfix "MINECRAFT_MANAGEMENT_SECRET" server.extraStartPre;
 assert pkgs.lib.hasInfix "^[A-Za-z0-9]{40}$" server.extraStartPre;
-assert pkgs.lib.hasInfix "minecraft-dh-identity capture" service.preStart;
-assert pkgs.lib.hasInfix "minecraft-dh-identity capture" server.extraStopPre;
-assert pkgs.lib.hasInfix "minecraft-dh-identity apply" server.extraStartPre;
 
 assert pkgs.lib.hasInfix "/bin/chmod 0600 server.properties" server.extraStartPre;
 assert server.whitelist == { };
@@ -80,66 +68,13 @@ assert
     cancel-duplicate-fluid-ticks = false;
   };
 assert
-  builtins.removeAttrs pregenServer.files [
-    "config/DistantHorizons.toml"
-    "config/chunky/config.json"
-  ] == builtins.removeAttrs server.files [ "config/DistantHorizons.toml" ];
-assert
-  server.files."config/DistantHorizons.toml".value == {
-    _version = 5;
-    server = {
-      synchronizeOnLoad = true;
-      enableRealTimeUpdates = true;
-    };
-    common.worldGenerator = {
-      chunkGeneratorMode = "PRE_EXISTING_ONLY";
-      generatorPlan = "CHUNKS_ONLY";
-    };
-    common.multiThreading = {
-      numberOfThreads = 2;
-      threadRunTimeRatio = "0.5";
-    };
-  };
-assert
-  pregenServer.files."config/DistantHorizons.toml".value
-  == server.files."config/DistantHorizons.toml".value
-  // {
-    common = server.files."config/DistantHorizons.toml".value.common // {
-      worldGenerator = {
-        chunkGeneratorMode = "PRE_EXISTING_ONLY";
-        generatorPlan = "DISABLED";
-      };
-    };
-  };
-assert pregenServer.extraStartPre == server.extraStartPre;
-
-assert
   server.files."config/c2me.toml".value == {
     version = 3;
     globalExecutorParallelism = 4;
   };
-assert
-  pregenServer.files."config/chunky/config.json".value == {
-    version = 2;
-    language = "en";
-    continueOnRestart = true;
-    forceLoadExistingChunks = false;
-    silent = false;
-    updateInterval = 1;
-  };
-assert dhLodBackfillServer.symlinks.mods == server.symlinks.mods;
-assert dhLodBackfillServer.serverProperties."pause-when-empty-seconds" == -1;
-assert dhLodBackfillServer.files."config/c2me.toml" == server.files."config/c2me.toml";
-assert
-  dhLodBackfillServer.files."config/DistantHorizons.toml".value.common.worldGenerator == {
-    chunkGeneratorMode = "PRE_EXISTING_ONLY";
-    generatorPlan = "CHUNKS_ONLY";
-  };
-assert dhLodBackfillServer.extraStartPre == server.extraStartPre;
-assert dhLodBackfillServer.extraStopPre == server.extraStopPre;
-assert !dhLodBackfillConfig.systemd.timers.minecraft-backup.enable;
-assert dhLodBackfillConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
-assert !dhLodBackfillConfig.systemd.units."minecraft-backup.timer".enable;
+assert server.files."config/chunky/config.json".value.continueOnRestart;
+assert !(config.specialisation ? minecraft-pregen);
+assert !(config.specialisation ? minecraft-dh-lod-backfill);
 
 assert properties."server-ip" == "";
 assert properties."server-port" == 25565;
@@ -149,7 +84,7 @@ assert properties."white-list";
 assert properties."enforce-whitelist";
 assert properties."view-distance" == 12;
 assert properties."simulation-distance" == 8;
-assert properties."pause-when-empty-seconds" == 60;
+assert properties."pause-when-empty-seconds" == -1;
 
 assert properties."management-server-enabled";
 assert properties."management-server-host" == "127.0.0.1";
@@ -162,34 +97,11 @@ assert properties."status-heartbeat-interval" == 0;
 assert !properties."enable-rcon";
 assert properties."use-native-transport";
 
-assert pregenServer.enable;
-assert pregenServer.package.name == server.package.name;
-assert
-  pregenServer.jvmOpts
-  == "-Xms1G -Xmx10G -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -Xlog:gc*,safepoint:file=logs/gc-pregen.log:time,uptime,level,tags:filecount=5,filesize=20M";
-assert pregenServer.symlinks ? mods;
-assert pregenMods != mods;
-assert pregenProperties."pause-when-empty-seconds" == -1;
-
-assert pregenProperties."management-server-enabled";
-assert pregenProperties."management-server-host" == properties."management-server-host";
-assert pregenProperties."management-server-port" == properties."management-server-port";
-assert pregenProperties."management-server-secret" == properties."management-server-secret";
-assert
-  pregenProperties."management-server-tls-enabled" == properties."management-server-tls-enabled";
-assert
-  pregenProperties."management-server-allowed-origins"
-  == properties."management-server-allowed-origins";
-assert pregenProperties."status-heartbeat-interval" == properties."status-heartbeat-interval";
-
 assert service.serviceConfig.Slice == "minecraft.slice";
 assert service.serviceConfig.Nice == 5;
 assert service.serviceConfig.MemoryHigh == "10G";
 assert service.serviceConfig.MemoryMax == "12G";
-assert pregenService.serviceConfig.MemoryHigh == "14G";
-assert pregenService.serviceConfig.MemoryMax == "16G";
 assert service.serviceConfig.EnvironmentFile == "/persist/secrets/minecraft-management.env";
-assert pregenService.serviceConfig.EnvironmentFile == service.serviceConfig.EnvironmentFile;
 
 assert builtins.elem "srv-minecraft.mount" service.requires;
 assert builtins.elem "srv-minecraft.mount" service.after;
@@ -246,10 +158,6 @@ assert backupTimer.timerConfig.OnCalendar == "*-*-* 00,06,12,18:00:00 UTC";
 assert backupTimer.timerConfig.Persistent;
 assert backupTimer.timerConfig.AccuracySec == "5min";
 assert backupTimer.timerConfig.Unit == "minecraft-backup.service";
-assert !pregenConfig.systemd.timers.minecraft-backup.enable;
-assert pregenConfig.systemd.timers.minecraft-backup.wantedBy == [ ];
-assert !pregenConfig.systemd.units."minecraft-backup.timer".enable;
-assert pregenConfig.systemd.services.minecraft-backup.serviceConfig == backupService.serviceConfig;
 assert builtins.elem "minecraft-backup-timer-stamp-seed.service"
   config.systemd.services.${pkgs.lib.removeSuffix ".service" (builtins.head backupTimer.requires)}.requires;
 assert builtins.elem "minecraft-backup-timer-stamp-seed.service"
@@ -301,7 +209,7 @@ assert backupClient.name == "minecraft-backup";
 
 pkgs.runCommand "check-minecraft-server-config"
   {
-    inherit mods pregenMods;
+    inherit mods;
 
     nativeBuildInputs = [
       msmpTestPython
@@ -320,8 +228,6 @@ pkgs.runCommand "check-minecraft-server-config"
         }
         normalActual="$TMPDIR/minecraft-mods.txt"
         normalExpected="$TMPDIR/expected-minecraft-mods.txt"
-        pregenActual="$TMPDIR/minecraft-pregen-mods.txt"
-        pregenExpected="$TMPDIR/expected-minecraft-pregen-mods.txt"
 
         extract_mods() {
           farm="$1"
@@ -334,37 +240,21 @@ pkgs.runCommand "check-minecraft-server-config"
         }
 
         extract_mods "$mods" "$normalActual"
-        extract_mods "$pregenMods" "$pregenActual"
 
         cat > "$normalExpected" <<'EOF'
-    c2me 0.4.2-alpha.0.90+26.3
-    distanthorizons 3.3.4
-    fabric-api 0.162.0+26.3
-    ferritecore 9.0.0
-    krypton 0.3.2
-    lithium 0.26.2+mc26.3
-    servercore 1.5.20+26.3
-    spark 1.10.187
-    EOF
-
-        cat > "$pregenExpected" <<'EOF'
     c2me 0.4.2-alpha.0.90+26.3
     chunky 1.5.3
     fabric-api 0.162.0+26.3
     ferritecore 9.0.0
     krypton 0.3.2
     lithium 0.26.2+mc26.3
+    mr_chunky_offline 1-v1.1.0
     servercore 1.5.20+26.3
     spark 1.10.187
     EOF
 
         if ! diff -u "$normalExpected" "$normalActual"; then
           echo "Minecraft server normal mod set differs from the pinned baseline" >&2
-          exit 1
-        fi
-
-        if ! diff -u "$pregenExpected" "$pregenActual"; then
-          echo "Minecraft server pregen mod set differs from the pinned baseline" >&2
           exit 1
         fi
 

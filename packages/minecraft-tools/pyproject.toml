@@ -13,7 +13,6 @@ dependencies = ["websockets"]
 minecraft-backup = "minecraft_tools.backup:main"
 minecraft-msmp = "minecraft_tools.msmp:main"
 minecraft-prerequisites = "minecraft_tools.prerequisites:main"
-minecraft-dh-identity = "minecraft_tools.dh_identity:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

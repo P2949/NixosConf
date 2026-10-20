@@ -84,8 +84,13 @@ VM results do not replace physical acceptance.
 Minecraft production is deployed on the desktop with automatic startup,
 `Restart=always`, a six-hour UTC backup timer and transactional local Btrfs
 recovery. Normal policy pins Minecraft 26.3, Fabric 0.19.5, OpenJDK 25, C2ME
-executor four, Distant Horizons 3.3.4 and G1. Maintenance specialisations provide
-Chunky pregeneration and DH LOD backfill. Spark background profiling is disabled.
+executor four and G1. Distant Horizons and the Minecraft maintenance
+specialisations are removed. Chunky 1.5.3 and Chunky Offline 1.1.0 manage finite
+background pregeneration at radius 10,000 around 0,0: empty server generates;
+a player joining pauses Chunky. Empty-server tick pausing is temporarily disabled
+(`pause-when-empty-seconds=-1`); after completion, remove both Chunky mods and
+restore 60 seconds. Six-hour backups remain enabled. Spark background profiling
+is disabled.
 See [Minecraft operations](minecraft-server.md).
 
 The accepted stack, backup/recovery and maintenance behavior are recorded in

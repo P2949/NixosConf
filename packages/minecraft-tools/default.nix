@@ -27,7 +27,6 @@ python3Packages.buildPythonApplication {
     "minecraft_tools.backup"
     "minecraft_tools.msmp"
     "minecraft_tools.prerequisites"
-    "minecraft_tools.dh_identity"
   ];
   meta.mainProgram = "minecraft-backup";
 }
