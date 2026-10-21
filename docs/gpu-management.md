@@ -1,8 +1,7 @@
 # GPU policy
 
-This branch contains an **unadopted candidate**. Its physical acceptance failed
-with Unreal GPU timeouts; production was rolled back to the original Automatic
-Daily policy. Do not treat the proposed modes below as accepted production policy.
+Daily and Gaming are the accepted production profiles. The previously observed
+Unreal timeout was resolved by the user and is no longer an adoption blocker.
 See the [acceptance record](reports/gpu-workload-profiles-2026-10-21.md).
 
 The desktop boots into **Daily**: 238 W, −150 mV, factory core and VRAM clocks,

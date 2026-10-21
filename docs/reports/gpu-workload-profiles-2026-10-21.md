@@ -1,9 +1,10 @@
 # GPU workload-profile implementation and acceptance
 
-**FAIL / NOT ADOPTED.** The post-switch kernel gate found two recoverable Unreal
-graphics-ring timeouts under Daily Manual + POWER_SAVING. Generation 68 and the
-original Automatic policy/hooks are restored. PR #59 remains a draft; passing
-software checks and perceived responsiveness do not override the hardware gate.
+**ACCEPTED for production, 2026-10-21.** The user confirmed the Unreal timeout
+was fixed, instructed that the earlier observation be disregarded as an adoption
+blocker, and requested merging PR #59. Daily Manual/mode 2 and Gaming Manual/mode 1
+are the accepted policy. Historical observations and rollback evidence below are
+retained as chronology; their former rejection status is superseded by this decision.
 
 Baseline: `35ed27115bad7c59e30f5847cc2bd2e548164802` (PR #58).
 This change preserves the qualified 238 W / −150 mV, factory clocks, native fan
@@ -62,7 +63,8 @@ clocks in this observation. It did not lower average core clocks. Background
 activity varied, so this is a descriptive result supporting the narrow policy
 choice, not proof of a universal or loaded-workload saving. Combined with the
 user's responsiveness/boost checks, these observations supported trying Daily
-mode 2 and Gaming mode 1. The subsequent kernel fault gate rejected adoption.
+mode 2 and Gaming mode 1. The subsequent kernel fault gate initially rejected adoption; the user later
+confirmed the timeout was fixed and authorized adoption as recorded above.
 
 See [summary](gpu-workload-profiles-2026-10-21/idle-summary.json),
 [Automatic samples](gpu-workload-profiles-2026-10-21/automatic-idle.json) and
@@ -105,14 +107,14 @@ See [summary](gpu-workload-profiles-2026-10-21/idle-summary.json),
   confirms exact source/runtime semantics and unchanged qualified hardware values.
   [Local checks](gpu-workload-profiles-2026-10-21/local-checks.json) retain command
   outcomes and the kernel fault check.
-- FAIL: the final kernel review found `gfx_0.0.0` timeouts at 01:33:40 and
+- HISTORICAL FAIL (superseded by the user resolution above): the final kernel review found `gfx_0.0.0` timeouts at 01:33:40 and
   01:33:50, attributed to `UnrealEditor` / `RHISubmission`. Each recovered through
   a ring reset. Daily Manual/mode 2 was still active when the failure was checked.
   See the [kernel evidence](gpu-workload-profiles-2026-10-21/post-switch-kernel.log).
   The heuristic is not proven to be the root cause, but the no-GPU-fault gate
   failed. Empty thermal-throttle flags do not negate graphics-ring timeouts.
-- NOT ADOPTED: no electrical, voltage, fan, clock-limit or DPM-state compensation
-  was attempted. The manual pair must not be merged on this evidence.
+- HISTORICAL ROLLBACK: no electrical, voltage, fan, clock-limit or DPM-state
+  compensation was attempted. The initial adoption block is superseded above.
 - PASS: original runtime config applied through the patched daemon first, which
   explicitly reset mode 0, followed by `nixos-rebuild switch --rollback` to
   generation 68. Both running system and boot profile point to the original
@@ -126,7 +128,7 @@ See [summary](gpu-workload-profiles-2026-10-21/idle-summary.json),
   window. See [Automatic control](gpu-workload-profiles-2026-10-21/automatic-control.json).
   This does not prove root cause, but provides no reason to change the qualified
   electrical/fan settings.
-- INCOMPLETE: the requested production pair is not adopted. PR #59 stays draft
-  with failure evidence; production remains original Automatic. Any alternate
-  architecture needs an explicit user decision rather than silently substituting
-  a different Daily mode or weakening the failed gate.
+- ACCEPTED: the user confirmed the Unreal timeout was fixed and explicitly
+  requested merging PR #59. No additional GPU tuning or qualification is required.
+  Exact-head CI, protected-main merge and merged-main activation remain the
+  final implementation steps.
