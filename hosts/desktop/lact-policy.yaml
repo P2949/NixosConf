@@ -64,7 +64,31 @@ profiles:
         pmfw_options:
           zero_rpm: true
         power_cap: 238.0
-        performance_level: auto
+        performance_level: manual
+        power_profile_mode_index: 2
+        voltage_offset: -150
+  Gaming:
+    gpus:
+      1002:7550-1025:187A-0000:03:00.0:
+        fan_control_enabled: true
+        fan_control_settings:
+          mode: curve
+          static_speed: 1.0
+          temperature_key: edge
+          interval_ms: 500
+          curve:
+            30: 0.2
+            40: 0.3
+            45: 0.5
+            50: 0.7
+            55: 1.0
+          spindown_delay_ms: 5000
+          change_threshold: 2
+        pmfw_options:
+          zero_rpm: true
+        power_cap: 238.0
+        performance_level: manual
+        power_profile_mode_index: 1
         voltage_offset: -150
 current_profile: Daily
 auto_switch_profiles: false

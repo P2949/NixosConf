@@ -1,0 +1,172 @@
+{
+  "result": "PASS",
+  "source_commit": "a0f33c0c28712119958127b1479414ee7b34ce0e",
+  "running_system": "/nix/store/kggsw6s347fsy61ml8smz9w4j5rzvpvb-nixos-system-desktop-26.05.20261004.0d9e9b8",
+  "source_sha256": {
+    "flake.lock": "f9138547f8becdfd54abf5099aa30615390b9470d7ca59765107b88c47331148",
+    "hosts/desktop/lact-policy.yaml": "722f45bb5222e67b2e176ac145d016c17088c834a8c6974f778d18b9720d9365",
+    "packages/lact/lact-auto-reset.patch": "da2a8260afb39ff053fdc618790282693f696db75eba20b7527048722ff1356a",
+    "packages/gamemode-gpu-profile/helper.py": "9f9012bf0becff1c53761f2f4c7cd861ba2ba2cc74548576a5ec170334e9a917"
+  },
+  "runtime_semantically_equals_source": true,
+  "config_mode": "0600 regular file",
+  "profile": "Daily",
+  "performance_level": "manual",
+  "firmware_mode": "2   POWER_SAVING*:",
+  "power_cap_w": 238,
+  "clock_voltage_table_unchanged": true,
+  "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+  "fan_curve_unchanged": true,
+  "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+  "zero_rpm_unchanged": true,
+  "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+  "installed_helper_equals_source": true,
+  "installed_helper": "/nix/store/hvgcly50abfxphcg37qyzm65xn0pq1y9-helper.py",
+  "lact_exec_start": "{ path=/nix/store/4l622pbq6hpwi8q45ip3cxm27qyv2kni-lact-0.10.1/bin/lact ; argv[]=/nix/store/4l622pbq6hpwi8q45ip3cxm27qyv2kni-lact-0.10.1/bin/lact daemon ; ignore_errors=no ; start_time=[Wed 2026-10-21 01:28:02 IST] ; stop_time=[n/a] ; pid=1003001 ; code=(null) ; status=0/0 }",
+  "stats": {
+    "fan": {
+      "control_enabled": true,
+      "control_mode": "curve",
+      "static_speed": 1.0,
+      "curve": {
+        "30": 0.2,
+        "40": 0.3,
+        "45": 0.5,
+        "50": 0.7,
+        "55": 1.0
+      },
+      "pwm_current": 0,
+      "speed_current": 0,
+      "speed_max": 4350,
+      "speed_min": 0,
+      "pwm_max": 254,
+      "pwm_min": 51,
+      "temperature_range": [
+        25,
+        100
+      ],
+      "temperature_key": "edge",
+      "spindown_delay_ms": 5000,
+      "change_threshold": 2,
+      "pmfw_info": {
+        "acoustic_limit": {
+          "current": 3750,
+          "allowed_range": [
+            500,
+            4350
+          ]
+        },
+        "acoustic_target": {
+          "current": 2000,
+          "allowed_range": [
+            500,
+            4350
+          ]
+        },
+        "target_temp": {
+          "current": 85,
+          "allowed_range": [
+            25,
+            105
+          ]
+        },
+        "minimum_pwm": {
+          "current": 20,
+          "allowed_range": [
+            20,
+            100
+          ]
+        },
+        "zero_rpm_enable": true
+      }
+    },
+    "clockspeed": {
+      "gpu_clockspeed": 1120,
+      "target_gpu_clockspeed": 1120,
+      "vram_clockspeed": 456,
+      "sensors": {
+        "DCLK": 25,
+        "DCLK1": 25,
+        "VCLK": 25,
+        "VCLK1": 25,
+        "UCLK": 456,
+        "SOCCLK": 1200
+      }
+    },
+    "voltage": {
+      "gpu": 656,
+      "sensors": {
+        "mem": 1250,
+        "soc": 824
+      }
+    },
+    "vram": {
+      "total": 17095983104,
+      "used": 5146292224,
+      "gtt_total_usable": 16724987904,
+      "gtt_used": 210853888
+    },
+    "power": {
+      "average": 24.0,
+      "cap_current": 238.0,
+      "cap_max": 374.0,
+      "cap_min": 238.0,
+      "cap_default": 340.0
+    },
+    "temps": {
+      "edge": {
+        "current": 38.0,
+        "crit": 110.0,
+        "crit_hyst": -273.15,
+        "primary": true,
+        "display_only": false
+      },
+      "junction": {
+        "current": 39.0,
+        "crit": 110.0,
+        "crit_hyst": -273.15,
+        "primary": true,
+        "display_only": false
+      },
+      "mem": {
+        "current": 42.0,
+        "crit": 108.0,
+        "crit_hyst": -273.15,
+        "primary": true,
+        "display_only": false
+      },
+      "vrgfx": {
+        "current": 40.0,
+        "crit": null,
+        "crit_hyst": null,
+        "primary": false,
+        "display_only": true
+      },
+      "vrmem": {
+        "current": 44.0,
+        "crit": null,
+        "crit_hyst": null,
+        "primary": false,
+        "display_only": true
+      },
+      "vrsoc": {
+        "current": 40.0,
+        "crit": null,
+        "crit_hyst": null,
+        "primary": false,
+        "display_only": true
+      }
+    },
+    "busy_percent": 6,
+    "performance_level": "manual",
+    "active_power_states": {
+      "core": {
+        "Index": 1
+      },
+      "memory": {
+        "Index": 1
+      }
+    },
+    "throttle_info": {}
+  }
+}

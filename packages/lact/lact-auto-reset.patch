@@ -1,0 +1,32 @@
+--- a/lact-daemon/src/server/gpu_controller/amd.rs
++++ b/lact-daemon/src/server/gpu_controller/amd.rs
+@@ -1238,6 +1238,29 @@
+                     let performance_level =
+                         config.performance_level.unwrap_or(PerformanceLevel::Auto);
+ 
++                    // On Navi 48, Auto retains a previously selected firmware
++                    // workload profile. Reset it before entering Auto so Stock
++                    // and Default restore the factory heuristic via every API.
++                    if performance_level == PerformanceLevel::Auto
++                        && config.power_profile_mode_index.is_none()
++                    {
++                        match self.handle.get_power_profile_modes() {
++                            Ok(modes) if modes.active != 0 => {
++                                self.handle
++                                    .set_power_force_performance_level(PerformanceLevel::Manual)
++                                    .context("Could not enter manual mode for workload reset")?;
++                                self.handle
++                                    .set_active_power_profile_mode(0)
++                                    .context("Could not reset firmware workload profile")?;
++                            }
++                            Ok(_) => (),
++                            Err(err) if err.is_not_found() => (),
++                            Err(err) => {
++                                return Err(err).context("Could not read firmware workload profile");
++                            }
++                        }
++                    }
++
+                     match performance_level {
+                         PerformanceLevel::Auto | PerformanceLevel::Manual => {
+                             self.handle

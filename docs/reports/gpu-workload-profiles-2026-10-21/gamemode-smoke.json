@@ -1,0 +1,168 @@
+{
+  "result": "PASS",
+  "source_commit": "a0f33c0c28712119958127b1479414ee7b34ce0e",
+  "running_system": "/nix/store/kggsw6s347fsy61ml8smz9w4j5rzvpvb-nixos-system-desktop-26.05.20261004.0d9e9b8",
+  "records": [
+    {
+      "label": "installed Daily",
+      "result": "PASS",
+      "profile": "Daily",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "manual",
+      "mode": 2,
+      "cap_uw": 238000000,
+      "voltage_offset_mv": -150,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        38.0,
+        40.0
+      ]
+    },
+    {
+      "label": "Daily -> GameMode Gaming",
+      "result": "PASS",
+      "profile": "Gaming",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "manual",
+      "mode": 1,
+      "cap_uw": 238000000,
+      "voltage_offset_mv": -150,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        35.0,
+        36.0,
+        38.0
+      ]
+    },
+    {
+      "label": "GameMode -> Daily",
+      "result": "PASS",
+      "profile": "Daily",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "manual",
+      "mode": 2,
+      "cap_uw": 238000000,
+      "voltage_offset_mv": -150,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        37.0,
+        40.0
+      ]
+    },
+    {
+      "label": "Stock before GameMode",
+      "result": "PASS",
+      "profile": "Stock",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "auto",
+      "mode": 0,
+      "cap_uw": 340000000,
+      "voltage_offset_mv": 0,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n0mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 0C 0%\n1: 0C 0%\n2: 0C 0%\n3: 0C 0%\n4: 0C 0%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        36.0,
+        40.0
+      ]
+    },
+    {
+      "label": "Stock -> GameMode Gaming",
+      "result": "PASS",
+      "profile": "Gaming",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "manual",
+      "mode": 1,
+      "cap_uw": 238000000,
+      "voltage_offset_mv": -150,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        37.0,
+        40.0
+      ]
+    },
+    {
+      "label": "GameMode -> Stock",
+      "result": "PASS",
+      "profile": "Stock",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "auto",
+      "mode": 0,
+      "cap_uw": 340000000,
+      "voltage_offset_mv": 0,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n0mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 0C 0%\n1: 0C 0%\n2: 0C 0%\n3: 0C 0%\n4: 0C 0%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        37.0,
+        40.0
+      ]
+    },
+    {
+      "label": "final Daily",
+      "result": "PASS",
+      "profile": "Daily",
+      "auto_switch": false,
+      "profiles": [
+        "Daily",
+        "Gaming",
+        "Stock"
+      ],
+      "level": "manual",
+      "mode": 2,
+      "cap_uw": 238000000,
+      "voltage_offset_mv": -150,
+      "clocks": "OD_SCLK_OFFSET:\n0Mhz\nOD_MCLK:\n0: 97Mhz\n1: 1259MHz\nOD_VDDGFX_OFFSET:\n-150mV\nOD_RANGE:\nSCLK_OFFSET:    -500Mhz       1000Mhz\nMCLK:      97Mhz       1500Mhz\nVDDGFX_OFFSET:    -200mv          0mv\n",
+      "fan_curve": "OD_FAN_CURVE:\n0: 30C 20%\n1: 40C 30%\n2: 45C 50%\n3: 50C 70%\n4: 55C 100%\nOD_RANGE:\nFAN_CURVE(hotspot temp): 25C 100C\nFAN_CURVE(fan speed): 20% 100%\n",
+      "zero_rpm": "FAN_ZERO_RPM_ENABLE:\n1\nOD_RANGE:\nZERO_RPM_ENABLE: 0 1\n",
+      "temps_c": [
+        36.0,
+        37.0,
+        40.0
+      ]
+    }
+  ]
+}
