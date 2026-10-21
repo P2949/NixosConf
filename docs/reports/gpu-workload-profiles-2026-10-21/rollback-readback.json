@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "generation": 68,
+  "running_system": "/nix/store/hk7j8hmlsymdxnw4v7wskypka5rwd9zd-nixos-system-desktop-26.05.20261004.0d9e9b8",
+  "boot_profile": "/nix/store/hk7j8hmlsymdxnw4v7wskypka5rwd9zd-nixos-system-desktop-26.05.20261004.0d9e9b8",
+  "original_config_matches_baseline_commit": "35ed27115bad7c59e30f5847cc2bd2e548164802",
+  "profile": "Daily",
+  "performance_level": "auto",
+  "firmware_mode": "0 BOOTUP_DEFAULT*:",
+  "clock_voltage_table_unchanged": true,
+  "fan_curve_unchanged": true,
+  "zero_rpm_unchanged": true,
+  "original_helper_restored": true,
+  "gamemode_restarted_while_inactive": true,
+  "automatic_control_start_epoch": 1792542925.5316672
+}

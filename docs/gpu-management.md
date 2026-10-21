@@ -1,5 +1,10 @@
 # GPU policy
 
+This branch contains an **unadopted candidate**. Its physical acceptance failed
+with Unreal GPU timeouts; production was rolled back to the original Automatic
+Daily policy. Do not treat the proposed modes below as accepted production policy.
+See the [acceptance record](reports/gpu-workload-profiles-2026-10-21.md).
+
 The desktop boots into **Daily**: 238 W, −150 mV, factory core and VRAM clocks,
 Manual performance level with the `POWER_SAVING` firmware workload heuristic,
 native PMFW fan curve and zero RPM. Gaming uses the same electrical, clock and

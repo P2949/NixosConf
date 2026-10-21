@@ -11,7 +11,7 @@ let
 in
 {
   options.programs.gamemode.gpuProfile.enable =
-    lib.mkEnableOption "GameMode Daily GPU profile ownership";
+    lib.mkEnableOption "GameMode Gaming GPU profile ownership";
   config = {
     programs.steam = {
       enable = true;

@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "policy": "original Daily Automatic + BOOTUP_DEFAULT",
+  "generation": 68,
+  "user_report": "Normal responsiveness; no new problems",
+  "control_start_epoch": 1792542925.5316672,
+  "check_end_epoch": 1792543249.4919324,
+  "journal_command": [
+    "journalctl",
+    "-k",
+    "--since",
+    "@1792542925.531667",
+    "--no-pager"
+  ],
+  "journal_exit_status": 0,
+  "gpu_fault_matches": [],
+  "scope": "Short fresh-session Automatic control; no claim of proving root cause"
+}
