@@ -25,7 +25,7 @@ in
     ];
     services.lact = {
       enable = true;
-      package = pkgsUnstable.lact;
+      package = import ../../../packages/lact { inherit (pkgsUnstable) lact; };
     };
     systemd.services.gpu-lact-config-seed = {
       description = "Seed the declarative LACT baseline as writable runtime state";

@@ -60,6 +60,7 @@ def select(paths, event):
                 "tests/workstation/",
                 "profiles/",
                 "packages/gamemode-gpu-profile/",
+                "packages/lact/",
             )
         ):
             targets.add("workstation-smoke")

@@ -32,7 +32,7 @@ class PolicyTests(unittest.TestCase):
     def test_identity_and_selection(self):
         self.assertEqual(POLICY["version"], 7)
         self.assertEqual(set(POLICY["gpus"]), {GPU})
-        self.assertEqual(set(POLICY["profiles"]), {"Stock", "Daily"})
+        self.assertEqual(set(POLICY["profiles"]), {"Stock", "Daily", "Gaming"})
         self.assertEqual(POLICY["current_profile"], "Daily")
         self.assertIs(POLICY["auto_switch_profiles"], False)
         for profile in POLICY["profiles"].values():
@@ -49,11 +49,23 @@ class PolicyTests(unittest.TestCase):
     def test_daily_is_exact_validated_policy(self):
         daily = POLICY["profiles"]["Daily"]["gpus"][GPU]
         expected = gpu_config(True, 1.0)
-        expected.update(power_cap=238.0, voltage_offset=-150)
+        expected.update(
+            power_cap=238.0,
+            voltage_offset=-150,
+            performance_level="manual",
+            power_profile_mode_index=2,
+        )
         # Full mapping equality also rejects extra core/VRAM clock overrides.
         self.assertEqual(daily, expected)
         self.assertIs(daily["fan_control_enabled"], True)
         self.assertIs(daily["pmfw_options"]["zero_rpm"], True)
+
+    def test_gaming_differs_only_in_workload_heuristic(self):
+        daily = POLICY["profiles"]["Daily"]["gpus"][GPU].copy()
+        gaming = POLICY["profiles"]["Gaming"]["gpus"][GPU].copy()
+        self.assertEqual(daily.pop("power_profile_mode_index"), 2)
+        self.assertEqual(gaming.pop("power_profile_mode_index"), 1)
+        self.assertEqual(daily, gaming)
 
 
 if __name__ == "__main__":

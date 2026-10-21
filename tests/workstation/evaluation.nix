@@ -32,7 +32,7 @@ in
 assert topologyValid;
 assert config.hardware.amdgpu.overdrive.enable;
 assert config.services.lact.enable;
-assert config.services.lact.package == pkgsUnstable.lact;
+assert config.services.lact.package == import ../../packages/lact { inherit (pkgsUnstable) lact; };
 assert config.hardware.lactPolicy.enable;
 assert config.services.lact.settings == { };
 assert seed.serviceConfig.Type == "oneshot" && seed.serviceConfig.RemainAfterExit;
@@ -46,6 +46,7 @@ assert pkgs.lib.hasInfix "current_profile: Daily\n" gpuPolicy;
 assert pkgs.lib.hasInfix "auto_switch_profiles: false\n" gpuPolicy;
 assert pkgs.lib.hasInfix "  Stock:\n" gpuPolicy;
 assert pkgs.lib.hasInfix "  Daily:\n" gpuPolicy;
+assert pkgs.lib.hasInfix "  Gaming:\n" gpuPolicy;
 assert !(builtins.elem "/etc/lact" systemDirectories);
 assert config.programs.gamemode.gpuProfile.enable;
 assert pkgs.lib.hasSuffix "/bin/gamemode-gpu-profile start"

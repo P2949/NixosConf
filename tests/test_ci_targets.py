@@ -51,9 +51,14 @@ class SelectionTests(unittest.TestCase):
         )
 
     def test_gpu_helper_selects_workstation(self):
-        result = ci.select(["packages/gamemode-gpu-profile/helper.py"], "pull_request")
-        self.assertEqual(result["targets"], ["workstation-smoke"])
-        self.assertTrue(result["desktop"])
+        for path in [
+            "packages/gamemode-gpu-profile/helper.py",
+            "packages/lact/lact-auto-reset.patch",
+        ]:
+            with self.subTest(path=path):
+                result = ci.select([path], "pull_request")
+                self.assertEqual(result["targets"], ["workstation-smoke"])
+                self.assertTrue(result["desktop"])
 
 
 if __name__ == "__main__":

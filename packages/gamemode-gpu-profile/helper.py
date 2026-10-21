@@ -1,4 +1,4 @@
-"""GameMode owns Daily only until the last client exits; preserve manual changes."""
+"""GameMode owns Gaming only until the last client exits; preserve manual changes."""
 import argparse
 import fcntl
 import json
@@ -71,7 +71,7 @@ def transition(operation, directory, query=api, choose=select, owner=None):
         if operation == "start":
             if state is not None:
                 return  # Duplicate callback must not replace the saved profile.
-            assert "Daily" in current["profiles"], "Daily profile is missing"
+            assert "Gaming" in current["profiles"], "Gaming profile is missing"
             state = {"version": 1, "owner": owner, "previous": profile}
             descriptor, temporary_name = tempfile.mkstemp(prefix="state-", dir=directory)
             temporary = Path(temporary_name)
@@ -84,12 +84,12 @@ def transition(operation, directory, query=api, choose=select, owner=None):
                 temporary.replace(path)
             finally:
                 temporary.unlink(missing_ok=True)
-            if profile != "Daily":
-                choose("Daily")  # State retained if selection fails ambiguously.
+            if profile != "Gaming":
+                choose("Gaming")  # State retained if selection fails ambiguously.
         else:
-            if profile == "Daily" and state["previous"] != "Daily":
+            if profile == "Gaming" and state["previous"] != "Gaming":
                 choose(state["previous"])
-            elif profile != "Daily":
+            elif profile != "Gaming":
                 print("gamemode-gpu-profile: preserving externally selected profile", file=sys.stderr)
             path.unlink()  # Keep the receipt on query/selection failure for diagnosis.
 
