@@ -187,6 +187,7 @@ in
         "--host ${host}"
         "--port ${toString port}"
         "--jinja"
+        "--chat-template-file ${./chat-template.jinja}"
         "--n-gpu-layers all"
         "--ctx-size ${toString contextSize}"
         "--cache-type-k q4_1"

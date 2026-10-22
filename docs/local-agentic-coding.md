@@ -43,6 +43,8 @@ curl -s http://127.0.0.1:11435/props
 - Context is capped at 49,152 tokens with `--fit off`, Q4_1 KV and Flash Attention, so Codex's
   window matches the real allocation. Change `contextSize` and the compaction limit together.
 - Codex uses `tool_mode = direct` (Code Mode emits items llama.cpp rejects).
+- The server uses a patched copy of the model's chat template ([chat-template.jinja](../home/p2949/development/agentic-coding/chat-template.jinja)): Codex sends developer messages after the first turn, which the stock Qwen template rejects with "System message must be at the beginning". The patch renders them in place. Re-derive it from the model's embedded template when the model changes.
+- Weights are already in the persisted path `/persist/home/p2949/.local/share/local-ai` (downloaded before activation).
 
 ## Known exclusions
 
