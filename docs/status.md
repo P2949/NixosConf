@@ -83,7 +83,9 @@ VM results do not replace physical acceptance.
 Local Sabi-Noema coding agent (`codex-sabi`) is accepted for repository
 tool/edit/test loops at a 49,152-token context on the RX 9070 XT through
 llama.cpp ROCm; idle sleep releases VRAM and the GPU stays on the Daily profile.
-The `/goal` lifecycle, compaction and reboot persistence are pending acceptance. See the
+A `/goal` survives exit, resume and reboot and completes in the same thread; tool use
+continues after manual `/compact`. After reboot the model is kept without redownload and
+the service stays stopped until `codex-sabi` starts it. See the
 [operating guide](local-agentic-coding.md).
 
 ## Minecraft server

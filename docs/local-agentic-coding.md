@@ -25,11 +25,20 @@ For autonomous work use `/goal <objective + verification + constraints + stop co
 `AGENTS.md` carries durable repository behavior; the model instructions carry global
 agent behavior; `/goal` carries the current task contract.
 
+Resume Sabi threads with `codex-sabi resume <id>`; the `codex resume <id>` hint Codex prints
+lacks the profile and fails with "Model provider `llamacpp-sabi` not found". After a resume,
+pick "Resume goal" (or `/goal resume`) to reactivate a paused goal.
+
+Under the `sabi` profile Codex writes TUI settings changes, including folder trust, to the
+read-only generated profile, so they fail. Trust a new folder through the base config: run
+plain `codex` there once, or add `[projects."<path>"] trust_level = "trusted"` to
+`~/.codex/config.toml`.
+
 Operations:
 
 ```console
 systemctl --user status sabi-noema
-journalctl --user -u sabi-noema
+sudo journalctl _SYSTEMD_USER_UNIT=sabi-noema.service -b
 systemctl --user restart sabi-noema
 curl -s http://127.0.0.1:11435/props
 ```
