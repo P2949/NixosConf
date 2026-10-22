@@ -11,7 +11,7 @@ host GPU policy is unchanged and stays on the Daily LACT profile.
 
 - Model: `owao/Sabi-Noema-GGUF` revision `63c4e5c0012e5445cea31822a40f54f2628fb8f3`, `Sabi-Noema-Q3_K_M.gguf` (~13.3 GB).
 - llama.cpp: source-only flake input `llama-cpp-src`, commit `a37cc46104eb50900d5ab4a9ba02a0abdac039db`, built with upstream's package expression for `gfx1201`.
-- Codex: `pkgsUnstable.codex` (0.159.3 at adoption).
+- Codex: `pkgsUnstable.codex` 0.159.3, asserted by the evaluation test.
 - Update only by explicit change of these pins, followed by requalification.
 
 ## Usage
@@ -36,15 +36,18 @@ curl -s http://127.0.0.1:11435/props
 
 ## Behavior
 
-- Weights live in `~/.local/share/local-ai/models/` (persisted, class R), never in the Nix store.
+- Weights live in `~/.local/share/local-ai/models/<model-revision>/<model-file>` (persisted, class R),
+  never in the Nix store. A new revision installs beside the old one; remove stale revisions by hand.
 - The server binds `127.0.0.1:11435` only and is not started at login. After 300 s idle,
   llama.cpp sleeps and releases model/KV VRAM; the process stays and wakes on the next request.
 - `~/.codex/sabi.config.toml` is generated; `~/.codex/config.toml` is not managed.
 - Context is capped at 49,152 tokens with `--fit off`, Q4_1 KV and Flash Attention, so Codex's
   window matches the real allocation. Change `contextSize` and the compaction limit together.
 - Codex uses `tool_mode = direct` (Code Mode emits items llama.cpp rejects).
+- Earlier-turn reasoning is not replayed (`--no-reasoning-preserve`), so history does not spend
+  the 49K window; reasoning within the current tool loop is kept. Reasoning levels are `low`,
+  `medium` and `xhigh` (default), matching the template.
 - The server uses a patched copy of the model's chat template ([chat-template.jinja](../home/p2949/development/agentic-coding/chat-template.jinja)): Codex sends developer messages after the first turn, which the stock Qwen template rejects with "System message must be at the beginning". The patch renders them in place. Re-derive it from the model's embedded template when the model changes.
-- Weights are already in the persisted path `/persist/home/p2949/.local/share/local-ai` (downloaded before activation).
 
 ## Known exclusions
 
@@ -54,7 +57,8 @@ curl -s http://127.0.0.1:11435/props
 
 ## Requalification triggers
 
-Change of model file, llama.cpp commit, Codex major/minor version, ROCm, or context size.
+Change of model file or revision, llama.cpp commit, any Codex version change, ROCm,
+context size or other KV-relevant inference settings, or `chat-template.jinja` changes.
 
 ## Sandbox note
 

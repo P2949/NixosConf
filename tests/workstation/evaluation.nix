@@ -14,7 +14,8 @@ let
   seed = config.systemd.services.gpu-lact-config-seed;
   systemFiles = map (entry: entry.file) systemPolicy.files;
   homeConfig = config.home-manager.users.${username};
-  sabiService = homeConfig.systemd.user.services.sabi-noema.Service;
+  sabiUnit = homeConfig.systemd.user.services.sabi-noema;
+  sabiService = sabiUnit.Service;
   sabiExec = builtins.head sabiService.ExecStart;
   sabiProfile = builtins.readFile homeConfig.home.file.".codex/sabi.config.toml".source;
   sabiCatalog = builtins.head (builtins.fromJSON (
@@ -94,7 +95,14 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--parallel 1 "
   "--no-context-shift "
   "--sleep-idle-seconds 300 "
+  "--jinja "
+  "--chat-template-file "
+  "--no-reasoning-preserve "
+  "/local-ai/models/63c4e5c0012e5445cea31822a40f54f2628fb8f3/Sabi-Noema-Q3_K_M.gguf "
 ];
+assert builtins.elem "HIP_VISIBLE_DEVICES=0" (pkgs.lib.toList sabiService.Environment);
+# Started only by codex-sabi, never at login.
+assert !(sabiUnit ? Install) || (sabiUnit.Install.WantedBy or [ ]) == [ ];
 assert !(config.systemd.services ? sabi-noema);
 assert !(builtins.elem 11435 config.networking.firewall.allowedTCPPorts);
 assert builtins.elem pkgsUnstable.codex homeConfig.home.packages;
@@ -114,6 +122,15 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
 ];
 assert sabiCatalog.context_window == 49152 && sabiCatalog.max_context_window == 49152;
 assert sabiCatalog.tool_mode == "direct";
+assert
+  map (level: level.effort) sabiCatalog.supported_reasoning_levels == [
+    "low"
+    "medium"
+    "xhigh"
+  ];
+assert sabiCatalog.default_reasoning_level == "xhigh";
+# Codex's Responses/tool wire behavior is part of the compatibility boundary.
+assert pkgsUnstable.codex.version == "0.159.3";
 assert config.services.journald.storage == "volatile";
 pkgs.runCommand "check-desktop-evaluation" { inherit evaluation; } ''
   printf '%s\n' "$evaluation" > "$out"

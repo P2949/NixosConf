@@ -21,7 +21,7 @@ let
     revision = "63c4e5c0012e5445cea31822a40f54f2628fb8f3";
     file = "Sabi-Noema-Q3_K_M.gguf";
   };
-  modelDir = "${config.xdg.dataHome}/local-ai/models";
+  modelDir = "${config.xdg.dataHome}/local-ai/models/${model.revision}";
   modelPath = "${modelDir}/${model.file}";
 
   host = "127.0.0.1";
@@ -76,7 +76,6 @@ let
               [
                 "low"
                 "medium"
-                "high"
                 "xhigh"
               ];
           shell_type = "unified_exec";
@@ -196,6 +195,7 @@ in
         "--fit off"
         "--parallel 1"
         "--no-context-shift"
+        "--no-reasoning-preserve"
         "--sleep-idle-seconds 300"
         "--metrics"
         "--temp 1.0"
