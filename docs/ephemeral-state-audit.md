@@ -46,6 +46,8 @@ acceptance; see [current desktop status](status.md).
 | Android/Sdk | R | Writable Studio-managed SDK, build/platform tools, emulator and system images; retained to avoid repeated large downloads |
 | .gradle | M | Initially retained privately: wrapper distributions, dependencies, configuration and managed JDKs; observed caches, daemon, native and temporary children await a workload audit before exclusions |
 | .codex | M | Authentication, config, goals, queue, threads, memories, sessions, attachments, plugins, skills retained; cache/temp/IPC/locks/shell snapshots and model-cache/diagnostic log DB reset |
+| .claude | M | Claude Code credentials, settings, recent transcripts, session tool results, checkpoints/file history, plans/tasks, memories, plugins and other session/application state retained privately; debug, session-env, sessions, shell-snapshots and usage-data reset. Claude ages session artifacts out itself after `cleanupPeriodDays` = 14 (writable `settings.json`, not Nix-owned) |
+| .claude.json | P | Writable global Claude Code application, authentication and configuration state |
 | .local/share/local-ai | R | Pinned, reproducible local LLM weights retained because rebuilding/redownloading the multi-GB artifact is expensive; agent configuration itself remains declarative |
 | .plastic4 | P | Unity VCS credentials/settings; currently empty |
 | .zen | E | Invocation metadata identifies the Unreal engine's `Engine/Binaries/Linux/zen`; History/States are server invocation/runtime bookkeeping, not the browser profile or retained Zen data cache |
@@ -171,6 +173,14 @@ copies below those mountpoints must be pruned after physical acceptance.
   Native boot-only tmpfiles rules discard models_cache.json and the complete
   logs_2.sqlite diagnostic bundle (main, WAL, SHM) before login. Authentication,
   queue/goals/thread/state/memory DBs and their companions remain together.
+- Claude Code: debug, session-env, sessions, shell-snapshots and usage-data
+  disappear. Project transcripts, subagent transcripts, `projects/.../tool-results`
+  (resumable session state despite the name), file-history, plans, tasks,
+  history, credentials, memories and plugins remain. Claude prunes retained
+  session artifacts after 14 days (`cleanupPeriodDays`). Scratchpads and pasted
+  images under `/tmp` stay root-local and disappear on reboot; neither
+  `CLAUDE_CONFIG_DIR` nor `CLAUDE_CODE_TMPDIR` is set. The VS Code extension's
+  globalStorage is already covered by `.config/Code`.
 - Unity Hub: Electron render/code/GPU/crash caches, logs, sentry, graphql cache,
   video decoder statistics and service-worker/dictionary caches disappear.
   Download/install-state is retained so a reboot does not lose resumable installs.
