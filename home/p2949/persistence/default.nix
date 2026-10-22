@@ -54,6 +54,10 @@
         directory = ".codex";
         mode = "0700";
       }
+      {
+        directory = ".local/share/local-ai";
+        mode = "0700";
+      }
       ".plastic4"
       ".dotnet/corefx/cryptography"
       ".vscode"

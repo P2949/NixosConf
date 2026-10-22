@@ -13,6 +13,15 @@ let
   gpuPolicy = builtins.readFile config.hardware.lactPolicy.source;
   seed = config.systemd.services.gpu-lact-config-seed;
   systemFiles = map (entry: entry.file) systemPolicy.files;
+  homeConfig = config.home-manager.users.${username};
+  sabiService = homeConfig.systemd.user.services.sabi-noema.Service;
+  sabiExec = sabiService.ExecStart;
+  sabiProfile = builtins.readFile homeConfig.home.file.".codex/sabi.config.toml".source;
+  sabiCatalog = builtins.head (builtins.fromJSON (
+    builtins.readFile (
+      builtins.head (builtins.match ".*model_catalog_json = \"([^\"]+)\".*" sabiProfile)
+    )
+  )).models;
   topologyValid =
     !(config.fileSystems ? "/home")
     && !(config.fileSystems ? "/var")
@@ -70,6 +79,41 @@ assert
   config.home-manager.users.${username}.programs.fuzzel.settings.main.cache
   == "${config.home-manager.users.${username}.xdg.stateHome}/fuzzel/history";
 assert builtins.elem "/var/lib/systemd/random-seed" systemFiles;
+assert builtins.elem ".local/share/local-ai" homeDirectories;
+assert !(builtins.elem ".local/share" homeDirectories);
+assert pkgs.lib.hasInfix "-rocm" sabiExec && pkgs.lib.hasInfix "/bin/llama-server " sabiExec;
+assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
+  "--host 127.0.0.1 "
+  "--port 11435 "
+  "--n-gpu-layers all "
+  "--ctx-size 49152 "
+  "--cache-type-k q4_1 "
+  "--cache-type-v q4_1 "
+  "--flash-attn on "
+  "--fit off "
+  "--parallel 1 "
+  "--no-context-shift "
+  "--sleep-idle-seconds 300 "
+];
+assert !(config.systemd.services ? sabi-noema);
+assert !(builtins.elem 11435 config.networking.firewall.allowedTCPPorts);
+assert builtins.elem pkgsUnstable.codex homeConfig.home.packages;
+assert homeConfig.home.file ? ".codex/sabi.config.toml";
+assert !(homeConfig.home.file ? ".codex/config.toml");
+assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
+  ''model = "sabi-noema"''
+  ''base_url = "http://127.0.0.1:11435/v1"''
+  ''wire_api = "responses"''
+  "requires_openai_auth = false"
+  "model_context_window = 49152"
+  "model_auto_compact_token_limit = 40000"
+  ''approval_policy = "on-request"''
+  ''sandbox_mode = "workspace-write"''
+  ''web_search = "disabled"''
+  "model_catalog_json = "
+];
+assert sabiCatalog.context_window == 49152 && sabiCatalog.max_context_window == 49152;
+assert sabiCatalog.tool_mode == "direct";
 assert config.services.journald.storage == "volatile";
 pkgs.runCommand "check-desktop-evaluation" { inherit evaluation; } ''
   printf '%s\n' "$evaluation" > "$out"

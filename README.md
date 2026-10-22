@@ -7,6 +7,7 @@ baseline and frozen benchmark control.
 ## Where to start
 
 - [Current system](docs/status.md).
+- [Local coding agent (Sabi/Codex)](docs/local-agentic-coding.md).
 - [Minecraft server operations](docs/minecraft-server.md).
 - [Repository change policy](docs/repository-policy.md).
 - [Qualification baseline](docs/baselines/pre-optimization/baseline-final.md).

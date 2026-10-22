@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./agentic-coding
     ./android.nix
     ./blender.nix
     ./unreal.nix

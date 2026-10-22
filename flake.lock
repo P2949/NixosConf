@@ -97,6 +97,23 @@
         "type": "github"
       }
     },
+    "llama-cpp-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792617982,
+        "narHash": "sha256-xK7GHR5ywEgrgLAP8DVp+RjOV5065LT7XmpzBDOWf/0=",
+        "owner": "ggml-org",
+        "repo": "llama.cpp",
+        "rev": "a37cc46104eb50900d5ab4a9ba02a0abdac039db",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ggml-org",
+        "repo": "llama.cpp",
+        "rev": "a37cc46104eb50900d5ab4a9ba02a0abdac039db",
+        "type": "github"
+      }
+    },
     "nix-minecraft": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -157,6 +174,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "liquidctl-pr886": "liquidctl-pr886",
+        "llama-cpp-src": "llama-cpp-src",
         "nix-minecraft": "nix-minecraft",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable"

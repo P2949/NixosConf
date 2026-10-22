@@ -46,6 +46,7 @@ acceptance; see [current desktop status](status.md).
 | Android/Sdk | R | Writable Studio-managed SDK, build/platform tools, emulator and system images; retained to avoid repeated large downloads |
 | .gradle | M | Initially retained privately: wrapper distributions, dependencies, configuration and managed JDKs; observed caches, daemon, native and temporary children await a workload audit before exclusions |
 | .codex | M | Authentication, config, goals, queue, threads, memories, sessions, attachments, plugins, skills retained; cache/temp/IPC/locks/shell snapshots and model-cache/diagnostic log DB reset |
+| .local/share/local-ai | R | Pinned, reproducible local LLM weights retained because rebuilding/redownloading the multi-GB artifact is expensive; agent configuration itself remains declarative |
 | .plastic4 | P | Unity VCS credentials/settings; currently empty |
 | .zen | E | Invocation metadata identifies the Unreal engine's `Engine/Binaries/Linux/zen`; History/States are server invocation/runtime bookkeeping, not the browser profile or retained Zen data cache |
 | .vscode | P/R | Editor argv and extension inventory/builds; CLI installation/state retained; VS Code generated caches are separately discarded |
