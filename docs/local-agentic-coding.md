@@ -55,3 +55,13 @@ curl -s http://127.0.0.1:11435/props
 ## Requalification triggers
 
 Change of model file, llama.cpp commit, Codex major/minor version, ROCm, or context size.
+
+## Sandbox note
+
+Codex's `workspace-write` sandbox cannot reach the Nix daemon socket, so `nix` commands fail inside it.
+Approve them for escalation (or run them yourself); this is a sandbox limit, not a model fault.
+
+## Accepted configuration
+
+Accepted at the full 49,152-token context with all layers on the GPU (about 15 GB VRAM used,
+0.8 GB when asleep). Generation runs at roughly 25 tokens/s.
