@@ -25,6 +25,13 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # Source-only pin: the locked nixpkgs llama.cpp predates Qwen3.8 and
+    # Responses API support. Built through upstream's package expression.
+    llama-cpp-src = {
+      url = "github:ggml-org/llama.cpp/a37cc46104eb50900d5ab4a9ba02a0abdac039db";
+      flake = false;
+    };
+
     # Pinned Commander Core fw2 support from upstream PR #886.
     # Remove only after the required support is released and available in Nixpkgs.
     liquidctl-pr886 = {
