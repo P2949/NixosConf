@@ -58,6 +58,10 @@ these same metadata lists, including matching filenames for disposable-file
 globs. Each declared child is checked across normal reset and persistent-root
 recovery boots; adding policy entries automatically expands this coverage.
 
+Claude Code's meaningful user and session state (`.claude`, `.claude.json`)
+is explicitly retained; its audited runtime children reset through the generic
+application-state mechanism, and Claude itself ages retained session artifacts
+out after 14 days through its writable `cleanupPeriodDays` setting.
 Fuzzel launch counts use persisted `.local/state/fuzzel/history`. Unity layouts,
 search filters and overlays use persisted `.config/unity3d/Preferences`.
 The user deliberately retains Steam shaders, Unreal DDC/Zen and current Unity

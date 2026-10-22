@@ -33,6 +33,16 @@
     ];
   }
   {
+    parent = ".claude";
+    children = [
+      "debug"
+      "session-env"
+      "sessions"
+      "shell-snapshots"
+      "usage-data"
+    ];
+  }
+  {
     parent = ".android";
     children = [ "cache" ];
   }

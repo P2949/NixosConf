@@ -54,6 +54,12 @@
         directory = ".codex";
         mode = "0700";
       }
+      # Claude Code login, settings and resumable sessions; Claude itself
+      # ages session artifacts out after cleanupPeriodDays (14).
+      {
+        directory = ".claude";
+        mode = "0700";
+      }
       {
         directory = ".local/share/local-ai";
         mode = "0700";
@@ -133,6 +139,8 @@
       ".histfile"
       ".zsh_history"
       ".pulse-cookie"
+      # Claude Code global application and authentication state.
+      ".claude.json"
     ];
   };
 }

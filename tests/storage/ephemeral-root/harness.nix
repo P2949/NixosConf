@@ -256,6 +256,7 @@ pkgs.testers.runNixOSTest {
           persistent_paths += [
               "/home/tester/.local/share/Steam/steamapps/shadercache/granular-proof",
               "/home/tester/.config/Epic/UnrealEngine/Common/DerivedDataCache/granular-proof",
+              "/home/tester/.claude/granular-proof", "/home/tester/.claude.json",
           ]
 
       def write_sentinel(path, persistent=False):
