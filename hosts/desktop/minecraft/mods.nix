@@ -30,6 +30,11 @@
     url = "https://cdn.modrinth.com/data/l6YH9Als/versions/e3hsPc1o/spark-1.10.187-fabric.jar";
     sha512 = "c74bf5d5a16b2445ec6ea717eac756412b272a8015e91f91a7bf5a27e6f2f99c4a11878d434510f941f37b0344b3a7d1ba0dd6c34e80642762c48fb6e9a93894";
   };
+
+  villager-linker = pkgs.fetchurl {
+    url = "https://cdn.modrinth.com/data/k8lsAvg8/versions/KpMSOcw2/villagerlinker-1.3.1.jar";
+    sha512 = "668b5d9b38176830f5ffb1f6b8bdfd81fb00aab2f9eb47105f0e0602450ecb1c1e3f7cc80381501c6d1989b76548bc5cfa0a235553885ded17957bc861d00475";
+  };
   chunky = import ./chunky.nix { inherit pkgs; };
   chunky-offline = import ./chunky-offline.nix { inherit pkgs; };
 }

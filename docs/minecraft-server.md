@@ -17,7 +17,8 @@ NixOS manages the server through nix-minecraft and systemd in
 `-XX:+ExitOnOutOfMemoryError` and G1 through `-XX:+UseG1GC`.
 
 The normal mod set is Fabric API, Lithium, FerriteCore, Krypton, ServerCore,
-spark, C2ME 0.4.2-alpha.0.90+26.3, Chunky 1.5.3 and Chunky Offline 1.1.0.
+spark, C2ME 0.4.2-alpha.0.90+26.3, Chunky 1.5.3, Chunky Offline 1.1.0 and
+Villager Linker 1.3.1.
 C2ME uses config schema version 3 with `globalExecutorParallelism = 4`.
 Spark background profiling remains disabled. Distant Horizons is removed.
 Chunky 1.5.3 carries a [task-retirement patch](../hosts/desktop/minecraft/chunky.nix):
@@ -473,7 +474,13 @@ reviewed pinned defaults; changing gameplay values requires declarative ownershi
 and fresh review. `ferritecore.mixin.properties` keeps the pinned memory-layout
 optimizations, with the unsafe small threading detector disabled and compact fast
 map disabled; it is runtime-owned at reviewed defaults. `lithium.properties` has
-no overrides and remains runtime-owned at pinned defaults. `spark/config.json`
+no overrides and remains runtime-owned at pinned defaults. `villagerlinker.json`
+is runtime-owned at pinned defaults (`requireCrouch=true`,
+`restockTimeMinutes=10`, `enableCycleTrades=true`); the mod stores its villager
+trade state in entity data inside the world save. Villager Linker changes
+villager memories, professions and POI ownership: removing the JAR does not
+revert actions already performed, so world-state rollback requires restoring a
+snapshot taken before use. `spark/config.json`
 is declaratively owned with `backgroundProfiler=false`. Profiling is available
 on demand through `/spark profiler start` and `/spark profiler stop`. Profiler recordings and other generated diagnostic state remain
 runtime-owned. These classifications apply to the currently pinned mod versions;

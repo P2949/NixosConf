@@ -252,6 +252,7 @@ pkgs.runCommand "check-minecraft-server-config"
     mr_chunky_offline 1-v1.1.0
     servercore 1.5.20+26.3
     spark 1.10.187
+    villagerlinker 1.3.1
     EOF
 
         if ! diff -u "$normalExpected" "$normalActual"; then
