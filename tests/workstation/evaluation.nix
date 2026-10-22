@@ -15,7 +15,7 @@ let
   systemFiles = map (entry: entry.file) systemPolicy.files;
   homeConfig = config.home-manager.users.${username};
   sabiService = homeConfig.systemd.user.services.sabi-noema.Service;
-  sabiExec = sabiService.ExecStart;
+  sabiExec = builtins.head sabiService.ExecStart;
   sabiProfile = builtins.readFile homeConfig.home.file.".codex/sabi.config.toml".source;
   sabiCatalog = builtins.head (builtins.fromJSON (
     builtins.readFile (
