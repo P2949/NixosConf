@@ -49,6 +49,12 @@
           mode = "0700";
         }
         "/var/lib/btrfs"
+        # Stutter validation state: the pinned runner, its authorization and the durable
+        # reboot/resume record must survive the ephemeral-root reset between kernels.
+        {
+          directory = "/var/lib/stutter-validation";
+          mode = "0700";
+        }
         # NetworkManager atomically creates its identity key, so persist the
         # enclosing directory and discard its known disposable children at boot.
         "/var/lib/NetworkManager"
