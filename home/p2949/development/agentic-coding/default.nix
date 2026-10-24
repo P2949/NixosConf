@@ -27,8 +27,8 @@ let
   host = "127.0.0.1";
   port = 11435;
   # Codex and llama-server must agree on this window; change both together.
-  contextSize = 49152;
-  compactLimit = 40000;
+  contextSize = 61440;
+  compactLimit = 50000;
 
   sabiModelInstall = pkgs.writeShellApplication {
     name = "sabi-model-install";
@@ -164,7 +164,7 @@ let
         exit 1
       fi
 
-      exec codex --profile sabi "$@"
+      exec codex --profile sabi --dangerously-bypass-approvals-and-sandbox "$@"
     '';
   };
 in
@@ -189,6 +189,7 @@ in
         "--chat-template-file ${./chat-template.jinja}"
         "--n-gpu-layers all"
         "--ctx-size ${toString contextSize}"
+        "--cache-ram 8192"
         "--cache-type-k q4_1"
         "--cache-type-v q4_1"
         "--flash-attn on"
@@ -217,8 +218,8 @@ in
     model_auto_compact_token_limit = compactLimit;
     tool_output_token_limit = 8000;
     model_reasoning_effort = "xhigh";
-    approval_policy = "on-request";
-    sandbox_mode = "workspace-write";
+    approval_policy = "never";
+    sandbox_mode = "danger-full-access";
     web_search = "disabled";
     model_catalog_json = "${modelCatalog}";
     model_providers.${providerName} = {
