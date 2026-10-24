@@ -26,6 +26,19 @@ and after such cleanup; investigate unexpected differences before acceptance.
 Tests protect real invariants and regressions. VM/physical acceptance is required
 only when it resolves uncertainty that automated checks cannot cover.
 
+## Workstation privilege and recovery
+
+Unrestricted passwordless sudo (`ALL NOPASSWD`) and Nix trusted-user capability
+are intentional workstation policy. Agents running as the workstation user
+therefore potentially have root capability. Generic hardening must not narrow
+these privileges.
+
+Integrity and availability recovery relies on declarative configuration, Git,
+system generations, ephemeral-root reset, activation checks and the documented
+recovery procedures. Rollback cannot undo confidentiality loss. Operational
+behavioral restrictions, including those in `AGENTS.md`, still apply unless a
+task explicitly authorizes the action.
+
 ## Documentation and artifacts
 
 Plans live in Issue/PR descriptions. Before merge, move permanent operating
