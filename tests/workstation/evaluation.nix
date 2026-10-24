@@ -14,6 +14,11 @@ let
   seed = config.systemd.services.gpu-lact-config-seed;
   systemFiles = map (entry: entry.file) systemPolicy.files;
   homeConfig = config.home-manager.users.${username};
+  runnerUnit = config.systemd.services.stutter-validation-runner;
+  resumeUnit = config.systemd.services.stutter-validation-resume;
+  validationMarker =
+    builtins.fromJSON
+      config.environment.etc."stutter-validation/persistent-runner-v1.json".text;
   sabiUnit = homeConfig.systemd.user.services.sabi-noema;
   sabiService = sabiUnit.Service;
   sabiExec = builtins.head sabiService.ExecStart;
@@ -49,6 +54,31 @@ let
   );
 in
 assert topologyValid;
+# Stutter's persistent autonomous multi-kernel validation (contract persistent-runner-v1).
+assert builtins.elem "/var/lib/stutter-validation" (
+  map (entry: entry.directory) systemPolicy.directories
+);
+assert
+  (builtins.head (
+    builtins.filter (entry: entry.directory == "/var/lib/stutter-validation") systemPolicy.directories
+  )).mode == "0700";
+assert
+  runnerUnit.serviceConfig.ExecStart
+  == "/var/lib/stutter-validation/bin/stutter-validation-runner serve --authorization /var/lib/stutter-validation/current/authorization.json --state-dir /var/lib/stutter-validation/current";
+assert
+  resumeUnit.serviceConfig.ExecStart
+  == "/var/lib/stutter-validation/bin/stutter-validation-runner resume --all --wait-for-runner 120";
+assert builtins.elem "stutter-validation-runner.service" resumeUnit.after;
+assert builtins.elem "stutter-validation-runner.service" resumeUnit.requires;
+assert resumeUnit.serviceConfig.KillMode == "process";
+assert validationMarker.contract_version == 1;
+assert validationMarker.state_root == "/var/lib/stutter-validation";
+assert
+  validationMarker.services == [
+    "stutter-validation-runner.service"
+    "stutter-validation-resume.service"
+  ];
+assert validationMarker.repository == "${config.users.users.${username}.home}/Development/stutter";
 assert pkgs.lib.length (pkgs.lib.unique validationKernelVersions) == 3;
 assert config.hardware.amdgpu.overdrive.enable;
 assert config.services.lact.enable;

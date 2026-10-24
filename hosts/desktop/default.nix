@@ -8,6 +8,7 @@
     ./persistence.nix
     ./ephemeral-root.nix
     ./stutter-validation-kernels.nix
+    ./stutter-validation.nix
     ./minecraft
     ./gpu-policy.nix
 
