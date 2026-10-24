@@ -41,6 +41,7 @@ def select(paths, event):
         storage = broad or path.startswith(
             (
                 "modules/storage/",
+                "home/p2949/persistence/",
                 "tests/storage/",
                 "images/recovery",
                 "hosts/desktop/storage",

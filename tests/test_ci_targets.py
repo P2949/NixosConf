@@ -43,6 +43,19 @@ class SelectionTests(unittest.TestCase):
             ci.select(["packages/minecraft-tools/main.py"], "pull_request")["targets"],
         )
 
+    def test_home_persistence_selects_full_storage_validation(self):
+        for path in [
+            "home/p2949/persistence/default.nix",
+            "home/p2949/persistence/ephemeral-directories.nix",
+            "home/p2949/persistence/ephemeral-files.nix",
+        ]:
+            with self.subTest(path=path):
+                result = ci.select([path], "pull_request")
+                self.assertTrue(ci.STORAGE <= set(result["targets"]))
+                self.assertIn("workstation-smoke", result["targets"])
+                self.assertTrue(result["desktop"])
+                self.assertTrue(result["integration"])
+
     def test_main_and_manual(self):
         self.assertTrue(ci.select([], "push")["desktop"])
         self.assertTrue(

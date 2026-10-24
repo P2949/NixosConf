@@ -362,7 +362,10 @@ built for comparison and was not activated or runtime-qualified.
 
 ## CI validation tiers
 
-`Flake checks` remains the permanent required job. Every PR runs formatting,
+`Required CI` is the required aggregate job. It runs even when dependencies fail
+or are cancelled, and passes only when `Flake checks` succeeds and each of
+`Integration checks` and `Desktop build` succeeds or is skipped by selection.
+Every PR runs formatting,
 lint, configuration assertions, negative configuration checks, Python tests,
 stock-control safeguards and cheap optimization checks via `nix flake check`.
 Explicit integration packages are evaluated through `integration-evaluation`;
@@ -371,7 +374,7 @@ VMs or alternate compilers. No tests have been deleted.
 
 `Integration checks` builds targets selected by `scripts/ci-targets.py` from the
 PR base/head diff (including deleted and renamed paths). Storage policy and
-recovery changes select granular/reset, interrupted recovery, persistent
+recovery changes, including Home Manager persistence policy, select granular/reset, interrupted recovery, persistent
 identity/fallback, blank-disk reconstruction, activation actions and recovery
 ISO targets. Desktop/session changes select `workstation-smoke`; Minecraft
 changes select `minecraft-staging`; optimization changes select compiler
