@@ -97,14 +97,28 @@ were inactive during the prefill probe, and active main/HIP thread CPU time was 
 Main/HIP thread activity during generation does not imply CPU layer fallback; all 65
 layers were confirmed GPU-offloaded. No affinity, quota or HSA workaround is configured.
 
+The server explicitly allows an 8 GiB host prompt cache (`--cache-ram 8192`) to
+preserve expensive prompt states for reuse. A direct switch-away/return probe serialized
+1,277 MiB of state; the reported cache, including recurrent checkpoints, was 1,875 MiB,
+and anonymous memory rose from about 1.10 to 2.64 GiB. Returning to that prompt reused
+57,576 tokens and completed in 3.28 s. Host prompt state is therefore a measured
+anonymous allocation owner, distinct from the 521 MiB CPU-mapped model buffer and
+100 MiB host compute buffer. Recurrent checkpoints also consume host memory separately
+(about 150 MiB each); the earlier 6.6–8.6 GiB long-session RSS is not a measurement of
+serialized cache alone.
+
+Same-thread A/B requests reused the GPU slot with either cache setting; after 300 s
+idle sleep both settings reprocessed the prompt. The comparison did not establish a
+material same-thread latency benefit or a 2 GiB anonymous-RAM saving, so the existing
+8 GiB allowance is retained under the qualification fallback. In the serialization
+probe about 2.48 GiB anonymous memory remained allocated during GPU sleep, although
+wake/reload did not reuse the saved state. GPU idle sleep is a VRAM release mechanism,
+not a promise to release all host allocations or preserve prompt reuse across wake.
+
 `--load-mode auto` remains intentional: it uses mmap where supported, and mapped GGUF
-pages may contribute reclaimable file cache. However, do not assume all large RSS is
-file-backed. Physical qualification found roughly 6.6–8.6 GiB RSS after agent/long-context
-work, overwhelmingly anonymous (`Pss_Anon`/`RssAnon`), with only about 70–82 MiB file-backed
-at those samples. Mapping inspection and startup logs distinguish this from the 521 MiB
-CPU-mapped model buffer and 100 MiB host compute buffer; the anonymous allocation owners
-were not fully attributed. The original ~11 GiB observation was not reproduced exactly.
-This is real host-memory use, not evidence for an mmap explanation or CPU-offloaded layers.
+pages may contribute reclaimable file cache. The dominant anonymous allocation is not
+explained by mmap or CPU-offloaded layers. The original ~11 GiB observation was not
+reproduced exactly.
 
 At the long-context idle sample the host had about 19 GiB available, recent memory PSI
 was zero, and Sabi had about 18 MiB swapped: no sustained memory pressure was observed.

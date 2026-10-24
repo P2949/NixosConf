@@ -132,6 +132,7 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--port 11435 "
   "--n-gpu-layers all "
   "--ctx-size 61440 "
+  "--cache-ram 8192 "
   "--cache-type-k q4_1 "
   "--cache-type-v q4_1 "
   "--flash-attn on "
