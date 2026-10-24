@@ -9,7 +9,9 @@ host GPU policy is unchanged and stays on the Daily LACT profile.
 
 ## Pins
 
-- Model: `owao/Sabi-Noema-GGUF` revision `63c4e5c0012e5445cea31822a40f54f2628fb8f3`, `Sabi-Noema-Q3_K_M.gguf` (~13.3 GB).
+- Model: `owao/Sabi-Noema-GGUF` revision `63c4e5c0012e5445cea31822a40f54f2628fb8f3`, `Sabi-Noema-Q3_K_M.gguf`, exactly 13,301,443,488 bytes,
+  SHA-256 `7fcf50e0cc26d31655baa81a1086638b7fd5797ee7ff9eef764f3cfd02cf3e1e`.
+  Repository, revision, file, size and SHA-256 form one model pin and change together.
 - llama.cpp: source-only flake input `llama-cpp-src`, commit `a37cc46104eb50900d5ab4a9ba02a0abdac039db`, built with upstream's package expression for `gfx1201`.
 - Codex: `pkgsUnstable.codex` 0.159.3, asserted by the evaluation test.
 - Update only by explicit change of these pins, followed by requalification.
@@ -18,6 +20,7 @@ host GPU policy is unchanged and stays on the Daily LACT profile.
 
 ```console
 sabi-model-install   # one-time, resumable; also run automatically by codex-sabi
+sabi-model-verify    # full size/SHA-256 verification of the installed bytes
 codex-sabi           # starts the server on demand, then launches the full-access Sabi profile
 ```
 
@@ -47,6 +50,14 @@ curl -s http://127.0.0.1:11435/props
 
 - Weights live in `~/.local/share/local-ai/models/<model-revision>/<model-file>` (persisted, class R),
   never in the Nix store. A new revision installs beside the old one; remove stale revisions by hand.
+  The installer verifies size and SHA-256 under its lock before accepting an existing
+  file or atomically publishing a download. Invalid installed bytes are quarantined;
+  a private size/hash/time receipt remains after successful replacement removes those
+  bytes. An invalid resumed download is retried once from a clean download, then
+  fails closed if verification still fails. `sabi-model-verify` always hashes the full
+  file. `codex-sabi` checks existence and exact size at startup, invoking the installer
+  when needed; use the explicit verifier to detect same-size corruption without
+  hashing 13.3 GB on every agent launch.
 - The server binds `127.0.0.1:11435` only and is not started at login. After 300 s idle,
   llama.cpp sleeps and releases model/KV VRAM; the process stays and wakes on the next request.
 - `~/.codex/sabi.config.toml` is generated; `~/.codex/config.toml` is not managed.

@@ -178,6 +178,10 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
 ];
 assert sabiCatalog.context_window == 61440 && sabiCatalog.max_context_window == 61440;
 assert builtins.length sabiWrappers == 1;
+assert
+  builtins.length (
+    builtins.filter (package: pkgs.lib.getName package == "sabi-model-verify") homeConfig.home.packages
+  ) == 1;
 assert sabiCatalog.effective_context_window_percent == 95;
 assert sabiCatalog.tool_mode == "direct";
 assert
