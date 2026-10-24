@@ -54,8 +54,8 @@
         directory = ".codex";
         mode = "0700";
       }
-      # Claude Code login, settings and resumable sessions; Claude itself
-      # ages session artifacts out after cleanupPeriodDays (14).
+      # Claude Code login, settings and resumable sessions. cleanupPeriodDays
+      # was 14 at acceptance; this mutable user setting is not Nix-owned.
       {
         directory = ".claude";
         mode = "0700";
