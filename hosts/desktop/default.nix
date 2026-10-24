@@ -7,6 +7,7 @@
     ./disko.nix
     ./persistence.nix
     ./ephemeral-root.nix
+    ./stutter-validation-kernels.nix
     ./minecraft
     ./gpu-policy.nix
 

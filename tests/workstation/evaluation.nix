@@ -29,17 +29,27 @@ let
     && config.fileSystems."/persist".neededForBoot
     && config.boot.ephemeralBtrfsRoot.enable
     && !config.specialisation.persistent-root.configuration.boot.ephemeralBtrfsRoot.enable;
+  validationKernels = config.specialisation;
+  validationKernelVersions = [
+    config.boot.kernelPackages.kernel.modDirVersion
+    validationKernels.stutter-kernel-6-12.configuration.boot.kernelPackages.kernel.modDirVersion
+    validationKernels.stutter-kernel-7-2.configuration.boot.kernelPackages.kernel.modDirVersion
+  ];
   # Force toplevel evaluation (including NixOS assertions) for both boot
   # policies. Discard the string context so CI does not build either closure.
   evaluation = builtins.unsafeDiscardStringContext (
     builtins.toJSON {
       desktop = config.system.build.toplevel.drvPath;
       persistentRoot = config.specialisation.persistent-root.configuration.system.build.toplevel.drvPath;
+      stutterKernel612 =
+        validationKernels.stutter-kernel-6-12.configuration.system.build.toplevel.drvPath;
+      stutterKernel72 = validationKernels.stutter-kernel-7-2.configuration.system.build.toplevel.drvPath;
       stateVersion = config.system.stateVersion;
     }
   );
 in
 assert topologyValid;
+assert pkgs.lib.length (pkgs.lib.unique validationKernelVersions) == 3;
 assert config.hardware.amdgpu.overdrive.enable;
 assert config.services.lact.enable;
 assert config.services.lact.package == import ../../packages/lact { inherit (pkgsUnstable) lact; };
