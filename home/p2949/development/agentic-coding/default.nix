@@ -78,7 +78,16 @@ let
       exec 9>"$dest.lock"
       flock 9
 
+      remove_quarantined() {
+        for bad in "$dest".quarantine.*; do
+          if [ -f "$bad" ] || [ -L "$bad" ]; then
+            rm -- "$bad"
+          fi
+        done
+      }
+
       if verify_model "$dest"; then
+        remove_quarantined
         echo "Model already installed and verified: $dest"
         exit 0
       fi
@@ -105,11 +114,7 @@ let
         fi
       fi
       mv "$dest.part" "$dest"
-      for bad in "$dest".quarantine.*; do
-        if [ -f "$bad" ] || [ -L "$bad" ]; then
-          rm -- "$bad"
-        fi
-      done
+      remove_quarantined
       echo "Installed $dest"
     '';
   };

@@ -277,8 +277,11 @@ pkgs.runCommand "check-desktop-evaluation"
     run("install")
     assert dest.read_bytes() == payload and downloads() == 1
     run("verify")
+    orphan = root / "model.gguf.quarantine.interrupted"
+    orphan.write_bytes(corrupt)
     run("install")
     assert downloads() == 1  # A valid final file is never downloaded again.
+    assert not orphan.exists()  # Finish cleanup if interrupted after atomic publication.
     for bad in (b"short", corrupt):
         reset()
         dest.write_bytes(bad)
