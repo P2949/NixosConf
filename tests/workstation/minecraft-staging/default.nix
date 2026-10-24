@@ -186,7 +186,7 @@ let
                   assert f"{player} left the game" not in journal
 
           both_connected()
-          machine.succeed(inside(management + " --save"))
+          machine.succeed(inside(management + " --save --expected-players " + " ".join(players)))
           both_connected()
           machine.succeed("touch /tmp/staging-release")
           for player in players:

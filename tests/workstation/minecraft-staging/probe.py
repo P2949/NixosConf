@@ -254,12 +254,26 @@ def management_probe(args):
         close_timeout=5,
     ) as websocket:
         session = msmp.MsmpSession(websocket)
-        session.require_backup_capabilities(timeout=20)
+        session.require_backup_capabilities(
+            timeout=20,
+            additional_capabilities=("minecraft:players",)
+            if args.expected_players
+            else (),
+        )
         result = session.call("minecraft:server/status", timeout=20)
         if result.get("started") is not True:
             raise RuntimeError("staging world is not initialized")
+
+        def require_players():
+            if args.expected_players:
+                players = session.call("minecraft:players", timeout=20)
+                if {player["name"] for player in players} != set(args.expected_players):
+                    raise RuntimeError("expected simultaneous staging players missing")
+
+        require_players()
         if args.save:
             session.save_and_wait(timeout=120)
+        require_players()
     print(json.dumps({"initialized": True, "save": args.save}))
 
 
@@ -278,6 +292,7 @@ def main():
     management.add_argument("--port", type=int, required=True)
     management.add_argument("--secret-file", type=Path, required=True)
     management.add_argument("--save", action="store_true")
+    management.add_argument("--expected-players", nargs="+")
     args = parser.parse_args()
     {"game": game_probe, "management": management_probe}[args.operation](args)
 
