@@ -81,8 +81,11 @@ VM results do not replace physical acceptance.
 
 
 Local Sabi-Noema coding agent (`codex-sabi`) is accepted for repository
-tool/edit/test loops at a 49,152-token context on the RX 9070 XT through
-llama.cpp ROCm; idle sleep releases VRAM and the GPU stays on the Daily profile.
+tool/edit/test loops at a 61,440-token context (50,000-token compaction) on the
+RX 9070 XT through llama.cpp ROCm. New and legacy-resumed threads run unattended
+with full command access; normal Unix privileges and behavioral restrictions still apply.
+The server remains on demand, idle sleep releases VRAM, and the GPU stays on Daily.
+Polling remains at the upstream default after `--poll 0` showed no measured benefit.
 A `/goal` survives exit, resume and reboot and completes in the same thread; tool use
 continues after manual `/compact`. After reboot the model is kept without redownload and
 the service stays stopped until `codex-sabi` starts it. See the

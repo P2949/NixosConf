@@ -19,6 +19,10 @@ let
   validationMarker =
     builtins.fromJSON
       config.environment.etc."stutter-validation/persistent-runner-v1.json".text;
+  sabiWrappers = builtins.filter (
+    package: pkgs.lib.getName package == "codex-sabi"
+  ) homeConfig.home.packages;
+  sabiWrapper = builtins.head sabiWrappers;
   sabiUnit = homeConfig.systemd.user.services.sabi-noema;
   sabiService = sabiUnit.Service;
   sabiExec = builtins.head sabiService.ExecStart;
@@ -127,7 +131,7 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--host 127.0.0.1 "
   "--port 11435 "
   "--n-gpu-layers all "
-  "--ctx-size 49152 "
+  "--ctx-size 61440 "
   "--cache-type-k q4_1 "
   "--cache-type-v q4_1 "
   "--flash-attn on "
@@ -140,6 +144,8 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--no-reasoning-preserve "
   "/local-ai/models/63c4e5c0012e5445cea31822a40f54f2628fb8f3/Sabi-Noema-Q3_K_M.gguf "
 ];
+# Physical qualification found no benefit from --poll 0; retain upstream polling.
+assert !(pkgs.lib.hasInfix "--poll " sabiExec);
 assert builtins.elem "HIP_VISIBLE_DEVICES=0" (pkgs.lib.toList sabiService.Environment);
 # Started only by codex-sabi, never at login.
 assert !(sabiUnit ? Install) || (sabiUnit.Install.WantedBy or [ ]) == [ ];
@@ -153,14 +159,16 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
   ''base_url = "http://127.0.0.1:11435/v1"''
   ''wire_api = "responses"''
   "requires_openai_auth = false"
-  "model_context_window = 49152"
-  "model_auto_compact_token_limit = 40000"
-  ''approval_policy = "on-request"''
-  ''sandbox_mode = "workspace-write"''
+  "model_context_window = 61440"
+  "model_auto_compact_token_limit = 50000"
+  ''approval_policy = "never"''
+  ''sandbox_mode = "danger-full-access"''
   ''web_search = "disabled"''
   "model_catalog_json = "
 ];
-assert sabiCatalog.context_window == 49152 && sabiCatalog.max_context_window == 49152;
+assert sabiCatalog.context_window == 61440 && sabiCatalog.max_context_window == 61440;
+assert builtins.length sabiWrappers == 1;
+assert sabiCatalog.effective_context_window_percent == 95;
 assert sabiCatalog.tool_mode == "direct";
 assert
   map (level: level.effort) sabiCatalog.supported_reasoning_levels == [
@@ -173,5 +181,7 @@ assert sabiCatalog.default_reasoning_level == "xhigh";
 assert pkgsUnstable.codex.version == "0.159.3";
 assert config.services.journald.storage == "volatile";
 pkgs.runCommand "check-desktop-evaluation" { inherit evaluation; } ''
+  grep -F -- '--profile sabi' ${sabiWrapper}/bin/codex-sabi
+  grep -F -- '--dangerously-bypass-approvals-and-sandbox' ${sabiWrapper}/bin/codex-sabi
   printf '%s\n' "$evaluation" > "$out"
 ''

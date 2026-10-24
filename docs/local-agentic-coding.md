@@ -18,7 +18,7 @@ host GPU policy is unchanged and stays on the Daily LACT profile.
 
 ```console
 sabi-model-install   # one-time, resumable; also run automatically by codex-sabi
-codex-sabi           # starts sabi-noema.service on demand, then runs codex --profile sabi
+codex-sabi           # starts the server on demand, then launches the full-access Sabi profile
 ```
 
 For autonomous work use `/goal <objective + verification + constraints + stop condition>`.
@@ -50,11 +50,12 @@ curl -s http://127.0.0.1:11435/props
 - The server binds `127.0.0.1:11435` only and is not started at login. After 300 s idle,
   llama.cpp sleeps and releases model/KV VRAM; the process stays and wakes on the next request.
 - `~/.codex/sabi.config.toml` is generated; `~/.codex/config.toml` is not managed.
-- Context is capped at 49,152 tokens with `--fit off`, Q4_1 KV and Flash Attention, so Codex's
-  window matches the real allocation. Change `contextSize` and the compaction limit together.
+- Context is capped at 61,440 tokens with a 50,000-token auto-compaction threshold,
+  `--fit off`, Q4_1 KV and Flash Attention. The server, profile and model catalog agree;
+  effective context remains 95%. Change `contextSize` and the compaction limit together.
 - Codex uses `tool_mode = direct` (Code Mode emits items llama.cpp rejects).
 - Earlier-turn reasoning is not replayed (`--no-reasoning-preserve`), so history does not spend
-  the 49K window; reasoning within the current tool loop is kept. Reasoning levels are `low`,
+  the context window; reasoning within the current tool loop is kept. Reasoning levels are `low`,
   `medium` and `xhigh` (default), matching the template.
 - The server uses a patched copy of the model's chat template ([chat-template.jinja](../home/p2949/development/agentic-coding/chat-template.jinja)): Codex sends developer messages after the first turn, which the stock Qwen template rejects with "System message must be at the beginning". The patch renders them in place. Re-derive it from the model's embedded template when the model changes.
 
@@ -62,19 +63,77 @@ curl -s http://127.0.0.1:11435/props
 
 - MCP servers and apps are not configured.
 - Multi-agent is not enabled.
-- Contexts above ~48K: upstream llama.cpp has a gfx1201 Flash Attention corruption bug with Qwen3.8-27B at long context. Do not raise the limit or disable Flash Attention until it is fixed and requalified.
+- Contexts above 61,440 are not accepted. A 65,536-token allocation started with full
+  GPU offload and sufficient VRAM, but a 57.5K-token Responses request caused a GPU
+  hang/reset during prefill. The same request passed at 61,440. Qualification applies
+  to the Responses/chat path; raw `/completion` behavior is not a substitute. See
+  [upstream long-context discussion](https://github.com/ggml-org/llama.cpp/issues/30884).
 
 ## Requalification triggers
 
 Change of model file or revision, llama.cpp commit, any Codex version change, ROCm,
 context size or other KV-relevant inference settings, or `chat-template.jinja` changes.
 
-## Sandbox note
+## Command permissions
 
-Codex's `workspace-write` sandbox cannot reach the Nix daemon socket, so `nix` commands fail inside it.
-Approve them for escalation (or run them yourself); this is a sandbox limit, not a model fault.
+The profile uses `approval_policy = "never"` and `sandbox_mode = "danger-full-access"`.
+`codex-sabi` also intentionally passes `--dangerously-bypass-approvals-and-sandbox`:
+Codex can restore permission state from thread history, so the CLI override is needed
+when resuming threads created under the former restrictive policy. New and legacy-resumed
+threads were physically tested with Git branch/ref changes, rebase, outside-workspace
+writes and Nix daemon access without command approval dialogs or sandbox escalation.
+Relaunch through the wrapper to acquire changed permissions; existing processes do not
+update retroactively.
+
+Normal Unix permissions and privilege authentication still apply. `AGENTS.md` and Sabi's
+behavioral restrictions remain in force, including explicit authorization for commits,
+pushes, activation and reboot. Hook trust is not bypassed.
+
+## CPU and host RAM
+
+Upstream CPU polling remains unchanged. `--poll 0` was tested and removed because it
+provided no measurable benefit: awake-idle CPU was already near zero, ggml workers
+were inactive during the prefill probe, and active main/HIP thread CPU time was unchanged.
+Main/HIP thread activity during generation does not imply CPU layer fallback; all 65
+layers were confirmed GPU-offloaded. No affinity, quota or HSA workaround is configured.
+
+`--load-mode auto` remains intentional: it uses mmap where supported, and mapped GGUF
+pages may contribute reclaimable file cache. However, do not assume all large RSS is
+file-backed. Physical qualification found roughly 6.6–8.6 GiB RSS after agent/long-context
+work, overwhelmingly anonymous (`Pss_Anon`/`RssAnon`), with only about 70–82 MiB file-backed
+at those samples. Mapping inspection and startup logs distinguish this from the 521 MiB
+CPU-mapped model buffer and 100 MiB host compute buffer; the anonymous allocation owners
+were not fully attributed. The original ~11 GiB observation was not reproduced exactly.
+This is real host-memory use, not evidence for an mmap explanation or CPU-offloaded layers.
+
+At the long-context idle sample the host had about 19 GiB available, recent memory PSI
+was zero, and Sabi had about 18 MiB swapped: no sustained memory pressure was observed.
+Inspect `RssAnon`/`Pss_Anon`, `RssFile`/`Pss_File`, `MemAvailable`, swap activity and memory
+pressure together, rather than RSS or free RAM alone:
+
+```console
+pid=$(systemctl --user show --property MainPID --value sabi-noema.service)
+grep -E '^(Rss|Pss|Pss_Anon|Pss_File|Swap):' /proc/"$pid"/smaps_rollup
+grep -E '^(VmRSS|RssAnon|RssFile|VmSwap):' /proc/"$pid"/status
+free -h
+cat /proc/pressure/memory
+```
+
+No mmap, host-buffer, swap or memory-locking workaround was added.
 
 ## Accepted configuration
 
-Accepted at the full 49,152-token context with all layers on the GPU (about 15 GB VRAM used,
-0.8 GB when asleep). Generation runs at roughly 25 tokens/s.
+Physically qualified on 2026-10-24 at 61,440 tokens / 50,000-token compaction, with
+65/65 layers on the GPU. The Responses sentinel test processed 57,549 input tokens
+(57,497 from `/tokenize`) and returned the exact marker. New and legacy-resumed agents
+completed real inspect/edit/test loops; shell/test use also passed after manual `/compact`.
+
+Measured whole-card awake VRAM was 14,748–14,753 MiB of 16,304 MiB (about 1.5 GiB headroom).
+After the existing 300-second idle timeout, whole-card VRAM fell to 827 MiB and
+sampled CPU was near zero. Host anonymous RSS still measured about 6.4 GiB while asleep;
+model/KV VRAM release does not imply release of all host allocations.
+The fixed temperature-zero chat benchmark used 4,242 prompt tokens and 256 output tokens,
+with prompt caching disabled. Three-run medians were 1,135 prompt tokens/s and 32.60 decode
+tokens/s, versus 1,142 and 32.63 at the old 49,152-token baseline (both regressions below 1%).
+Long-context performance depends on prompt length; these rates describe the fixed short
+benchmark, not the 57.5K-token test. Higher contexts remain outside acceptance.
