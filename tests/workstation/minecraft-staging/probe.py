@@ -21,7 +21,6 @@ from websockets.sync.client import connect
 # A version with a different wire protocol needs an explicit probe update.
 PROTOCOL = 777
 MAX_PACKET = 8 * 1024 * 1024
-PLAYER = "StageProbe"
 
 
 def varint(value):
@@ -140,22 +139,27 @@ def game_probe(args):
 
     connection = Connection(args.host, args.port)
     player_id = uuid.UUID(
-        bytes=hashlib.md5(("OfflinePlayer:" + PLAYER).encode()).digest(), version=3
+        bytes=hashlib.md5(("OfflinePlayer:" + args.player).encode()).digest(), version=3
     )
     try:
         connection.handshake(args.host, args.port, 2, PROTOCOL)
-        connection.send(0, string(PLAYER) + player_id.bytes)
+        connection.send(0, string(args.player) + player_id.bytes)
         state = "login"
         joined_at = None
         position = [0.0] * 5
-        while joined_at is None or time.monotonic() - joined_at < args.hold_seconds:
+        while joined_at is None or (
+            time.monotonic() - joined_at < args.hold_seconds
+            and (args.release_file is None or not args.release_file.exists())
+        ):
             packet = connection.packet(
-                wait_until=joined_at + args.hold_seconds
+                wait_until=min(joined_at + args.hold_seconds, time.monotonic() + 0.5)
                 if joined_at is not None
                 else None
             )
             if packet is None:
-                break
+                if time.monotonic() >= connection.deadline:
+                    raise TimeoutError("staging connection deadline exceeded")
+                continue
             packet_id, payload = packet
             if state == "login":
                 if packet_id == 3:
@@ -222,14 +226,18 @@ def game_probe(args):
                         args.ready_file.write_text(
                             json.dumps(
                                 {
-                                    "player": PLAYER,
+                                    "player": args.player,
                                     "uuid": str(player_id),
                                     "protocol": PROTOCOL,
                                     "position_acknowledged": True,
                                 }
                             )
                         )
-        print(json.dumps({"login": "passed", "player": PLAYER, "uuid": str(player_id)}))
+        print(
+            json.dumps(
+                {"login": "passed", "player": args.player, "uuid": str(player_id)}
+            )
+        )
     finally:
         connection.close()
 
@@ -262,7 +270,9 @@ def main():
     game.add_argument("--host", required=True)
     game.add_argument("--port", type=int, required=True)
     game.add_argument("--expected-version", required=True)
+    game.add_argument("--player", default="StageProbe")
     game.add_argument("--ready-file", type=Path, required=True)
+    game.add_argument("--release-file", type=Path)
     game.add_argument("--hold-seconds", type=float, default=20)
     management = subparsers.add_parser("management")
     management.add_argument("--port", type=int, required=True)
