@@ -91,3 +91,19 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build desktop system
         run: nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link --no-write-lock-file --print-build-logs --max-jobs 1 --cores 2
+
+  required:
+    name: Required CI
+    needs: [checks, integration, desktop]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require all selected validation
+        env:
+          CHECKS: ${{ needs.checks.result }}
+          INTEGRATION: ${{ needs.integration.result }}
+          DESKTOP: ${{ needs.desktop.result }}
+        run: |
+          [[ "$CHECKS" = success ]]
+          [[ "$INTEGRATION" = success || "$INTEGRATION" = skipped ]]
+          [[ "$DESKTOP" = success || "$DESKTOP" = skipped ]]
