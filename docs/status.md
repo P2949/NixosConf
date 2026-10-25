@@ -24,12 +24,19 @@ Commander Core retains the accepted cooling policy. Bluetooth is disabled.
 Accepted physical display/audio/workload and recovery evidence remains bound
 to the baseline closures.
 
-The optimization-v2 foundation is available. No optimization candidate is
-installed in the productive system. The completed
-[`zstd-skylake-v1`](../optimization/results/zstd-skylake-v1/) experiment found
-compression inconclusive and decompression regressed at its declared threshold;
-the candidate was not adopted. Ordinary desktop changes may proceed while the
-frozen control and experiment admission gates remain protected.
+All eight scoped optimization experiments are **COMPLETED**; their distinct
+performance verdicts and adoption status are in the
+[results index](../optimization/results/README.md). Generic and CPU-targeted PGO
+established improvements above the predefined 1% practical threshold. No
+optimization candidate is installed in the productive desktop.
+
+BOLT has an evidence-based **GO for a future isolated experiment**, as recorded
+in the [optimization policy](optimization.md#bolt-decision). This decision adds
+no BOLT implementation or broader optimization campaign. The declared
+measurement scope is complete; further optimization requires new evidence and a
+separate proposal. The productive system, ordinary services, timers and retained
+application state were recovered after the physical campaigns. Ordinary desktop
+changes remain independent of the frozen control and its admission gates.
 
 ## Development applications
 
