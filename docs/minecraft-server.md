@@ -7,7 +7,7 @@ pregeneration and isolated IPv4/IPv6 host ingress passed. Two simultaneous
 disposable protocol clients passed login, play, saving and restored-player-data
 checks. A separate network namespace reached the production game port over a
 non-loopback veth path while management stayed inaccessible. An unchanged natural
-UTC calendar backup event passed. Genuine missed-event catch-up remains pending.
+UTC calendar backup event and genuine missed-event catch-up both passed.
 Permanent operating policy is recorded here; PR metadata owns exact
 qualification and acceptance receipts.
 
@@ -278,8 +278,12 @@ manual backup when needed; the next scheduled attempt is the next calendar
 event. Reboot persistence and pregen switching passed. The unchanged natural
 00:00 UTC event on 2026-10-25 completed successfully, advanced last success,
 registered a new verified read-only snapshot, left no pending capture, deletion
-or autosave-recovery state, and scheduled the next normal event. Genuine
-missed-event catch-up remains pending.
+or autosave-recovery state, and scheduled the next normal event. For the following
+06:00 UTC event, the timer and empty server were stopped across the actual
+timestamp. After server management readiness, restarting the unchanged
+`Persistent=true` timer produced exactly one successful catch-up activation,
+another registered read-only snapshot, clean pending/recovery state and the
+normal 12:00 UTC next event. Original enabled states were retained.
 
 ## Manual operations
 
@@ -839,14 +843,17 @@ Production ingress is verified through a separate network namespace and veth,
 including game-port reachability and management-port isolation. Natural UTC
 calendar activation has been observed with successful service completion, a
 new registered read-only recovery point, clean pending/recovery state, healthy
-retention and the normal next event. The existing schedule and stamp were not
-altered for that observation.
+retention and the normal next event. The timer expression and persistent stamp
+were not manually altered for that observation.
 
-For genuine catch-up, observe a real maintenance shutdown spanning a scheduled
-event, then verify the same transaction and timer-stamp invariants after startup.
-Synthetic stale-stamp tests and reboot persistence cover mechanisms but do not
-prove an actual missed calendar event. Genuine missed-event acceptance remains
-pending; physical router/laptop operation is outside the acceptance gate.
+Genuine missed-event acceptance used a maintenance shutdown spanning the actual
+2026-10-25 06:00 UTC event, with zero online players and no active backup before
+shutdown. The server became management-ready before the existing timer was
+restarted. Service invocation metadata proved exactly one successful catch-up;
+live verification confirmed its registered read-only recovery point, no pending
+capture/deletion/recovery state, restored service states and the normal future
+schedule. No timer stamp or calendar expression was fabricated. Physical
+router/laptop operation and maximum-player capacity are outside this gate.
 
 Normal management uses literal `127.0.0.1` with systemd loopback IP filtering.
 Optional loopback-hostname hardening remains deferred.

@@ -127,7 +127,9 @@ acknowledgement, saving while both were connected, clean disconnect and restored
 player-data checks. A separate network namespace reached production TCP 25565
 over non-loopback veth while management TCP 25585 remained inaccessible. The
 unchanged natural 2026-10-25 00:00 UTC backup event completed with a new verified
-read-only snapshot and clean health. Genuine missed-event catch-up remains
-pending. Physical router/laptop behavior and maximum-player capacity are outside
+read-only snapshot and clean health. Stopping the empty server and timer across
+the real 06:00 UTC event, then restoring management readiness before the timer,
+produced exactly one verified catch-up, clean recovery state and the normal
+future schedule. Physical router/laptop behavior and maximum-player capacity are outside
 this acceptance gate. Local Btrfs recovery covers
 rollback on this device; total device loss is outside the declared backup scope.
