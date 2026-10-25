@@ -122,7 +122,12 @@ The accepted stack, backup/recovery and maintenance behavior are recorded in
 [PR #26](https://github.com/P2949/NixosConf/pull/26). One unexpected-terrain C2ME
 observation did not reproduce; causality remains unresolved.
 
-Ordinary calendar-event and genuine missed-event observations remain deferred;
-manual/synthetic tests do not establish either. Actual laptop/LAN gameplay and
-multi-player resource capacity remain unexercised. Local Btrfs recovery covers
+Two simultaneous disposable protocol clients passed login/play, position
+acknowledgement, saving while both were connected, clean disconnect and restored
+player-data checks. A separate network namespace reached production TCP 25565
+over non-loopback veth while management TCP 25585 remained inaccessible. The
+unchanged natural 2026-10-25 00:00 UTC backup event completed with a new verified
+read-only snapshot and clean health. Genuine missed-event catch-up remains
+pending. Physical router/laptop behavior and maximum-player capacity are outside
+this acceptance gate. Local Btrfs recovery covers
 rollback on this device; total device loss is outside the declared backup scope.
