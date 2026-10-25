@@ -58,6 +58,15 @@ let
   );
 in
 assert topologyValid;
+# Intentional workstation recovery authority must survive generic hardening.
+assert builtins.elem username config.nix.settings.trusted-users;
+assert builtins.any (
+  rule:
+  builtins.elem username rule.users
+  && builtins.any (
+    command: command.command == "ALL" && builtins.elem "NOPASSWD" command.options
+  ) rule.commands
+) config.security.sudo.extraRules;
 # Stutter's persistent autonomous multi-kernel validation (contract persistent-runner-v1).
 assert builtins.elem "/var/lib/stutter-validation" (
   map (entry: entry.directory) systemPolicy.directories

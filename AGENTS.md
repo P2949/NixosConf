@@ -21,6 +21,13 @@ nix build .#nixosConfigurations.desktop.config.system.build.toplevel
 
 ## Safety
 
+- Passwordless sudo `ALL NOPASSWD` and Nix trusted-user access are intentional.
+  Agents running as the workstation user can therefore potentially act as root;
+  generic hardening must preserve these privileges. Operational restrictions
+  below still apply unless the task explicitly authorizes the action.
+- Recovery relies on declarative state, Git, generations, ephemeral-root reset
+  and activation checks. Rollback restores integrity and availability within
+  those mechanisms; it cannot undo confidentiality loss.
 - Builds do not activate. Do not run `nixos-rebuild switch`, reboot or deploy unless explicitly asked.
 - Do not commit or push unless explicitly asked.
 - Persistence changes need an entry in `docs/ephemeral-state-audit.md` and matching tests.
