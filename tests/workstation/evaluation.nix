@@ -241,7 +241,8 @@ pkgs.runCommand "check-desktop-evaluation"
     dest.write_bytes(data)
     """)
     fake_curl.chmod(0o700)
-    real_path = re.search(r"--model (\S+)", ${builtins.toJSON sabiExec}).group(1)
+    # Inspect unit metadata without building the inference engine for this fixture.
+    real_path = re.search(r"--model (\S+)", ${builtins.toJSON (builtins.unsafeDiscardStringContext sabiExec)}).group(1)
     commands = {}
     for name, original in [
         ("install", "${sabiInstaller}/bin/sabi-model-install"),
