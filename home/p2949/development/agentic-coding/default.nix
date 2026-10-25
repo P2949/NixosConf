@@ -20,6 +20,8 @@ let
     repo = "owao/Sabi-Noema-GGUF";
     revision = "63c4e5c0012e5445cea31822a40f54f2628fb8f3";
     file = "Sabi-Noema-Q3_K_M.gguf";
+    size = 13301443488;
+    sha256 = "7fcf50e0cc26d31655baa81a1086638b7fd5797ee7ff9eef764f3cfd02cf3e1e";
   };
   modelDir = "${config.xdg.dataHome}/local-ai/models/${model.revision}";
   modelPath = "${modelDir}/${model.file}";
@@ -30,6 +32,36 @@ let
   contextSize = 61440;
   compactLimit = 50000;
 
+  verifyModel = ''
+    verify_model() {
+      local candidate="$1" actual_size actual_hash
+      if [ ! -f "$candidate" ]; then
+        echo "Model file missing: $candidate" >&2
+        return 1
+      fi
+      actual_size=$(stat -Lc '%s' -- "$candidate") || return 1
+      if [ "$actual_size" != ${lib.escapeShellArg (toString model.size)} ]; then
+        echo "Model size mismatch: $candidate" >&2
+        return 1
+      fi
+      actual_hash=$(sha256sum -- "$candidate") || return 1
+      if [ "''${actual_hash%% *}" != ${lib.escapeShellArg model.sha256} ]; then
+        echo "Model SHA-256 mismatch: $candidate" >&2
+        return 1
+      fi
+    }
+  '';
+
+  sabiModelVerify = pkgs.writeShellApplication {
+    name = "sabi-model-verify";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      ${verifyModel}
+      verify_model ${lib.escapeShellArg modelPath}
+      echo "Model integrity verified."
+    '';
+  };
+
   sabiModelInstall = pkgs.writeShellApplication {
     name = "sabi-model-install";
     runtimeInputs = [
@@ -38,6 +70,7 @@ let
       pkgs.util-linux
     ];
     text = ''
+      ${verifyModel}
       dest=${lib.escapeShellArg modelPath}
       url=${lib.escapeShellArg "https://huggingface.co/${model.repo}/resolve/${model.revision}/${model.file}"}
 
@@ -45,14 +78,43 @@ let
       exec 9>"$dest.lock"
       flock 9
 
-      if [ -s "$dest" ]; then
-        echo "Model already installed: $dest"
+      remove_quarantined() {
+        for bad in "$dest".quarantine.*; do
+          if [ -f "$bad" ] || [ -L "$bad" ]; then
+            rm -- "$bad"
+          fi
+        done
+      }
+
+      if verify_model "$dest"; then
+        remove_quarantined
+        echo "Model already installed and verified: $dest"
         exit 0
       fi
 
-      curl --fail --location --retry 5 --retry-delay 5 --continue-at - \
-        --output "$dest.part" "$url"
+      if [ -e "$dest" ] || [ -L "$dest" ]; then
+        receipt=$(mktemp "$dest.integrity-failure.XXXXXXXX")
+        actual_size=$(stat -Lc '%s' -- "$dest")
+        actual_hash=$(sha256sum -- "$dest")
+        printf 'time=%s\nsize=%s\nsha256=%s\n' \
+          "$(date --utc --iso-8601=seconds)" "$actual_size" "''${actual_hash%% *}" > "$receipt"
+        quarantine=$(mktemp "$dest.quarantine.XXXXXXXX")
+        mv -T -- "$dest" "$quarantine"
+      fi
+
+      if ! { curl --fail --location --retry 5 --retry-delay 5 --continue-at - \
+        --output "$dest.part" "$url" && verify_model "$dest.part"; }; then
+        rm -f -- "$dest.part"
+        curl --fail --location --retry 5 --retry-delay 5 \
+          --output "$dest.part" "$url"
+        if ! verify_model "$dest.part"; then
+          rm -f -- "$dest.part"
+          echo "Clean model download failed integrity verification" >&2
+          exit 1
+        fi
+      fi
       mv "$dest.part" "$dest"
+      remove_quarantined
       echo "Installed $dest"
     '';
   };
@@ -139,7 +201,8 @@ let
       pkgsUnstable.codex
     ];
     text = ''
-      if [ ! -s ${lib.escapeShellArg modelPath} ]; then
+      if [ ! -f ${lib.escapeShellArg modelPath} ] || \
+        [ "$(stat -Lc '%s' -- ${lib.escapeShellArg modelPath})" != ${lib.escapeShellArg (toString model.size)} ]; then
         sabi-model-install
       fi
 
@@ -172,6 +235,7 @@ in
   home.packages = [
     pkgsUnstable.codex
     sabiModelInstall
+    sabiModelVerify
     codexSabi
   ];
 
