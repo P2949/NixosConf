@@ -93,8 +93,8 @@ the service stays stopped until `codex-sabi` starts it. See the
 
 Claude Code (VS Code extension) is accepted under granular Impermanence.
 `.claude` and `.claude.json` persist privately; login, settings, resumable
-transcripts and checkpoints survive normal reboots, and Claude ages session
-artifacts out after 14 days (`cleanupPeriodDays`). Its debug, session-env,
+transcripts and checkpoints survive normal reboots. `cleanupPeriodDays = 14`
+was the mutable user setting at acceptance; NixOS does not own or enforce it. Its debug, session-env,
 sessions, shell-snapshots and usage-data children reset each boot, proven by
 two physical reboots. See the [state audit](ephemeral-state-audit.md).
 

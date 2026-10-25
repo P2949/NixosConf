@@ -1,6 +1,9 @@
 # Files cannot be individual bind mounts if their owner atomically replaces
 # them. Known disposable files in persistent profiles are removed by native
 # boot-only tmpfiles rules before applications start, in normal mode only.
+let
+  firefoxProfile = import ./firefox-profile.nix;
+in
 [
   {
     parent = ".codex";
@@ -32,8 +35,8 @@
   {
     parent = ".config/mozilla/firefox";
     children = [
-      "y34aofre.default/.parentlock"
-      "y34aofre.default/lock"
+      "${firefoxProfile}/.parentlock"
+      "${firefoxProfile}/lock"
     ];
   }
 ]

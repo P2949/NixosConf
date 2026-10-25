@@ -1,5 +1,8 @@
 # Relative application paths whose contents are root-local even though the
 # surrounding profile is persistent. Keep this metadata-only list audited.
+let
+  firefoxProfile = import ./firefox-profile.nix;
+in
 [
   {
     parent = ".local/share/PrismLauncher";
@@ -72,14 +75,14 @@
       "Crash Reports"
       "Pending Pings"
       "firefox-mpris"
-      "y34aofre.default/cache2"
-      "y34aofre.default/startupCache"
-      "y34aofre.default/shader-cache"
-      "y34aofre.default/thumbnails"
-      "y34aofre.default/minidumps"
-      "y34aofre.default/crashes"
-      "y34aofre.default/datareporting"
-      "y34aofre.default/saved-telemetry-pings"
+      "${firefoxProfile}/cache2"
+      "${firefoxProfile}/startupCache"
+      "${firefoxProfile}/shader-cache"
+      "${firefoxProfile}/thumbnails"
+      "${firefoxProfile}/minidumps"
+      "${firefoxProfile}/crashes"
+      "${firefoxProfile}/datareporting"
+      "${firefoxProfile}/saved-telemetry-pings"
     ];
   }
   {

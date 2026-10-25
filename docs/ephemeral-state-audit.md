@@ -46,7 +46,7 @@ acceptance; see [current desktop status](status.md).
 | Android/Sdk | R | Writable Studio-managed SDK, build/platform tools, emulator and system images; retained to avoid repeated large downloads |
 | .gradle | M | Initially retained privately: wrapper distributions, dependencies, configuration and managed JDKs; observed caches, daemon, native and temporary children await a workload audit before exclusions |
 | .codex | M | Authentication, config, goals, queue, threads, memories, sessions, attachments, plugins, skills retained; cache/temp/IPC/locks/shell snapshots and model-cache/diagnostic log DB reset |
-| .claude | M | Claude Code credentials, settings, recent transcripts, session tool results, checkpoints/file history, plans/tasks, memories, plugins and other session/application state retained privately; debug, session-env, sessions, shell-snapshots and usage-data reset. Claude ages session artifacts out itself after `cleanupPeriodDays` = 14 (writable `settings.json`, not Nix-owned) |
+| .claude | M | Claude Code credentials, settings, recent transcripts, session tool results, checkpoints/file history, plans/tasks, memories, plugins and other session/application state retained privately; debug, session-env, sessions, shell-snapshots and usage-data reset. `cleanupPeriodDays = 14` was the mutable user setting at acceptance; NixOS does not own or enforce it |
 | .claude.json | P | Writable global Claude Code application, authentication and configuration state |
 | .local/share/local-ai | R | Pinned, reproducible local LLM weights retained because rebuilding/redownloading the multi-GB artifact is expensive; agent configuration itself remains declarative |
 | .plastic4 | P | Unity VCS credentials/settings; currently empty |
@@ -157,8 +157,13 @@ copies below those mountpoints must be pruned after physical acceptance.
 - Firefox: normal XDG `.cache/mozilla/firefox` already disappears. In-profile
   cache2, startupCache, shader-cache, thumbnails, crashes, minidumps and telemetry
   directories also disappear, as do root Crash Reports/Pending Pings/mpris data.
-  The observed profile is `y34aofre.default`; new profiles require an audit and
-  matching exception entries. Keep `storage`, sessionstore-backups, cookies,
+  [`firefox-profile.nix`](../home/p2949/persistence/firefox-profile.nix) owns the
+  accepted profile name, shared by directory and file exclusions. Its value was
+  checked against the real `profiles.ini` default using metadata only; the
+  centralization changes no classified paths. New profiles require an audit and
+  an update to that declaration. The granular Impermanence VM imports these
+  actual declarations and exercises disposable and retained state across boots.
+  Keep `storage`, sessionstore-backups, cookies,
   places, keys/certificates and extension data: these hold actual website/user
   state, even when a website uses the word cache. Mozilla distinguishes profile
   root and local cache paths in its [profile service documentation](https://firefox-source-docs.mozilla.org/toolkit/profile/index.html)
@@ -177,7 +182,8 @@ copies below those mountpoints must be pruned after physical acceptance.
   disappear. Project transcripts, subagent transcripts, `projects/.../tool-results`
   (resumable session state despite the name), file-history, plans, tasks,
   history, credentials, memories and plugins remain. Claude prunes retained
-  session artifacts after 14 days (`cleanupPeriodDays`). Scratchpads and pasted
+  session artifacts according to the mutable `cleanupPeriodDays` user setting,
+  which was 14 at acceptance and is neither owned nor enforced by NixOS. Scratchpads and pasted
   images under `/tmp` stay root-local and disappear on reboot; neither
   `CLAUDE_CONFIG_DIR` nor `CLAUDE_CODE_TMPDIR` is set. The VS Code extension's
   globalStorage is already covered by `.config/Code`.
