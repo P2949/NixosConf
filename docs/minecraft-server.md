@@ -3,9 +3,11 @@
 The Minecraft server and local Btrfs recovery system are deployed on the
 physical desktop. Live snapshot creation, failure recovery,
 retention and a playable isolated local restore have passed. Reboot persistence,
-pregeneration and isolated IPv4/IPv6 host ingress passed. Ordinary calendar activation acceptance is a user-approved post-merge observation;
-genuine missed-event catch-up is a user-approved post-merge observation;
-the unavailable laptop path is a recommended later operational smoke test.
+pregeneration and isolated IPv4/IPv6 host ingress passed. Two simultaneous
+disposable protocol clients passed login, play, saving and restored-player-data
+checks. A separate network namespace reached the production game port over a
+non-loopback veth path while management stayed inaccessible. An unchanged natural
+UTC calendar backup event and genuine missed-event catch-up both passed.
 Permanent operating policy is recorded here; PR metadata owns exact
 qualification and acceptance receipts.
 
@@ -127,8 +129,12 @@ non-loopback endpoints and requires capability discovery before a backup.
 The real secret must be created only during physical bootstrap, never in Git,
 backup metadata, screenshots or logs. The game port is TCP 25565, with online
 mode and enforced whitelist enabled. Management is local; game access and the
-whitelist is enforced. Local player access and IPv4/IPv6 host ingress passed;
-the laptop's actual network path remains unexercised.
+whitelist is enforced. Local player access and IPv4/IPv6 host ingress passed.
+Production TCP 25565 also accepted a connection from a separate network
+namespace over a temporary veth on the reserved benchmarking subnet; TCP 25585
+was inaccessible. The temporary namespace and interfaces were removed on exit.
+This is deterministic isolated non-loopback ingress coverage. Physical router
+and laptop behavior is outside the project acceptance gate.
 
 Official protocol references:
 [Minecraft management introduction](https://feedback.minecraft.net/hc/en-us/articles/39107188599565-Minecraft-Java-Edition-Snapshot-25w35a),
@@ -269,9 +275,15 @@ probe may extend past the window by at most those transport bounds. No autosave
 changes occur during readiness; the real transaction independently rediscovers
 capabilities. A readiness timeout records a fixed failed health stage. Inspect status and take a
 manual backup when needed; the next scheduled attempt is the next calendar
-event. Reboot persistence and pregen switching passed. Ordinary scheduled-event
-acceptance and genuine missed-event catch-up are user-approved post-merge
-operational observations.
+event. Reboot persistence and pregen switching passed. The unchanged natural
+00:00 UTC event on 2026-10-25 completed successfully, advanced last success,
+registered a new verified read-only snapshot, left no pending capture, deletion
+or autosave-recovery state, and scheduled the next normal event. For the following
+06:00 UTC event, the timer and empty server were stopped across the actual
+timestamp. After server management readiness, restarting the unchanged
+`Persistent=true` timer produced exactly one successful catch-up activation,
+another registered read-only snapshot, clean pending/recovery state and the
+normal 12:00 UTC next event. Original enabled states were retained.
 
 ## Manual operations
 
@@ -818,20 +830,30 @@ secret injection, whitelist, player acceptance and a fresh local recovery point.
 The first real version upgrade must exercise this workflow; current deployment
 has not claimed a cross-version world rollback test.
 
-## Deferred operational observations
+## Autonomous acceptance and remaining scope
 
-Ordinary, unmodified UTC calendar activation and genuine missed-event catch-up
-remain unexercised operational observations. The six-hour timer remains active.
-For an ordinary event, verify service execution, a newly registered read-only
-recovery point, autosave enabled, no pending state/marker, complete live recovery
-integrity, sane retention and an advanced persistent timer stamp. Manual starts
-and artificial stale stamps do not establish this observation.
+The disposable staging test runs two simultaneous named 26.3 protocol clients.
+Both acknowledge position, appear together in server logs and management's
+player list before and after a flushed save, then disconnect cleanly. Both
+player-data records survive the isolated world export/restore test. The pinned
+production package and mod set are inherited unchanged. This establishes
+deterministic concurrency; maximum-player resource capacity is outside scope.
 
-For genuine catch-up, observe a real maintenance shutdown spanning a scheduled
-event, then verify the same transaction and timer-stamp invariants after startup.
-Synthetic stale-stamp tests and reboot persistence cover mechanisms but do not
-prove an actual missed calendar event. Actual laptop/LAN gameplay and multi-player
-resource capacity remain unexercised. None requires another backup tier.
+Production ingress is verified through a separate network namespace and veth,
+including game-port reachability and management-port isolation. Natural UTC
+calendar activation has been observed with successful service completion, a
+new registered read-only recovery point, clean pending/recovery state, healthy
+retention and the normal next event. The timer expression and persistent stamp
+were not manually altered for that observation.
+
+Genuine missed-event acceptance used a maintenance shutdown spanning the actual
+2026-10-25 06:00 UTC event, with zero online players and no active backup before
+shutdown. The server became management-ready before the existing timer was
+restarted. Service invocation metadata proved exactly one successful catch-up;
+live verification confirmed its registered read-only recovery point, no pending
+capture/deletion/recovery state, restored service states and the normal future
+schedule. No timer stamp or calendar expression was fabricated. Physical
+router/laptop operation and maximum-player capacity are outside this gate.
 
 Normal management uses literal `127.0.0.1` with systemd loopback IP filtering.
 Optional loopback-hostname hardening remains deferred.

@@ -165,15 +165,34 @@ let
           observer.fail("nc -z -w 3 ${nodes.machine.networking.primaryIPAddress} ${toString managementPort}")
           observer.succeed("ip route add 10.233.77.0/24 via ${nodes.machine.networking.primaryIPAddress}")
           observer.fail("nc -z -w 3 10.233.77.2 ${toString gamePort}")
-          machine.succeed("minecraft-staging-probe game --host 10.233.77.2 --port ${toString gamePort} --expected-version ${loader.gameVersion} --ready-file /tmp/staging-client-ready.json > /tmp/staging-client.log 2>&1 & echo $! > /run/staging-client.pid")
-          machine.wait_until_succeeds("test -s /tmp/staging-client-ready.json", timeout=150)
-          receipt = json.loads(machine.succeed("cat /tmp/staging-client-ready.json"))
-          assert receipt["position_acknowledged"] is True
-          assert receipt["player"] == "StageProbe"
-          machine.wait_until_succeeds(inside("cat /srv/minecraft-staging/staging/logs/latest.log") + " | grep -F 'StageProbe joined the game'", timeout=60)
-          machine.succeed(inside(management + " --save"))
-          machine.wait_until_succeeds("grep -F '\"login\": \"passed\"' /tmp/staging-client.log", timeout=90)
-          machine.wait_until_succeeds(inside("cat /srv/minecraft-staging/staging/logs/latest.log") + " | grep -F 'StageProbe left the game'", timeout=60)
+          players = ["StageProbe", "StageProbe2"]
+          receipts = []
+          for player in players:
+              machine.succeed(f"minecraft-staging-probe game --host 10.233.77.2 --port ${toString gamePort} --expected-version ${loader.gameVersion} --player {player} --hold-seconds 90 --release-file /tmp/staging-release --ready-file /tmp/{player}-ready.json > /tmp/{player}.log 2>&1 & echo $! > /run/{player}.pid")
+          for player in players:
+              machine.wait_until_succeeds(f"test -s /tmp/{player}-ready.json", timeout=150)
+              receipt = json.loads(machine.succeed(f"cat /tmp/{player}-ready.json"))
+              assert receipt["position_acknowledged"] is True
+              assert receipt["player"] == player
+              receipts.append(receipt)
+              machine.wait_until_succeeds(inside("cat /srv/minecraft-staging/staging/logs/latest.log") + f" | grep -F '{player} joined the game'", timeout=60)
+
+          def both_connected():
+              journal = machine.succeed(inside("cat /srv/minecraft-staging/staging/logs/latest.log"))
+              for player in players:
+                  machine.succeed(f"kill -0 $(cat /run/{player}.pid)")
+                  machine.fail(f"grep -F '\"login\": \"passed\"' /tmp/{player}.log")
+                  assert f"{player} joined the game" in journal
+                  assert f"{player} left the game" not in journal
+
+          both_connected()
+          machine.succeed(inside(management + " --save --expected-players " + " ".join(players)))
+          both_connected()
+          machine.succeed("touch /tmp/staging-release")
+          for player in players:
+              machine.wait_until_succeeds(f"grep -F '\"login\": \"passed\"' /tmp/{player}.log", timeout=90)
+              machine.wait_until_succeeds(inside("cat /srv/minecraft-staging/staging/logs/latest.log") + f" | grep -F '{player} left the game'", timeout=60)
+          assert len({receipt["uuid"] for receipt in receipts}) == 2
 
           journal = machine.succeed(inside("cat /srv/minecraft-staging/staging/logs/latest.log"))
           assert "Loading Minecraft ${loader.gameVersion} with Fabric Loader ${loader.loaderVersion}" in journal
@@ -186,7 +205,8 @@ let
           machine.succeed(inside("systemctl stop minecraft-server-staging.service"))
           machine.succeed(inside("test $(systemctl show -p Result --value minecraft-server-staging.service) = success"))
           machine.succeed(inside("test -s /srv/minecraft-staging/staging/world/level.dat"))
-          machine.succeed(inside("test -s /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
+          for receipt in receipts:
+              machine.succeed(inside("test -s /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
           # Export only the stopped world, not server.properties or credentials.
           machine.succeed(inside("tar -C /srv/minecraft-staging/staging/world -cf - .") + " > /tmp/staging-world.tar")
           machine.succeed(inside("touch /staging-disposable-proof"))
@@ -195,16 +215,18 @@ let
           machine.wait_until_succeeds(inside("test ! -e /staging-disposable-proof"))
           machine.wait_until_succeeds(inside(management), timeout=240)
           machine.succeed(inside("systemctl stop minecraft-server-staging.service"))
-          machine.succeed(inside("test ! -e /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
+          for receipt in receipts:
+              machine.succeed(inside("test ! -e /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
           machine.succeed(inside("mv /srv/minecraft-staging/staging/world /srv/minecraft-staging/staging/world.generated"))
           machine.succeed(inside("mkdir /srv/minecraft-staging/staging/world"))
           machine.succeed(inside("tar -C /srv/minecraft-staging/staging/world -xf -") + " < /tmp/staging-world.tar")
           machine.succeed(inside("chown -R minecraft:minecraft /srv/minecraft-staging/staging/world"))
-          machine.succeed(inside("test -s /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
+          for receipt in receipts:
+              machine.succeed(inside("test -s /srv/minecraft-staging/staging/world/players/data/" + receipt["uuid"] + ".dat"))
           machine.succeed(inside("systemctl start minecraft-server-staging.service"))
           machine.wait_until_succeeds(inside(management), timeout=240)
           clone = json.loads(machine.succeed("minecraft-staging-probe game --host 10.233.77.2 --port ${toString gamePort} --expected-version ${loader.gameVersion} --ready-file /tmp/staging-clone-ready.json --hold-seconds 5"))
-          assert clone["login"] == "passed" and clone["uuid"] == receipt["uuid"]
+          assert clone["login"] == "passed" and clone["uuid"] == receipts[0]["uuid"]
           assert not re.search(fatal_errors, machine.succeed(inside("cat /srv/minecraft-staging/staging/logs/latest.log")))
           machine.succeed(inside(management + " --save"))
           machine.succeed(inside("systemctl stop minecraft-server-staging.service"))
@@ -214,7 +236,7 @@ let
           machine.fail("test -e /srv/minecraft")
       except Exception:
           for command in [
-              "cat /tmp/staging-client.log",
+              "cat /tmp/StageProbe.log /tmp/StageProbe2.log",
               inside("cat /srv/minecraft-staging/staging/logs/latest.log"),
               inside("journalctl -b --no-pager -n 80"),
           ]:
