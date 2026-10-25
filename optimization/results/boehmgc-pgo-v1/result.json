@@ -1,0 +1,472 @@
+{
+  "adoption": "NOT_ADOPTED",
+  "attribution": "PGO with generic CPU code generation",
+  "buildProvenanceSha256": "fd9a8d802e3df0d7a7936a582ba2fe8b863d7686f4a84edfd768f395b0cf408e",
+  "collectorPolicy": {
+    "enableLargeConfig": true,
+    "initialMarkStackSize": 1048576
+  },
+  "comparison": "pgo",
+  "consumer": {
+    "derivation": "/nix/store/fy9ikn9qnbfhbkh6zz0flp5raqvb9f3r-nix-2.34.8.drv",
+    "executable": "bin/nix",
+    "output": "/nix/store/f82xir6jh4ad169dpcs8hf32pjzs7sgy-nix-2.34.8"
+  },
+  "corpus": {
+    "identity": {
+      "inputs": {
+        "disko": {
+          "narHash": "sha256-uZkBR7yHdIKUFB5SZdfgh1qkGfI3XmYmI/lTiquxbck=",
+          "path": "/nix/store/adcpmshidndclaz4dxjsgklrx3gqhaxp-source",
+          "revision": "725ea35e410ad83be4931d1bff7e090eacaf3563"
+        },
+        "flake-compat": {
+          "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+          "path": "/nix/store/b0my5vy8pzfzjqrr3g58j0w6md9jf3ch-source",
+          "revision": "9100a0f413b0c601e0533d1d94ffd501ce2e7885"
+        },
+        "home-manager": {
+          "narHash": "sha256-f+kOxEmOUnQazVAmGg0i8hzwgd1kX/geY+k/Dpheye8=",
+          "path": "/nix/store/41xfn9jzjgn6avsdpwiv0zrnwbiz5mmb-source",
+          "revision": "db7d5e2332710f5abb088f6b5de927d7f9511b35"
+        },
+        "impermanence": {
+          "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
+          "path": "/nix/store/3ib4ns4q84wcjfqim5wc0jsjw7v18lpd-source",
+          "revision": "7b1d382faf603b6d264f58627330f9faa5cba149"
+        },
+        "liquidctl-pr886": {
+          "narHash": "sha256-DRrnLrG1hqXdQcQu8fHyViYkwBsCgsULvFK2hFv3bK0=",
+          "path": "/nix/store/gwpp2b1mkvk0af1v9xwkjjzyvj4bv9q9-source",
+          "revision": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59"
+        },
+        "nix-minecraft": {
+          "narHash": "sha256-rsNrfGjPl6gZ9xLA4JuxErUuzXG3i0eVEPt7R+g2/es=",
+          "path": "/nix/store/gl72w1l8jm08xs1d5znbz9md78pr7pa4-source",
+          "revision": "2b3de3195966ba80499063064dca608c805cb34a"
+        },
+        "nixpkgs": {
+          "narHash": "sha256-9+n3ReS2y9xS199LoJjKUWHwZrISGHWgkD/LUZTDZyA=",
+          "path": "/nix/store/hwg0y945hq5cr4rpkjsr9ffl2yqrvz3m-source",
+          "revision": "0d9e9b832d03ac387417e16ce1febf73b2e631e1"
+        },
+        "nixpkgs-unstable": {
+          "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+          "path": "/nix/store/fd5qgysvbfx27wj651swlr899w6jnbwd-source",
+          "revision": "c59305bab2065cfecc4944690d9eedbb56f3a9fa"
+        },
+        "systems": {
+          "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+          "path": "/nix/store/yj1wxm9hh8610iyzqnz75kvs6xl8j3my-source",
+          "revision": "da67096a3b9bf56a91d16901293e51ba5b49a27e"
+        }
+      },
+      "kind": "nixos-nix-evaluation-corpus",
+      "schemaVersion": 1,
+      "source": {
+        "lockSha256": "f9138547f8becdfd54abf5099aa30615390b9470d7ca59765107b88c47331148",
+        "narHash": "sha256-PGKO4Qb7PPDRcZv0SATXhKDNp9ZePk71dxgHGEBy0Kc=",
+        "path": "/nix/store/b101sbpbrga420hgxr46b9ixn5a0iimj-source",
+        "rev": "658c02f637f488bf02cd6907b51718b52e133f54"
+      }
+    },
+    "path": "/nix/store/mcki7vjlyjbjkxdzkrkdybkzhy6liliv-nix-evaluation-corpus.json",
+    "sha256": "56dd369532c393c3abd99ccb1eeae3c231b0eeac28779beb640289d1fee4071b"
+  },
+  "experimentId": "boehmgc-pgo",
+  "kind": "nixos-sanitized-experiment-result",
+  "libraries": {
+    "candidate": {
+      "audit": "/nix/store/ljazp2pc11sgg51bcbkj7w0p5z9wy2da-nixos-opt-pgo-boehm-gc-generic-8.2.12-audit",
+      "command": {
+        "derivation": "/nix/store/zszf93a307njp44j1iy11fp3i4k3yfwf-nix-evaluation.drv",
+        "output": "/nix/store/hzfyqwqdff05sfymhiy58cd0j89n6pzk-nix-evaluation"
+      },
+      "compileFlags": " -fprofile-instr-use=/nix/store/7h26044jsag7fysn0wgn9bz4qc44hvv6-boehmgc-pgo-profile/merged.profdata -Werror=profile-instr-out-of-date",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/216f20z3pqf5iwk2bffmxp3s70vynbya-nixos-opt-pgo-boehm-gc-generic-8.2.12.drv",
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/2xxd0ca01agyfxhksk32z2f9kvpabxyd-nixos-opt-pgo-boehm-gc-generic-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "narHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "toolchain": {
+        "compiler": {
+          "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+          "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+        },
+        "compilerVersion": "21.1.8",
+        "linker": {
+          "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+          "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+        },
+        "linkerVersion": "21.1.8"
+      },
+      "version": "8.2.12"
+    },
+    "stock": {
+      "audit": "/nix/store/zi0lxnxmvx7b429lqd6s3gjdfc0mwkcr-nixos-opt-lto-boehm-gc-clang-stock-8.2.12-audit",
+      "command": {
+        "derivation": "/nix/store/m8749sfi5053kimw1x62n515gaj4xm68-nix-evaluation.drv",
+        "output": "/nix/store/33zx1x4sfsxpvjm2r762dlxlkd18hq09-nix-evaluation"
+      },
+      "compileFlags": "",
+      "configureFlags": [
+        "--enable-cplusplus",
+        "--with-libatomic-ops=none",
+        "--enable-mmap",
+        "--enable-large-config"
+      ],
+      "derivation": "/nix/store/vzx9f5galwq38dl2y6j3gdfbhqrnzrfm-nixos-opt-lto-boehm-gc-clang-stock-8.2.12.drv",
+      "linkFlags": " --save-temps --threads=1 --thinlto-jobs=1",
+      "makeFlags": [
+        "CFLAGS_EXTRA=-DINITIAL_MARK_STACK_SIZE=1048576"
+      ],
+      "output": "/nix/store/a2hgvpdk1hqsakg9m94pcvil37zaqgkn-nixos-opt-lto-boehm-gc-clang-stock-8.2.12",
+      "source": {
+        "derivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+        "narHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+        "output": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source"
+      },
+      "toolchain": {
+        "compiler": {
+          "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+          "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+        },
+        "compilerVersion": "21.1.8",
+        "linker": {
+          "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+          "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+        },
+        "linkerVersion": "21.1.8"
+      },
+      "version": "8.2.12"
+    }
+  },
+  "packages": {
+    "candidate": {
+      "derivation": "/nix/store/zszf93a307njp44j1iy11fp3i4k3yfwf-nix-evaluation.drv",
+      "expressionAttribute": "commands.candidate",
+      "id": "candidate",
+      "output": "/nix/store/hzfyqwqdff05sfymhiy58cd0j89n6pzk-nix-evaluation"
+    },
+    "stock": {
+      "derivation": "/nix/store/m8749sfi5053kimw1x62n515gaj4xm68-nix-evaluation.drv",
+      "expressionAttribute": "commands.stock",
+      "id": "stock",
+      "output": "/nix/store/33zx1x4sfsxpvjm2r762dlxlkd18hq09-nix-evaluation"
+    }
+  },
+  "privateArtifactIndexSha256": "71bb14bbbff7e7a46e85b1828c53d36a0509630d445fb417b4e12df4f3575a64",
+  "privateBundleSha256": "4bbba7b145d55b96001a46478053e196577e17e56c5c21af23c35655b3d143b0",
+  "profile": {
+    "mergedProfileSha256": "9bdfe366f0ce4fb907a4a9907f74e07b5feaba88ea78be96087ee877a7ef970d",
+    "metadata": {
+      "acceptance": "TRAINING_ONLY_NOT_BENCHMARK",
+      "kind": "boehmgc-pgo-merged-profile",
+      "mergeCommand": [
+        "/nix/store/c8f95avghs0b8m3vzvqc4fn9q058h7qp-llvm-21.1.8/bin/llvm-profdata",
+        "merge",
+        "--failure-mode=any",
+        "--output",
+        "/nix/store/i9zxnsff7zj8l5k4mng5724xkrs8n6w5-boehmgc-pgo-generic-profile/merged.profdata",
+        "/nix/store/i9zxnsff7zj8l5k4mng5724xkrs8n6w5-boehmgc-pgo-generic-profile/raw/863-6018643687068877262_0.profraw"
+      ],
+      "mergeTool": "/nix/store/c8f95avghs0b8m3vzvqc4fn9q058h7qp-llvm-21.1.8/bin/llvm-profdata",
+      "mergeToolVersion": "LLVM (http://llvm.org/):\n  LLVM version 21.1.8\n  Optimized build.\n",
+      "mergedProfileSha256": "9bdfe366f0ce4fb907a4a9907f74e07b5feaba88ea78be96087ee877a7ef970d",
+      "rawProfiles": {
+        "863-6018643687068877262_0.profraw": "8218c29a37e93eebd47cbb5d4354d3a915cc53b2adbdcdaff1252e4b4138b2a5"
+      },
+      "schemaVersion": 1,
+      "summarySha256": "a4f45c3262b018346f1deff9594a78217f5567183b1e693346a45736e7c29ba5",
+      "training": {
+        "acceptance": "TRAINING_ONLY_NOT_BENCHMARK",
+        "artifact": {
+          "command": "/nix/store/ngrkznwnvidh2gfcrkf0irq7c8xacbd5-nix-evaluation-pgo-training/bin/nix-evaluation-pgo-training",
+          "compileFlags": " -fprofile-instr-generate -fprofile-update=atomic",
+          "instrumentedDerivation": "/nix/store/5lhl44mpp3mia2kwzs9xxli9xmkcqyp1-nixos-opt-pgo-boehm-gc-generic-instrumented-8.2.12.drv",
+          "instrumentedOutput": "/nix/store/m5ac8fl5sgyh5whpaafvz16g1k2l7i5w-nixos-opt-pgo-boehm-gc-generic-instrumented-8.2.12",
+          "package": "boehm-gc",
+          "source": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source",
+          "sourceDerivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+          "sourceHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+          "version": "8.2.12"
+        },
+        "compiler": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8",
+        "compilerDerivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+        "compilerVersion": "21.1.8",
+        "consumer": "/nix/store/f82xir6jh4ad169dpcs8hf32pjzs7sgy-nix-2.34.8",
+        "consumerDerivation": "/nix/store/fy9ikn9qnbfhbkh6zz0flp5raqvb9f3r-nix-2.34.8.drv",
+        "evaluatedDerivation": "/nix/store/i9z4bwr3jsdzqqhqilsnid9vybs7zjly-nixos-system-desktop-26.05.20261004.0d9e9b8.drv",
+        "kind": "boehmgc-pgo-training",
+        "linker": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8",
+        "linkerDerivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+        "rawProfiles": {
+          "863-6018643687068877262_0.profraw": "8218c29a37e93eebd47cbb5d4354d3a915cc53b2adbdcdaff1252e4b4138b2a5"
+        },
+        "schemaVersion": 1,
+        "sourceNarHash": "sha256-n0enMeumBDrSWx2nH/KIc6coMH65DVjb+3Be1XmufYA=",
+        "sourceRevision": "46ea637b071ae23c789a030840f228442f433166",
+        "trainingCommand": [
+          "/nix/store/ngrkznwnvidh2gfcrkf0irq7c8xacbd5-nix-evaluation-pgo-training/bin/nix-evaluation-pgo-training",
+          "eval",
+          "--offline",
+          "--no-write-lock-file",
+          "--no-eval-cache",
+          "--extra-experimental-features",
+          "nix-command flakes",
+          "--raw",
+          "path:/nix/store/228rrvia1dwdgzry2z8h4bx95l3yip56-source#nixosConfigurations.desktop.config.system.build.toplevel.drvPath"
+        ],
+        "trainingCorpus": {
+          "inputs": {
+            "disko": {
+              "narHash": "sha256-uZkBR7yHdIKUFB5SZdfgh1qkGfI3XmYmI/lTiquxbck=",
+              "path": "/nix/store/adcpmshidndclaz4dxjsgklrx3gqhaxp-source",
+              "revision": "725ea35e410ad83be4931d1bff7e090eacaf3563"
+            },
+            "flake-compat": {
+              "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+              "path": "/nix/store/b0my5vy8pzfzjqrr3g58j0w6md9jf3ch-source",
+              "revision": "9100a0f413b0c601e0533d1d94ffd501ce2e7885"
+            },
+            "home-manager": {
+              "narHash": "sha256-f+kOxEmOUnQazVAmGg0i8hzwgd1kX/geY+k/Dpheye8=",
+              "path": "/nix/store/41xfn9jzjgn6avsdpwiv0zrnwbiz5mmb-source",
+              "revision": "db7d5e2332710f5abb088f6b5de927d7f9511b35"
+            },
+            "impermanence": {
+              "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
+              "path": "/nix/store/3ib4ns4q84wcjfqim5wc0jsjw7v18lpd-source",
+              "revision": "7b1d382faf603b6d264f58627330f9faa5cba149"
+            },
+            "liquidctl-pr886": {
+              "narHash": "sha256-DRrnLrG1hqXdQcQu8fHyViYkwBsCgsULvFK2hFv3bK0=",
+              "path": "/nix/store/gwpp2b1mkvk0af1v9xwkjjzyvj4bv9q9-source",
+              "revision": "48e8dd07bdc1c5dca330a844aca7fb22218e6e59"
+            },
+            "nix-minecraft": {
+              "narHash": "sha256-rsNrfGjPl6gZ9xLA4JuxErUuzXG3i0eVEPt7R+g2/es=",
+              "path": "/nix/store/gl72w1l8jm08xs1d5znbz9md78pr7pa4-source",
+              "revision": "2b3de3195966ba80499063064dca608c805cb34a"
+            },
+            "nixpkgs": {
+              "narHash": "sha256-9+n3ReS2y9xS199LoJjKUWHwZrISGHWgkD/LUZTDZyA=",
+              "path": "/nix/store/hwg0y945hq5cr4rpkjsr9ffl2yqrvz3m-source",
+              "revision": "0d9e9b832d03ac387417e16ce1febf73b2e631e1"
+            },
+            "nixpkgs-unstable": {
+              "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+              "path": "/nix/store/fd5qgysvbfx27wj651swlr899w6jnbwd-source",
+              "revision": "c59305bab2065cfecc4944690d9eedbb56f3a9fa"
+            },
+            "systems": {
+              "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+              "path": "/nix/store/yj1wxm9hh8610iyzqnz75kvs6xl8j3my-source",
+              "revision": "da67096a3b9bf56a91d16901293e51ba5b49a27e"
+            }
+          },
+          "kind": "nixos-nix-evaluation-corpus",
+          "schemaVersion": 1,
+          "source": {
+            "lockSha256": "f9138547f8becdfd54abf5099aa30615390b9470d7ca59765107b88c47331148",
+            "narHash": "sha256-zKS9aBPg3RmeFMC7aUTnrTictkBCwAlcC6f5vEXmC5E=",
+            "path": "/nix/store/228rrvia1dwdgzry2z8h4bx95l3yip56-source",
+            "rev": "4a122b6f2898269d9c8d85a15d655f4bcb80b195"
+          }
+        },
+        "trainingEnvironment": [
+          "env",
+          "HOME=/tmp/pgo-training/generic/home",
+          "XDG_CACHE_HOME=/tmp/pgo-training/generic/cache",
+          "XDG_CONFIG_HOME=/tmp/pgo-training/generic/config",
+          "XDG_STATE_HOME=/tmp/pgo-training/generic/state",
+          "NIX_CONF_DIR=/tmp/pgo-training/generic/config",
+          "NIX_REMOTE=daemon",
+          "LD_DEBUG=libs",
+          "LLVM_PROFILE_FILE=/tmp/pgo-training/generic/raw/%p-%m.profraw"
+        ],
+        "variant": "generic",
+        "variants": {
+          "generic": {
+            "command": "/nix/store/ngrkznwnvidh2gfcrkf0irq7c8xacbd5-nix-evaluation-pgo-training/bin/nix-evaluation-pgo-training",
+            "compileFlags": " -fprofile-instr-generate -fprofile-update=atomic",
+            "instrumentedDerivation": "/nix/store/5lhl44mpp3mia2kwzs9xxli9xmkcqyp1-nixos-opt-pgo-boehm-gc-generic-instrumented-8.2.12.drv",
+            "instrumentedOutput": "/nix/store/m5ac8fl5sgyh5whpaafvz16g1k2l7i5w-nixos-opt-pgo-boehm-gc-generic-instrumented-8.2.12",
+            "package": "boehm-gc",
+            "source": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source",
+            "sourceDerivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+            "sourceHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+            "version": "8.2.12"
+          },
+          "skylake": {
+            "command": "/nix/store/kx41m8qq0vjjd4jpavwc2hnslwl6nv7h-nix-evaluation-pgo-training/bin/nix-evaluation-pgo-training",
+            "compileFlags": "-march=skylake -mtune=skylake -fprofile-instr-generate -fprofile-update=atomic",
+            "instrumentedDerivation": "/nix/store/w4y7iyz1nlj5lnk6h0xx04rp6fgv32rl-nixos-opt-pgo-boehm-gc-skylake-instrumented-8.2.12.drv",
+            "instrumentedOutput": "/nix/store/1xmmq51k7xbvhwr7ymgwj9ib7px6fvxv-nixos-opt-pgo-boehm-gc-skylake-instrumented-8.2.12",
+            "package": "boehm-gc",
+            "source": "/nix/store/jpm63hrn8hkga38vf5mp82y26inabri6-source",
+            "sourceDerivation": "/nix/store/hvxc30w50ciknzqvx8zlxfbx9ch2886m-source.drv",
+            "sourceHash": "sha256-5yeAB5Y92YjOutwRXBJkMxoOLkmzmqIJs4PirKX89fE=",
+            "version": "8.2.12"
+          }
+        }
+      },
+      "trainingReceiptSha256": "17df8ea4f379d899c15a8a925dff04bff5d1aaa4ba1d3c71ef5bcce5235f9d7c"
+    },
+    "metadataSha256": "34f4000e02eb9c0b7c9bf87f7054985c4159e80735180059a2eaad3ea789f84d",
+    "profileNarHash": "sha256-GVFW7epLDbPeCIv3J44cY2C+0zaWQBMt3pEQ/zXuTK0=",
+    "profilePath": "/nix/store/7h26044jsag7fysn0wgn9bz4qc44hvv6-boehmgc-pgo-profile",
+    "variant": "generic"
+  },
+  "runId": "boehmgc-pgo-20261025T181009Z-46ea637",
+  "runnerSha256": "c3c58f6b14918c6ffb10c508be884f355c60bbed3a69c8b9537e73e176b7b8e4",
+  "schemaVersion": 1,
+  "source": {
+    "revision": "46ea637b071ae23c789a030840f228442f433166",
+    "tree": "aecc3199fe24bffae05e13df5dce48e49f371baa"
+  },
+  "specificationSha256": "a8c090b5afbb4c923fff07165115eedaa3e915eb221e7a6878a54a659c6a89d0",
+  "summaries": {
+    "repository-evaluation": {
+      "measurementPairs": 10,
+      "metrics": {
+        "cpuTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            0.02162664313388818,
+            0.037815149827844674
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 127.51947089999992,
+            "median": 126.75771099999986,
+            "standardDeviation": 1.850242701916196
+          },
+          "control": {
+            "mean": 131.66508919999995,
+            "median": 131.39120850000006,
+            "standardDeviation": 0.8877127318421282
+          },
+          "interpretation": "improvement",
+          "meanPairedRelativeDelta": 0.03145754094210579,
+          "medianPairedRelativeDelta": 0.03521813242589805,
+          "pairedRelativeDeltas": [
+            0.036528738586529386,
+            0.03158480131167285,
+            0.04107283949224805,
+            0.04275061839668037,
+            -0.008947292985034272,
+            0.035785649990346946,
+            0.03465061486144916,
+            0.02954975433495055,
+            0.03817578928544596,
+            0.03342389614676888
+          ],
+          "pairedRelativeStandardDeviation": 0.014756696116052325,
+          "pairs": 10
+        },
+        "wallTime": {
+          "acceptanceThreshold": 0.01,
+          "bootstrap95PercentInterval": [
+            0.021240481995338123,
+            0.03797382447777453
+          ],
+          "bootstrapResamples": 10000,
+          "bootstrapSeed": 20261015,
+          "candidate": {
+            "mean": 128.62178186420005,
+            "median": 127.84204783600012,
+            "standardDeviation": 1.9252450957766396
+          },
+          "control": {
+            "mean": 132.78776996470003,
+            "median": 132.49910467049995,
+            "standardDeviation": 0.9312194668959357
+          },
+          "interpretation": "improvement",
+          "meanPairedRelativeDelta": 0.03134392287253339,
+          "medianPairedRelativeDelta": 0.035021399213571225,
+          "pairedRelativeDeltas": [
+            0.036499238420970914,
+            0.031404360284558286,
+            0.041786986927770164,
+            0.043492756247849096,
+            -0.009822084467431935,
+            0.03557020584173498,
+            0.03447259258540747,
+            0.02924773448637763,
+            0.03817576456177141,
+            0.032611673836325905
+          ],
+          "pairedRelativeStandardDeviation": 0.015122456192596702,
+          "pairs": 10
+        }
+      },
+      "pilotPairs": 4,
+      "samplingDecision": {
+        "cpuTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        },
+        "wallTime": {
+          "estimatedRequiredPairs": 1,
+          "measurementPairs": 10,
+          "precisionLimitedByMaximum": false,
+          "targetDeltaHalfWidth": 0.02
+        }
+      }
+    }
+  },
+  "supportModuleSha256": {
+    "gcCompiler": "34eb4053a4ef607d54aadd2c99eae9a105c8bb28e175a10537becfb0350459d7",
+    "runtime": "d2994edc27665384dc194343208860a1068dc19639ab9374ac85c4767136fc0c",
+    "statistics": "509c845ad9982bbc4d467597a2fd32c38b5ef0b74f7f9ff4cdfd7302124f36ac"
+  },
+  "targetExpression": {
+    "path": "optimization/experiments/boehmgc-compiler-measurements/measurement.nix",
+    "sha256": "ea9a732fa311a9fcf892751c5279b8856f2474ee9f715ca69e78a0386453156e"
+  },
+  "toolchains": {
+    "candidate": {
+      "compiler": {
+        "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+        "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+      },
+      "compilerVersion": "21.1.8",
+      "linker": {
+        "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+        "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+      },
+      "linkerVersion": "21.1.8"
+    },
+    "stock": {
+      "compiler": {
+        "derivation": "/nix/store/394x3l5alryaq009zrcvl7i2iwc1ggfi-clang-wrapper-21.1.8.drv",
+        "output": "/nix/store/kx5gf31if1z9kknvnlkr02xp91s6k7sk-clang-wrapper-21.1.8"
+      },
+      "compilerVersion": "21.1.8",
+      "linker": {
+        "derivation": "/nix/store/1z0vcs1irv63svyznp01dfn8knpmr2zr-llvm-binutils-wrapper-21.1.8.drv",
+        "output": "/nix/store/4jbhr3q0zgbvwrij7kqprk82xh1f6cwv-llvm-binutils-wrapper-21.1.8"
+      },
+      "linkerVersion": "21.1.8"
+    }
+  },
+  "validation": "Exact source, artifact hashes, profile and tool identities, independent training/measurement corpora, raw observations, balanced order, reconstructed statistics and physical runtime intervals passed independent verification; maintenance states restored and productive system recovered.",
+  "workingStock": "nixos-26.05-optimization-stock-v1"
+}
