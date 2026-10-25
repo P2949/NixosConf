@@ -42,3 +42,21 @@ Android Studio integration completed through
 build/emulator and debugger acceptance belongs to its PR metadata. Current
 operations are in the [development guide](../development-validation.md#android-studio)
 and [state audit](../ephemeral-state-audit.md).
+
+## Frozen optimization sources
+
+Annotated archive tags retain the exact scientific source independently of
+productive `main` and mutable experiment branches:
+
+| Annotated tag | Frozen revision | Purpose |
+| --- | --- | --- |
+| `archive/boehmgc-cpu-target-v1` | `468c24c1ef944122a5b394ce3e33c9841eb62501` | Original GCC CPU-target experiment source |
+| `archive/boehmgc-compiler-frozen-control-v1` | `46ea637b071ae23c789a030840f228442f433166` | Matched compiler, ThinLTO, bridge and physical PGO source |
+
+The compiler source superseded the CPU-target source and remained unchanged
+through both PGO campaigns. Frozen history was not rebased onto productive
+application changes. Mutable experiment branches are removed after result
+publication; annotated tags and [result provenance](../../optimization/results/README.md)
+retain their scientific identities. Productive-system recovery preceded the PGO
+result publications. Qualification baseline, benchmark control and productive
+desktop identities remain distinct.
