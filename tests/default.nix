@@ -20,6 +20,7 @@
           cd "$src"
           export PYTHONDONTWRITEBYTECODE=1
           python tests/test_validation_targets.py
+          python tests/test_ci_targets.py
           touch "$out"
         '';
 

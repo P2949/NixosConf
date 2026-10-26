@@ -215,6 +215,32 @@ class ValidationTests(unittest.TestCase):
         )
 
 
+class LocalCiDispatchTests(unittest.TestCase):
+    def test_every_command_maps_to_the_canonical_orchestrator(self):
+        spec = importlib.util.spec_from_file_location(
+            "local_ci", ROOT / "scripts/local-ci.py"
+        )
+        local_ci = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(local_ci)
+        seen = []
+        local_ci.subprocess.call = lambda argv, cwd=None: seen.append(argv) or 0
+        for argv in (["fast"], ["changed"], ["changed", "--base", "HEAD~1"], ["full"]):
+            self.assertEqual(local_ci.main(argv), 0)
+        self.assertEqual(
+            [[Path(a).name for a in call[:2]] + call[2:] for call in seen],
+            [
+                ["validate", "fast"],
+                ["validate", "affected"],
+                ["validate", "affected", "--base", "HEAD~1"],
+                ["validate", "full"],
+            ],
+        )
+        local_ci.main(["policy"])
+        local_ci.main(["setup"])
+        self.assertTrue(seen[-2][1].endswith("validation-policy.py"))
+        self.assertTrue(seen[-1][0].endswith("setup-local-validation"))
+
+
 class PolicyTests(unittest.TestCase):
     def test_remote_infrastructure_and_history(self):
         spec = importlib.util.spec_from_file_location(

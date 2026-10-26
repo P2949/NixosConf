@@ -12,6 +12,10 @@ Install the tracked push hook in each checkout:
 ./scripts/setup-local-validation
 ```
 
+`scripts/local-ci.py` is the same contract under the plan's vocabulary and owns no checks:
+`fast`, `changed [--base REV]` (= `affected`), `full`, `policy` (hosted-CI rejection) and `setup`.
+The selector also knows `main`, which selects like `changed` but always builds the desktop closure.
+
 The canonical orchestrator is `scripts/validate`:
 
 - `fast` runs ordinary flake checks, including formatting, lint and policy tests.
