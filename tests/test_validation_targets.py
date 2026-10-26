@@ -90,21 +90,12 @@ class SelectionTests(unittest.TestCase):
             self.assertEqual(set(result["targets"]), expected, path)
             self.assertTrue(result["desktop"])
 
-    def test_compatibility_modes(self):
-        for paths in (
-            [],
-            ["README.md"],
-            ["home/p2949/default.nix"],
-            ["optimization/default.nix"],
-            ["flake.lock"],
-        ):
-            affected = ci.select(paths, "affected")
-            self.assertEqual(ci.select(paths, "changed"), affected)
-            main = ci.select(paths, "main")
-            self.assertEqual(main["targets"], affected["targets"])
-            self.assertEqual(main["integration"], affected["integration"])
-            self.assertTrue(main["desktop"])
-        self.assertEqual(ci.select([], "main")["targets"], [])
+    def test_only_affected_and_full_modes_exist(self):
+        ci.select([], "affected")
+        ci.select([], "full")
+        for mode in ("changed", "main", "other"):
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                ci.select([], mode)
 
     def test_gpu_helper_selects_workstation(self):
         for path in [

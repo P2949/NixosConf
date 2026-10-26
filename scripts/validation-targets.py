@@ -18,13 +18,10 @@ OPTIMIZATION = {"boehmgc-compiler-preparation", "nix-evaluation-gc-consumers"}
 
 
 def select(paths, mode):
-    force_desktop = mode == "main"
-    if mode in {"changed", "main"}:
-        mode = "affected"
     targets = set()
     if mode not in {"affected", "full"}:
         raise ValueError("invalid validation mode")
-    desktop = mode == "full" or force_desktop
+    desktop = mode == "full"
     for path in paths:
         if path.endswith(".md") or path.startswith("optimization/results/"):
             continue
