@@ -173,6 +173,16 @@ def run(mode, base=None, head="HEAD"):
     print("PASS receipt: " + str(destination))
 
 
+def check_validator_revision(expected):
+    embedded = os.environ.get("NIXOSCONF_VALIDATOR_REV", "")
+    if not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", embedded):
+        raise ValueError("validator requires an embedded canonical Git commit SHA")
+    if receipts.git("rev-parse", "--verify", embedded + "^{commit}") != embedded:
+        raise ValueError("validator revision is not canonical")
+    if embedded != receipts.git("rev-parse", "--verify", expected + "^{commit}"):
+        raise ValueError("validator revision differs from the operation's commit")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="mode", required=True)
@@ -186,6 +196,7 @@ def main():
     child.add_argument("commit")
     args = parser.parse_args()
     os.chdir(receipts.git("rev-parse", "--show-toplevel"))
+    check_validator_revision(args.commit if args.mode == "require-receipt" else "HEAD")
     if args.mode == "require-receipt":
         receipts.require(args.required, args.commit, selector)
     else:

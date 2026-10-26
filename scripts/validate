@@ -1,4 +1,21 @@
 #!/bin/sh
 set -eu
-cd "$(git rev-parse --show-toplevel)"
-exec nix shell --no-write-lock-file --inputs-from . nixpkgs#python3 --command python3 scripts/validation-runner.py "$@"
+repo_root=$(git rev-parse --show-toplevel)
+case "$repo_root" in
+    *[!A-Za-z0-9/._~-]*)
+        echo "Unsupported repository path: URI delimiters/whitespace require encoding" >&2
+        exit 1
+        ;;
+esac
+cd "$repo_root"
+revision=HEAD
+if [ "${1-}" = require-receipt ]; then
+    if [ "$#" -ne 3 ]; then
+        echo "Usage: scripts/validate require-receipt MODE COMMIT" >&2
+        exit 1
+    fi
+    revision=$3
+fi
+commit=$(git rev-parse --verify "$revision^{commit}")
+exec nix run --no-write-lock-file --builders "" \
+    "git+file://$repo_root?rev=$commit&allRefs=1#validation" -- "$@"
