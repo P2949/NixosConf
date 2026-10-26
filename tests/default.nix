@@ -31,11 +31,13 @@
             pkgs.python3
             pkgs.git
             pkgs.bash
+            pkgs.shellcheck
           ];
         }
         ''
           cd "$src"
           export PYTHONDONTWRITEBYTECODE=1
+          shellcheck scripts/validate scripts/setup-local-validation .githooks/pre-push
           python scripts/validation-policy.py .
           python tests/test_validation_runner.py
           touch "$out"
