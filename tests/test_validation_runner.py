@@ -325,7 +325,11 @@ class ValidationTests(unittest.TestCase):
             self.hook(branch, True)
             record = self.bootstrap_records()[-1]
             self.assertEqual(record["revision"], self.sha)
-            self.assertEqual(record["args"][-3:], ["require-receipt", mode, self.sha])
+            expected = ["require-receipt", mode, self.sha]
+            if mode == "affected":
+                # The hook binds feature receipts to the merge base with local main.
+                expected += ["--base", self.sha]
+            self.assertEqual(record["args"][-len(expected) :], expected)
         # A direct caller cannot substitute HEAD's validator for the requested SHA.
         env = dict(self.env, NIXOSCONF_VALIDATOR_REV=newer)
         self.cmd(

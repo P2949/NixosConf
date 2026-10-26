@@ -10,8 +10,8 @@ esac
 cd "$repo_root"
 revision=HEAD
 if [ "${1-}" = require-receipt ]; then
-    if [ "$#" -ne 3 ]; then
-        echo "Usage: scripts/validate require-receipt MODE COMMIT" >&2
+    if [ "$#" -ne 3 ] && { [ "$#" -ne 5 ] || [ "$4" != --base ]; }; then
+        echo "Usage: scripts/validate require-receipt MODE COMMIT [--base BASE]" >&2
         exit 1
     fi
     revision=$3
