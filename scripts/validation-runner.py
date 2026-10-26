@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import socket
 import subprocess
@@ -29,6 +30,30 @@ selector = module("validation-targets")
 
 def now():
     return datetime.now(timezone.utc).isoformat()
+
+
+def stage_result(name, status, output):
+    if name == "stock-contamination-negative":
+        if (
+            status not in {1, 100}
+            or "contains the following disallowed paths:" not in output
+            or not re.search(
+                r"/nix/store/[a-z0-9]{32}-nixos-opt-pgo-fixture(?:\s|$)", output
+            )
+        ):
+            raise ValueError(
+                "negative fixture did not prove forbidden-dependency rejection"
+            )
+        return dict(
+            name=name,
+            result="PASS",
+            expected_failure=True,
+            exit_code=status,
+            diagnostic="forbidden-dependency",
+        )
+    if status:
+        raise ValueError("stage failed: " + name)
+    return dict(name=name, result="PASS")
 
 
 def run(mode, base=None, head="HEAD"):
@@ -127,12 +152,14 @@ def run(mode, base=None, head="HEAD"):
             with subprocess.Popen(
                 command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
             ) as process:
+                output = []
                 for line in process.stdout:
                     sys.stdout.write(line)
                     log.write(line)
-                if process.wait():
-                    raise ValueError("stage failed: " + name)
-            data["stages"].append(dict(name=name, result="PASS"))
+                    if name == "stock-contamination-negative":
+                        output.append(line)
+                status = process.wait()
+            data["stages"].append(stage_result(name, status, "".join(output)))
     receipts.clean()
     if receipts.identity("HEAD") != source:
         raise ValueError("source changed during validation")
