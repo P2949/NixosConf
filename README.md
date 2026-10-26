@@ -79,9 +79,10 @@ activating the system or starting stress tests. The
 define the frozen benchmark environment and exclude experimental outputs from
 the productive desktop.
 
-Optimization measurements use the frozen benchmark control on a separate
-branch. Each experiment must retain source, toolchain, profile, derivation
-and workload identity. BOLT outputs are new immutable derivations; existing
+Optimization measurements use isolated experiment branches rooted in the
+appropriate frozen/archive-tagged benchmark source. Each experiment must retain
+source, toolchain, profile, derivation and workload identity. BOLT outputs are new
+immutable derivations; existing
 Nix-store outputs are never modified. Readiness and experiment status belong
 in [current status](docs/status.md), rather than this overview.
 

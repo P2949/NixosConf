@@ -2,7 +2,7 @@
 
 Daily and Gaming are the accepted production profiles. The previously observed
 Unreal timeout was resolved by the user and is no longer an adoption blocker.
-See the [acceptance record](reports/gpu-workload-profiles-2026-10-21.md).
+The workload policy was accepted through [PR #59](https://github.com/P2949/NixosConf/pull/59).
 
 The desktop boots into **Daily**: 238 W, −150 mV, factory core and VRAM clocks,
 Manual performance level with the `POWER_SAVING` firmware workload heuristic,
@@ -81,10 +81,8 @@ runtime locking, writable seeding and daemon-restart ordering. The VM does not
 prove physical AMD clocks, power, temperature or fan behavior.
 
 Prior electrical, fan, boot, daemon-restart and accepted suspend evidence remains
-closed. The [workload-profile acceptance record](reports/gpu-workload-profiles-2026-10-21.md)
-tracks the narrow heuristic change and its current validation status. The user
-checks their existing Unreal project; do not rebuild the removed historical
-benchmark or reopen electrical/fan qualification.
+closed. The Daily/Gaming workload-heuristic policy is accepted; do not rebuild
+the removed historical benchmark or reopen electrical/fan qualification.
 
 For ordinary NixOS/configuration updates, run `nix flake check` and
 `nixos-rebuild build`, switch/reboot as normally appropriate, and confirm Daily
