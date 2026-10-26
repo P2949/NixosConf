@@ -86,9 +86,11 @@ def unique_object(pairs):
     return result
 
 
-def require(mode, commit, selector):
+def require(mode, commit, selector, expected_base=None):
     if mode not in {"affected", "full", "all"}:
         raise ValueError("invalid receipt mode")
+    if mode != "affected" and expected_base is not None:
+        raise ValueError("an expected base applies only to affected receipts")
     clean()
     expected = identity(commit)
     data = json.loads(
@@ -118,6 +120,10 @@ def require(mode, commit, selector):
         base = git("rev-parse", "--verify", data["base"] + "^{commit}")
         if data["base"] != base:
             raise ValueError("affected base must be an exact commit SHA")
+        if expected_base is not None and (
+            git("rev-parse", "--verify", expected_base + "^{commit}") != base
+        ):
+            raise ValueError("affected receipt base differs from the expected base")
         paths = (
             subprocess.check_output(
                 [

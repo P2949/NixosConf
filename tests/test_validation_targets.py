@@ -80,6 +80,7 @@ class SelectionTests(unittest.TestCase):
             "tests/test_ci_targets.py",
             "scripts/validation-receipts.py",
             "scripts/setup-local-validation",
+            ".githooks/pre-commit",
             ".githooks/pre-push",
             "tests/test_validation_runner.py",
             "tests/default.nix",

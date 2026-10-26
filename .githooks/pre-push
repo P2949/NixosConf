@@ -1,13 +1,25 @@
 #!/bin/sh
+# Admission is local-only: main needs an exact full receipt; any other branch needs an exact
+# affected receipt bound to its merge base with local main. No remote state is consulted.
 set -eu
 while read -r _local_ref local_sha remote_ref _remote_sha; do
     case "$local_sha" in
         0000000000000000000000000000000000000000) continue ;;
     esac
     case "$remote_ref" in
-        refs/heads/main) mode=full ;;
-        refs/heads/*) mode=affected ;;
-        *) continue ;;
+        refs/heads/main)
+            ./scripts/validate require-receipt full "$local_sha"
+            ;;
+        refs/heads/*)
+            main=$(git rev-parse --verify --quiet refs/heads/main^{commit}) || {
+                echo "pre-push: local main cannot be resolved" >&2
+                exit 1
+            }
+            base=$(git merge-base "$local_sha" "$main") || {
+                echo "pre-push: no merge base between $local_sha and local main" >&2
+                exit 1
+            }
+            ./scripts/validate require-receipt affected "$local_sha" --base "$base"
+            ;;
     esac
-    ./scripts/validate require-receipt "$mode" "$local_sha"
 done

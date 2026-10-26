@@ -127,9 +127,12 @@ class ValidationTests(unittest.TestCase):
             for line in (self.root / ".git/bootstrap.jsonl").read_text().splitlines()
         ]
 
-    def receipt(self, mode):
+    def receipt(self, mode, sha=None):
         return (
-            self.root / ".git/local-validation/receipts" / self.sha / (mode + ".json")
+            self.root
+            / ".git/local-validation/receipts"
+            / (sha or self.sha)
+            / (mode + ".json")
         )
 
     def hook(self, branch, ok):
@@ -399,6 +402,147 @@ class ValidationTests(unittest.TestCase):
             self.cmd("git", "config", "core.hooksPath").stdout.strip(), ".githooks"
         )
 
+    def head(self):
+        return self.cmd("git", "rev-parse", "HEAD").stdout.strip()
+
+    def push_hook(self, sha, branch="feature", remote_sha="0" * 40, ok=True):
+        return self.cmd(
+            "sh",
+            ".githooks/pre-push",
+            input=f"refs/heads/{branch} {sha} refs/heads/{branch} {remote_sha}\n",
+            ok=ok,
+        )
+
+    def feature_with_change(self):
+        self.cmd("git", "checkout", "-b", "feature")
+        path = self.root / "packages/minecraft-tools/main.py"
+        path.parent.mkdir(parents=True)
+        path.write_text("print('change')\n")
+        self.cmd("git", "add", ".")
+        self.cmd("git", "commit", "-m", "feature change")
+        return self.head()
+
+    def test_feature_push_binds_the_receipt_to_the_merge_base_with_local_main(self):
+        feature = self.feature_with_change()
+        self.push_hook(feature, ok=False)
+        self.validate("affected")
+        data = json.loads(self.receipt("affected", feature).read_text())
+        self.assertEqual(data["base"], self.sha)
+        self.assertTrue(data["targets"])
+        self.push_hook(feature)
+        self.validate("require-receipt", "affected", feature, "--base", self.sha)
+
+    def test_feature_push_rejects_a_receipt_made_against_head(self):
+        feature = self.feature_with_change()
+        self.validate("affected", "--base", "HEAD")
+        data = json.loads(self.receipt("affected", feature).read_text())
+        self.assertEqual(data["base"], feature)
+        self.assertEqual(data["targets"], [])
+        # Structurally valid on its own, so only the expected base can refuse it.
+        self.validate("require-receipt", "affected", feature)
+        result = self.push_hook(feature, ok=False)
+        self.assertIn("differs from the expected base", result.stderr)
+
+    def test_a_stored_base_that_differs_from_the_expected_base_is_rejected(self):
+        feature = self.feature_with_change()
+        self.validate("affected")
+        other = self.cmd("git", "rev-parse", "HEAD~1").stdout.strip()
+        self.assertEqual(other, self.sha)
+        path = self.receipt("affected", feature)
+        data = json.loads(path.read_text())
+        data["base"] = feature
+        path.write_text(json.dumps(data))
+        result = self.validate(
+            "require-receipt", "affected", feature, "--base", self.sha, ok=False
+        )
+        self.assertIn("differs from the expected base", result.stderr)
+
+    def test_expected_base_is_canonicalized_and_not_accepted_for_full(self):
+        feature = self.feature_with_change()
+        self.validate("affected")
+        self.validate("require-receipt", "affected", feature, "--base", "main")
+        self.validate("require-receipt", "affected", feature, "--base", "HEAD~1")
+        self.validate("full")
+        self.validate("require-receipt", "full", feature)
+        self.validate(
+            "require-receipt", "full", feature, "--base", self.sha, ok=False
+        )
+
+    def test_main_needs_full_and_does_not_accept_affected(self):
+        self.validate("affected")
+        self.push_hook(self.sha, branch="main", ok=False)
+        self.validate("full")
+        self.push_hook(self.sha, branch="main")
+
+    def test_feature_admission_ignores_the_remote_state_and_network(self):
+        feature = self.feature_with_change()
+        self.cmd("git", "remote", "add", "origin", "/nonexistent/unreachable.git")
+        self.validate("affected")
+        for remote_sha in ("0" * 40, "f" * 40, feature):
+            self.push_hook(feature, remote_sha=remote_sha)
+        self.validate("require-receipt", "affected", feature, "--base", self.sha)
+
+    def test_feature_push_fails_closed_without_local_main(self):
+        feature = self.feature_with_change()
+        self.validate("affected")
+        self.cmd("git", "branch", "-m", "main", "trunk")
+        result = self.push_hook(feature, ok=False)
+        self.assertIn("local main cannot be resolved", result.stderr)
+
+    def test_feature_push_fails_closed_without_a_merge_base(self):
+        self.cmd("git", "checkout", "--orphan", "unrelated")
+        self.cmd("git", "rm", "-rf", "--quiet", ".")
+        (self.root / "flake.lock").write_text("{}")
+        self.cmd("git", "add", ".")
+        self.cmd("git", "commit", "-m", "unrelated history")
+        unrelated = self.head()
+        self.push_hook(unrelated, ok=False)
+
+    def test_pre_commit_runs_policy_and_formatting_and_nothing_heavier(self):
+        log = self.root / ".git/nix-calls"
+        nix = self.bin / "nix"
+        nix.write_text(
+            '#!/bin/sh\necho "$*" >> "$NIX_CALL_LOG"\n'
+            'if [ "$1" = "shell" ]; then\n shift\n'
+            ' while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\n'
+            '[ "${FAIL_FMT:-}" != "yes" ]\n'
+        )
+        nix.chmod(0o755)
+        os.symlink(sys.executable, self.bin / "python3")
+        self.env["NIX_CALL_LOG"] = str(log)
+        self.cmd("sh", ".githooks/pre-commit")
+        calls = log.read_text().splitlines()
+        self.assertEqual(len(calls), 2)
+        self.assertIn("nixpkgs#python3", calls[0])
+        self.assertTrue(calls[1].startswith("fmt "))
+        self.assertTrue(calls[1].endswith("-- --ci"))
+        self.assertFalse(any("flake check" in call for call in calls))
+        self.env["FAIL_FMT"] = "yes"
+        self.cmd("sh", ".githooks/pre-commit", ok=False)
+        del self.env["FAIL_FMT"]
+        workflow = self.root / ".github/workflows/check.yml"
+        workflow.parent.mkdir(parents=True)
+        workflow.touch()
+        result = self.cmd("sh", ".githooks/pre-commit", ok=False)
+        self.assertIn("Remote CI is prohibited", result.stderr)
+
+    def test_setup_requires_both_hooks_before_changing_git_config(self):
+        for hook in ("pre-commit", "pre-push"):
+            path = self.root / ".githooks" / hook
+            mode = path.stat().st_mode
+            path.chmod(0o644)
+            self.cmd("sh", "scripts/setup-local-validation", ok=False)
+            self.cmd("git", "config", "core.hooksPath", ok=False)
+            path.unlink()
+            self.cmd("sh", "scripts/setup-local-validation", ok=False)
+            self.cmd("git", "config", "core.hooksPath", ok=False)
+            path.write_text("#!/bin/sh\n")
+            path.chmod(mode)
+        self.cmd("sh", "scripts/setup-local-validation")
+        self.assertEqual(
+            self.cmd("git", "config", "core.hooksPath").stdout.strip(), ".githooks"
+        )
+
 
 class LocalCiDispatchTests(unittest.TestCase):
     def test_every_command_maps_to_the_canonical_orchestrator(self):
@@ -449,25 +593,72 @@ class PolicyTests(unittest.TestCase):
             cache.parent.mkdir(parents=True)
             cache.write_bytes(b"GITHUB_ACTIONS workflow_dispatch")
             self.assertEqual(policy.violations(root), [])
-            for name in [
-                ".github/workflows/check.yml",
-                ".gitlab-ci.yml",
-                ".gitlab-ci.yaml",
-                ".circleci/config.yml",
-                "Jenkinsfile",
-                "azure-pipelines.yml",
-                ".buildkite/pipeline.yml",
-            ]:
-                path = root / name
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.touch()
-                self.assertTrue(policy.violations(root), name)
-                path.unlink()
-            path = root / "scripts/test.sh"
-            path.parent.mkdir(exist_ok=True)
+            for name in policy.FORBIDDEN_PATHS:
+                for target in (name, name + "/config"):
+                    path = root / target
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.touch()
+                    self.assertTrue(policy.violations(root), target)
+                    path.unlink()
+                    if target != name:
+                        path.parent.rmdir()
+            self.assertEqual(
+                {
+                    ".github/workflows",
+                    ".github/actions",
+                    ".gitlab-ci.yml",
+                    ".gitlab-ci.yaml",
+                    ".circleci",
+                    ".travis.yml",
+                    "azure-pipelines.yml",
+                    "Jenkinsfile",
+                    ".buildkite",
+                    ".drone.yml",
+                    ".woodpecker",
+                    "bitbucket-pipelines.yml",
+                },
+                set(policy.FORBIDDEN_PATHS),
+            )
             for token in policy.TOKENS:
-                path.write_text(token)
-                self.assertTrue(policy.violations(root), token)
+                for name in ("scripts/test.sh", "hosts/host.nix", "tools/job.json"):
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text("x " + token + " y")
+                    self.assertTrue(policy.violations(root), token + " in " + name)
+                    path.unlink()
+            for text in (
+                "steps:\n  - uses: owner/action@v1\n",
+                "steps:\n  - uses: actions/checkout@v4\n",
+                "steps:\n  - uses: some-org/some-action@0123abc\n",
+            ):
+                path = root / "config/steps.yaml"
+                path.parent.mkdir(exist_ok=True)
+                path.write_text(text)
+                self.assertTrue(policy.violations(root), text)
+                path.unlink()
+
+    def test_legitimate_github_use_and_fixtures_are_accepted(self):
+        spec = importlib.util.spec_from_file_location(
+            "policy", ROOT / "scripts/validation-policy.py"
+        )
+        policy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(policy)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "flake.nix").write_text('inputs.nixpkgs.url = "github:NixOS/nixpkgs";')
+            (root / ".github").mkdir()
+            (root / ".github/CODEOWNERS").write_text("* @owner")
+            (root / "notes.md").write_text("runs-on: GITHUB_ACTIONS ${{ github.sha }}")
+            (root / "local.yaml").write_text("steps:\n  - uses: ./local/action\n")
+            for name in ("target", "node_modules", ".llm-runs", "dist", "result"):
+                path = root / name / "x.sh"
+                path.parent.mkdir()
+                path.write_text("GITHUB_ACTIONS")
+            for name in ("scripts/validation-policy.py", "tests/test_validation_runner.py"):
+                path = root / name
+                path.parent.mkdir(exist_ok=True)
+                path.write_text("GITHUB_ACTIONS runs-on:")
+            self.assertEqual(policy.violations(root), [])
 
 
 if __name__ == "__main__":

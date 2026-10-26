@@ -1,3 +1,9 @@
 #!/bin/sh
 set -eu
+for hook in pre-commit pre-push; do
+    if [ ! -x ".githooks/$hook" ]; then
+        echo "setup-local-validation: .githooks/$hook is missing or not executable" >&2
+        exit 1
+    fi
+done
 git config core.hooksPath .githooks

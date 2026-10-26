@@ -194,11 +194,12 @@ def main():
     child = sub.add_parser("require-receipt")
     child.add_argument("required", choices=["affected", "full", "all"])
     child.add_argument("commit")
+    child.add_argument("--base")
     args = parser.parse_args()
     os.chdir(receipts.git("rev-parse", "--show-toplevel"))
     check_validator_revision(args.commit if args.mode == "require-receipt" else "HEAD")
     if args.mode == "require-receipt":
-        receipts.require(args.required, args.commit, selector)
+        receipts.require(args.required, args.commit, selector, args.base)
     else:
         run(args.mode, getattr(args, "base", None), getattr(args, "head", "HEAD"))
 

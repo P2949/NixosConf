@@ -6,7 +6,8 @@ Actions (including self-hosted runners), and equivalent remote validation
 services are prohibited. PRs may support human review or history but never
 control validation, merge eligibility, or release qualification.
 
-Install the tracked push hook in each checkout:
+Install the tracked hooks in each checkout (setup refuses to run unless both exist and are
+executable):
 
 ```bash
 ./scripts/setup-local-validation
@@ -14,7 +15,8 @@ Install the tracked push hook in each checkout:
 
 `scripts/local-ci.py` is the same contract under the plan's vocabulary and owns no checks:
 `fast`, `changed [--base REV]` (= `affected`), `full`, `policy` (hosted-CI rejection) and `setup`.
-The selector also knows `main`, which selects like `changed` but always builds the desktop closure.
+The selector itself accepts only `affected` and `full`; `main` is enforced at push time by requiring
+a `full` receipt, not by a third selection mode.
 
 The canonical interface is `scripts/validate`. Its trust chain is:
 
@@ -67,12 +69,26 @@ repository identity, exact commit and tree, lock hash, mode, selection, stages,
 tool/system provenance and timestamps. Failed or interrupted runs cannot qualify
 source. These local artifacts are never committed or added to system persistence.
 
-The pre-push hook rejects a feature branch without an exact affected PASS and
-rejects `main` without an exact full PASS. Inspect admission without a push:
+Admission has three layers:
+
+- `pre-commit` runs the hosted-CI policy and the Nix formatting check (`nix fmt -- --ci`) only;
+  it never runs `fast`.
+- Pushing a feature branch requires an exact `affected` PASS for the pushed commit **whose base is
+  the merge base of that commit and local `main`**. The hook passes that base to
+  `require-receipt`, so a receipt generated with a different base (for example `affected --base
+  HEAD`, which selects nothing) is rejected. The hook uses local `main` and never the remote SHA,
+  `origin/main` or the network, and fails closed if local `main` or the merge base is unresolvable.
+- Pushing `main` requires an exact `full` PASS and does not accept `affected`.
+
+Inspect admission without a push:
 
 ```bash
 ./scripts/validate require-receipt full HEAD
+./scripts/validate require-receipt affected HEAD --base "$(git merge-base HEAD main)"
 ```
+
+`--base` applies only to `affected`; `full` and `all` reject it. `affected --base` also remains
+available for reproduction and debugging.
 
 Develop on a feature branch, commit, then run `./scripts/validate affected`.
 Merge locally into `main`, run `./scripts/validate full` against the exact merge
