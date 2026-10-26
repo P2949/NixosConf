@@ -7,11 +7,16 @@ to [stock policy](stock-policy.md); qualification evidence belongs to the
 The v2 framework is established on the frozen benchmark control.
 
 Ordinary desktop application additions may change the productive closure without
-retagging the immutable benchmark control. `nix flake check` retains the pinned
-control-input and optimization-dependency checks. Before an experiment, run
+retagging the immutable benchmark control. Ordinary `nix flake check` validates
+the optimization framework, stage/schema invariants and optimization-dependency
+exclusions; it does not require productive inputs or the recovery ISO to equal
+an older frozen control. Before an experiment, run
 `nix build .#optimization-control-identity --no-link` explicitly: it rejects
 evaluated normal/recovery closures that differ from the frozen control. The
 runner independently rejects evaluated/current/booted control mismatches.
+An advanced productive source is expected to fail this explicit admission gate.
+The immutable control tag retains its source and lock identities independently
+of productive maintenance.
 Prism candidates are ordinary workstation changes and are not benchmark controls.
 
 The first completed reference experiment is
