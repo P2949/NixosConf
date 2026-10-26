@@ -5,6 +5,8 @@
 
   networking.hostName = "nixos-recovery";
 
+  boot.zfs.forceImportRoot = false;
+
   # Independent pinned rescue environment; never import workstation disks,
   # persistence, passwords, cooling control or destructive reset behavior.
   environment.systemPackages = with pkgs; [
