@@ -21,6 +21,10 @@ class ValidationTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         shutil.copytree(ROOT / "scripts", self.root / "scripts")
         shutil.copytree(ROOT / ".githooks", self.root / ".githooks")
+        # Nix-store sources are read-only; transient-edit fixtures must be writable.
+        for path in (self.root / "scripts").rglob("*"):
+            if path.is_file():
+                path.chmod(path.stat().st_mode | 0o200)
         (self.root / "flake.lock").write_text("{}")
         self.env = dict(
             os.environ,
