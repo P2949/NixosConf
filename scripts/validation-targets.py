@@ -1,7 +1,6 @@
-"""Select explicit CI builds from a NUL-delimited git diff on stdin."""
+"""Select local integration builds from a NUL-delimited git diff on stdin."""
 
 import json
-import os
 import sys
 
 STORAGE = {
@@ -18,9 +17,11 @@ STORAGE = {
 OPTIMIZATION = {"boehmgc-compiler-preparation", "nix-evaluation-gc-consumers"}
 
 
-def select(paths, event):
+def select(paths, mode):
     targets = set()
-    desktop = event in {"push", "workflow_dispatch"}
+    if mode not in {"affected", "full"}:
+        raise ValueError("invalid validation mode")
+    desktop = mode == "full"
     for path in paths:
         if path.endswith(".md") or path.startswith("optimization/results/"):
             continue
@@ -31,7 +32,11 @@ def select(paths, event):
         } or path.startswith(
             (
                 ".github/",
-                "scripts/ci-",
+                "scripts/validation-",
+                "scripts/validate",
+                "scripts/setup-local-validation",
+                ".githooks/",
+                "tests/test_validation_",
                 "profiles/",
                 "modules/workstation/",
                 "modules/core/",
@@ -80,7 +85,7 @@ def select(paths, event):
             ("hosts/", "home/", "modules/", "profiles/", "packages/", "images/")
         ):
             desktop = True
-    if event == "workflow_dispatch":
+    if mode == "full":
         targets.update(
             STORAGE | OPTIMIZATION | {"workstation-smoke", "minecraft-staging"}
         )
@@ -93,6 +98,4 @@ def select(paths, event):
 
 if __name__ == "__main__":
     result = select(sys.stdin.buffer.read().decode().split("\0"), sys.argv[1])
-    with open(os.environ["GITHUB_OUTPUT"], "a") as output:
-        for key, value in result.items():
-            print(f"{key}={json.dumps(value)}", file=output)
+    print(json.dumps(result))

@@ -2,8 +2,9 @@
 
 The **productive desktop** advances on `main`, independently of the immutable
 [qualification baseline](baselines/pre-optimization/baseline-final.md) and frozen
-[benchmark control](stock-policy.md). Exact source, CI and acceptance receipts
-belong to PR/tag history; see the [history index](history/README.md).
+[benchmark control](stock-policy.md). Exact-source validation receipts live in local Git metadata under the
+[local validation policy](local-validation.md). Historical acceptance records
+remain in the [history index](history/README.md).
 
 ## Storage and recovery
 

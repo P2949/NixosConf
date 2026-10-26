@@ -54,6 +54,9 @@ pkgs.testers.runNixOSTest {
       pkgs.btrfs-progs
     ];
     virtualisation = {
+      graphics = false;
+      qemu.consoles = [ "ttyS0,115200n8" ];
+      qemu.options = [ "-vga none" ];
       memorySize = 4096;
       cores = 2;
       # Avoid a label collision after target Btrfs is also labelled nixos.
@@ -95,7 +98,7 @@ pkgs.testers.runNixOSTest {
     variables = Path(tempfile.mkdtemp()) / "efi-vars.fd"
     shutil.copyfile("${pkgs.OVMF.variables}", variables)
     command = shlex.split("${qemuCommon.qemuBinary pkgs.qemu_test}") + [
-        "-m", "4096", "-smp", "2",
+        "-m", "4096", "-smp", "2", "-vga", "none",
         "-drive", f"file={installer.state_dir}/empty0.qcow2,if=none,id=installed,format=qcow2",
         "-device", "virtio-blk-pci,drive=installed,serial=reconstruction",
         "-drive", "if=pflash,format=raw,unit=0,readonly=on,file=${pkgs.OVMF.firmware}",

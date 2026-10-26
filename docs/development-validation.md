@@ -136,7 +136,7 @@ Build, UEFI boot, Home Manager activation, guest persistence/reboot, active
 Hyprland and a rendered Alacritty window have been verified. System and user
 units reported no failures. Human interactive input/audio and application
 workloads remain unexercised in the VM; physical acceptance is separate.
-The desktop VM is an explicit developer tool and is not built by ordinary CI.
+The desktop VM is an explicit developer tool and is not built by routine local validation.
 
 ## Interactive interrupted-recovery debugging
 
@@ -360,54 +360,21 @@ capability or a runtime benefit. The running system already had AMD graphics
 and KVM loaded. Retain curated hardware policy; the inferred configuration was
 built for comparison and was not activated or runtime-qualified.
 
-## CI validation tiers
+## Local validation tiers
 
-`Required CI` is the required aggregate job. It runs even when dependencies fail
-or are cancelled, and passes only when `Flake checks` succeeds and each of
-`Integration checks` and `Desktop build` succeeds or is skipped by selection.
-Every PR runs formatting,
-lint, configuration assertions, negative configuration checks, Python tests,
-stock-control safeguards and cheap optimization checks via `nix flake check`.
-Explicit integration packages are evaluated through `integration-evaluation`;
-their derivation paths have dependency contexts removed so this does not build
-VMs or alternate compilers. No tests have been deleted.
+[Local validation](local-validation.md) owns the runner, receipts and push policy.
+`./scripts/validate fast` runs formatting, lint, configuration assertions,
+negative checks, Python/shell tests, stock safeguards and cheap optimization
+checks. `integration-evaluation` evaluates explicit integration packages without
+building their VM/compiler dependency contexts.
 
-`Integration checks` builds targets selected by `scripts/ci-targets.py` from the
-PR base/head diff (including deleted and renamed paths). Storage policy and
-recovery changes, including Home Manager persistence policy, select granular/reset, interrupted recovery, persistent
-identity/fallback, blank-disk reconstruction, activation actions and recovery
-ISO targets. Desktop/session changes select `workstation-smoke`; Minecraft
-changes select `minecraft-staging`; optimization changes select compiler
-preparation and GC-consumer builds. Commander Core configuration and Python
-tests remain universal. Flake inputs/composition and shared policy select the
-broader suite. Changes to CI selection itself also select the broader suite.
+`affected` retains path-aware storage/recovery, workstation, Minecraft and
+optimization selection. `full` builds the complete integration set and desktop;
+`all` adds the automated developer/system-model tests documented above.
+Integration builds run sequentially with one job and two cores; fast checks use
+two jobs and two cores. Interactive/debug artifacts remain explicit tools.
 
-`Desktop build` runs on every main push and on PRs touching system composition,
-hosts, modules, profiles, Home Manager, packages or images. Documentation-only,
-test-only and optimization-result PRs avoid the desktop closure build. Main
-pushes retain fast checks and path-selected integration as well as the complete
-build. A manual **Run workflow** runs all selected subsystem and exhaustive
-storage/recovery targets plus the desktop build. Experimental image, binfmt,
-distributed-build and interactive debug packages remain explicit developer
-commands documented above.
-
-Fast checks use two Nix jobs with two cores per derivation; integration and
-system builds use one job with two cores. Fast evaluation and integration retain swap headroom: evaluating all explicit
-VM targets can itself exceed a small runner's RAM.
-Superseded runs are cancelled per PR/ref. Timing targets are 3–8 minutes for
-fast checks, 5–15 for ordinary integration and 30–60+ for exhaustive recovery;
-these are goals awaiting hosted-run measurements, not verified performance.
-Inspect Actions job durations and memory behavior before increasing parallelism.
-When merging, verify the current head's fast check and any selected integration
-and desktop jobs; a successful fast job alone does not prove those jobs passed.
-
-Validate changes from a clean committed source: optimization package provenance
-requires a Git revision. Run the routing regressions, Ruff, Actionlint and flake
-checks before publication, then verify all selected jobs on the exact PR head
-and the main push after merge. Retain run identities and measured durations in
-the PR rather than treating the timing targets above as acceptance evidence.
 The integration-evaluation derivation must depend only on Bash/stdenv, not the
-enumerated VM/compiler derivations. All variants in the shared root-reset/recovery
-harness use a serial console and disable VGA to avoid hosted framebuffer
-stalls; their storage assertions remain intact. CI registration changes do not authorize
-physical optimization measurements or runtime deployment.
+enumerated VM/compiler derivations. The shared root-reset/recovery harness uses
+a serial console and disables VGA; storage assertions remain intact. Validation
+registration changes do not authorize physical measurements or deployment.
