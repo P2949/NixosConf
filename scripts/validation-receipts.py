@@ -54,13 +54,48 @@ def receipt_path(mode, commit):
     return metadata() / "receipts" / commit / (mode + ".json")
 
 
+RECEIPT_KEYS = {
+    "schema_version",
+    "source_ref",
+    "repository",
+    "commit",
+    "tree",
+    "clean_tree",
+    "flake_lock_sha256",
+    "mode",
+    "base",
+    "targets",
+    "integration",
+    "desktop",
+    "started",
+    "finished",
+    "nix_version",
+    "nixos_version",
+    "hostname",
+    "stages",
+    "result",
+}
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate receipt key: " + key)
+        result[key] = value
+    return result
+
+
 def require(mode, commit, selector):
     if mode not in {"affected", "full", "all"}:
         raise ValueError("invalid receipt mode")
     clean()
     expected = identity(commit)
-    data = json.loads(receipt_path(mode, expected["commit"]).read_text())
-    if not isinstance(data, dict):
+    data = json.loads(
+        receipt_path(mode, expected["commit"]).read_text(),
+        object_pairs_hook=unique_object,
+    )
+    if not isinstance(data, dict) or set(data) != RECEIPT_KEYS:
         raise ValueError("malformed receipt")
     if any(
         type(data.get(k)) is not type(v) or data.get(k) != v
@@ -100,6 +135,8 @@ def require(mode, commit, selector):
         )
         selected = selector.select(paths, "affected")
     else:
+        if data["base"] is not None:
+            raise ValueError("full/all base must be null")
         selected = selector.select([], "full")
     if any(
         type(data.get(k)) is not type(selected[k]) or data.get(k) != selected[k]
@@ -119,6 +156,16 @@ def require(mode, commit, selector):
         or any(r.get("result") != "PASS" for r in results)
     ):
         raise ValueError("receipt has incomplete or failed stages")
+    for stage in results:
+        keys = {"name", "result"}
+        if stage["name"] == "stock-contamination-negative":
+            keys |= {"expected_failure", "exit_code", "diagnostic"}
+        if (
+            set(stage) != keys
+            or type(stage["name"]) is not str
+            or type(stage["result"]) is not str
+        ):
+            raise ValueError("malformed receipt stage")
     if mode == "all":
         negative = results[-1]
         if (

@@ -64,6 +64,13 @@
         systemConfig = inputs.self.nixosConfigurations.desktop;
         recoverySystem = inputs.self.nixosConfigurations.recovery;
       };
+      validationDriver = pkgs.writeShellApplication {
+        name = "nixosconf-validation";
+        runtimeEnv.NIXOSCONF_VALIDATOR_REV = inputs.self.rev or "dirty";
+        text = ''
+          exec ${pkgs.python3}/bin/python3 ${./scripts}/validation-runner.py "$@"
+        '';
+      };
       validation = import ./tests {
         inherit
           inputs
@@ -78,6 +85,11 @@
     {
 
       formatter.${system} = pkgs.nixfmt-tree;
+
+      apps.${system}.validation = {
+        type = "app";
+        program = "${validationDriver}/bin/nixosconf-validation";
+      };
 
       devShells.${system} = {
         default = pkgs.mkShell {

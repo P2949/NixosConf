@@ -16,7 +16,24 @@ Install the tracked push hook in each checkout:
 `fast`, `changed [--base REV]` (= `affected`), `full`, `policy` (hosted-CI rejection) and `setup`.
 The selector also knows `main`, which selects like `changed` but always builds the desktop closure.
 
-The canonical orchestrator is `scripts/validate`:
+The canonical interface is `scripts/validate`. Its trust chain is:
+
+```text
+scripts/validate
+→ exact local Git revision
+→ apps.x86_64-linux.validation
+→ immutable Nix-store validator and Python from that locked flake
+→ exact Git source for validation stages
+→ strict exact-commit receipt
+```
+
+Bootstrap uses `nix run --builders ""` and never executes validator code from
+the mutable checkout. The app embeds its source revision and verifies it against
+HEAD for validation, or the requested commit for receipt admission. Thus
+`require-receipt MODE COMMIT` uses COMMIT's own validator, even when COMMIT is
+not HEAD. The small wrapper rejects repository paths needing URI encoding.
+
+Supported modes:
 
 - `fast` runs ordinary flake checks, including formatting, lint and policy tests.
   It allows a dirty tree and does not qualify a commit.
@@ -34,9 +51,13 @@ Affected, full and all require clean committed source, including no untracked
 files. Exact modes pass a local Git flake reference pinned to the commit SHA to
 every Nix stage; transient checkout edits cannot change the qualified source.
 Schema version 2 receipts record that reference and strictly validate field types
-and time-zone-aware timestamps. Receipts are specific to this checkout location;
-older receipt schemas require requalification. The runner disables remote Nix builders and obtains Python from the
-locked Nix input. Nix jobs use two cores, with two fast jobs or one integration/build job.
+and time-zone-aware timestamps. Schema v2 rejects unknown or missing fields,
+duplicate JSON keys at every object level, and unexpected stage fields. Receipts
+are specific to this checkout location;
+older receipt schemas require requalification. Bootstrap and validation stages
+disable remote Nix builders; binary substitutes are allowed. The app pins Python
+and validator source while retaining the host Nix, Git and NixOS-version tools.
+Nix jobs use two cores, with two fast jobs or one integration/build job.
 Tests and their derivations remain authoritative in `tests/default.nix` and
 `flake.nix`; selection lives in `scripts/validation-targets.py`.
 
@@ -56,6 +77,10 @@ rejects `main` without an exact full PASS. Inspect admission without a push:
 Develop on a feature branch, commit, then run `./scripts/validate affected`.
 Merge locally into `main`, run `./scripts/validate full` against the exact merge
 commit, then push `main`. Earlier feature receipts do not qualify a merge commit.
-Use `all` for exhaustive qualification when needed. No network service or human
-validation step decides PASS; GitHub can be unavailable throughout qualification
-and local merge decisions. Building never activates the workstation.
+Use `all` for exhaustive qualification when needed. No GitHub API, Actions
+runner, status check, PR or other remote validation service participates in
+qualification. If locked dependencies/substitutes are already present,
+qualification can run with GitHub unavailable. A cold Nix store may require
+network access to acquire locked inputs or substitutes; dependency acquisition
+is not remote validation. No human validation step decides PASS. Building never
+activates the workstation.

@@ -76,7 +76,9 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(ci.select([], "full")["desktop"])
         for path in [
             "scripts/validate",
-            "scripts/validation-receipt.py",
+            "scripts/local-ci.py",
+            "tests/test_ci_targets.py",
+            "scripts/validation-receipts.py",
             "scripts/setup-local-validation",
             ".githooks/pre-push",
             "tests/test_validation_runner.py",
@@ -86,6 +88,22 @@ class SelectionTests(unittest.TestCase):
             result = ci.select([path], "affected")
             self.assertEqual(set(result["targets"]), expected, path)
             self.assertTrue(result["desktop"])
+
+    def test_compatibility_modes(self):
+        for paths in (
+            [],
+            ["README.md"],
+            ["home/p2949/default.nix"],
+            ["optimization/default.nix"],
+            ["flake.lock"],
+        ):
+            affected = ci.select(paths, "affected")
+            self.assertEqual(ci.select(paths, "changed"), affected)
+            main = ci.select(paths, "main")
+            self.assertEqual(main["targets"], affected["targets"])
+            self.assertEqual(main["integration"], affected["integration"])
+            self.assertTrue(main["desktop"])
+        self.assertEqual(ci.select([], "main")["targets"], [])
 
     def test_gpu_helper_selects_workstation(self):
         for path in [

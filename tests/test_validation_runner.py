@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import textwrap
 import os
 from pathlib import Path
 import shutil
@@ -37,19 +38,63 @@ class ValidationTests(unittest.TestCase):
         self.sha = self.cmd("git", "rev-parse", "HEAD").stdout.strip()
         self.bin = self.root / ".git" / "test-bin"
         self.bin.mkdir()
+        fake_nix = textwrap.dedent(r"""            import json
+            import os
+            from pathlib import Path
+            import subprocess
+            import sys
+            from urllib.parse import parse_qs, urlsplit
+
+            args = sys.argv[1:]
+            if not args or args == ["--version"]:
+                print("test-version")
+                sys.exit(0)
+            if args[0] == "run":
+                ref = next(arg for arg in args if arg.startswith("git+file:"))
+                rev = parse_qs(urlsplit(ref.split("#")[0]).query)["rev"][0]
+                with Path(".git/bootstrap.jsonl").open("a") as log:
+                    log.write(json.dumps({"args": args, "ref": ref, "revision": rev}) + "\n")
+                snapshot = Path(".git/fake-apps") / rev
+                snapshot.mkdir(parents=True, exist_ok=True)
+                for name in ("validation-runner.py", "validation-receipts.py", "validation-targets.py"):
+                    content = subprocess.check_output(["git", "show", rev + ":scripts/" + name])
+                    (snapshot / name).write_bytes(content)
+                originals = {}
+                if os.environ.get("BOOTSTRAP_EDIT"):
+                    for name in ("flake.lock", "scripts/validation-runner.py", "scripts/validation-receipts.py"):
+                        path = Path(name)
+                        originals[path] = path.read_bytes()
+                        path.write_text("transient checkout content, never authoritative")
+                try:
+                    env = dict(os.environ, NIXOSCONF_VALIDATOR_REV=rev)
+                    status = subprocess.run([sys.executable, str(snapshot / "validation-runner.py"), *args[args.index("--") + 1:]], env=env).returncode
+                finally:
+                    for path, content in originals.items():
+                        path.write_bytes(content)
+                sys.exit(status)
+            if args[0] == "build" and args[1].endswith("#stock-contamination-negative"):
+                behavior = os.environ.get("NEGATIVE_BEHAVIOR", "expected")
+                if behavior == "expected":
+                    print("System closure /nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-nixos-system-fixture contains the following disallowed paths:")
+                    print("/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-nixos-opt-pgo-fixture")
+                    sys.exit(int(os.environ.get("NEGATIVE_STATUS", "1")))
+                if behavior == "unrelated":
+                    print("unrelated build failure")
+                    sys.exit(1)
+                sys.exit(0)
+            sys.exit(1 if os.environ.get("FAIL_STAGE") == "yes" else 0)
+        """)
         for name in ("nix", "nixos-version"):
             script = self.bin / name
-            script.write_text(
-                '#!/bin/sh\nif [ "$1" = "shell" ]; then\n shift\n while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\nif [ "$1" = "--version" ] || [ "$#" = 0 ]; then echo test-version; exit; fi\nif [ "${2##*#}" = "stock-contamination-negative" ]; then\n case "${NEGATIVE_BEHAVIOR:-expected}" in\n expected) echo "System closure /nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-nixos-system-fixture contains the following disallowed paths:"; echo "/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-nixos-opt-pgo-fixture"; exit "${NEGATIVE_STATUS:-1}" ;;\n unrelated) echo "unrelated build failure"; exit 1 ;;\n pass) exit 0 ;;\n esac\nfi\n[ "${FAIL_STAGE:-}" != "yes" ]\n'
-            )
+            script.write_text("#!" + sys.executable + "\n" + fake_nix)
             script.chmod(0o755)
         self.env["PATH"] = str(self.bin) + os.pathsep + os.environ["PATH"]
 
-    def cmd(self, *args, ok=True, input=None):
+    def cmd(self, *args, ok=True, input=None, env=None):
         result = subprocess.run(
             args,
             cwd=self.root,
-            env=self.env,
+            env=self.env if env is None else env,
             text=True,
             input=input,
             stdout=subprocess.PIPE,
@@ -62,7 +107,21 @@ class ValidationTests(unittest.TestCase):
         return result
 
     def validate(self, *args, **kw):
-        return self.cmd(sys.executable, "scripts/validation-runner.py", *args, **kw)
+        requested = args[2] if args[0] == "require-receipt" else "HEAD"
+        revision = self.cmd("git", "rev-parse", requested + "^{commit}").stdout.strip()
+        env = dict(self.env, NIXOSCONF_VALIDATOR_REV=revision)
+        return self.cmd(
+            sys.executable, "scripts/validation-runner.py", *args, env=env, **kw
+        )
+
+    def bootstrap(self, *args, **kw):
+        return self.cmd("sh", "scripts/validate", *args, **kw)
+
+    def bootstrap_records(self):
+        return [
+            json.loads(line)
+            for line in (self.root / ".git/bootstrap.jsonl").read_text().splitlines()
+        ]
 
     def receipt(self, mode):
         return (
@@ -206,6 +265,128 @@ class ValidationTests(unittest.TestCase):
         del data["stages"][-1]["diagnostic"]
         self.receipt("all").write_text(json.dumps(data))
         self.validate("require-receipt", "all", self.sha, ok=False)
+
+    def test_bootstrap_exact_refs_and_transient_edits(self):
+        self.env["FAIL_STAGE"] = "yes"
+        for mode in ("fast", "affected", "full", "all"):
+            self.bootstrap(mode, ok=False)
+            record = self.bootstrap_records()[-1]
+            self.assertEqual(record["revision"], self.sha)
+            self.assertEqual(
+                record["ref"],
+                f"git+file://{self.root}?rev={self.sha}&allRefs=1#validation",
+            )
+            self.assertIn("--no-write-lock-file", record["args"])
+            self.assertEqual(record["args"][record["args"].index("--builders") + 1], "")
+            self.assertNotIn("--inputs-from", record["args"])
+            self.assertFalse(
+                any("validation-runner.py" in arg for arg in record["args"])
+            )
+        self.env.pop("FAIL_STAGE")
+        self.env["BOOTSTRAP_EDIT"] = "yes"
+        self.bootstrap("fast")
+        self.assertEqual(self.bootstrap_records()[-1]["revision"], self.sha)
+        self.assertEqual(self.cmd("git", "status", "--porcelain").stdout, "")
+
+    def test_bootstrap_rejects_unsupported_repository_path(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "repo with space"
+            self.cmd(
+                "git", "clone", "--quiet", "--shared", str(self.root), str(destination)
+            )
+            result = subprocess.run(
+                ["sh", "scripts/validate", "fast"],
+                cwd=destination,
+                env=self.env,
+                text=True,
+                capture_output=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Unsupported repository path", result.stderr)
+            self.assertFalse((destination / ".git/bootstrap.jsonl").exists())
+
+    def test_non_head_hook_uses_pushed_validator(self):
+        self.bootstrap("affected")
+        self.bootstrap("full")
+        (self.root / "README.md").write_text("newer commit")
+        self.cmd("git", "add", ".")
+        self.cmd("git", "commit", "-m", "newer")
+        newer = self.cmd("git", "rev-parse", "HEAD").stdout.strip()
+        self.assertNotEqual(newer, self.sha)
+        # The existing hook sends self.sha while HEAD is the newer commit.
+        for branch, mode in (("feature", "affected"), ("main", "full")):
+            self.hook(branch, True)
+            record = self.bootstrap_records()[-1]
+            self.assertEqual(record["revision"], self.sha)
+            self.assertEqual(record["args"][-3:], ["require-receipt", mode, self.sha])
+        # A direct caller cannot substitute HEAD's validator for the requested SHA.
+        env = dict(self.env, NIXOSCONF_VALIDATOR_REV=newer)
+        self.cmd(
+            sys.executable,
+            "scripts/validation-runner.py",
+            "require-receipt",
+            "full",
+            self.sha,
+            env=env,
+            ok=False,
+        )
+
+    def test_embedded_revision_is_mandatory_and_exact(self):
+        for revision in ("", "dirty", self.sha[:12], "0" * 40):
+            env = dict(self.env, NIXOSCONF_VALIDATOR_REV=revision)
+            self.cmd(
+                sys.executable,
+                "scripts/validation-runner.py",
+                "fast",
+                env=env,
+                ok=False,
+            )
+        env = dict(self.env)
+        env.pop("NIXOSCONF_VALIDATOR_REV", None)
+        self.cmd(
+            sys.executable, "scripts/validation-runner.py", "fast", env=env, ok=False
+        )
+
+    def test_closed_schema_and_duplicate_keys(self):
+        self.validate("full")
+        original = self.receipt("full").read_text()
+        edits = [
+            lambda d: d.update(unknown=True),
+            lambda d: d.pop("hostname"),
+            lambda d: d.update(base=self.sha),
+            lambda d: d["stages"][0].update(extra="unexpected"),
+            lambda d: d["stages"][0].pop("result"),
+            lambda d: d["stages"][0].update(name=1),
+            lambda d: d["stages"][0].update(result=True),
+        ]
+        for edit in edits:
+            data = json.loads(original)
+            edit(data)
+            self.receipt("full").write_text(json.dumps(data))
+            self.validate("require-receipt", "full", self.sha, ok=False)
+        for raw in (
+            original[:-2] + ', "mode": "full"}',
+            original.replace('"name": "fast"', '"name": "fast", "name": "fast"', 1),
+        ):
+            json.loads(raw)  # Legal JSON syntax with duplicate object keys.
+            self.receipt("full").write_text(raw)
+            result = self.validate("require-receipt", "full", self.sha, ok=False)
+            self.assertIn("duplicate receipt key", result.stderr)
+        self.validate("affected")
+        data = json.loads(self.receipt("affected").read_text())
+        data["base"] = None
+        self.receipt("affected").write_text(json.dumps(data))
+        self.validate("require-receipt", "affected", self.sha, ok=False)
+        self.validate("all")
+        original_all = self.receipt("all").read_text()
+        for edit in (
+            lambda d: d.update(base=self.sha),
+            lambda d: d["stages"][-1].update(extra=True),
+        ):
+            data = json.loads(original_all)
+            edit(data)
+            self.receipt("all").write_text(json.dumps(data))
+            self.validate("require-receipt", "all", self.sha, ok=False)
 
     def test_setup_idempotent(self):
         self.cmd("sh", "scripts/setup-local-validation")
