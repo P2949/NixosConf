@@ -40,7 +40,7 @@ class ValidationTests(unittest.TestCase):
         for name in ("nix", "nixos-version"):
             script = self.bin / name
             script.write_text(
-                '#!/bin/sh\nif [ "$1" = "shell" ]; then\n shift\n while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\nif [ "$1" = "--version" ] || [ "$#" = 0 ]; then echo test-version; exit; fi\n[ "${FAIL_STAGE:-}" != "yes" ]\n'
+                '#!/bin/sh\nif [ "$1" = "shell" ]; then\n shift\n while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\nif [ "$1" = "--version" ] || [ "$#" = 0 ]; then echo test-version; exit; fi\nif [ "$2" = ".#stock-contamination-negative" ]; then\n case "${NEGATIVE_BEHAVIOR:-expected}" in\n expected) echo "System closure /nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-nixos-system-fixture contains the following disallowed paths:"; echo "/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-nixos-opt-pgo-fixture"; exit "${NEGATIVE_STATUS:-1}" ;;\n unrelated) echo "unrelated build failure"; exit 1 ;;\n pass) exit 0 ;;\n esac\nfi\n[ "${FAIL_STAGE:-}" != "yes" ]\n'
             )
             script.chmod(0o755)
         self.env["PATH"] = str(self.bin) + os.pathsep + os.environ["PATH"]
@@ -127,6 +127,23 @@ class ValidationTests(unittest.TestCase):
         )
         self.assertEqual(data["targets"], [])
         self.assertFalse(data["desktop"])
+
+    def test_negative_fixture_requires_specific_rejection(self):
+        for behavior in ("unrelated", "pass"):
+            self.env["NEGATIVE_BEHAVIOR"] = behavior
+            self.validate("all", ok=False)
+            self.assertFalse(self.receipt("all").exists())
+        self.env["NEGATIVE_BEHAVIOR"] = "expected"
+        self.env["NEGATIVE_STATUS"] = "130"
+        self.validate("all", ok=False)
+        self.assertFalse(self.receipt("all").exists())
+        self.env["NEGATIVE_STATUS"] = "1"
+        self.validate("all")
+        data = json.loads(self.receipt("all").read_text())
+        self.assertTrue(data["stages"][-1]["expected_failure"])
+        del data["stages"][-1]["diagnostic"]
+        self.receipt("all").write_text(json.dumps(data))
+        self.validate("require-receipt", "all", self.sha, ok=False)
 
     def test_setup_idempotent(self):
         self.cmd("sh", "scripts/setup-local-validation")

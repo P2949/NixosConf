@@ -22,7 +22,9 @@ The canonical orchestrator is `scripts/validate`:
 - `full` runs fast checks, all storage, optimization, workstation and Minecraft
   integration targets, and the desktop build.
 - `all` runs full plus the six automated developer/system-model tests; interactive
-  and debugging artifacts remain explicit developer tools.
+  and debugging artifacts remain explicit developer tools. The stock-contamination
+  negative build must fail with the forbidden-dependency diagnostic naming its
+  fixture; an unrelated failure or unexpected build success fails qualification.
 
 Affected, full and all require clean committed source, including no untracked
 files. The runner disables remote Nix builders and obtains Python from the

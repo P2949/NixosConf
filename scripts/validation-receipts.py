@@ -99,4 +99,13 @@ def require(mode, commit, selector):
         or any(r.get("result") != "PASS" for r in results)
     ):
         raise ValueError("receipt has incomplete or failed stages")
+    if mode == "all":
+        negative = results[-1]
+        if (
+            negative.get("expected_failure") is not True
+            or type(negative.get("exit_code")) is not int
+            or negative["exit_code"] not in {1, 100}
+            or negative.get("diagnostic") != "forbidden-dependency"
+        ):
+            raise ValueError("missing negative fixture rejection evidence")
     return data
