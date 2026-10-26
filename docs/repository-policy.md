@@ -20,7 +20,7 @@ flake-parts, flake-utils, a host/user framework, automatic discovery, individual
 application persistence modules or tiny option-only modules without a concrete
 new need.
 
-One conceptual feature belongs to one branch/PR. Separate runtime changes from
+One conceptual feature belongs to one branch. Separate runtime changes from
 cleanup claimed to preserve behavior or closures. Compare desktop outputs before
 and after such cleanup; investigate unexpected differences before acceptance.
 Tests protect real invariants and regressions. VM/physical acceptance is required
@@ -41,7 +41,7 @@ task explicitly authorizes the action.
 
 ## Documentation and artifacts
 
-Plans live in Issue/PR descriptions. Before merge, move permanent operating
+Plans stay outside the committed source tree. Before merge, move permanent operating
 policy into normal documentation and remove implementation journals, temporary
 scripts and evidence. Retain tooling only when it has recurring operational value.
 Git, tags and PRs preserve history; `docs/history` is an index, not an archive dump.
@@ -73,17 +73,22 @@ Before merge:
   workflow as tested.
 - Update permanent documentation and current status.
 - Remove temporary plans, scripts and raw evidence from the live tree.
-- Run `nix fmt -- --ci`, `nix flake check --no-write-lock-file --print-build-logs`
-  and the desktop build; inspect changed closures and verify PR CI.
+- Run `./scripts/validate affected` on the clean feature commit; inspect changed closures.
 
-Then merge and delete the feature branch. PR metadata owns exact source/CI and
-acceptance receipts. Do not make source documents certify their own future CI.
+Then merge locally, run `./scripts/validate full` on the exact merge commit,
+push and delete the feature branch. Local Git metadata holds exact-source PASS
+receipts; see [local validation](local-validation.md).
+
+Hosted CI, GitHub Actions, self-hosted Actions runners and equivalent remote
+validation services are not part of this repository architecture and must not
+be introduced. PRs may exist for human review/history; validation, merge
+eligibility and release qualification must never depend on them.
 
 ## Adopt capabilities when needed
 
 Experimental ideas stay in GitHub Issues until adopted. Generated custom-module
 docs and the real-config bootloader VM are explicit developer tools; generated
-docs are not committed and the desktop VM is not an ordinary CI build.
+docs are not committed and the desktop VM is not a routine local validation build.
 
 Add an nspawn test tier when service orchestration needs it without boot/storage
 modeling. Consider Facter only after a useful hardware comparison. Repart/dm-verity

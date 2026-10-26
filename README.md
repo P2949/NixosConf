@@ -9,6 +9,7 @@ baseline and frozen benchmark control.
 - [Current system](docs/status.md).
 - [Local coding agent (Sabi/Codex)](docs/local-agentic-coding.md).
 - [Minecraft server operations](docs/minecraft-server.md).
+- [Local validation](docs/local-validation.md).
 - [Repository change policy](docs/repository-policy.md).
 - [Qualification baseline](docs/baselines/pre-optimization/baseline-final.md).
 - Persistence: [contract](docs/persistence-contract.md), [architecture](docs/impermanence.md), [state audit](docs/ephemeral-state-audit.md).
@@ -38,9 +39,10 @@ policy. The flake remains explicit for this workstation.
 ## Build and check
 
 ```bash
-nix build .#nixosConfigurations.desktop.config.system.build.toplevel
-nix fmt -- --ci
-nix flake check --no-write-lock-file --print-build-logs
+./scripts/validate fast
+./scripts/validate affected
+./scripts/validate full
+./scripts/validate all
 nix develop .#default
 nix build .#module-docs
 nixos-rebuild build-vm-with-bootloader --flake .#desktop

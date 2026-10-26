@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+while read -r local_ref local_sha remote_ref remote_sha; do
+    case "$local_sha" in
+        0000000000000000000000000000000000000000) continue ;;
+    esac
+    case "$remote_ref" in
+        refs/heads/main) mode=full ;;
+        refs/heads/*) mode=affected ;;
+        *) continue ;;
+    esac
+    ./scripts/validate require-receipt "$mode" "$local_sha"
+done

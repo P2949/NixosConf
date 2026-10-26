@@ -14,10 +14,13 @@ before architectural changes.
 ## Completion checks
 
 ```console
-nix fmt -- --ci
-nix flake check --no-write-lock-file --print-build-logs
-nix build .#nixosConfigurations.desktop.config.system.build.toplevel
+./scripts/validate fast     # during development
+./scripts/validate affected # clean feature commit before pushing
+./scripts/validate full     # exact local merge commit before main advances
 ```
+
+See [local validation](docs/local-validation.md) for receipts, hooks and exhaustive checks.
+Hosted CI and remote validation services are prohibited.
 
 ## Safety
 

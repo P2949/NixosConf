@@ -10,8 +10,8 @@
   fastChecks = {
     gpu-policy = import ./workstation/gpu-policy { inherit pkgs; };
     gamemode-gpu-profile = import ./packages/gamemode-gpu-profile { inherit pkgs; };
-    ci-selection =
-      pkgs.runCommand "check-ci-selection"
+    validation-selection =
+      pkgs.runCommand "check-validation-selection"
         {
           src = repoSource;
           nativeBuildInputs = [ pkgs.python3 ];
@@ -19,7 +19,25 @@
         ''
           cd "$src"
           export PYTHONDONTWRITEBYTECODE=1
-          python tests/test_ci_targets.py
+          python tests/test_validation_targets.py
+          touch "$out"
+        '';
+
+    local-validation-policy =
+      pkgs.runCommand "check-local-validation-policy"
+        {
+          src = repoSource;
+          nativeBuildInputs = [
+            pkgs.python3
+            pkgs.git
+            pkgs.bash
+          ];
+        }
+        ''
+          cd "$src"
+          export PYTHONDONTWRITEBYTECODE=1
+          python scripts/validation-policy.py .
+          python tests/test_validation_runner.py
           touch "$out"
         '';
 

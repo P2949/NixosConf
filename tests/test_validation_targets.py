@@ -1,11 +1,12 @@
-"""Regression coverage for CI admission decisions."""
+"""Regression coverage for local validation selection decisions."""
 
 import importlib.util
 from pathlib import Path
 import unittest
 
 spec = importlib.util.spec_from_file_location(
-    "ci_targets", Path(__file__).resolve().parents[1] / "scripts/ci-targets.py"
+    "validation_targets",
+    Path(__file__).resolve().parents[1] / "scripts/validation-targets.py",
 )
 ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
@@ -18,7 +19,7 @@ class SelectionTests(unittest.TestCase):
             "docs/impermanence.md",
             "optimization/results/run.json",
         ]:
-            result = ci.select([path], "pull_request")
+            result = ci.select([path], "affected")
             self.assertFalse(result["desktop"])
             self.assertFalse(result["integration"])
 
@@ -29,18 +30,18 @@ class SelectionTests(unittest.TestCase):
             "modules/core/nix.nix",
             "flake.lock",
         ]:
-            result = ci.select([path], "pull_request")
+            result = ci.select([path], "affected")
             self.assertTrue(ci.STORAGE <= set(result["targets"]))
             self.assertTrue(result["desktop"])
 
     def test_home_and_minecraft(self):
         self.assertIn(
             "workstation-smoke",
-            ci.select(["home/p2949/default.nix"], "pull_request")["targets"],
+            ci.select(["home/p2949/default.nix"], "affected")["targets"],
         )
         self.assertIn(
             "minecraft-staging",
-            ci.select(["packages/minecraft-tools/main.py"], "pull_request")["targets"],
+            ci.select(["packages/minecraft-tools/main.py"], "affected")["targets"],
         )
 
     def test_home_persistence_selects_full_storage_validation(self):
@@ -50,18 +51,30 @@ class SelectionTests(unittest.TestCase):
             "home/p2949/persistence/ephemeral-files.nix",
         ]:
             with self.subTest(path=path):
-                result = ci.select([path], "pull_request")
+                result = ci.select([path], "affected")
                 self.assertTrue(ci.STORAGE <= set(result["targets"]))
                 self.assertIn("workstation-smoke", result["targets"])
                 self.assertTrue(result["desktop"])
                 self.assertTrue(result["integration"])
 
-    def test_main_and_manual(self):
-        self.assertTrue(ci.select([], "push")["desktop"])
-        self.assertTrue(
-            ci.STORAGE | ci.OPTIMIZATION
-            <= set(ci.select([], "workflow_dispatch")["targets"])
+    def test_full_and_plumbing(self):
+        expected = (
+            ci.STORAGE | ci.OPTIMIZATION | {"workstation-smoke", "minecraft-staging"}
         )
+        self.assertEqual(set(ci.select([], "full")["targets"]), expected)
+        self.assertTrue(ci.select([], "full")["desktop"])
+        for path in [
+            "scripts/validate",
+            "scripts/validation-receipt.py",
+            "scripts/setup-local-validation",
+            ".githooks/pre-push",
+            "tests/test_validation_runner.py",
+            "tests/default.nix",
+            "flake.nix",
+        ]:
+            result = ci.select([path], "affected")
+            self.assertEqual(set(result["targets"]), expected, path)
+            self.assertTrue(result["desktop"])
 
     def test_gpu_helper_selects_workstation(self):
         for path in [
@@ -69,7 +82,7 @@ class SelectionTests(unittest.TestCase):
             "packages/lact/lact-auto-reset.patch",
         ]:
             with self.subTest(path=path):
-                result = ci.select([path], "pull_request")
+                result = ci.select([path], "affected")
                 self.assertEqual(result["targets"], ["workstation-smoke"])
                 self.assertTrue(result["desktop"])
 
