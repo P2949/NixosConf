@@ -115,6 +115,8 @@ def run(mode, base=None, head="HEAD"):
         hostname=socket.gethostname(),
         stages=[],
     )
+    # Pin Nix to committed Git content, independently of concurrent checkout edits.
+    fast.insert(3, source["source_ref"])
     commands = [("fast", fast)]
     targets = selected["targets"] + (
         ["nixosConfigurations.desktop.config.system.build.toplevel"]
@@ -131,7 +133,7 @@ def run(mode, base=None, head="HEAD"):
                 [
                     "nix",
                     "build",
-                    ".#" + target,
+                    source["source_ref"] + "#" + target,
                     "--no-link",
                     "--no-write-lock-file",
                     "--print-build-logs",

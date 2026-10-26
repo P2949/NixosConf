@@ -40,7 +40,7 @@ class ValidationTests(unittest.TestCase):
         for name in ("nix", "nixos-version"):
             script = self.bin / name
             script.write_text(
-                '#!/bin/sh\nif [ "$1" = "shell" ]; then\n shift\n while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\nif [ "$1" = "--version" ] || [ "$#" = 0 ]; then echo test-version; exit; fi\nif [ "$2" = ".#stock-contamination-negative" ]; then\n case "${NEGATIVE_BEHAVIOR:-expected}" in\n expected) echo "System closure /nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-nixos-system-fixture contains the following disallowed paths:"; echo "/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-nixos-opt-pgo-fixture"; exit "${NEGATIVE_STATUS:-1}" ;;\n unrelated) echo "unrelated build failure"; exit 1 ;;\n pass) exit 0 ;;\n esac\nfi\n[ "${FAIL_STAGE:-}" != "yes" ]\n'
+                '#!/bin/sh\nif [ "$1" = "shell" ]; then\n shift\n while [ "$1" != "--command" ]; do shift; done\n shift\n exec "$@"\nfi\nif [ "$1" = "--version" ] || [ "$#" = 0 ]; then echo test-version; exit; fi\nif [ "${2##*#}" = "stock-contamination-negative" ]; then\n case "${NEGATIVE_BEHAVIOR:-expected}" in\n expected) echo "System closure /nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-nixos-system-fixture contains the following disallowed paths:"; echo "/nix/store/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-nixos-opt-pgo-fixture"; exit "${NEGATIVE_STATUS:-1}" ;;\n unrelated) echo "unrelated build failure"; exit 1 ;;\n pass) exit 0 ;;\n esac\nfi\n[ "${FAIL_STAGE:-}" != "yes" ]\n'
             )
             script.chmod(0o755)
         self.env["PATH"] = str(self.bin) + os.pathsep + os.environ["PATH"]
@@ -94,11 +94,28 @@ class ValidationTests(unittest.TestCase):
             ("result", "FAIL"),
             ("stages", []),
             ("flake_lock_sha256", "wrong"),
+            ("schema_version", 1),
+            ("schema_version", 2.0),
+            ("schema_version", True),
+            ("clean_tree", 1),
+            ("desktop", 1),
+            ("integration", 1),
+            ("targets", "not-a-list"),
+            ("source_ref", "git+file:///wrong?rev=" + self.sha),
+            ("started", "not-a-timestamp"),
+            ("finished", "not-a-timestamp"),
+            ("started", "2026-10-26T12:00:00"),
+            ("finished", "2000-01-01T00:00:00+00:00"),
         ]:
             data = json.loads(original)
             data[key] = value
             self.receipt("full").write_text(json.dumps(data))
             self.validate("require-receipt", "full", self.sha, ok=False)
+        valid = json.loads(original)
+        valid["started"] = "2026-10-26T12:00:00+02:00"
+        valid["finished"] = "2026-10-26T11:00:00+00:00"
+        self.receipt("full").write_text(json.dumps(valid))
+        self.validate("require-receipt", "full", self.sha)
         self.receipt("full").write_text("{broken")
         self.validate("require-receipt", "full", self.sha, ok=False)
         self.receipt("full").write_text(original)
@@ -127,6 +144,51 @@ class ValidationTests(unittest.TestCase):
         )
         self.assertEqual(data["targets"], [])
         self.assertFalse(data["desktop"])
+
+    def test_transient_edits_cannot_change_qualified_source(self):
+        # This fake Nix records the source revision each command actually addresses.
+        # Dirty the checkout during fast, then restore it after the desktop build.
+        executable = self.bin / "nix"
+        executable.write_text(
+            "#!"
+            + sys.executable
+            + "\n"
+            + "\n".join(
+                [
+                    "import json, subprocess, sys",
+                    "from pathlib import Path",
+                    "from urllib.parse import parse_qs, urlsplit",
+                    "args = sys.argv[1:]",
+                    "if args == ['--version']: print('test-nix-version'); sys.exit(0)",
+                    "ref = args[2] if args[0] == 'flake' else args[1]",
+                    "parsed = urlsplit(ref.split('#')[0])",
+                    "assert parsed.scheme == 'git+file'",
+                    "rev = parse_qs(parsed.query)['rev'][0]",
+                    "source = subprocess.check_output(['git', 'show', rev + ':flake.lock'], text=True)",
+                    "with Path('.git/stage-sources.jsonl').open('a') as log: log.write(json.dumps({'ref': ref, 'revision': rev, 'source': source, 'checkout': Path('flake.lock').read_text()}) + '\\n')",
+                    "if args[0] == 'flake': Path('flake.lock').write_text('{\"transient_change\":true}')",
+                    "if ref.endswith('#nixosConfigurations.desktop.config.system.build.toplevel'): Path('flake.lock').write_text('{}')",
+                ]
+            )
+            + "\n"
+        )
+        self.validate("full")
+        self.validate("require-receipt", "full", self.sha)
+        stages = [
+            json.loads(line)
+            for line in (self.root / ".git/stage-sources.jsonl")
+            .read_text()
+            .splitlines()
+        ]
+        self.assertEqual(len(stages), 15)
+        self.assertTrue(
+            all(
+                stage["revision"] == self.sha and stage["source"] == "{}"
+                for stage in stages
+            )
+        )
+        self.assertTrue(all(stage["checkout"] != "{}" for stage in stages[1:]))
+        self.assertEqual((self.root / "flake.lock").read_text(), "{}")
 
     def test_negative_fixture_requires_specific_rejection(self):
         for behavior in ("unrelated", "pass"):
@@ -172,6 +234,9 @@ class PolicyTests(unittest.TestCase):
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("GITHUB_ACTIONS workflow_dispatch")
+            cache = root / "scripts/__pycache__/old.pyc"
+            cache.parent.mkdir(parents=True)
+            cache.write_bytes(b"GITHUB_ACTIONS workflow_dispatch")
             self.assertEqual(policy.violations(root), [])
             for name in [
                 ".github/workflows/check.yml",
@@ -188,7 +253,7 @@ class PolicyTests(unittest.TestCase):
                 self.assertTrue(policy.violations(root), name)
                 path.unlink()
             path = root / "scripts/test.sh"
-            path.parent.mkdir()
+            path.parent.mkdir(exist_ok=True)
             for token in policy.TOKENS:
                 path.write_text(token)
                 self.assertTrue(policy.violations(root), token)

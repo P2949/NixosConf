@@ -54,8 +54,9 @@ output is available through `result` and is not committed.
 Building does not activate the configuration. Review
 [activation safety](docs/activation-safety.md) and
 [closure review](docs/closure-review.md) before deployment.
-The combined granular persistence VM is a permanent flake check. Other heavy
-VM outputs and physical acceptance are separate from ordinary checks;
+The granular persistence VM is an integration package included in `full` and
+`all`, and selected by `affected` for relevant changes. Heavy VM builds and
+physical acceptance are separate from the fast checks;
 see [reconstruction](docs/reconstruction.md) and
 [development validation](docs/development-validation.md).
 

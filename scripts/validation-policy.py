@@ -50,6 +50,7 @@ def violations(root):
         if (
             operational
             and not historical
+            and path.suffix not in {".pyc", ".pyo"}
             and relative != "scripts/validation-policy.py"
         ):
             content = path.read_text(errors="replace")

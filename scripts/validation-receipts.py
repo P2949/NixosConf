@@ -1,5 +1,6 @@
 """Local exact-source receipt format and admission checks."""
 
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -30,11 +31,17 @@ def clean():
         raise ValueError("exact qualification requires a clean committed tree")
 
 
+def pinned_ref(commit):
+    root = Path(git("rev-parse", "--show-toplevel")).as_uri()
+    return f"git+{root}?rev={commit}&allRefs=1"
+
+
 def identity(commit):
     commit = git("rev-parse", "--verify", commit + "^{commit}")
     lock = subprocess.check_output(["git", "show", commit + ":flake.lock"])
     return dict(
-        schema_version=1,
+        schema_version=2,
+        source_ref=pinned_ref(commit),
         repository=git("rev-list", "--max-parents=0", commit),
         commit=commit,
         tree=git("rev-parse", commit + "^{tree}"),
@@ -55,17 +62,27 @@ def require(mode, commit, selector):
     data = json.loads(receipt_path(mode, expected["commit"]).read_text())
     if not isinstance(data, dict):
         raise ValueError("malformed receipt")
-    if any(data.get(k) != v for k, v in expected.items()):
+    if any(
+        type(data.get(k)) is not type(v) or data.get(k) != v
+        for k, v in expected.items()
+    ):
         raise ValueError("receipt source identity mismatch")
     if data.get("mode") != mode or data.get("result") != "PASS":
         raise ValueError("receipt is not a PASS for the required mode")
     for key in ("nix_version", "nixos_version", "hostname", "started", "finished"):
         if not isinstance(data.get(key), str) or not data[key]:
             raise ValueError("missing receipt provenance: " + key)
-    if data["finished"] < data["started"]:
+    timestamps = [datetime.fromisoformat(data[key]) for key in ("started", "finished")]
+    if any(value.tzinfo is None or value.utcoffset() is None for value in timestamps):
+        raise ValueError("receipt timestamps require time zones")
+    if timestamps[1] < timestamps[0]:
         raise ValueError("invalid receipt timestamps")
     if mode == "affected":
+        if not isinstance(data.get("base"), str):
+            raise ValueError("missing affected base SHA")
         base = git("rev-parse", "--verify", data["base"] + "^{commit}")
+        if data["base"] != base:
+            raise ValueError("affected base must be an exact commit SHA")
         paths = (
             subprocess.check_output(
                 [
@@ -84,7 +101,10 @@ def require(mode, commit, selector):
         selected = selector.select(paths, "affected")
     else:
         selected = selector.select([], "full")
-    if any(data.get(k) != selected[k] for k in ("targets", "desktop")):
+    if any(
+        type(data.get(k)) is not type(selected[k]) or data.get(k) != selected[k]
+        for k in ("targets", "integration", "desktop")
+    ):
         raise ValueError("receipt selection mismatch")
     stages = ["fast"] + selected["targets"]
     if selected["desktop"]:
