@@ -57,6 +57,17 @@ class SelectionTests(unittest.TestCase):
                 self.assertTrue(result["desktop"])
                 self.assertTrue(result["integration"])
 
+    def test_subsystem_selections(self):
+        result = ci.select(["optimization/default.nix"], "affected")
+        self.assertEqual(set(result["targets"]), ci.OPTIMIZATION)
+        self.assertFalse(result["desktop"])
+        result = ci.select(["home/p2949/default.nix"], "affected")
+        self.assertEqual(result["targets"], ["workstation-smoke"])
+        self.assertTrue(result["desktop"])
+        result = ci.select(["packages/minecraft-tools/main.py"], "affected")
+        self.assertEqual(result["targets"], ["minecraft-staging"])
+        self.assertTrue(result["desktop"])
+
     def test_full_and_plumbing(self):
         expected = (
             ci.STORAGE | ci.OPTIMIZATION | {"workstation-smoke", "minecraft-staging"}

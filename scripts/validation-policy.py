@@ -6,6 +6,7 @@ import sys
 FORBIDDEN = (".github/workflows/", ".circleci/", ".buildkite/")
 FILES = {".gitlab-ci.yml", ".gitlab-ci.yaml", "Jenkinsfile", "azure-pipelines.yml"}
 TOKENS = (
+    "GITHUB_",
     "GITHUB_OUTPUT",
     "GITHUB_ACTIONS",
     "workflow_dispatch",

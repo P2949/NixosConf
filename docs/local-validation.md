@@ -25,7 +25,8 @@ The canonical orchestrator is `scripts/validate`:
   and debugging artifacts remain explicit developer tools.
 
 Affected, full and all require clean committed source, including no untracked
-files. Nix jobs use two cores, with two fast jobs or one integration/build job.
+files. The runner disables remote Nix builders and obtains Python from the
+locked Nix input. Nix jobs use two cores, with two fast jobs or one integration/build job.
 Tests and their derivations remain authoritative in `tests/default.nix` and
 `flake.nix`; selection lives in `scripts/validation-targets.py`.
 

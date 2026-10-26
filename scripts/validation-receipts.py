@@ -53,6 +53,8 @@ def require(mode, commit, selector):
     clean()
     expected = identity(commit)
     data = json.loads(receipt_path(mode, expected["commit"]).read_text())
+    if not isinstance(data, dict):
+        raise ValueError("malformed receipt")
     if any(data.get(k) != v for k, v in expected.items()):
         raise ValueError("receipt source identity mismatch")
     if data.get("mode") != mode or data.get("result") != "PASS":
@@ -92,6 +94,7 @@ def require(mode, commit, selector):
     results = data.get("stages")
     if (
         not isinstance(results, list)
+        or any(not isinstance(r, dict) for r in results)
         or [r.get("name") for r in results] != stages
         or any(r.get("result") != "PASS" for r in results)
     ):
