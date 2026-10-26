@@ -286,13 +286,9 @@ rec {
           test "$(cat stock.evaluation)" = 4999950000
           touch "$out"
         '';
-    optimization-control-inputs =
-      assert toString recoverySystem.config.system.build.isoImage == stock.recoveryIso;
-      assert inputs.nixpkgs.rev == stock.nixpkgsRevision;
-      assert pkgs.lib.hasInfix "-nixos-opt-cpu-" (toString candidate);
-      pkgs.runCommand "check-optimization-control-inputs" { } ''touch "$out"'';
     optimization-schema =
       assert import ./experiment/test.nix { inherit (pkgs) lib; };
+      assert pkgs.lib.hasInfix "-nixos-opt-cpu-" (toString candidate);
       pkgs.runCommand "check-optimization-schema" { } ''touch "$out"'';
     optimization-runtime-statistics =
       pkgs.runCommand "check-optimization-runtime-statistics"

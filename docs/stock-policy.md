@@ -58,6 +58,16 @@ optimization output namespaces; see the
 [stock closure contract](stock-control.md). Runtime-policy changes, package
 refreshes and workstation features belong on separate branches.
 
+Ordinary productive `nix flake check` validates the optimization framework,
+stage/schema invariants and candidate exclusions without equating current
+Nixpkgs or recovery-image inputs to this frozen control. Authoritative
+measurements must explicitly build `.#optimization-control-identity` from a
+control-compatible source. That gate compares the evaluated normal and
+persistent-root systems, lock hash, Nixpkgs revision and recovery ISO with the
+control manifest; an advanced productive source is expected to fail it.
+The immutable control tag owns the historical source and lock identity and is
+not moved when productive inputs advance.
+
 ## Post-qualification journal correction
 
 The benchmark control differs from qualification only by the deliberate volatile
