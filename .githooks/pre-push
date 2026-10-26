@@ -11,7 +11,7 @@ while read -r _local_ref local_sha remote_ref _remote_sha; do
             ./scripts/validate require-receipt full "$local_sha"
             ;;
         refs/heads/*)
-            main=$(git rev-parse --verify --quiet refs/heads/main^{commit}) || {
+            main=$(git rev-parse --verify --quiet "refs/heads/main^{commit}") || {
                 echo "pre-push: local main cannot be resolved" >&2
                 exit 1
             }
