@@ -146,6 +146,15 @@ class PolicyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "history.md").write_text("GITHUB_ACTIONS workflow_dispatch")
+            for name in [
+                "docs/history/old.yml",
+                "docs/reports/old.yaml",
+                "docs/baselines/old.nix",
+                "optimization/results/old.yml",
+            ]:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("GITHUB_ACTIONS workflow_dispatch")
             self.assertEqual(policy.violations(root), [])
             for name in [
                 ".github/workflows/check.yml",

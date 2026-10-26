@@ -39,7 +39,19 @@ def violations(root):
                 "packages/",
             )
         ) or path.suffix in {".nix", ".yaml", ".yml"}
-        if operational and relative != "scripts/validation-policy.py":
+        historical = relative.startswith(
+            (
+                "docs/history/",
+                "docs/reports/",
+                "docs/baselines/",
+                "optimization/results/",
+            )
+        )
+        if (
+            operational
+            and not historical
+            and relative != "scripts/validation-policy.py"
+        ):
             content = path.read_text(errors="replace")
             errors.extend(
                 relative + ": " + token for token in TOKENS if token in content
