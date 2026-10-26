@@ -27,7 +27,11 @@ The canonical orchestrator is `scripts/validate`:
   fixture; an unrelated failure or unexpected build success fails qualification.
 
 Affected, full and all require clean committed source, including no untracked
-files. The runner disables remote Nix builders and obtains Python from the
+files. Exact modes pass a local Git flake reference pinned to the commit SHA to
+every Nix stage; transient checkout edits cannot change the qualified source.
+Schema version 2 receipts record that reference and strictly validate field types
+and time-zone-aware timestamps. Receipts are specific to this checkout location;
+older receipt schemas require requalification. The runner disables remote Nix builders and obtains Python from the
 locked Nix input. Nix jobs use two cores, with two fast jobs or one integration/build job.
 Tests and their derivations remain authoritative in `tests/default.nix` and
 `flake.nix`; selection lives in `scripts/validation-targets.py`.
