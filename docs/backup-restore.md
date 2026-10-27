@@ -16,8 +16,9 @@ A real production snapshot was restored into an isolated local server, and the
 user confirmed that the restored world and player state matched. Physical
 snapshot/recovery acceptance and reboot persistence passed. Ordinary calendar
 acceptance and genuine missed-event catch-up are user-approved post-merge
-observations; the production timer remains active. The unavailable laptop path
-is a later operational smoke test. Production
+observations; the production timer remains active. Physical router/laptop testing
+is optional operational coverage outside the project gate. Accepted ingress
+coverage includes deterministic non-loopback network-namespace testing. Production
 cutover and matching-version upgrade rollback are documented in
 
 [Minecraft operations](minecraft-server.md).

@@ -43,6 +43,15 @@ build/emulator and debugger acceptance belongs to its PR metadata. Current
 operations are in the [development guide](../development-validation.md#android-studio)
 and [state audit](../ephemeral-state-audit.md).
 
+GPU Daily/Gaming workload policy was accepted through
+[PR #59](https://github.com/P2949/NixosConf/pull/59); current policy lives in
+[GPU management](../gpu-management.md).
+
+The Chunky task-retirement correction completed through
+[PR #56](https://github.com/P2949/NixosConf/pull/56), merge
+`278578feabbb7b882b80cedfd97f9f9f879bb47a`; current behavior lives in
+[Minecraft operations](../minecraft-server.md).
+
 ## Frozen optimization sources
 
 Annotated archive tags retain the exact scientific source independently of
