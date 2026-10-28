@@ -43,12 +43,13 @@ without interrupting active jobs, and restore timers afterward. Pilot
 observations determine bounded sample counts and remain outside final estimates.
 Report variance, standard deviation, paired effects, confidence intervals and an
 explicit effect threshold; a higher candidate mean alone proves no improvement.
-Missing evidence or uncertain effects remain inconclusive. Builds may run on
-valid distributed builders; measurements run only on the physical target.
+Missing evidence or uncertain effects remain inconclusive. Qualification runs
+locally under the [local validation policy](local-validation.md); measurements
+run only on the physical target.
 
 ## Completed scope and future research
 
-All eight scoped experiments are **COMPLETED** in the
+All eight scoped 26.05 experiments are **COMPLETED** in the
 [results index](../optimization/results/README.md): zstd CPU codegen, Boehm GC
 GCC and Clang/LLD CPU codegen, generic and CPU-targeted ThinLTO, the
 bridge from GCC/binutils to Clang/LLD, generic PGO and CPU-targeted PGO.
@@ -60,14 +61,22 @@ training workload/input hashes, compiler, profile hashes, optimized derivation
 and distinct benchmark evidence. Independent training, functional VM acceptance
 and physical performance measurements retain separate identities.
 
-Readiness is closed. No additional soak, application qualification, recovery
-campaign or whole-home backup is required. Preserve the tested secret recovery
-and tiny local-only exception archive. Optional storage forensics, manual GC,
-extra abstractions and cosmetic refactors do not block experiments.
+Readiness qualification for the completed 26.05 campaign is closed. No
+additional soak, application qualification, recovery campaign or whole-home
+backup is required for that campaign. Preserve the tested secret recovery and
+tiny local-only exception archive. Optional storage forensics, manual GC, extra
+abstractions and cosmetic refactors do not reopen its acceptance.
+
+This does not establish readiness across a distribution upgrade. New experiments
+wait for official 26.11 migration acceptance, the productive stable-versus-unstable
+dependency review, a new frozen control and fresh profiling of repository
+evaluation. See [current status](status.md#current-release-and-next-campaign).
+Revalidate Boehm's relevance before PGO, and require a current PGO win before
+considering BOLT.
 
 ## BOLT decision
 
-**BOLT = GO for a future isolated experiment.** Both the
+**26.05 BOLT decision = GO for a future isolated experiment.** Both the
 [generic PGO](../optimization/results/boehmgc-pgo-v1/) and
 [CPU-targeted PGO](../optimization/results/boehmgc-cpu-pgo-v1/) comparisons
 established improvements at the predefined 1% practical threshold; their 95%
@@ -142,11 +151,17 @@ inconclusive wall/CPU effects and no productive adoption; see the
 
 Keep frozen benchmark source, retained by its annotated archive tag, separate
 from productive `main`; never rebase frozen experiment history.
-The Nix-checks workflow supports manual invocation for that pushed source ref;
-verify its exact head and successful conclusion before using the source for
-measurement. Build `.#optimization-control-identity` explicitly as the frozen
-source admission gate. Code integration does not retag the control or adopt the
-candidate. General cleanup and readiness qualification remain closed.
+Qualify new experiment source locally under the
+[local validation policy](local-validation.md): require an `affected` PASS for
+the clean feature commit and a `full` PASS for the exact local merge commit
+before `main` advances. Receipts bind the exact commit, tree and lock; earlier
+source receipts do not qualify a changed head. Use no hosted workflow or remote
+validation service. Immutable historical source and its acceptance evidence stay
+unchanged; do not rewrite it to add today's validator.
+Build `.#optimization-control-identity` explicitly as the separate frozen-source
+admission gate before measurement. Code integration does not retag the control
+or adopt the candidate. Completed 26.05 readiness qualification remains closed;
+new-release readiness must be established separately.
 
 ## GC compiler and profile experiments
 
