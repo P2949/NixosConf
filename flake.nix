@@ -111,6 +111,16 @@
           ];
         };
 
+        android = pkgs.mkShell {
+          packages = [
+            pkgs.jdk25
+            pkgs.android-tools
+            pkgsUnstable.android-cli
+          ];
+
+          JAVA_HOME = "${pkgs.jdk25}/lib/openjdk";
+        };
+
         validation = pkgs.mkShell {
           packages = [
             pkgs.python3
