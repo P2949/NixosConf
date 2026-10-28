@@ -6,6 +6,23 @@ The **productive desktop** advances on `main`, independently of the immutable
 [local validation policy](local-validation.md). Historical acceptance records
 remain in the [history index](history/README.md).
 
+## Current release and next campaign
+
+Productive NixOS 26.05 is accepted after the stable refresh and Impermanence
+compatibility update. Keep this runtime and its package/input pins stable until
+a concrete correctness or security issue requires a change.
+
+The NixOS/Home Manager 26.11 migration is externally release-gated: require the
+Nixpkgs `26.11` tag, the `nixos-26.11` branch and Home Manager's `release-26.11`
+branch. A preliminary release branch alone is insufficient. After release,
+qualify the migration with exact-source local validation and two physical
+reboot/root-reset cycles, keeping both compatibility state versions at 26.05.
+
+New optimization measurements are paused until migration acceptance, a review
+of stable versus unstable productive dependencies, a new frozen 26.11 control
+and fresh profiling establish readiness. Preserve the completed 26.05 results
+and control identities as historical evidence.
+
 ## Storage and recovery
 
 `@root` contains ephemeral root, home and ordinary var. Explicit retained state
@@ -25,13 +42,13 @@ Commander Core retains the accepted cooling policy. Bluetooth is disabled.
 Accepted physical display/audio/workload and recovery evidence remains bound
 to the baseline closures.
 
-All eight scoped optimization experiments are **COMPLETED**; their distinct
+All eight scoped 26.05 optimization experiments are **COMPLETED**; their distinct
 performance verdicts and adoption status are in the
 [results index](../optimization/results/README.md). Generic and CPU-targeted PGO
 established improvements above the predefined 1% practical threshold. No
 optimization candidate is installed in the productive desktop.
 
-BOLT has an evidence-based **GO for a future isolated experiment**, as recorded
+The 26.05 BOLT decision is an evidence-based **GO for a future isolated experiment**, as recorded
 in the [optimization policy](optimization.md#bolt-decision). This decision adds
 no BOLT implementation or broader optimization campaign. The declared
 measurement scope is complete; further optimization requires new evidence and a

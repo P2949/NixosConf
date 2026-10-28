@@ -18,7 +18,7 @@
 --   3440x1440 @ 155 Hz, scale 1. HDR switches for fullscreen HDR content.
 --
 -- Keep Adaptive Sync enabled for desktop and fullscreen workloads.
--- Actual HDR content and return-to-desktop behavior require validation.
+-- HDR engagement and SDR return are accepted in the qualification baseline.
 hl.monitor({
     output = "desc:Microstep MSI MAG401QR EA5H156300816",
     mode = "3440x1440@155",

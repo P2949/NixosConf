@@ -60,9 +60,15 @@ Measurement artifacts must come from a frozen-compatible benchmark source
 revision. Productive `main` has a separate desktop identity; rebasing the
 benchmark source onto it would invalidate the control. The code can be
 integrated on the productive branch independently of the measured source.
-The manually invoked Nix-checks workflow can qualify the exact frozen source
-ref before measurement. Build `.#optimization-control-identity` explicitly as
-well; a productive configuration must fail that admission gate.
+Qualify new experiment source using the [local validation
+policy](../../../docs/local-validation.md): run `./scripts/validate affected` on
+the clean feature commit, then `./scripts/validate full` on the exact local
+merge commit before advancing `main`. Retain exact commit/tree/lock-bound PASS
+receipts; no hosted workflow or remote validation service qualifies the source.
+Preserve immutable historical source and its original acceptance evidence rather
+than rewriting it to add current validation tooling.
+Build `.#optimization-control-identity` explicitly before measurement as well;
+productive source that differs from the frozen control must fail that gate.
 
 The runner requires the exact evaluated, current and booted physical benchmark
 control with inactive maintenance. It does not activate a system, stop services,
