@@ -30,8 +30,8 @@ let
   port = 11435;
   backendPort = 11436;
   # Codex and llama-server must agree on this window; change both together.
-  contextSize = 61440;
-  compactLimit = 50000;
+  contextSize = 57344;
+  compactLimit = 47000;
 
   verifyModel = ''
     verify_model() {

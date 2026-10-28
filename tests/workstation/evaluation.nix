@@ -35,6 +35,18 @@ let
   sabiProxy = homeConfig.systemd.user.services.sabi-noema-proxy;
   sabiProxyExec = builtins.head sabiProxy.Service.ExecStart;
   sabiExec = builtins.head sabiService.ExecStart;
+  sabiPortsClosed =
+    firewall:
+    pkgs.lib.all
+      (
+        port:
+        !(builtins.elem port firewall.allowedTCPPorts)
+        && !(builtins.any (range: range.from <= port && port <= range.to) firewall.allowedTCPPortRanges)
+      )
+      [
+        11435
+        11436
+      ];
   sabiProfile = builtins.readFile homeConfig.home.file.".codex/sabi.config.toml".source;
   sabiCatalog = builtins.head (builtins.fromJSON (
     builtins.readFile (
@@ -149,7 +161,7 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--host 127.0.0.1 "
   "--port 11436 "
   "--n-gpu-layers all "
-  "--ctx-size 61440 "
+  "--ctx-size 57344 "
   "--cache-ram 0 "
   "--no-cache-idle-slots "
   "--cache-type-k q4_1 "
@@ -188,10 +200,8 @@ assert sabiProxy.Service.TimeoutStartSec == 250;
 # Backend activation belongs to the proxy dependency, never the login target.
 assert !(sabiUnit ? Install) || (sabiUnit.Install.WantedBy or [ ]) == [ ];
 assert !(config.systemd.services ? sabi-noema);
-assert pkgs.lib.all (port: !(builtins.elem port config.networking.firewall.allowedTCPPorts)) [
-  11435
-  11436
-];
+assert sabiPortsClosed config.networking.firewall;
+assert pkgs.lib.all sabiPortsClosed (builtins.attrValues config.networking.firewall.interfaces);
 assert builtins.elem pkgsUnstable.codex homeConfig.home.packages;
 assert homeConfig.home.file ? ".codex/sabi.config.toml";
 assert !(homeConfig.home.file ? ".codex/config.toml");
@@ -200,14 +210,14 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
   ''base_url = "http://127.0.0.1:11435/v1"''
   ''wire_api = "responses"''
   "requires_openai_auth = false"
-  "model_context_window = 61440"
-  "model_auto_compact_token_limit = 50000"
+  "model_context_window = 57344"
+  "model_auto_compact_token_limit = 47000"
   ''approval_policy = "never"''
   ''sandbox_mode = "danger-full-access"''
   ''web_search = "disabled"''
   "model_catalog_json = "
 ];
-assert sabiCatalog.context_window == 61440 && sabiCatalog.max_context_window == 61440;
+assert sabiCatalog.context_window == 57344 && sabiCatalog.max_context_window == 57344;
 assert builtins.length sabiWrappers == 1;
 assert
   builtins.length (
