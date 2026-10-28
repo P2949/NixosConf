@@ -28,6 +28,7 @@ let
 
   host = "127.0.0.1";
   port = 11435;
+  backendPort = 11436;
   # Codex and llama-server must agree on this window; change both together.
   contextSize = 61440;
   compactLimit = 50000;
@@ -191,6 +192,25 @@ let
 
   providerName = "llamacpp-sabi";
 
+  backendReady = pkgs.writeShellApplication {
+    name = "sabi-noema-ready";
+    runtimeInputs = [
+      pkgs.curl
+      pkgs.coreutils
+    ];
+    text = ''
+      deadline=$((SECONDS + 240))
+      while (( SECONDS < deadline )); do
+        if curl --silent --fail --max-time 2 http://${host}:${toString backendPort}/health >/dev/null; then
+          exit 0
+        fi
+        sleep 1
+      done
+      echo "sabi-noema backend did not become ready within 240 seconds" >&2
+      exit 1
+    '';
+  };
+
   codexSabi = pkgs.writeShellApplication {
     name = "codex-sabi";
     runtimeInputs = [
@@ -206,7 +226,7 @@ let
         sabi-model-install
       fi
 
-      systemctl --user start sabi-noema.service
+      systemctl --user start sabi-noema-proxy.socket
 
       ready=0
       for _ in $(seq 1 240); do
@@ -214,15 +234,15 @@ let
           ready=1
           break
         fi
-        if ! systemctl --user --quiet is-active sabi-noema.service; then
+        if ! systemctl --user --quiet is-active sabi-noema-proxy.socket; then
           break
         fi
         sleep 1
       done
 
       if [ "$ready" != 1 ]; then
-        systemctl --user status --no-pager sabi-noema.service || true
-        journalctl --user -u sabi-noema.service --no-pager -n 40 || true
+        systemctl --user status --no-pager sabi-noema-proxy.socket sabi-noema-proxy.service sabi-noema.service || true
+        journalctl --user -u sabi-noema-proxy.service -u sabi-noema.service --no-pager -n 40 || true
         echo "sabi-noema did not become ready" >&2
         exit 1
       fi
@@ -240,7 +260,10 @@ in
   ];
 
   systemd.user.services.sabi-noema = {
-    Unit.Description = "Sabi-Noema local inference (llama.cpp, ROCm)";
+    Unit = {
+      Description = "Sabi-Noema local inference (llama.cpp, ROCm)";
+      StopWhenUnneeded = true;
+    };
     Service = {
       Environment = [ "HIP_VISIBLE_DEVICES=0" ];
       ExecStart = lib.concatStringsSep " " [
@@ -248,12 +271,13 @@ in
         "--model ${modelPath}"
         "--alias sabi-noema"
         "--host ${host}"
-        "--port ${toString port}"
+        "--port ${toString backendPort}"
         "--jinja"
         "--chat-template-file ${./chat-template.jinja}"
         "--n-gpu-layers all"
         "--ctx-size ${toString contextSize}"
-        "--cache-ram 8192"
+        "--cache-ram 0"
+        "--no-cache-idle-slots"
         "--cache-type-k q4_1"
         "--cache-type-v q4_1"
         "--flash-attn on"
@@ -271,6 +295,36 @@ in
       ];
       Restart = "on-failure";
       RestartSec = 5;
+    };
+  };
+
+  systemd.user.sockets.sabi-noema-proxy = {
+    Unit.Description = "Sabi-Noema loopback activation socket";
+    Socket = {
+      ListenStream = "${host}:${toString port}";
+      Accept = false;
+      NoDelay = true;
+    };
+    Install.WantedBy = [ "sockets.target" ];
+  };
+
+  systemd.user.services.sabi-noema-proxy = {
+    Unit = {
+      Description = "Sabi-Noema socket proxy";
+      Requires = [
+        "sabi-noema.service"
+        "sabi-noema-proxy.socket"
+      ];
+      After = [
+        "sabi-noema.service"
+        "sabi-noema-proxy.socket"
+      ];
+    };
+    Service = {
+      Type = "notify";
+      ExecStartPre = "${backendReady}/bin/sabi-noema-ready";
+      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd --exit-idle-time=300s ${host}:${toString backendPort}";
+      TimeoutStartSec = 250;
     };
   };
 
