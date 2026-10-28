@@ -158,7 +158,6 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--fit off "
   "--parallel 1 "
   "--no-context-shift "
-  "--sleep-idle-seconds 300 "
   "--jinja "
   "--chat-template-file "
   "--no-reasoning-preserve "
@@ -166,6 +165,7 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
 ];
 # Physical qualification found no benefit from --poll 0; retain upstream polling.
 assert !(pkgs.lib.hasInfix "--poll " sabiExec);
+assert !(pkgs.lib.hasInfix "--sleep-idle-seconds" sabiExec);
 assert builtins.elem "HIP_VISIBLE_DEVICES=0" (pkgs.lib.toList sabiService.Environment);
 assert !(pkgs.lib.hasInfix "--no-cache-prompt" sabiExec);
 assert sabiUnit.Unit.StopWhenUnneeded;

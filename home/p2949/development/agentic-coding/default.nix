@@ -285,7 +285,6 @@ in
         "--parallel 1"
         "--no-context-shift"
         "--no-reasoning-preserve"
-        "--sleep-idle-seconds 300"
         "--metrics"
         "--temp 1.0"
         "--top-p 0.95"
