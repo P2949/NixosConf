@@ -105,15 +105,14 @@ configuration; raw reports and closure receipts remain private.
 VM results do not replace physical acceptance.
 
 
-Local Sabi-Noema coding agent (`codex-sabi`) is accepted for repository
-tool/edit/test loops at a 61,440-token context (50,000-token compaction) on the
-RX 9070 XT through llama.cpp ROCm. New and legacy-resumed threads run unattended
-with full command access; normal Unix privileges and behavioral restrictions still apply.
-The server remains on demand, idle sleep releases VRAM, and the GPU stays on Daily.
-Polling remains at the upstream default after `--poll 0` showed no measured benefit.
-A `/goal` survives exit, resume and reboot and completes in the same thread; tool use
-continues after manual `/compact`. After reboot the model is kept without redownload and
-the service stays stopped until `codex-sabi` starts it. See the
+Local Sabi-Noema coding agent (`codex-sabi`) is usable in **temporary degraded mode**
+on the RX 9070 XT through llama.cpp ROCm: 49,152-token context, 40,000-token compaction
+and ubatch 256. Unattended full command access remains enabled, subject to normal Unix
+privileges and behavioral restrictions. The backend starts through a loopback socket
+on demand and fully unloads with its proxy after 300 s idle; an existing Codex process
+wakes it automatically. The GPU stays on Daily. The approximately 10% prompt-speed
+loss is intentionally accepted pending a relevant backend/driver fix. Higher context
+and larger micro-batches remain outside acceptance on the current stack. See the
 [operating guide](local-agentic-coding.md).
 
 Claude Code (VS Code extension) is accepted under granular Impermanence.

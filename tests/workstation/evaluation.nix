@@ -31,7 +31,22 @@ let
   );
   sabiUnit = homeConfig.systemd.user.services.sabi-noema;
   sabiService = sabiUnit.Service;
+  sabiSocket = homeConfig.systemd.user.sockets.sabi-noema-proxy;
+  sabiProxy = homeConfig.systemd.user.services.sabi-noema-proxy;
+  sabiProxyExec = builtins.head sabiProxy.Service.ExecStart;
   sabiExec = builtins.head sabiService.ExecStart;
+  sabiPortsClosed =
+    firewall:
+    pkgs.lib.all
+      (
+        port:
+        !(builtins.elem port firewall.allowedTCPPorts)
+        && !(builtins.any (range: range.from <= port && port <= range.to) firewall.allowedTCPPortRanges)
+      )
+      [
+        11435
+        11436
+      ];
   sabiProfile = builtins.readFile homeConfig.home.file.".codex/sabi.config.toml".source;
   sabiCatalog = builtins.head (builtins.fromJSON (
     builtins.readFile (
@@ -144,29 +159,68 @@ assert !(builtins.elem ".local/share" homeDirectories);
 assert pkgs.lib.hasInfix "-rocm" sabiExec && pkgs.lib.hasInfix "/bin/llama-server " sabiExec;
 assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--host 127.0.0.1 "
-  "--port 11435 "
+  "--port 11436 "
   "--n-gpu-layers all "
-  "--ctx-size 61440 "
-  "--cache-ram 8192 "
+  "--ctx-size 49152 "
+  "--cache-ram 0 "
+  "--no-cache-idle-slots "
   "--cache-type-k q4_1 "
   "--cache-type-v q4_1 "
   "--flash-attn on "
   "--fit off "
   "--parallel 1 "
   "--no-context-shift "
-  "--sleep-idle-seconds 300 "
   "--jinja "
   "--chat-template-file "
   "--no-reasoning-preserve "
+  "--ubatch-size 256 "
   "/local-ai/models/63c4e5c0012e5445cea31822a40f54f2628fb8f3/Sabi-Noema-Q3_K_M.gguf "
 ];
 # Physical qualification found no benefit from --poll 0; retain upstream polling.
 assert !(pkgs.lib.hasInfix "--poll " sabiExec);
+assert !(pkgs.lib.hasInfix "--sleep-idle-seconds" sabiExec);
+# Rejected during GPU qualification: none of these may become configured.
+assert
+  !(pkgs.lib.any (flag: pkgs.lib.hasInfix flag sabiExec) [
+    "--batch-size "
+    "--ctx-checkpoints"
+  ]);
+assert
+  !(pkgs.lib.any
+    (
+      name:
+      pkgs.lib.any (entry: pkgs.lib.hasPrefix "${name}=" entry) (pkgs.lib.toList sabiService.Environment)
+    )
+    [
+      "HSA_ENABLE_SDMA"
+      "GGML_CUDA_DISABLE_GRAPHS"
+    ]
+  );
 assert builtins.elem "HIP_VISIBLE_DEVICES=0" (pkgs.lib.toList sabiService.Environment);
-# Started only by codex-sabi, never at login.
+assert !(pkgs.lib.hasInfix "--no-cache-prompt" sabiExec);
+assert sabiUnit.Unit.StopWhenUnneeded;
+assert sabiService.Restart == "on-failure";
+assert pkgs.lib.toList sabiSocket.Socket.ListenStream == [ "127.0.0.1:11435" ];
+assert !sabiSocket.Socket.Accept && sabiSocket.Socket.NoDelay;
+assert builtins.elem "sockets.target" sabiSocket.Install.WantedBy;
+assert pkgs.lib.all
+  (unit: builtins.elem unit sabiProxy.Unit.Requires && builtins.elem unit sabiProxy.Unit.After)
+  [
+    "sabi-noema.service"
+    "sabi-noema-proxy.socket"
+  ];
+assert pkgs.lib.hasSuffix "/lib/systemd/systemd-socket-proxyd --exit-idle-time=300s 127.0.0.1:11436"
+  sabiProxyExec;
+assert sabiProxy.Service.Type == "notify";
+assert pkgs.lib.hasSuffix "/bin/sabi-noema-ready" (
+  builtins.head (pkgs.lib.toList sabiProxy.Service.ExecStartPre)
+);
+assert sabiProxy.Service.TimeoutStartSec == 250;
+# Backend activation belongs to the proxy dependency, never the login target.
 assert !(sabiUnit ? Install) || (sabiUnit.Install.WantedBy or [ ]) == [ ];
 assert !(config.systemd.services ? sabi-noema);
-assert !(builtins.elem 11435 config.networking.firewall.allowedTCPPorts);
+assert sabiPortsClosed config.networking.firewall;
+assert pkgs.lib.all sabiPortsClosed (builtins.attrValues config.networking.firewall.interfaces);
 assert builtins.elem pkgsUnstable.codex homeConfig.home.packages;
 assert homeConfig.home.file ? ".codex/sabi.config.toml";
 assert !(homeConfig.home.file ? ".codex/config.toml");
@@ -175,14 +229,14 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
   ''base_url = "http://127.0.0.1:11435/v1"''
   ''wire_api = "responses"''
   "requires_openai_auth = false"
-  "model_context_window = 61440"
-  "model_auto_compact_token_limit = 50000"
+  "model_context_window = 49152"
+  "model_auto_compact_token_limit = 40000"
   ''approval_policy = "never"''
   ''sandbox_mode = "danger-full-access"''
   ''web_search = "disabled"''
   "model_catalog_json = "
 ];
-assert sabiCatalog.context_window == 61440 && sabiCatalog.max_context_window == 61440;
+assert sabiCatalog.context_window == 49152 && sabiCatalog.max_context_window == 49152;
 assert builtins.length sabiWrappers == 1;
 assert
   builtins.length (
@@ -206,6 +260,9 @@ pkgs.runCommand "check-desktop-evaluation"
     nativeBuildInputs = [ pkgs.python3 ];
   }
   ''
+    grep -F -- 'systemctl --user start sabi-noema-proxy.socket' ${sabiWrapper}/bin/codex-sabi
+    grep -F -- 'http://127.0.0.1:11435/props' ${sabiWrapper}/bin/codex-sabi
+    ! grep -F -- 'systemctl --user start sabi-noema.service' ${sabiWrapper}/bin/codex-sabi
     grep -F -- '--profile sabi' ${sabiWrapper}/bin/codex-sabi
     grep -F -- '--dangerously-bypass-approvals-and-sandbox' ${sabiWrapper}/bin/codex-sabi
     python3 - <<'PY'
