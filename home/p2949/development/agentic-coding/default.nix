@@ -285,6 +285,9 @@ in
         "--parallel 1"
         "--no-context-shift"
         "--no-reasoning-preserve"
+        # Temporary degraded mode: ubatch 256 is the only micro-batch that
+        # completed the 49152-context qualification on gfx1201/HIP.
+        "--ubatch-size 256"
         "--metrics"
         "--temp 1.0"
         "--top-p 0.95"
