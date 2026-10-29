@@ -199,6 +199,7 @@ assert
 assert builtins.elem "HIP_VISIBLE_DEVICES=0" (pkgs.lib.toList sabiService.Environment);
 assert !(pkgs.lib.hasInfix "--no-cache-prompt" sabiExec);
 assert sabiUnit.Unit.StopWhenUnneeded;
+assert sabiService.Restart == "on-failure";
 assert pkgs.lib.toList sabiSocket.Socket.ListenStream == [ "127.0.0.1:11435" ];
 assert !sabiSocket.Socket.Accept && sabiSocket.Socket.NoDelay;
 assert builtins.elem "sockets.target" sabiSocket.Install.WantedBy;
