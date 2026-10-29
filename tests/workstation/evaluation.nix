@@ -161,7 +161,7 @@ assert pkgs.lib.all (flag: pkgs.lib.hasInfix flag sabiExec) [
   "--host 127.0.0.1 "
   "--port 11436 "
   "--n-gpu-layers all "
-  "--ctx-size 57344 "
+  "--ctx-size 49152 "
   "--cache-ram 0 "
   "--no-cache-idle-slots "
   "--cache-type-k q4_1 "
@@ -210,14 +210,14 @@ assert pkgs.lib.all (line: pkgs.lib.hasInfix line sabiProfile) [
   ''base_url = "http://127.0.0.1:11435/v1"''
   ''wire_api = "responses"''
   "requires_openai_auth = false"
-  "model_context_window = 57344"
-  "model_auto_compact_token_limit = 47000"
+  "model_context_window = 49152"
+  "model_auto_compact_token_limit = 40000"
   ''approval_policy = "never"''
   ''sandbox_mode = "danger-full-access"''
   ''web_search = "disabled"''
   "model_catalog_json = "
 ];
-assert sabiCatalog.context_window == 57344 && sabiCatalog.max_context_window == 57344;
+assert sabiCatalog.context_window == 49152 && sabiCatalog.max_context_window == 49152;
 assert builtins.length sabiWrappers == 1;
 assert
   builtins.length (
