@@ -1,7 +1,8 @@
 # Local coding agent (Sabi-Noema + Codex)
 
 ```text
-codex-sabi → Codex (profile "sabi") → Responses API → llama-server (ROCm gfx1201) → Sabi-Noema Q3_K_M
+codex-sabi → Codex (profile "sabi") → Responses API :11435
+→ systemd socket/proxy → llama-server :11436 (ROCm gfx1201) → Sabi-Noema Q3_K_M
 ```
 
 Home Manager owns the feature ([agentic-coding](../home/p2949/development/agentic-coding/default.nix));
@@ -21,7 +22,7 @@ host GPU policy is unchanged and stays on the Daily LACT profile.
 ```console
 sabi-model-install   # one-time, resumable; also run automatically by codex-sabi
 sabi-model-verify    # full size/SHA-256 verification of the installed bytes
-codex-sabi           # starts the server on demand, then launches the full-access Sabi profile
+codex-sabi           # probes the activation socket, then launches the full-access Sabi profile
 ```
 
 For autonomous work use `/goal <objective + verification + constraints + stop condition>`.
@@ -40,10 +41,10 @@ plain `codex` there once, or add `[projects."<path>"] trust_level = "trusted"` t
 Operations:
 
 ```console
-systemctl --user status sabi-noema
+systemctl --user status sabi-noema-proxy.socket sabi-noema-proxy.service sabi-noema.service
 sudo journalctl _SYSTEMD_USER_UNIT=sabi-noema.service -b
-systemctl --user restart sabi-noema
-curl -s http://127.0.0.1:11435/props
+systemctl --user start sabi-noema-proxy.socket
+curl -s http://127.0.0.1:11435/props # wakes the backend and counts as activity
 ```
 
 ## Behavior
@@ -58,12 +59,20 @@ curl -s http://127.0.0.1:11435/props
   file. `codex-sabi` checks existence and exact size at startup, invoking the installer
   when needed; use the explicit verifier to detect same-size corruption without
   hashing 13.3 GB on every agent launch.
-- The server binds `127.0.0.1:11435` only and is not started at login. After 300 s idle,
-  llama.cpp sleeps and releases model/KV VRAM; the process stays and wakes on the next request.
+- The frontend socket binds only `127.0.0.1:11435` and is armed at login. A connection
+  starts `systemd-socket-proxyd` and its backend dependency on `127.0.0.1:11436`;
+  neither port is exposed through the firewall. The proxy waits for backend readiness.
+  After 300 s without traffic, the proxy exits and the backend's `StopWhenUnneeded`
+  terminates llama-server completely. The socket remains available for automatic wake
+  from an already-running Codex process. Cold starts reload the model and reprocess
+  the prompt. Background Codex requests count as activity and postpone teardown.
+  `Restart=on-failure` recovers a failed backend automatically.
 - `~/.codex/sabi.config.toml` is generated; `~/.codex/config.toml` is not managed.
-- Context is capped at 61,440 tokens with a 50,000-token auto-compaction threshold,
-  `--fit off`, Q4_1 KV and Flash Attention. The server, profile and model catalog agree;
-  effective context remains 95%. Change `contextSize` and the compaction limit together.
+- **Temporary degraded mode** caps context at 49,152 tokens with a 40,000-token
+  auto-compaction threshold and physical micro-batch `--ubatch-size 256`.
+  Full GPU offload, `--fit off`, Q4_1 KV and Flash Attention remain enabled.
+  The server, profile and model catalog agree; effective context remains 95%.
+  Change `contextSize` and the compaction limit together.
 - Codex uses `tool_mode = direct` (Code Mode emits items llama.cpp rejects).
 - Earlier-turn reasoning is not replayed (`--no-reasoning-preserve`), so history does not spend
   the context window; reasoning within the current tool loop is kept. Reasoning levels are `low`,
@@ -74,16 +83,18 @@ curl -s http://127.0.0.1:11435/props
 
 - MCP servers and apps are not configured.
 - Multi-agent is not enabled.
-- Contexts above 61,440 are not accepted. A 65,536-token allocation started with full
-  GPU offload and sufficient VRAM, but a 57.5K-token Responses request caused a GPU
-  hang/reset during prefill. The same request passed at 61,440. Qualification applies
-  to the Responses/chat path; raw `/completion` behavior is not a substitute. See
-  [upstream long-context discussion](https://github.com/ggml-org/llama.cpp/issues/30884).
+- Higher context and larger micro-batches are not accepted on the current gfx1201/HIP
+  stack because qualification produced machine-level GPU faults. The temporary ceiling
+  is 49,152 tokens and the accepted micro-batch is 256. No HSA or graph/checkpoint
+  workaround is configured. Qualification covers the production Responses/chat path.
 
 ## Requalification triggers
 
-Change of model file or revision, llama.cpp commit, any Codex version change, ROCm,
-context size or other KV-relevant inference settings, or `chat-template.jinja` changes.
+Model, Codex, context/KV policy and chat-template changes require requalification.
+Revisit this temporary degraded mode after a material change to llama.cpp's
+HIP/Qwen/GDN implementation, ROCm, kernel/amdgpu or GPU firmware. A future
+campaign should start with one fresh run at 49,152 context and the default ubatch 512;
+only after that passes should repetitions or context increase.
 
 ## Command permissions
 
@@ -102,63 +113,36 @@ pushes, activation and reboot. Hook trust is not bypassed.
 
 ## CPU and host RAM
 
-Upstream CPU polling remains unchanged. `--poll 0` was tested and removed because it
-provided no measurable benefit: awake-idle CPU was already near zero, ggml workers
-were inactive during the prefill probe, and active main/HIP thread CPU time was unchanged.
-Main/HIP thread activity during generation does not imply CPU layer fallback; all 65
-layers were confirmed GPU-offloaded. No affinity, quota or HSA workaround is configured.
+Host prompt caching is disabled (`--cache-ram 0`) and idle-slot publication is
+disabled (`--no-cache-idle-slots`). Normal live same-thread prefix reuse remains
+available while the backend is warm. Full idle termination releases the backend
+and proxy's process-owned RAM, CPU and model/KV VRAM; prompt state does not survive
+cold teardown. `--load-mode auto` remains intentional: kernel-reclaimable mmap/GGUF
+file cache may remain after the processes exit.
 
-The server explicitly allows an 8 GiB host prompt cache (`--cache-ram 8192`) to
-preserve expensive prompt states for reuse. A direct switch-away/return probe serialized
-1,277 MiB of state; the reported cache, including recurrent checkpoints, was 1,875 MiB,
-and anonymous memory rose from about 1.10 to 2.64 GiB. Returning to that prompt reused
-57,576 tokens and completed in 3.28 s. Host prompt state is therefore a measured
-anonymous allocation owner, distinct from the 521 MiB CPU-mapped model buffer and
-100 MiB host compute buffer. Recurrent checkpoints also consume host memory separately
-(about 150 MiB each); the earlier 6.6–8.6 GiB long-session RSS is not a measurement of
-serialized cache alone.
+Upstream CPU polling and the logical batch default remain unchanged; no explicit
+`--poll` or `--batch-size` is configured. There is no llama.cpp idle-sleep layer,
+affinity, quota, HSA, mmap, swap or memory-locking workaround. Main/HIP thread CPU
+activity during inference does not imply CPU layer fallback; all 65 layers are
+offloaded to the GPU.
 
-Same-thread A/B requests reused the GPU slot with either cache setting; after 300 s
-idle sleep both settings reprocessed the prompt. The comparison did not establish a
-material same-thread latency benefit or a 2 GiB anonymous-RAM saving, so the existing
-8 GiB allowance is retained under the qualification fallback. In the serialization
-probe about 2.48 GiB anonymous memory remained allocated during GPU sleep, although
-wake/reload did not reuse the saved state. GPU idle sleep is a VRAM release mechanism,
-not a promise to release all host allocations or preserve prompt reuse across wake.
+## Accepted temporary degraded mode
 
-`--load-mode auto` remains intentional: it uses mmap where supported, and mapped GGUF
-pages may contribute reclaimable file cache. The dominant anonymous allocation is not
-explained by mmap or CPU-offloaded layers. The original ~11 GiB observation was not
-reproduced exactly.
+Physically qualified on 2026-10-29 at 49,152 context / 40,000-token compaction /
+ubatch 256. The production socket path passed the 47,085-token sentinel and its
+follow-up, reusing 47,081 of 47,116 follow-up input tokens. The sequential warm
+correctness gate passed 32/32 unrelated requests without contamination.
 
-At the long-context idle sample the host had about 19 GiB available, recent memory PSI
-was zero, and Sabi had about 18 MiB swapped: no sustained memory pressure was observed.
-Inspect `RssAnon`/`Pss_Anon`, `RssFile`/`Pss_File`, `MemAvailable`, swap activity and memory
-pressure together, rather than RSS or free RAM alone:
+The fixed temperature-zero benchmark uses 4,242 prompt tokens and 256 output tokens.
+Three-run medians were **1,026.15 prompt tokens/s** and **32.33 decode tokens/s**,
+compared with the historical 1,135 and 32.60. The approximately 10% prompt-performance
+loss is intentionally accepted for stability; the temporary floors are 999 prompt
+and 30.97 decode tokens/s. Cold-start latency is excluded from these active rates.
 
-```console
-pid=$(systemctl --user show --property MainPID --value sabi-noema.service)
-grep -E '^(Rss|Pss|Pss_Anon|Pss_File|Swap):' /proc/"$pid"/smaps_rollup
-grep -E '^(VmRSS|RssAnon|RssFile|VmSwap):' /proc/"$pid"/status
-free -h
-cat /proc/pressure/memory
-```
-
-No mmap, host-buffer, swap or memory-locking workaround was added.
-
-## Accepted configuration
-
-Physically qualified on 2026-10-24 at 61,440 tokens / 50,000-token compaction, with
-65/65 layers on the GPU. The Responses sentinel test processed 57,549 input tokens
-(57,497 from `/tokenize`) and returned the exact marker. New and legacy-resumed agents
-completed real inspect/edit/test loops; shell/test use also passed after manual `/compact`.
-
-Measured whole-card awake VRAM was 14,748–14,753 MiB of 16,304 MiB (about 1.5 GiB headroom).
-After the existing 300-second idle timeout, whole-card VRAM fell to 827 MiB and
-sampled CPU was near zero. Host anonymous RSS still measured about 6.4 GiB while asleep;
-model/KV VRAM release does not imply release of all host allocations.
-The fixed temperature-zero chat benchmark used 4,242 prompt tokens and 256 output tokens,
-with prompt caching disabled. Three-run medians were 1,135 prompt tokens/s and 32.60 decode
-tokens/s, versus 1,142 and 32.63 at the old 49,152-token baseline (both regressions below 1%).
-Long-context performance depends on prompt length; these rates describe the fixed short
-benchmark, not the 57.5K-token test. Higher contexts remain outside acceptance.
+Three natural cold-wake cycles passed from one real Codex process, followed by
+successful shell tool use, automatic recovery after a controlled backend SIGKILL,
+and final natural idle teardown. Across 30 final idle samples, whole-card VRAM was
+only 7.46 MiB above the 30-sample baseline median (limit: 256 MiB). The backend and
+proxy were absent, the frontend socket remained active, and port 11436 had no listener.
+Cold wake trades model reload latency for near-zero idle Sabi resources. No GPU fault
+was recorded during accepted production qualification.
