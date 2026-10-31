@@ -88,6 +88,24 @@ assert builtins.any (
     command: command.command == "ALL" && builtins.elem "NOPASSWD" command.options
   ) rule.commands
 ) config.security.sudo.extraRules;
+# Product recovery state is independent of the validation runner and persists for both
+# privilege domains. The host does not define the product units or its operation policy.
+assert builtins.all
+  (
+    directory:
+    builtins.any (entry: entry.directory == directory && entry.mode == "0700") systemPolicy.directories
+  )
+  [
+    "/var/lib/stutter/autotune-${username}"
+    "/var/lib/stutter/worker-${username}"
+  ];
+assert
+  (builtins.head (
+    builtins.filter (
+      entry: entry.directory == "/var/lib/stutter/autotune-${username}"
+    ) systemPolicy.directories
+  )).user == username;
+assert !(config.systemd.services ? "stutter-autotune-bounded");
 # Stutter's persistent autonomous multi-kernel validation (contract persistent-runner-v1).
 assert builtins.elem "/var/lib/stutter-validation" (
   map (entry: entry.directory) systemPolicy.directories
