@@ -177,7 +177,25 @@
         "llama-cpp-src": "llama-cpp-src",
         "nix-minecraft": "nix-minecraft",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "stutter": "stutter"
+      }
+    },
+    "stutter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793911260,
+        "narHash": "sha256-PY9FZ4cEhhLpg719gelTA2s7FQHjxC+qHx3q4Qfwj3c=",
+        "owner": "P2949",
+        "repo": "stutter",
+        "rev": "adef09a8b60a13426090b22db2c95367e3dcb763",
+        "type": "github"
+      },
+      "original": {
+        "owner": "P2949",
+        "repo": "stutter",
+        "rev": "adef09a8b60a13426090b22db2c95367e3dcb763",
+        "type": "github"
       }
     },
     "systems": {

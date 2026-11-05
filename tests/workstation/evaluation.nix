@@ -106,6 +106,25 @@ assert
     ) systemPolicy.directories
   )).user == username;
 assert !(config.systemd.services ? "stutter-autotune-bounded");
+# Stutter's production bounded service: the product's own templates rendered with an immutable
+# store binary, never a path into a writable checkout, started with the system.
+assert config.services.stutterBounded.enable;
+assert
+  builtins.match ".*ExecStart=/nix/store/[a-z0-9]+-stutter privileged-worker .*" (
+    config.systemd.units."stutter-privileged-worker@.service".text
+  ) != null;
+assert
+  builtins.match ".*ExecStart=/nix/store/[a-z0-9]+-stutter autotune .*--mode apply-medium-risk.*" (
+    config.systemd.units."stutter-autotune-bounded@.service".text
+  ) != null;
+assert
+  builtins.match ".*/home/.*" config.systemd.units."stutter-privileged-worker@.service".text == null;
+assert builtins.elem "stutter-privileged-worker@${username}.service"
+  config.systemd.targets.multi-user.wants;
+assert
+  builtins.match ".*worker_only_mutation = true.*" (
+    config.environment.etc."stutter/autotune-bounded-${username}.toml".text
+  ) != null;
 # Stutter's persistent autonomous multi-kernel validation (contract persistent-runner-v1).
 assert builtins.elem "/var/lib/stutter-validation" (
   map (entry: entry.directory) systemPolicy.directories

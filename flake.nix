@@ -38,6 +38,13 @@
       url = "github:indyfive11/liquidctl/48e8dd07bdc1c5dca330a844aca7fb22218e6e59";
       flake = false;
     };
+
+    # Source-only pin of the Stutter checkout whose unit templates the production service renders;
+    # the binary itself is pinned separately by hash (services.stutterBounded.binarySha256).
+    stutter = {
+      url = "github:P2949/stutter/adef09a8b60a13426090b22db2c95367e3dcb763";
+      flake = false;
+    };
   };
 
   outputs =

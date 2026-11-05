@@ -9,6 +9,7 @@
     ./ephemeral-root.nix
     ./stutter-validation-kernels.nix
     ./stutter-validation.nix
+    ./stutter-service.nix
     ./minecraft
     ./gpu-policy.nix
 
@@ -22,6 +23,14 @@
   ];
 
   networking.hostName = "desktop";
+
+  # Stutter's bounded always-on service (controller as the desktop account plus a root worker).
+  # The binary is the release build of the Stutter commit pinned in flake.nix, added to the store
+  # with `nix-store --add-fixed sha256` and pinned here by the hash of the file.
+  services.stutterBounded = {
+    enable = true;
+    binarySha256 = "00ce6c49a980d40dd06d736c427eb33b7a8346994207c7c8b9993b461ffcf2c7";
+  };
 
   workstation.activationSafety = {
     enable = true;
