@@ -29,7 +29,7 @@
   # with `nix-store --add-fixed sha256` and pinned here by the hash of the file.
   services.stutterBounded = {
     enable = true;
-    binarySha256 = "8493a9eb5dfe8d2a8ec466ec19723d97b228e7172216a19cb4a22b6f1c9cd5be";
+    binarySha256 = "ec9d47bf8495d33cc4884aa71d5521c885c73dc6430dc827f3b171bf0f9bf789";
   };
 
   workstation.activationSafety = {
