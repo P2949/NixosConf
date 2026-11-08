@@ -55,6 +55,18 @@
           directory = "/var/lib/stutter-validation";
           mode = "0700";
         }
+        # Product controller journal/kept ledger and worker rollback snapshots. These are
+        # separate from validation-runner state; Stutter owns their service implementation.
+        {
+          directory = "/var/lib/stutter/autotune-${username}";
+          user = username;
+          group = "users";
+          mode = "0700";
+        }
+        {
+          directory = "/var/lib/stutter/worker-${username}";
+          mode = "0700";
+        }
         # NetworkManager atomically creates its identity key, so persist the
         # enclosing directory and discard its known disposable children at boot.
         "/var/lib/NetworkManager"

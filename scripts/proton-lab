@@ -1,0 +1,297 @@
+#!/usr/bin/env python3
+"""Private, isolated Proton experiments. No Steam account or prefix edits."""
+import argparse
+import csv
+import hashlib
+import datetime as dt
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import shutil
+import statistics
+import subprocess
+import sys
+import time
+import uuid
+
+ROOT = Path.home() / 'Development/ProtonExperiments'
+BLOCKED = {'unavailable', 'hardware-inapplicable', 'unverified'}
+
+
+def capture(command, timeout=20):
+    try:
+        p = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
+        return {'command': command, 'exit_code': p.returncode,
+                'stdout': p.stdout, 'stderr': p.stderr}
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return {'command': command, 'exit_code': None, 'error': str(e)}
+
+
+def load_manifest(path):
+    data = json.loads(Path(path).read_text())
+    tools = data['tools']
+    if set(tools) != {'cachyos', 'cachyosV3', 'ge', 'em'}:
+        raise ValueError('Expected the four selected tools')
+    for field in ['id', 'displayName', 'path']:
+        values = [tool[field] for tool in tools.values()]
+        if not all(isinstance(value, str) and value for value in values) or len(set(values)) != 4:
+            raise ValueError(f'Tools need four distinct {field} values')
+    if any(feature['runtime_status'] != 'NOT_TESTED' for feature in data['features'].values()):
+        raise ValueError('Feature metadata cannot establish runtime functionality')
+    return data
+
+
+def select_case(manifest, fork, case):
+    feature = manifest['features'][case]
+    if fork not in feature['forks']:
+        raise ValueError(f'{case} is not supported by {fork}')
+    if feature['availability'] in BLOCKED:
+        raise ValueError(f'{case}: {feature["availability"]}: {feature["requires"]}')
+    return dict(feature['env'])
+
+
+def clean_environment(env):
+    # Remove inherited experiment flags, allowing attribution to one case.
+    prefixes = ('PROTON_', 'WINE_', 'WAYLANDDRV_', 'DXVK_', 'VKD3D_',
+                'FSR', 'MLFG_', 'DXIL_SPIRV_', 'WINEDLLOVERRIDES', 'UMU_', 'STEAM_COMPAT_',
+                'RUNTIMEPATH', 'PROTONPATH', 'WINEPREFIX')
+    return {k: v for k, v in env.items() if not k.startswith(prefixes)}
+
+
+def inventory(manifest):
+    for fork, tool in manifest['tools'].items():
+        print(f'{fork}: {tool["displayName"]} ({tool["version"]})\n  {tool["path"]}')
+        print('  source: ' + json.dumps(tool['source'], sort_keys=True))
+        for case, feature in manifest['features'].items():
+            if fork not in feature['forks']:
+                continue
+            options = ' '.join(f'{k}={shlex.quote(v)}' for k, v in feature['env'].items())
+            print(f'  {case}: {feature["availability"]}; {feature["requires"]}')
+            if feature['availability'] not in BLOCKED:
+                print(f'    {options} %command%'.strip())
+
+
+def probe(manifest):
+    checks = {"loader_environment": {k: os.environ.get(k) for k in ["VK_DRIVER_FILES", "VK_ICD_FILENAMES", "MESA_VK_DEVICE_SELECT", "DRI_PRIME"]}}
+    for arch, directory in [('64', '/run/opengl-driver'), ('32', '/run/opengl-driver-32')]:
+        icds = []
+        for path in Path(directory, 'share/vulkan/icd.d').glob('radeon_icd*.json'):
+            data = json.loads(path.read_text())
+            library = data['ICD']['library_path']
+            icds.append({'path': str(path), 'library': library, 'readable': os.access(library, os.R_OK)})
+        checks[f'icd{arch}'] = {'status': 'DETECTED' if icds and all(x['readable'] for x in icds) else 'FAIL', 'icds': icds}
+    commands = {
+        'vulkan64': [manifest['vulkan64'], '--summary'],
+        'vulkan32': [manifest['vulkan32'], '--summary'],
+        'monitors': ['hyprctl', '-j', 'monitors'],
+        'compositor': ['hyprctl', 'version'],
+        'protocols': ['wayland-info'],
+        'audio': ['systemctl', '--user', 'is-active', 'pipewire', 'pipewire-pulse'],
+        'gamescope': ['gamescope', '--version'],
+        'gpu_profile': ['lact', 'cli', 'profile', 'get'],
+        'gamemode': ['gamemoded', '-s'],
+    }
+    for key, cmd in commands.items():
+        result = capture(cmd)
+        result['status'] = 'DETECTED' if result['exit_code'] == 0 else 'NOT_TESTED'
+        checks[key] = result
+    for fork, tool in manifest['tools'].items():
+        p = Path(tool['path'])
+        readable = all((p / name).is_file() for name in ['proton', 'compatibilitytool.vdf', 'toolmanifest.vdf'])
+        checks[fork] = {'status': 'DETECTED' if readable and os.access(p/'proton', os.X_OK) else 'FAIL',
+                        'manifest': (p/'compatibilitytool.vdf').read_text() if readable else None}
+    ntsync = capture(['modinfo', 'ntsync'])
+    checks['ntsync'] = {'status': 'DETECTED' if Path('/dev/ntsync').exists() else ('NOT_TESTED' if ntsync['exit_code'] == 0 else 'UNSUPPORTED'),
+                        'module': ntsync, 'reason': 'A module present without /dev/ntsync is not an operational device'}
+    checks['controllers'] = {'status': 'DETECTED' if list(Path('/dev/input').glob('js*')) else 'NOT_TESTED', 'reason': 'Detection is not a hardware behavior test'}
+    steam = Path.home()/'.local/share/Steam/steamapps'
+    checks['games'] = {'status':'DETECTED' if steam.is_dir() else 'NOT_TESTED',
+                       'manifests':sorted(p.name for p in steam.glob('appmanifest_*.acf')),
+                       'reason':'Installation does not establish unattended launch or feature compatibility'}
+    checks['hdr'] = {'status': 'NOT_TESTED', 'reason': 'Protocol/output detection alone does not demonstrate game HDR'}
+    return checks
+
+
+def classify(exit_code, timed_out):
+    return 'INCONCLUSIVE' if timed_out else ('PASS' if exit_code == 0 else 'FAIL')
+
+
+
+def classify_fixture(launcher_exit, timed_out, output):
+    markers = re.findall(r'^PROTON_LAB result=(\d+)\s*$', output, re.MULTILINE)
+    target_exit = int(markers[0]) if len(markers) == 1 else None
+    if timed_out:
+        return 'INCONCLUSIVE', target_exit
+    if launcher_exit != 0:
+        return 'FAIL', target_exit
+    if target_exit is None:
+        return 'INCONCLUSIVE', None
+    return ('PASS' if target_exit == 0 else 'FAIL'), target_exit
+
+
+def prepare_runtime(tool):
+    """Reuse a private copy of an installed Valve runtime, after UMU verification."""
+    manifest = (Path(tool['path'])/'toolmanifest.vdf').read_text()
+    if not re.search(r'"require_tool_appid"\s*"4183110"', manifest):
+        return {}, {'status': 'NOT_TESTED', 'reason': 'UMU must acquire required runtime'}
+    source = Path.home()/'.local/share/Steam/steamapps/common/SteamLinuxRuntime_4'
+    root = ROOT/'runtime'
+    dest = root/'umu/steamrt4'
+    if not (dest/'toolmanifest.vdf').exists() and (source/'toolmanifest.vdf').exists():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        temporary = dest.with_name('steamrt4-copy-'+uuid.uuid4().hex[:8])
+        shutil.copytree(source, temporary, symlinks=True, ignore=shutil.ignore_patterns('var'))
+        (temporary/'umu').symlink_to('_v2-entry-point')
+        temporary.rename(dest)
+    if (dest/'toolmanifest.vdf').exists():
+        return {'UMU_FOLDERS_PATH': str(root), 'UMU_RUNTIME_UPDATE':'0'}, {
+            'status':'DETECTED', 'source':str(source), 'path':str(dest),
+            'versions':(dest/'VERSIONS.txt').read_text(),
+            'reason':'Private copy; UMU validates mtree before use, updates disabled'}
+    return {}, {'status':'NOT_TESTED', 'reason':'No installed runtime; UMU download required'}
+
+
+def run(manifest, args):
+    options = select_case(manifest, args.fork, args.case)
+    tool = manifest['tools'][args.fork]
+    if args.case == 'primary-monitor':
+        monitors = capture(['hyprctl', '-j', 'monitors'])
+        names = [m['name'] for m in json.loads(monitors.get('stdout', '[]'))]
+        if not args.monitor or args.monitor not in names:
+            raise ValueError('--monitor must name a connected compositor output')
+        options['WAYLANDDRV_PRIMARY_MONITOR'] = args.monitor
+    target = Path(args.target).expanduser().resolve(strict=True)
+    if not target.is_file():
+        raise ValueError('Target must be a file')
+    # Make each invocation new; never reuse real Steam compatibility data.
+    run_id = dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex[:8]
+    directory = args.results.expanduser().resolve() / run_id
+    directory.mkdir(parents=True, mode=0o700)
+    prefix = directory / f'prefix-{args.fork}-{tool["version"]}'
+    env = clean_environment(os.environ)
+    env.update(options)
+    runtime_env, runtime_identity = prepare_runtime(tool)
+    env.update(runtime_env)
+    env.update(PROTONPATH=tool['path'], WINEPREFIX=str(prefix), GAMEID='umu-default',
+               PROTON_LOG='1', PROTON_LOG_DIR=str(directory),
+               PROTON_LAB_OUTPUT='Z:'+str(directory/'fixture.txt').replace('/', '\\'),
+               PROTON_CRASH_REPORT_DIR=str(directory/'crashes'))
+    telemetry = directory/'telemetry'
+    telemetry.mkdir()
+    env.update(MANGOHUD='1', MANGOHUD_CONFIG=f'autostart_log=1,log_duration=0,output_folder={telemetry},no_display')
+    record = {'schema': 1, 'id': run_id, 'timestamp': dt.datetime.now(dt.timezone.utc).isoformat(),
+              'fork': args.fork, 'case': args.case, 'tool': tool, 'target': str(target),
+              'options': options, 'target_args':args.target_args, 'fixture_protocol':args.fixture, 'prefix': str(prefix), 'provenance': probe(manifest),
+              'mesa': manifest['mesa'], 'steam_runtime': runtime_identity, 'resolution_refresh': capture(['hyprctl','-j','monitors']),
+              'launch_status': 'INCONCLUSIVE', 'feature_status': 'NOT_TESTED',
+              'feature_reason': 'Launch success alone does not prove feature functionality',
+              'frame_times_ms': [], 'input_latency': 'NOT_TESTED: no input-to-photon instrumentation'}
+    (directory/'run.json').write_text(json.dumps(record, indent=2))
+    started = time.monotonic()
+    timed_out = False
+    exit_code = None
+    with (directory/'stdout.log').open('w') as stdout, (directory/'stderr.log').open('w') as stderr:
+        try:
+            # The FHS launcher supervises the actual Steam Runtime child.
+            p = subprocess.Popen([manifest['umu'], str(target), *args.target_args], env=env, cwd=directory, stdout=stdout, stderr=stderr, start_new_session=True)
+            try:
+                exit_code = p.wait(timeout=args.timeout)
+            except subprocess.TimeoutExpired:
+                import signal
+                timed_out = True
+                os.killpg(p.pid, signal.SIGTERM)
+                try:
+                    p.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    os.killpg(p.pid, signal.SIGKILL)
+                    p.wait()
+        except OSError as e:
+            stderr.write(str(e))
+    record.update(exit_code=exit_code, timed_out=timed_out, duration_seconds=time.monotonic()-started,
+                  launch_status=classify(exit_code,timed_out))
+    # Only explicitly named, numeric fixture observations are interpreted.
+    output = (directory/'stdout.log').read_text(errors='replace')
+    if (directory/'fixture.txt').exists():
+        output += (directory/'fixture.txt').read_text(errors='replace')
+    record['launcher_exit_code'] = exit_code
+    record['exit_code_source'] = 'launcher'
+    record['target_exit_code'] = None
+    if args.fixture:
+        status, target_exit = classify_fixture(exit_code, timed_out, output)
+        record.update(launch_status=status, target_exit_code=target_exit, exit_code=target_exit, exit_code_source='fixture')
+        record['fixture_status'] = status
+    upscalers = prefix/'upscaler_files'
+    record['upscaler_metadata'] = upscalers.read_text(errors='replace') if upscalers.is_file() else None
+    record['upscaler_dlls'] = {}
+    for dll in prefix.rglob('amdxcffx64.dll'):
+        if dll.is_file():
+            with dll.open('rb') as f:
+                record['upscaler_dlls'][str(dll.relative_to(prefix))] = hashlib.file_digest(f, 'sha256').hexdigest()
+    record['fixture_observations'] = re.findall(r'PROTON_LAB ([^\r\n]+)', output)
+    record['frame_times_ms'] = [float(x) for x in re.findall(r'PROTON_LAB frame_ms=([0-9.]+)', output)]
+    frames = record['frame_times_ms']
+    if frames:
+        ordered = sorted(frames)
+        record['frame_pacing'] = {'samples':len(frames), 'mean_ms':statistics.mean(frames),
+            'p50_ms':statistics.median(frames), 'p95_ms':ordered[int((len(frames)-1)*.95)],
+            'p99_ms':ordered[int((len(frames)-1)*.99)], 'fps':1000/statistics.mean(frames)}
+    (directory/'run.json').write_text(json.dumps(record, indent=2))
+    print(directory)
+    return 0 if record['launch_status'] == 'PASS' else 1
+
+
+def report(directory):
+    records = [json.loads(p.read_text()) for p in sorted(directory.glob('*/run.json'))]
+    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'exit_code_source', 'launcher_exit_code', 'target_exit_code', 'duration_seconds', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
+    with (directory/'summary.csv').open('w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore')
+        writer.writeheader()
+        writer.writerows(dict(r, **r.get('frame_pacing', {})) for r in records)
+    lines = ['# Proton experiments', '', 'Launch PASS does not establish feature function or performance benefit.', '',
+             '| Fork | Case | Launch | Feature | Exit | Frames | p95 ms |', '| --- | --- | --- | --- | --- | --- | --- |']
+    for r in records:
+        lines.append(f'| {r["fork"]} | {r["case"]} | {r["launch_status"]} | {r["feature_status"]} | {r.get("exit_code")} | {r.get("frame_pacing",{}).get("samples","")} | {r.get("frame_pacing",{}).get("p95_ms","")} |')
+    (directory/'summary.md').write_text('\n'.join(lines)+'\n')
+    (directory/'summary.json').write_text(json.dumps(records, indent=2))
+    print(directory/'summary.md')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--manifest', default=os.environ.get('PROTON_LAB_MANIFEST', '/etc/proton-lab.json'))
+    sub = parser.add_subparsers(dest='operation', required=True)
+    sub.add_parser('inventory')
+    sub.add_parser('probe')
+    runner = sub.add_parser('run')
+    runner.add_argument('--fork', required=True)
+    runner.add_argument('--case', required=True)
+    runner.add_argument('--target', required=True)
+    runner.add_argument('--results', type=Path, default=ROOT/'results')
+    runner.add_argument('--fixture', action='store_true', help='Require the built-in fixture completion marker; report its target exit code')
+    runner.add_argument('--monitor')
+    runner.add_argument('--timeout', type=int, default=180)
+    runner.add_argument('target_args', nargs='*')
+    reporter = sub.add_parser('report')
+    reporter.add_argument('directory', type=Path)
+    args = parser.parse_args()
+    os.umask(0o077)
+    if args.operation == 'report':
+        report(args.directory.expanduser())
+        return 0
+    manifest = load_manifest(args.manifest)
+    if args.operation == 'inventory':
+        inventory(manifest)
+    elif args.operation == 'probe':
+        print(json.dumps(probe(manifest), indent=2))
+    else:
+        return run(manifest, args)
+    return 0
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except (KeyError, ValueError, OSError) as e:
+        sys.exit(str(e))

@@ -58,6 +58,7 @@ in
         "CAP_SYS_RESOURCE"
         "CAP_SYS_NICE"
         "CAP_SYS_BOOT"
+        "CAP_SYS_PTRACE"
         "CAP_CHOWN"
         "CAP_DAC_OVERRIDE"
         "CAP_DAC_READ_SEARCH"

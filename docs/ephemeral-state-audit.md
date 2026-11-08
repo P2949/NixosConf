@@ -306,3 +306,33 @@ The plan records exact private receipt names for pruning, physical proofs,
 semantic reconciliation and deliberate retirement. Final source freeze/local
 suite/CI integration remains a repository-release task, not another migration
 or a reason to repeat accepted human-observation gates.
+
+## Stutter bounded product service
+
+| Path | Class | Decision |
+| --- | --- | --- |
+| `/var/lib/stutter/autotune-p2949` | P | Private desktop-user controller journal, kept-action ledger, candidate memory and recovery audit; must survive the ephemeral-root reset. |
+| `/var/lib/stutter/worker-p2949` | P | Root-owned rollback snapshots created by the product privileged worker; required to restore committed mutations after controller death and reboot. |
+| `/run/stutter-worker-p2949`, `/run/stutter-autotune-p2949` | E | Private service runtime/socket directories recreated by the product templates. |
+
+These directories are separate from `/var/lib/stutter-validation`. Stutter owns the embedded
+product units, policy and exact autonomous contracts. A pinned validation campaign must reinstall
+the product templates and their root-owned configuration after an ephemeral-root reboot; this
+persistence declaration does not make imperative service installation permanent packaging or
+claim service graduation. Workstation evaluation checks both persisted privilege domains.
+
+## Proton experiments
+
+`Development/ProtonExperiments` uses the existing persisted `Development` tree.
+Verified upstream archives/checksums and private experiment reports are P state;
+source GC roots supplement archive retention and do not replace backups. Isolated
+fixture prefixes are disposable experiment data retained with their run for
+inspection. Installed compatibility tools are immutable Nix outputs. Existing
+Steam libraries, config, compatdata and shader-cache policy are unchanged.
+The narrowly retained `runtime/umu/steamrt4` snapshot is R state copied from the
+already-installed Valve runtime after UMU's downloader failed integrity checks.
+UMU validates it against its mtree; its version is recorded per experiment.
+UMU's unrelated generated cache remains disposable; no new persistence mount or
+whole-cache persistence is declared.
+See [Proton operation and restoration](proton.md). Workstation evaluation protects
+the pre-existing persisted Development and Steam paths.

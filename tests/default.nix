@@ -8,6 +8,19 @@
 }:
 {
   fastChecks = {
+    proton-lab =
+      pkgs.runCommand "check-proton-lab"
+        {
+          src = repoSource;
+          nativeBuildInputs = [ pkgs.python3 ];
+        }
+        ''
+          cd "$src"
+          export PYTHONDONTWRITEBYTECODE=1
+          python tests/test_proton_lab.py
+          touch "$out"
+        '';
+
     gpu-policy = import ./workstation/gpu-policy { inherit pkgs; };
     gamemode-gpu-profile = import ./packages/gamemode-gpu-profile { inherit pkgs; };
     validation-selection =

@@ -4,6 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
+    # Graphics-only package set; the operating system and other packages stay pinned.
+    nixpkgs-mesa.url = "github:NixOS/nixpkgs/3d35ed46b5d9edd6d082d4548d8c738aae9b632a";
+
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
@@ -38,6 +41,13 @@
       url = "github:indyfive11/liquidctl/48e8dd07bdc1c5dca330a844aca7fb22218e6e59";
       flake = false;
     };
+
+    # Source-only pin of the Stutter checkout whose unit templates the production service renders;
+    # the binary itself is pinned separately by hash (services.stutterBounded.binarySha256).
+    stutter = {
+      url = "github:P2949/stutter/e37984c1c424d0c048e8ce3aae8cb244663d1abe";
+      flake = false;
+    };
   };
 
   outputs =
@@ -58,6 +68,17 @@
         inherit system;
         config.allowUnfree = true;
       };
+      pkgsMesa = import ./packages/mesa {
+        inherit pkgs;
+        nixpkgsMesa = inputs.nixpkgs-mesa;
+      };
+      protonPackages = import ./packages/proton { inherit pkgs; };
+      protonLab = import ./packages/proton/lab.nix {
+        inherit pkgs protonPackages;
+        inherit (pkgsMesa) mesa;
+        mesa32 = pkgsMesa.pkgsi686Linux.mesa;
+      };
+      protonFixtures = import ./packages/proton/fixtures.nix { inherit pkgs; };
       optimization = import ./optimization {
         inherit pkgs inputs;
         repository = inputs.self;
@@ -165,6 +186,13 @@
         // optimization.integrationChecks
         // optimization.packages
         // {
+          proton-cachyos = protonPackages.cachyos;
+          proton-cachyos-v3 = protonPackages.cachyosV3;
+          proton-ge = protonPackages.ge;
+          proton-em = protonPackages.em;
+          proton-lab = protonLab;
+          proton-fixture64 = protonFixtures.win64;
+          proton-fixture32 = protonFixtures.win32;
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
           benchmark-appliance = inputs.self.nixosConfigurations.benchmark-appliance.config.system.build.image;
           diagnostic-kexec = inputs.self.nixosConfigurations.diagnostic.config.system.build.kexecTree;
@@ -209,7 +237,12 @@
         inherit system;
 
         specialArgs = {
-          inherit inputs username pkgsUnstable;
+          inherit
+            inputs
+            username
+            pkgsUnstable
+            pkgsMesa
+            ;
         };
 
         modules = [

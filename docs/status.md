@@ -23,6 +23,21 @@ of stable versus unstable productive dependencies, a new frozen 26.11 control
 and fresh profiling establish readiness. Preserve the completed 26.05 results
 and control identities as historical evidence.
 
+## Proton compatibility and Mesa
+
+The [Proton integration](proton.md) adds four independently selected tools and
+a graphics-only Mesa 26.2.6 backport for both architectures. The combined
+generation booted once; native Vulkan 64/32, GL/EGL, the four Proton tools,
+Gamescope, MangoHud, Blender Vulkan rendering and isolated Unreal Vulkan
+startup passed physical smoke tests. Steam discovers all four alongside Valve
+Proton. Source archives and detailed evidence are retained privately.
+Wine-Wayland/XWayland, DX11/DX12 pacing and synchronization comparisons are
+fixture measurements, not game-performance or input-latency claims. Automatic
+HDR was unavailable in the tested compositor/output state; GE's forced HDR
+swapchain presented, but end-to-end HDR output remains unproved. Controller,
+multi-monitor and game-dependent FSR4/MLFG results are not inferred from flags.
+Existing 26.05 pins, Stutter and optimization controls remain in place.
+
 ## Storage and recovery
 
 `@root` contains ephemeral root, home and ordinary var. Explicit retained state

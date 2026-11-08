@@ -79,6 +79,45 @@ let
   );
 in
 assert topologyValid;
+assert builtins.elem "Development" homeDirectories;
+assert builtins.elem ".local/share/Steam" homeDirectories;
+assert config.hardware.graphics.package.version == "26.2.6";
+assert config.hardware.graphics.package32.version == "26.2.6";
+assert config.hardware.graphics.enable32Bit;
+assert builtins.length config.programs.steam.extraCompatPackages == 4;
+assert builtins.all (
+  tool: tool ? steamcompattool && tool.steamcompattool != tool.out
+) config.programs.steam.extraCompatPackages;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.id) config.programs.steam.extraCompatPackages)
+  ) == 4;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.displayName) config.programs.steam.extraCompatPackages)
+  ) == 4;
+assert builtins.any (
+  tool: tool.provenance.id == "proton-em-11" && pkgs.lib.hasPrefix "11." tool.version
+) config.programs.steam.extraCompatPackages;
+assert builtins.all
+  (
+    variables:
+    builtins.all (name: !(builtins.hasAttr name variables)) [
+      "PROTON_ENABLE_WAYLAND"
+      "PROTON_USE_WAYLAND"
+      "PROTON_ENABLE_HDR"
+      "PROTON_FORCE_HDR"
+      "DXVK_HDR"
+      "WINE_FULLSCREEN_FSR"
+      "PROTON_DXVK_LOWLATENCY"
+      "MLFG_UPGRADE"
+    ]
+  )
+  [
+    config.environment.variables
+    config.environment.sessionVariables
+    homeConfig.home.sessionVariables
+  ];
 # Intentional workstation recovery authority must survive generic hardening.
 assert builtins.elem username config.nix.settings.trusted-users;
 assert builtins.any (
@@ -88,6 +127,40 @@ assert builtins.any (
     command: command.command == "ALL" && builtins.elem "NOPASSWD" command.options
   ) rule.commands
 ) config.security.sudo.extraRules;
+# Product recovery state is independent of the validation runner and persists for both
+# privilege domains. The host does not define the product units or its operation policy.
+assert builtins.all
+  (
+    directory:
+    builtins.any (entry: entry.directory == directory && entry.mode == "0700") systemPolicy.directories
+  )
+  [
+    "/var/lib/stutter/autotune-${username}"
+    "/var/lib/stutter/worker-${username}"
+  ];
+assert
+  (builtins.head (
+    builtins.filter (
+      entry: entry.directory == "/var/lib/stutter/autotune-${username}"
+    ) systemPolicy.directories
+  )).user == username;
+assert !(config.systemd.services ? "stutter-autotune-bounded");
+# Stutter's production bounded service: the product's own templates rendered with an immutable
+# store binary, never a path into a writable checkout, started with the system.
+assert config.services.stutterBounded.enable;
+assert
+  builtins.match ".*ExecStart=/nix/store/[a-z0-9]+-stutter privileged-worker .*"
+    config.systemd.units."stutter-privileged-worker@.service".text != null;
+assert
+  builtins.match ".*ExecStart=/nix/store/[a-z0-9]+-stutter autotune .*--mode apply-medium-risk.*"
+    config.systemd.units."stutter-autotune-bounded@.service".text != null;
+assert
+  builtins.match ".*/home/.*" config.systemd.units."stutter-privileged-worker@.service".text == null;
+assert builtins.elem "stutter-privileged-worker@${username}.service"
+  config.systemd.targets.multi-user.wants;
+assert
+  builtins.match ".*worker_only_mutation = true.*"
+    config.environment.etc."stutter/autotune-bounded-${username}.toml".text != null;
 # Stutter's persistent autonomous multi-kernel validation (contract persistent-runner-v1).
 assert builtins.elem "/var/lib/stutter-validation" (
   map (entry: entry.directory) systemPolicy.directories

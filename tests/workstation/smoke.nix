@@ -21,7 +21,13 @@ vmPkgs.testers.runNixOSTest {
       ../../modules/hardware/lact-policy
       ../../modules/storage/ephemeral-btrfs-root
     ];
-    _module.args = { inherit inputs username pkgsUnstable; };
+    _module.args = {
+      inherit inputs username pkgsUnstable;
+      pkgsMesa = import ../../packages/mesa {
+        pkgs = vmPkgs;
+        nixpkgsMesa = inputs.nixpkgs-mesa;
+      };
+    };
     # Match the harness's immutable package configuration to the real profile.
     nixpkgs.config = lib.mkForce vmPkgs.config;
     # Guest storage/networking come from the NixOS test harness, never Disko
