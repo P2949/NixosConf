@@ -1,3 +1,4 @@
+#define WIDL_C_INLINE_WRAPPERS
 #define COBJMACROS
 #include <windows.h>
 #include <d3d11.h>
@@ -14,6 +15,94 @@ static LRESULT CALLBACK window_proc(HWND h, UINT msg, WPARAM w, LPARAM l) {
     if (msg == WM_CLOSE) { DestroyWindow(h); return 0; }
     return DefWindowProcW(h, msg, w, l);
 }
+static int render_d3d12(HWND window) {
+    ID3D12Device *device=NULL;
+    ID3D12CommandQueue *queue=NULL;
+    ID3D12CommandAllocator *allocator=NULL;
+    ID3D12GraphicsCommandList *list=NULL;
+    ID3D12DescriptorHeap *heap=NULL;
+    ID3D12Fence *fence=NULL;
+    ID3D12Resource *buffers[2]={NULL,NULL};
+    IDXGIFactory4 *factory=NULL;
+    IDXGISwapChain1 *swap1=NULL;
+    IDXGISwapChain3 *swap=NULL;
+    HANDLE event=NULL;
+    HRESULT hr=S_OK;
+#define CHECK_D12(call) do { hr=(call); if(FAILED(hr)) goto done; } while(0)
+    CHECK_D12(D3D12CreateDevice(NULL,D3D_FEATURE_LEVEL_11_0,&IID_ID3D12Device,(void**)&device));
+    printf("PROTON_LAB d3d12_device=0x%08lx\n",(unsigned long)hr);
+    D3D12_COMMAND_QUEUE_DESC queue_desc={0};
+    queue_desc.Type=D3D12_COMMAND_LIST_TYPE_DIRECT;
+    CHECK_D12(ID3D12Device_CreateCommandQueue(device,&queue_desc,&IID_ID3D12CommandQueue,(void**)&queue));
+    CHECK_D12(CreateDXGIFactory1(&IID_IDXGIFactory4,(void**)&factory));
+    DXGI_SWAP_CHAIN_DESC1 swap_desc={0};
+    swap_desc.Width=800;swap_desc.Height=600;swap_desc.Format=DXGI_FORMAT_R8G8B8A8_UNORM;
+    swap_desc.SampleDesc.Count=1;swap_desc.BufferUsage=DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swap_desc.BufferCount=2;swap_desc.SwapEffect=DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    CHECK_D12(IDXGIFactory4_CreateSwapChainForHwnd(factory,(IUnknown*)queue,window,&swap_desc,NULL,NULL,&swap1));
+    CHECK_D12(IDXGISwapChain1_QueryInterface(swap1,&IID_IDXGISwapChain3,(void**)&swap));
+    D3D12_DESCRIPTOR_HEAP_DESC heap_desc={0};
+    heap_desc.Type=D3D12_DESCRIPTOR_HEAP_TYPE_RTV;heap_desc.NumDescriptors=2;
+    CHECK_D12(ID3D12Device_CreateDescriptorHeap(device,&heap_desc,&IID_ID3D12DescriptorHeap,(void**)&heap));
+    D3D12_CPU_DESCRIPTOR_HANDLE start=ID3D12DescriptorHeap_GetCPUDescriptorHandleForHeapStart(heap);
+    UINT stride=ID3D12Device_GetDescriptorHandleIncrementSize(device,D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    for (UINT i=0;i<2;i++) {
+        CHECK_D12(IDXGISwapChain3_GetBuffer(swap,i,&IID_ID3D12Resource,(void**)&buffers[i]));
+        D3D12_CPU_DESCRIPTOR_HANDLE handle=start;handle.ptr+=i*stride;
+        ID3D12Device_CreateRenderTargetView(device,buffers[i],NULL,handle);
+    }
+    CHECK_D12(ID3D12Device_CreateCommandAllocator(device,D3D12_COMMAND_LIST_TYPE_DIRECT,&IID_ID3D12CommandAllocator,(void**)&allocator));
+    CHECK_D12(ID3D12Device_CreateCommandList(device,0,D3D12_COMMAND_LIST_TYPE_DIRECT,allocator,NULL,&IID_ID3D12GraphicsCommandList,(void**)&list));
+    CHECK_D12(ID3D12GraphicsCommandList_Close(list));
+    CHECK_D12(ID3D12Device_CreateFence(device,0,D3D12_FENCE_FLAG_NONE,&IID_ID3D12Fence,(void**)&fence));
+    event=CreateEventW(NULL,FALSE,FALSE,NULL);
+    if (!event) {hr=E_FAIL;goto done;}
+    LARGE_INTEGER frequency,before,after;QueryPerformanceFrequency(&frequency);
+    for (UINT64 frame=1;frame<=240;frame++) {
+        MSG msg;while(PeekMessageW(&msg,NULL,0,0,PM_REMOVE)) {TranslateMessage(&msg);DispatchMessageW(&msg);}
+        QueryPerformanceCounter(&before);
+        UINT index=IDXGISwapChain3_GetCurrentBackBufferIndex(swap);
+        CHECK_D12(ID3D12CommandAllocator_Reset(allocator));
+        CHECK_D12(ID3D12GraphicsCommandList_Reset(list,allocator,NULL));
+        D3D12_RESOURCE_BARRIER barrier={0};barrier.Type=D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Transition.pResource=buffers[index];barrier.Transition.Subresource=D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        barrier.Transition.StateBefore=D3D12_RESOURCE_STATE_PRESENT;barrier.Transition.StateAfter=D3D12_RESOURCE_STATE_RENDER_TARGET;
+        ID3D12GraphicsCommandList_ResourceBarrier(list,1,&barrier);
+        D3D12_CPU_DESCRIPTOR_HANDLE handle=start;handle.ptr+=index*stride;
+        float color[]={0.3f,(float)(frame%60)/60.0f,0.1f,1.0f};
+        ID3D12GraphicsCommandList_ClearRenderTargetView(list,handle,color,0,NULL);
+        barrier.Transition.StateBefore=D3D12_RESOURCE_STATE_RENDER_TARGET;barrier.Transition.StateAfter=D3D12_RESOURCE_STATE_PRESENT;
+        ID3D12GraphicsCommandList_ResourceBarrier(list,1,&barrier);
+        CHECK_D12(ID3D12GraphicsCommandList_Close(list));
+        ID3D12CommandList *commands[]={(ID3D12CommandList*)list};
+        ID3D12CommandQueue_ExecuteCommandLists(queue,1,commands);
+        CHECK_D12(IDXGISwapChain3_Present(swap,1,0));
+        CHECK_D12(ID3D12CommandQueue_Signal(queue,fence,frame));
+        if(ID3D12Fence_GetCompletedValue(fence)<frame) {
+            CHECK_D12(ID3D12Fence_SetEventOnCompletion(fence,frame,event));
+            if(WaitForSingleObject(event,10000)!=WAIT_OBJECT_0) {hr=E_FAIL;goto done;}
+        }
+        QueryPerformanceCounter(&after);
+        printf("PROTON_LAB frame_ms=%.6f\n",1000.0*(double)(after.QuadPart-before.QuadPart)/(double)frequency.QuadPart);
+    }
+    printf("PROTON_LAB d3d12_presented=240\n");
+done:
+    printf("PROTON_LAB d3d12_result=0x%08lx\n",(unsigned long)hr);
+    if(event) CloseHandle(event);
+    if(fence) ID3D12Fence_Release(fence);
+    if(list) ID3D12GraphicsCommandList_Release(list);
+    if(allocator) ID3D12CommandAllocator_Release(allocator);
+    if(heap) ID3D12DescriptorHeap_Release(heap);
+    for(int i=0;i<2;i++) if(buffers[i]) ID3D12Resource_Release(buffers[i]);
+    if(swap) IDXGISwapChain3_Release(swap);
+    if(swap1) IDXGISwapChain1_Release(swap1);
+    if(factory) IDXGIFactory4_Release(factory);
+    if(queue) ID3D12CommandQueue_Release(queue);
+    if(device) ID3D12Device_Release(device);
+#undef CHECK_D12
+    return FAILED(hr)?12:0;
+}
+
 int main(int argc, char **argv) {
     const char *mode = argc > 1 ? argv[1] : "d3d11";
     const char *output = getenv("PROTON_LAB_OUTPUT");
@@ -26,11 +115,8 @@ int main(int argc, char **argv) {
     if (!window) return 11;
     PostMessageW(window, WM_CHAR, L'A', 0);
     if (!strcmp(mode,"d3d12")) {
-        ID3D12Device *device=NULL;
-        HRESULT hr=D3D12CreateDevice(NULL,D3D_FEATURE_LEVEL_11_0,&IID_ID3D12Device,(void**)&device);
-        printf("PROTON_LAB d3d12_device=0x%08lx\n", (unsigned long)hr);
-        if (device) ID3D12Device_Release(device);
-        DestroyWindow(window); return FAILED(hr)?12:0;
+        int result=render_d3d12(window);
+        DestroyWindow(window); return result;
     }
     if (!strcmp(mode,"ddraw")) {
         IDirectDraw *dd=NULL;
