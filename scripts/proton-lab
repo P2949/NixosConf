@@ -95,8 +95,14 @@ def probe(manifest):
         readable = all((p / name).is_file() for name in ['proton', 'compatibilitytool.vdf', 'toolmanifest.vdf'])
         checks[fork] = {'status': 'DETECTED' if readable and os.access(p/'proton', os.X_OK) else 'FAIL',
                         'manifest': (p/'compatibilitytool.vdf').read_text() if readable else None}
-    checks['ntsync'] = {'status': 'DETECTED' if Path('/dev/ntsync').exists() else 'UNSUPPORTED'}
+    ntsync = capture(['modinfo', 'ntsync'])
+    checks['ntsync'] = {'status': 'DETECTED' if Path('/dev/ntsync').exists() else ('NOT_TESTED' if ntsync['exit_code'] == 0 else 'UNSUPPORTED'),
+                        'module': ntsync, 'reason': 'A module present without /dev/ntsync is not an operational device'}
     checks['controllers'] = {'status': 'DETECTED' if list(Path('/dev/input').glob('js*')) else 'NOT_TESTED', 'reason': 'Detection is not a hardware behavior test'}
+    steam = Path.home()/'.local/share/Steam/steamapps'
+    checks['games'] = {'status':'DETECTED' if steam.is_dir() else 'NOT_TESTED',
+                       'manifests':sorted(p.name for p in steam.glob('appmanifest_*.acf')),
+                       'reason':'Installation does not establish unattended launch or feature compatibility'}
     checks['hdr'] = {'status': 'NOT_TESTED', 'reason': 'Protocol/output detection alone does not demonstrate game HDR'}
     return checks
 
