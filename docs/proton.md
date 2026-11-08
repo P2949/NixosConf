@@ -61,7 +61,7 @@ no Wayland, HDR or latency option is enabled globally.
 | HDR | `hdr` uses automatic Wine-Wayland detection; `sdr` disables DXVK HDR on GE/EM. GE-only `hdr-force` overrides detection for a verified HDR output with compositor auto-HDR; it does not prove actual HDR output. Never use it on SDR hardware |
 | CachyOS audio | `pipewire` default versus `pulse`; observations cannot establish absolute latency |
 | CachyOS pacing | `dxvk`/`dxvk-lowlatency`, `vkd3d`/`vkd3d-lowlatency`; isolate APIs and controls |
-| CachyOS legacy/injection | `ddraw`, `optiscaler`; need suitable targets |
+| CachyOS legacy/injection | `ddraw` needs a 32-bit target (only syswow64 is replaced); `optiscaler` needs a compatible game |
 | FSR4 | `fsr4-cachyos`, `fsr4-ge`, `fsr4-em`; verify actual game/DLL/variant. GE's downloader is opt-in and its requested version may fall back upstream |
 | MLFG | `mlfg-em` uses `MLFG_UPGRADE=1`; CachyOS selected-release support remains unverified, so its case cannot run. A frame-generation watermark alone proves nothing |
 | GE fullscreen scaling | `fullscreen-fsr`; strength 2, optional per-game `WINE_FULLSCREEN_FSR_CUSTOM_MODE=WIDTHxHEIGHT`; compare with native scaling/Gamescope |

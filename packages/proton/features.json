@@ -109,7 +109,7 @@
       "PROTON_D7VK_DDRAW": "1"
     },
     "availability": "opt-in",
-    "requires": "DirectDraw target",
+    "requires": "32-bit DirectDraw target; selected release injects D7VK only into syswow64",
     "runtime_status": "NOT_TESTED"
   },
   "optiscaler": {
