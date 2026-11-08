@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 lab = importlib.machinery.SourceFileLoader('proton_lab', 'scripts/proton-lab').load_module()
 FEATURES = json.loads(Path('packages/proton/features.json').read_text())
@@ -28,6 +29,25 @@ class ProtonLabTests(unittest.TestCase):
                'PROTON_ENABLE_WAYLAND':'1', 'DXVK_HDR':'1', 'MLFG_UPGRADE':'1',
                'WINE_FULLSCREEN_FSR':'1', 'DXIL_SPIRV_CONFIG':'wmma_rdna3_workaround'}
         self.assertEqual(lab.clean_environment(env), {'PATH':'/bin','WAYLAND_DISPLAY':'wayland-1','DISPLAY':':0'})
+
+    def test_runtime_copy_preserves_steam_and_freezes_version(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root/'.local/share/Steam/steamapps/common/SteamLinuxRuntime_4'
+            source.mkdir(parents=True)
+            (source/'toolmanifest.vdf').write_text('runtime')
+            (source/'VERSIONS.txt').write_text('runtime-version-123')
+            tool = root/'proton'; tool.mkdir()
+            (tool/'toolmanifest.vdf').write_text('"require_tool_appid" "4183110"')
+            with mock.patch.object(lab.Path, 'home', return_value=root), mock.patch.object(lab, 'ROOT', root/'workspace'):
+                env, identity = lab.prepare_runtime({'path':str(tool)})
+            self.assertEqual(env['UMU_RUNTIME_UPDATE'], '0')
+            self.assertEqual(identity['versions'], 'runtime-version-123')
+            self.assertFalse((source/'umu').exists())
+            dest = Path(identity['path'])
+            self.assertTrue((dest/'umu').is_symlink())
+            (dest/'VERSIONS.txt').write_text('changed private copy')
+            self.assertEqual((source/'VERSIONS.txt').read_text(), 'runtime-version-123')
 
     def test_launch_results_do_not_imply_feature_success(self):
         self.assertEqual(lab.classify(0, False), 'PASS')

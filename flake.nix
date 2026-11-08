@@ -68,7 +68,10 @@
         inherit system;
         config.allowUnfree = true;
       };
-      pkgsMesa = import inputs.nixpkgs-mesa { inherit system; };
+      pkgsMesa = import ./packages/mesa {
+        inherit pkgs;
+        nixpkgsMesa = inputs.nixpkgs-mesa;
+      };
       protonPackages = import ./packages/proton { inherit pkgs; };
       protonLab = import ./packages/proton/lab.nix {
         inherit pkgs protonPackages;

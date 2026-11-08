@@ -23,7 +23,10 @@ vmPkgs.testers.runNixOSTest {
     ];
     _module.args = {
       inherit inputs username pkgsUnstable;
-      pkgsMesa = import inputs.nixpkgs-mesa { system = pkgs.stdenv.hostPlatform.system; };
+      pkgsMesa = import ../../packages/mesa {
+        pkgs = vmPkgs;
+        nixpkgsMesa = inputs.nixpkgs-mesa;
+      };
     };
     # Match the harness's immutable package configuration to the real profile.
     nixpkgs.config = lib.mkForce vmPkgs.config;

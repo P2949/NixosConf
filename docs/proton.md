@@ -7,8 +7,10 @@ Select a tool per game in Steam's Compatibility settings. Valve's installed
 Proton remains available. Installation does not replace game launch settings,
 prefixes, libraries or shader caches.
 
-The desktop's graphics packages use the separate exact `nixpkgs-mesa` input,
-Mesa 26.2.6 for both architectures. The system and Home Manager remain on
+The desktop's graphics packages backport Mesa 26.2.6 from the separate exact
+`nixpkgs-mesa` input onto the stable package set for both architectures. Direct
+use of that input's Mesa fails to load on the 26.05 ABI because its LLVM requires
+GLIBC_2.44. The backport retains the stable compiler and runtime dependencies. The system and Home Manager remain on
 26.05; other existing inputs and package selections remain unchanged.
 
 ```console
@@ -34,6 +36,12 @@ prefix. Results, prefixes, logs and telemetry stay in the existing persistent
 launch; timeouts are INCONCLUSIVE. A successful launch is distinct from
 feature functionality and performance benefit. Reports preserve that distinction.
 The launcher removes inherited experiment flags, then applies one named case.
+When available, an installed Valve Steam Runtime 4 is privately copied under
+`Development/ProtonExperiments/runtime/`, validated by UMU against its mtree,
+and run with runtime updates disabled. The installed Steam copy is never
+modified. The runtime version is recorded per run. Without an installed copy,
+UMU uses its normal download path. The selected tool manifests require runtime
+4; do not infer runtime 3 from the SLR label.
 Logs may contain private game/account data; no automatic upload is performed.
 
 `inventory` reads the generated package manifest and `features.json`, including

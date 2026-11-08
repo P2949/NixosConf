@@ -6,6 +6,7 @@
 #include <mmsystem.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 static LRESULT CALLBACK window_proc(HWND h, UINT msg, WPARAM w, LPARAM l) {
     if (msg == WM_CHAR) printf("PROTON_LAB character=%lu\n", (unsigned long)w);
@@ -14,6 +15,8 @@ static LRESULT CALLBACK window_proc(HWND h, UINT msg, WPARAM w, LPARAM l) {
 }
 int main(int argc, char **argv) {
     const char *mode = argc > 1 ? argv[1] : "d3d11";
+    const char *output = getenv("PROTON_LAB_OUTPUT");
+    if (output && !freopen(output, "w", stdout)) return 19;
     setvbuf(stdout, NULL, _IONBF, 0);
     printf("PROTON_LAB bits=%u mode=%s\n", (unsigned)(sizeof(void*)*8), mode);
     WNDCLASSW wc = {0}; wc.lpfnWndProc=window_proc; wc.hInstance=GetModuleHandleW(NULL); wc.lpszClassName=L"ProtonLab";

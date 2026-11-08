@@ -329,6 +329,10 @@ source GC roots supplement archive retention and do not replace backups. Isolate
 fixture prefixes are disposable experiment data retained with their run for
 inspection. Installed compatibility tools are immutable Nix outputs. Existing
 Steam libraries, config, compatdata and shader-cache policy are unchanged.
-UMU's generated cache remains disposable; no new cache persistence is declared.
+The narrowly retained `runtime/umu/steamrt4` snapshot is R state copied from the
+already-installed Valve runtime after UMU's downloader failed integrity checks.
+UMU validates it against its mtree; its version is recorded per experiment.
+UMU's unrelated generated cache remains disposable; no new persistence mount or
+whole-cache persistence is declared.
 See [Proton operation and restoration](proton.md). Workstation evaluation protects
 the pre-existing persisted Development and Steam paths.
