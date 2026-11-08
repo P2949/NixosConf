@@ -31,8 +31,15 @@ def capture(command, timeout=20):
 
 def load_manifest(path):
     data = json.loads(Path(path).read_text())
-    if len(data['tools']) != 4:
-        raise ValueError('Expected four tools')
+    tools = data['tools']
+    if set(tools) != {'cachyos', 'cachyosV3', 'ge', 'em'}:
+        raise ValueError('Expected the four selected tools')
+    for field in ['id', 'displayName', 'path']:
+        values = [tool[field] for tool in tools.values()]
+        if not all(isinstance(value, str) and value for value in values) or len(set(values)) != 4:
+            raise ValueError(f'Tools need four distinct {field} values')
+    if any(feature['runtime_status'] != 'NOT_TESTED' for feature in data['features'].values()):
+        raise ValueError('Feature metadata cannot establish runtime functionality')
     return data
 
 

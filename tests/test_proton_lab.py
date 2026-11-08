@@ -12,6 +12,23 @@ MANIFEST = {'features': FEATURES}
 
 
 class ProtonLabTests(unittest.TestCase):
+    def test_manifest_rejects_colliding_tools_and_unmeasured_claims(self):
+        data = {'tools':{key:{'id':key, 'displayName':key, 'path':'/nix/store/'+key} for key in ['cachyos','cachyosV3','ge','em']},
+                'features':{'wayland':{'runtime_status':'NOT_TESTED'}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'manifest.json'
+            path.write_text(json.dumps(data))
+            self.assertEqual(set(lab.load_manifest(path)['tools']), set(data['tools']))
+            data['tools']['cachyosV3']['path'] = data['tools']['cachyos']['path']
+            path.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):
+                lab.load_manifest(path)
+            data['tools']['cachyosV3']['path'] = '/nix/store/distinct-v3'
+            data['features']['wayland']['runtime_status'] = 'PASS'
+            path.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):
+                lab.load_manifest(path)
+
     def test_isolated_latency_cases(self):
         dxvk = lab.select_case(MANIFEST, 'cachyos', 'dxvk-lowlatency')
         vkd3d = lab.select_case(MANIFEST, 'cachyos', 'vkd3d-lowlatency')
