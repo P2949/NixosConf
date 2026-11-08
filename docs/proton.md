@@ -80,6 +80,23 @@ RDNA4 does not require RDNA3 WMMA or old RDNA2 Vulkan-layer workarounds.
 Unavailable games, controllers and compositor protocols are NOT_TESTED or
 UNSUPPORTED with reasons, never inferred operational from environment flags.
 
+Physical acceptance used the RX 9070 XT on Mesa 26.2.6 with both architectures.
+All four tools rendered DX11 fixtures through XWayland and Wine-Wayland;
+focus, compositor-delivered keyboard input and fullscreen round trips were
+checked with owned test windows. This does not establish physical-controller,
+raw-pointer sensitivity or IME-composition behavior. CachyOS standard and
+low-latency DXVK/VKD3D paths presented frames with distinct runtime versions;
+single short frame-pacing samples establish no performance benefit. NTSync
+and its fsync fallback were identified in runtime logs without changing the kernel.
+
+On the tested Hyprland/output configuration, automatic HDR reported unavailable.
+GE's verified-output `hdr-force` case accepted the HDR color space and presented
+10-bit frames, while the observed compositor output preset remained sRGB.
+End-to-end HDR output/colorimetry is therefore unproved. EM's selected README
+requires color-manager interface version 3 for HDR; the running compositor
+advertises version 1. Do not upgrade the compositor or force global HDR to
+turn this conditional result into PASS.
+
 ## EM archive retention and restoration
 
 EM is an upstream Actions snapshot, not a durable release download. Its
