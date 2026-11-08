@@ -37,6 +37,38 @@ class ProtonLabTests(unittest.TestCase):
         self.assertEqual(lab.classify_fixture(1, False, 'PROTON_LAB result=0\n'), ('FAIL',0))
         self.assertEqual(lab.classify_fixture(0, False, 'PROTON_LAB result=0\nPROTON_LAB result=11\n'), ('INCONCLUSIVE',None))
 
+    def test_mangohud_metadata_and_invalid_values_are_not_frame_samples(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'game.csv').write_text('os,cpu,gpu\nLinux,CPU,GPU\nfps,frametime,elapsed\n100,10,1\n90,nan,2\n90,inf,3\n90,-1,4\n90,0,5\n90,missing,6\n50,20,7\n')
+            (root/'game_summary.csv').write_text('fps,frametime,elapsed\n1,999,1\n')
+            frames, identity = lab.telemetry_frames(root)
+            self.assertEqual(frames, [10,20])
+            self.assertEqual(identity, {'status':'MEASURED','files':['game.csv']})
+
+    def test_ambiguous_or_missing_telemetry_does_not_invent_a_distribution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            self.assertEqual(lab.telemetry_frames(root)[1]['status'], 'NOT_TESTED')
+            for name in ['one.csv','two.csv']:
+                (root/name).write_text('fps,frametime\n100,10\n')
+            frames, identity = lab.telemetry_frames(root)
+            self.assertEqual(frames, [])
+            self.assertEqual(identity['status'], 'INCONCLUSIVE')
+
+    def test_swapchain_initialization_interval_cannot_exceed_process_lifetime(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'game.csv').write_text('fps,frametime\n155,6.45\n0.00002,40817000\n2,500\n')
+            frames, identity = lab.telemetry_frames(root, duration_seconds=20)
+            self.assertEqual(frames, [6.45,500])
+            self.assertEqual(identity['rejected_beyond_run_lifetime'], {'game.csv':1})
+            (root/'game.csv').write_text('fps,frametime\n0.00002,40817000\n')
+            frames, identity = lab.telemetry_frames(root, duration_seconds=20)
+            self.assertEqual(frames, [])
+            self.assertEqual(identity['status'], 'NOT_TESTED')
+            self.assertEqual(identity['rejected_beyond_run_lifetime'], {'game.csv':1})
+
     def test_isolated_latency_cases(self):
         dxvk = lab.select_case(MANIFEST, 'cachyos', 'dxvk-lowlatency')
         vkd3d = lab.select_case(MANIFEST, 'cachyos', 'vkd3d-lowlatency')
