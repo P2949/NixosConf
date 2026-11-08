@@ -18,7 +18,7 @@ let
         }
       ) protonPackages;
       mesa = {
-        version = mesa.version;
+        inherit (mesa) version;
         path64 = toString mesa;
         path32 = toString mesa32;
       };

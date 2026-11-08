@@ -75,7 +75,7 @@
       protonPackages = import ./packages/proton { inherit pkgs; };
       protonLab = import ./packages/proton/lab.nix {
         inherit pkgs protonPackages;
-        mesa = pkgsMesa.mesa;
+        inherit (pkgsMesa) mesa;
         mesa32 = pkgsMesa.pkgsi686Linux.mesa;
       };
       protonFixtures = import ./packages/proton/fixtures.nix { inherit pkgs; };
