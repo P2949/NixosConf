@@ -23,6 +23,14 @@ of stable versus unstable productive dependencies, a new frozen 26.11 control
 and fresh profiling establish readiness. Preserve the completed 26.05 results
 and control identities as historical evidence.
 
+## Proton compatibility candidate
+
+The [Proton integration](proton.md) adds four independently selected tools and
+a graphics-only Mesa 26.2.6 candidate for both architectures. Source archives
+are verified and retained privately. Build, deployment and physical acceptance
+are pending; this is not yet the accepted productive graphics runtime. Existing
+26.05 pins, Stutter and optimization controls remain in place.
+
 ## Storage and recovery
 
 `@root` contains ephemeral root, home and ordinary var. Explicit retained state

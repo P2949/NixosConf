@@ -4,6 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
+    # Graphics-only package set; the operating system and other packages stay pinned.
+    nixpkgs-mesa.url = "github:NixOS/nixpkgs/3d35ed46b5d9edd6d082d4548d8c738aae9b632a";
+
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
@@ -65,6 +68,14 @@
         inherit system;
         config.allowUnfree = true;
       };
+      pkgsMesa = import inputs.nixpkgs-mesa { inherit system; };
+      protonPackages = import ./packages/proton { inherit pkgs; };
+      protonLab = import ./packages/proton/lab.nix {
+        inherit pkgs protonPackages;
+        mesa = pkgsMesa.mesa;
+        mesa32 = pkgsMesa.pkgsi686Linux.mesa;
+      };
+      protonFixtures = import ./packages/proton/fixtures.nix { inherit pkgs; };
       optimization = import ./optimization {
         inherit pkgs inputs;
         repository = inputs.self;
@@ -172,6 +183,13 @@
         // optimization.integrationChecks
         // optimization.packages
         // {
+          proton-cachyos = protonPackages.cachyos;
+          proton-cachyos-v3 = protonPackages.cachyosV3;
+          proton-ge = protonPackages.ge;
+          proton-em = protonPackages.em;
+          proton-lab = protonLab;
+          proton-fixture64 = protonFixtures.win64;
+          proton-fixture32 = protonFixtures.win32;
           recovery-iso = inputs.self.nixosConfigurations.recovery.config.system.build.isoImage;
           benchmark-appliance = inputs.self.nixosConfigurations.benchmark-appliance.config.system.build.image;
           diagnostic-kexec = inputs.self.nixosConfigurations.diagnostic.config.system.build.kexecTree;
@@ -216,7 +234,12 @@
         inherit system;
 
         specialArgs = {
-          inherit inputs username pkgsUnstable;
+          inherit
+            inputs
+            username
+            pkgsUnstable
+            pkgsMesa
+            ;
         };
 
         modules = [

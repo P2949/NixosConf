@@ -79,6 +79,45 @@ let
   );
 in
 assert topologyValid;
+assert builtins.elem "Development" homeDirectories;
+assert builtins.elem ".local/share/Steam" homeDirectories;
+assert config.hardware.graphics.package.version == "26.2.6";
+assert config.hardware.graphics.package32.version == "26.2.6";
+assert config.hardware.graphics.enable32Bit;
+assert builtins.length config.programs.steam.extraCompatPackages == 4;
+assert builtins.all (
+  tool: tool ? steamcompattool && tool.steamcompattool != tool.out
+) config.programs.steam.extraCompatPackages;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.id) config.programs.steam.extraCompatPackages)
+  ) == 4;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.displayName) config.programs.steam.extraCompatPackages)
+  ) == 4;
+assert builtins.any (
+  tool: tool.provenance.id == "proton-em-11" && pkgs.lib.hasPrefix "11." tool.version
+) config.programs.steam.extraCompatPackages;
+assert builtins.all
+  (
+    variables:
+    builtins.all (name: !(builtins.hasAttr name variables)) [
+      "PROTON_ENABLE_WAYLAND"
+      "PROTON_USE_WAYLAND"
+      "PROTON_ENABLE_HDR"
+      "PROTON_FORCE_HDR"
+      "DXVK_HDR"
+      "WINE_FULLSCREEN_FSR"
+      "PROTON_DXVK_LOWLATENCY"
+      "MLFG_UPGRADE"
+    ]
+  )
+  [
+    config.environment.variables
+    config.environment.sessionVariables
+    homeConfig.home.sessionVariables
+  ];
 # Intentional workstation recovery authority must survive generic hardening.
 assert builtins.elem username config.nix.settings.trusted-users;
 assert builtins.any (

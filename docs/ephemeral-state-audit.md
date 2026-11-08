@@ -320,3 +320,15 @@ product units, policy and exact autonomous contracts. A pinned validation campai
 the product templates and their root-owned configuration after an ephemeral-root reboot; this
 persistence declaration does not make imperative service installation permanent packaging or
 claim service graduation. Workstation evaluation checks both persisted privilege domains.
+
+## Proton experiments
+
+`Development/ProtonExperiments` uses the existing persisted `Development` tree.
+Verified upstream archives/checksums and private experiment reports are P state;
+source GC roots supplement archive retention and do not replace backups. Isolated
+fixture prefixes are disposable experiment data retained with their run for
+inspection. Installed compatibility tools are immutable Nix outputs. Existing
+Steam libraries, config, compatdata and shader-cache policy are unchanged.
+UMU's generated cache remains disposable; no new cache persistence is declared.
+See [Proton operation and restoration](proton.md). Workstation evaluation protects
+the pre-existing persisted Development and Steam paths.
