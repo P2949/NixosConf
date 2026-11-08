@@ -1,6 +1,7 @@
 #define COBJMACROS
 #include <windows.h>
 #include <d3d11.h>
+#include <dxgi1_6.h>
 #include <d3d12.h>
 #include <ddraw.h>
 #include <mmsystem.h>
@@ -45,11 +46,28 @@ int main(int argc, char **argv) {
         if (out) waveOutClose(out);
         DestroyWindow(window); return result?14:0;
     }
-    DXGI_SWAP_CHAIN_DESC desc={0}; desc.BufferDesc.Width=800;desc.BufferDesc.Height=600;desc.BufferDesc.Format=DXGI_FORMAT_R8G8B8A8_UNORM;
+    int hdr = !strcmp(mode, "hdr");
+    DXGI_SWAP_CHAIN_DESC desc={0}; desc.BufferDesc.Width=800;desc.BufferDesc.Height=600;desc.BufferDesc.Format=hdr?DXGI_FORMAT_R10G10B10A2_UNORM:DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.SampleDesc.Count=1;desc.BufferUsage=DXGI_USAGE_RENDER_TARGET_OUTPUT;desc.BufferCount=2;desc.OutputWindow=window;desc.Windowed=TRUE;desc.SwapEffect=DXGI_SWAP_EFFECT_DISCARD;
     ID3D11Device *device=NULL; ID3D11DeviceContext *context=NULL; IDXGISwapChain *swap=NULL;
     HRESULT hr=D3D11CreateDeviceAndSwapChain(NULL,D3D_DRIVER_TYPE_HARDWARE,NULL,0,NULL,0,D3D11_SDK_VERSION,&desc,&swap,&device,NULL,&context);
     if (FAILED(hr)) { printf("PROTON_LAB d3d11_error=0x%08lx\n",(unsigned long)hr); DestroyWindow(window);return 15; }
+    if (hdr) {
+        IDXGISwapChain3 *swap3=NULL;
+        UINT support=0;
+        hr=IDXGISwapChain_QueryInterface(swap,&IID_IDXGISwapChain3,(void**)&swap3);
+        if (SUCCEEDED(hr)) hr=IDXGISwapChain3_CheckColorSpaceSupport(swap3,DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020,&support);
+        printf("PROTON_LAB hdr_present_support=%u hresult=0x%08lx\n",(unsigned)(support&DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT),(unsigned long)hr);
+        if (FAILED(hr) || !(support&DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT)) {
+            if (swap3) IDXGISwapChain3_Release(swap3);
+            IDXGISwapChain_Release(swap);ID3D11DeviceContext_Release(context);ID3D11Device_Release(device);DestroyWindow(window);
+            return 0;
+        }
+        hr=IDXGISwapChain3_SetColorSpace1(swap3,DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
+        IDXGISwapChain3_Release(swap3);
+        if (FAILED(hr)) return 20;
+        printf("PROTON_LAB hdr_colorspace_set=1\n");
+    }
     ID3D11Texture2D *buffer=NULL; ID3D11RenderTargetView *view=NULL;
     hr=IDXGISwapChain_GetBuffer(swap,0,&IID_ID3D11Texture2D,(void**)&buffer);
     if (FAILED(hr)) return 16;

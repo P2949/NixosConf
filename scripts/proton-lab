@@ -48,7 +48,8 @@ def select_case(manifest, fork, case):
 def clean_environment(env):
     # Remove inherited experiment flags, allowing attribution to one case.
     prefixes = ('PROTON_', 'WINE_', 'WAYLANDDRV_', 'DXVK_', 'VKD3D_',
-                'FSR', 'MLFG_', 'DXIL_SPIRV_', 'WINEDLLOVERRIDES')
+                'FSR', 'MLFG_', 'DXIL_SPIRV_', 'WINEDLLOVERRIDES', 'UMU_', 'STEAM_COMPAT_',
+                'RUNTIMEPATH', 'PROTONPATH', 'WINEPREFIX')
     return {k: v for k, v in env.items() if not k.startswith(prefixes)}
 
 
@@ -211,15 +212,15 @@ def run(manifest, args):
 
 def report(directory):
     records = [json.loads(p.read_text()) for p in sorted(directory.glob('*/run.json'))]
-    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'duration_seconds']
+    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'duration_seconds', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
     with (directory/'summary.csv').open('w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore')
         writer.writeheader()
-        writer.writerows(records)
+        writer.writerows(dict(r, **r.get('frame_pacing', {})) for r in records)
     lines = ['# Proton experiments', '', 'Launch PASS does not establish feature function or performance benefit.', '',
-             '| Fork | Case | Launch | Feature | Exit |', '| --- | --- | --- | --- | --- |']
+             '| Fork | Case | Launch | Feature | Exit | Frames | p95 ms |', '| --- | --- | --- | --- | --- | --- | --- |']
     for r in records:
-        lines.append(f'| {r["fork"]} | {r["case"]} | {r["launch_status"]} | {r["feature_status"]} | {r.get("exit_code")} |')
+        lines.append(f'| {r["fork"]} | {r["case"]} | {r["launch_status"]} | {r["feature_status"]} | {r.get("exit_code")} | {r.get("frame_pacing",{}).get("samples","")} | {r.get("frame_pacing",{}).get("p95_ms","")} |')
     (directory/'summary.md').write_text('\n'.join(lines)+'\n')
     (directory/'summary.json').write_text(json.dumps(records, indent=2))
     print(directory/'summary.md')

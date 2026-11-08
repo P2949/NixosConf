@@ -24,8 +24,9 @@ proton-lab report ~/Development/ProtonExperiments/results
 
 For standalone probes use `nix build .#proton-fixture64 .#proton-fixture32`.
 Their `bin/probe-win64.exe` and `bin/probe-win32.exe` accept `d3d11` (default),
-`d3d12` (device creation), `ddraw` (device creation) or `audio` (silent device
-open). D3D11 presents 240 colored frames and records CPU-observed Present
+`d3d12` (device creation), `ddraw` (device creation), `audio` (silent device
+open), or `hdr` (10-bit swapchain and HDR color-space capability/presentation).
+HDR swapchain support is detection; it does not establish display colorimetry. D3D11 presents 240 colored frames and records CPU-observed Present
 durations. These measure this fixture's frame pacing, not game throughput
 or input-to-photon latency. The posted character checks the window message
 path; it does not validate physical input, IME composition or pointer capture.
