@@ -4,7 +4,7 @@ let
     cross: name:
     cross.stdenv.mkDerivation {
       pname = "proton-lab-fixture-${name}";
-      version = "1";
+      version = "2";
       src = ./fixture.c;
       dontUnpack = true;
       dontConfigure = true;

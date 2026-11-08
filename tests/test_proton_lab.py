@@ -29,6 +29,14 @@ class ProtonLabTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 lab.load_manifest(path)
 
+    def test_fixture_completion_is_required_even_when_umu_exits_zero(self):
+        self.assertEqual(lab.classify_fixture(0, False, 'PROTON_LAB bits=32 mode=d3d11\n'), ('INCONCLUSIVE',None))
+        self.assertEqual(lab.classify_fixture(0, False, 'PROTON_LAB result=11\n'), ('FAIL',11))
+        self.assertEqual(lab.classify_fixture(0, False, 'PROTON_LAB result=0\n'), ('PASS',0))
+        self.assertEqual(lab.classify_fixture(0, True, 'PROTON_LAB result=0\n'), ('INCONCLUSIVE',0))
+        self.assertEqual(lab.classify_fixture(1, False, 'PROTON_LAB result=0\n'), ('FAIL',0))
+        self.assertEqual(lab.classify_fixture(0, False, 'PROTON_LAB result=0\nPROTON_LAB result=11\n'), ('INCONCLUSIVE',None))
+
     def test_isolated_latency_cases(self):
         dxvk = lab.select_case(MANIFEST, 'cachyos', 'dxvk-lowlatency')
         vkd3d = lab.select_case(MANIFEST, 'cachyos', 'vkd3d-lowlatency')
@@ -37,7 +45,7 @@ class ProtonLabTests(unittest.TestCase):
         self.assertNotEqual(lab.select_case(MANIFEST, 'cachyos', 'dxvk'), dxvk)
 
     def test_wrong_fork_and_unavailable_features_rejected(self):
-        for fork, case in [('ge','dxvk-lowlatency'),('em','nvidia'),('cachyos','zluda'),('cachyos','mlfg-cachyos')]:
+        for fork, case in [('ge','dxvk-lowlatency'),('em','hdr-force'),('em','nvidia'),('cachyos','zluda'),('cachyos','mlfg-cachyos')]:
             with self.assertRaises(ValueError):
                 lab.select_case(MANIFEST, fork, case)
 

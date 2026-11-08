@@ -392,5 +392,17 @@
     "availability": "hardware-inapplicable",
     "requires": "NVIDIA DLSS/NVAPI/CUDA/RTX need NVIDIA hardware",
     "runtime_status": "NOT_TESTED"
+  },
+  "hdr-force": {
+    "forks": [
+      "ge"
+    ],
+    "env": {
+      "PROTON_ENABLE_WAYLAND": "1",
+      "PROTON_FORCE_HDR": "1"
+    },
+    "availability": "opt-in",
+    "requires": "Verified HDR monitor and compositor auto-HDR mode; GE-specific reporting override, not automatic detection",
+    "runtime_status": "NOT_TESTED"
   }
 }

@@ -24,8 +24,14 @@ proton-lab report ~/Development/ProtonExperiments/results
 
 For standalone probes use `nix build .#proton-fixture64 .#proton-fixture32`.
 Their `bin/probe-win64.exe` and `bin/probe-win32.exe` accept `d3d11` (default),
-`d3d12` (240 clear/present frames with GPU fences), `ddraw` (device creation), `audio` (silent device
-open), or `hdr` (10-bit swapchain and HDR color-space capability/presentation).
+`d3d12` (240 clear/present frames with GPU fences), `ddraw` (surface fill/readback),
+`audio` (one second of silent playback), `fullscreen`, `window` (two windows,
+keyboard/focus and F11 fullscreen toggling), `fail` (intentional exit 23), or
+`hdr` (10-bit swapchain and HDR color-space capability/presentation).
+Pass `--fixture` to `proton-lab run` for these fixtures: UMU's exit code can
+hide a target failure. This mode requires exactly one target completion marker
+and records target and launcher exits separately. Missing completion is
+INCONCLUSIVE. Ordinary game runs only report the launcher exit.
 HDR swapchain support is detection; it does not establish display colorimetry. D3D11 presents 240 colored frames and records CPU-observed Present
 durations. These measure this fixture's frame pacing, not game throughput
 or input-to-photon latency. The posted character checks the window message
@@ -52,7 +58,7 @@ no Wayland, HDR or latency option is enabled globally.
 | Area | Cases / interpretation |
 | --- | --- |
 | Window system | `xwayland`, `wayland`; XWayland is the control |
-| HDR | `hdr` uses automatic Wine-Wayland detection; `sdr` disables DXVK HDR on GE/EM. Requires compatible output, protocols and target; do not force HDR on SDR outputs |
+| HDR | `hdr` uses automatic Wine-Wayland detection; `sdr` disables DXVK HDR on GE/EM. GE-only `hdr-force` overrides detection for a verified HDR output with compositor auto-HDR; it does not prove actual HDR output. Never use it on SDR hardware |
 | CachyOS audio | `pipewire` default versus `pulse`; observations cannot establish absolute latency |
 | CachyOS pacing | `dxvk`/`dxvk-lowlatency`, `vkd3d`/`vkd3d-lowlatency`; isolate APIs and controls |
 | CachyOS legacy/injection | `ddraw`, `optiscaler`; need suitable targets |

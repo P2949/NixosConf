@@ -119,6 +119,18 @@ def classify(exit_code, timed_out):
 
 
 
+def classify_fixture(launcher_exit, timed_out, output):
+    markers = re.findall(r'^PROTON_LAB result=(\d+)\s*$', output, re.MULTILINE)
+    target_exit = int(markers[0]) if len(markers) == 1 else None
+    if timed_out:
+        return 'INCONCLUSIVE', target_exit
+    if launcher_exit != 0:
+        return 'FAIL', target_exit
+    if target_exit is None:
+        return 'INCONCLUSIVE', None
+    return ('PASS' if target_exit == 0 else 'FAIL'), target_exit
+
+
 def prepare_runtime(tool):
     """Reuse a private copy of an installed Valve runtime, after UMU verification."""
     manifest = (Path(tool['path'])/'toolmanifest.vdf').read_text()
@@ -171,7 +183,7 @@ def run(manifest, args):
     env.update(MANGOHUD='1', MANGOHUD_CONFIG=f'autostart_log=1,log_duration=0,output_folder={telemetry},no_display')
     record = {'schema': 1, 'id': run_id, 'timestamp': dt.datetime.now(dt.timezone.utc).isoformat(),
               'fork': args.fork, 'case': args.case, 'tool': tool, 'target': str(target),
-              'options': options, 'prefix': str(prefix), 'provenance': probe(manifest),
+              'options': options, 'target_args':args.target_args, 'fixture_protocol':args.fixture, 'prefix': str(prefix), 'provenance': probe(manifest),
               'mesa': manifest['mesa'], 'steam_runtime': runtime_identity, 'resolution_refresh': capture(['hyprctl','-j','monitors']),
               'launch_status': 'INCONCLUSIVE', 'feature_status': 'NOT_TESTED',
               'feature_reason': 'Launch success alone does not prove feature functionality',
@@ -203,6 +215,13 @@ def run(manifest, args):
     output = (directory/'stdout.log').read_text(errors='replace')
     if (directory/'fixture.txt').exists():
         output += (directory/'fixture.txt').read_text(errors='replace')
+    record['launcher_exit_code'] = exit_code
+    record['exit_code_source'] = 'launcher'
+    record['target_exit_code'] = None
+    if args.fixture:
+        status, target_exit = classify_fixture(exit_code, timed_out, output)
+        record.update(launch_status=status, target_exit_code=target_exit, exit_code=target_exit, exit_code_source='fixture')
+        record['fixture_status'] = status
     upscalers = prefix/'upscaler_files'
     record['upscaler_metadata'] = upscalers.read_text(errors='replace') if upscalers.is_file() else None
     record['upscaler_dlls'] = {}
@@ -225,7 +244,7 @@ def run(manifest, args):
 
 def report(directory):
     records = [json.loads(p.read_text()) for p in sorted(directory.glob('*/run.json'))]
-    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'duration_seconds', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
+    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'exit_code_source', 'launcher_exit_code', 'target_exit_code', 'duration_seconds', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
     with (directory/'summary.csv').open('w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore')
         writer.writeheader()
@@ -250,6 +269,7 @@ def main():
     runner.add_argument('--case', required=True)
     runner.add_argument('--target', required=True)
     runner.add_argument('--results', type=Path, default=ROOT/'results')
+    runner.add_argument('--fixture', action='store_true', help='Require the built-in fixture completion marker; report its target exit code')
     runner.add_argument('--monitor')
     runner.add_argument('--timeout', type=int, default=180)
     runner.add_argument('target_args', nargs='*')
