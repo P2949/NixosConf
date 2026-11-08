@@ -5,6 +5,7 @@ import csv
 import hashlib
 import datetime as dt
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -131,6 +132,48 @@ def classify_fixture(launcher_exit, timed_out, output):
     return ('PASS' if target_exit == 0 else 'FAIL'), target_exit
 
 
+def telemetry_frames(directory, duration_seconds=None):
+    """Keep one observed frame stream; metadata/summary rows are not samples."""
+    streams = {}
+    impossible = {}
+    for path in sorted(directory.glob('*.csv')):
+        if path.name.endswith('_summary.csv'):
+            continue
+        frames = []
+        header = None
+        with path.open(errors='replace', newline='') as f:
+            for row in csv.reader(f):
+                if row[:2] == ['fps', 'frametime']:
+                    header = row
+                    continue
+                if header is None or len(row) != len(header):
+                    continue
+                try:
+                    value = float(row[1])
+                except ValueError:
+                    continue
+                if math.isfinite(value) and value > 0:
+                    # A newly launched process cannot have a frame interval
+                    # longer than its observed lifetime (swapchain init sentinel).
+                    if duration_seconds is not None and value > duration_seconds * 1000:
+                        impossible[path.name] = impossible.get(path.name, 0) + 1
+                        continue
+                    frames.append(value)
+        if frames:
+            streams[path.name] = frames
+    if len(streams) == 1:
+        name, frames = next(iter(streams.items()))
+        identity = {'status':'MEASURED', 'files':[name]}
+        if impossible:
+            identity['rejected_beyond_run_lifetime'] = impossible
+        return frames, identity
+    identity = {'status':'INCONCLUSIVE' if streams else 'NOT_TESTED',
+                'files':list(streams), 'reason':'Need exactly one valid frame stream; never pool different swapchains/sessions'}
+    if impossible:
+        identity['rejected_beyond_run_lifetime'] = impossible
+    return [], identity
+
+
 def prepare_runtime(tool):
     """Reuse a private copy of an installed Valve runtime, after UMU verification."""
     manifest = (Path(tool['path'])/'toolmanifest.vdf').read_text()
@@ -180,7 +223,9 @@ def run(manifest, args):
                PROTON_CRASH_REPORT_DIR=str(directory/'crashes'))
     telemetry = directory/'telemetry'
     telemetry.mkdir()
-    env.update(MANGOHUD='1', MANGOHUD_CONFIG=f'autostart_log=1,log_duration=0,output_folder={telemetry},no_display')
+    # no_display skips the updates that start MangoHud 0.8.3's autologger.
+    # Transparent drawing preserves updates without displaying an overlay.
+    env.update(MANGOHUD='1', MANGOHUD_CONFIG=f'autostart_log=1,log_duration=0,output_folder={telemetry},alpha=0,background_alpha=0,permit_upload=0')
     record = {'schema': 1, 'id': run_id, 'timestamp': dt.datetime.now(dt.timezone.utc).isoformat(),
               'fork': args.fork, 'case': args.case, 'tool': tool, 'target': str(target),
               'options': options, 'target_args':args.target_args, 'fixture_protocol':args.fixture, 'prefix': str(prefix), 'provenance': probe(manifest),
@@ -231,6 +276,11 @@ def run(manifest, args):
                 record['upscaler_dlls'][str(dll.relative_to(prefix))] = hashlib.file_digest(f, 'sha256').hexdigest()
     record['fixture_observations'] = re.findall(r'PROTON_LAB ([^\r\n]+)', output)
     record['frame_times_ms'] = [float(x) for x in re.findall(r'PROTON_LAB frame_ms=([0-9.]+)', output)]
+    measured, record['telemetry_capture'] = telemetry_frames(telemetry, record['duration_seconds'])
+    record['frame_time_source'] = 'fixture_present' if record['frame_times_ms'] else 'NOT_TESTED'
+    if not record['frame_times_ms'] and measured:
+        record['frame_times_ms'] = measured
+        record['frame_time_source'] = 'mangohud_frame_interval'
     frames = record['frame_times_ms']
     if frames:
         ordered = sorted(frames)
@@ -244,15 +294,15 @@ def run(manifest, args):
 
 def report(directory):
     records = [json.loads(p.read_text()) for p in sorted(directory.glob('*/run.json'))]
-    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'exit_code_source', 'launcher_exit_code', 'target_exit_code', 'duration_seconds', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
+    fields = ['id', 'fork', 'case', 'launch_status', 'feature_status', 'exit_code', 'exit_code_source', 'launcher_exit_code', 'target_exit_code', 'duration_seconds', 'frame_time_source', 'samples', 'mean_ms', 'p95_ms', 'p99_ms']
     with (directory/'summary.csv').open('w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore')
         writer.writeheader()
         writer.writerows(dict(r, **r.get('frame_pacing', {})) for r in records)
     lines = ['# Proton experiments', '', 'Launch PASS does not establish feature function or performance benefit.', '',
-             '| Fork | Case | Launch | Feature | Exit | Frames | p95 ms |', '| --- | --- | --- | --- | --- | --- | --- |']
+             '| Fork | Case | Launch | Feature | Exit | Timing source | Frames | p95 ms |', '| --- | --- | --- | --- | --- | --- | --- | --- |']
     for r in records:
-        lines.append(f'| {r["fork"]} | {r["case"]} | {r["launch_status"]} | {r["feature_status"]} | {r.get("exit_code")} | {r.get("frame_pacing",{}).get("samples","")} | {r.get("frame_pacing",{}).get("p95_ms","")} |')
+        lines.append(f'| {r["fork"]} | {r["case"]} | {r["launch_status"]} | {r["feature_status"]} | {r.get("exit_code")} | {r.get("frame_time_source","not_recorded")} | {r.get("frame_pacing",{}).get("samples","")} | {r.get("frame_pacing",{}).get("p95_ms","")} |')
     (directory/'summary.md').write_text('\n'.join(lines)+'\n')
     (directory/'summary.json').write_text(json.dumps(records, indent=2))
     print(directory/'summary.md')

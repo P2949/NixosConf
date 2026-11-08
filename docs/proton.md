@@ -42,6 +42,12 @@ prefix. Results, prefixes, logs and telemetry stay in the existing persistent
 `~/Development/ProtonExperiments/results/` directory. `--timeout` bounds the
 launch; timeouts are INCONCLUSIVE. A successful launch is distinct from
 feature functionality and performance benefit. Reports preserve that distinction.
+Timing sources are explicit: fixture Present durations take precedence; otherwise
+one valid MangoHud CSV stream supplies frame intervals. Missing or ambiguous
+streams produce no invented distribution. Short game/menu captures also do not
+establish a performance benefit.
+Impossible initialization intervals exceeding the observed process lifetime
+are excluded with recorded counts; raw CSVs and genuine in-run stalls remain.
 The launcher removes inherited experiment flags, then applies one named case.
 When available, an installed Valve Steam Runtime 4 is privately copied under
 `Development/ProtonExperiments/runtime/`, validated by UMU against its mtree,
