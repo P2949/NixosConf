@@ -9,6 +9,7 @@
     ./ephemeral-root.nix
     ./stutter-validation-kernels.nix
     ./stutter-validation.nix
+    ./stutter-tools.nix
     ./stutter-service.nix
     ./minecraft
     ./gpu-policy.nix
