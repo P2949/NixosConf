@@ -30,10 +30,29 @@ let
   configDir = "/etc/stutter";
   render =
     name:
+    let
+      template = builtins.readFile "${upstream}/${name}";
+      withResearch =
+        if cfg.research.enable && name == "stutter-autotune-bounded@.service" then
+          builtins.replaceStrings
+            [ "ProtectHome=read-only" ]
+            [ "ProtectHome=read-only\nReadWritePaths=${builtins.toJSON cfg.research.studyDir}" ]
+            template
+        else
+          template;
+    in
     builtins.replaceStrings
       [ "@BINARY@" "@SYSTEMCTL@" "@CONFIG_DIR@" ]
       [ "${binary}" "${config.systemd.package}/bin/systemctl" configDir ]
-      (builtins.readFile "${upstream}/${name}");
+      withResearch;
+  campaignDir = "/var/lib/stutter/autotune-${cfg.user}/research-campaign";
+  socketDir = "/run/stutter-autotune-${cfg.user}";
+  absoluteSafe =
+    path:
+    builtins.match "/[A-Za-z0-9_+./-]+" path != null
+    && !(lib.hasInfix "//" path)
+    && !(lib.hasInfix "/../" "${path}/")
+    && !(lib.hasInfix "/./" "${path}/");
 in
 {
   options.services.stutterBounded = {
@@ -48,6 +67,24 @@ in
       default = username;
       description = "The monitored desktop account the controller runs as.";
     };
+    research = {
+      enable = lib.mkEnableOption "the separately authorized Stutter research control";
+      steamappsDir = lib.mkOption {
+        type = lib.types.str;
+        default = "/home/${cfg.user}/.local/share/Steam/steamapps";
+        description = "Canonical Steam library directory used for read-only inventory.";
+      };
+      protonManifest = lib.mkOption {
+        type = lib.types.str;
+        default = toString inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.proton-lab.manifest;
+        description = "Absolute immutable proton-lab manifest path from this configuration.";
+      };
+      studyDir = lib.mkOption {
+        type = lib.types.str;
+        default = "/home/${cfg.user}/Development/StutterProtonStudies";
+        description = "Existing private, persistent directory for research evidence.";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -55,6 +92,29 @@ in
       {
         assertion = builtins.match "[0-9a-f]{64}" cfg.binarySha256 != null;
         message = "services.stutterBounded.binarySha256 must be the 64 hex digit SHA-256 of the pinned binary";
+      }
+      {
+        assertion =
+          !cfg.research.enable
+          || (
+            absoluteSafe cfg.research.steamappsDir
+            && lib.hasPrefix "/nix/store/" cfg.research.protonManifest
+            && absoluteSafe cfg.research.protonManifest
+            && lib.hasPrefix "/home/${cfg.user}/Development/" cfg.research.studyDir
+            && absoluteSafe cfg.research.studyDir
+          );
+        message = "Stutter research requires absolute, confined study and Steam paths and an immutable Proton manifest";
+      }
+      {
+        assertion =
+          !cfg.research.enable
+          ||
+            builtins.length (
+              lib.splitString "ProtectHome=read-only" (
+                builtins.readFile "${upstream}/stutter-autotune-bounded@.service"
+              )
+            ) == 2;
+        message = "Stutter research requires the expected controller home sandbox in the pinned unit template";
       }
     ];
 
@@ -69,7 +129,15 @@ in
       worker_only_mutation = true
       manage_privileged_worker = false
       privileged_worker_socket = "/run/stutter-worker-${cfg.user}/worker.sock"
+    ''
+    + lib.optionalString cfg.research.enable ''
+      research_socket_dir = ${builtins.toJSON socketDir}
+      research_campaign_dir = ${builtins.toJSON campaignDir}
+      research_steamapps_dir = ${builtins.toJSON cfg.research.steamappsDir}
+      research_proton_manifest = ${builtins.toJSON cfg.research.protonManifest}
     '';
+
+    systemd.tmpfiles.rules = lib.optional cfg.research.enable "d ${campaignDir} 0700 ${cfg.user} users -";
 
     # Start with the system; the worker starts the controller after itself.
     systemd.targets.multi-user.wants = [ "stutter-privileged-worker@${cfg.user}.service" ];

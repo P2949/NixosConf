@@ -320,6 +320,10 @@ product units, policy and exact autonomous contracts. A pinned validation campai
 the product templates and their root-owned configuration after an ephemeral-root reboot; this
 persistence declaration does not make imperative service installation permanent packaging or
 claim service graduation. Workstation evaluation checks both persisted privilege domains.
+When research is enabled, `/var/lib/stutter/autotune-p2949/research-campaign` is private
+campaign metadata under the already-persisted controller directory. Private research evidence
+under `Development/StutterProtonStudies` uses the existing persisted Development tree; the
+service's runtime socket remains under `/run/stutter-autotune-p2949` and is recreated.
 
 ## Proton experiments
 

@@ -113,6 +113,10 @@
       inherit (desktopSystem) config;
     };
 
+    stutter-research-config = import ./workstation/stutter-research.nix {
+      inherit pkgs username desktopSystem;
+    };
+
     ephemeral-root-config = import ./storage/ephemeral-root/config.nix {
       inherit pkgs;
     };
