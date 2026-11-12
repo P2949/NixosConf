@@ -53,6 +53,11 @@ let
     && !(lib.hasInfix "//" path)
     && !(lib.hasInfix "/../" "${path}/")
     && !(lib.hasInfix "/./" "${path}/");
+  overlaps =
+    left: right:
+    left == right
+    || lib.hasPrefix "${lib.removeSuffix "/" left}/" right
+    || lib.hasPrefix "${lib.removeSuffix "/" right}/" left;
 in
 {
   options.services.stutterBounded = {
@@ -102,6 +107,7 @@ in
             && absoluteSafe cfg.research.protonManifest
             && lib.hasPrefix "/home/${cfg.user}/Development/" cfg.research.studyDir
             && absoluteSafe cfg.research.studyDir
+            && !(overlaps cfg.research.studyDir cfg.research.steamappsDir)
           );
         message = "Stutter research requires absolute, confined study and Steam paths and an immutable Proton manifest";
       }
@@ -133,6 +139,7 @@ in
     + lib.optionalString cfg.research.enable ''
       research_socket_dir = ${builtins.toJSON socketDir}
       research_campaign_dir = ${builtins.toJSON campaignDir}
+      research_study_dir = ${builtins.toJSON cfg.research.studyDir}
       research_steamapps_dir = ${builtins.toJSON cfg.research.steamappsDir}
       research_proton_manifest = ${builtins.toJSON cfg.research.protonManifest}
     '';
