@@ -4,7 +4,7 @@
   desktopSystem,
 }:
 let
-  lib = pkgs.lib;
+  inherit (pkgs) lib;
   manifest = "/nix/store/00000000000000000000000000000000-proton-lab.json";
   configured =
     extra:
