@@ -20,6 +20,15 @@ let
       ];
     }).config;
   config = configured { };
+  live = configured { liveLaunch = true; };
+  liveWithoutResearch =
+    (desktopSystem.extendModules {
+      modules = [ { services.stutterBounded.research.liveLaunch = true; } ];
+    }).config;
+  liveSettings = live.environment.etc."stutter/autotune-bounded-${username}.toml".text;
+  liveWithoutResearchAssertion = lib.findFirst (
+    entry: lib.hasInfix "research.liveLaunch requires" entry.message
+  ) null liveWithoutResearch.assertions;
   unsafe = configured { studyDir = "/home/${username}/Development/../.local/share/Steam"; };
   unsafeManifest = configured { protonManifest = "/home/${username}/proton.json"; };
   unsafeOverlap = configured {

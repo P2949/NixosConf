@@ -89,6 +89,7 @@ in
         default = "/home/${cfg.user}/Development/StutterProtonStudies";
         description = "Existing private, persistent directory for research evidence.";
       };
+      liveLaunch = lib.mkEnableOption "the composed research launch host (off by default; a campaign still needs its own consented intent, lease and safe window)";
     };
   };
 
@@ -122,6 +123,10 @@ in
             ) == 2;
         message = "Stutter research requires the expected controller home sandbox in the pinned unit template";
       }
+      {
+        assertion = !cfg.research.liveLaunch || cfg.research.enable;
+        message = "services.stutterBounded.research.liveLaunch requires services.stutterBounded.research.enable";
+      }
     ];
 
     # The product's own unit templates, rendered with the immutable binary, never reimplemented here.
@@ -142,6 +147,9 @@ in
       research_study_dir = ${builtins.toJSON cfg.research.studyDir}
       research_steamapps_dir = ${builtins.toJSON cfg.research.steamappsDir}
       research_proton_manifest = ${builtins.toJSON cfg.research.protonManifest}
+    ''
+    + lib.optionalString (cfg.research.enable && cfg.research.liveLaunch) ''
+      research_live_launch = true
     '';
 
     systemd.tmpfiles.rules = lib.optional cfg.research.enable "d ${campaignDir} 0700 ${cfg.user} users -";
