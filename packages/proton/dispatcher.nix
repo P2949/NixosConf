@@ -66,9 +66,9 @@ runCommand id
     cp ${manifest} "$steamcompattool/toolmanifest.vdf"
     cat > "$steamcompattool/proton" <<'SH'
     #!/bin/sh
-    ctx=$(ls -dt ${studyDir}/*/dispatch 2>/dev/null | head -1)
-    [ -n "$ctx" ] || { echo "no armed research campaign" >&2; exit 1; }
-    exec ${stutterBinary} research dispatch --context-dir "$ctx" -- "$0" "$@"
+    # The dispatcher selects the one armed attempt itself, by an unused ticket for this verb across
+    # the private study root; it never picks a campaign by directory time and refuses ambiguity.
+    exec ${stutterBinary} research dispatch --study-root ${studyDir} -- "$0" "$@"
     SH
     chmod 0555 "$steamcompattool/proton"
   ''
