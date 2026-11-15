@@ -51,6 +51,11 @@ let
   settings = config.environment.etc."stutter/autotune-bounded-${username}.toml".text;
 in
 assert !desktopSystem.config.services.stutterBounded.research.enable;
+# Live launch is off unless explicitly enabled, and is refused without research.
+assert !desktopSystem.config.services.stutterBounded.research.liveLaunch;
+assert !(lib.hasInfix "research_live_launch" settings);
+assert lib.hasInfix "research_live_launch = true" liveSettings;
+assert liveWithoutResearchAssertion != null && !liveWithoutResearchAssertion.assertion;
 assert lib.hasPrefix "/nix/store/"
   desktopSystem.config.services.stutterBounded.research.protonManifest;
 assert
