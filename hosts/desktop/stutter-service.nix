@@ -28,6 +28,12 @@ let
     '';
   };
   configDir = "/etc/stutter";
+  # Immutable and exact: names the pinned binary by store path, so it is only built and registered
+  # for a configuration that explicitly enables live launch.
+  dispatcher = pkgs.callPackage ../../packages/proton/dispatcher.nix { } {
+    stutterBinary = "${binary}";
+    studyDir = cfg.research.studyDir;
+  };
   render =
     name:
     let
@@ -153,6 +159,12 @@ in
     '';
 
     systemd.tmpfiles.rules = lib.optional cfg.research.enable "d ${campaignDir} 0700 ${cfg.user} users -";
+
+    # Steam discovers the dispatcher through the same Nix mechanism as the Proton builds; it only
+    # runs when a game selects it and a campaign has armed a dispatch context.
+    programs.steam.extraCompatPackages = lib.mkIf (cfg.research.enable && cfg.research.liveLaunch) [
+      dispatcher
+    ];
 
     # Start with the system; the worker starts the controller after itself.
     systemd.targets.multi-user.wants = [ "stutter-privileged-worker@${cfg.user}.service" ];

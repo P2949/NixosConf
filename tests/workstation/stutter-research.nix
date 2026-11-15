@@ -60,6 +60,11 @@ let
   unit = config.systemd.units."stutter-autotune-bounded@.service".text;
   worker = config.systemd.units."stutter-privileged-worker@.service".text;
   settings = config.environment.etc."stutter/autotune-bounded-${username}.toml".text;
+  dispatcherRegistered =
+    system:
+    builtins.any (
+      pkg: (pkg.passthru.id or "") == "stutter-research-dispatcher"
+    ) system.config.programs.steam.extraCompatPackages;
 in
 # The module itself is off by default; the desktop explicitly opts in.
 assert !moduleDefault.config.services.stutterBounded.research.enable;
@@ -71,6 +76,10 @@ assert lib.hasInfix "research_live_launch = true"
 assert !moduleDefault.config.services.stutterBounded.research.liveLaunch;
 assert !(lib.hasInfix "research_live_launch" settings);
 assert lib.hasInfix "research_live_launch = true" liveSettings;
+# The immutable dispatcher is registered with Steam only when live launch is enabled.
+assert dispatcherRegistered desktopSystem;
+assert dispatcherRegistered live;
+assert !(dispatcherRegistered moduleDefault);
 assert liveWithoutResearchAssertion != null && !liveWithoutResearchAssertion.assertion;
 assert lib.hasPrefix "/nix/store/"
   desktopSystem.config.services.stutterBounded.research.protonManifest;
