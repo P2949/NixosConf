@@ -23,7 +23,7 @@ let
     sha256 = cfg.binarySha256;
     message = ''
       Add the release binary of the pinned Stutter source to the store first:
-        nix-store --add-fixed sha256 /path/to/stutter/target/release/stutter
+        nix-store --add-fixed sha256 /path/to/stutter/target/release/stutter   (built with: cargo build --release -p stutter --features wayland-probe)
       and set services.stutterBounded.binarySha256 to the hash of that file (nix hash file --type sha256 --base16).
     '';
   };
