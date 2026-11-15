@@ -45,7 +45,7 @@
     # Source-only pin of the Stutter checkout whose unit templates the production service renders;
     # the binary itself is pinned separately by hash (services.stutterBounded.binarySha256).
     stutter = {
-      url = "github:P2949/stutter/e97a9b4ae2827bbd7b27b71ea0d783ee344ec66c";
+      url = "github:P2949/stutter/56905e5b05c33e352f6fcc2cb012fe361ed8ef90";
       flake = false;
     };
   };
