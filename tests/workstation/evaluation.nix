@@ -77,9 +77,6 @@ let
       stateVersion = config.system.stateVersion;
     }
   );
-  # The four Proton builds are the research candidates; the immutable research dispatcher is a separate,
-  # optional registration that exists only when live launch is enabled.
-  protonTools = builtins.filter (tool: tool ? provenance) config.programs.steam.extraCompatPackages;
 in
 assert topologyValid;
 assert builtins.elem "Development" homeDirectories;
@@ -87,14 +84,21 @@ assert builtins.elem ".local/share/Steam" homeDirectories;
 assert config.hardware.graphics.package.version == "26.2.6";
 assert config.hardware.graphics.package32.version == "26.2.6";
 assert config.hardware.graphics.enable32Bit;
-assert builtins.length protonTools == 4;
-assert builtins.length config.programs.steam.extraCompatPackages - builtins.length protonTools <= 1;
-assert builtins.all (tool: tool ? steamcompattool && tool.steamcompattool != tool.out) protonTools;
-assert builtins.length (pkgs.lib.unique (map (tool: tool.provenance.id) protonTools)) == 4;
-assert builtins.length (pkgs.lib.unique (map (tool: tool.provenance.displayName) protonTools)) == 4;
+assert builtins.length config.programs.steam.extraCompatPackages == 4;
+assert builtins.all (
+  tool: tool ? steamcompattool && tool.steamcompattool != tool.out
+) config.programs.steam.extraCompatPackages;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.id) config.programs.steam.extraCompatPackages)
+  ) == 4;
+assert
+  builtins.length (
+    pkgs.lib.unique (map (tool: tool.provenance.displayName) config.programs.steam.extraCompatPackages)
+  ) == 4;
 assert builtins.any (
   tool: tool.provenance.id == "proton-em-11" && pkgs.lib.hasPrefix "11." tool.version
-) protonTools;
+) config.programs.steam.extraCompatPackages;
 assert builtins.all
   (
     variables:

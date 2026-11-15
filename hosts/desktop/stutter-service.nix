@@ -160,11 +160,15 @@ in
 
     systemd.tmpfiles.rules = lib.optional cfg.research.enable "d ${campaignDir} 0700 ${cfg.user} users -";
 
-    # Steam discovers the dispatcher through the same Nix mechanism as the Proton builds; it only
-    # runs when a game selects it and a campaign has armed a dispatch context.
-    programs.steam.extraCompatPackages = lib.mkIf (cfg.research.enable && cfg.research.liveLaunch) [
-      dispatcher
-    ];
+    # The immutable dispatcher stays in the system closure and is referenced from /etc, without
+    # touching Steam's package set (which would also restart polkit and reload dbus). It is placed in
+    # Steam's tool directory only by a verified, reversible operational step, and it only runs when a
+    # game selects it and a campaign has armed a dispatch context.
+    environment.etc."stutter/research-dispatcher" =
+      lib.mkIf (cfg.research.enable && cfg.research.liveLaunch)
+        {
+          source = dispatcher.steamcompattool;
+        };
 
     # Start with the system; the worker starts the controller after itself.
     systemd.targets.multi-user.wants = [ "stutter-privileged-worker@${cfg.user}.service" ];
