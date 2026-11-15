@@ -43,7 +43,7 @@ let
           builtins.replaceStrings
             [ "ProtectHome=read-only" ]
             [
-              "ProtectHome=read-only\nReadWritePaths=${builtins.toJSON cfg.research.studyDir}\nEnvironment=RUST_LOG=warn"
+              "ProtectHome=read-only\nReadWritePaths=${builtins.toJSON cfg.research.studyDir}\nEnvironment=RUST_LOG=warn\nEnvironment=STUTTER_JOURNALCTL=${config.systemd.package}/bin/journalctl"
             ]
             template
         else
