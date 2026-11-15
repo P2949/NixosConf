@@ -6,13 +6,24 @@
 let
   inherit (pkgs) lib;
   manifest = "/nix/store/00000000000000000000000000000000-proton-lab.json";
+  # The module defaults with research forced off, independent of what the desktop enables.
+  moduleDefault = desktopSystem.extendModules {
+    modules = [
+      {
+        services.stutterBounded.research = {
+          enable = lib.mkForce false;
+          liveLaunch = lib.mkForce false;
+        };
+      }
+    ];
+  };
   configured =
     extra:
-    (desktopSystem.extendModules {
+    (moduleDefault.extendModules {
       modules = [
         {
           services.stutterBounded.research = {
-            enable = true;
+            enable = lib.mkOverride 40 true;
             protonManifest = manifest;
           }
           // extra;
@@ -20,10 +31,10 @@ let
       ];
     }).config;
   config = configured { };
-  live = configured { liveLaunch = true; };
+  live = configured { liveLaunch = lib.mkOverride 40 true; };
   liveWithoutResearch =
-    (desktopSystem.extendModules {
-      modules = [ { services.stutterBounded.research.liveLaunch = true; } ];
+    (moduleDefault.extendModules {
+      modules = [ { services.stutterBounded.research.liveLaunch = lib.mkOverride 40 true; } ];
     }).config;
   liveSettings = live.environment.etc."stutter/autotune-bounded-${username}.toml".text;
   liveWithoutResearchAssertion = lib.findFirst (
@@ -50,9 +61,14 @@ let
   worker = config.systemd.units."stutter-privileged-worker@.service".text;
   settings = config.environment.etc."stutter/autotune-bounded-${username}.toml".text;
 in
-assert !desktopSystem.config.services.stutterBounded.research.enable;
+# The module itself is off by default; the desktop explicitly opts in.
+assert !moduleDefault.config.services.stutterBounded.research.enable;
+assert desktopSystem.config.services.stutterBounded.research.enable;
+assert desktopSystem.config.services.stutterBounded.research.liveLaunch;
+assert lib.hasInfix "research_live_launch = true"
+  desktopSystem.config.environment.etc."stutter/autotune-bounded-${username}.toml".text;
 # Live launch is off unless explicitly enabled, and is refused without research.
-assert !desktopSystem.config.services.stutterBounded.research.liveLaunch;
+assert !moduleDefault.config.services.stutterBounded.research.liveLaunch;
 assert !(lib.hasInfix "research_live_launch" settings);
 assert lib.hasInfix "research_live_launch = true" liveSettings;
 assert liveWithoutResearchAssertion != null && !liveWithoutResearchAssertion.assertion;
@@ -60,7 +76,7 @@ assert lib.hasPrefix "/nix/store/"
   desktopSystem.config.services.stutterBounded.research.protonManifest;
 assert
   !(lib.hasInfix "research_socket_dir"
-    desktopSystem.config.environment.etc."stutter/autotune-bounded-${username}.toml".text
+    moduleDefault.config.environment.etc."stutter/autotune-bounded-${username}.toml".text
   );
 assert lib.hasInfix "ProtectHome=read-only" unit;
 assert lib.hasInfix ''ReadWritePaths="/home/${username}/Development/StutterProtonStudies"'' unit;
