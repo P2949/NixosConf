@@ -42,7 +42,9 @@ let
         if cfg.research.enable && name == "stutter-autotune-bounded@.service" then
           builtins.replaceStrings
             [ "ProtectHome=read-only" ]
-            [ "ProtectHome=read-only\nReadWritePaths=${builtins.toJSON cfg.research.studyDir}" ]
+            [
+              "ProtectHome=read-only\nReadWritePaths=${builtins.toJSON cfg.research.studyDir}\nEnvironment=RUST_LOG=warn"
+            ]
             template
         else
           template;
