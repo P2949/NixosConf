@@ -30,7 +30,7 @@
   # with `nix-store --add-fixed sha256` and pinned here by the hash of the file.
   services.stutterBounded = {
     enable = true;
-    binarySha256 = "12c0714e50367b22142bf7e205599b1301a757c1c16732089ff135a0b942efc4";
+    binarySha256 = "19d4af04775008fa69580fc706de909cad395474f5abd554bc05988f9f307acf";
     # The separately authorized Stutter research control. liveLaunch only selects the composed
     # launch host; a campaign still needs its own consented intent, lease and safe window.
     research = {
