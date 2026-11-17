@@ -98,6 +98,7 @@ in
         description = "Existing private, persistent directory for research evidence.";
       };
       liveLaunch = lib.mkEnableOption "the composed research launch host (off by default; a campaign still needs its own consented intent, lease and safe window)";
+      childFunnel = lib.mkEnableOption "the child-study funnel (screen, pilot, confirmation, action and feature studies) in the resident controller (off by default; requires liveLaunch, and every study still needs its own consented intent, lease and safe window)";
     };
   };
 
@@ -135,6 +136,10 @@ in
         assertion = !cfg.research.liveLaunch || cfg.research.enable;
         message = "services.stutterBounded.research.liveLaunch requires services.stutterBounded.research.enable";
       }
+      {
+        assertion = !cfg.research.childFunnel || cfg.research.liveLaunch;
+        message = "services.stutterBounded.research.childFunnel requires services.stutterBounded.research.liveLaunch";
+      }
     ];
 
     # The product's own unit templates, rendered with the immutable binary, never reimplemented here.
@@ -158,6 +163,11 @@ in
     ''
     + lib.optionalString (cfg.research.enable && cfg.research.liveLaunch) ''
       research_live_launch = true
+    ''
+    # The funnel is a separate, default-off switch beside live launch; without it every campaign runs
+    # the flat schedule exactly as before.
+    + lib.optionalString (cfg.research.enable && cfg.research.liveLaunch && cfg.research.childFunnel) ''
+      research_child_funnel = true
     '';
 
     systemd.tmpfiles.rules = lib.optional cfg.research.enable "d ${campaignDir} 0700 ${cfg.user} users -";

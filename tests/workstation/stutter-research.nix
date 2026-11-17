@@ -40,6 +40,15 @@ let
   liveWithoutResearchAssertion = lib.findFirst (
     entry: lib.hasInfix "research.liveLaunch requires" entry.message
   ) null liveWithoutResearch.assertions;
+  funnel = configured {
+    liveLaunch = lib.mkOverride 40 true;
+    childFunnel = lib.mkOverride 40 true;
+  };
+  funnelWithoutLive = configured { childFunnel = lib.mkOverride 40 true; };
+  funnelWithoutLiveAssertion = lib.findFirst (
+    entry: lib.hasInfix "research.childFunnel requires" entry.message
+  ) null funnelWithoutLive.assertions;
+  funnelSettings = funnel.environment.etc."stutter/autotune-bounded-${username}.toml".text;
   unsafe = configured { studyDir = "/home/${username}/Development/../.local/share/Steam"; };
   unsafeManifest = configured { protonManifest = "/home/${username}/proton.json"; };
   unsafeOverlap = configured {
@@ -72,6 +81,17 @@ assert lib.hasInfix "research_live_launch = true"
 assert !moduleDefault.config.services.stutterBounded.research.liveLaunch;
 assert !(lib.hasInfix "research_live_launch" settings);
 assert lib.hasInfix "research_live_launch = true" liveSettings;
+# The child-study funnel is a separate switch, off unless explicitly enabled (including on the
+# desktop), emitted only beside live launch, and refused without it.
+assert !moduleDefault.config.services.stutterBounded.research.childFunnel;
+assert !desktopSystem.config.services.stutterBounded.research.childFunnel;
+assert !(lib.hasInfix "research_child_funnel" liveSettings);
+assert
+  !(lib.hasInfix "research_child_funnel"
+    desktopSystem.config.environment.etc."stutter/autotune-bounded-${username}.toml".text
+  );
+assert lib.hasInfix "research_child_funnel = true" funnelSettings;
+assert funnelWithoutLiveAssertion != null && !funnelWithoutLiveAssertion.assertion;
 # The immutable dispatcher is placed in /etc only when live launch is enabled, and Steam's package
 # set (which would restart polkit and reload dbus) stays untouched.
 assert dispatcherPlaced desktopSystem.config;
