@@ -201,17 +201,17 @@
     "stutter": {
       "flake": false,
       "locked": {
-        "lastModified": 1795288765,
-        "narHash": "sha256-Z+XJN1MdGHRJCbhAOS5VqTtSsu0bOVMB4pB22z9ezug=",
+        "lastModified": 1795291831,
+        "narHash": "sha256-s2cboY4DTCwC/eZ2ET3dYwPaVEA4bcxkETIlv0DPAnY=",
         "owner": "P2949",
         "repo": "stutter",
-        "rev": "e25ceb56236f290212fb7ff227c9dc1bc0bd73c5",
+        "rev": "c37833c12846600cfeb0c04e6181d2738753c579",
         "type": "github"
       },
       "original": {
         "owner": "P2949",
         "repo": "stutter",
-        "rev": "e25ceb56236f290212fb7ff227c9dc1bc0bd73c5",
+        "rev": "c37833c12846600cfeb0c04e6181d2738753c579",
         "type": "github"
       }
     },
