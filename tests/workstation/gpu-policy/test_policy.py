@@ -51,7 +51,7 @@ class PolicyTests(unittest.TestCase):
         expected = gpu_config(True, 1.0)
         expected.update(
             power_cap=238.0,
-            voltage_offset=-150,
+            voltage_offset=-120,
             performance_level="manual",
             power_profile_mode_index=2,
         )

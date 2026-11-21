@@ -4,7 +4,7 @@ Daily and Gaming are the accepted production profiles. The previously observed
 Unreal timeout was resolved by the user and is no longer an adoption blocker.
 The workload policy was accepted through [PR #59](https://github.com/P2949/NixosConf/pull/59).
 
-The desktop boots into **Daily**: 238 W, −150 mV, factory core and VRAM clocks,
+The desktop boots into **Daily**: 238 W, −120 mV, factory core and VRAM clocks,
 Manual performance level with the `POWER_SAVING` firmware workload heuristic,
 native PMFW fan curve and zero RPM. Gaming uses the same electrical, clock and
 fan configuration with `3D_FULL_SCREEN` instead. Both retain dynamic clocks and
@@ -23,7 +23,7 @@ policy, including workloads launched without GameMode.
 
 [The desktop source](../hosts/desktop/lact-policy.yaml) is the canonical LACT
 version-7 configuration. Stock and the root Default mapping preserve the original
-factory reference. Daily and Gaming preserve the qualified 238 W / −150 mV / fan
+factory reference. Daily and Gaming preserve the qualified 238 W / −120 mV / fan
 policy and differ only in `power_profile_mode_index` (2 and 1). LACT automatic
 switching remains disabled; no profile rules or hooks are installed.
 
@@ -93,7 +93,7 @@ Material changes to kernel/amdgpu, Mesa/RADV, LACT or its schema, GameMode, the
 profile helper, policy YAML, electrical settings or fan curve require a compact
 regression after the same automated checks and normal activation:
 
-1. Verify exact Daily: 238 W, −150 mV, factory clocks, accepted PMFW curve,
+1. Verify exact Daily: 238 W, −120 mV, factory clocks, accepted PMFW curve,
    zero RPM enabled, Manual + `POWER_SAVING` and LACT auto-switch disabled.
 2. Verify Daily → GameMode → Gaming → client exit → Daily, modes 2 → 1 → 2;
    also verify Stock restoration ends at Automatic + `BOOTUP_DEFAULT`.
