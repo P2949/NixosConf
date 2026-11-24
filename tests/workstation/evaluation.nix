@@ -79,6 +79,21 @@ let
   );
 in
 assert topologyValid;
+assert homeConfig.programs.obs-studio.enable;
+assert homeConfig.programs.obs-studio.plugins == [ ];
+assert builtins.all (package: builtins.elem package homeConfig.home.packages) [
+  pkgs.kdePackages.kdenlive
+  pkgs.ffmpeg-full
+  pkgs.libva-utils
+];
+assert builtins.all (path: builtins.elem path homeDirectories) [
+  ".config/obs-studio"
+  ".local/share/kdenlive"
+  ".local/share/stalefiles/kdenlive"
+];
+assert builtins.any (
+  entry: entry.file == ".config/kdenliverc" && entry.method == "symlink"
+) homePolicy.files;
 assert builtins.elem "Development" homeDirectories;
 assert builtins.elem ".local/share/Steam" homeDirectories;
 assert config.hardware.graphics.package.version == "26.2.6";

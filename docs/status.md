@@ -87,6 +87,32 @@ physical USB-device workflows remain unexercised. See the
 [Android workflow](development-validation.md#android-studio) and
 [state audit](ephemeral-state-audit.md).
 
+OBS Studio and Kdenlive are installed natively (OBS with no plugins; Kdenlive,
+`ffmpeg-full` and `libva-utils` as packages). OBS uses the `Desktop Recording`
+profile: native Wayland/PipeWire screen and window capture through the
+Hyprland portal, 3440×1440 at 60 FPS, MKV with FFmpeg VA-API H.264 on the AMD
+render device (CQP QP 20) and three AAC tracks (`Mixed`, `Desktop`,
+`Microphone`). Recordings, projects and exports live under `~/Videos`.
+Kdenlive edits those recordings and renders MP4 through a CPU libx264 preset
+(`Desktop HQ x264 CRF19 (CPU)`, the quality default) and a VA-API preset
+(`Desktop Fast VAAPI H264 QP21`). The custom presets exist because the built-in
+ones cap AAC at 256 kbps (CPU) or fix it at 192 kbps (VA-API). Both exports
+were exercised through the GUI, including after a reboot. The portal consent
+prompt is not bypassed; restore tokens did not survive a reboot, so the first
+capture after boot asks for the monitor/window once. Unsaved-project recovery
+is KAutoSaveFile's `share/stalefiles/kdenlive`. See the
+[application state audit](ephemeral-state-audit.md).
+
+OBS recording adds GPU, compositor and media-engine load. A recorded run must
+never be treated as equivalent to an unrecorded Stutter benchmark run.
+
+Not exercised: the physical microphone (no capture source was exposed; the
+onboard microphone ports were unplugged, so the `Microphone` track was
+validated only with a temporary virtual source), HEVC/AV1 recording, per-
+application audio capture and Vulkan game capture. AAC at the 320 kbps target
+averages about 230 kbps on sparse tonal material because FFmpeg's native
+encoder does not pad it.
+
 General maintainability cleanup is complete under the
 [repository policy](repository-policy.md). Generated custom-module docs and the
 [interactive desktop bootloader VM](development-validation.md#interactive-desktop-vm)

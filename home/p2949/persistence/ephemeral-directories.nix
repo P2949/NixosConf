@@ -5,6 +5,17 @@ let
 in
 [
   {
+    parent = ".config/obs-studio";
+    children = [
+      "logs"
+      # Unclean-shutdown sentinel: persisting it would trigger the safe-mode
+      # prompt after every reboot.
+      ".sentinel"
+      "updates"
+      "profiler_data"
+    ];
+  }
+  {
     parent = ".local/share/PrismLauncher";
     children = [
       "cache"
