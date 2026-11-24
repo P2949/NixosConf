@@ -1,4 +1,4 @@
-{ ... }:
+{ config, lib, ... }:
 
 {
   # Impermanence's NixOS module imports the Home Manager support and turns
@@ -72,6 +72,10 @@
       # Split stateful application children from declarative .config files.
       # Keep atomic application updates within one mounted directory. Known
       # cache children are instead bound to reset-root storage by the host.
+      {
+        directory = ".config/obs-studio";
+        mode = "0700";
+      }
       ".config/Code"
       # Versioned Android Studio settings; IDE caches remain under .cache.
       {
@@ -99,6 +103,7 @@
       ".config/Epic"
 
       # .local is also split: no complete share/state container is persisted.
+      ".local/share/kdenlive"
       ".local/share/Steam"
       # Versioned Android Studio plugins and user data.
       {
@@ -133,6 +138,10 @@
     ];
 
     files = [
+      {
+        file = ".config/kdenliverc";
+        method = "symlink";
+      }
       # Manual configuration and intentionally retained command history.
       ".zshrc"
       ".bash_history"
@@ -143,4 +152,12 @@
       ".claude.json"
     ];
   };
+
+  # Kdenlive uses this cache path for unsaved-project recovery. Keep the
+  # recovery directory inside its persistent data parent, not the cache tree.
+  home.file.".cache/stalefiles/kdenlive".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.local/share/kdenlive/stalefiles";
+  home.activation.kdenliveRecoveryDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "$HOME/.local/share/kdenlive/stalefiles"
+  '';
 }

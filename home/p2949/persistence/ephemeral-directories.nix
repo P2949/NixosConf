@@ -5,6 +5,10 @@ let
 in
 [
   {
+    parent = ".config/obs-studio";
+    children = [ "logs" ];
+  }
+  {
     parent = ".local/share/PrismLauncher";
     children = [
       "cache"
