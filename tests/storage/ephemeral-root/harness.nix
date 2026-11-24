@@ -202,7 +202,10 @@ pkgs.testers.runNixOSTest {
         pkgs.btrfs-progs
         pkgs.openssl
       ]
-      ++ pkgs.lib.optionals granular [ pkgs.git ];
+      ++ pkgs.lib.optionals granular [
+        pkgs.git
+        pkgs.kdePackages.kconfig
+      ];
 
       specialisation = {
         ephemeral.configuration = btrfsConfiguration;
@@ -262,7 +265,6 @@ pkgs.testers.runNixOSTest {
               "/home/tester/.config/obs-studio/basic/scenes/granular-proof",
               "/home/tester/.local/share/kdenlive/granular-proof",
               "/home/tester/.cache/stalefiles/kdenlive/granular-proof",
-              "/home/tester/.config/kdenliverc",
           ]
 
       def write_sentinel(path, persistent=False):
@@ -475,6 +477,8 @@ pkgs.testers.runNixOSTest {
                   for path in persistent_paths:
                       machine.succeed(f"grep -Fx persistent {q(path)}")
                   machine.succeed("cmp /var/lib/impermanence-fixture /persist/var/lib/impermanence-fixture")
+                  machine.succeed("test -L /home/tester/.config/kdenliverc")
+                  machine.succeed("grep -Fx value=edited /home/tester/.config/kdenliverc")
               # Write through the active user mounts as the actual user, proving
               # that mount ownership permits ordinary application writes.
               machine.succeed("su - tester -c 'printf \"persistent\\n\" > ~/Documents/granular-proof; printf \"persistent\\n\" > ~/.ssh/granular-proof'")
@@ -497,6 +501,11 @@ pkgs.testers.runNixOSTest {
               machine.succeed("su - tester -c 'echo first > ~/.config/Code/preferences-fixture; echo second > ~/.config/Code/preferences-fixture.new; mv ~/.config/Code/preferences-fixture.new ~/.config/Code/preferences-fixture'")
               machine.succeed("su - tester -c 'git config --global impermanence.fixture edited'")
               machine.succeed("grep -q edited /persist/home/tester/.config/git/config")
+              # Exercise KConfig's own atomic save through the persistent file
+              # symlink, not a shell rename of the link itself.
+              machine.succeed("su - tester -c 'kwriteconfig6 --file ~/.config/kdenliverc --group PersistenceTest --key value edited'")
+              machine.succeed("test -L /home/tester/.config/kdenliverc")
+              machine.succeed("grep -Fx value=edited /persist/home/tester/.config/kdenliverc")
               for path in ["/var/lib/portables", "/var/lib/machines", "/var/tmp"]:
                   machine.fail(f"btrfs subvolume show {q(path)}")
 
@@ -655,6 +664,7 @@ pkgs.testers.runNixOSTest {
           machine.succeed(f"test -e {q(path)}")
       for path in persistent_paths:
           machine.succeed(f"grep -Fx persistent {q(path)}")
+      machine.succeed("grep -Fx value=edited /home/tester/.config/kdenliverc")
       machine.reboot()
       machine.wait_for_unit("multi-user.target")
       machine.wait_for_unit("home-manager-tester.service")
@@ -664,6 +674,7 @@ pkgs.testers.runNixOSTest {
           machine.succeed(f"test -e {q(path)}")
       for path in persistent_paths:
           machine.succeed(f"grep -Fx persistent {q(path)}")
+      machine.succeed("grep -Fx value=edited /home/tester/.config/kdenliverc")
 
       # Installing the recovery-only profile above lets bootloader cleanup
       # remove the normal initrd. Reinstall the normal generation, as a real
