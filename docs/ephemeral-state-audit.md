@@ -112,8 +112,8 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | git | P | Global Git configuration in a writable containing directory |
 | Code | M | User/global/workspace state, unsaved Backups, cookies, identity, extensions' storage retained; cache exceptions listed below |
 | Google | P | Private stable parent for versioned AndroidStudio settings; audit other Google applications before adopting them |
-| obs-studio | M | Profiles, scene collections (including portal restore tokens), global/user settings and plugin configuration retained; logs, the unclean-shutdown `.sentinel` (persisting it would prompt safe mode after every reboot), `updates` and `profiler_data` use reset-root storage |
-| kdenliverc | P | Preferences retained through a file symlink to the persistent backing file; Kdenlive's own KConfig writes were observed to preserve the link |
+| obs-studio | M | Profiles, scene collections (including portal restore tokens), global/user settings and plugin configuration retained; logs, the unclean-shutdown `.sentinel` (persisting it would prompt safe mode after every reboot), `updates` and `profiler_data` use reset-root storage (reboot-proven). Portal restore tokens do not survive a reboot, so the first capture asks once |
+| kdenliverc | P | Preferences retained through a file symlink to the persistent backing file; Kdenlive's own KConfig writes preserved the link before and after a normal reboot |
 | mozilla/firefox | M | profiles.ini, profile groups, passwords, cookies, bookmarks/history, extensions, sessions and site storage retained; cache/crash/telemetry exceptions below |
 | unityhub | M | Account/storage, install-state database, project registry, preferences, Templates and resumable editor installation payloads retained; cache exceptions below |
 | unity3d/Unity/config, unity3d/Unity/licenses | P | Licensing configuration/identity; sibling Licensing.Client logs discarded |
@@ -136,7 +136,7 @@ and [Unreal directory structure](https://dev.epicgames.com/documentation/unreal-
 | share/applications, share/icons/hicolor | P | User/game launchers and icons |
 | share/icons/default, share/icons/Adwaita, share/dbus-1 | D | Home Manager links |
 | share/kdenlive | M | Observed: project backups (`.backup`), custom project profiles, render presets (`export/customprofiles.xml`), library, titles and transitions retained |
-| share/stalefiles/kdenlive | P | KAutoSaveFile unsaved-project recovery; Kdenlive 26.04.3 does not use the older `.cache/stalefiles` location |
+| share/stalefiles/kdenlive | P | KAutoSaveFile unsaved-project recovery, reboot-proven with a sentinel; Kdenlive 26.04.3 does not use the older `.cache/stalefiles` location |
 | .cache/kdenlive | E | Thumbnails, timeline previews, work files, proxies and other generated caches; projects reference sources under Videos |
 | state/kdenlivestaterc | E | Window state and recent file-dialog locations; `kdenlive-layoutsrc` and `kdenliveui.rc` were not created by the exercised workflow and are classified when a layout customization is exercised |
 | share/gh, state/gh | P/R | CLI device identity, extensions and extension state |
