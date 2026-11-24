@@ -160,4 +160,11 @@
   home.activation.kdenliveRecoveryDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run mkdir -p "$HOME/.local/share/kdenlive/stalefiles"
   '';
+  # KConfig cannot reliably create a missing target through a dangling link.
+  # Preserve any existing settings while initializing a fresh installation.
+  home.activation.kdenliveConfiguration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -e "$HOME/.config/kdenliverc" ]; then
+      run touch "$HOME/.config/kdenliverc"
+    fi
+  '';
 }
