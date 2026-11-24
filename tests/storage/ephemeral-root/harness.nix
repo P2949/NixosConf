@@ -264,7 +264,7 @@ pkgs.testers.runNixOSTest {
               "/home/tester/.config/obs-studio/basic/profiles/granular-proof",
               "/home/tester/.config/obs-studio/basic/scenes/granular-proof",
               "/home/tester/.local/share/kdenlive/granular-proof",
-              "/home/tester/.cache/stalefiles/kdenlive/granular-proof",
+              "/home/tester/.local/share/stalefiles/kdenlive/granular-proof",
           ]
 
       def write_sentinel(path, persistent=False):

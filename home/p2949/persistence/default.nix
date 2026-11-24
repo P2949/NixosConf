@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 
 {
   # Impermanence's NixOS module imports the Home Manager support and turns
@@ -104,6 +104,8 @@
 
       # .local is also split: no complete share/state container is persisted.
       ".local/share/kdenlive"
+      # KAutoSaveFile recovery for unsaved Kdenlive projects.
+      ".local/share/stalefiles/kdenlive"
       ".local/share/Steam"
       # Versioned Android Studio plugins and user data.
       {
@@ -153,13 +155,6 @@
     ];
   };
 
-  # Kdenlive uses this cache path for unsaved-project recovery. Keep the
-  # recovery directory inside its persistent data parent, not the cache tree.
-  home.file.".cache/stalefiles/kdenlive".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.local/share/kdenlive/stalefiles";
-  home.activation.kdenliveRecoveryDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    run mkdir -p "$HOME/.local/share/kdenlive/stalefiles"
-  '';
   # KConfig cannot reliably create a missing target through a dangling link.
   # Preserve any existing settings while initializing a fresh installation.
   home.activation.kdenliveConfiguration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

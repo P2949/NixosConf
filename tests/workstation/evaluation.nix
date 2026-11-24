@@ -89,10 +89,8 @@ assert builtins.all (package: builtins.elem package homeConfig.home.packages) [
 assert builtins.all (path: builtins.elem path homeDirectories) [
   ".config/obs-studio"
   ".local/share/kdenlive"
+  ".local/share/stalefiles/kdenlive"
 ];
-assert
-  homeConfig.home.file.".cache/stalefiles/kdenlive".source
-  == homeConfig.lib.file.mkOutOfStoreSymlink "${homeConfig.home.homeDirectory}/.local/share/kdenlive/stalefiles";
 assert builtins.any (
   entry: entry.file == ".config/kdenliverc" && entry.method == "symlink"
 ) homePolicy.files;
